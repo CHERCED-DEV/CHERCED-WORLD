@@ -1,0 +1,45 @@
+// + Typography
+// -------
+// WL call Roboto family from Google cdn (CMS GeneralConfig.json)
+$font-path-secondary:    '../fonts/static/';
+
+$font-name:             'Lato';
+$font-name-secondary:   'Static';
+$font-filename-secondary:    'static-bold-webfont';
+
+$font-sanserif:         'Lato';
+$font-icon-name:        'avianca-icons';
+
+$f-body:    $font-name, sans-serif;
+$f-title:   $font-sanserif, sans-serif;
+$f-offer:   $font-name-secondary, sans-serif;
+$f-icons:   $font-icon-name;
+$f-button:  $f-title;
+
+// ++ Fonts weight
+$f-weight-bold:     700;
+$f-weight-medium:   700;
+$f-weight-normal:   400;
+$f-weight-light:    400;
+
+// ++ Fonts size
+$f-size-xxs:    11px;
+$f-size-xs:     12px;
+$f-size-sm:     14px;
+$f-size:        16px;
+$f-size-md:     18px;
+$f-size-md-xl:  20px;
+$f-size-md-xxl: 24px;
+$f-size-lg:     28px;
+$f-size-xlg:    34px;
+$f-size-xlgx:   40px;
+$f-size-xxlg:   48px;
+$f-size-super:  60px;
+$f-size-ultra:  74px;
+
+//## icons size
+$f-iconsize: 20px;
+$f-iconsize-md: 39px;
+$f-iconsize-lg: 48px;
+$f-iconsize-xlg: 64px;
+$f-iconsize-super: 70px;

@@ -1,0 +1,32 @@
+// + Headings
+// -------
+
+// breakpoint
+// when font get smaller (small screen devices)
+$headings-fontsize-breakpoint: $until-mobile;
+
+// font sizes
+$f-size-h1:         $f-size-lg; 	  // 28px
+$f-size-h1-mobile:  $f-size-lg - 6px; // 22px
+$f-size-h2:         $f-size-md-xl;	  // 20px
+$f-size-h2-mobile:  $f-size-md-xl;    // 20px
+$f-size-h3:         $f-size-md;	      // 18px
+$f-size-h3-mobile:  $f-size-md;	      // 18px
+$f-size-h4:         $f-size-md;	      // 18px
+
+// weights
+$f-weight-h1:       $f-weight-bold;
+$f-weight-h2:       $f-weight-bold;
+$f-weight-h3:       $f-weight-medium;
+$f-weight-h4:       $f-weight-light;
+
+// margin top and bottom
+// accepts only pixel unit - will be later converted to em
+$h1-margin-bottom:  16px;
+$h1-margin-top:     30px;
+$h2-margin-bottom:  10px;
+$h2-margin-top:     30px;
+$h3-margin-bottom:  10px;
+$h3-margin-top:     30px;
+$h4-margin-bottom:  $h3-margin-bottom;
+$h4-margin-top:     30px;

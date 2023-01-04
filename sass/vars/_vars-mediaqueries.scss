@@ -1,0 +1,36 @@
+// + Breakpoints
+// -------
+
+//## mobile
+$bp-mobile-small: calculateRem(480px);
+$bp-mobile-small-max: calculateRem(480px - 1);
+$bp-mobile: calculateRem(640px);
+$bp-mobile-max: calculateRem(640px - 1);
+$bp-mobile-min: calculateRem(480px + 1);
+//## tablet
+$bp-tablet-portrait: calculateRem(768px);
+$bp-tablet-portrait-max: calculateRem(768px - 1);
+$bp-tablet-portrait-min: calculateRem(640px + 1);
+$bp-tablet-landscape: calculateRem(992px);
+$bp-tablet-landscape-max: calculateRem(992px - 1);
+$bp-tablet-landscape-min: calculateRem(768px + 1);
+//## desktop
+$bp-desktop: calculateRem($container-max-width);
+$bp-desktop-max: calculateRem($container-max-width - 1);
+$bp-desktop-min: calculateRem(992px + 1);
+
+
+// + Media queries
+// -------
+$mobile-sm: '(min-width: #{$bp-mobile-small})';                         // >=480px
+$mobile: '(min-width: #{$bp-mobile})';                                  // >=640px
+$tablet-portrait: '(min-width: #{$bp-tablet-portrait})';                // >=768px
+$tablet-landscape: '(min-width: #{$bp-tablet-landscape})';              // >=992px
+$desktop: '(min-width: #{$bp-desktop})';                                // >=1248px
+
+$until-mobile-sm: '(max-width: #{$bp-mobile-small-max})';               // <480px
+$until-mobile: '(max-width: #{$bp-mobile-max})';                        // <640px
+$until-tablet-portrait: '(max-width: #{$bp-tablet-portrait-max})';      // <768px
+$until-tablet-landscape: '(max-width: #{$bp-tablet-landscape-max})';    // <992px
+$until-desktop: '(max-width: #{$bp-desktop-max})';                      // <1248px
+

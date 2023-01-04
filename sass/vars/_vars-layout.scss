@@ -1,0 +1,20 @@
+// + Container 
+$container-max-width: 1248px;
+$default-pad: calculateRem(33px);
+
+// + Grid gutter variations
+// -------
+$gutter: 14px;
+$gutter-desktop: 16px;
+
+$gutter-sides: $gutter;
+$gutter-sides-desktop: $gutter-desktop;
+
+// + Grid variables (nsgrid-vars)
+// -------
+$gl-max-width: $container-max-width;
+$gl-gutter-sides-breakpoint: $tablet-landscape; //## 992px by default
+$gl-gutter-sides: $gutter-sides; //## whole web container padding left/right
+$gl-gutter-sides-desktop: $gutter-sides-desktop;
+$gl-margin-top: 24px;
+$gl-margin-bottom: $gl-margin-top;

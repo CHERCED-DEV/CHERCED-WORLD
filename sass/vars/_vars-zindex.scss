@@ -1,0 +1,20 @@
+// + z-index
+// -------
+$alert-pwa-zindex:                  1098;
+$page-loader-zindex:                1090;
+$main-header-collapsed-zindex:      1070;
+$alert-zindex:                      1070;
+$modal-zindex:                      1070;
+$popover-zindex:                    1070;
+$mobile-modal-zindex:               1070;
+$flow-header-toggle-menu-zindex:    1060;
+$modal-overlay-zindex:              1050; // this value come from ng-bootstrap and should not be modify
+$search-header-fixed-zindex:        1005; // keep search above overlay but below header when is fixed at page's top
+$summary-fixed-zindex:              $modal-overlay-zindex - 1; // 1049
+$button-scrolltop-zindex:           1024;
+$alert-fixed-zindex:                1020;
+$tooltip-zindex:                    1016;
+$main-header-fixed-onscroll-zindex: 1008;
+$flow-header-collapsed-zindex:      1008;
+$overlay-zindex:                    1004;
+$dropdown-zindex:                   1000;
