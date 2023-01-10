@@ -2,6 +2,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import { Header } from '../components/atoms/Headers/Header'
+import { HomeBanner } from '../components/atoms/Banners/MainBanner'
+import { FloatMenuMobile } from '../components/atoms/Headers/FloatMenuMobile'
+import { Footer } from '../components/atoms/Footers/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,7 +18,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
     </Head>
       <Header/>
+      <HomeBanner/>
+      <FloatMenuMobile/>
+      <Footer/>
     </>
-      
     )
 }

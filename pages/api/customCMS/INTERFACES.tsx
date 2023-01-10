@@ -1,24 +1,30 @@
-interface ImageProps { // general config
+// general config
+interface ImageProps { 
     src: string;
     alt: string;
-    loading:  "lazy" | "eager" | undefined;
+    loading: "lazy" | "eager" | undefined;
     width?: number;
     height?: number;
 }
-interface ListItems { // general config
-    title: string;
-    href: string;
+interface ListItems { 
+    title?: string;
+    href?: string;
 }
-interface HomeBannerTitles { // specific config
+interface Link {
+    href?: string;
+}
+interface HomeBannerTitles {
     textParragraph: string;
     textStrong: string;
     mainTitle: string;
 }
 
+// special config for contexts
 export interface CmsDataContextProviderProps {
     children: React.ReactNode | JSX.Element | JSX.Element[];
 }
 
+//elements structure
 export interface HeaderConfig {
     brandImage: ImageProps;
     dskList: {
@@ -30,9 +36,6 @@ export interface HeaderConfig {
     }
     buttonMenu: ImageProps;
 }
-export interface FloatMenuMobileConfig {
-
-}
 
 export interface HomeBannerConfig {
     homeBannerTitles: HomeBannerTitles;
@@ -41,10 +44,53 @@ export interface HomeBannerConfig {
         mailito: ImageProps;
         github: ImageProps;
         linkedin: ImageProps;
-    }  
+    }
 }
 
-export interface HomeData {
+export interface FloatMenuMobileConfig {
+    aboutMe: ListItems;
+    services: ListItems;
+    portfolio: ListItems;
+    blog: ListItems;
+    contact: ListItems;
+    brandLogo: ImageProps;
+}
+
+export interface FooterConfig {
+    backOption: {
+        img: ImageProps;
+        text: string;
+        link: Link;
+    };
+    footerSocialMedia: {
+        facebook: {
+            img: ImageProps;
+            link: Link;
+        };
+        linkedin: {
+            img: ImageProps;
+            link: Link;
+        };
+        instagram: {
+            img: ImageProps;
+            link: Link;
+        };
+        mailito: {
+            img: ImageProps;
+            link: Link;
+        }
+    };
+    copyright: {
+        strongText: string;
+        normalText: string;
+    }
+}
+
+
+// this its the call of all data just import this to fetch the apiCms
+export interface CmsDataConfig {
     header: HeaderConfig;
-    mainBanner: HomeBannerConfig;
+    homeBanner: HomeBannerConfig;
+    floatMenuMobile: FloatMenuMobileConfig;
+    footer: FooterConfig;
 }

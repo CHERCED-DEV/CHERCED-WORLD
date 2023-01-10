@@ -1,35 +1,44 @@
 import React from 'react';
-import Image from 'next/image'
+import { useCmsDataHome } from '../../../providers/cmsDataProvider';
 
-export const FloatMenuMobile = () => {
-    return (
-      /* component: FloatMenuMobile */
-        <nav className="floatMenu-navegation">
-            <ul className="floatMenu-navegation__list">
-                <li className="floatMenu-navegation__item">
-                    <a className="floatMenu-navegation__link" href="">About me</a>
-                </li>
-                <li className="floatMenu-navegation__item">
-                    <a className="floatMenu-navegation__link" href="">Services</a>
-                </li>
-                <li className="floatMenu-navegation__item">
-                    <a className="floatMenu-navegation__link" href="">Portfolio</a>
-                </li>
-                <li className="floatMenu-navegation__item">
-                    <a className="floatMenu-navegation__link" href="">Blog</a>
-                </li>
-                <li className="floatMenu-navegation__item">
-                    <a className="floatMenu-navegation__link" href="">Contact me</a>
-                </li>  
-            </ul>
-            <div className="floatMenu-navegation__logo">
-            <Image
-                src="../../../public/assets/icons/brandLogoX2.png"
-                alt="CHERCED logo"
-                width={122}
-                height={128} 
-            />
-            </div>
-        </nav>
-    )
+export const FloatMenuMobile: React.FC = () => {
+
+    const { CmsData } = useCmsDataHome();
+    const { floatMenuMobile } = CmsData;
+
+    if (!floatMenuMobile) {
+        return (
+            <header>
+                <h1 style={{ color: 'red', fontSize: 32 }}>
+                    Loading...
+                </h1>
+            </header>
+        )
+    } else {
+        return (
+            /* component: FloatMenuMobile */
+            <nav className="floatMenu-navegation">
+                <ul className="floatMenu-navegation__list">
+                    <li className="floatMenu-navegation__item">
+                        <a className="floatMenu-navegation__link" href="">{floatMenuMobile.aboutMe.title}</a>
+                    </li>
+                    <li className="floatMenu-navegation__item">
+                        <a className="floatMenu-navegation__link" href="">{floatMenuMobile.services.title}</a>
+                    </li>
+                    <li className="floatMenu-navegation__item">
+                        <a className="floatMenu-navegation__link" href="">{floatMenuMobile.portfolio.title}</a>
+                    </li>
+                    <li className="floatMenu-navegation__item">
+                        <a className="floatMenu-navegation__link" href="">{floatMenuMobile.blog.title}</a>
+                    </li>
+                    <li className="floatMenu-navegation__item">
+                        <a className="floatMenu-navegation__link" href="">{floatMenuMobile.contact.title}</a>
+                    </li>
+                </ul>
+                <div className="floatMenu-navegation__logo">
+                    <img src={floatMenuMobile.brandLogo.src} alt={floatMenuMobile.brandLogo.alt} loading={floatMenuMobile.brandLogo.loading} />
+                </div>
+            </nav>
+        )
+    }
 }

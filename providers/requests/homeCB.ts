@@ -1,6 +1,6 @@
-import { HomeData } from '../../pages/api/customCMS/INTERFACES'
+import { CmsDataConfig } from '../../pages/api/customCMS/interfaces'
 
-export async function getHomeData(): Promise<HomeData> {
+export async function getCMSData(): Promise<CmsDataConfig> {
     const response = await fetch('/api/homeCMS');
     return response.json();
 } 

@@ -3,10 +3,11 @@ import { useCmsDataHome } from '../../../providers/cmsDataProvider';
 
 
 export const Header: React.FC = () => {
-    const {homeData, loading} = useCmsDataHome();
-    const headerData = homeData.header;
+    
+    const { CmsData } = useCmsDataHome();
+    const { header } = CmsData;
 
-    if (loading) {
+    if (!header) {
         return (
         <header>
             <h1 style={{color: 'red', fontSize: 32}}>
@@ -18,30 +19,30 @@ export const Header: React.FC = () => {
         return (
             <header className="header">
                 <div className="header__imgContainer">
-                    <img src={headerData?.brandImage.src} alt={headerData?.brandImage.alt} loading={headerData?.brandImage.loading}/>
+                    <img src={header.brandImage.src} alt={header.brandImage.alt} loading={header.brandImage.loading}/>
                 </div>
                     <nav className="header-navegation">
                         <ul className="header-navegation__list">
                             <li className="header-navegation__item">
-                                <a className="header-navegation__link" href="">{headerData?.dskList.optionOne.title}</a>
+                                <a className="header-navegation__link" href="">{header.dskList.optionOne.title}</a>
                             </li>
                             <li className="header-navegation__item">
-                                <a className="header-navegation__link" href="">{headerData?.dskList.optionTwo.title}</a>
+                                <a className="header-navegation__link" href="">{header.dskList.optionTwo.title}</a>
                             </li>
                             <li className="header-navegation__item">
-                                <a className="header-navegation__link" href="">{headerData?.dskList.optionThree.title}</a>
+                                <a className="header-navegation__link" href="">{header.dskList.optionThree.title}</a>
                             </li>
                             <li className="header-navegation__item">
-                                <a className="header-navegation__link" href="">{headerData?.dskList.optionFour.title}</a>
+                                <a className="header-navegation__link" href="">{header.dskList.optionFour.title}</a>
                             </li> 
                             <li className="header-navegation__item">
-                                <a className="header-navegation__link" href="">{headerData?.dskList.optionFive.title}</a>
+                                <a className="header-navegation__link" href="">{header.dskList.optionFive.title}</a>
                             </li> 
                         </ul>
                     </nav>
                     <button className="header-button">
                         <div className="header-button__imgContainer">
-                            <img src={headerData?.buttonMenu.src} alt={headerData?.buttonMenu.alt} loading={headerData?.buttonMenu.loading}/>
+                            <img src={header.buttonMenu.src} alt={header.buttonMenu.alt} loading={header.buttonMenu.loading}/>
                         </div>
                     </button>
             </header>
