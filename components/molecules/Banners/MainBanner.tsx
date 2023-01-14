@@ -1,5 +1,7 @@
 import React from 'react'
+import { ImageProps } from '../../../pages/api/customCMS/interfaces';
 import { useCmsDataHome } from '../../../providers/cmsDataProvider';
+import { ListContacMedia } from '../../atoms/ListItems/ListContacMedia';
 
 export const HomeBanner = () => {
     const { CmsData } = useCmsDataHome();
@@ -29,21 +31,17 @@ export const HomeBanner = () => {
                 </div>
                 <nav className="homeBanner-socialMedia">
                     <ul className="homeBanner-socialMedia__list">
-                        <li className="homeBanner-socialMedia__item">
-                            <a className="homeBanner-socialMedia__link" href="">
-                                <img src={homeBanner.homeSocialMedia.github.src} alt={homeBanner.homeSocialMedia.github.alt} loading={homeBanner.homeSocialMedia.github.loading} />
-                            </a>
-                        </li>
-                        <li className="homeBanner-socialMedia__item">
-                            <a className="homeBanner-socialMedia__link" href="">
-                                <img src={homeBanner.homeSocialMedia.linkedin.src} alt={homeBanner.homeSocialMedia.linkedin.alt} loading={homeBanner.homeSocialMedia.linkedin.loading} />
-                            </a>
-                        </li>
-                        <li className="homeBanner-socialMedia__item">
-                            <a className="homeBanner-socialMedia__link" href="">
-                                <img src={homeBanner.homeSocialMedia.mailito.src} alt={homeBanner.homeSocialMedia.mailito.alt} loading={homeBanner.homeSocialMedia.mailito.loading} />
-                            </a>
-                        </li>
+                        {
+                            homeBanner.homeSocialMedia.map((homeSocialMedia: ImageProps, index: number) => (
+                                <ListContacMedia
+                                    key={index}
+                                    src={homeSocialMedia.src}
+                                    alt={homeSocialMedia.alt}
+                                    loading={homeSocialMedia.loading}
+                                    a={homeSocialMedia.a}
+                                />
+                            ))
+                        }
                     </ul>
                 </nav>
             </section>

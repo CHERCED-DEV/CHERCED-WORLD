@@ -1,10 +1,10 @@
+import React from 'react'
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import { Header } from '../components/atoms/Headers/Header'
-import { HomeBanner } from '../components/atoms/Banners/MainBanner'
-import { FloatMenuMobile } from '../components/atoms/Headers/FloatMenuMobile'
-import { Footer } from '../components/atoms/Footers/Footer'
+import { Header } from '../components/molecules/Headers/Header'
+import { HomeBanner } from '../components/molecules/Banners/MainBanner'
+import { FloatMenuMobile } from '../components/molecules/Headers/FloatMenuMobile'
+import { Footer } from '../components/molecules/Footers/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 

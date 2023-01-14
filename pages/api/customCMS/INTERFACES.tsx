@@ -1,12 +1,13 @@
 // general config
-interface ImageProps { 
+export interface ImageProps { 
     src: string;
     alt: string;
     loading: "lazy" | "eager" | undefined;
+    a?: string;
     width?: number;
     height?: number;
 }
-interface ListItems { 
+export interface ListItems { 
     title?: string;
     href?: string;
 }
@@ -18,6 +19,18 @@ interface HomeBannerTitles {
     textStrong: string;
     mainTitle: string;
 }
+interface techListConfig {
+    img: ImageProps;
+    progress: string;
+}
+interface ProExpConfig {
+    dateDegree: string;
+    proTitleDegree: {
+        proTitle: string;
+        strong: string;
+        descriptionDegree: string;
+    }
+}
 
 // special config for contexts
 export interface CmsDataContextProviderProps {
@@ -27,32 +40,18 @@ export interface CmsDataContextProviderProps {
 //elements structure
 export interface HeaderConfig {
     brandImage: ImageProps;
-    dskList: {
-        optionOne: ListItems;
-        optionTwo: ListItems;
-        optionThree: ListItems;
-        optionFour: ListItems;
-        optionFive: ListItems;
-    }
+    dskList: ListItems[];
     buttonMenu: ImageProps;
 }
 
 export interface HomeBannerConfig {
     homeBannerTitles: HomeBannerTitles;
     separator: ImageProps;
-    homeSocialMedia: {
-        mailito: ImageProps;
-        github: ImageProps;
-        linkedin: ImageProps;
-    }
+    homeSocialMedia: ImageProps[];
 }
 
 export interface FloatMenuMobileConfig {
-    aboutMe: ListItems;
-    services: ListItems;
-    portfolio: ListItems;
-    blog: ListItems;
-    contact: ListItems;
+    options: ListItems[];
     brandLogo: ImageProps;
 }
 
@@ -62,35 +61,47 @@ export interface FooterConfig {
         text: string;
         link: Link;
     };
-    footerSocialMedia: {
-        facebook: {
-            img: ImageProps;
-            link: Link;
-        };
-        linkedin: {
-            img: ImageProps;
-            link: Link;
-        };
-        instagram: {
-            img: ImageProps;
-            link: Link;
-        };
-        mailito: {
-            img: ImageProps;
-            link: Link;
-        }
-    };
+    footerSocialMedia: ImageProps[];
     copyright: {
         strongText: string;
         normalText: string;
     }
 }
 
+export interface MainDescriptionConfig {
+    brandButton: {
+        img: ImageProps;
+        link: Link;
+    };
+    description: string;
+    moreButton: string;
+}
+
+export interface AboutMeConfig {
+    titles: {
+        mainTitle: string;
+        career: string;
+        skills: string;
+        education: string;
+    }
+    descriptions: {
+        aboutMe: string;
+        skills: string;
+        endSkills: string;
+    }
+    proExp: ProExpConfig[];
+    skills: string[];
+    techList: techListConfig[];
+}
+
+
 
 // this its the call of all data just import this to fetch the apiCms
 export interface CmsDataConfig {
     header: HeaderConfig;
     homeBanner: HomeBannerConfig;
+    mainDescription: MainDescriptionConfig;
     floatMenuMobile: FloatMenuMobileConfig;
+    aboutMe: AboutMeConfig;
     footer: FooterConfig;
 }
