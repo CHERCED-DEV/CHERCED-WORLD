@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import { Header } from '../components/molecules/Headers/Header'
-
+import { AboutBanner } from '../components/molecules/Banners/AboutBanner'
 
 export default function AboutMe() {
   return (
@@ -13,6 +13,7 @@ export default function AboutMe() {
         <link rel="icon" href="/favicon.ico" />
     </Head>
     <Header/>
+    <AboutBanner/>
     </>
   )
 }

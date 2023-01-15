@@ -1,6 +1,8 @@
 import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, FooterConfig } from "./interfaces"
 
-export const CMS: { [key: string]: HeaderConfig | HomeBannerConfig | MainDescriptionConfig | FloatMenuMobileConfig | AboutMeConfig | FooterConfig } = {
+export const CMS: { [key: string]: 
+		HeaderConfig | HomeBannerConfig | MainDescriptionConfig 
+	| FloatMenuMobileConfig | AboutMeConfig | FooterConfig } = {
 	header: {
 		brandImage: {
 			src: 'assets/icons/brandLogo.png',
@@ -112,8 +114,6 @@ export const CMS: { [key: string]: HeaderConfig | HomeBannerConfig | MainDescrip
 			src: 'assets/icons/brandLogo.png',
 			alt: 'CHERCED logo',
 			loading: 'lazy',
-			width: 64,
-			height: 64
 		}
 	},
 	aboutMe: {
@@ -122,9 +122,11 @@ export const CMS: { [key: string]: HeaderConfig | HomeBannerConfig | MainDescrip
 			career: "Career",
 			skills: "Skills",
 			education: "Education",
+			courses: "Courses",
+			idioms: "Idioms"
 		},
 		descriptions: {
-			aboutMe: "I am a front-end developer with experience in developing highly interactive and high-performance web applications. I specialize in React and Angular, and have strong knowledge of HTML, CSS, JavaScript, TypeScript, Node.js, and Next.js.",
+			aboutMe: "I am a front-end developer with experience in developing highly interactive and high-performance web applications. I specialize in React and Angular, and have company knowledge of HTML, CSS, JavaScript, TypeScript, Node.js, and Next.js.",
 			skills: "I am a front-end and full-stack developer with experience in a variety of technologies and skills such as:",
 			endSkills: "With these skills, I am capable of working on web projects from design to implementation and maintenance.",
 		},
@@ -140,6 +142,208 @@ export const CMS: { [key: string]: HeaderConfig | HomeBannerConfig | MainDescrip
 			"NPM for managing project packages and dependencies.",
 			"Knowledge in tools such as Umbraco and other CMSs for developing and maintaining."
 		],
+		proExp: [
+			{
+				initialDate: "Jul 22",
+				endingDate: "Actually",
+				expTitleDescription: {
+					expTitle: "Frontend Developer",
+					company: "Newshore (a FLYR Labs company)",
+					descriptionExp: "responsible for creating the user interface and user experience on the flight reservation website. This includes designing and building visual elements such as buttons, menus and forms, as well as ensuring the website is easy to navigate and use for customers. They will also work closely with the back-end development team to ensure proper system functionality integration. They also ensure the website is compatible with different devices and browsers, and perform testing and debugging to troubleshoot technical issues. In summary, a Frontend developer at an airline booking web app company creates and maintains the user interface of the website, and works with the back-end team to ensure system integration."
+				}
+			},
+			{
+				initialDate: "Feb 22",
+				endingDate: "Jun 22",
+				expTitleDescription: {
+					expTitle: "Frontend Developer",
+					company: "Frontend Web Developer -- Platzi Master [CX]",
+					descriptionExp: "Platzi Master is an online bootcamp for learning frontend development skills. It offers courses in technologies such as HTML, CSS, JavaScript, and React, as well as hands-on projects and personalized mentorship with industry professionals. The goal of the bootcamp is to help students become skilled frontend developers and find employment in the field."
+				}
+			},
+			{
+				initialDate: "Jan 20",
+				endingDate: "Nov 21",
+				expTitleDescription: {
+					expTitle: "Frontend Developer",
+					company: "Platzi",
+					descriptionExp: "Frontend developer responsible for improving and optimizing the existing code of a commercial services company's website. This includes identifying and solving performance issues, rewriting code, and updating the code to meet the latest trends and standards. They also create and maintain visual styles using CSS, ensuring the website looks and performs well on different devices and browsers. In summary, a Frontend developer is responsible for improving and optimizing the website's code and ensuring the website's design and visual styles are attractive and consistent."
+				}
+			},
+			{
+				initialDate: "Oct 2016",
+				endingDate: "May 2020",
+				expTitleDescription: {
+					expTitle: "Bussines Manager",
+					company: "Growup IT",
+					descriptionExp: "An administrator and founder of a company focused on the development and remodeling of hospital architecture manages and oversees construction projects, negotiates with clients and suppliers, and represents the company in public bidding. In summary, the administrator and founder leads the hospital architecture projects, handles negotiations, and represents the company in public bidding."
+				}
+			},
+		],
+		techList: [
+			{
+				techName: "HTML5",
+				img: {
+					src: "",
+					alt: "HTML5",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "CSS",
+				img: {
+					src: "",
+					alt: "CSS",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "JAVASCRIPT",
+				img: {
+					src: "",
+					alt: "JAVASCRIPT",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "REACT",
+				img: {
+					src: "",
+					alt: "REACT",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "ANGULAR",
+				img: {
+					src: "",
+					alt: "ANGULAR",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "NEXTJS",
+				img: {
+					src: "",
+					alt: "NEXTJS",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "MONGO",
+				img: {
+					src: "",
+					alt: "MONGO",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "NODEJS",
+				img: {
+					src: "",
+					alt: "NODEJS",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "FIGMA",
+				img: {
+					src: "",
+					alt: "FIGMA",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "GIT",
+				img: {
+					src: "",
+					alt: "GIT",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "AZURE",
+				img: {
+					src: "",
+					alt: "AZURE",
+					loading: "lazy",
+				},
+				progress: "50"
+			}
+		],
+		education: [
+			{
+				initialDate: "Feb 22",
+				endingDate: "Jun 22",
+				proTitleDegree: {
+					proTitle: "Platzi",
+					strong: "Frontend Developer",
+				}
+			},
+			{
+				initialDate: "20",
+				endingDate: "actually",
+				proTitleDegree: {
+					proTitle: "Universidad Nacional Abierta y a Distancia - UNAD Colombia",
+					strong: "Ingeniero de Sistemas, Ingeniería de sistemas",
+				}
+			},
+			{
+				initialDate: "11",
+				endingDate: "16",
+				proTitleDegree: {
+					proTitle: "Institución Universitaria EAM",
+					strong: "administrador de empresas, Gestión de proyectos",
+				}
+			}			
+		],
+		courses: [
+			{
+				schools: [
+					"Full Stack Developer with JavaScript",
+					"Frontend and Backend with JavaScript for Web Development",
+					"Full Stack with  Next.js",
+					"And other shools"
+				],
+				descriptions: [
+					" Learn to create professional web applications from scratch using JavaScript, including popular frameworks like React and Node.js.",
+					"Focus on mastering the art of building dynamic user interfaces and efficient web application's backend using JavaScript, explore libraries like React and frameworks like Express.",
+					"Build high-performance web apps with Next.js, learn how to handle server-side rendering and work with other technologies like Node.js and MongoDB.",
+					"Learn different skills and technologies relevant to web development and software engineering."
+				]
+			}
+		],
+		linkPlatzi: "https://platzi.com/p/Cherced/",
+		idioms: [
+			{
+				idiom: "Spanish",
+    			progress: "100",
+    			img: {
+					src: "",
+					alt: "Spanish",
+					loading: "lazy",
+				}
+			},
+			{
+				idiom: "English",
+    			progress: "60",
+    			img: {
+					src: "",
+					alt: "English",
+					loading: "lazy",
+				}
+			}
+		]
 	},
 	footer: {
 		backOption: {

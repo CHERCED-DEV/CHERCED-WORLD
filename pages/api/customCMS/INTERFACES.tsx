@@ -19,17 +19,39 @@ interface HomeBannerTitles {
     textStrong: string;
     mainTitle: string;
 }
-interface techListConfig {
+export interface techListConfig {
+    techName: string;
     img: ImageProps;
     progress: string;
 }
-interface ProExpConfig {
-    dateDegree: string;
+export interface ProExpConfig {
+    initialDate: string;
+    endingDate?: string;
+    expTitleDescription: {
+        expTitle: string;
+        company: string;
+        descriptionExp: string;
+    }
+}
+
+export interface EducationConfig {
+    initialDate: string;
+    endingDate?: string;
     proTitleDegree: {
         proTitle: string;
         strong: string;
-        descriptionDegree: string;
     }
+}
+
+export interface CoursesConfig {
+    schools: string[];
+    descriptions: string[];
+}
+
+export interface IdiomsConfig {
+    idiom: string;
+    progress: string;
+    img: ImageProps;
 }
 
 // special config for contexts
@@ -83,6 +105,8 @@ export interface AboutMeConfig {
         career: string;
         skills: string;
         education: string;
+        courses: string;
+        idioms: string;
     }
     descriptions: {
         aboutMe: string;
@@ -92,6 +116,10 @@ export interface AboutMeConfig {
     proExp: ProExpConfig[];
     skills: string[];
     techList: techListConfig[];
+    education: EducationConfig[];
+    courses: CoursesConfig[];           
+    linkPlatzi: string;
+    idioms: IdiomsConfig[];
 }
 
 
