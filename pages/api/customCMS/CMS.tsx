@@ -1,4 +1,4 @@
-import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, FooterConfig } from "./interfaces"
+import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, FooterConfig } from "./interfaces";
 
 export const CMS: { [key: string]: 
 		HeaderConfig | HomeBannerConfig | MainDescriptionConfig 

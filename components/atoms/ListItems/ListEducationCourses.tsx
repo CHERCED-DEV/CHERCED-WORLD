@@ -14,8 +14,8 @@ export const ListEducationCourses = (props: CoursesConfig) => {
             <ul className="aboutMe-courses__listCrouses">
                 {
                     props.descriptions.map((description: string, index: number) => (
-                        <li className="aboutMe-courses__itemCoruses">
-                            <h1 key={index} className="aboutMe-courses__descriptionCoruse">
+                        <li key={index} className="aboutMe-courses__itemCoruses">
+                            <h1  className="aboutMe-courses__descriptionCoruse">
                                 {description}
                             </h1>
                         </li>

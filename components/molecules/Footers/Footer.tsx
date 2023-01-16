@@ -33,6 +33,7 @@ export const Footer = () => {
                     {
                        footer.footerSocialMedia.map((footerSocialMedia: ImageProps, index: number)=>(
                             <ListFooterMedia
+                                key={index}
                                 src={footerSocialMedia.src}
                                 alt={footerSocialMedia.alt}
                                 loading={footerSocialMedia.loading}
