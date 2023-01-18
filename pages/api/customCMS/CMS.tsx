@@ -1,8 +1,8 @@
-import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, FooterConfig } from "./interfaces";
+import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, PortfolioConfig, FooterConfig  } from "./interfaces";
 
 export const CMS: { [key: string]: 
 		HeaderConfig | HomeBannerConfig | MainDescriptionConfig 
-	| FloatMenuMobileConfig | AboutMeConfig | FooterConfig } = {
+	| FloatMenuMobileConfig | AboutMeConfig | PortfolioConfig | FooterConfig } = {
 	header: {
 		brandImage: {
 			src: 'assets/icons/brandLogo.png',
@@ -345,6 +345,44 @@ export const CMS: { [key: string]:
 			}
 		]
 	},
+	portfolio: {
+		services: [
+			{
+				title: "Desing",
+				img: {
+					src: "",
+					alt: "",
+					loading: "lazy",
+				},
+				description: "I can design the website based on your needs and suggestions. I can also create it from scratch by consulting with you during work."
+			},
+			{
+				title: "Development",
+				img: {
+					src: "",
+					alt: "",
+					loading: "lazy",
+				},
+				description: "Based on a project created by me or another one, sent by you, I can program the website to be fully functional and responsive.",
+			},
+			{
+				title: "Maintenance",
+				img: {
+					src: "",
+					alt: "",
+					loading: "lazy",
+				},
+				description: "In case of any problems or the need for changes, I can introduce new functionalities and solutions.",
+			}
+		],
+		portFolioTitle: "Portfolio",
+		optionsMenu: {
+			all: "All",
+			coded: "Coded",
+			designed: "Designed"
+		},
+		footerPortfolio: "And many more to come!",
+	},
 	footer: {
 		backOption: {
 			img: {
@@ -386,7 +424,7 @@ export const CMS: { [key: string]:
 		],
 		copyright: {
 			strongText: '@2023 Camilo Hernandez',
-			normalText: 'All Rigths Reserved'
+			normalText: 'All Rigths Reserved',
 		}
 	}
 };
