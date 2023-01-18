@@ -54,6 +54,18 @@ export interface IdiomsConfig {
     img: ImageProps;
 }
 
+export interface ServicesConfig {
+    title: string;
+    img: ImageProps;
+    description: string;
+}
+
+export interface CardsPortfolioConfig {
+    nameProject: string;
+    description: string;
+    buttonNext: string;
+}
+
 // special config for contexts
 export interface CmsDataContextProviderProps {
     children: React.ReactNode | JSX.Element | JSX.Element[];
@@ -122,6 +134,17 @@ export interface AboutMeConfig {
     idioms: IdiomsConfig[];
 }
 
+export interface PortfolioConfig {
+    services: ServicesConfig[];
+    portFolioTitle: string;
+    optionsMenu: {
+        all: string;
+        coded: string;
+        designed: string;
+    }
+    footerPortfolio: string;
+}
+
 
 
 // this its the call of all data just import this to fetch the apiCms
@@ -131,5 +154,6 @@ export interface CmsDataConfig {
     mainDescription: MainDescriptionConfig;
     floatMenuMobile: FloatMenuMobileConfig;
     aboutMe: AboutMeConfig;
+    portfolio: PortfolioConfig;
     footer: FooterConfig;
 }
