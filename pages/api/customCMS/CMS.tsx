@@ -184,7 +184,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "HTML5",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/html-5.png",
 					alt: "HTML5",
 					loading: "lazy",
 				},
@@ -193,8 +193,17 @@ export const CMS: { [key: string]:
 			{
 				techName: "CSS",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/css.png",
 					alt: "CSS",
+					loading: "lazy",
+				},
+				progress: "50"
+			},
+			{
+				techName: "SASS",
+				img: {
+					src: "assets/icons/skillsIcon/sass.png",
+					alt: "SASS",
 					loading: "lazy",
 				},
 				progress: "50"
@@ -202,7 +211,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "JAVASCRIPT",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/js.png",
 					alt: "JAVASCRIPT",
 					loading: "lazy",
 				},
@@ -211,7 +220,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "REACT",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/react.png",
 					alt: "REACT",
 					loading: "lazy",
 				},
@@ -220,7 +229,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "ANGULAR",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/angular.png",
 					alt: "ANGULAR",
 					loading: "lazy",
 				},
@@ -229,7 +238,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "NEXTJS",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/nextjs.png",
 					alt: "NEXTJS",
 					loading: "lazy",
 				},
@@ -238,7 +247,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "MONGO",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/mongodb.png",
 					alt: "MONGO",
 					loading: "lazy",
 				},
@@ -247,7 +256,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "NODEJS",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/nodejs.png",
 					alt: "NODEJS",
 					loading: "lazy",
 				},
@@ -256,7 +265,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "FIGMA",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/figma.png",
 					alt: "FIGMA",
 					loading: "lazy",
 				},
@@ -265,7 +274,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "GIT",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/merge.png",
 					alt: "GIT",
 					loading: "lazy",
 				},
@@ -274,7 +283,7 @@ export const CMS: { [key: string]:
 			{
 				techName: "AZURE",
 				img: {
-					src: "",
+					src: "assets/icons/skillsIcon/azure.png",
 					alt: "AZURE",
 					loading: "lazy",
 				},
