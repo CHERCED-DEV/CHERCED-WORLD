@@ -1,7 +1,7 @@
 import React from 'react'
-import { ProExpConfig, techListConfig, CoursesConfig, IdiomsConfig } from '../../../pages/api/customCMS/interfaces';
+import { ProExpConfig, skillConfig, techListConfig, CoursesConfig, IdiomsConfig } from '../../../pages/api/customCMS/interfaces';
 import { useCmsDataHome } from '../../../providers/cmsDataProvider';
-import { ListExperiencie } from '../../../components/atoms/ListItems/ListExperiencie';
+import { ListExperiencie } from '../../atoms/ListItems/ListExperiencie';
 import { ListMySkills } from '../../atoms/ListItems/ListMySkills';
 import { ListTecnologies } from '../../atoms/ListItems/ListTecnologies';
 import { ListEducationPro } from '../../atoms/ListItems/ListEducationPro';
@@ -9,7 +9,8 @@ import { EducationConfig } from "../../../pages/api/customCMS/interfaces";
 import { ListEducationCourses } from '../../atoms/ListItems/ListEducationCourses';
 import { ListIdioms } from '../../atoms/ListItems/ListIdioms';
 
-export const AboutBanner = () => {
+export const AboutMeSection: React.FC = () => {
+
     const { CmsData } = useCmsDataHome();
     const { aboutMe } = CmsData
 
@@ -43,9 +44,10 @@ export const AboutBanner = () => {
                                     key={index}
                                     initialDate={proExp.initialDate}
                                     endingDate={proExp.endingDate}
-                                    expTitleDescription= {
-                                        {   expTitle: proExp.expTitleDescription.expTitle, 
-                                            company: proExp.expTitleDescription.company, 
+                                    expTitleDescription={
+                                        {
+                                            expTitle: proExp.expTitleDescription.expTitle,
+                                            company: proExp.expTitleDescription.company,
                                             descriptionExp: proExp.expTitleDescription.descriptionExp
                                         }
                                     }
@@ -59,7 +61,7 @@ export const AboutBanner = () => {
                         {aboutMe.titles.skills}
                     </h1>
                     <p className="aboutMe-skills__parragraph">
-                        { aboutMe.descriptions.skills }
+                        {aboutMe.descriptions.skills}
                     </p>
                     <ul className="aboutMe-skills__list">
                         {
@@ -87,7 +89,7 @@ export const AboutBanner = () => {
                                         }
                                     }
                                     progress={techList.progress}
-                                />   
+                                />
                             ))
                         }
                     </ul>
@@ -98,14 +100,14 @@ export const AboutBanner = () => {
                     </h1>
                     <ul className="aboutMe-education__list">
                         {
-                            aboutMe.education.map(( education: EducationConfig, index: number)=>(
+                            aboutMe.education.map((education: EducationConfig, index: number) => (
                                 <ListEducationPro
                                     key={index}
                                     initialDate={education.initialDate}
                                     endingDate={education.endingDate}
                                     proTitleDegree={
-                                        {   
-                                            proTitle: education.proTitleDegree.proTitle, 
+                                        {
+                                            proTitle: education.proTitleDegree.proTitle,
                                             strong: education.proTitleDegree.strong
                                         }
                                     }
@@ -115,12 +117,12 @@ export const AboutBanner = () => {
                     </ul>
                 </section>
                 <section className="aboutMe-courses">
-                <ul className="aboutMe-courses__list" >
+                    <ul className="aboutMe-courses__list" >
                         <h1 className="aboutMe-courses__textFlag" >
                             {aboutMe.titles.courses}
                         </h1>
                         {
-                            aboutMe.courses.map((course: CoursesConfig, index: number)=>(
+                            aboutMe.courses.map((course: CoursesConfig, index: number) => (
                                 <ListEducationCourses
                                     key={index}
                                     schools={course.schools}
@@ -129,14 +131,14 @@ export const AboutBanner = () => {
                             ))
                         }
                     </ul>
-                <a href={aboutMe.linkPlatzi}>
-                    My Profile On Platzi
-                </a>
+                    <a href={aboutMe.linkPlatzi}>
+                        My Profile On Platzi
+                    </a>
                 </section>
                 <section className="aboutMe-Idioms">
                     <ul className="aboutMe-Idioms__list">
                         {
-                            aboutMe.idioms.map((idiom: IdiomsConfig, index: number)=>(
+                            aboutMe.idioms.map((idiom: IdiomsConfig, index: number) => (
                                 <ListIdioms
                                     key={index}
                                     idiom={idiom.idiom}
@@ -156,6 +158,4 @@ export const AboutBanner = () => {
             </div>
         )
     }
-
-
 }

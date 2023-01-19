@@ -1,8 +1,11 @@
-import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, PortfolioConfig, FooterConfig  } from "./interfaces";
+import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, PortfolioConfig, ContactMeConfig, FooterConfig } from "./interfaces";
 
-export const CMS: { [key: string]: 
-		HeaderConfig | HomeBannerConfig | MainDescriptionConfig 
-	| FloatMenuMobileConfig | AboutMeConfig | PortfolioConfig | FooterConfig } = {
+export const CMS: {
+	[key: string]:
+	HeaderConfig | HomeBannerConfig | MainDescriptionConfig
+	| FloatMenuMobileConfig | AboutMeConfig | PortfolioConfig |
+	ContactMeConfig | FooterConfig
+} = {
 	header: {
 		brandImage: {
 			src: 'assets/icons/brandLogo.png',
@@ -314,7 +317,7 @@ export const CMS: { [key: string]:
 					proTitle: "Institución Universitaria EAM",
 					strong: "administrador de empresas, Gestión de proyectos",
 				}
-			}			
+			}
 		],
 		courses: [
 			{
@@ -336,8 +339,8 @@ export const CMS: { [key: string]:
 		idioms: [
 			{
 				idiom: "Spanish",
-    			progress: "100",
-    			img: {
+				progress: "100",
+				img: {
 					src: "",
 					alt: "Spanish",
 					loading: "lazy",
@@ -345,8 +348,8 @@ export const CMS: { [key: string]:
 			},
 			{
 				idiom: "English",
-    			progress: "60",
-    			img: {
+				progress: "60",
+				img: {
 					src: "",
 					alt: "English",
 					loading: "lazy",
@@ -391,6 +394,21 @@ export const CMS: { [key: string]:
 			designed: "Designed"
 		},
 		footerPortfolio: "And many more to come!",
+	},
+	contactMe: {
+		title: "Contact",
+		description: "My name is Camilo Hernandez, I’m a third year Applied Computer Science student at UNAD University of Science and Technology in Bogota Colombia.",
+		separator: {
+			src: "",
+			alt: "",
+			loading: "lazy",
+		},
+		fields: {
+			name: "Enter your name",
+			email: "Enter your email",
+			phone: "Phone number",
+			message: "Your message"
+		}
 	},
 	footer: {
 		backOption: {

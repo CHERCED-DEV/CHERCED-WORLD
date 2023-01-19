@@ -4,7 +4,8 @@ import { useCmsDataHome } from '../../../providers/cmsDataProvider';
 import { ListFooterMedia } from '../../atoms/ListItems/ListFooterMedia';
 
 
-export const Footer = () => {
+export const Footer: React.FC = () => {
+
     const { CmsData } = useCmsDataHome()
     const { footer } = CmsData;
 
@@ -22,7 +23,11 @@ export const Footer = () => {
                 <section className="footer-back">
                     <div className="footer-back__img">
                         <a className="footer-back__link" href={footer.backOption.link.href}>
-                            <img className="footer-back__img" src={footer.backOption.img.src} alt={footer.backOption.img.alt} loading={footer.backOption.img.loading} />
+                            <img className="footer-back__img" 
+                                src={footer.backOption.img.src} 
+                                alt={footer.backOption.img.alt} 
+                                loading={footer.backOption.img.loading} 
+                            />
                         </a>
                     </div>
                     <h1 className="footer-back__title">
@@ -31,7 +36,7 @@ export const Footer = () => {
                 </section>
                 <ul className="footer-socialMedia">
                     {
-                       footer.footerSocialMedia.map((footerSocialMedia: ImageProps, index: number)=>(
+                        footer.footerSocialMedia.map((footerSocialMedia: ImageProps, index: number) => (
                             <ListFooterMedia
                                 key={index}
                                 src={footerSocialMedia.src}
@@ -39,12 +44,14 @@ export const Footer = () => {
                                 loading={footerSocialMedia.loading}
                                 a={footerSocialMedia.a}
                             />
-                       )) 
+                        ))
                     }
                 </ul>
                 <section className="footer-copyRight">
                     <h1 className="footer-copyRight__title">
-                        <strong>{footer.copyright.strongText}</strong>
+                        <strong className="footer-copyRight__strong">
+                            {footer.copyright.strongText}
+                        </strong>
                         {footer.copyright.normalText}
                     </h1>
                 </section>

@@ -1,7 +1,8 @@
 import React from 'react'
 import { CoursesConfig } from "../../../pages/api/customCMS/interfaces"
 
-export const ListEducationCourses = (props: CoursesConfig) => {
+export const ListEducationCourses: React.FC<CoursesConfig> = (props) => {
+    
     return (
         <li className="aboutMe-courses__item">
             {
@@ -15,7 +16,7 @@ export const ListEducationCourses = (props: CoursesConfig) => {
                 {
                     props.descriptions.map((description: string, index: number) => (
                         <li key={index} className="aboutMe-courses__itemCoruses">
-                            <h1  className="aboutMe-courses__descriptionCoruse">
+                            <h1 className="aboutMe-courses__descriptionCoruse">
                                 {description}
                             </h1>
                         </li>

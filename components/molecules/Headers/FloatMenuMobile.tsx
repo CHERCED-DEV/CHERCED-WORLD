@@ -31,7 +31,11 @@ export const FloatMenuMobile: React.FC = () => {
                     }
                 </ul>
                 <div className="floatMenu-navegation__logo">
-                    <img src={floatMenuMobile.brandLogo.src} alt={floatMenuMobile.brandLogo.alt} loading={floatMenuMobile.brandLogo.loading} />
+                    <img className="floatMenu-navegation__img"
+                        src={floatMenuMobile.brandLogo.src} 
+                        alt={floatMenuMobile.brandLogo.alt} 
+                        loading={floatMenuMobile.brandLogo.loading} 
+                    />
                 </div>
             </nav>
         )

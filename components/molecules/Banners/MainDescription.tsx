@@ -1,10 +1,9 @@
 import React from 'react'
 import { useCmsDataHome } from '../../../providers/cmsDataProvider';
 
+export const MainDescription: React.FC = () => {
 
-export const MainDescription = () => {
-    
-    const { CmsData } = useCmsDataHome(); 
+    const { CmsData } = useCmsDataHome();
     const { mainDescription } = CmsData;
 
     if (!mainDescription) {
@@ -19,7 +18,11 @@ export const MainDescription = () => {
         return (
             <section className="mainDescription">
                 <button className="mainDescription-brandButton">
-                    <img className="mainDescription-brandButton__img" src={mainDescription.brandButton.img.src} alt={mainDescription.brandButton.img.alt} loading={mainDescription.brandButton.img.loading} />
+                    <img className="mainDescription-brandButton__img"
+                        src={mainDescription.brandButton.img.src}
+                        alt={mainDescription.brandButton.img.alt}
+                        loading={mainDescription.brandButton.img.loading}
+                    />
                 </button>
                 <div className="mainDescription-description">
                     <p className="mainDescription-description__parragraph">

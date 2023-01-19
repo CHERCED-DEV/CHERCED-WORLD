@@ -34,6 +34,10 @@ export interface ProExpConfig {
     }
 }
 
+export interface skillConfig {
+    skill: string;
+}
+
 export interface EducationConfig {
     initialDate: string;
     endingDate?: string;
@@ -145,7 +149,17 @@ export interface PortfolioConfig {
     footerPortfolio: string;
 }
 
-
+export interface ContactMeConfig {
+    title: string;
+    description: string;
+    separator: ImageProps;
+    fields: {
+        name: string;
+        email: string;
+        phone: string;
+        message: string;
+    }
+}
 
 // this its the call of all data just import this to fetch the apiCms
 export interface CmsDataConfig {
@@ -155,5 +169,6 @@ export interface CmsDataConfig {
     floatMenuMobile: FloatMenuMobileConfig;
     aboutMe: AboutMeConfig;
     portfolio: PortfolioConfig;
+    contactMe: ContactMeConfig;
     footer: FooterConfig;
 }

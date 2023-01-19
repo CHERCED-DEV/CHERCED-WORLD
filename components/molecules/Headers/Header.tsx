@@ -38,8 +38,12 @@ export const Header: React.FC = () => {
                     </ul>
                 </nav>
                 <button className="header-button">
-                    <div className="header-button__imgContainer">
-                        <img src={header.buttonMenu.src} alt={header.buttonMenu.alt} loading={header.buttonMenu.loading} />
+                    <div className="header-button__mediaContainer">
+                        <img className="header-button__img"
+                            src={header.buttonMenu.src} 
+                            alt={header.buttonMenu.alt} 
+                            loading={header.buttonMenu.loading} 
+                        />
                     </div>
                 </button>
             </header>

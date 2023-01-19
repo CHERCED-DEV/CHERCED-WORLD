@@ -1,7 +1,7 @@
 import React from 'react'
 import { EducationConfig } from "../../../pages/api/customCMS/interfaces"
 
-export const ListEducationPro = (props: EducationConfig) => {
+export const ListEducationPro: React.FC<EducationConfig> = (props) => {
     return (
 
         <li className="aboutMe-education__item">

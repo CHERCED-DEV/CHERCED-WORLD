@@ -1,6 +1,8 @@
 import React from 'react'
+import { ListItems } from "../../../pages/api/customCMS/interfaces"
 
-export const ListOptionsHeader = (props: any) => {
+export const ListOptionsHeader: React.FC<ListItems> = (props) => {
+
     return (
         <>
             <li className="header-navegation__item">
