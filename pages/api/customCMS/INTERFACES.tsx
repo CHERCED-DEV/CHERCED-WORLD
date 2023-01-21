@@ -1,5 +1,5 @@
 // general config
-export interface ImageProps { 
+export interface ImageProps {
     src: string;
     alt: string;
     loading: "lazy" | "eager" | undefined;
@@ -7,7 +7,7 @@ export interface ImageProps {
     width?: number;
     height?: number;
 }
-export interface ListItems { 
+export interface ListItems {
     title?: string;
     href?: string;
 }
@@ -68,6 +68,31 @@ export interface CardsPortfolioConfig {
     nameProject: string;
     description: string;
     buttonNext: string;
+}
+
+export interface ContactMeFieldsConfig {
+    name: {
+        value: string; 
+        required: boolean;
+    }
+    email: {
+        value: string; 
+        required: boolean;
+    }
+    phone: {
+        value: string; 
+        required: boolean;
+    }
+    message: {
+        value: string; 
+        required: boolean;
+    }
+    errors: {
+        name: string;
+        email: string;
+        phone: string;
+        message: string;
+    }
 }
 
 // special config for contexts
@@ -133,7 +158,7 @@ export interface AboutMeConfig {
     skills: string[];
     techList: techListConfig[];
     education: EducationConfig[];
-    courses: CoursesConfig[];           
+    courses: CoursesConfig[];
     linkPlatzi: string;
     idioms: IdiomsConfig[];
 }
@@ -153,12 +178,8 @@ export interface ContactMeConfig {
     title: string;
     description: string;
     separator: ImageProps;
-    fields: {
-        name: string;
-        email: string;
-        phone: string;
-        message: string;
-    }
+    fields: ContactMeFieldsConfig;
+    button: string;
 }
 
 // this its the call of all data just import this to fetch the apiCms

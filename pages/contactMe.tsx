@@ -1,5 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
+import { ContactMeSection } from '../components/molecules/Mains/ContactMeSection'
 
 
 export default function ContactMe() {
@@ -12,6 +13,7 @@ export default function ContactMe() {
         <link rel="icon" href="/favicon.ico" />
     </Head>
     <div>home</div>
+    <ContactMeSection/>
     </>
   )
 }

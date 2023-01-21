@@ -404,11 +404,30 @@ export const CMS: {
 			loading: "lazy",
 		},
 		fields: {
-			name: "Enter your name",
-			email: "Enter your email",
-			phone: "Phone number",
-			message: "Your message"
-		}
+			name: {
+				value: "Enter your name",
+				required: true,
+			},
+			email: {
+				value: "Enter your email",
+				required: true, 
+			},   
+			phone: {
+				value: "Phone number",
+				required: true,
+			}, 
+			message: {
+				value: "Your message",
+				required: true, 
+			},
+			errors: {
+				name: "Please enter your name",
+				email: "Please enter your email",
+				phone: "Please enter your phone",
+				message: "Please enter your message"
+			}
+		},
+		button: "Submit"
 	},
 	footer: {
 		backOption: {
