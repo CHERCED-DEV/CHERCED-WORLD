@@ -3,10 +3,10 @@ import allData from './data'
 class DataBase {
   constructor() {}
 
-  getAll() {
+  getAll(): Promise<object[]> {
     return new Promise(async (resolve, reject) => {
       try {
-        const asArray = Object.values(allData)
+        const asArray: object[] = Object.values(allData)
         console.log('allDATA:', asArray)
         await randomDelay()
         resolve(asArray)
@@ -16,12 +16,15 @@ class DataBase {
     })
   }
 
-  getById(id) {
+  getById(id: string): Promise<object> {
     return new Promise(async (resolve, reject) => {
       try {
-        const project = Object.values(allData).find(
+        const project: object | undefined = Object.values(allData).find(
           (project) => project.id === id
         )
+        if (!project) {
+          throw new Error(`No project found with id ${id}`)
+        }
         await randomDelay()
         resolve(project)
       } catch (error) {
@@ -31,7 +34,7 @@ class DataBase {
   }
 }
 
-const randomDelay = () =>
+const randomDelay = (): Promise<void> =>
   new Promise((resolve) => {
     const max = 350
     const min = 100

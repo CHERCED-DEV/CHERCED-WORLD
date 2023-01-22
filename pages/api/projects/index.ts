@@ -1,7 +1,7 @@
-import DataBase from './projects/database/db'
+import { NextApiRequest, NextApiResponse } from "next";
+import DataBase from './database/db'
 
-
-const allProjects = async (req, res) => {
+const allProjects = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const db = new DataBase()
         const projects = await db.getAll()

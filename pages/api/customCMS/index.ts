@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { CMS } from './customCMS/CMS'
+import { CMS } from './CMS'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {

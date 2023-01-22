@@ -420,12 +420,6 @@ export const CMS: {
 				value: "Your message",
 				required: true, 
 			},
-			errors: {
-				name: "Please enter your name",
-				email: "Please enter your email",
-				phone: "Please enter your phone",
-				message: "Please enter your message"
-			}
 		},
 		button: "Submit"
 	},

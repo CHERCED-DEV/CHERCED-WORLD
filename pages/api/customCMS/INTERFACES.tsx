@@ -87,12 +87,6 @@ export interface ContactMeFieldsConfig {
         value: string; 
         required: boolean;
     }
-    errors: {
-        name: string;
-        email: string;
-        phone: string;
-        message: string;
-    }
 }
 
 // special config for contexts
