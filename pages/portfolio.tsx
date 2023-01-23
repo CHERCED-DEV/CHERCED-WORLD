@@ -1,5 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
+import { PortfolioSection } from '../components/molecules/Mains/PortfolioSection'
+
 
 export default function Portfolio() {
   return (
@@ -11,6 +13,7 @@ export default function Portfolio() {
         <link rel="icon" href="/favicon.ico" />
     </Head>
     <div>home</div>
+    <PortfolioSection/>
     </>
   )
 }

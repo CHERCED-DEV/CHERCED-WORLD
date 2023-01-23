@@ -1,4 +1,5 @@
-import allData from './data'
+import allData from "./data";
+import { ProjectsConfig, NotFoundProject } from "./interfaces";
 
 class DataBase {
   constructor() {}
@@ -6,41 +7,41 @@ class DataBase {
   getAll(): Promise<object[]> {
     return new Promise(async (resolve, reject) => {
       try {
-        const asArray: object[] = Object.values(allData)
-        console.log('allDATA:', asArray)
-        await randomDelay()
-        resolve(asArray)
+        const asArray: object[] = Object.values(allData);
+        console.log("allDATA:", asArray);
+        await randomDelay();
+        resolve(asArray);
       } catch (error) {
-        reject(error)
+        reject(error);
       }
-    })
+    });
   }
 
-  getById(id: string): Promise<object> {
+  getById(id: any): Promise<ProjectsConfig | NotFoundProject> {
     return new Promise(async (resolve, reject) => {
       try {
-        const project: object | undefined = Object.values(allData).find(
+        const project: any = Object.values(allData).find(
           (project) => project.id === id
-        )
+        );
         if (!project) {
-          throw new Error(`No project found with id ${id}`)
+          resolve({status:404, message: `No project found with id ${id}`})
         }
-        await randomDelay()
-        resolve(project)
+        await randomDelay();
+        resolve(project);
       } catch (error) {
-        reject(error)
+        reject(error);
       }
-    })
+    });
   }
 }
 
 const randomDelay = (): Promise<void> =>
   new Promise((resolve) => {
-    const max = 350
-    const min = 100
-    const delay = Math.floor(Math.random() * (max - min + 1)) + min
+    const max = 350;
+    const min = 100;
+    const delay = Math.floor(Math.random() * (max - min + 1)) + min;
 
-    setTimeout(resolve, delay)
-  })
+    setTimeout(resolve, delay);
+  });
 
-export default DataBase
+export default DataBase;

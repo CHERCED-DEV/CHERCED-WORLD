@@ -1,58 +1,65 @@
 import React from 'react'
-import {useRouter} from 'next/router'
-import {projects} from '../api/projects'
-
+import { useRouter } from 'next/router'
+import { fetchProject } from '../../providers/requests/homeCB'
+import { ProjectsConfig } from '../api/projects/database/interfaces'
 
 const Proyects = () => {
-  const router = useRouter()
-  const { id } = router.query
-  const [project, setProject] = React.useState([]);
-  
-  React.useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      window.fetch(`/api/projects/${id}`).then(res => res.json()).then(data => {
-        console.log(data)
-        setProject(data)
-      })
-    }
-    return () => mounted = false;
-  }, [])
+    const router = useRouter()
+    const { id } = router.query
+    const [project, setProject] = React.useState<ProjectsConfig>();
+    const [error, setError] = React.useState(null);
+    const [loading, setLoading] = React.useState(true);
 
-  return (
-    <div className='ProyectContainer'>
-      <HeaderBack />
-      <div className='Proyect'>
-        <div className='Proyect-image'>
-          <img src={project.image} alt={project.title}/>
-          </div>
-          <div className='Proyect-info'>
-            <h1>{project.title}</h1>
-            <p>{project.description}</p>
-            <div className='Proyect-tech'>
-      {/*       {
-              project.technologies.map(tech => (
-                
-                <p>{tech}</p>
-                ))
-            } */}
-            </div>
-            <div className='Proyect-info-links'>
-              <a href={project.link} target='_blank' rel="noopener noreferrer">
-                <button>
-                  <span>Live</span>
-                </button>
-              </a>
-              <a href={project.github} target='_blank' rel="noopener noreferrer">
-                <button>
-                  <span>Github</span>
-                </button>
-              </a>
-            </div>
-          </div>
-        </div>
-    </div>
-  )
+    React.useEffect(() => {
+        let isMounted = true;
+        fetchProject(id).then((project: any) => {
+            if (isMounted) {
+				setProject(project);
+			}
+        })
+        return () => {
+            isMounted = false;
+        }
+    }, [id]);
+
+    
+    if (!project) {
+        return (
+            <header>
+                <h1 style={{ color: 'red', fontSize: 32 }}>
+                    Loading...
+                </h1>
+            </header>
+        )
+    } else {
+        return (
+            <>
+                <section className="project-sectionOne">
+                    <img className="project-sectionOne__img"
+                        src={project.image?.src}
+                        alt={project.image?.alt}
+                        loading={project.image?.loading}
+                    />
+                </section>
+                <section className="project-sectionTwo">
+                    <h1 className="project-sectionTwo__title">{project.title}</h1>
+                    <p className="project-sectionTwo__parragraph">{project.description}</p>
+                    <ul className="project-sectionTwo__list">
+                        {
+                            project.technologies?.map((technologie: string, index: number) => (
+                                <li className="project-sectionTwo__list" key={index}>{technologie}</li>
+                            ))
+                        }
+
+                    </ul>
+                    <div>
+                        <button>Live</button>
+                        <button>GitHub</button>
+                    </div>
+                </section>
+            </>
+        )
+    }
 }
 
 export default Proyects

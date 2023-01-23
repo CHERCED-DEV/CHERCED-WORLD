@@ -1,7 +1,11 @@
 import { ImageProps } from '../../customCMS/interfaces'
 
+export interface NotFoundProject {
+    status: number;
+    message: string;
+}
 export interface ProjectsConfig {
-    id?: string;
+    id: string;
     title?: string;
     description?: string;
     image: ImageProps;
