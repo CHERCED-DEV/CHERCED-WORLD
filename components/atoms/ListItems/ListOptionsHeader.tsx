@@ -1,12 +1,15 @@
-import React from 'react'
-import { ListItems } from "../../../pages/api/customCMS/interfaces"
+import React from 'react';
+import Link from 'next/link';
+import { ListItems } from "../../../pages/api/customCMS/interfaces";
 
 export const ListOptionsHeader: React.FC<ListItems> = (props) => {
 
     return (
         <>
             <li className="header-navegation__item">
-                <a className="header-navegation__link" href={props.href}>{props.title}</a>
+                <Link href={props.href}>
+                    <span className="header-navegation__link">{props.title}</span>
+                </Link>
             </li>
         </>
     )

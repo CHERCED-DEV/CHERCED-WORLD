@@ -1,5 +1,5 @@
-import React from 'react'
-import { ProExpConfig, skillConfig, techListConfig, CoursesConfig, IdiomsConfig } from '../../../pages/api/customCMS/interfaces';
+import React from 'react';
+import { ProExpConfig, techListConfig, CoursesConfig, IdiomsConfig } from '../../../pages/api/customCMS/interfaces';
 import { useCmsDataHome } from '../../../providers/cmsDataProvider';
 import { ListExperiencie } from '../../atoms/ListItems/ListExperiencie';
 import { ListMySkills } from '../../atoms/ListItems/ListMySkills';
@@ -24,14 +24,23 @@ export const AboutMeSection: React.FC = () => {
         )
     } else {
         return (
-            <div className="aboutMe">
+            <main className="aboutMe">
                 <section className="aboutMe-description">
-                    <h1 className="aboutMe-description__title">
-                        {aboutMe.titles.mainTitle}
-                    </h1>
-                    <p className="aboutMe-description__parragraph">
-                        {aboutMe.descriptions.aboutMe}
-                    </p>
+                    <div className="aboutMe-container__parallax">
+                        <img className="aboutMe-img__parallax"
+                            src={aboutMe.parallax.src}
+                            alt={aboutMe.parallax.alt}
+                            loading={aboutMe.parallax.loading}
+                        />
+                    </div>
+                    <div className="aboutMe-description__container">
+                        <h1 className="aboutMe-description__title">
+                            {aboutMe.titles.mainTitle}
+                        </h1>
+                        <p className="aboutMe-description__parragraph">
+                            {aboutMe.descriptions.aboutMe}
+                        </p>
+                    </div>
                 </section>
                 <section className="aboutMe-career">
                     <h1 className="aboutMe-career__title" >
@@ -155,7 +164,7 @@ export const AboutMeSection: React.FC = () => {
                         }
                     </ul>
                 </section>
-            </div>
+            </main>
         )
     }
 }

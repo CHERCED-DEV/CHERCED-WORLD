@@ -1,10 +1,9 @@
-import React from 'react'
-import Head from 'next/head'
-import { Inter } from '@next/font/google'
-import { Header } from '../components/molecules/Headers/Header'
-import { HomeBanner } from '../components/molecules/Banners/MainBanner'
-import { FloatMenuMobile } from '../components/molecules/Headers/FloatMenuMobile'
-import { Footer } from '../components/molecules/Footers/Footer'
+import React from 'react';
+import Head from 'next/head';
+import { Inter } from '@next/font/google';
+import { Header } from '../components/molecules/Headers/Header';
+import { HomeBanner } from '../components/molecules/Banners/MainBanner';
+import { Footer } from '../components/molecules/Footers/Footer';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,12 +16,14 @@ export default function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Header />
-            <FloatMenuMobile />
-            <main className="main-home">
+            <body className="HOME-PAGE">
+                <Header />
+                <main className="main-home">
                 <HomeBanner />
-            </main>
-            <Footer />
+                </main>
+                <Footer />    
+            </body>
+            
         </>
     )
 }

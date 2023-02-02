@@ -1,10 +1,11 @@
-import React from 'react'
-import Head from 'next/head'
-import { Header } from '../components/molecules/Headers/Header'
-import { AboutMeSection } from '../components/molecules/Mains/AboutMeSection'
-import { Footer } from '../components/molecules/Footers/Footer'
+import React from 'react';
+import Head from 'next/head';
+import { Header } from '../components/molecules/Headers/Header';
+import { AboutMeSection } from '../components/molecules/Mains/AboutMeSection';
+import { Footer } from '../components/molecules/Footers/Footer';
 
 export default function AboutMe() {
+ 
     return (
         <>
             <Head>
@@ -13,11 +14,11 @@ export default function AboutMe() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Header />
-            <main className="main-aboutMe">
-                <AboutMeSection />
-            </main>
-            <Footer />
+            <body className="ABOUTME-PAGE">
+                <Header />
+                <AboutMeSection />   
+                <Footer />
+            </body>
         </>
     )
 }

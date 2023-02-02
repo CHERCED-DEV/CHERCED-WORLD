@@ -1,0 +1,29 @@
+// PAGE MANAGER:
+
+body.HOME-PAGE,
+body.ABOUTME-PAGE {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+// HOME PAGE:
+body.HOME-PAGE {
+    height: 100vh;
+    background-color: grey;
+    .footer {
+        .footer-back {
+            display: none;
+        }
+        .footer-socialMedia {
+            margin-top: calculateRem(50px);
+        }
+    }
+}
+
+// ABOUT ME PAGE
+body.ABOUTME-PAGE {
+    align-items: center;
+    background-color: black;
+    color: white ;
+}

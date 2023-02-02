@@ -45,8 +45,9 @@ export const PortfolioSection = () => {
             <section className="portfolio">
                 <ul className="portfolio-services" >
                     {
-                        portfolio.services.map((service: ServicesConfig) => (
+                        portfolio.services.map((service: ServicesConfig, index: number) => (
                             <ListServices
+                                key={index}
                                 title={service.title}
                                 img={
                                     {
@@ -65,8 +66,9 @@ export const PortfolioSection = () => {
                 </div>
                 <ul className="portfolio-carrousel__list">
                     {
-                        projects.map((project: ProjectsConfig) => (
+                        projects.map((project: ProjectsConfig, index: number) => (
                             <CarruselContainer
+                                key={index}
                                 id={project.id}
                                 description={project.description}
                                 image={

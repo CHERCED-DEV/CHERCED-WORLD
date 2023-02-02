@@ -9,7 +9,7 @@ export interface ImageProps {
 }
 export interface ListItems {
     title?: string;
-    href?: string;
+    href: string;
 }
 interface Link {
     href?: string;
@@ -135,6 +135,7 @@ export interface MainDescriptionConfig {
 }
 
 export interface AboutMeConfig {
+    parallax: ImageProps;
     titles: {
         mainTitle: string;
         career: string;

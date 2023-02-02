@@ -4,13 +4,14 @@ import { CmsDataContextProviderProps, CmsDataConfig } from '../pages/api/customC
 
 const CmsDataContext = React.createContext<{
 	CmsData: CmsDataConfig;
-	loading: boolean;
+	handleSubMenu: boolean;
+	sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }>({} as any);
 
 export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps) => {
 
 	const [CmsData, setCmsData] = React.useState<CmsDataConfig>({} as any);
-	const [loading, setLoading] = React.useState(true);
+	const [handleSubMenu, sethandleSubMenu] = React.useState<any>(false);
 
 	React.useEffect(() => {
 		let mounted = true;
@@ -20,7 +21,6 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 			}
 		})
 		return () => {
-			setLoading(false);
 			mounted = false;
 		};
 	}, []);
@@ -29,7 +29,8 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 		<CmsDataContext.Provider
 			value={{
 				CmsData,
-				loading,
+				handleSubMenu,
+				sethandleSubMenu,
 			}}
 		>
 			{children}
@@ -39,7 +40,8 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 
 export function useCmsDataHome(): {
 	CmsData: CmsDataConfig;
-	loading: boolean;
+	handleSubMenu: boolean;
+	sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>
 } {
 	const context = React.useContext(CmsDataContext);
 	return context;

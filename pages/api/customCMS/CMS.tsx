@@ -15,23 +15,23 @@ export const CMS: {
 		dskList: [
 			{
 				title: 'About me',
-				href: ''
+				href: 'aboutMe'
 			},
 			{
 				title: 'Services',
-				href: ''
+				href: 'services'
 			},
 			{
 				title: 'Portfolio',
-				href: ''
+				href: 'portfolio'
 			},
 			{
 				title: 'Blog',
-				href: ''
+				href: 'blog'
 			},
 			{
 				title: 'Contact me',
-				href: ''
+				href: 'contactMe'
 			}
 		],
 		buttonMenu: {
@@ -42,7 +42,7 @@ export const CMS: {
 	},
 	homeBanner: {
 		homeBannerTitles: {
-			textParragraph: 'Hi there, my name is',
+			textParragraph: 'My name is',
 			textStrong: 'Camilo',
 			mainTitle: 'I’M A DEVELOPER'
 		},
@@ -94,23 +94,23 @@ export const CMS: {
 		options: [
 			{
 				title: 'About me',
-				href: ''
+				href: 'aboutMe'
 			},
 			{
 				title: 'Services',
-				href: ''
+				href: 'services'
 			},
 			{
 				title: 'Portfolio',
-				href: ''
+				href: 'portfolio'
 			},
 			{
 				title: 'blog',
-				href: ''
+				href: 'blog'
 			},
 			{
 				title: 'Contact Me',
-				href: ''
+				href: 'contactMe'
 			}
 		],
 		brandLogo: {
@@ -120,6 +120,11 @@ export const CMS: {
 		}
 	},
 	aboutMe: {
+		parallax: {
+			src: 'assets/imgs/meParallax.png',
+			alt: 'CHERCED',
+			loading: 'lazy'
+		},
 		titles: {
 			mainTitle: "About Me!",
 			career: "Career",
@@ -444,7 +449,7 @@ export const CMS: {
 			},
 			{
 
-				src: 'assets/icons/arrowFooter.png',
+				src: 'assets/icons/linkedInIcon.png',
 				alt: 'linkedIn icon',
 				loading: 'lazy',
 				a: 'sdad'

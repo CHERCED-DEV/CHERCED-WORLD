@@ -21,7 +21,6 @@ export const Footer: React.FC = () => {
         return (
             <footer className="footer">
                 <section className="footer-back">
-                    <div className="footer-back__img">
                         <a className="footer-back__link" href={footer.backOption.link.href}>
                             <img className="footer-back__img" 
                                 src={footer.backOption.img.src} 
@@ -29,7 +28,6 @@ export const Footer: React.FC = () => {
                                 loading={footer.backOption.img.loading} 
                             />
                         </a>
-                    </div>
                     <h1 className="footer-back__title">
                         {footer.backOption.text}
                     </h1>
