@@ -5,7 +5,7 @@ import { techListConfig } from "../../../pages/api/customCMS/interfaces"
 export const ListTecnologies: React.FC<techListConfig> = (props) => {
     
     return (
-        <li className="aboutMe-tecnologies">
+        <li className="aboutMe-tecnologies__item">
             <h1 className="aboutMe-tecnologies__title">
                 {props.techName}
             </h1>

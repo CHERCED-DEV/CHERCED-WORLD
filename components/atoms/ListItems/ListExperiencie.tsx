@@ -4,9 +4,11 @@ import { ProExpConfig } from "../../../pages/api/customCMS/interfaces"
 export const ListExperiencie: React.FC<ProExpConfig> = (props) => {
     return (
         <li className="aboutMe-career__item">
-            <h1 className="aboutMe-career__itemTitle">
-                {props.initialDate} until {props.endingDate}
-            </h1>
+            <div className="aboutMe-career__itemTitleConainer">
+                <h1 className="aboutMe-career__itemTitle">
+                    {props.initialDate} - {props.endingDate}
+                </h1>
+            </div>
             <div className="aboutMe-career__containerExp">
                 <h1 className="aboutMe-containerExp__title">
                     {props.expTitleDescription.expTitle}

@@ -30,7 +30,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    list-style: none;
 }
 .floatMenu-navegation__item {
     font-size: calculateRem(30px);
@@ -44,9 +43,7 @@
         font-weight: $f-weight-medium;
     }
 }
-.floatMenu-navegation__logo {
-    margin-bottom: calculateRem(40px);
-}
+.floatMenu-navegation__logo { margin-bottom: calculateRem(40px); }
 
 @media #{$tablet-landscape} {
     .floatMenu-navegation {

@@ -27,19 +27,13 @@ $size-icons: calculateRem(30px);
     }
 }
 
-.homeBanner-img__container {
-    margin: calculateRem(25px) 0;
-}
-
+.homeBanner-img__container { margin: calculateRem(25px) 0; }
 .homeBanner-socialMedia__list {
     display: flex;
     justify-content: center;
     align-items: center;
-    list-style: none;
 }
-.homeBanner-socialMedia__item {
-    margin: 0 calculateRem(15px);
-}
+.homeBanner-socialMedia__item { margin: 0 calculateRem(15px); }
 .homeBanner-socialMedia__img {
     width: $size-icons;
     height: $size-icons;

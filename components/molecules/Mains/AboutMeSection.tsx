@@ -144,8 +144,8 @@ export const AboutMeSection: React.FC = () => {
                         My Profile On Platzi
                     </a>
                 </section>
-                <section className="aboutMe-Idioms">
-                    <ul className="aboutMe-Idioms__list">
+                <section className="aboutMe-idioms">
+                    <ul className="aboutMe-idioms__list">
                         {
                             aboutMe.idioms.map((idiom: IdiomsConfig, index: number) => (
                                 <ListIdioms

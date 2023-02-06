@@ -5,9 +5,7 @@ export const ListMySkills: React.FC<skillConfig> = (props) => {
 
     return (
         <li className="aboutMe-skills__item">
-            {
-                props.skill
-            }
+            <p className="aboutMe-skills__text">{ props.skill }</p> 
         </li>
     )
 }

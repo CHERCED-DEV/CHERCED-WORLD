@@ -1,0 +1,18 @@
+.aboutMe-skills__title {
+    margin: calculateRem(10px) 0 calculateRem(35px);
+}
+.aboutMe-skills__parragraph {
+    margin: 0 5%;
+    text-align: justify;
+}
+.aboutMe-skills__list {
+    list-style-image: url("../../../../../public/assets/icons/liIcon.png");
+    margin: calculateRem(25px) 5% calculateRem(25px) 20%;
+}
+.aboutMe-skills__item {
+    margin: calculateRem(25px) 0;
+    text-align: justify;
+    &:last-child {
+        margin-bottom: calculateRem(10px);
+    }
+}

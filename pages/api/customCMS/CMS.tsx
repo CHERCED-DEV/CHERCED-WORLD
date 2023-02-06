@@ -174,16 +174,16 @@ export const CMS: {
 				endingDate: "Nov 21",
 				expTitleDescription: {
 					expTitle: "Frontend Developer",
-					company: "Platzi",
+					company: "Growup IT",
 					descriptionExp: "Frontend developer responsible for improving and optimizing the existing code of a commercial services company's website. This includes identifying and solving performance issues, rewriting code, and updating the code to meet the latest trends and standards. They also create and maintain visual styles using CSS, ensuring the website looks and performs well on different devices and browsers. In summary, a Frontend developer is responsible for improving and optimizing the website's code and ensuring the website's design and visual styles are attractive and consistent."
 				}
 			},
 			{
-				initialDate: "Oct 2016",
-				endingDate: "May 2020",
+				initialDate: "Oct 16",
+				endingDate: "May 20",
 				expTitleDescription: {
 					expTitle: "Bussines Manager",
-					company: "Growup IT",
+					company: "Squadra Arquitectura",
 					descriptionExp: "An administrator and founder of a company focused on the development and remodeling of hospital architecture manages and oversees construction projects, negotiates with clients and suppliers, and represents the company in public bidding. In summary, the administrator and founder leads the hospital architecture projects, handles negotiations, and represents the company in public bidding."
 				}
 			},

@@ -1,0 +1,30 @@
+@import './sections/aboutMe.Career';
+@import './sections/aboutMe.Description';
+@import './sections/aboutMe.Skills';
+@import './sections/aboutMe.Tecnologies';
+@import './sections/aboutMe.Education';
+
+.aboutMe {
+    @include container-wrap;
+    display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.aboutMe-description,
+.aboutMe-career,
+.aboutMe-skills,
+.aboutMe-tecnologies,
+.aboutMe-education,
+.aboutMe-courses,
+.aboutMe-idioms {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.aboutMe-career__title,
+.aboutMe-skills__title,
+.aboutMe-education__title {
+    @include font-size($f-size-xlgx);
+    width: 90%;
+}
+

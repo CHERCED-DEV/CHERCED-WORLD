@@ -23,3 +23,7 @@ $parentSize: 16px;
 	$remSize: $size / $parentSize;
 	@return #{$remSize}rem;
 }
+
+@mixin font-size($size) {
+	font-size: calculateRem($size);
+}
