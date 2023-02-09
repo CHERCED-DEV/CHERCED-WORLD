@@ -1,0 +1,14 @@
+.aboutMe-education__list {
+    margin: 0 5%;
+}
+.aboutMe-education__item {
+    margin: calculateRem(25px) 0;
+}
+
+.aboutMe-education__institution {
+    @include font-size($f-size);
+}
+.aboutMe-education__degreeParragraph {
+   text-align: justify;
+   font-weight: $f-weight-light;
+}

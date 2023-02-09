@@ -126,10 +126,10 @@ export const AboutMeSection: React.FC = () => {
                     </ul>
                 </section>
                 <section className="aboutMe-courses">
-                    <ul className="aboutMe-courses__list" >
                         <h1 className="aboutMe-courses__textFlag" >
                             {aboutMe.titles.courses}
                         </h1>
+                    <ul className="aboutMe-courses__list" >
                         {
                             aboutMe.courses.map((course: CoursesConfig, index: number) => (
                                 <ListEducationCourses

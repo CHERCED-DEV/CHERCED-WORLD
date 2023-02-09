@@ -3,6 +3,9 @@
 @import './sections/aboutMe.Skills';
 @import './sections/aboutMe.Tecnologies';
 @import './sections/aboutMe.Education';
+@import './sections/aboutMe.Courses';
+@import './sections/aboutMe.Idioms';
+
 
 .aboutMe {
     @include container-wrap;
@@ -23,7 +26,8 @@
 }
 .aboutMe-career__title,
 .aboutMe-skills__title,
-.aboutMe-education__title {
+.aboutMe-education__title, 
+.aboutMe-courses__textFlag {
     @include font-size($f-size-xlgx);
     width: 90%;
 }

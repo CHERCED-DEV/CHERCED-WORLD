@@ -1,0 +1,12 @@
+.aboutMe-courses__list {
+    margin: 0 5%;
+}
+.aboutMe-courses__item {
+    margin: calculateRem(25px) 0;
+}
+.aboutMe-courses__school {
+    margin-bottom: calculateRem(15px);
+}
+.aboutMe-courses__descriptionCoruse {
+    text-align: justify;
+}

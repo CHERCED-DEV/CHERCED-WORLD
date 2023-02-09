@@ -346,7 +346,7 @@ export const CMS: {
 				idiom: "Spanish",
 				progress: "100",
 				img: {
-					src: "",
+					src: "assets/icons/flags/spain.png",
 					alt: "Spanish",
 					loading: "lazy",
 				}
@@ -355,7 +355,7 @@ export const CMS: {
 				idiom: "English",
 				progress: "60",
 				img: {
-					src: "",
+					src: "assets/icons/flags/uniteStates.png",
 					alt: "English",
 					loading: "lazy",
 				}
