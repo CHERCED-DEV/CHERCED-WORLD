@@ -1,5 +1,6 @@
 import React from 'react';
 import { getCMSData } from './requests/homeCB';
+import { useClearCacheOnPageChange } from './domMethods/clearCacheOnPage';
 import { CmsDataContextProviderProps, CmsDataConfig } from '../pages/api/customCMS/interfaces';
 
 const CmsDataContext = React.createContext<{
@@ -25,6 +26,8 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 		};
 	}, []);
 
+	useClearCacheOnPageChange();
+
 	return (
 		<CmsDataContext.Provider
 			value={{
@@ -41,8 +44,8 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 export function useCmsDataHome(): {
 	CmsData: CmsDataConfig;
 	handleSubMenu: boolean;
-	sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>
-} {
+	sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
+} & ReturnType<typeof useClearCacheOnPageChange> {
 	const context = React.useContext(CmsDataContext);
-	return context;
+	return { ...context, ...useClearCacheOnPageChange() };
 }
