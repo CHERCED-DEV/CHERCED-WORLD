@@ -1,51 +1,17 @@
-import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
+import { Html, Head, Main, NextScript } from 'next/document'
 
-interface MyDocumentProps extends DocumentInitialProps {
-	pageClass: string;
+export default function Document() {
+  return (
+    <Html lang="en">
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" />
+      </Head>
+        <Main />
+        <NextScript />
+    </Html>
+  )
 }
-
-type PageClassMap = {
-	[path: string]: string;
-};
-
-class MyDocument extends Document<MyDocumentProps> {
-	static async getInitialProps(ctx: DocumentContext): Promise<MyDocumentProps> {
-		const initialProps = await Document.getInitialProps(ctx);
-		const { pathname } = ctx;
-		let pageClass = '';
-
-		// Assign class based on pathname
-		const pageClassMap: PageClassMap = {
-			"/aboutMe": "ABOUTME-PAGE",
-			"/blog": "BLOG-PAGE",
-			"/contactMe": "CONTACTME-PAGE",
-			"/": "HOME-PAGE",
-			"/portfolio": "PORTFOLIO-PAGE",
-			"/services": "SERVICES-PAGE",
-			// add clases as requiered
-		};
-
-		if (pageClassMap[pathname]) {
-			pageClass = pageClassMap[pathname]; // actualizate the class as the path indicate you
-		}
-
-		return { ...initialProps, pageClass };
-	}
-
-	render(): JSX.Element {
-		const { pageClass } = this.props;
-
-		return (
-			<Html>
-				<Head />
-				<body className={pageClass}>
-					<Main />
-					<NextScript />
-				</body>
-			</Html>
-		);
-	}
-}
-
-export default MyDocument;
 

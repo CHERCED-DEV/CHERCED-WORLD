@@ -1,18 +1,23 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { getCMSData } from './requests/homeCB';
 import { useClearCacheOnPageChange } from './domMethods/clearCacheOnPage';
+import { pageClassDynamicBody } from './domMethods/pageClassDynamicBody';
 import { CmsDataContextProviderProps, CmsDataConfig } from '../pages/api/customCMS/interfaces';
 
 const CmsDataContext = React.createContext<{
 	CmsData: CmsDataConfig;
 	handleSubMenu: boolean;
 	sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
+	pageClass: string
 }>({} as any);
 
 export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps) => {
-
+	const router = useRouter();
+	const id = router.asPath
 	const [CmsData, setCmsData] = React.useState<CmsDataConfig>({} as any);
 	const [handleSubMenu, sethandleSubMenu] = React.useState<any>(false);
+	const [pageClassValue, setPageClassValue] = React.useState<string>('');
 
 	React.useEffect(() => {
 		let mounted = true;
@@ -26,6 +31,10 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 		};
 	}, []);
 
+	React.useEffect(() => {
+		setPageClassValue(pageClassDynamicBody(id));
+	  }, [id]);
+
 	useClearCacheOnPageChange();
 
 	return (
@@ -34,6 +43,7 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 				CmsData,
 				handleSubMenu,
 				sethandleSubMenu,
+				pageClass: pageClassValue,
 			}}
 		>
 			{children}
@@ -45,6 +55,7 @@ export function useCmsDataHome(): {
 	CmsData: CmsDataConfig;
 	handleSubMenu: boolean;
 	sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
+	pageClass: string
 } & ReturnType<typeof useClearCacheOnPageChange> {
 	const context = React.useContext(CmsDataContext);
 	return { ...context, ...useClearCacheOnPageChange() };

@@ -3,9 +3,11 @@ import Head from 'next/head';
 import { Header } from '../components/molecules/Headers/Header';
 import { AboutMeSection } from '../components/molecules/Mains/AboutMeSection';
 import { Footer } from '../components/molecules/Footers/Footer';
+import { useCmsDataHome } from '../providers/cmsDataProvider';
 
 export default function AboutMe() {
- 
+    const {pageClass} = useCmsDataHome()
+
     return (
         <>
             <Head>
@@ -14,7 +16,7 @@ export default function AboutMe() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <body className="ABOUTME-PAGE">
+            <body className={pageClass}>
                 <Header />
                 <AboutMeSection />   
                 <Footer />
