@@ -21,7 +21,6 @@ export const ContactMeSection: React.FC = () => {
                 body: JSON.stringify(contactInfo)
             });
             const data = await response.json();
-            console.log(data);
         } catch (error) {
             console.error(error);
         }
@@ -51,14 +50,16 @@ export const ContactMeSection: React.FC = () => {
                     loading="lazy"
                 />
                 <section className="contactMe">
-                    <h1 className="contactMe-title"></h1>
-                    <p className="contactMe-description"></p>
-                    <img
-                        className="contactMe-img"
-                        src=""
-                        alt=""
-                        loading="lazy"
-                    />
+                    <div className="contactMe-info">
+                        <h1 className="contactMe-info__title">{contactMe.title}</h1>
+                        <p className="contactMe-info__description">{contactMe.description}</p>
+                        <img className="contactMe-info__img"
+                            src={contactMe.separator.src}
+                            alt={contactMe.separator.alt}
+                            loading={contactMe.separator.loading}
+                        />
+                    </div>
+                    
                     <form className="contactMe-form" onSubmit={handleSubmit(onSubmit)}>
                         <input
                             className="contactMe-form__input"
@@ -88,7 +89,7 @@ export const ContactMeSection: React.FC = () => {
                             {...register("message")}
                             placeholder={contactMe.fields.message.value}
                         />
-                        <input className="contactMe-form__submit" type="submit" />
+                        <input className="contactMe-form__submit" type="submit" value={contactMe.button} />
                     </form>
                 </section>
             </>

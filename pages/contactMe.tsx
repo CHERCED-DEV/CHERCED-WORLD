@@ -2,6 +2,8 @@ import React from 'react'
 import Head from 'next/head'
 import { useCmsDataHome } from '../providers/cmsDataProvider';
 import { ContactMeSection } from '../components/molecules/Mains/ContactMeSection'
+import { Footer } from '../components/molecules/Footers/Footer';
+import { Header } from '../components/molecules/Headers/Header';
 
 export default function ContactMe() {
     const { pageClass } = useCmsDataHome();
@@ -15,7 +17,9 @@ export default function ContactMe() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <body className={pageClass}>
+                <Header/>
                 <ContactMeSection />
+                <Footer/>
             </body>
         </>
     )

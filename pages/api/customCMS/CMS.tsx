@@ -404,8 +404,8 @@ export const CMS: {
 		title: "Contact",
 		description: "My name is Camilo Hernandez, I’m a third year Applied Computer Science student at UNAD University of Science and Technology in Bogota Colombia.",
 		separator: {
-			src: "",
-			alt: "",
+			src: "assets/icons/separatorBlack.png",
+			alt: "separator",
 			loading: "lazy",
 		},
 		fields: {

@@ -1,6 +1,10 @@
+// to the components o
 @import './page-manager';
 @import './headers/header';
 @import './banners/homeBanner';
-@import './mains/aboutMe/aboutMe';
 @import './floatSubMenu/floatSubMenu';
 @import './footer/footer';
+
+// to the main content of the pages:
+@import './mains/aboutMe/aboutMe';
+@import './mains/contactMe/contactMe';

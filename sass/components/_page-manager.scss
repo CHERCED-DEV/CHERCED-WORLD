@@ -1,15 +1,19 @@
 // PAGE MANAGER:
 
 body.HOME-PAGE,
-body.ABOUTME-PAGE {
+body.ABOUTME-PAGE,
+body.BLOG-PAGE,
+body.CONTACTME-PAGE,
+body.PORTFOLIO-PAGE,
+body.SERVICES-PAGE {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-// HOME PAGE:
-body.HOME-PAGE {
-    height: 100vh;
+// commun layout pages:
+body.HOME-PAGE,
+body.CONTACTME-PAGE {
     background-color: grey;
     .footer {
         .footer-back {
@@ -21,9 +25,21 @@ body.HOME-PAGE {
     }
 }
 
+//[Unic Styles]
+// HOME PAGE
+body.HOME-PAGE {
+    height: 100vh;
+}
 // ABOUT ME PAGE
 body.ABOUTME-PAGE {
     align-items: center;
     background-color: black;
     color: white ;
+}
+
+// to wrap the main section class on the pages.
+.aboutMe,
+.contactMe {
+    @include container-wrap;
+    @include centerContent;
 }

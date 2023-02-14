@@ -1,0 +1,38 @@
+.contactMe {
+    justify-content: space-between;
+    height: 100vh;
+    margin: calculateRem(65px) 0;
+}
+
+.contactMe-info {
+    @include centerContent;
+    height: 100%;
+    justify-content: space-around;
+}
+.contactMe-info__title {
+    @include rectangularButton;
+    margin-bottom: calculateRem(40px);
+}
+.contactMe-info__description {
+    text-align: center;
+    font-weight: $f-weight-light;
+    padding: 0 2%;
+}
+.contactMe-info__img {margin: calculateRem(40px) 0 calculateRem(60px);}
+
+.contactMe-form {
+    @include centerContent;
+    :nth-child(4) {
+        height: calculateRem(160px)
+    }
+}
+.contactMe-form__input { @include fieldsContactMeInput; }
+
+.contactMe-form__submit {
+    @include fieldsContactMeInput;
+    border-right: 8px solid;
+    border-bottom: none;
+    width: calculateRem(150px);
+    margin-top: calculateRem(20px);
+    margin-bottom: 0;
+}
