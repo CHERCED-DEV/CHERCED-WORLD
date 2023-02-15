@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head'
 import { useCmsDataHome } from '../providers/cmsDataProvider';
+import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
+import { Header } from '../components/molecules/Headers/Header';
+import { Footer } from '../components/molecules/Footers/Footer';
 
 export default function Services() {
     const { pageClass } = useCmsDataHome();
+    const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setShowStarterPage(!showStarterPage);
+        }, 4000);
+
+        // Return a function to clear the timer before the component is unmounted.
+        return () => {
+            clearTimeout(timerId);
+        }
+    }, []);
 
     return (
         <>
@@ -13,10 +28,17 @@ export default function Services() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <body className={pageClass}>
-                <div>home</div>
-            </body>
+            {
+                showStarterPage ? (
+                    <PageLoader />
+                ) : (
+                    <body className={pageClass}>
+                        <Header />
+                        <div>home</div>
+                        <Footer />
+                    </body>
+                )
+            }
         </>
     )
 }
-

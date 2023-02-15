@@ -11,9 +11,8 @@ body.SERVICES-PAGE {
     justify-content: space-between;
 }
 
-// commun layout pages:
-body.HOME-PAGE,
-body.CONTACTME-PAGE {
+// Pages withOut backtop footer:
+body.HOME-PAGE {
     background-color: grey;
     .footer {
         .footer-back {
@@ -29,6 +28,10 @@ body.CONTACTME-PAGE {
 // HOME PAGE
 body.HOME-PAGE {
     height: 100vh;
+}
+// CONTACTME PAGE
+body.CONTACTME-PAGE {
+   background: $colorLinearGradientContactMeBody;
 }
 // ABOUT ME PAGE
 body.ABOUTME-PAGE {

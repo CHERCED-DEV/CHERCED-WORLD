@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Inter } from '@next/font/google';
+import { StarterApp } from '../components/atoms/Spiners&Loaders/StarterApp';
 import { Header } from '../components/molecules/Headers/Header';
 import { HomeBanner } from '../components/molecules/Banners/MainBanner';
 import { Footer } from '../components/molecules/Footers/Footer';
@@ -9,7 +10,20 @@ import { useCmsDataHome } from '../providers/cmsDataProvider';
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-    const { pageClass } = useCmsDataHome();
+    const { pageClass } = useCmsDataHome()
+    const [showStarterApp, setShowStarterApp] = useState<boolean>(true);
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setShowStarterApp(!showStarterApp);
+        }, 6500);
+
+        // Return a function to clear the timer before the component is unmounted.
+        return () => {
+            clearTimeout(timerId);
+        }
+    }, []);
+
     return (
         <>
             <Head>
@@ -18,13 +32,19 @@ export default function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <body className={pageClass}>
-                <Header />
-                <main className="main-home">
-                    <HomeBanner />
-                </main>
-                <Footer />
-            </body>
+            {
+                showStarterApp ? (
+                    <StarterApp />
+                ) : (
+                    <body className={pageClass}>
+                        <Header />
+                        <main className="main-home">
+                            <HomeBanner />
+                        </main>
+                        <Footer />
+                    </body>
+                )
+            }
         </>
     )
 }

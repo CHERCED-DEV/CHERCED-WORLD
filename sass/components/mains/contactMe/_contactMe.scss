@@ -1,7 +1,8 @@
 .contactMe {
+    //background: linear-gradient(0deg, #000000 8.81%, rgba(196, 196, 196, 0) 31.87%);
     justify-content: space-between;
     height: 100vh;
-    margin: calculateRem(65px) 0;
+    padding: calculateRem(65px) 0;
 }
 
 .contactMe-info {
@@ -23,10 +24,15 @@
 .contactMe-form {
     @include centerContent;
     :nth-child(4) {
-        height: calculateRem(160px)
+        height: calculateRem(160px);
+        width: 100%;
+        overflow-y: auto; 
     }
 }
-.contactMe-form__input { @include fieldsContactMeInput; }
+.contactMe-form__input { 
+    @include fieldsContactMeInput; 
+    overflow: hidden;
+}
 
 .contactMe-form__submit {
     @include fieldsContactMeInput;
