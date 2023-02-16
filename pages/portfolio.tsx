@@ -13,7 +13,7 @@ export default function Portfolio() {
     useEffect(() => {
         const timerId = setTimeout(() => {
             setShowStarterPage(!showStarterPage);
-        }, 4000);
+        }, 3500);
 
         // Return a function to clear the timer before the component is unmounted.
         return () => {

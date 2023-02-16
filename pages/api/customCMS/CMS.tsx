@@ -3,7 +3,7 @@ import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileC
 export const CMS: {
 	[key: string]:
 	HeaderConfig | HomeBannerConfig | MainDescriptionConfig
-	| FloatMenuMobileConfig | AboutMeConfig | PortfolioConfig |
+	| AboutMeConfig | PortfolioConfig |
 	ContactMeConfig | FooterConfig
 } = {
 	header: {
@@ -89,35 +89,6 @@ export const CMS: {
 		},
 		description: "I am a professional in business administration, the last 8 years of my life I CHANGEEEEEEE have worked in all operational areas of a corporation, leading a company of civil projects, there I learned about programming, and I fell in love with the whole beautiful world computer science, so I am looking for an opportunity to demonstrate my capabilities and take my talents to another level, I believe in continuous learning as the most important added value of my profile, thanks for reading.",
 		moreButton: "MORE",
-	},
-	floatMenuMobile: {
-		options: [
-			{
-				title: 'About me',
-				href: 'aboutMe'
-			},
-			{
-				title: 'Services',
-				href: 'services'
-			},
-			{
-				title: 'Portfolio',
-				href: 'portfolio'
-			},
-			{
-				title: 'blog',
-				href: 'blog'
-			},
-			{
-				title: 'Contact Me',
-				href: 'contactMe'
-			}
-		],
-		brandLogo: {
-			src: 'assets/icons/brandLogo.png',
-			alt: 'CHERCED logo',
-			loading: 'lazy',
-		}
 	},
 	aboutMe: {
 		parallax: {

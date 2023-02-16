@@ -8,7 +8,7 @@ export interface ImageProps {
     height?: number;
 }
 export interface ListItems {
-    title?: string;
+    title: string;
     href: string;
 }
 interface Link {
@@ -107,11 +107,6 @@ export interface HomeBannerConfig {
     homeSocialMedia: ImageProps[];
 }
 
-export interface FloatMenuMobileConfig {
-    options: ListItems[];
-    brandLogo: ImageProps;
-}
-
 export interface FooterConfig {
     backOption: {
         img: ImageProps;
@@ -182,7 +177,6 @@ export interface CmsDataConfig {
     header: HeaderConfig;
     homeBanner: HomeBannerConfig;
     mainDescription: MainDescriptionConfig;
-    floatMenuMobile: FloatMenuMobileConfig;
     aboutMe: AboutMeConfig;
     portfolio: PortfolioConfig;
     contactMe: ContactMeConfig;
