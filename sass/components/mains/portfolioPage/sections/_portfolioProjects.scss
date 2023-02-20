@@ -15,15 +15,55 @@
 .portfolio-projectsContainer__title {
     @include rectangularButton;
 }
+.portfolio-carrousel__list {
+    background-color: cadetblue;
+    display: flex;
+    width: 800%;
+    height: calculateRem(600px);
+    margin-left: -100%;
+}
+.portfolio-carrousel__item {
+    width: 100%;
+    border: none;
+}
+.portfolio-carrousel__button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+}
+.portfolio-carrousel__img {
+    padding: calculateRem(60px) 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.portfolio-buttonsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $uiKit-background;
+    width: 100%;
+    height: calculateRem(60px);
+
+    .portfolio-buttons__button {
+        @include font-size($f-size-md);
+        width: 50%;
+        height: 100%;
+        background-color: transparent;
+        color: $uiKit-fontColor;
+    }
+}
 .portfolio-footer {
     @include centerContent;
     height: calculateRem(60px);
     width: 100%;
-    color: white;
-    background-color: black;
+    color: $uiKit-fontColor;
+    background-color: $uiKit-background;
     justify-content: center;
 }
 .portfolio-footer__title {
     @include font-size($f-size);
-    font-weight:$f-weight-medium;    
+    font-weight: $f-weight-medium;
 }
