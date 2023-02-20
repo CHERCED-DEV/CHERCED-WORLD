@@ -4,10 +4,11 @@ import { ServicesConfig } from '../../../pages/api/customCMS/interfaces';
 import { CarruselContainer } from '../../atoms/Carrousel/CarruselContainer';
 import { ProjectsConfig } from '../../../pages/api/projects/database/interfaces';
 import { useCmsDataHome } from '../../../providers/cmsDataProvider';
-import { next, prev } from './portfolioDom/slider'
+import { next, prev } from './portfolioDom/slider';
 
 
 export const PortfolioSection = () => {
+
     const [projects, setProjects] = React.useState<ProjectsConfig[]>([])
     const { CmsData } = useCmsDataHome();
     const { portfolio } = CmsData;
@@ -32,20 +33,13 @@ export const PortfolioSection = () => {
     const handleClickLeft = () => {
         prev();
     }
-    if (!portfolio) {
-        return (
-            <header>
-                <h1 style={{ color: 'red', fontSize: 32 }}>
-                    Loading...
-                </h1>
-            </header>
-        )
-    } else {
-        return (
-            <section className="portfolio">
-                <ul className="portfolio-services" >
+
+    return (
+        <>
+            <section className="portfolio-services">
+                <ul className="portfolio-services__list">
                     {
-                        portfolio.services.map((service: ServicesConfig, index: number) => (
+                        portfolio?.projects.services.map((service: ServicesConfig, index: number) => (
                             <ListServices
                                 key={index}
                                 title={service.title}
@@ -61,12 +55,14 @@ export const PortfolioSection = () => {
                         ))
                     }
                 </ul>
-                <div className="portfolio-titleContainer">
-                    <h1 className="portfolio-titleContainer__title">{portfolio.portFolioTitle}</h1>
+            </section>
+            <section className="portfolio-projects">
+                <div className="portfolio-projectsContainer">
+                    <h1 className="portfolio-projectsContainer__title">{portfolio?.portFolioTitle}</h1>
                 </div>
-                <ul className="portfolio-carrousel__list">
+                <ul className="portfolio-carrousel__list" id="slider">
                     {
-                        projects.map((project: ProjectsConfig, index: number) => (
+                        projects?.map((project: ProjectsConfig, index: number) => (
                             <CarruselContainer
                                 key={index}
                                 id={project.id}
@@ -90,12 +86,12 @@ export const PortfolioSection = () => {
                         &#62;
                     </button>
                 </div>
-                <div className="portfolio-footer">
+                <footer className="portfolio-footer">
                     <h1 className="portfolio-footer__title">
-                        {portfolio.footerPortfolio}
+                        {portfolio?.footerPortfolio}
                     </h1>
-                </div>
+                </footer>
             </section>
-        )
-    }
+        </>
+    )
 }

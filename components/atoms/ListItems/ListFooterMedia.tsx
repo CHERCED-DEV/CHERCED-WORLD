@@ -2,6 +2,7 @@ import React from 'react'
 import { ImageProps } from "../../../pages/api/customCMS/interfaces"
 
 export const ListFooterMedia: React.FC<ImageProps> = (props) => {
+
     return (
         <li className="footer-socialMedia__item">
             <a className="footer-socialMedia__link" href={props.a}>

@@ -1,31 +1,39 @@
 @mixin container-wrap() {
-	max-width: $gl-max-width;
-	width: 100vw;
-	min-width: calculateRem(320px);
-	padding-right: calculateRem($gl-gutter-sides);
-	padding-left: calculateRem($gl-gutter-sides);
-	margin-right: auto;
-	margin-left: auto;
-	@media #{$gl-gutter-sides-breakpoint} {
-		padding-left: calculateRem($gl-gutter-sides-desktop);
-		padding-right: calculateRem($gl-gutter-sides-desktop);
-	}
+    max-width: $gl-max-width;
+    width: 100vw;
+    min-width: calculateRem(320px);
+    padding-right: calculateRem($gl-gutter-sides);
+    padding-left: calculateRem($gl-gutter-sides);
+    margin-right: auto;
+    margin-left: auto;
+
+    @media #{$gl-gutter-sides-breakpoint} {
+        padding-left: calculateRem($gl-gutter-sides-desktop);
+        padding-right: calculateRem($gl-gutter-sides-desktop);
+    }
 }
 
 
 $parentSize: 16px;
-@function calculateRem($size) {
-	// @if unitless($size) { TODO: validate unit calculateRem function
-	// 	@warn 'Assuming value `#{$size}` to be in pixels; attempting to convert it.';
-	// 	$size: $size * 1px;
-	// }
 
-	$remSize: $size / $parentSize;
-	@return #{$remSize}rem;
+@function calculateRem($size) {
+    // @if unitless($size) { TODO: validate unit calculateRem function
+    // 	@warn 'Assuming value `#{$size}` to be in pixels; attempting to convert it.';
+    // 	$size: $size * 1px;
+    // }
+
+    $remSize: $size / $parentSize;
+    @return #{$remSize}rem;
 }
 
 @mixin font-size($size) {
-	font-size: calculateRem($size);
+    font-size: calculateRem($size);
+}
+
+@mixin centerContent() {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 
@@ -36,17 +44,12 @@ $parentSize: 16px;
     font-weight: 700;
     letter-spacing: 0.35538em;
     text-transform: uppercase;
-    border:  calculateRem(8px) solid #000000;
+    border: calculateRem(8px) solid #000000;
     padding: calculateRem(20px);
 }
 
-@mixin centerContent() {
-    display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
 @mixin fieldsContactMeInput() {
+    font-family: $f-body;
     border-top: none;
     border-right: none;
     border-bottom: calculateRem(8px) solid;
@@ -61,4 +64,19 @@ $parentSize: 16px;
     font-weight: 700;
     line-height: 1.2;
     text-transform: uppercase;
+}
+
+@mixin submitButtonRegular($font-size: 14px, $h: 40px) {
+    @include font-size($font-size);
+    height: calculateRem($h);
+    font-family: $f-body;
+    background: transparent;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: calculateRem(4px) solid #000000;
+    border-top: none;
+    border-bottom: none;
+    padding: calculateRem(20px);
+    display: flex;
+    align-items: center;
 }

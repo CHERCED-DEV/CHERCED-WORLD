@@ -72,19 +72,19 @@ export interface CardsPortfolioConfig {
 
 export interface ContactMeFieldsConfig {
     name: {
-        value: string; 
+        value: string;
         required: boolean;
     }
     email: {
-        value: string; 
+        value: string;
         required: boolean;
     }
     phone: {
-        value: string; 
+        value: string;
         required: boolean;
     }
     message: {
-        value: string; 
+        value: string;
         required: boolean;
     }
 }
@@ -97,7 +97,6 @@ export interface CmsDataContextProviderProps {
 //elements structure
 export interface HeaderConfig {
     brandImage: ImageProps;
-    dskList: ListItems[];
     buttonMenu: ImageProps;
 }
 
@@ -154,7 +153,21 @@ export interface AboutMeConfig {
 }
 
 export interface PortfolioConfig {
-    services: ServicesConfig[];
+    wcfu: {
+        title: string;
+        description: string;
+        img: ImageProps;
+        explore: {
+            text: string;
+            a: string;
+        } 
+    },
+    projects: {
+        title: string;
+        description: string;
+        services: ServicesConfig[];
+    },
+    offers: ServicesConfig[];
     portFolioTitle: string;
     optionsMenu: {
         all: string;

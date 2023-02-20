@@ -2,6 +2,7 @@ import React from 'react'
 import { CoursesConfig } from "../../../pages/api/customCMS/interfaces"
 
 export const ListEducationCourses: React.FC<CoursesConfig> = (props) => {
+
     return (
         <>
             {props.schools.map((school: string, index: number) => (
@@ -10,6 +11,6 @@ export const ListEducationCourses: React.FC<CoursesConfig> = (props) => {
                     <p className="aboutMe-courses__descriptionCoruse">{props.descriptions[index]}</p>
                 </li>
             ))}
-        </>  
-    )          
+        </>
+    )
 }

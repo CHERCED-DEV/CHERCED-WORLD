@@ -2,7 +2,7 @@ import React from 'react'
 import { ImageProps } from "../../../pages/api/customCMS/interfaces"
 
 export const ListContacMedia: React.FC<ImageProps> = (props) => {
-    
+
     return (
         <>
             <li className="homeBanner-socialMedia__item">

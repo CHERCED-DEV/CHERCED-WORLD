@@ -35,7 +35,9 @@ export default function Portfolio() {
                 ) : (
                     <body className={pageClass}>
                         <Header />
-                        <PortfolioSection />
+                        <main className="portfolio">
+                            <PortfolioSection />
+                        </main>
                         <Footer />
                     </body>
                 )

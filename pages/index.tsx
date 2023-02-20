@@ -26,14 +26,13 @@ export default function Home() {
             const timerId = setTimeout(() => {
                 setShowStarterApp(false);
                 sessionStorage.setItem('showStarterApp', 'false');
-                setShowPageLoader(true);
                 const pageLoaderTimerId = setTimeout(() => {
                     setShowPageLoader(false);
                 }, 3500);
                 return () => {
                     clearTimeout(pageLoaderTimerId);
                 };
-            }, 6000);
+            }, 5500);
             return () => {
                 clearTimeout(timerId);
             };

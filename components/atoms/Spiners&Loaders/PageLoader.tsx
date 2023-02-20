@@ -2,7 +2,7 @@ import React from 'react'
 
 export const PageLoader = () => {
     return (
-        <div>
+        <div className='start-page__position'>
             <section className="start-page">
                 <header id="header" />
                 <div id="banner" />

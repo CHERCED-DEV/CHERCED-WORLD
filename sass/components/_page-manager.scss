@@ -20,6 +20,9 @@ body.HOME-PAGE {
         }
         .footer-socialMedia {
             margin-top: calculateRem(50px);
+            :nth-child(2) {
+                display: none;
+            }
         }
     }
 }
@@ -42,7 +45,8 @@ body.ABOUTME-PAGE {
 
 // to wrap the main section class on the pages.
 .aboutMe,
-.contactMe {
+.contactMe,
+.services {
     @include container-wrap;
     @include centerContent;
 }

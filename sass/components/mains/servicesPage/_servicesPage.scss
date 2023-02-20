@@ -1,0 +1,47 @@
+.services-wcfu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: calculateRem(65px) 0;
+}
+.services-wcfu__title {
+    @include rectangularButton;
+    margin-bottom: calculateRem(50px);
+}
+.services-wcfu__parragraph {
+    text-align: justify;
+    margin: 0 5% calculateRem(50px);
+}
+.services-wcfu__button {
+    @include submitButtonRegular;
+}
+.services-offer {
+    margin-bottom: calculateRem(65px);
+}
+.services-offer__list {
+    :first-child {
+        margin-top: 0;
+    }
+    :last-child {
+        margin-bottom: 0;
+    }
+}
+.services-offer__item {
+    margin: calculateRem(50px) calculateRem(50px);
+}
+.services-offer__titleConteiner {
+    display: flex;
+    align-items: center;
+}
+.services-offer__text {
+    @include font-size($f-size);
+    margin-left: calculateRem(-15px);
+    text-transform: uppercase;
+    letter-spacing: 0.18538em;
+}
+
+.services-offer__description {
+    margin: calculateRem(20px) 0 0 calculateRem(50px);
+    text-align: justify;    
+}

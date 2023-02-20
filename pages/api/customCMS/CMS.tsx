@@ -1,4 +1,4 @@
-import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, FloatMenuMobileConfig, AboutMeConfig, PortfolioConfig, ContactMeConfig, FooterConfig } from "./interfaces";
+import { HeaderConfig, HomeBannerConfig, MainDescriptionConfig, AboutMeConfig, PortfolioConfig, ContactMeConfig, FooterConfig } from "./interfaces";
 
 export const CMS: {
 	[key: string]:
@@ -12,28 +12,6 @@ export const CMS: {
 			alt: 'CHERCED logo',
 			loading: 'lazy',
 		},
-		dskList: [
-			{
-				title: 'About me',
-				href: 'aboutMe'
-			},
-			{
-				title: 'Services',
-				href: 'services'
-			},
-			{
-				title: 'Portfolio',
-				href: 'portfolio'
-			},
-			{
-				title: 'Blog',
-				href: 'blog'
-			},
-			{
-				title: 'Contact me',
-				href: 'contactMe'
-			}
-		],
 		buttonMenu: {
 			src: 'assets/icons/navbar.png',
 			alt: 'menu button',
@@ -58,19 +36,19 @@ export const CMS: {
 				src: 'assets/icons/mailito.png',
 				alt: 'mailito icon',
 				loading: 'lazy',
-				a: '.hola'
+				a: 'mailto:chernandezcediel@gmail.com'
 			},
 			{
 				src: 'assets/icons/githubCircle.png',
 				alt: 'github icon',
 				loading: 'lazy',
-				a: 'hasd'
+				a: 'https://github.com/CHERCED-DEV'
 			},
 			{
 				src: 'assets/icons/linkedinCircle.png',
 				alt: 'linkedin icon',
 				loading: 'lazy',
-				a: 'hasds'
+				a: 'https://www.linkedin.com/in/cherced/'
 			}
 		]
 	},
@@ -334,12 +312,49 @@ export const CMS: {
 		]
 	},
 	portfolio: {
-		services: [
+        wcfu: {
+            title: "How can I help you?",
+            description: "A full-stack MERN developer can build end-to-end web applications that are fast, secure, and scalable, using a combination of cutting-edge front-end and back-end technologies. They can help clients achieve their business goals by designing and developing custom solutions, optimizing performance, and providing ongoing support and maintenance. With expertise in MongoDB, Express.js, React.js, and Node.js, MERN developers can leverage the power of the MERN stack to create dynamic, interactive, and responsive web applications that meet the needs of their clients and their customers",
+            img: {
+                src: "assets/icons/separatorBlack.png",
+			    alt: "separator",
+			    loading: "lazy",
+            },
+            explore: {
+                text: "Explore",
+                a: "portfolio"
+            } 
+        },
+        projects: {
+            title:"",
+            description: "asdasd",
+            services: [
+                {
+                    title: "Desing",
+                    img: {
+                        src: "",
+                        alt: "",
+                        loading: "lazy",
+                    },
+                    description: "I can design the website based on your needs and suggestions. I can also create it from scratch by consulting with you during work."
+                },
+                {
+                    title: "Development",
+                    img: {
+                        src: "",
+                        alt: "",
+                        loading: "lazy",
+                    },
+                    description: "Based on a project created by me or another one, sent by you, I can program the website to be fully functional and responsive.",
+                },
+            ]
+        },
+		offers: [
 			{
 				title: "Desing",
 				img: {
-					src: "",
-					alt: "",
+					src: "assets/icons/services/desing.png",
+					alt: "desingIcon",
 					loading: "lazy",
 				},
 				description: "I can design the website based on your needs and suggestions. I can also create it from scratch by consulting with you during work."
@@ -347,8 +362,8 @@ export const CMS: {
 			{
 				title: "Development",
 				img: {
-					src: "",
-					alt: "",
+					src: "assets/icons/services/development.png",
+					alt: "developmentIcon",
 					loading: "lazy",
 				},
 				description: "Based on a project created by me or another one, sent by you, I can program the website to be fully functional and responsive.",
@@ -356,8 +371,8 @@ export const CMS: {
 			{
 				title: "Maintenance",
 				img: {
-					src: "",
-					alt: "",
+					src: "assets/icons/services/maintenance.png",
+					alt: "maintenanceIcon",
 					loading: "lazy",
 				},
 				description: "In case of any problems or the need for changes, I can introduce new functionalities and solutions.",
@@ -408,7 +423,7 @@ export const CMS: {
 			},
 			text: 'BACK TO TOP',
 			link: {
-				href: ''
+				href: '#header'
 			}
 		},
 		footerSocialMedia: [
@@ -416,26 +431,26 @@ export const CMS: {
 				src: 'assets/icons/facebookIcon.png',
 				alt: 'faceBook icon',
 				loading: 'lazy',
-				a: ''
+				a: 'https://www.bbc.com/mundo/noticias-51225114'
 			},
 			{
 
 				src: 'assets/icons/linkedInIcon.png',
 				alt: 'linkedIn icon',
 				loading: 'lazy',
-				a: 'sdad'
+				a: 'https://www.linkedin.com/in/cherced/'
 			},
 			{
 				src: 'assets/icons/instagramIcon.png',
 				alt: 'instagram icon',
 				loading: 'lazy',
-				a: 'sdad'
+				a: 'https://www.instagram.com/cherced/'
 			},
 			{
 				src: 'assets/icons/gmailIcon.png',
 				alt: 'gmail icon',
 				loading: 'lazy',
-				a: 'sdad'
+				a: 'mailto:chernandezcediel@gmail.com'
 			},
 		],
 		copyright: {

@@ -35,7 +35,9 @@ export default function AboutMe() {
                 ) : (
                     <body className={pageClass}>
                         <Header />
-                        <AboutMeSection />
+                        <main className="aboutMe">
+                            <AboutMeSection />
+                        </main>
                         <Footer />
                     </body>
                 )

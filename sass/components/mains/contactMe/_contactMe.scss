@@ -35,10 +35,6 @@
 }
 
 .contactMe-form__submit {
-    @include fieldsContactMeInput;
-    border-right: 8px solid;
-    border-bottom: none;
-    width: calculateRem(150px);
+    @include submitButtonRegular;
     margin-top: calculateRem(20px);
-    margin-bottom: 0;
 }

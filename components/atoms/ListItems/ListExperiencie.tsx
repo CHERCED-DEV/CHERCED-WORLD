@@ -2,6 +2,7 @@ import React from 'react'
 import { ProExpConfig } from "../../../pages/api/customCMS/interfaces"
 
 export const ListExperiencie: React.FC<ProExpConfig> = (props) => {
+
     return (
         <li className="aboutMe-career__item">
             <div className="aboutMe-career__itemTitleConainer">

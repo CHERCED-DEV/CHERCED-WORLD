@@ -3,7 +3,9 @@ import Head from 'next/head'
 import { useCmsDataHome } from '../providers/cmsDataProvider';
 import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
 import { Header } from '../components/molecules/Headers/Header';
+import { ServicesSection } from '../components/molecules/Mains/ServicesSection';
 import { Footer } from '../components/molecules/Footers/Footer';
+
 
 export default function Services() {
     const { pageClass } = useCmsDataHome();
@@ -34,7 +36,9 @@ export default function Services() {
                 ) : (
                     <body className={pageClass}>
                         <Header />
-                        <div>home</div>
+                        <main className='services'>
+                            <ServicesSection />
+                        </main>
                         <Footer />
                     </body>
                 )

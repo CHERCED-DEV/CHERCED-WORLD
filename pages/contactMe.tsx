@@ -35,7 +35,9 @@ export default function ContactMe() {
                 ) : (
                     <body className={pageClass}>
                         <Header />
-                        <ContactMeSection />
+                        <main className="contactMe">
+                            <ContactMeSection />
+                        </main>                        
                         <Footer />
                     </body>
                 )
