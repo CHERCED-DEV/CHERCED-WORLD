@@ -24,7 +24,7 @@ export const ServicesSection = () => {
             <section className='services-offer'>
                 <ul className='services-offer__list'>
                     {
-                        portfolio?.offers.map((offer: ServicesConfig, index: number) => (
+                        portfolio?.services.map((offer: ServicesConfig, index: number) => (
                             <ListServicesOffer
                                 key={index}
                                 title={offer.title}

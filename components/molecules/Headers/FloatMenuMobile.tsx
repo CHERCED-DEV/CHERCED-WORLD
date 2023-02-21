@@ -43,9 +43,9 @@ export const FloatMenuMobile: React.FC = () => {
             </ul>
             <div className="floatMenu-navegation__logo">
                 <img className="floatMenu-navegation__img"
-                    src={header?.buttonMenu.src}
-                    alt={header?.buttonMenu.alt}
-                    loading={header?.buttonMenu.loading}
+                    src={header?.brandImage.src}
+                    alt={header?.brandImage.alt}
+                    loading={header?.brandImage.loading}
                 />
             </div>
         </nav>

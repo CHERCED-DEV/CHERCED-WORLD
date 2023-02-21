@@ -38,6 +38,13 @@ export default function Portfolio() {
                         <main className="portfolio">
                             <PortfolioSection />
                         </main>
+                        <div className="AtomContainer">
+                            <div className="atomP">
+                                <div className="electronP" />
+                                <div className="electronP" />
+                                <div className="electronP" />
+                            </div>
+                        </div>
                         <Footer />
                     </body>
                 )

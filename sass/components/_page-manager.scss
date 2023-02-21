@@ -45,6 +45,12 @@ body.ABOUTME-PAGE {
     background-color: black;
     color: white ;
 }
+// PORTFOLIO PAGE
+body.PORTFOLIO-PAGE {
+    .footer {
+        border-radius: 0;
+    }
+}
 
 // to wrap the main section class on the pages.
 .aboutMe,

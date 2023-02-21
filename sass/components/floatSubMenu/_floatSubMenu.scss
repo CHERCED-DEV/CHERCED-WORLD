@@ -12,6 +12,7 @@
     width: 100%;
     &.on {
         top: 0;
+        z-index: $page-loader-zindex;
     }
     &.off {
         top: -100vh;

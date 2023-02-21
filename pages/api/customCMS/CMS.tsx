@@ -326,30 +326,14 @@ export const CMS: {
             } 
         },
         projects: {
-            title:"",
-            description: "asdasd",
-            services: [
-                {
-                    title: "Desing",
-                    img: {
-                        src: "",
-                        alt: "",
-                        loading: "lazy",
-                    },
-                    description: "I can design the website based on your needs and suggestions. I can also create it from scratch by consulting with you during work."
-                },
-                {
-                    title: "Development",
-                    img: {
-                        src: "",
-                        alt: "",
-                        loading: "lazy",
-                    },
-                    description: "Based on a project created by me or another one, sent by you, I can program the website to be fully functional and responsive.",
-                },
-            ]
+            title: "Portfolio",
+            description: {
+                one:"In this section of my web app, you will find some projects that showcase my notable growth in both best practices and complexity, scalability, and user experience. It's a vast universe for me, and as of now, I am a frontend developer seeking to improve my logic and backend knowledge to become a skilled developer with a deep understanding of this exciting world of software.", 
+                two: "Eventually, I want to develop Native apps. Today, we have many ecosystems, but I am particularly drawn to the frontend trident, along with emerging frameworks. Thank you for visiting, and now I invite you to learn more by clicking on the image in the portfolio carousel.",
+                three: "And who knows, someday I may become a great software architect or technical leader, just like the ones I have worked with, who have had great patience and love to teach me, and on the same way return to new people to love this world and build a better one!",
+            }, 
         },
-		offers: [
+		services: [
 			{
 				title: "Desing",
 				img: {
@@ -378,7 +362,7 @@ export const CMS: {
 				description: "In case of any problems or the need for changes, I can introduce new functionalities and solutions.",
 			}
 		],
-		portFolioTitle: "Portfolio",
+		portFolioTitle: "Projects",
 		optionsMenu: {
 			all: "All",
 			coded: "Coded",

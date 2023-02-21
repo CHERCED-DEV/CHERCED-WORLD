@@ -164,10 +164,13 @@ export interface PortfolioConfig {
     },
     projects: {
         title: string;
-        description: string;
-        services: ServicesConfig[];
+        description: {
+            one: string;
+            two: string;
+            three: string;
+        } 
     },
-    offers: ServicesConfig[];
+    services: ServicesConfig[];
     portFolioTitle: string;
     optionsMenu: {
         all: string;

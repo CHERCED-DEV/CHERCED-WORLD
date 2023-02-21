@@ -1,8 +1,8 @@
 .contactMe {
-    //background: linear-gradient(0deg, #000000 8.81%, rgba(196, 196, 196, 0) 31.87%);
     justify-content: space-between;
     height: 100vh;
-    padding: calculateRem(65px) 0;
+    padding-top: calculateRem(65px);
+    padding-bottom: calculateRem(65px);
 }
 
 .contactMe-info {

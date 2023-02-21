@@ -1,6 +1,6 @@
 .portfolio-projects {
     @include centerContent;
-    margin: calculateRem(60px) 0;
+    margin-top: calculateRem(35px)
 }
 .portfolio-projectsContainer {
     @include centerContent;

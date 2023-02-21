@@ -1,6 +1,4 @@
 import React from 'react';
-import { ListServices } from '../../atoms/ListItems/ListServices';
-import { ServicesConfig } from '../../../pages/api/customCMS/interfaces';
 import { CarruselContainer } from '../../atoms/Carrousel/CarruselContainer';
 import { ProjectsConfig } from '../../../pages/api/projects/database/interfaces';
 import { useCmsDataHome } from '../../../providers/cmsDataProvider';
@@ -37,24 +35,10 @@ export const PortfolioSection = () => {
     return (
         <>
             <section className="portfolio-services">
-                <ul className="portfolio-services__list">
-                    {
-                        portfolio?.projects.services.map((service: ServicesConfig, index: number) => (
-                            <ListServices
-                                key={index}
-                                title={service.title}
-                                img={
-                                    {
-                                        src: service.img.src,
-                                        alt: service.img.alt,
-                                        loading: service.img.loading
-                                    }
-                                }
-                                description={service.description}
-                            />
-                        ))
-                    }
-                </ul>
+                <h1 className="portfolio-services__title">{portfolio.projects.title}</h1>
+                <p className="portfolio-services__description">{portfolio.projects.description.one}</p>
+                <p className="portfolio-services__description">{portfolio.projects.description.two}</p>
+                <p className="portfolio-services__description">{portfolio.projects.description.three}</p>
             </section>
             <section className="portfolio-projects">
                 <div className="portfolio-projectsContainer">
