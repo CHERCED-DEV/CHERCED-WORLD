@@ -32,7 +32,6 @@ export const dinamycReaderOptions = (pageClass: string, options: ListItems[]): L
     if (index >= 0) {
       newOptions[index] = homePath;
     }
-    console.log(newOptions)
     return newOptions;
   };
   

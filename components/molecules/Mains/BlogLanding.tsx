@@ -14,19 +14,35 @@ export const BlogLanding = () => {
                     <p className='blog-content__text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </article>
                 <section className='comments'>
-                    <h3 className='comments__title'>Comentarios</h3>
-                    <ul className='comments__list'>
-                        <li className='comments__item'>
-                            <p className='comments__text'>Comentario 1</p>
-                            <span className='comments__author'>Autor del Comentario</span>
+                    <h3 className='comments-title'>Comentarios</h3>
+                    <ul className='comments-list'>
+                        <li className='comments-list__item'>
+                            <div className='comments-list__textContainer'>
+                            <span className='comments-item__author'>Autor del Comentario</span>
+                            <p className='comments-item__date'>Comentario 1</p>
+                            </div>
+                            <p className='comments-item__text'>Comentario 1</p>
                         </li>
-                        <li className='comments__item'>
-                            <p className='comments__text'>Comentario 2</p>
-                            <span className='comments__author'>Autor del Comentario</span>
+                        <li className='comments-list__item'>
+                            <div className='comments-list__textContainer'>
+                            <span className='comments-item__author'>Autor del Comentario</span>
+                            <p className='comments-item__date'>Comentario 1</p>
+                            </div>
+                            <p className='comments-item__text'>Comentario 1</p>
                         </li>
-                        <li className='comments__item'>
-                            <p className='comments__text'>Comentario 3</p>
-                            <span className='comments__author'>Autor del Comentario</span>
+                        <li className='comments-list__item'>
+                            <div className='comments-list__textContainer'>
+                            <span className='comments-item__author'>Autor del Comentario</span>
+                            <p className='comments-item__date'>Comentario 1</p>
+                            </div>
+                            <p className='comments-item__text'>Comentario 1</p>
+                        </li>
+                        <li className='comments-list__item'>
+                            <div className='comments-list__textContainer'>
+                            <span className='comments-item__author'>Autor del Comentario</span>
+                            <p className='comments-item__date'>Comentario 1</p>
+                            </div>
+                            <p className='comments-item__text'>Comentario 1</p>
                         </li>
                     </ul>
                 </section>

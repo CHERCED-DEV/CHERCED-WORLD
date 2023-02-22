@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
-import { Header } from '../components/molecules/Headers/Header';
-import { BlogLanding } from '../components/molecules/Mains/BlogLanding';
-import { Footer } from '../components/molecules/Footers/Footer';
-import { useCmsDataHome } from '../providers/cmsDataProvider';
+import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
+import { Header } from '../../components/molecules/Headers/Header';
+import { BlogLanding } from '../../components/molecules/Mains/BlogLanding';
+import { Footer } from '../../components/molecules/Footers/Footer';
+import { useCmsDataHome } from '../../providers/cmsDataProvider';
 
 
 export default function Blog() {

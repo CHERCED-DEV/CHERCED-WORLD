@@ -28,8 +28,6 @@ export const CMS: {
 			src: 'assets/icons/separatorWhite.png',
 			alt: 'separator line',
 			loading: 'lazy',
-			width: 94,
-			height: 4
 		},
 		homeSocialMedia: [
 			{
