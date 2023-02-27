@@ -4,11 +4,9 @@ import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
 import { Header } from '../../components/molecules/Headers/Header';
 import { BlogLanding } from '../../components/molecules/Mains/BlogLanding';
 import { Footer } from '../../components/molecules/Footers/Footer';
-import { useCmsDataHome } from '../../providers/cmsDataProvider';
 
 
 export default function Blog() {
-    const { pageClass } = useCmsDataHome();
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
@@ -34,7 +32,7 @@ export default function Blog() {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <body className='BLOG-PAGE'>
                         <Header />
                         <BlogLanding/>
                         <Footer />

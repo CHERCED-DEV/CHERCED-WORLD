@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useCmsDataHome } from '../../providers/cmsDataProvider';
 import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
 import { BlogCmsConfig } from '../api/blog/blogData/blog.interface';
 import { PostConfig } from '../api/blog/posts/post.interface';
@@ -7,11 +9,16 @@ import { Header } from '../../components/molecules/Headers/Header';
 import { Footer } from '../../components/molecules/Footers/Footer';
 
 
+
+
 export default function BlogIntro() {
+
+    const { pageClass } = useCmsDataHome()
+    const router = useRouter();
 
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
     const [BlogPostDataCMS, setBlogPostDataCMS] = useState<BlogCmsConfig>();
-    const [postData, setPostData] = useState<PostConfig>();
+    const [postData, setPostData] = useState<PostConfig[]>([]);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
@@ -45,6 +52,8 @@ export default function BlogIntro() {
 
         fetchBlogData();
         fetchPostsData();
+        console.log(fetchPostsData())
+        console.log(postData)
 
         return () => {
             mounted = false;
@@ -62,7 +71,8 @@ export default function BlogIntro() {
             </Head>
             {
 
-                showStarterPage ? (<PageLoader />) : (<body className='BLOG-PAGE'>
+                showStarterPage ? (<PageLoader />) : (
+                    <body className={pageClass}>
                     <Header />
                     <section>
                         <h1>{BlogPostDataCMS?.mainTitle}<strong>{BlogPostDataCMS?.mainTitleStrong}</strong> </h1>
@@ -75,14 +85,22 @@ export default function BlogIntro() {
                     </section>
                     <section>
                         <ul>
-                            <li>
-                                <img
-                                    src={BlogPostDataCMS?.img.src}
-                                    alt={BlogPostDataCMS?.img.alt}
-                                    loading={BlogPostDataCMS?.img.loading}
-                                />
-                                <h1></h1>
-                            </li>
+                           {
+                            postData.map((post: PostConfig, index: number )=>(
+                                <li>
+                                    <h1>{post.title}</h1>
+                                    <img 
+                                        src={post.img.src} 
+                                        alt={post.img.alt}
+                                        loading={post.img.loading}
+                                    />
+                                    <button onClick={() => {
+                                    
+                                    }}
+                                        >Take a look</button>
+                                </li>
+                            ))
+                           }
                         </ul>
                     </section>
                     <Footer />
