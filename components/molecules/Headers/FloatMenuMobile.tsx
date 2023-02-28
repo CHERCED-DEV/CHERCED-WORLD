@@ -19,9 +19,10 @@ export const FloatMenuMobile: React.FC = () => {
     const handleEvent = () => {
         sethandleSubMenu(!handleSubMenu);
     }
+    
     return (
         <nav className={handleSubMenu ? ("floatMenu-navegation on") : ("floatMenu-navegation off")}>
-            <header>
+            <header className='header'>
                 <button className='header-button' onClick={handleEvent}>
                     <img
                         src={header?.buttonMenu.src}

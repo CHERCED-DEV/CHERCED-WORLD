@@ -52,8 +52,6 @@ export default function BlogIntro() {
 
         fetchBlogData();
         fetchPostsData();
-        console.log(fetchPostsData())
-        console.log(postData)
 
         return () => {
             mounted = false;
@@ -87,7 +85,7 @@ export default function BlogIntro() {
                         <ul>
                            {
                             postData.map((post: PostConfig, index: number )=>(
-                                <li>
+                                <li key={index}>
                                     <h1>{post.title}</h1>
                                     <img 
                                         src={post.img.src} 
@@ -95,7 +93,7 @@ export default function BlogIntro() {
                                         loading={post.img.loading}
                                     />
                                     <button onClick={() => {
-                                    
+                                        router.push(`blog/${post.id}`);
                                     }}
                                         >Take a look</button>
                                 </li>

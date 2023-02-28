@@ -16,7 +16,7 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 	const router = useRouter();
 	const id = router.asPath
 	const [CmsData, setCmsData] = React.useState<CmsDataConfig>({} as any);
-	const [handleSubMenu, sethandleSubMenu] = React.useState<any>(false);
+	const [handleSubMenu, sethandleSubMenu] = React.useState<boolean>(false);
 	const [pageClassValue, setPageClassValue] = React.useState<string>('');
 
 	React.useEffect(() => {
@@ -33,8 +33,9 @@ export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps
 
 	React.useEffect(() => {
 		setPageClassValue(pageClassDynamicBody(id));
+        sethandleSubMenu(false);
 	  }, [id]);
-
+      
 	useClearCacheOnPageChange();
 
 	return (

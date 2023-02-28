@@ -22,9 +22,7 @@ export const dinamycReaderOptions = (pageClass: string, options: ListItems[]): L
         optionToReplace = "Services";
         break;
       default:
-        console.log("home");
         return options
-        break;
     }
   
     const index = newOptions.findIndex(option => option.title.trim() === optionToReplace.trim());

@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
 interface ClearCacheOnPageChange {
   clearCacheOnPageChange: () => void;
 }
@@ -9,16 +8,24 @@ export function useClearCacheOnPageChange(): ClearCacheOnPageChange {
   const router = useRouter();
 
   const handleRouteChange = () => {
-    window.location.reload();
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
   };
 
   useEffect(() => {
-    router.events.on("routeChangeStart", handleRouteChange);
+    const handleRouteComplete = (url: string) => {
+      if (typeof window !== "undefined" && url !== router.asPath) {
+        handleRouteChange();
+      }
+    };
+
+    router.events.on("routeChangeComplete", handleRouteComplete);
 
     return () => {
-      router.events.off("routeChangeStart", handleRouteChange);
+      router.events.off("routeChangeComplete", handleRouteComplete);
     };
-  }, []);
+  }, [router]);
 
   return {
     clearCacheOnPageChange: handleRouteChange,
