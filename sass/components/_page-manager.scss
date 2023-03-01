@@ -55,7 +55,8 @@ body.PORTFOLIO-PAGE {
 // to wrap the main section class on the pages.
 .aboutMe,
 .contactMe,
-.services {
+.services,
+.blog {
     @include container-wrap;
     @include centerContent;
 }

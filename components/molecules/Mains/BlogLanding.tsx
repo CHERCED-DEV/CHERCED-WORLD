@@ -1,52 +1,37 @@
 import React from 'react'
+import { ComentsConfig, PostConfig } from '../../../pages/api/blog/posts/post.interface'
+import { ListComentsBlog } from '../../atoms/ListItems/ListComentsBlog'
 
-export const BlogLanding = () => {
+export const BlogLanding: React.FC<PostConfig> = (props) => {
+
     return (
         <>
-            <main className='blog'>
-                <article className='blog-content'>
-                    <h1 className='blog-main__title'>titulo de post</h1>
-                    <h2 className='blog-content__title'>Título de la publicación</h2>
-                    <img className='blog-content__image'
-                        src='imagen.jpg'
-                        alt='Descripción de la imagen'
-                    />
-                    <p className='blog-content__text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </article>
-                <section className='comments'>
-                    <h3 className='comments-title'>Comentarios</h3>
-                    <ul className='comments-list'>
-                        <li className='comments-list__item'>
-                            <div className='comments-list__textContainer'>
-                                <span className='comments-item__author'>Autor del Comentario</span>
-                                <p className='comments-item__date'>Comentario 1</p>
-                            </div>
-                            <p className='comments-item__text'>Comentario 1</p>
-                        </li>
-                        <li className='comments-list__item'>
-                            <div className='comments-list__textContainer'>
-                                <span className='comments-item__author'>Autor del Comentario</span>
-                                <p className='comments-item__date'>Comentario 1</p>
-                            </div>
-                            <p className='comments-item__text'>Comentario 1</p>
-                        </li>
-                        <li className='comments-list__item'>
-                            <div className='comments-list__textContainer'>
-                                <span className='comments-item__author'>Autor del Comentario</span>
-                                <p className='comments-item__date'>Comentario 1</p>
-                            </div>
-                            <p className='comments-item__text'>Comentario 1</p>
-                        </li>
-                        <li className='comments-list__item'>
-                            <div className='comments-list__textContainer'>
-                                <span className='comments-item__author'>Autor del Comentario</span>
-                                <p className='comments-item__date'>Comentario 1</p>
-                            </div>
-                            <p className='comments-item__text'>Comentario 1</p>
-                        </li>
-                    </ul>
-                </section>
-            </main>
+            <article className='blog-content'>
+                <h1 className='blog-main__title'>{props.title}</h1>
+                <h2 className='blog-content__title'>{props.subtitle}</h2>
+                <img className='blog-content__image'
+                    src={props.img.src}
+                    alt={props.img.alt}
+                    loading={props.img.loading}
+                />
+                <p className='blog-content__text'>{props.description}</p>
+            </article>
+            <section className='comments'>
+                <h3 className='comments-title'>Comentarios</h3>
+                <ul className='comments-list'>
+                    {
+                        props.comnents?.map((comnent: ComentsConfig, index: number) => (
+                            <ListComentsBlog
+                                key={index}
+                                id={comnent.id}
+                                userName={comnent.userName}
+                                comment={comnent.comment}
+                                date={comnent.date}
+                            />
+                        ))
+                    }
+                </ul>
+            </section>
         </>
     )
 }

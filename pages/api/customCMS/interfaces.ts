@@ -98,6 +98,7 @@ export interface CmsDataContextProviderProps {
 export interface HeaderConfig {
     brandImage: ImageProps;
     buttonMenu: ImageProps;
+    backTo: ImageProps;
 }
 
 export interface HomeBannerConfig {

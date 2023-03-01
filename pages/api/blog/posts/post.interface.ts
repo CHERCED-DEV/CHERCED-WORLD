@@ -1,16 +1,17 @@
 import { ImageProps } from "../../customCMS/interfaces";
 
 export interface PostConfig {
-    id: string;
+    id?: string;
     title: string;
+    subtitle?: string;
     img: ImageProps;
     description: string;
-    comnents: ComentsConfig[];
+    comnents?: ComentsConfig[];
 }
 
 export interface ComentsConfig {
     id: string;
-    postId: string;
+    postId?: string;
     date: string;
     userName: string;
     comment: string;

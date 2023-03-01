@@ -17,6 +17,11 @@ export const CMS: {
 			alt: 'menu button',
 			loading: 'lazy',
 		},
+        backTo: {
+            src: '/assets/icons/backTo.png',
+			alt: 'BackTo',
+			loading: 'lazy',
+        }
 	},
 	homeBanner: {
 		homeBannerTitles: {

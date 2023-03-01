@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { useCmsDataHome } from '../../providers/cmsDataProvider';
+import { ListBlogCarrousel } from '../../components/atoms/ListItems/ListBlogCarrousel';
 import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
 import { BlogCmsConfig } from '../api/blog/blogData/blog.interface';
 import { PostConfig } from '../api/blog/posts/post.interface';
@@ -9,12 +9,9 @@ import { Header } from '../../components/molecules/Headers/Header';
 import { Footer } from '../../components/molecules/Footers/Footer';
 
 
-
-
 export default function BlogIntro() {
 
     const { pageClass } = useCmsDataHome()
-    const router = useRouter();
 
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
     const [BlogPostDataCMS, setBlogPostDataCMS] = useState<BlogCmsConfig>();
@@ -68,41 +65,41 @@ export default function BlogIntro() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             {
-
                 showStarterPage ? (<PageLoader />) : (
                     <body className={pageClass}>
-                    <Header />
-                    <section>
-                        <h1>{BlogPostDataCMS?.mainTitle}<strong>{BlogPostDataCMS?.mainTitleStrong}</strong> </h1>
-                        <p>{BlogPostDataCMS?.welcomeMenssage}</p>
-                        <img
-                            src={BlogPostDataCMS?.img.src}
-                            alt={BlogPostDataCMS?.img.alt}
-                            loading={BlogPostDataCMS?.img.loading}
-                        />
-                    </section>
-                    <section>
-                        <ul>
-                           {
-                            postData.map((post: PostConfig, index: number )=>(
-                                <li key={index}>
-                                    <h1>{post.title}</h1>
-                                    <img 
-                                        src={post.img.src} 
-                                        alt={post.img.alt}
-                                        loading={post.img.loading}
-                                    />
-                                    <button onClick={() => {
-                                        router.push(`blog/${post.id}`);
-                                    }}
-                                        >Take a look</button>
-                                </li>
-                            ))
-                           }
-                        </ul>
-                    </section>
-                    <Footer />
-                </body>
+                        <Header />
+                        <main className="blog">
+                            <section className="blog-intro">
+                                <h1 className="blog-intro__title">{BlogPostDataCMS?.mainTitle}<strong>{BlogPostDataCMS?.mainTitleStrong}</strong> </h1>
+                                <p className="blog-intro__description">{BlogPostDataCMS?.welcomeMenssage}</p>
+                                <img className="blog-intro__img"
+                                    src={BlogPostDataCMS?.img.src}
+                                    alt={BlogPostDataCMS?.img.alt}
+                                    loading={BlogPostDataCMS?.img.loading}
+                                />
+                            </section>
+                            <section className="blog-carrousel">
+                                <ul className="blog-carrousel__list">
+                                    {
+                                        postData.map((post: PostConfig, index: number) => (
+                                            <ListBlogCarrousel
+                                                key={index}
+                                                id={post.id}
+                                                title={post.title}
+                                                description={post.description}
+                                                img={{
+                                                    src: post.img.src,
+                                                    alt: post.img.alt,
+                                                    loading: post.img.loading
+                                                }}
+                                            />
+                                        ))
+                                    }
+                                </ul>
+                            </section>
+                        </main>
+                        <Footer />
+                    </body>
                 )
             }
         </>

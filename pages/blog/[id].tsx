@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { PostConfig } from '../api/blog/posts/post.interface';
 import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
-import { Header } from '../../components/molecules/Headers/Header';
+import { HeaderBackTo } from '../../components/molecules/Headers/HeaderBackTo';
 import { BlogLanding } from '../../components/molecules/Mains/BlogLanding';
 import { Footer } from '../../components/molecules/Footers/Footer';
 
 
 export default function Blog() {
+
+    const router = useRouter();
+
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
+    const [postIdData, setPostIdData] = useState<PostConfig>({} as PostConfig);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
@@ -19,6 +25,29 @@ export default function Blog() {
             clearTimeout(timerId);
         }
     }, []);
+
+    useEffect(() => {
+        let mounted = true;
+
+        const fetchPostsData = async () => {
+            const id = router.asPath.split('/').pop();
+            if (typeof id === 'string') {
+                if (mounted) {
+                    const response = await fetch('/api/blog/posts');
+                    const data = await response.json();
+                    const filteredData: PostConfig = await data.filter((post: any) => post.id === id)[0];
+                    setPostIdData(filteredData);
+                }
+            }
+        };
+
+        fetchPostsData();
+
+        return () => {
+            mounted = false;
+        };
+
+    }, [router.asPath])
 
     return (
         <>
@@ -33,8 +62,22 @@ export default function Blog() {
                     <PageLoader />
                 ) : (
                     <body className='BLOG-PAGE'>
-                        <Header />
-                        <BlogLanding/>
+                        <HeaderBackTo />
+                        <main className='blog'>
+                            <BlogLanding
+                                title={postIdData?.title}
+                                subtitle={postIdData?.subtitle}
+                                img={
+                                    {
+                                        src: postIdData?.img.src,
+                                        alt: postIdData?.img.alt,
+                                        loading: postIdData?.img.loading
+                                    }
+                                }
+                                description={postIdData?.description}
+                                comnents={postIdData?.comnents}
+                            />
+                        </main>
                         <Footer />
                     </body>
                 )

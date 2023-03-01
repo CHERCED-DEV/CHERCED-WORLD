@@ -1,0 +1,20 @@
+.blog-carrousel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.blog-carrousel__list {
+    
+}
+.blog-carrousel__item {
+    width: 85%;
+    margin: calculateRem(30px) 0;
+}
+.blog-carrousel__title {
+    @include rectangularButton;
+    text-align: center;
+}
+.blog-carrousel__button {
+    @include submitButtonRegular;
+}
