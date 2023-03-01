@@ -8,12 +8,12 @@ export const BlogLanding: React.FC<PostConfig> = (props) => {
         <>
             <article className='blog-content'>
                 <h1 className='blog-main__title'>{props.title}</h1>
-                <h2 className='blog-content__title'>{props.subtitle}</h2>
                 <img className='blog-content__image'
                     src={props.img.src}
                     alt={props.img.alt}
                     loading={props.img.loading}
                 />
+                <h2 className='blog-content__subTitle'>{props.subtitle}</h2>
                 <p className='blog-content__text'>{props.description}</p>
             </article>
             <section className='comments'>
