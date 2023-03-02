@@ -11,13 +11,13 @@ export const posts: PostConfig[] = [
         },
         subtitle: "subtitle! lalala",
         description: "Looking back, John realized that while it was a difficult decision to leave his established career in the construction and hospital architecture industry, he was able to find a new and exciting path that combined his passion for technology with his previous experience. He encourages others to follow their passions, even if it means taking a risk and making a big career change.",
-        comnents: [
+        comments: [
             {
                 id: "asdasf43",
                 postId: "1",
                 date: "01/02/03",
                 userName: "Camilo Alonso Hernandez Cediel",
-                comment: "lorenmus jdsafaghlkjasblkñajsnvlñskcmlasdgm",
+                comment: "lorenmus  jdsafaghlkjasblkñajsnvlñskcmlasdgm jdsafaghlkjasblkñajsnvlñskcmlasdgm jdsafaghlkjasblkñajsnvlñskcmlasdgm",
             },
             {
                 id: "asdasasf43",
@@ -37,17 +37,17 @@ export const posts: PostConfig[] = [
 			loading: 'lazy',
         },
         description: "Looking back, John realized that while it was a difficult decision to leave his established career in the construction and hospital architecture industry, he was able to find a new and exciting path that combined his passion for technology with his previous experience. He encourages others to follow their passions, even if it means taking a risk and making a big career change.",
-        comnents: [
+        comments: [
             {
                 id: "asdasf43",
-                postId: "1",
+                postId: "2",
                 date: "01/02/03",
                 userName: "nickdias",
                 comment: "lorenmus",
             },
             {
                 id: "asdasasf43",
-                postId: "1",
+                postId: "2",
                 date: "01/02/03",
                 userName: "nickdias",
                 comment: "lorenmus",
@@ -63,17 +63,17 @@ export const posts: PostConfig[] = [
 			loading: 'lazy',
         },
         description: "Looking back, John realized that while it was a difficult decision to leave his established career in the construction and hospital architecture industry, he was able to find a new and exciting path that combined his passion for technology with his previous experience. He encourages others to follow their passions, even if it means taking a risk and making a big career change.",
-        comnents: [
+        comments: [
             {
                 id: "asdasf43",
-                postId: "1",
+                postId: "3",
                 date: "01/02/03",
                 userName: "nickdias",
                 comment: "lorenmus",
             },
             {
                 id: "asdasasf43",
-                postId: "1",
+                postId: "3",
                 date: "01/02/03",
                 userName: "nickdias",
                 comment: "lorenmus",

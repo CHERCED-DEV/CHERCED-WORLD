@@ -1,5 +1,5 @@
 import React from 'react'
-import { ComentsConfig, PostConfig } from '../../../pages/api/blog/posts/post.interface'
+import { CommentsConfig, PostConfig } from '../../../pages/api/blog/posts/post.interface'
 import { ListComentsBlog } from '../../atoms/ListItems/ListComentsBlog'
 
 export const BlogLanding: React.FC<PostConfig> = (props) => {
@@ -20,7 +20,7 @@ export const BlogLanding: React.FC<PostConfig> = (props) => {
                 <h3 className='comments-title'>Comentarios</h3>
                 <ul className='comments-list'>
                     {
-                        props.comnents?.map((comnent: ComentsConfig, index: number) => (
+                        props.comments?.map((comnent: CommentsConfig, index: number) => (
                             <ListComentsBlog
                                 key={index}
                                 id={comnent.id}

@@ -10,4 +10,22 @@ export const BlogCms: BlogCmsConfig = {
         loading: "lazy",
         a: "https://github.com/CHERCED-DEV",
     },
+    sendPost: {
+        title: "send me a post!",
+        fields: {
+            name: {
+                value: "Your name Here!",
+                required: true,
+            },
+            comment: {
+                value: "Comment",
+                required: true,
+            },
+            date: {
+                value: "today",
+                required: true,
+            }
+        },
+        button: "Submit"
+    }
 };

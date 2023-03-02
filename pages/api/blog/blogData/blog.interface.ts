@@ -5,4 +5,23 @@ export interface BlogCmsConfig {
     mainTitleStrong: string
     welcomeMenssage: string;
     img: ImageProps;
+    sendPost: SendPostConfig;
+}
+export interface SendPostConfig {
+    title: string; 
+    fields: {
+        name: {
+            value: string;
+            required: boolean;
+        },
+        date: {
+            value: string;
+            required: boolean;
+        },
+        comment: {
+            value: string;
+            required: boolean;
+        },        
+    }
+    button: string;
 }

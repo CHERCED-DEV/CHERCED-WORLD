@@ -6,13 +6,14 @@ export interface PostConfig {
     subtitle?: string;
     img: ImageProps;
     description: string;
-    comnents?: ComentsConfig[];
+    comments?: CommentsConfig[];
 }
 
-export interface ComentsConfig {
+export interface CommentsConfig {
     id: string;
     postId?: string;
     date: string;
     userName: string;
     comment: string;
 }
+

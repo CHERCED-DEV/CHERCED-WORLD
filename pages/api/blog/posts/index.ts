@@ -1,11 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { posts } from "./posts";
-import { ComentsConfig } from "./post.interface";
-
-function isValidPost(postId: string): boolean {
-  const post = posts.find((p) => p.id === postId);
-  return !!post;
-}
+import { posts } from "./posts.data";
+import { CommentsConfig } from "./post.interface";
 
 export default (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   switch (req.method) {
@@ -14,13 +9,14 @@ export default (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
       res.status(200).json(posts);
       break;
     case "POST":
-      const newComment: ComentsConfig = req.body;
-      if (!isValidPost(newComment.postId)) {
+      const newComment: CommentsConfig = req.body;
+      const validPost = newComment.postId === "" ? true : false
+      if (validPost) {
         res.setHeader("Content-Type", "application/json");
         res.status(404).json({ message: "Post not found" });
       } else {
         const post = posts.find((p) => p.id === newComment.postId);
-        post?.comnents.push(newComment);
+        post?.comments?.push(newComment);
         res.setHeader("Content-Type", "application/json");
         res.status(201).json({ message: "Comentario agregado exitosamente" });
       }
