@@ -1,4 +1,4 @@
-import { ImageProps } from "../../customCMS/interfaces";
+import { ImageProps } from "../../../customCMS/interfaces";
 
 export interface BlogCmsConfig {
     mainTitle: string;
@@ -10,11 +10,11 @@ export interface BlogCmsConfig {
 export interface SendPostConfig {
     title: string; 
     fields: {
-        name: {
+        email: {
             value: string;
             required: boolean;
         },
-        date: {
+        name: {
             value: string;
             required: boolean;
         },

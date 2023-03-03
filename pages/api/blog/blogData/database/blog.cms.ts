@@ -13,6 +13,10 @@ export const BlogCms: BlogCmsConfig = {
     sendPost: {
         title: "send me a post!",
         fields: {
+            email: {
+                value: "Enter your email",
+                required: true,
+            },
             name: {
                 value: "Your name Here!",
                 required: true,
@@ -21,10 +25,6 @@ export const BlogCms: BlogCmsConfig = {
                 value: "Comment",
                 required: true,
             },
-            date: {
-                value: "today",
-                required: true,
-            }
         },
         button: "Submit"
     }

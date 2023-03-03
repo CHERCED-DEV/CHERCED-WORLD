@@ -1,7 +1,7 @@
 import React from 'react'
-import { ComentsConfig } from '../../../pages/api/blog/posts/post.interface'
+import { CommentsConfig } from '../../../pages/api/blog/posts/database/post.interface'
 
-export const ListComentsBlog: React.FC<ComentsConfig> = (props) => {
+export const ListComentsBlog: React.FC<CommentsConfig> = (props) => {
     return (
         <li className='comments-list__item'>
             <div className='comments-list__textContainer'>

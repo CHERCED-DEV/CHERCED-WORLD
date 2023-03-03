@@ -1,5 +1,5 @@
 import React from 'react';
-import { PostConfig } from '../../../pages/api/blog/posts/post.interface';
+import { PostConfig } from '../../../pages/api/blog/posts/database/post.interface';
 import { useRouter } from 'next/router';
 
 export const ListBlogCarrousel: React.FC<PostConfig> = (props) => {

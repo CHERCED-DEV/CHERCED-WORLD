@@ -20,7 +20,6 @@ export const ContactMeSection: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(contactInfo)
             });
-            const data = await response.json();
         } catch (error) {
             console.error(error);
         }

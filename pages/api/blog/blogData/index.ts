@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { BlogCms } from './blog.cms'
+import { BlogCms } from './database/blog.cms'
 
 export default (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     switch (req.method) {

@@ -3,8 +3,8 @@ import Head from 'next/head';
 import { useCmsDataHome } from '../../providers/cmsDataProvider';
 import { ListBlogCarrousel } from '../../components/atoms/ListItems/ListBlogCarrousel';
 import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
-import { BlogCmsConfig } from '../api/blog/blogData/blog.interface';
-import { PostConfig } from '../api/blog/posts/post.interface';
+import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
+import { PostConfig } from '../api/blog/posts/database/post.interface';
 import { Header } from '../../components/molecules/Headers/Header';
 import { Footer } from '../../components/molecules/Footers/Footer';
 

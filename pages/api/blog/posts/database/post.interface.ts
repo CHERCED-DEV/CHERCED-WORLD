@@ -1,4 +1,4 @@
-import { ImageProps } from "../../customCMS/interfaces";
+import { ImageProps } from "../../../customCMS/interfaces";
 
 export interface PostConfig {
     id?: string;
@@ -13,6 +13,7 @@ export interface CommentsConfig {
     id: string;
     postId?: string;
     date: string;
+    email?: string;
     userName: string;
     comment: string;
 }

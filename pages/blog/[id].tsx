@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { PostConfig } from '../api/blog/posts/post.interface';
+import { PostConfig } from '../api/blog/posts/database/post.interface';
 import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
 import { HeaderBackTo } from '../../components/molecules/Headers/HeaderBackTo';
 import { BlogLanding } from '../../components/molecules/Mains/BlogLanding';
@@ -75,7 +75,7 @@ export default function Blog() {
                                     }
                                 }
                                 description={postIdData?.description}
-                                comnents={postIdData?.comnents}
+                                comments={postIdData?.comments}
                             />
                         </main>
                         <Footer />

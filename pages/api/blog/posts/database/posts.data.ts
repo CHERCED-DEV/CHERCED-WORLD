@@ -16,6 +16,7 @@ export const posts: PostConfig[] = [
                 id: "asdasf43",
                 postId: "1",
                 date: "01/02/03",
+                email: "camilonso@gmail.com",
                 userName: "Camilo Alonso Hernandez Cediel",
                 comment: "lorenmus  jdsafaghlkjasblkñajsnvlñskcmlasdgm jdsafaghlkjasblkñajsnvlñskcmlasdgm jdsafaghlkjasblkñajsnvlñskcmlasdgm",
             },
@@ -23,6 +24,7 @@ export const posts: PostConfig[] = [
                 id: "asdasasf43",
                 postId: "1",
                 date: "01/02/03",
+                email: "camilonso@gmail.com",
                 userName: "nickdias",
                 comment: "lorenmus",
             }
@@ -42,6 +44,7 @@ export const posts: PostConfig[] = [
                 id: "asdasf43",
                 postId: "2",
                 date: "01/02/03",
+                email: "camilonso@gmail.com",
                 userName: "nickdias",
                 comment: "lorenmus",
             },
@@ -49,6 +52,7 @@ export const posts: PostConfig[] = [
                 id: "asdasasf43",
                 postId: "2",
                 date: "01/02/03",
+                email: "camilonso@gmail.com",
                 userName: "nickdias",
                 comment: "lorenmus",
             }
@@ -68,6 +72,7 @@ export const posts: PostConfig[] = [
                 id: "asdasf43",
                 postId: "3",
                 date: "01/02/03",
+                email: "camilonso@gmail.com",
                 userName: "nickdias",
                 comment: "lorenmus",
             },
@@ -75,6 +80,7 @@ export const posts: PostConfig[] = [
                 id: "asdasasf43",
                 postId: "3",
                 date: "01/02/03",
+                email: "camilonso@gmail.com",
                 userName: "nickdias",
                 comment: "lorenmus",
             }

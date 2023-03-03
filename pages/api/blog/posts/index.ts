@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { posts } from "./posts.data";
-import { CommentsConfig } from "./post.interface";
+import { posts } from "./database/posts.data";
+import { CommentsConfig } from "./database/post.interface";
 
 export default (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   switch (req.method) {

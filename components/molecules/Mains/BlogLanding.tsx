@@ -1,5 +1,5 @@
 import React from 'react'
-import { CommentsConfig, PostConfig } from '../../../pages/api/blog/posts/post.interface'
+import { CommentsConfig, PostConfig } from '../../../pages/api/blog/posts/database/post.interface'
 import { ListComentsBlog } from '../../atoms/ListItems/ListComentsBlog'
 
 export const BlogLanding: React.FC<PostConfig> = (props) => {
