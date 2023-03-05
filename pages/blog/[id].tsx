@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
+import { FormSendPost } from '../../components/atoms/Forms/FormSendPost';
+import { Modal } from '../../providers/modal/modalPortal';
+import { usePortalProvider } from '../../providers/modalProvider';
 import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
 import { HeaderBackTo } from '../../components/molecules/Headers/HeaderBackTo';
 import { BlogLanding } from '../../components/molecules/Mains/BlogLanding';
 import { Footer } from '../../components/molecules/Footers/Footer';
 
-
 export default function Blog() {
-
+    const { modalSwitch, setModalSwitch } = usePortalProvider();
     const router = useRouter();
 
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
     const [postIdData, setPostIdData] = useState<PostConfig>({} as PostConfig);
+    const [postsList, setPostsList] = useState<PostConfig[]>([]);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
@@ -36,18 +39,26 @@ export default function Blog() {
                     const response = await fetch('/api/blog/posts');
                     const data = await response.json();
                     const filteredData: PostConfig = await data.filter((post: any) => post.id === id)[0];
+                    console.log(filteredData)
                     setPostIdData(filteredData);
                 }
             }
         };
 
+        const fetchAllPostsData = async () => {
+            const response = await fetch('/api/blog/posts');
+            const data = await response.json();
+            setPostsList(data);
+        };
+
         fetchPostsData();
+        fetchAllPostsData();
 
         return () => {
             mounted = false;
         };
 
-    }, [router.asPath])
+    }, [router.asPath, postsList]);
 
     return (
         <>
@@ -78,6 +89,12 @@ export default function Blog() {
                                 comments={postIdData?.comments}
                             />
                         </main>
+                        <button onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
+                        {!!modalSwitch && (
+                            <Modal>
+                                <FormSendPost />
+                            </Modal>
+                        )}
                         <Footer />
                     </body>
                 )

@@ -90,7 +90,7 @@ export interface ContactMeFieldsConfig {
 }
 
 // special config for contexts
-export interface CmsDataContextProviderProps {
+export interface ContextProviderProps {
     children: React.ReactNode | JSX.Element | JSX.Element[];
 }
 

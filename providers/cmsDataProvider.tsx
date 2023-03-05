@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { getCMSData } from './requests/homeCB';
 import { useClearCacheOnPageChange } from './domMethods/clearCacheOnPage';
 import { pageClassDynamicBody } from './domMethods/pageClassDynamicBody';
-import { CmsDataContextProviderProps, CmsDataConfig } from '../pages/api/customCMS/interfaces';
+import { ContextProviderProps, CmsDataConfig } from '../pages/api/customCMS/interfaces';
 
 const CmsDataContext = React.createContext<{
 	CmsData: CmsDataConfig;
@@ -12,7 +12,7 @@ const CmsDataContext = React.createContext<{
 	pageClass: string
 }>({} as any);
 
-export const CmsDataContextProvider = ({ children }: CmsDataContextProviderProps) => {
+export const CmsDataContextProvider = ({ children }: ContextProviderProps) => {
 	const router = useRouter();
 	const id = router.asPath
 	const [CmsData, setCmsData] = React.useState<CmsDataConfig>({} as any);

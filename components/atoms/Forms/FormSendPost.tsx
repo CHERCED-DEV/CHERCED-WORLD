@@ -4,11 +4,13 @@ import { useRouter } from 'next/router';
 import { CommentsConfig } from '../../../pages/api/blog/posts/database/post.interface';
 import { BlogCms } from '../../../pages/api/blog/blogData/database/blog.cms';
 import DataBase from '../../../pages/api/blog/posts/database/post.methods';
+import { usePortalProvider } from '../../../providers/modalProvider';
 
 
-export const FormSendPost: React.FC<CommentsConfig> = () => {
+export const FormSendPost: React.FC = () => {
 
     const router = useRouter();
+    const { modalSwitch, setModalSwitch } = usePortalProvider()
     const { register, handleSubmit, formState: { errors } } = useForm<CommentsConfig>();
 
     const { sendPost } = BlogCms;
@@ -49,6 +51,7 @@ export const FormSendPost: React.FC<CommentsConfig> = () => {
 
     const onSubmit = (data: CommentsConfig) => {
         const idLength = 8;
+        debugger
         const idCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
         let id = "";
 
@@ -72,6 +75,7 @@ export const FormSendPost: React.FC<CommentsConfig> = () => {
 
     return (
         <section className="postMe">
+            <button onClick={() => { setModalSwitch(!modalSwitch) }}>X</button>
             <h1 className="postMe-title">{sendPost.title}</h1>
             <form className="postMe-form" onSubmit={handleSubmit(onSubmit)}>
                 <input
