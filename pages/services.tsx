@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head'
-import { useCmsDataHome } from '../providers/cmsDataProvider';
-import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
-import { Header } from '../components/molecules/Headers/Header';
-import { ServicesSection } from '../components/molecules/Mains/ServicesSection';
-import { Footer } from '../components/molecules/Footers/Footer';
+import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
+import { PortfolioSectionProps } from '../utils/mainPages.interfaces';
+import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
+import { Header } from '../components/Layout/Headers/Header';
+import { ServicesWCFUSection } from '../components/Mains/ServicesWCFU/ServicesWCFUSection';
+import { Footer } from '../components/Layout/Footers/Footer';
 
 
-export default function Services() {
-    const { pageClass } = useCmsDataHome();
+interface ServicesProps {
+    data: PortfolioSectionProps;
+}
+
+export default function Services({data}: ServicesProps) {
+
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
@@ -34,10 +39,12 @@ export default function Services() {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <body className={data.pageClass}>
                         <Header />
                         <main className='services'>
-                            <ServicesSection />
+                            <ServicesWCFUSection 
+                                portfolio={data.portfolio}
+                            />
                         </main>
                         <Footer />
                     </body>
@@ -46,3 +53,18 @@ export default function Services() {
         </>
     )
 }
+
+export async function getServerSideProps() {
+    
+    const { pageClass, CmsData } = await UseCmsDataHome();
+    const { portfolio } = CmsData;
+
+    return {
+        props: {
+            pageClass,
+            portfolio
+        }
+    }
+}
+
+export const MemoizedAboutMe = memo(Services);

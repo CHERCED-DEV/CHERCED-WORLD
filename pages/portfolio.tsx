@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useCmsDataHome } from '../providers/cmsDataProvider';
-import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
-import { Header } from '../components/molecules/Headers/Header';
-import { PortfolioSection } from '../components/molecules/Mains/PortfolioSection'
-import { Footer } from '../components/molecules/Footers/Footer';
+import { PortfolioSectionProps } from '../utils/mainPages.interfaces';
+import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
+import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
+import { Header } from '../components/Layout/Headers/Header';
+import { PortfolioSection } from '../components/Mains/portfolio/PortfolioSection';
+import { Footer } from '../components/Layout/Footers/Footer';
 
-export default function Portfolio() {
-    const { pageClass } = useCmsDataHome()
+
+
+interface PortfolioProps {
+    data: PortfolioSectionProps;
+}
+
+export default function Portfolio({data}: PortfolioProps) {
+    
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
@@ -33,10 +40,12 @@ export default function Portfolio() {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <body className={data.pageClass}>
                         <Header />
                         <main className="portfolio">
-                            <PortfolioSection />
+                            <PortfolioSection 
+                                portfolio={data.portfolio}
+                            />
                         </main>
                         <div className="AtomContainer">
                             <div className="atomP">
@@ -52,3 +61,18 @@ export default function Portfolio() {
         </>
     )
 }
+
+export async function getServerSideProps() {
+    
+    const { pageClass, CmsData } = await UseCmsDataHome();
+    const { portfolio } = CmsData;
+
+    return {
+        props: {
+            pageClass,
+            portfolio
+        }
+    }
+}
+
+export const MemoizedAboutMe = memo(Portfolio);

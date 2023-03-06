@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
-import { FormSendPost } from '../../components/atoms/Forms/FormSendPost';
-import { Modal } from '../../providers/modal/modalPortal';
-import { usePortalProvider } from '../../providers/modalProvider';
-import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
-import { HeaderBackTo } from '../../components/molecules/Headers/HeaderBackTo';
-import { BlogLanding } from '../../components/molecules/Mains/BlogLanding';
-import { Footer } from '../../components/molecules/Footers/Footer';
+import { FormSendPost } from '../../components/Mains/blogLanding/utils/FormSendPost'; 
+import { Modal } from '../../utils/portals/modalPortal';
+import { usePortalProvider } from '../../utils/providers/modalProvider';
+import { PageLoader } from '../../components/Spiners&Loaders/PageLoader';
+import { HeaderBackTo } from '../../components/Layout/Headers/HeaderBackTo';
+import { BlogLanding } from '../../components/Mains/blogLanding/BlogLanding';
+import { Footer } from '../../components/Layout/Footers/Footer';
 
 export default function Blog() {
+
     const { modalSwitch, setModalSwitch } = usePortalProvider();
     const router = useRouter();
 
@@ -29,7 +30,6 @@ export default function Blog() {
         }
     }, []);
 
-    
     useEffect(() => {
         let mounted = true;
 

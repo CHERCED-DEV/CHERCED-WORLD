@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import Head from 'next/head';
-import { useCmsDataHome } from '../providers/cmsDataProvider';
-import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
-import { Header } from '../components/molecules/Headers/Header';
-import { AboutMeSection } from '../components/molecules/Mains/AboutMeSection';
-import { Footer } from '../components/molecules/Footers/Footer';
+import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
+import { AboutMeSectionProps } from '../utils/mainPages.interfaces';
+import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
+import { Header } from '../components/Layout/Headers/Header';
+import { AboutMeSection } from '../components/Mains/aboutMeSection/AboutMeSection';
+import { Footer } from '../components/Layout/Footers/Footer';
 
-export default function AboutMe() {
-    const { pageClass } = useCmsDataHome()
+interface AboutMeProps {
+    data: AboutMeSectionProps;
+}
+
+export default function AboutMe({ data }: AboutMeProps) {
+
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
@@ -33,10 +38,12 @@ export default function AboutMe() {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <body className={data.pageClass}>
                         <Header />
                         <main className="aboutMe">
-                            <AboutMeSection />
+                            <AboutMeSection
+                                aboutMe={data.aboutMe}
+                            />
                         </main>
                         <Footer />
                     </body>
@@ -45,3 +52,18 @@ export default function AboutMe() {
         </>
     )
 }
+
+export async function getServerSideProps() {
+    
+    const { pageClass, CmsData } = await UseCmsDataHome();
+    const { aboutMe } = CmsData;
+
+    return {
+        props: {
+            pageClass,
+            aboutMe
+        }
+    }
+}
+
+export const MemoizedAboutMe = memo(AboutMe);

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useCmsDataHome } from '../../providers/cmsDataProvider';
-import { ListBlogCarrousel } from '../../components/atoms/ListItems/ListBlogCarrousel';
-import { PageLoader } from '../../components/atoms/Spiners&Loaders/PageLoader';
+import { useCmsDataHome } from '../../utils/providers/cmsDataProvider'; 
+import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel'; 
+import { PageLoader } from '../../components/Spiners&Loaders/PageLoader';
 import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
-import { Header } from '../../components/molecules/Headers/Header';
-import { Footer } from '../../components/molecules/Footers/Footer';
+import { Header } from '../../components/Layout/Headers/Header'; 
+import { Footer } from '../../components/Layout/Footers/Footer'; 
 
 
 export default function BlogIntro() {

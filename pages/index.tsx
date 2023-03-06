@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { StarterApp } from '../components/atoms/Spiners&Loaders/StarterApp';
-import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
-import { Header } from '../components/molecules/Headers/Header';
-import { HomeBanner } from '../components/molecules/Banners/MainBanner';
-import { Footer } from '../components/molecules/Footers/Footer';
-import { useCmsDataHome } from '../providers/cmsDataProvider';
+import { HomeSectionProps } from '../utils/mainPages.interfaces';
+import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
+import { StarterApp } from '../components/Spiners&Loaders/StarterApp';
+import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
+import { Header } from '../components/Layout/Headers/Header';
+import { HomeBanner } from '../components/Mains/Banners/mainBanner/MainBanner';
+import { Footer } from '../components/Layout/Footers/Footer';
 
-export default function Home() {
-    const { pageClass } = useCmsDataHome();
+
+interface HomeConfig {
+    data: HomeSectionProps;
+}
+
+export default function Home({data}: HomeConfig) {
+    
     const [showStarterApp, setShowStarterApp] = useState<boolean>(true);
     const [showPageLoader, setShowPageLoader] = useState<boolean>(false);
 
@@ -50,10 +56,12 @@ export default function Home() {
             {showStarterApp && <StarterApp />}
             {showPageLoader && <PageLoader />}
             {!showStarterApp && (
-                <body className={pageClass}>
+                <body className={data.pageClass}>
                     <Header />
                     <main className="main-home">
-                        <HomeBanner />
+                        <HomeBanner 
+                            homeBanner={data.homeBanner}
+                        />
                     </main>
                     <Footer />
                 </body>
@@ -61,3 +69,18 @@ export default function Home() {
         </>
     );
 }
+
+export async function getServerSideProps() {
+    
+    const { pageClass, CmsData } = UseCmsDataHome();
+    const { homeBanner } = CmsData;
+
+    return {
+        props: {
+            pageClass,
+            homeBanner
+        }
+    }
+}
+
+export const MemoizedAboutMe = memo(Home);

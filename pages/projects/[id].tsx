@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { fetchProject } from '../../providers/requests/homeCB'
+import { fetchProject } from '../../utils/providers/requests/homeCB' 
 import { ProjectsConfig } from '../api/projects/database/interfaces'
 
 const Proyects = () => {

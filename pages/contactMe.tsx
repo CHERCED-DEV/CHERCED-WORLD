@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useCmsDataHome } from '../providers/cmsDataProvider';
-import { PageLoader } from '../components/atoms/Spiners&Loaders/PageLoader';
-import { Footer } from '../components/molecules/Footers/Footer';
-import { ContactMeSection } from '../components/molecules/Mains/ContactMeSection';
-import { Header } from '../components/molecules/Headers/Header';
+import { ContactMeSectionProps } from '../utils/mainPages.interfaces';
+import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
+import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
+import { Header } from '../components/Layout/Headers/Header';
+import { ContactMeSection } from '../components/Mains/contactMe/ContactMeSection';
+import { Footer } from '../components/Layout/Footers/Footer';
 
-export default function ContactMe() {
-    const { pageClass } = useCmsDataHome();
+interface ContactMeProps {
+    data: ContactMeSectionProps;
+}
+
+export default function ContactMe({data}: ContactMeProps) {
+    
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
@@ -33,10 +38,12 @@ export default function ContactMe() {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <body className={data.pageClass}>
                         <Header />
                         <main className="contactMe">
-                            <ContactMeSection />
+                            <ContactMeSection 
+                                contactMe={data.contactMe}
+                            />
                         </main>                        
                         <Footer />
                     </body>
@@ -45,3 +52,18 @@ export default function ContactMe() {
         </>
     )
 }
+
+export async function getServerSideProps(): Promise<{data: ContactMeSectionProps}> {
+    
+    const { pageClass, CmsData } = await UseCmsDataHome();
+    const { contactMe } = CmsData
+
+    return {
+        data: {
+            pageClass,
+            contactMe
+        }
+    }
+}
+
+export const MemoizedContactMe = memo(ContactMe);
