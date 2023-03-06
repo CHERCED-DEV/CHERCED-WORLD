@@ -1,21 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useCmsDataHome } from '../../../utils/providers/cmsDataProvider';
-import { ListItems } from '../../../pages/api/customCMS/interfaces';
+import React, { memo, useEffect, useState } from 'react';
+import { UseCmsDataHome } from '../../../utils/providers/cmsDataProvider';
+import { HeaderConfig, ListItems } from '../../../pages/api/customCMS/interfaces';
 import { ListOptionsHeader } from './utils/ListOptionsHeader';
 import { FloatMenuMobile } from './FloatMenuMobile'
 import { dinamycReaderOptions } from './HeaderLogic/dinamicReaderRouteToOptions';
 import { floatMenuData } from './HeaderLogic/floatMenuData';
+import { getCMSData } from '../../../utils/providers/requests/homeCB';
 
 
 export const Header: React.FC = () => {
 
     const [newOptions, setNewOptions] = useState<ListItems[]>([{ title: "", href: "" }]);
-    const { CmsData, handleSubMenu, sethandleSubMenu, pageClass } = useCmsDataHome();
-    const { header } = CmsData;
+    const { handleSubMenu, sethandleSubMenu, pageClass } = UseCmsDataHome();
+    const [header, setHeader] = useState<HeaderConfig | undefined>();
 
     useEffect(() => {
-        setNewOptions(dinamycReaderOptions(pageClass, floatMenuData.options));
+        setNewOptions(dinamycReaderOptions(pageClass, floatMenuData.options));        
     }, [pageClass]);
+
+    useEffect(() => {
+        const fetchHeaderData = async () => {
+            const CmsData = await getCMSData();
+            setHeader(CmsData?.header);
+        }
+        fetchHeaderData();
+    }, []);
 
     const handleEvent = () => {
         sethandleSubMenu(!handleSubMenu)
@@ -55,3 +64,5 @@ export const Header: React.FC = () => {
         </>
     )
 }
+
+export const MemoizedAboutMe = memo(Header);

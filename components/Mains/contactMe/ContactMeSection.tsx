@@ -1,11 +1,11 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { ContactMeDataProps } from '../../../utils/mainPages.interfaces';
+import { ContactMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ContactMeFieldsInfoConfig } from '../../../pages/api/contactMe/database/interfaceMessage'
 import DataBase from '../../../pages/api/contactMe/database/db';
 
 
-export const ContactMeSection: React.FC<ContactMeDataProps> = ({contactMe}) => {
+export const ContactMeSection: React.FC<ContactMeServerDataProps> = ({contactMe}) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<ContactMeFieldsInfoConfig>();
 

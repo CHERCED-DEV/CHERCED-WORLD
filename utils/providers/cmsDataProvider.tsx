@@ -1,47 +1,51 @@
-import React from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getCMSData } from './requests/homeCB';
 import { useClearCacheOnPageChange } from '../domMethods/clearCacheOnPage';
 import { pageClassDynamicBody } from '../domMethods/pageClassDynamicBody';
-import { ContextProviderProps, CmsDataConfig } from '../../pages/api/customCMS/interfaces';
+import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
 
-const CmsDataContext = React.createContext<{
-  handleSubMenu: boolean;
-  sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  pageClass: string;
-}>({} as any);
+const CmsDataContext = createContext<{
+    handleSubMenu: boolean;
+    sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
+    pageClass: string;
+}>({
+    handleSubMenu: false,
+    sethandleSubMenu: () => { },
+    pageClass: '',
+});
+
 
 export const CmsDataProvider: React.FC<ContextProviderProps> = ({ children }) => {
-  const router = useRouter();
-  const id = router.asPath;
-  const [handleSubMenu, sethandleSubMenu] = React.useState<boolean>(false);
-  const [pageClassValue, setPageClassValue] = React.useState<string>('');
+    const router = useRouter();
+    const id = router.asPath;
+    const [handleSubMenu, sethandleSubMenu] = useState<boolean>(false);
+    const [pageClassValue, setPageClassValue] = useState<string>('');
 
-  React.useEffect(() => {
-    setPageClassValue(pageClassDynamicBody(id));
-    sethandleSubMenu(false);
-  }, [id]);
+    useEffect(() => {
+        setPageClassValue(pageClassDynamicBody(id));
+        sethandleSubMenu(false);
+    }, [id]);
 
-  useClearCacheOnPageChange();
+    useClearCacheOnPageChange();
 
-  return (
-    <CmsDataContext.Provider
-      value={{
-        handleSubMenu,
-        sethandleSubMenu,
-        pageClass: pageClassValue,
-      }}
-    >
-      {children}
-    </CmsDataContext.Provider>
-  );
+    return (
+        <CmsDataContext.Provider
+            value={{
+                handleSubMenu,
+                sethandleSubMenu,
+                pageClass: pageClassValue,
+            }}
+        >
+            {children}
+        </CmsDataContext.Provider>
+    );
 };
 
 export const UseCmsDataHome = (): {
-  handleSubMenu: boolean;
-  sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  pageClass: string;
+    handleSubMenu: boolean;
+    sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
+    pageClass: string;
 } & ReturnType<typeof useClearCacheOnPageChange> => {
-  const context = React.useContext(CmsDataContext);
-  return { ...context, ...useClearCacheOnPageChange() };
+    const context = useContext(CmsDataContext);
+    return { ...context, ...useClearCacheOnPageChange() };
 };

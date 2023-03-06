@@ -1,5 +1,5 @@
 import React from 'react';
-import { AboutMeDataProps } from '../../../utils/mainPages.interfaces';
+import { AboutMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ProExpConfig, techListConfig, CoursesConfig, IdiomsConfig, EducationConfig } from '../../../pages/api/customCMS/interfaces';
 import { ListExperiencie } from './utils/ListExperiencie';
 import { ListMySkills } from './utils/ListMySkills';
@@ -10,7 +10,7 @@ import { ListIdioms } from './utils/ListIdioms';
 
 
 
-export const AboutMeSection: React.FC<AboutMeDataProps> = ({aboutMe}) => {
+export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({aboutMe}) => {
 
     return (
         <>

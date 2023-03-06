@@ -2,7 +2,7 @@ import { CmsDataConfig } from '../../../pages/api/customCMS/interfaces'
 import { ProjectsConfig } from '../../../pages/api/projects/database/interfaces'
 
 export async function getCMSData(): Promise<CmsDataConfig> {
-    const response = await fetch('/api/customCMS');
+    const response = await fetch('http://localhost:3000//api/customCMS');
     return response.json();
 } 
 

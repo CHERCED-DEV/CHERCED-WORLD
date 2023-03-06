@@ -1,9 +1,9 @@
 import React from 'react';
 import { ImageProps } from '../../../../pages/api/customCMS/interfaces';
-import { HomeDataProps } from '../../../../utils/mainPages.interfaces';
+import { HomeServerDataProps } from '../../../../utils/dataConfigWorkflow.interfaces'; 
 import { ListContacMedia } from './utils/ListContacMedia';
 
-export const HomeBanner: React.FC<HomeDataProps> = ({homeBanner}) => {
+export const HomeBanner: React.FC<HomeServerDataProps> = ({homeBanner}) => {
 
     return (
         <section className="homeBanner">
@@ -40,4 +40,3 @@ export const HomeBanner: React.FC<HomeDataProps> = ({homeBanner}) => {
         </section>
     )
 }
-

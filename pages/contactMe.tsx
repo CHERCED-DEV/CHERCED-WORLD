@@ -1,17 +1,18 @@
 import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { ContactMeSectionProps } from '../utils/mainPages.interfaces';
+import { ContactMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
 import { Header } from '../components/Layout/Headers/Header';
 import { ContactMeSection } from '../components/Mains/contactMe/ContactMeSection';
 import { Footer } from '../components/Layout/Footers/Footer';
+import { getCMSData } from '../utils/providers/requests/homeCB';
 
-interface ContactMeProps {
-    data: ContactMeSectionProps;
-}
 
-export default function ContactMe({data}: ContactMeProps) {
+
+export default function ContactMe({contactMe}: ContactMeServerDataProps) {
+
+    const { pageClass } =  UseCmsDataHome();
     
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
@@ -38,11 +39,11 @@ export default function ContactMe({data}: ContactMeProps) {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={data.pageClass}>
+                    <body className={pageClass}>
                         <Header />
                         <main className="contactMe">
                             <ContactMeSection 
-                                contactMe={data.contactMe}
+                                contactMe={contactMe}
                             />
                         </main>                        
                         <Footer />
@@ -53,17 +54,13 @@ export default function ContactMe({data}: ContactMeProps) {
     )
 }
 
-export async function getServerSideProps(): Promise<{data: ContactMeSectionProps}> {
+export async function getServerSideProps(): Promise<{props: ContactMeServerDataProps}> {
     
-    const { pageClass, CmsData } = await UseCmsDataHome();
-    const { contactMe } = CmsData
+    const CmsData = await getCMSData();    
+    const contactMe = CmsData?.contactMe
 
-    return {
-        data: {
-            pageClass,
-            contactMe
-        }
-    }
+    return {props: { contactMe }};
+    
 }
 
 export const MemoizedContactMe = memo(ContactMe);

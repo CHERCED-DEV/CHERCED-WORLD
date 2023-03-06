@@ -1,13 +1,20 @@
-import React from 'react'
-import { ImageProps } from '../../../pages/api/customCMS/interfaces';
-import { useCmsDataHome } from '../../../utils/providers/cmsDataProvider';
+import React, { useEffect, useState } from 'react'
+import { FooterConfig, ImageProps } from '../../../pages/api/customCMS/interfaces';
+import { getCMSData } from '../../../utils/providers/requests/homeCB';
 import { ListFooterMedia } from './utils/ListFooterMedia';
 
 
 export const Footer: React.FC = () => {
 
-    const { CmsData } = useCmsDataHome()
-    const { footer } = CmsData;
+    const [footer, setFooter] = useState<FooterConfig | undefined>();
+
+    useEffect(() => {
+        const fetchHeaderData = async () => {
+            const CmsData = await getCMSData();
+            setFooter(CmsData?.footer);
+        }
+        fetchHeaderData();
+    }, []);
 
     return (
         <footer className="footer">

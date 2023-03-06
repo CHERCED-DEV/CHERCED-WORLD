@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { HomeSectionProps } from '../utils/mainPages.interfaces';
+import { HomeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { StarterApp } from '../components/Spiners&Loaders/StarterApp';
 import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
@@ -10,11 +10,9 @@ import { Footer } from '../components/Layout/Footers/Footer';
 import { getCMSData } from '../utils/providers/requests/homeCB';
 
 
-interface HomeConfig {
-    data: HomeSectionProps;
-}
+export default function Home({homeBanner}: HomeServerDataProps) {
 
-export default function Home({data}: HomeConfig) {
+    const { pageClass } =  UseCmsDataHome();
     
     const [showStarterApp, setShowStarterApp] = useState<boolean>(true);
     const [showPageLoader, setShowPageLoader] = useState<boolean>(false);
@@ -57,11 +55,11 @@ export default function Home({data}: HomeConfig) {
             {showStarterApp && <StarterApp />}
             {showPageLoader && <PageLoader />}
             {!showStarterApp && (
-                <body className={data.pageClass}>
+                <body className={pageClass}>
                     <Header />
                     <main className="main-home">
                         <HomeBanner 
-                            homeBanner={data.homeBanner}
+                            homeBanner={homeBanner}
                         />
                     </main>
                     <Footer />
@@ -71,18 +69,12 @@ export default function Home({data}: HomeConfig) {
     );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(): Promise<{props: HomeServerDataProps}> {
     
-    const  CmsData  = await getCMSData();
-    const { pageClass } = UseCmsDataHome();
-    const { homeBanner } = CmsData;
+    const CmsData = await getCMSData();    
+    const homeBanner = CmsData?.homeBanner
 
-    return {
-        props: {
-            pageClass,
-            homeBanner
-        }
-    }
+    return {props: { homeBanner }};
 }
 
 export const MemoizedAboutMe = memo(Home);

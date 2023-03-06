@@ -1,24 +1,23 @@
 import React, { useEffect, useState, memo } from 'react';
 import Head from 'next/head';
+import { getCMSData } from '../utils/providers/requests/homeCB';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { AboutMeSectionProps } from '../utils/mainPages.interfaces';
+import { AboutMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
 import { Header } from '../components/Layout/Headers/Header';
 import { AboutMeSection } from '../components/Mains/aboutMeSection/AboutMeSection';
 import { Footer } from '../components/Layout/Footers/Footer';
 
-interface AboutMeProps {
-    data: AboutMeSectionProps;
-}
 
-export default function AboutMe({ data }: AboutMeProps) {
+export default function AboutMe({ aboutMe }: AboutMeServerDataProps) {
 
+    const { pageClass } =  UseCmsDataHome();
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
             setShowStarterPage(!showStarterPage);
-        }, 3500);
+        }, 1500);
 
         // Return a function to clear the timer before the component is unmounted.
         return () => {
@@ -38,11 +37,11 @@ export default function AboutMe({ data }: AboutMeProps) {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={data.pageClass}>
+                    <body className={pageClass}>
                         <Header />
                         <main className="aboutMe">
                             <AboutMeSection
-                                aboutMe={data.aboutMe}
+                                aboutMe={aboutMe}
                             />
                         </main>
                         <Footer />
@@ -53,17 +52,12 @@ export default function AboutMe({ data }: AboutMeProps) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(): Promise<{props: AboutMeServerDataProps}> {
     
-    const { pageClass, CmsData } = await UseCmsDataHome();
-    const { aboutMe } = CmsData;
+    const CmsData = await getCMSData();    
+    const aboutMe = CmsData?.aboutMe
 
-    return {
-        props: {
-            pageClass,
-            aboutMe
-        }
-    }
+    return {props: { aboutMe }};
 }
 
 export const MemoizedAboutMe = memo(AboutMe);

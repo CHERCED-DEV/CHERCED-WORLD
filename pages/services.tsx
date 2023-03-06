@@ -1,18 +1,17 @@
 import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head'
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { PortfolioSectionProps } from '../utils/mainPages.interfaces';
+import { PortfolioServicesServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
 import { Header } from '../components/Layout/Headers/Header';
 import { ServicesWCFUSection } from '../components/Mains/ServicesWCFU/ServicesWCFUSection';
 import { Footer } from '../components/Layout/Footers/Footer';
+import { getCMSData } from '../utils/providers/requests/homeCB';
 
 
-interface ServicesProps {
-    data: PortfolioSectionProps;
-}
+export default function Services({ portfolio }: PortfolioServicesServerDataProps) {
 
-export default function Services({data}: ServicesProps) {
+    const { pageClass } =  UseCmsDataHome();
 
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
@@ -39,11 +38,11 @@ export default function Services({data}: ServicesProps) {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={data.pageClass}>
+                    <body className={pageClass}>
                         <Header />
                         <main className='services'>
                             <ServicesWCFUSection 
-                                portfolio={data.portfolio}
+                                portfolio={portfolio}
                             />
                         </main>
                         <Footer />
@@ -54,17 +53,12 @@ export default function Services({data}: ServicesProps) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(): Promise<{props: PortfolioServicesServerDataProps}> {
     
-    const { pageClass, CmsData } = await UseCmsDataHome();
-    const { portfolio } = CmsData;
+    const CmsData = await getCMSData();    
+    const portfolio = CmsData?.portfolio
 
-    return {
-        props: {
-            pageClass,
-            portfolio
-        }
-    }
+    return {props: { portfolio }};
 }
 
 export const MemoizedAboutMe = memo(Services);
