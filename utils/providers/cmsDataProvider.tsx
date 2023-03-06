@@ -6,7 +6,6 @@ import { pageClassDynamicBody } from '../domMethods/pageClassDynamicBody';
 import { ContextProviderProps, CmsDataConfig } from '../../pages/api/customCMS/interfaces';
 
 const CmsDataContext = React.createContext<{
-  CmsData: CmsDataConfig;
   handleSubMenu: boolean;
   sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
   pageClass: string;
@@ -15,21 +14,8 @@ const CmsDataContext = React.createContext<{
 export const CmsDataProvider: React.FC<ContextProviderProps> = ({ children }) => {
   const router = useRouter();
   const id = router.asPath;
-  const [CmsData, setCmsData] = React.useState<CmsDataConfig>({} as any);
   const [handleSubMenu, sethandleSubMenu] = React.useState<boolean>(false);
   const [pageClassValue, setPageClassValue] = React.useState<string>('');
-
-  React.useEffect(() => {
-    let mounted = true;
-    getCMSData().then((data: CmsDataConfig) => {
-      if (mounted) {
-        setCmsData(data);
-      }
-    });
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   React.useEffect(() => {
     setPageClassValue(pageClassDynamicBody(id));
@@ -41,7 +27,6 @@ export const CmsDataProvider: React.FC<ContextProviderProps> = ({ children }) =>
   return (
     <CmsDataContext.Provider
       value={{
-        CmsData,
         handleSubMenu,
         sethandleSubMenu,
         pageClass: pageClassValue,
@@ -53,7 +38,6 @@ export const CmsDataProvider: React.FC<ContextProviderProps> = ({ children }) =>
 };
 
 export const UseCmsDataHome = (): {
-  CmsData: CmsDataConfig;
   handleSubMenu: boolean;
   sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
   pageClass: string;

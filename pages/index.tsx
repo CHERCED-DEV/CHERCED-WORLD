@@ -7,6 +7,7 @@ import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
 import { Header } from '../components/Layout/Headers/Header';
 import { HomeBanner } from '../components/Mains/Banners/mainBanner/MainBanner';
 import { Footer } from '../components/Layout/Footers/Footer';
+import { getCMSData } from '../utils/providers/requests/homeCB';
 
 
 interface HomeConfig {
@@ -72,7 +73,8 @@ export default function Home({data}: HomeConfig) {
 
 export async function getServerSideProps() {
     
-    const { pageClass, CmsData } = UseCmsDataHome();
+    const  CmsData  = await getCMSData();
+    const { pageClass } = UseCmsDataHome();
     const { homeBanner } = CmsData;
 
     return {
