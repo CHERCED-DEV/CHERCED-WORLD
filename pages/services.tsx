@@ -1,13 +1,13 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { lazy, memo, useEffect, useState } from 'react';
 import Head from 'next/head'
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { PortfolioServicesServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
-import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
 import { Header } from '../components/Layout/Headers/Header';
 import { ServicesWCFUSection } from '../components/Mains/ServicesWCFU/ServicesWCFUSection';
 import { Footer } from '../components/Layout/Footers/Footer';
 import { getCMSData } from '../utils/providers/requests/homeCB';
 
+const PageLoader = lazy(() => import('../components/Spiners&Loaders/PageLoader').then(({ PageLoader }) => ({ default: PageLoader })));
 
 export default function Services({ portfolio }: PortfolioServicesServerDataProps) {
 
@@ -18,7 +18,7 @@ export default function Services({ portfolio }: PortfolioServicesServerDataProps
     useEffect(() => {
         const timerId = setTimeout(() => {
             setShowStarterPage(!showStarterPage);
-        }, 3500);
+        }, 2500);
 
         // Return a function to clear the timer before the component is unmounted.
         return () => {
@@ -38,7 +38,7 @@ export default function Services({ portfolio }: PortfolioServicesServerDataProps
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <div className={pageClass}>
                         <Header />
                         <main className='services'>
                             <ServicesWCFUSection 
@@ -46,7 +46,7 @@ export default function Services({ portfolio }: PortfolioServicesServerDataProps
                             />
                         </main>
                         <Footer />
-                    </body>
+                    </div>
                 )
             }
         </>

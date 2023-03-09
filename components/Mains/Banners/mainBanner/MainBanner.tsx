@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/legacy/image';
 import { ImageProps } from '../../../../pages/api/customCMS/interfaces';
 import { HomeServerDataProps } from '../../../../utils/dataConfigWorkflow.interfaces'; 
 import { ListContacMedia } from './utils/ListContacMedia';
@@ -16,11 +17,16 @@ export const HomeBanner: React.FC<HomeServerDataProps> = ({homeBanner}) => {
                 </h1>
             </div>
             <div className="homeBanner-img__container">
-                <img
+                { homeBanner?.separator?.src && (
+                <Image
                     src={homeBanner?.separator.src}
                     alt={homeBanner?.separator.alt}
                     loading={homeBanner?.separator.loading}
-                />
+                    layout="responsive"
+                    width={120}
+                    height={10}
+                />)
+                }
             </div>
             <nav className="homeBanner-socialMedia">
                 <ul className="homeBanner-socialMedia__list">

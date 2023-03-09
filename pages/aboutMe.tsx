@@ -1,28 +1,33 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, memo, lazy } from 'react';
 import Head from 'next/head';
+
 import { getCMSData } from '../utils/providers/requests/homeCB';
-import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { AboutMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
-import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
+import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { Header } from '../components/Layout/Headers/Header';
-import { AboutMeSection } from '../components/Mains/aboutMeSection/AboutMeSection';
 import { Footer } from '../components/Layout/Footers/Footer';
 
+const PageLoader = lazy(() => import('../components/Spiners&Loaders/PageLoader').then(({ PageLoader }) => ({ default: PageLoader })));
+const AboutMeSection = lazy(() => import('../components/Mains/aboutMeSection/AboutMeSection').then(({ AboutMeSection }) => ({ default: AboutMeSection })));
 
-export default function AboutMe({ aboutMe }: AboutMeServerDataProps) {
+export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
 
-    const { pageClass } =  UseCmsDataHome();
+    const { pageClass } = UseCmsDataHome();
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            setShowStarterPage(!showStarterPage);
-        }, 1500);
+        function handlePageLoad() {
+            const timerId = setTimeout(() => {
+                setShowStarterPage(!showStarterPage);
+            }, 1500);
 
-        // Return a function to clear the timer before the component is unmounted.
-        return () => {
-            clearTimeout(timerId);
+            // Return a function to clear the timer before the component is unmounted.
+            return () => {
+                clearTimeout(timerId);
+            }
         }
+
+        handlePageLoad();
     }, []);
 
     return (
@@ -37,7 +42,7 @@ export default function AboutMe({ aboutMe }: AboutMeServerDataProps) {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <div className={pageClass}>
                         <Header />
                         <main className="aboutMe">
                             <AboutMeSection
@@ -45,19 +50,17 @@ export default function AboutMe({ aboutMe }: AboutMeServerDataProps) {
                             />
                         </main>
                         <Footer />
-                    </body>
+                    </div>
                 )
             }
         </>
     )
-}
+})
 
-export async function getServerSideProps(): Promise<{props: AboutMeServerDataProps}> {
-    
-    const CmsData = await getCMSData();    
+export async function getServerSideProps(): Promise<{ props: AboutMeServerDataProps }> {
+
+    const CmsData = await getCMSData();
     const aboutMe = CmsData?.aboutMe
 
-    return {props: { aboutMe }};
+    return { props: { aboutMe } };
 }
-
-export const MemoizedAboutMe = memo(AboutMe);

@@ -1,14 +1,13 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { lazy, memo, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { ContactMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { PageLoader } from '../components/Spiners&Loaders/PageLoader';
 import { Header } from '../components/Layout/Headers/Header';
 import { ContactMeSection } from '../components/Mains/contactMe/ContactMeSection';
 import { Footer } from '../components/Layout/Footers/Footer';
 import { getCMSData } from '../utils/providers/requests/homeCB';
 
-
+const PageLoader = lazy(() => import('../components/Spiners&Loaders/PageLoader').then(({ PageLoader }) => ({ default: PageLoader })));
 
 export default function ContactMe({contactMe}: ContactMeServerDataProps) {
 
@@ -19,7 +18,7 @@ export default function ContactMe({contactMe}: ContactMeServerDataProps) {
     useEffect(() => {
         const timerId = setTimeout(() => {
             setShowStarterPage(!showStarterPage);
-        }, 3500);
+        }, 2500);
 
         // Return a function to clear the timer before the component is unmounted.
         return () => {
@@ -39,7 +38,7 @@ export default function ContactMe({contactMe}: ContactMeServerDataProps) {
                 showStarterPage ? (
                     <PageLoader />
                 ) : (
-                    <body className={pageClass}>
+                    <div className={pageClass}>
                         <Header />
                         <main className="contactMe">
                             <ContactMeSection 
@@ -47,7 +46,7 @@ export default function ContactMe({contactMe}: ContactMeServerDataProps) {
                             />
                         </main>                        
                         <Footer />
-                    </body>
+                    </div>
                 )
             }
         </>

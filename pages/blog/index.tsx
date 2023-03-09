@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useCmsDataHome } from '../../utils/providers/cmsDataProvider'; 
+import { UseCmsDataHome } from '../../utils/providers/cmsDataProvider'; 
 import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel'; 
 import { PageLoader } from '../../components/Spiners&Loaders/PageLoader';
 import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
@@ -11,7 +11,7 @@ import { Footer } from '../../components/Layout/Footers/Footer';
 
 export default function BlogIntro() {
 
-    const { pageClass } = useCmsDataHome()
+    const { pageClass } = UseCmsDataHome()
 
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
     const [BlogPostDataCMS, setBlogPostDataCMS] = useState<BlogCmsConfig>();

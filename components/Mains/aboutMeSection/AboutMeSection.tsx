@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/legacy/image';
 import { AboutMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ProExpConfig, techListConfig, CoursesConfig, IdiomsConfig, EducationConfig } from '../../../pages/api/customCMS/interfaces';
 import { ListExperiencie } from './utils/ListExperiencie';
@@ -10,17 +11,24 @@ import { ListIdioms } from './utils/ListIdioms';
 
 
 
-export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({aboutMe}) => {
+export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) => {
 
     return (
         <>
             <section className="aboutMe-description">
                 <div className="aboutMe-container__parallax">
-                    <img className="aboutMe-img__parallax"
-                        src={aboutMe?.parallax.src}
-                        alt={aboutMe?.parallax.alt}
-                        loading={aboutMe?.parallax.loading}
-                    />
+                    <div className="aboutMe-img__parallax">
+                        {aboutMe?.parallax.src && (
+                            <Image
+                                src={aboutMe?.parallax.src}
+                                alt={aboutMe?.parallax.alt}
+                                loading={aboutMe?.parallax.loading}
+                                layout='responsive'
+                                width={225}
+                                height={368}
+                            />
+                        )}
+                    </div>
                 </div>
                 <div className="aboutMe-description__container">
                     <h1 className="aboutMe-description__title">

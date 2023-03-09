@@ -336,7 +336,7 @@ ol {
     align-items: center;
     background-color: black;
     position: relative;
-    z-index: 3;
+    z-index: $button-scrolltop-zindex;
     animation: loader 5s linear forwards;
 }
 

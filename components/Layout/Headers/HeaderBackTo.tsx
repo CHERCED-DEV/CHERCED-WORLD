@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
-import { useCmsDataHome } from '../../../utils/providers/cmsDataProvider';
+import { HeaderConfig } from '../../../pages/api/customCMS/interfaces';
+import { getCMSData } from '../../../utils/providers/requests/homeCB';
 
 
 export const HeaderBackTo: React.FC = () => {
 
+    const [header, setHeader] = useState<HeaderConfig | undefined>();
+
     const router = useRouter();
 
-    const { CmsData } = useCmsDataHome();
-    const { header } = CmsData;
-
+    useEffect(() => {
+        const fetchHeaderData = async () => {
+            const CmsData = await getCMSData();
+            setHeader(CmsData?.header);
+        }
+        fetchHeaderData();
+    }, []);
 
     const handleEvent = () => {
         const pathArray = router.asPath.split("/");
@@ -21,17 +29,31 @@ export const HeaderBackTo: React.FC = () => {
     return (
         <>
             <header id='header' className="headerBackTo">
-                <img className="headerBackTo__img"
-                    src={header?.brandImage.src}
-                    alt={header?.brandImage.alt}
-                    loading={header?.brandImage.loading}
-                />
+                <div className="headerBackTo__img">
+                    {header?.brandImage?.src && (
+                        <Image
+                            src={header?.brandImage.src}
+                            alt={header?.brandImage.alt}
+                            loading={header?.brandImage.loading}
+                            layout="responsive"
+                            width={64}
+                            height={64}
+                        />
+                    )}
+                </div>
                 <button className="headerBackTo-button" onClick={handleEvent}>
-                    <img className="headerBackTo-button__img"
-                        src={header?.backTo.src}
-                        alt={header?.backTo.alt}
-                        loading={header?.backTo.loading}
-                    />
+                    <div className="headerBackTo-button__img">
+                        {header?.brandImage?.src && (
+                        <Image
+                            src={header?.backTo.src}
+                            alt={header?.backTo.alt}
+                            loading={header?.backTo.loading}
+                            layout="responsive"
+                            width={32}
+                            height={32}
+                        />
+                    )}
+                    </div>
                 </button>
             </header>
         </>

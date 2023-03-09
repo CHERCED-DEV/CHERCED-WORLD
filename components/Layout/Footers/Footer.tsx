@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
+import Image from 'next/legacy/image';
 import { FooterConfig, ImageProps } from '../../../pages/api/customCMS/interfaces';
 import { getCMSData } from '../../../utils/providers/requests/homeCB';
 import { ListFooterMedia } from './utils/ListFooterMedia';
 
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC = memo(() => {
 
     const [footer, setFooter] = useState<FooterConfig | undefined>();
 
@@ -20,11 +21,19 @@ export const Footer: React.FC = () => {
         <footer className="footer">
             <section className="footer-back">
                 <a className="footer-back__link" href={footer?.backOption.link.href}>
-                    <img className="footer-back__img"
-                        src={footer?.backOption.img.src}
-                        alt={footer?.backOption.img.alt}
-                        loading={footer?.backOption.img.loading}
-                    />
+                    <div className="footer-back__img">
+                        {footer?.backOption?.img?.src && (
+                            <Image
+                                src={footer?.backOption.img.src}
+                                alt={footer?.backOption.img.alt}
+                                loading={footer?.backOption.img.loading}
+                                layout='fixed'
+                                width={15}
+                                height={15}
+                            />
+                        )
+                    }
+                    </div>
                 </a>
                 <h1 className="footer-back__title">
                     {footer?.backOption.text}
@@ -53,4 +62,6 @@ export const Footer: React.FC = () => {
             </section>
         </footer>
     )
-}
+})
+
+Footer.displayName = 'Footer';

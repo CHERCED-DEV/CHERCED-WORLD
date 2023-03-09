@@ -1,18 +1,18 @@
 // PAGE MANAGER:
 
-body.HOME-PAGE,
-body.ABOUTME-PAGE,
-body.BLOG-PAGE,
-body.CONTACTME-PAGE,
-body.PORTFOLIO-PAGE,
-body.SERVICES-PAGE {
+div.HOME-PAGE,
+div.ABOUTME-PAGE,
+div.BLOG-PAGE,
+div.CONTACTME-PAGE,
+div.PORTFOLIO-PAGE,
+div.SERVICES-PAGE {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 // Pages withOut backtop footer:
-body.HOME-PAGE {
+div.HOME-PAGE {
     background-color: grey;
     .footer {
         .footer-back {
@@ -32,21 +32,21 @@ body.HOME-PAGE {
 
 //[Unic Styles]
 // HOME PAGE
-body.HOME-PAGE {
+div.HOME-PAGE {
     height: 100vh;
 }
 // CONTACTME PAGE
-body.CONTACTME-PAGE {
+div.CONTACTME-PAGE {
    background: $colorLinearGradientContactMeBody;
 }
 // ABOUT ME PAGE
-body.ABOUTME-PAGE {
+div.ABOUTME-PAGE {
     align-items: center;
     background-color: black;
     color: white ;
 }
 // PORTFOLIO PAGE
-body.PORTFOLIO-PAGE {
+div.PORTFOLIO-PAGE {
     .footer {
         border-radius: 0;
     }
