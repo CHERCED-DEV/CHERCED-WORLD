@@ -34,7 +34,8 @@ export const Header: React.FC = memo(() => {
     return (
         <>
             <FloatMenuMobile />
-            <header id='header' className="header">
+            <header id='header' className="header-container" >
+                <nav className="header">
                 <div className="header__img">
                     {header?.brandImage?.src && (
                         <Image
@@ -76,6 +77,7 @@ export const Header: React.FC = memo(() => {
                         )}
                     </div>
                 </button>
+                </nav>
             </header>
         </>
     )

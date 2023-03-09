@@ -27,3 +27,10 @@ $height-header: calculateRem(65px);
     background-color: transparent;
     border: none;
 }
+.header-container {
+    width: 100vw;
+    background-color: black;
+} 
+@media screen and #{$tablet-landscape} {
+    
+}

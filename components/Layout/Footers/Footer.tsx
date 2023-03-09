@@ -18,8 +18,9 @@ export const Footer: React.FC = memo(() => {
     }, []);
 
     return (
-        <footer className="footer">
-            <section className="footer-back">
+        <footer className="footer-container">
+           <div className="footer">
+           <section className="footer-back">
                 <a className="footer-back__link" href={footer?.backOption.link.href}>
                     <div className="footer-back__img">
                         {footer?.backOption?.img?.src && (
@@ -60,6 +61,7 @@ export const Footer: React.FC = memo(() => {
                     {footer?.copyright.normalText}
                 </h1>
             </section>
+           </div>
         </footer>
     )
 })

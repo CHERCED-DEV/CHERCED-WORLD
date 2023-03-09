@@ -22,7 +22,7 @@ export const HomeBanner: React.FC<HomeServerDataProps> = ({homeBanner}) => {
                     src={homeBanner?.separator.src}
                     alt={homeBanner?.separator.alt}
                     loading={homeBanner?.separator.loading}
-                    layout="responsive"
+                    layout="fixed"
                     width={120}
                     height={10}
                 />)
