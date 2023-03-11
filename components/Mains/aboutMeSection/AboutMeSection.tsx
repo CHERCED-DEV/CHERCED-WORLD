@@ -30,8 +30,8 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
                                 alt={aboutMe?.parallax.alt}
                                 loading={aboutMe?.parallax.loading}
                                 layout='responsive'
-                                width={225}
-                                height={368}
+                                width={500}
+                                height={627}
                             />
                         )}
                     </div>

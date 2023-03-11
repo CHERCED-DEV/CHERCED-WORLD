@@ -1,34 +1,57 @@
+.aboutMe-description {
+    min-height: calculateRem(720px);
+    height: calc(100vh - calculateRem(65px));
+    justify-content: flex-end;
+}
 .aboutMe-container__parallax {
-	width: calculateRem(250px);
-	text-align: center;
+    width: calculateRem(250px);
+    text-align: center;
 }
 
-.aboutMe-img__parallax { 
-    margin-top: calculateRem(45px);
+.aboutMe-img__parallax {
+    height: 70%;
 }
 
 .aboutMe-description__container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-    margin: 0 0 calculateRem(60px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 calculateRem(30px);
 }
 
 .aboutMe-description__title {
     @include rectangularButton($f-size-md-xxl);
     margin-bottom: calculateRem(40px);
-	&::before {
-		content: '"';
-		color: black;
-	}
+    box-shadow: 0 0 0 white;
+    animation: shadow 2s ease-in-out infinite;
 
-	&::after {
-		content: '!';
-		color: black;
-	}
+
+    @keyframes shadow {
+        0% {
+            box-shadow: 0 0 0 white;
+        }
+
+        50% {
+            box-shadow: 0 5px 15px white;
+        }
+
+        100% {
+            box-shadow: 0 0 0 white;
+        }
+    }
+
+    &::before {
+        content: '"';
+        color: black;
+    }
+
+    &::after {
+        content: '!';
+        color: black;
+    }
 }
 
 .aboutMe-description__parragraph {
-	text-align: justify;
-	margin: 0 5%;
+    text-align: justify;
+    margin: 0 5%;
 }
