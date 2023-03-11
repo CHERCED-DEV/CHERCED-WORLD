@@ -9,21 +9,25 @@ import { getCMSData } from '../utils/providers/requests/homeCB';
 
 const PageLoader = lazy(() => import('../components/Spiners&Loaders/PageLoader').then(({ PageLoader }) => ({ default: PageLoader })));
 
-export default function Services({ portfolio }: PortfolioServicesServerDataProps) {
+export default memo(function Services({ portfolio }: PortfolioServicesServerDataProps) {
 
-    const { pageClass } =  UseCmsDataHome();
+    const { pageClass } = UseCmsDataHome();
 
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            setShowStarterPage(!showStarterPage);
-        }, 2500);
+        function handlePageLoad() {
+            const timerId = setTimeout(() => {
+                setShowStarterPage(!showStarterPage);
+            }, 1500);
 
-        // Return a function to clear the timer before the component is unmounted.
-        return () => {
-            clearTimeout(timerId);
+            // Return a function to clear the timer before the component is unmounted.
+            return () => {
+                clearTimeout(timerId);
+            }
         }
+
+        handlePageLoad();
     }, []);
 
     return (
@@ -41,7 +45,7 @@ export default function Services({ portfolio }: PortfolioServicesServerDataProps
                     <div className={pageClass}>
                         <Header />
                         <main className='services'>
-                            <ServicesWCFUSection 
+                            <ServicesWCFUSection
                                 portfolio={portfolio}
                             />
                         </main>
@@ -50,15 +54,13 @@ export default function Services({ portfolio }: PortfolioServicesServerDataProps
                 )
             }
         </>
-    )
-}
+    );
+});
 
-export async function getServerSideProps(): Promise<{props: PortfolioServicesServerDataProps}> {
-    
-    const CmsData = await getCMSData();    
+export async function getServerSideProps(): Promise<{ props: PortfolioServicesServerDataProps }> {
+
+    const CmsData = await getCMSData();
     const portfolio = CmsData?.portfolio
 
-    return {props: { portfolio }};
+    return { props: { portfolio } };
 }
-
-export const MemoizedAboutMe = memo(Services);

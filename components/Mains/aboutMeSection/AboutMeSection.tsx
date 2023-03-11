@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/legacy/image';
 import { AboutMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ProExpConfig, techListConfig, CoursesConfig, IdiomsConfig, EducationConfig } from '../../../pages/api/customCMS/interfaces';
@@ -12,6 +12,12 @@ import { ListIdioms } from './utils/ListIdioms';
 
 
 export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) => {
+
+    const [showHidden, setShowHidden] = useState(false);
+
+    function toggleShowHidden() {
+        setShowHidden(!showHidden);
+    }
 
     return (
         <>
@@ -82,23 +88,28 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
             </section>
             <section className="aboutMe-tecnologies">
                 <ul className="aboutMe-tecnologies__list">
-                    {
-                        aboutMe?.techList.map((techList: techListConfig, index: number) => (
+                    {aboutMe?.techList.map((techList: techListConfig, index: number) => {
+                        const hidden = index >= 4 && !showHidden;
+                        return (
                             <ListTecnologies
                                 key={index}
+                                hidden={hidden}
                                 techName={techList.techName}
-                                img={
-                                    {
-                                        src: techList.img.src,
-                                        alt: techList.img.alt,
-                                        loading: techList.img.loading,
-                                    }
-                                }
+                                img={{
+                                    src: techList.img.src,
+                                    alt: techList.img.alt,
+                                    loading: techList.img.loading,
+                                }}
                                 progress={techList.progress}
                             />
-                        ))
-                    }
+                        );
+                    })}
                 </ul>
+                {aboutMe?.techList.length > 4 && (
+                    <button className={ showHidden ?  "aboutMe-tecnologies__show-more off" : "aboutMe-tecnologies__show-more" }  onClick={toggleShowHidden}>
+                        {showHidden ? 'Show less' : 'Show more!'}
+                    </button>
+                )}
             </section>
             <section className="aboutMe-education">
                 <h1 className="aboutMe-education__title">

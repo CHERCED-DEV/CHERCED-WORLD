@@ -1,40 +1,54 @@
 .aboutMe-career__title {
-    margin: calculateRem(35px) 0;
+    margin-bottom: calculateRem(60px);
 }
 
-.aboutMe-career__list { margin: 0 5%; }
-.aboutMe-career__item { 
+.aboutMe-career__list {
+    margin: 0 5%;
+}
+
+.aboutMe-career__item {
     display: flex;
-    margin: calculateRem(25px) 0;
+    flex-direction: column;
+    margin: calculateRem(45px) 0;
+
     &:first-child {
         margin-top: 0;
-    } 
+    }
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
-.aboutMe-career__itemTitleConainer { 
-    text-align: center;
-    height: calculateRem(24px); 
+
+.aboutMe-career__itemTitleConainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
+
 .aboutMe-career__itemTitle {
-    @include font-size(10px);
-    min-width: calculateRem(100px);
-    display: inline-block;
-    background-color: blue;
-    border: 1px solid white;
-    border-radius: 100vh;
-    padding: 5px;
+    @include rectangularButton(10px);
+    width: calculateRem(120px);
+    padding: calculateRem(4px);
+    border-width: calculateRem(4px);
 }
 
 .aboutMe-containerExp__title {
     @include font-size($f-size);
-    height: calculateRem(24px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-left: calculateRem(20px);
 }
-.aboutMe-containerExp__subTitle { 
+
+.aboutMe-containerExp__subTitle {
     @include font-size($f-size-md);
-    margin: calculateRem(25px) 0; 
+    margin: calculateRem(25px) 0;
 }
+
+.aboutMe-career__containerExp {
+    >hr {
+        margin: calculateRem(40px) calculateRem(30px) 0;
+    }
+}
+
 .aboutMe-containerExp__description {
     text-align: justify;
+
 }

@@ -25,7 +25,7 @@ $bp-tablet-portrait-max: calculateRem(768px - 1);
 $bp-tablet-portrait-min: calculateRem(640px + 1);
 $bp-tablet-landscape: calculateRem(992px);
 $bp-tablet-landscape-max: calculateRem(992px - 1);
-$bp-tablet-landscape-min: calculateRem(768px + 1);
+$bp-tablet-landscape-min: (768px + 1);
 //## desktop
 $bp-desktop: calculateRem($container-max-width);
 $bp-desktop-max: calculateRem($container-max-width - 1);

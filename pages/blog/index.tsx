@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { UseCmsDataHome } from '../../utils/providers/cmsDataProvider'; 
-import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel'; 
+import { UseCmsDataHome } from '../../utils/providers/cmsDataProvider';
+import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel';
 import { PageLoader } from '../../components/Spiners&Loaders/PageLoader';
 import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
-import { Header } from '../../components/Layout/Headers/Header'; 
-import { Footer } from '../../components/Layout/Footers/Footer'; 
+import { Header } from '../../components/Layout/Headers/Header';
+import { Footer } from '../../components/Layout/Footers/Footer';
 
 
-export default function BlogIntro() {
+export default memo(function BlogIntro() {
 
     const { pageClass } = UseCmsDataHome()
 
@@ -18,14 +18,18 @@ export default function BlogIntro() {
     const [postData, setPostData] = useState<PostConfig[]>([]);
 
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            setShowStarterPage(!showStarterPage);
-        }, 3500);
+        function handlePageLoad() {
+            const timerId = setTimeout(() => {
+                setShowStarterPage(!showStarterPage);
+            }, 1500);
 
-        // Return a function to clear the timer before the component is unmounted.
-        return () => {
-            clearTimeout(timerId);
+            // Return a function to clear the timer before the component is unmounted.
+            return () => {
+                clearTimeout(timerId);
+            }
         }
+
+        handlePageLoad();
     }, []);
 
     useEffect(() => {
@@ -103,5 +107,5 @@ export default function BlogIntro() {
                 )
             }
         </>
-    )
-}
+    );
+});

@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sass": "node-sass --output-style compressed --source-map true --watch src/sass:dist/css"    
   },
   "dependencies": {
     "@next/font": "13.1.1",

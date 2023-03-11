@@ -7,7 +7,11 @@
 @import './sections/aboutMe.Idioms';
 
 
-.aboutMe-description,
+.aboutMe-description {
+    display: flex;
+	flex-direction: column;
+	align-items: center; 
+}
 .aboutMe-career,
 .aboutMe-skills,
 .aboutMe-tecnologies,
@@ -17,12 +21,16 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+    @include container-wrap;
+    background: white;
+    color: black;
+    padding-top: calculateRem(60px);
 }
 .aboutMe-career__title,
 .aboutMe-skills__title,
 .aboutMe-education__title, 
 .aboutMe-courses__textFlag {
-    @include font-size($f-size-xlgx);
+    @include rectangularButton($f-size-md-xxl);
     width: 90%;
 }
 

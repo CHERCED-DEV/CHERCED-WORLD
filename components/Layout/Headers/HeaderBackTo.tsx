@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import { HeaderConfig } from '../../../pages/api/customCMS/interfaces';
 import { getCMSData } from '../../../utils/providers/requests/homeCB';
 
 
-export const HeaderBackTo: React.FC = () => {
+export const HeaderBackTo: React.FC = memo(() => {
 
     const [header, setHeader] = useState<HeaderConfig | undefined>();
 
@@ -57,5 +57,7 @@ export const HeaderBackTo: React.FC = () => {
                 </button>
             </header>
         </>
-    )
-}
+    );
+});
+
+HeaderBackTo.displayName = 'HeaderBackTo';

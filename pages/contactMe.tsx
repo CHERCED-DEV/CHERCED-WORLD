@@ -3,28 +3,33 @@ import Head from 'next/head';
 import { ContactMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { Header } from '../components/Layout/Headers/Header';
-import { ContactMeSection } from '../components/Mains/contactMe/ContactMeSection';
 import { Footer } from '../components/Layout/Footers/Footer';
 import { getCMSData } from '../utils/providers/requests/homeCB';
 
 const PageLoader = lazy(() => import('../components/Spiners&Loaders/PageLoader').then(({ PageLoader }) => ({ default: PageLoader })));
+const ContactMeSection = lazy(() => import('../components/Mains/contactMe/ContactMeSection').then(({ ContactMeSection }) => ({ default: ContactMeSection })));
 
-export default function ContactMe({contactMe}: ContactMeServerDataProps) {
+export default memo(function ContactMe({ contactMe }: ContactMeServerDataProps) {
 
-    const { pageClass } =  UseCmsDataHome();
-    
+    const { pageClass } = UseCmsDataHome();
+
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            setShowStarterPage(!showStarterPage);
-        }, 2500);
+        function handlePageLoad() {
+            const timerId = setTimeout(() => {
+                setShowStarterPage(!showStarterPage);
+            }, 1500);
 
-        // Return a function to clear the timer before the component is unmounted.
-        return () => {
-            clearTimeout(timerId);
+            // Return a function to clear the timer before the component is unmounted.
+            return () => {
+                clearTimeout(timerId);
+            }
         }
+
+        handlePageLoad();
     }, []);
+
 
     return (
         <>
@@ -41,25 +46,23 @@ export default function ContactMe({contactMe}: ContactMeServerDataProps) {
                     <div className={pageClass}>
                         <Header />
                         <main className="contactMe">
-                            <ContactMeSection 
+                            <ContactMeSection
                                 contactMe={contactMe}
                             />
-                        </main>                        
+                        </main>
                         <Footer />
                     </div>
                 )
             }
         </>
-    )
-}
+    );
+});
 
-export async function getServerSideProps(): Promise<{props: ContactMeServerDataProps}> {
-    
-    const CmsData = await getCMSData();    
+export async function getServerSideProps(): Promise<{ props: ContactMeServerDataProps }> {
+
+    const CmsData = await getCMSData();
     const contactMe = CmsData?.contactMe
 
-    return {props: { contactMe }};
-    
-}
+    return { props: { contactMe } };
 
-export const MemoizedContactMe = memo(ContactMe);
+}

@@ -16,11 +16,42 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
-    margin-bottom: calculateRem(25px);
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
+    visibility: visible;
+
+    &.VISIBLE {
+        opacity: 1;
+        height: auto;
+        visibility: visible;
+        transition: opacity 0.5s ease-in-out, height 0.5s ease-in-out, visibility 0s linear;
+        margin-bottom: calculateRem(25px);
+    }
+
+    &.HIDDEN {
+        opacity: 0;
+        height: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease-in-out, height 0.5s ease-in-out, visibility 0s linear 0.5s;
+    }
 }
 
 .aboutMe-tecnologies__img {
     width: 50%;
     margin: calculateRem(15px) 0;
+}
+
+.aboutMe-tecnologies__item.HIDDEN+.aboutMe-tecnologies__item.VISIBLE {
+    height: 0;
+    visibility: hidden;
+    transition: height 0.5s ease-in-out, visibility 0s linear 0.5s;
+}
+
+.aboutMe-tecnologies__show-more {
+    @include submitButtonRegular;
+
+    &.off {
+        display: none;
+    }
 }

@@ -23,6 +23,7 @@ export interface techListConfig {
     techName: string;
     img: ImageProps;
     progress: string;
+    hidden?: boolean;
 }
 export interface ProExpConfig {
     initialDate: string;

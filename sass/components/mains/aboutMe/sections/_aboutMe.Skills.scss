@@ -1,18 +1,31 @@
 .aboutMe-skills__title {
-    margin: calculateRem(10px) 0 calculateRem(35px);
+    margin-bottom: calculateRem(60px);
 }
+
 .aboutMe-skills__parragraph {
     margin: 0 5%;
     text-align: justify;
 }
+
 .aboutMe-skills__list {
-    list-style-image: url("../../../../../public/assets/icons/liIcon.png");
-    margin: calculateRem(25px) 5% calculateRem(25px) 20%;
+    margin: calculateRem(25px);
 }
+
 .aboutMe-skills__item {
+    display: flex;
     margin: calculateRem(25px) 0;
-    text-align: justify;
+
+    &::before {
+        content: url("../../../../../public/assets/icons/liIcon.png");
+        width: 20%;
+    }
+
     &:last-child {
         margin-bottom: calculateRem(10px);
     }
+}
+
+.aboutMe-skills__text {
+    text-align: justify;
+    width: 100%;
 }

@@ -13,6 +13,7 @@ const AboutMeSection = lazy(() => import('../components/Mains/aboutMeSection/Abo
 export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
 
     const { pageClass } = UseCmsDataHome();
+
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
 
     useEffect(() => {
@@ -54,8 +55,8 @@ export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
                 )
             }
         </>
-    )
-})
+    );
+});
 
 export async function getServerSideProps(): Promise<{ props: AboutMeServerDataProps }> {
 

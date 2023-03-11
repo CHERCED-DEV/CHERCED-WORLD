@@ -42,7 +42,7 @@ div.CONTACTME-PAGE {
 // ABOUT ME PAGE
 div.ABOUTME-PAGE {
     align-items: center;
-    background-color: black;
+    background: linear-gradient(180deg, #000 6.81%, rgba(196, 196, 196, 0) 15.87%);
     color: white ;
 }
 // PORTFOLIO PAGE
@@ -53,7 +53,6 @@ div.PORTFOLIO-PAGE {
 }
 
 // to wrap the main section class on the pages.
-.aboutMe,
 .contactMe,
 .services,
 .blog {

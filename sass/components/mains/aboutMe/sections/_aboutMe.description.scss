@@ -3,25 +3,28 @@
 	text-align: center;
 }
 
-.aboutMe-img__parallax { width: 90%;}
+.aboutMe-img__parallax { 
+    margin-top: calculateRem(45px);
+}
 
 .aboutMe-description__container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+    margin: 0 0 calculateRem(60px);
 }
 
 .aboutMe-description__title {
-	@include font-size($f-size-xxlg);
-	margin: calculateRem(35px) 0 calculateRem(20px);
+    @include rectangularButton($f-size-md-xxl);
+    margin-bottom: calculateRem(40px);
 	&::before {
 		content: '"';
-		color: blue;
+		color: black;
 	}
 
 	&::after {
 		content: '!';
-		color: blue;
+		color: black;
 	}
 }
 
