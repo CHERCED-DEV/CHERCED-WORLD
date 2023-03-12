@@ -8,7 +8,10 @@ export const ListEducationCourses: React.FC<CoursesConfig> = (props) => {
             {props.schools.map((school: string, index: number) => (
                 <li key={index} className="aboutMe-courses__item">
                     <h2 className="aboutMe-courses__school">{school}</h2>
-                    <p className="aboutMe-courses__descriptionCoruse">{props.descriptions[index]}</p>
+                    <div className="aboutMe-courses__descriptionCoruse">
+                        <hr />
+                        <p>{props.descriptions[index]}</p>
+                    </div>
                 </li>
             ))}
         </>

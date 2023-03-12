@@ -1,202 +1,206 @@
 // general config
 export interface ImageProps {
-    src: string;
-    alt: string;
-    loading: "lazy" | "eager" | undefined;
-    a?: string;
-    width?: number;
-    height?: number;
+  src: string;
+  alt: string;
+  loading: "lazy" | "eager" | undefined;
+  a?: string;
+  width?: number;
+  height?: number;
 }
 export interface ListItems {
-    title: string;
-    href: string;
+  title: string;
+  href: string;
 }
 interface Link {
-    href?: string;
+  href?: string;
 }
 interface HomeBannerTitles {
-    textParragraph: string;
-    textStrong: string;
-    mainTitle: string;
+  textParragraph: string;
+  textStrong: string;
+  mainTitle: string;
 }
 export interface techListConfig {
-    techName: string;
-    img: ImageProps;
-    progress: string;
-    hidden?: boolean;
+  techName: string;
+  img: ImageProps;
+  progress: string;
+  hidden?: boolean;
 }
 export interface ProExpConfig {
-    initialDate: string;
-    endingDate?: string;
-    expTitleDescription: {
-        expTitle: string;
-        company: string;
-        descriptionExp: string;
-    }
+  initialDate: string;
+  endingDate?: string;
+  expTitleDescription: {
+    expTitle: string;
+    company: string;
+    descriptionExp: string;
+  };
 }
 
 export interface skillConfig {
-    skill: string;
+  skill: string;
 }
 
 export interface EducationConfig {
-    initialDate: string;
-    endingDate?: string;
-    proTitleDegree: {
-        proTitle: string;
-        strong: string;
-    }
+  initialDate: string;
+  endingDate?: string;
+  proTitleDegree: {
+    proTitle: string;
+    strong: string;
+  };
 }
 
 export interface CoursesConfig {
-    schools: string[];
-    descriptions: string[];
+  schools: string[];
+  descriptions: string[];
 }
 
 export interface IdiomsConfig {
-    idiom: string;
-    progress: string;
-    img: ImageProps;
+  idiom: string;
+  progress: string;
+  img: ImageProps;
 }
 
 export interface ServicesConfig {
-    title: string;
-    img: ImageProps;
-    description: string;
+  title: string;
+  img: ImageProps;
+  description: string;
 }
 
 export interface CardsPortfolioConfig {
-    nameProject: string;
-    description: string;
-    buttonNext: string;
+  nameProject: string;
+  description: string;
+  buttonNext: string;
 }
 
 export interface ContactMeFieldsConfig {
-    name: {
-        value: string;
-        required: boolean;
-    }
-    email: {
-        value: string;
-        required: boolean;
-    }
-    phone: {
-        value: string;
-        required: boolean;
-    }
-    message: {
-        value: string;
-        required: boolean;
-    }
+  name: {
+    value: string;
+    required: boolean;
+  };
+  email: {
+    value: string;
+    required: boolean;
+  };
+  phone: {
+    value: string;
+    required: boolean;
+  };
+  message: {
+    value: string;
+    required: boolean;
+  };
 }
 
 // special config for contexts
 export interface ContextProviderProps {
-    children: React.ReactNode | JSX.Element | JSX.Element[];
+  children: React.ReactNode | JSX.Element | JSX.Element[];
 }
 
 //elements structure
 export interface HeaderConfig {
-    brandImage: ImageProps;
-    buttonMenu: ImageProps;
-    backTo: ImageProps;
+  brandImage: ImageProps;
+  buttonMenu: ImageProps;
+  backTo: ImageProps;
 }
 
 export interface HomeBannerConfig {
-    homeBannerTitles: HomeBannerTitles;
-    separator: ImageProps;
-    homeSocialMedia: ImageProps[];
+  homeBannerTitles: HomeBannerTitles;
+  separator: ImageProps;
+  homeSocialMedia: ImageProps[];
 }
 
 export interface FooterConfig {
-    backOption: {
-        img: ImageProps;
-        text: string;
-        link: Link;
-    };
-    footerSocialMedia: ImageProps[];
-    copyright: {
-        strongText: string;
-        normalText: string;
-    }
+  backOption: {
+    img: ImageProps;
+    text: string;
+    link: Link;
+  };
+  footerSocialMedia: ImageProps[];
+  copyright: {
+    strongText: string;
+    normalText: string;
+  };
 }
 
 export interface MainDescriptionConfig {
-    brandButton: {
-        img: ImageProps;
-        link: Link;
-    };
-    description: string;
-    moreButton: string;
+  brandButton: {
+    img: ImageProps;
+    link: Link;
+  };
+  description: string;
+  moreButton: string;
 }
 
 export interface AboutMeConfig {
-    parallax: ImageProps;
-    titles: {
-        mainTitle: string;
-        career: string;
-        skills: string;
-        education: string;
-        courses: string;
-        idioms: string;
-    }
-    descriptions: {
-        aboutMe: string;
-        skills: string;
-        endSkills: string;
-    }
-    proExp: ProExpConfig[];
-    skills: string[];
-    techList: techListConfig[];
-    education: EducationConfig[];
-    courses: CoursesConfig[];
-    linkPlatzi: string;
-    idioms: IdiomsConfig[];
+  parallax: ImageProps;
+  titles: {
+    mainTitle: string;
+    career: string;
+    skills: string;
+    education: string;
+    courses: string;
+    idioms: string;
+  };
+  descriptions: {
+    aboutMe: string;
+    skills: string;
+    endSkills: string;
+  };
+  proExp: ProExpConfig[];
+  skills: string[];
+  techList: techListConfig[];
+  education: EducationConfig[];
+  courses: CoursesConfig[];
+  linkPlatzi: {
+    a: string;
+    img: ImageProps;
+    text: string;
+  };
+  idioms: IdiomsConfig[];
 }
 
 export interface PortfolioConfig {
-    wcfu: {
-        title: string;
-        description: string;
-        img: ImageProps;
-        explore: {
-            text: string;
-            a: string;
-        } 
-    },
-    projects: {
-        title: string;
-        description: {
-            one: string;
-            two: string;
-            three: string;
-        } 
-    },
-    services: ServicesConfig[];
-    portFolioTitle: string;
-    optionsMenu: {
-        all: string;
-        coded: string;
-        designed: string;
-    }
-    footerPortfolio: string;
+  wcfu: {
+    title: string;
+    description: string;
+    img: ImageProps;
+    explore: {
+      text: string;
+      a: string;
+    };
+  };
+  projects: {
+    title: string;
+    description: {
+      one: string;
+      two: string;
+      three: string;
+    };
+  };
+  services: ServicesConfig[];
+  portFolioTitle: string;
+  optionsMenu: {
+    all: string;
+    coded: string;
+    designed: string;
+  };
+  footerPortfolio: string;
 }
 
 export interface ContactMeConfig {
-    title: string;
-    description: string;
-    separator: ImageProps;
-    fields: ContactMeFieldsConfig;
-    button: string;
+  title: string;
+  description: string;
+  separator: ImageProps;
+  fields: ContactMeFieldsConfig;
+  button: string;
 }
 
 // this its the call of all data just import this to fetch the apiCms
 export interface CmsDataConfig {
-    header: HeaderConfig;
-    homeBanner: HomeBannerConfig;
-    mainDescription: MainDescriptionConfig;
-    aboutMe: AboutMeConfig;
-    portfolio: PortfolioConfig;
-    contactMe: ContactMeConfig;
-    footer: FooterConfig;
+  header: HeaderConfig;
+  homeBanner: HomeBannerConfig;
+  mainDescription: MainDescriptionConfig;
+  aboutMe: AboutMeConfig;
+  portfolio: PortfolioConfig;
+  contactMe: ContactMeConfig;
+  footer: FooterConfig;
 }

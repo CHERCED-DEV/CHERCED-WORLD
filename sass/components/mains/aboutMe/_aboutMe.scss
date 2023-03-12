@@ -29,7 +29,8 @@
 .aboutMe-career__title,
 .aboutMe-skills__title,
 .aboutMe-education__title, 
-.aboutMe-courses__textFlag {
+.aboutMe-courses__textFlag,
+.aboutMe-idioms__mainTitle {
     @include rectangularButton($f-size-md-xxl);
     width: 90%;
 }

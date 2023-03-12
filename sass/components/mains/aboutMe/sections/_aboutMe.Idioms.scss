@@ -1,19 +1,28 @@
 .aboutMe-idioms {
-    width: 100%;
+    margin-bottom: calculateRem(32px);
 }
+
 .aboutMe-idioms__list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
+
 .aboutMe-idioms__item {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0 calculateRem(10px);
 }
-.aboutMe-idioms__title { margin: calculateRem(25px) 0;}
+
+.aboutMe-idioms__title {
+    margin: calculateRem(25px) 0;
+}
+
 .aboutMe-idioms__img {
     width: calculateRem(128px);
 }
-.aboutMe-idioms__progress {margin: calculateRem(15px) 0 calculateRem(25px);}
+
+.aboutMe-idioms__progress {
+    margin: calculateRem(15px) 0 calculateRem(25px);
+}

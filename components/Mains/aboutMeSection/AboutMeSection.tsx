@@ -148,11 +148,19 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
                         ))
                     }
                 </ul>
-                <a href={aboutMe?.linkPlatzi}>
-                    My Profile On Platzi
+                <a className="aboutMe-courses__platzi" href={aboutMe?.linkPlatzi.a}>
+                   <Image
+                        src={aboutMe?.linkPlatzi.img.src}
+                        alt={aboutMe?.linkPlatzi.img.alt}
+                        layout='intrinsic'
+                        width={128}
+                        height={128}
+                   />
+                   <span>{aboutMe?.linkPlatzi.text}</span>
                 </a>
             </section>
             <section className="aboutMe-idioms">
+                <h1 className="aboutMe-idioms__mainTitle">Idioms</h1>
                 <ul className="aboutMe-idioms__list">
                     {
                         aboutMe?.idioms.map((idiom: IdiomsConfig, index: number) => (

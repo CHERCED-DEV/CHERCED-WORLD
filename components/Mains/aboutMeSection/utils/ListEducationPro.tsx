@@ -9,9 +9,10 @@ export const ListEducationPro: React.FC<EducationConfig> = (props) => {
             <h1 className="aboutMe-education__institution">
                 {props.proTitleDegree.proTitle}
             </h1>
-            <p className="aboutMe-education__degreeParragraph">
-                {props.proTitleDegree.strong}
-            </p>
+            <div className="aboutMe-education__degreeParragraph">
+                <hr />
+                <p>{props.proTitleDegree.strong}</p>
+            </div>
         </li>
     )
 }

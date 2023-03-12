@@ -292,7 +292,15 @@ export const CMS: {
 				]
 			}
 		],
-		linkPlatzi: "https://platzi.com/p/Cherced/",
+		linkPlatzi: {
+            img: {
+                src: "/assets/icons/plazi.png",
+				alt: "Platzi logo",
+				loading: "lazy",
+            },
+            a: "https://platzi.com/p/Cherced/",
+            text: "--> My Profile On Platzi"
+        },
 		idioms: [
 			{
 				idiom: "Spanish",

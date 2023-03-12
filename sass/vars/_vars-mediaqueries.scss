@@ -21,7 +21,7 @@ $bp-mobile-max: calculateRem(640px - 1);
 $bp-mobile-min: calculateRem(480px + 1);
 //## tablet
 $bp-tablet-portrait: calculateRem(768px);
-$bp-tablet-portrait-max: calculateRem(768px - 1);
+$bp-tablet-portrait-max: (768px - 1);
 $bp-tablet-portrait-min: calculateRem(640px + 1);
 $bp-tablet-landscape: calculateRem(992px);
 $bp-tablet-landscape-max: calculateRem(992px - 1);
