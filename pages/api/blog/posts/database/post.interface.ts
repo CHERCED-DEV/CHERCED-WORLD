@@ -17,4 +17,3 @@ export interface CommentsConfig {
     userName: string;
     comment: string;
 }
-

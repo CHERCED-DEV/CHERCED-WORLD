@@ -68,9 +68,8 @@ export const ContactMeSection: React.FC<ContactMeServerDataProps> = ({contactMe}
                         {...register("phone")}
                         placeholder={contactMe?.fields.phone.value}
                     />
-                    <input
+                    <textarea
                         className="contactMe-form__input"
-                        type="text"
                         required={contactMe?.fields.message.required}
                         {...register("message")}
                         placeholder={contactMe?.fields.message.value}

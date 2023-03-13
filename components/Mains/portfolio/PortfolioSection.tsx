@@ -42,24 +42,26 @@ export const PortfolioSection: React.FC<PortfolioServicesServerDataProps> = ({ p
                 <div className="portfolio-projectsContainer">
                     <h1 className="portfolio-projectsContainer__title">{portfolio?.portFolioTitle}</h1>
                 </div>
-                <ul className="portfolio-carrousel__list" id="slider">
-                    {
-                        projects?.map((project: ProjectsConfig, index: number) => (
-                            <CarruselContainer
-                                key={index}
-                                id={project.id}
-                                description={project.description}
-                                image={
-                                    {
-                                        src: project.image.src,
-                                        alt: project.image.alt,
-                                        loading: project.image.loading
+                <nav className="portfolio-carrousel__silder">
+                    <ul className="portfolio-carrousel__list" id="slider">
+                        {
+                            projects?.map((project: ProjectsConfig, index: number) => (
+                                <CarruselContainer
+                                    key={index}
+                                    id={project.id}
+                                    description={project.description}
+                                    image={
+                                        {
+                                            src: project.image.src,
+                                            alt: project.image.alt,
+                                            loading: project.image.loading
+                                        }
                                     }
-                                }
-                            />
-                        ))
-                    }
-                </ul>
+                                />
+                            ))
+                        }
+                    </ul>
+                </nav>
                 <div className="portfolio-buttonsContainer">
                     <button onClick={handleClickLeft} className="portfolio-buttons__button btn--lf" id="btn-lf">
                         &#60;

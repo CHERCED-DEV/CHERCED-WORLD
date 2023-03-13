@@ -35,7 +35,7 @@ export const HeaderBackTo: React.FC = memo(() => {
                             src={header?.brandImage.src}
                             alt={header?.brandImage.alt}
                             loading={header?.brandImage.loading}
-                            layout="responsive"
+                            layout="intrinsic"
                             width={64}
                             height={64}
                         />
@@ -44,15 +44,15 @@ export const HeaderBackTo: React.FC = memo(() => {
                 <button className="headerBackTo-button" onClick={handleEvent}>
                     <div className="headerBackTo-button__img">
                         {header?.brandImage?.src && (
-                        <Image
-                            src={header?.backTo.src}
-                            alt={header?.backTo.alt}
-                            loading={header?.backTo.loading}
-                            layout="responsive"
-                            width={32}
-                            height={32}
-                        />
-                    )}
+                            <Image
+                                src={header?.backTo.src}
+                                alt={header?.backTo.alt}
+                                loading={header?.backTo.loading}
+                                layout="intrinsic"
+                                width={32}
+                                height={32}
+                            />
+                        )}
                     </div>
                 </button>
             </header>
