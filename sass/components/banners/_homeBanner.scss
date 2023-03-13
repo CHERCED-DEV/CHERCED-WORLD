@@ -4,16 +4,21 @@ $size-icons: calculateRem(30px);
     @include container-wrap;
     height: 100%;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .homeBanner {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    width: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
+    overflow: hidden;
+    z-index: $overlay-zindex;
 }
+
 
 .homeBanner-text__container {
     display: flex;

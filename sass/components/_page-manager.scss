@@ -12,8 +12,20 @@ div.SERVICES-PAGE {
 }
 
 // Pages withOut backtop footer:
-div.HOME-PAGE {
-    background-color: grey;
+div.HOME-PAGE {   
+    position: relative;
+    background: #00222B;
+    
+    canvas#canvas {
+        @include container-wrap;
+        display: block;
+        filter: blur(4px);
+        height: calc(100vh - 241px);   
+       /*  @media screen and (max-width: calculateRem($bp-tablet-portrait-max)) {
+            height: calc(100vh - 241px);    
+        } */
+    }
+
     .footer {
         .footer-back {
             display: none;
@@ -34,6 +46,8 @@ div.HOME-PAGE {
 // HOME PAGE
 div.HOME-PAGE {
     height: 100vh;
+    width: 100vw;
+    overflow: hidden;
 }
 // CONTACTME PAGE
 div.CONTACTME-PAGE {
