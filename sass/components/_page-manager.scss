@@ -58,12 +58,18 @@ div.ABOUTME-PAGE {
     align-items: center;
     background: linear-gradient(180deg, #000 6.81%, rgba(196, 196, 196, 0) 15.87%);
     color: white ;
+    
+
 }
 // PORTFOLIO PAGE
 div.PORTFOLIO-PAGE {
     .footer {
         border-radius: 0;
     }
+}
+// SERVICES PAGE
+div.SERVICES-PAGE {
+    overflow-x: hidden;
 }
 
 // to wrap the main section class on the pages.

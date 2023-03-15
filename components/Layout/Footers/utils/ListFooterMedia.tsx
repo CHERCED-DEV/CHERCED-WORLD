@@ -13,7 +13,7 @@ export const ListFooterMedia: React.FC<ImageProps> = (props) => {
                                 src={props.src}
                                 alt={props.alt}
                                 loading={props.loading}
-                                layout="responsive"
+                                layout="intrinsic"
                                 width={30}
                                 height={30}
                             />

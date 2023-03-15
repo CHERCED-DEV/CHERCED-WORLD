@@ -1,17 +1,25 @@
 import React from 'react';
-import { PostConfig } from '../../../../pages/api/blog/posts/database/post.interface'; 
+import { PostConfig } from '../../../../pages/api/blog/posts/database/post.interface';
 import { useRouter } from 'next/router';
+import Image from 'next/legacy/image';
 
 export const ListBlogCarrousel: React.FC<PostConfig> = (props) => {
     const router = useRouter();
     return (
         <li className="blog-carrousel__item" >
             <h1 className="blog-carrousel__title">{props.title}</h1>
-            <img className="blog-carrousel__img"
-                src={props.img.src}
-                alt={props.img.alt}
-                loading={props.img.loading}
-            />
+            <div className="blog-carrousel__img">
+                {props?.img.src && (
+                    <Image
+                        src={props.img.src}
+                        alt={props.img.alt}
+                        loading={props.img.loading}
+                        layout='responsive'
+                        width={1143}
+                        height={1200}
+                    />
+                )}
+            </div>
             <button className="blog-carrousel__button"
                 onClick={() => {
                     router.push(`blog/${props.id}`);

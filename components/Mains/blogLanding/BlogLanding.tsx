@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/legacy/image';
 import { CommentsConfig, PostConfig } from '../../../pages/api/blog/posts/database/post.interface';
 import { ListComentsBlog } from './utils/ListComentsBlog';
 
@@ -7,11 +8,15 @@ export const BlogLanding: React.FC<PostConfig> = (props) => {
         <>
             <article className='blog-content'>
                 <h1 className='blog-main__title'>{props.title}</h1>
-                <img className='blog-content__image'
-                    src={props.img.src}
-                    alt={props.img.alt}
-                    loading={props.img.loading}
-                />
+                <div className='blog-content__image'>
+                    {props?.img.src && (
+                        <Image
+                            src={props.img.src}
+                            alt={props.img.alt}
+                            loading={props.img.loading}
+                        />
+                    )}
+                </div>
                 <h2 className='blog-content__subTitle'>{props.subtitle}</h2>
                 <p className='blog-content__text'>{props.description}</p>
             </article>

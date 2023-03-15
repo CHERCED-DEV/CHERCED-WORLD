@@ -1,7 +1,8 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { fetchProject } from '../../utils/providers/requests/homeCB' 
+import { fetchProject } from '../../utils/providers/requests/homeCB'
 import { ProjectsConfig } from '../api/projects/database/interfaces'
+import Image from 'next/legacy/image'
 
 const Proyects = () => {
     const router = useRouter()
@@ -14,15 +15,15 @@ const Proyects = () => {
         let isMounted = true;
         fetchProject(id).then((project: any) => {
             if (isMounted) {
-				setProject(project);
-			}
+                setProject(project);
+            }
         })
         return () => {
             isMounted = false;
         }
     }, [id]);
 
-    
+
     if (!project) {
         return (
             <header>
@@ -35,11 +36,15 @@ const Proyects = () => {
         return (
             <>
                 <section className="project-sectionOne">
-                    <img className="project-sectionOne__img"
-                        src={project.image?.src}
-                        alt={project.image?.alt}
-                        loading={project.image?.loading}
-                    />
+                    <div className="project-sectionOne__img">
+                        {project.image?.src && (
+                            <Image
+                                src={project.image?.src}
+                                alt={project.image?.alt}
+                                loading={project.image?.loading}
+                            />
+                        )}
+                    </div>
                 </section>
                 <section className="project-sectionTwo">
                     <h1 className="project-sectionTwo__title">{project.title}</h1>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo, lazy } from 'react';
+import { useEffect, useState, memo, lazy } from 'react';
 import Head from 'next/head';
 
 import { getCMSData } from '../utils/providers/requests/homeCB';

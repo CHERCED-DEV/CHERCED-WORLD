@@ -7,6 +7,7 @@ import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
 import { Header } from '../../components/Layout/Headers/Header';
 import { Footer } from '../../components/Layout/Footers/Footer';
+import Image from 'next/legacy/image';
 
 
 export default memo(function BlogIntro() {
@@ -70,17 +71,24 @@ export default memo(function BlogIntro() {
             </Head>
             {
                 showStarterPage ? (<PageLoader />) : (
-                    <body className={pageClass}>
+                    <div className={pageClass}>
                         <Header />
                         <main className="blog">
                             <section className="blog-intro">
                                 <h1 className="blog-intro__title">{BlogPostDataCMS?.mainTitle}<strong>{BlogPostDataCMS?.mainTitleStrong}</strong> </h1>
                                 <p className="blog-intro__description">{BlogPostDataCMS?.welcomeMenssage}</p>
-                                <img className="blog-intro__img"
-                                    src={BlogPostDataCMS?.img.src}
-                                    alt={BlogPostDataCMS?.img.alt}
-                                    loading={BlogPostDataCMS?.img.loading}
-                                />
+                                <div className="blog-intro__img">
+                                    {BlogPostDataCMS?.img.src && (
+                                        <Image
+                                            src={BlogPostDataCMS?.img.src}
+                                            alt={BlogPostDataCMS?.img.alt}
+                                            loading={BlogPostDataCMS?.img.loading}
+                                            layout="responsive"
+                                            width={472}
+                                            height={852}
+                                        />
+                                    )}
+                                </div>
                             </section>
                             <section className="blog-carrousel">
                                 <ul className="blog-carrousel__list">
@@ -103,7 +111,7 @@ export default memo(function BlogIntro() {
                             </section>
                         </main>
                         <Footer />
-                    </body>
+                    </div>
                 )
             }
         </>

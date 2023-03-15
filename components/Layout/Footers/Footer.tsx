@@ -28,7 +28,7 @@ export const Footer: React.FC = memo(() => {
                                 src={footer?.backOption.img.src}
                                 alt={footer?.backOption.img.alt}
                                 loading={footer?.backOption.img.loading}
-                                layout='fixed'
+                                layout='intrinsic'
                                 width={15}
                                 height={15}
                             />
