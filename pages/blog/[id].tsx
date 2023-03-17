@@ -5,7 +5,7 @@ import { PostConfig } from '../api/blog/posts/database/post.interface';
 import { FormSendPost } from '../../components/Mains/blogLanding/utils/FormSendPost'; 
 import { Modal } from '../../utils/portals/modalPortal';
 import { usePortalProvider } from '../../utils/providers/modalProvider';
-import { PageLoader } from '../../components/Spiners&Loaders/PageLoader';
+import { PageLoader } from '../../components/Layout/Spiners&Loaders/PageLoader';
 import { HeaderBackTo } from '../../components/Layout/Headers/HeaderBackTo';
 import { BlogLanding } from '../../components/Mains/blogLanding/BlogLanding';
 import { Footer } from '../../components/Layout/Footers/Footer';

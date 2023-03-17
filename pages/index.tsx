@@ -1,45 +1,39 @@
-import { memo, useEffect, useState, Suspense, lazy } from 'react';
+import { memo, useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import Head from 'next/head';
 
-import { getCMSData } from '../utils/providers/requests/homeCB';
-import { HomeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { StarterApp } from '../components/Spiners&Loaders/StarterApp';
-import { Header } from '../components/Layout/Headers/Header';
-import { Footer } from '../components/Layout/Footers/Footer';
+import { getCMSData } from '../utils/providers/requests/homeCB';
+import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { HomeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 
-const PageLoader = lazy(() => import('../components/Spiners&Loaders/PageLoader').then(({ PageLoader }) => ({ default: PageLoader })));
 const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner').then(({ HomeBanner }) => ({ default: HomeBanner })));
 
 export default memo(function Home({ homeBanner }: HomeServerDataProps) {
 
     const { pageClass } = UseCmsDataHome();
+    const {starterApp, pageLoader, header,  footer} = useLayoutProvider();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
 
-    useEffect(() => {
-        function storageValidator() {
-            const storedValue = window.sessionStorage.getItem('isLoading');
-            if (storedValue !== null) {
-                setIsLoading(storedValue === 'true');
-            } else {
-                setIsLoading(true);
-            }
-            setInitialStorageValue(true);
+    const storageValidator = useCallback(() => {
+        const storedValue = window.sessionStorage.getItem('isLoading');
+        if (storedValue !== null) {
+            setIsLoading(storedValue === 'true');
+        } else {
+            setIsLoading(true);
         }
-        storageValidator()
+        setInitialStorageValue(true);
     }, []);
+
+    useEffect(() => {
+        storageValidator()
+    }, [storageValidator]);
 
     useEffect(() => {
         function handlePageLoad() {
             if (sessionStorage.getItem('isLoading') === 'false') {
-                const timerId = setTimeout(() => {
-                    setIsLoading(false);
-                }, 10500);
-                return () => {
-                    clearTimeout(timerId);
-                };
+                console.log("Welcome to Cherced World")
             } else {
                 const timerId = setTimeout(() => {
                     sessionStorage.setItem('isLoading', 'false');
@@ -63,15 +57,15 @@ export default memo(function Home({ homeBanner }: HomeServerDataProps) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {initialStorageValue && isLoading && <StarterApp />}
+            {initialStorageValue && isLoading && {starterApp}}
             {!isLoading && (
-                <Suspense fallback={<PageLoader />}>
+                <Suspense fallback={pageLoader}>
                     <div className={pageClass}>
-                        <Header />
+                        {header}
                         <main className="main-home">
-                            <HomeBanner homeBanner={homeBanner} />
+                            {homeBanner ? <HomeBanner homeBanner={homeBanner} /> : null}
                         </main>
-                        <Footer />
+                        {footer}
                     </div>
                 </Suspense>
             )}
@@ -80,6 +74,7 @@ export default memo(function Home({ homeBanner }: HomeServerDataProps) {
 });
 
 export const getServerSideProps = async (): Promise<{ props: HomeServerDataProps }> => {
+
     const CmsData = await getCMSData();
     const homeBanner = CmsData?.homeBanner;
 

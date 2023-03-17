@@ -1,5 +1,5 @@
-import React, { useState, useContext, createContext } from 'react';
-import { ContextProviderProps } from '../../pages/api/customCMS/interfaces'; 
+import { useState, useContext, createContext } from 'react';
+import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
 
 const PortalContext = createContext<{
     modalSwitch: boolean;

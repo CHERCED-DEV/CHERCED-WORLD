@@ -24,9 +24,9 @@ export const BlogLanding: React.FC<PostConfig> = (props) => {
                 <h3 className='comments-title'>Comentarios</h3>
                 <ul className='comments-list'>
                     {
-                        props.comments?.map((comnent: CommentsConfig, index: number) => (
+                        props.comments?.map((comnent: CommentsConfig) => (
                             <ListComentsBlog
-                                key={index}
+                                key={comnent.id}
                                 id={comnent.id}
                                 userName={comnent.userName}
                                 comment={comnent.comment}

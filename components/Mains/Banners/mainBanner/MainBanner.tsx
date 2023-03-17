@@ -36,9 +36,9 @@ export const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
                 </div>
                 <nav className="homeBanner-socialMedia">
                     <ul className="homeBanner-socialMedia__list">
-                        {homeBanner?.homeSocialMedia.map((homeSocialMedia: ImageProps, index: number) => (
+                        {homeBanner?.homeSocialMedia.map((homeSocialMedia: ImageProps) => (
                             <ListContacMedia
-                                key={index}
+                                key={homeSocialMedia.a}
                                 src={homeSocialMedia.src}
                                 alt={homeSocialMedia.alt}
                                 loading={homeSocialMedia.loading}

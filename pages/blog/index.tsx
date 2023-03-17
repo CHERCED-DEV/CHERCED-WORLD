@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { UseCmsDataHome } from '../../utils/providers/cmsDataProvider';
 import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel';
-import { PageLoader } from '../../components/Spiners&Loaders/PageLoader';
+import { PageLoader } from '../../components/Layout/Spiners&Loaders/PageLoader';
 import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
 import { Header } from '../../components/Layout/Headers/Header';

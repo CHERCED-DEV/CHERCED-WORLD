@@ -24,9 +24,9 @@ export const ServicesWCFUSection: React.FC<PortfolioServicesServerDataProps> = (
             <section className='services-offer'>
                 <ul className='services-offer__list'>
                     {
-                        portfolio?.services.map((offer: ServicesConfig, index: number) => (
+                        portfolio?.services.map((offer: ServicesConfig) => (
                             <ListServicesOffer
-                                key={index}
+                                key={offer.title}
                                 title={offer.title}
                                 img={
                                     {

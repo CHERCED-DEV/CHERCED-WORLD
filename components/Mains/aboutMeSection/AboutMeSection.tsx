@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Image from 'next/legacy/image';
+
 import { AboutMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ProExpConfig, techListConfig, CoursesConfig, IdiomsConfig, EducationConfig } from '../../../pages/api/customCMS/interfaces';
 import { ListExperiencie } from './utils/ListExperiencie';
@@ -8,7 +8,7 @@ import { ListTecnologies } from './utils/ListTecnologies';
 import { ListEducationPro } from './utils/ListEducationPro';
 import { ListEducationCourses } from './utils/ListEducationCourses';
 import { ListIdioms } from './utils/ListIdioms';
-
+import { AboutMeDescriptionContainer } from './sections/aboutMeDescriptionContainer';
 
 
 export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) => {
@@ -19,33 +19,11 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
         setShowHidden(!showHidden);
     }
 
-    return (
+    return (       
         <>
-            <section className="aboutMe-description">
-                <div className="aboutMe-container__parallax">
-                    <div className="aboutMe-img__parallax">
-                        {aboutMe?.parallax.src && (
-                            <Image
-                                src={aboutMe?.parallax.src}
-                                alt={aboutMe?.parallax.alt}
-                                loading={aboutMe?.parallax.loading}
-                                layout='responsive'
-                                width={500}
-                                height={627}
-                            />
-                        )}
-                    </div>
-                </div>
-                <div className="aboutMe-description__container">
-                    <h1 className="aboutMe-description__title">
-                        {aboutMe?.titles.mainTitle}
-                    </h1>
-                    <p className="aboutMe-description__parragraph">
-                        {aboutMe?.descriptions.aboutMe}
-                    </p>
-                </div>
-            </section>
+            <AboutMeDescriptionContainer aboutMe={aboutMe}/>
             <section className="aboutMe-career">
+                
                 <h1 className="aboutMe-career__title" >
                     {aboutMe?.titles.career}
                 </h1>
@@ -77,9 +55,9 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
                 </p>
                 <ul className="aboutMe-skills__list">
                     {
-                        aboutMe?.skills.map((skill: string, index: number) => (
+                        aboutMe?.skills.map((skill: string) => (
                             <ListMySkills
-                                key={index}
+                                key={skill}
                                 skill={skill}
                             />
                         ))
@@ -92,7 +70,7 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
                         const hidden = index >= 4 && !showHidden;
                         return (
                             <ListTecnologies
-                                key={index}
+                                key={techList.techName}
                                 hidden={hidden}
                                 techName={techList.techName}
                                 img={{
@@ -117,9 +95,9 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
                 </h1>
                 <ul className="aboutMe-education__list">
                     {
-                        aboutMe?.education.map((education: EducationConfig, index: number) => (
+                        aboutMe?.education.map((education: EducationConfig) => (
                             <ListEducationPro
-                                key={index}
+                                key={education.proTitleDegree.proTitle}
                                 initialDate={education.initialDate}
                                 endingDate={education.endingDate}
                                 proTitleDegree={
@@ -141,7 +119,7 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
                     {
                         aboutMe?.courses.map((course: CoursesConfig, index: number) => (
                             <ListEducationCourses
-                                key={index}
+                                key={course.schools[index]}
                                 schools={course.schools}
                                 descriptions={course.descriptions}
                             />
@@ -163,9 +141,9 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
                 <h1 className="aboutMe-idioms__mainTitle">Idioms</h1>
                 <ul className="aboutMe-idioms__list">
                     {
-                        aboutMe?.idioms.map((idiom: IdiomsConfig, index: number) => (
+                        aboutMe?.idioms.map((idiom: IdiomsConfig) => (
                             <ListIdioms
-                                key={index}
+                                key={idiom.idiom}
                                 idiom={idiom.idiom}
                                 progress={idiom.progress}
                                 img={

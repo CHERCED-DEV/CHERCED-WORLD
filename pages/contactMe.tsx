@@ -1,35 +1,17 @@
-import React, { lazy, memo, useEffect, useState } from 'react';
+import { lazy, memo, Suspense } from 'react';
 import Head from 'next/head';
+
+import { getCMSData } from '../utils/providers/requests/homeCB';
 import { ContactMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { Header } from '../components/Layout/Headers/Header';
-import { Footer } from '../components/Layout/Footers/Footer';
-import { getCMSData } from '../utils/providers/requests/homeCB';
+import { useLayoutProvider } from '../utils/providers/layOutContext';
 
-const PageLoader = lazy(() => import('../components/Spiners&Loaders/PageLoader').then(({ PageLoader }) => ({ default: PageLoader })));
 const ContactMeSection = lazy(() => import('../components/Mains/contactMe/ContactMeSection').then(({ ContactMeSection }) => ({ default: ContactMeSection })));
 
 export default memo(function ContactMe({ contactMe }: ContactMeServerDataProps) {
 
     const { pageClass } = UseCmsDataHome();
-
-    const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
-
-    useEffect(() => {
-        function handlePageLoad() {
-            const timerId = setTimeout(() => {
-                setShowStarterPage(!showStarterPage);
-            }, 1500);
-
-            // Return a function to clear the timer before the component is unmounted.
-            return () => {
-                clearTimeout(timerId);
-            }
-        }
-
-        handlePageLoad();
-    }, []);
-
+    const { pageLoader, header, footer } = useLayoutProvider();
 
     return (
         <>
@@ -39,21 +21,17 @@ export default memo(function ContactMe({ contactMe }: ContactMeServerDataProps) 
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {
-                showStarterPage ? (
-                    <PageLoader />
-                ) : (
-                    <div className={pageClass}>
-                        <Header />
-                        <main className="contactMe">
-                            <ContactMeSection
-                                contactMe={contactMe}
-                            />
-                        </main>
-                        <Footer />
-                    </div>
-                )
-            }
+            <Suspense fallback={pageLoader}>
+                <div className={pageClass}>
+                    {header}
+                    <main className="contactMe">
+                        <ContactMeSection
+                            contactMe={contactMe}
+                        />
+                    </main>
+                    {footer}
+                </div>
+            </Suspense>
         </>
     );
 });
@@ -64,5 +42,4 @@ export async function getServerSideProps(): Promise<{ props: ContactMeServerData
     const contactMe = CmsData?.contactMe
 
     return { props: { contactMe } };
-
 }

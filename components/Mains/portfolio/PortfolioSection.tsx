@@ -45,9 +45,9 @@ export const PortfolioSection: React.FC<PortfolioServicesServerDataProps> = ({ p
                 <nav className="portfolio-carrousel__silder">
                     <ul className="portfolio-carrousel__list" id="slider">
                         {
-                            projects?.map((project: ProjectsConfig, index: number) => (
+                            projects?.map((project: ProjectsConfig) => (
                                 <CarruselContainer
-                                    key={index}
+                                    key={project.id}
                                     id={project.id}
                                     description={project.description}
                                     image={
