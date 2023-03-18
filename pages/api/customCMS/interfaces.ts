@@ -14,12 +14,7 @@ export interface ListItems {
 interface Link {
   href?: string;
 }
-interface HomeBannerTitles {
-  textParragraph: string;
-  textStrong: string;
-  mainTitle: string;
-}
-export interface techListConfig {
+export interface TechListConfig {
   techName: string;
   img: ImageProps;
   progress: string;
@@ -39,7 +34,7 @@ export interface skillConfig {
   skill: string;
 }
 
-export interface EducationConfig {
+export interface EducationDegreesConfig {
   initialDate: string;
   endingDate?: string;
   proTitleDegree: {
@@ -95,17 +90,11 @@ export interface ContextProviderProps {
   children: React.ReactNode | JSX.Element | JSX.Element[];
 }
 
-//elements structure
+//Layout structure
 export interface HeaderConfig {
   brandImage: ImageProps;
   buttonMenu: ImageProps;
   backTo: ImageProps;
-}
-
-export interface HomeBannerConfig {
-  homeBannerTitles: HomeBannerTitles;
-  separator: ImageProps;
-  homeSocialMedia: ImageProps[];
 }
 
 export interface FooterConfig {
@@ -120,42 +109,55 @@ export interface FooterConfig {
     normalText: string;
   };
 }
-
-export interface MainDescriptionConfig {
-  brandButton: {
-    img: ImageProps;
-    link: Link;
-  };
-  description: string;
-  moreButton: string;
-}
-
-export interface AboutMeConfig {
-  parallax: ImageProps;
-  titles: {
+export interface HomeBannerConfig {
+  homeBannerTitles: {
+    textParragraph: string;
+    textStrong: string;
     mainTitle: string;
-    career: string;
-    skills: string;
-    education: string;
-    courses: string;
-    idioms: string;
-  };
-  descriptions: {
-    aboutMe: string;
-    skills: string;
-    endSkills: string;
-  };
+  }
+  separator: ImageProps;
+  homeSocialMedia: ImageProps[];
+}
+export interface AboutMeDescriptionConfig {
+  mainTitle: string;
+  description: string
+  parallax: ImageProps;
+}
+export interface AboutMeCareerConfig {
+  mainTitle: string;
   proExp: ProExpConfig[];
-  skills: string[];
-  techList: techListConfig[];
-  education: EducationConfig[];
-  courses: CoursesConfig[];
+}
+export interface AboutMeSkillsConfig {
+  mainTitle: string;
+  description: string;
+  bullets: string[]
+  techList: TechListConfig[];
+}
+export interface AboutMeEducationConfig {
+  mainTitle: string;
+  titles: EducationDegreesConfig[]
+}
+export interface AboutMeCoursesConfig {
+  mainTitle: string;
+  certificatedon: CoursesConfig[];
   linkPlatzi: {
     a: string;
     img: ImageProps;
     text: string;
   };
-  idioms: IdiomsConfig[];
+}
+export interface AboutMeIdiomsConfig {
+  mainTitle: string;
+  lenguages: IdiomsConfig[];
+}
+
+export interface AboutMeConfig {
+  description: AboutMeDescriptionConfig;
+  career: AboutMeCareerConfig;
+  skills: AboutMeSkillsConfig;
+  education: AboutMeEducationConfig;
+  courses: AboutMeCoursesConfig;
+  idioms: AboutMeIdiomsConfig;
 }
 
 export interface PortfolioConfig {
@@ -198,7 +200,6 @@ export interface ContactMeConfig {
 export interface CmsDataConfig {
   header: HeaderConfig;
   homeBanner: HomeBannerConfig;
-  mainDescription: MainDescriptionConfig;
   aboutMe: AboutMeConfig;
   portfolio: PortfolioConfig;
   contactMe: ContactMeConfig;

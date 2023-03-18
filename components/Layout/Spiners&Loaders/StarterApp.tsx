@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const StarterApp = () => {
     return (
         <div className="INTROOO">

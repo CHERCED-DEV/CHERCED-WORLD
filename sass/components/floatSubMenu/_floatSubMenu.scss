@@ -3,21 +3,22 @@
 //Styles:
 .floatMenu-navegation {
     position: fixed;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     background-color: $uiKit-background;
-    height: 100vh;
     width: 100%;
+    height: 100vh;
 
     &.on {
+        display: flex;
         top: 0;
         z-index: $page-loader-zindex;
     }
 
     &.off {
         top: -100vh;
+        display: none;
     }
 
     header {
@@ -62,8 +63,7 @@
 
 @media screen and (min-width: calculateRem($bp-tablet-landscape-min)) {
     .floatMenu-navegation__item {
-        @include font-size(30px);
-        margin: calculateRem(30px);
+        margin: calculateRem(15px);
     }
     .floatMenu-navegation__logo { margin-bottom: calculateRem(40px); }
 }

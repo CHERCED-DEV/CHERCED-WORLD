@@ -1,31 +1,33 @@
-import React from 'react'
+import React, { memo } from 'react';
 import Image from 'next/legacy/image';
+import { AboutMeDescriptionConfig } from '../../../../pages/api/customCMS/interfaces';
 
-export const AboutMeDescriptionContainer: React.FC<any> = ({aboutMe}) => {
-    return (
-        <section className="aboutMe-description">
-            <div className="aboutMe-container__parallax">
-                <div className="aboutMe-img__parallax">
-                    {aboutMe?.parallax.src && (
-                        <Image
-                            src={aboutMe?.parallax.src}
-                            alt={aboutMe?.parallax.alt}
-                            loading={aboutMe?.parallax.loading}
-                            layout='responsive'
-                            width={500}
-                            height={627}
-                        />
-                    )}
-                </div>
-            </div>
-            <div className="aboutMe-description__container">
-                <h1 className="aboutMe-description__title">
-                    {aboutMe?.titles.mainTitle}
-                </h1>
-                <p className="aboutMe-description__parragraph">
-                    {aboutMe?.descriptions.aboutMe}
-                </p>
-            </div>
-        </section>
-    )
-}
+export const AboutMeDescriptionContainer: React.FC<{ description: AboutMeDescriptionConfig }> = memo(({ description }) => {
+
+  return (
+    <section className="aboutMe-description">
+      <div className="aboutMe-container__parallax">
+        <div className="aboutMe-img__parallax">
+          {description?.parallax.src && (
+            <Image
+              src={description?.parallax.src}
+              alt={description?.parallax.alt}
+              priority={true}
+              layout='responsive'
+              width={500}
+              height={627}
+            />
+          )}
+        </div>
+      </div>
+      <div className="aboutMe-description__container">
+        <h1 className="aboutMe-description__title">
+          {description?.mainTitle}
+        </h1>
+        <p className="aboutMe-description__parragraph">
+          {description?.description}
+        </p>
+      </div>
+    </section>
+  )
+})

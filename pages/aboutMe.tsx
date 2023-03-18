@@ -1,4 +1,4 @@
-import { memo, lazy, Suspense } from 'react';
+import { memo, lazy, Suspense, startTransition } from 'react';
 import Head from 'next/head';
 
 import { getCMSData } from '../utils/providers/requests/homeCB';
@@ -13,6 +13,7 @@ export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
     const { pageClass } = UseCmsDataHome();
     const {pageLoader, header,  footer} = useLayoutProvider();
 
+
     return (
         <>
             <Head>
@@ -22,21 +23,19 @@ export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Suspense fallback={pageLoader}>
-                <div className={pageClass}>
-                    {header}
-                    <main className="aboutMe">
-                        <AboutMeSection
-                            aboutMe={aboutMe}
-                        />
-                    </main>
-                    {footer}
-                </div>
+            <div className={pageClass}>
+                {header}
+                <main className="aboutMe">
+                        <AboutMeSection aboutMe={aboutMe} />
+                </main>
+                {footer}
+            </div>
             </Suspense>
         </>
     );
 });
 
-export async function getServerSideProps(): Promise<{ props: AboutMeServerDataProps }> {
+export async function getStaticProps(): Promise<{ props: AboutMeServerDataProps }> {
 
     const CmsData = await getCMSData();
     const aboutMe = CmsData?.aboutMe
