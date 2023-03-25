@@ -57,7 +57,7 @@ export default memo(function Home({ homeBanner }: HomeServerDataProps) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {initialStorageValue && isLoading && {starterApp}}
+            {initialStorageValue && isLoading && {...starterApp}}
             {!isLoading && (
                 <Suspense fallback={pageLoader}>
                     <div className={pageClass}>

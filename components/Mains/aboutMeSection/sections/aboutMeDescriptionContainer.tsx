@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import Image from 'next/legacy/image';
 import { AboutMeDescriptionConfig } from '../../../../pages/api/customCMS/interfaces';
 
-export const AboutMeDescriptionContainer: React.FC<{ description: AboutMeDescriptionConfig }> = memo(({ description }) => {
+const AboutMeDescriptionContainer: React.FC<{ description: AboutMeDescriptionConfig }> = memo(({ description }) => {
 
   return (
     <section className="aboutMe-description">
@@ -31,3 +31,5 @@ export const AboutMeDescriptionContainer: React.FC<{ description: AboutMeDescrip
     </section>
   )
 })
+
+export default AboutMeDescriptionContainer

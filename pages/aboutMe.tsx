@@ -6,7 +6,7 @@ import { AboutMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { useLayoutProvider } from '../utils/providers/layOutContext';
 
-const AboutMeSection = lazy(() => import('../components/Mains/aboutMeSection/AboutMeSection').then(({ AboutMeSection }) => ({ default: AboutMeSection })));
+const AboutMeSection = lazy(() => import('../components/Mains/aboutMeSection/AboutMeSection'));
 
 export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
 
@@ -35,7 +35,7 @@ export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
     );
 });
 
-export async function getStaticProps(): Promise<{ props: AboutMeServerDataProps }> {
+export async function getServerSideProps(): Promise<{ props: AboutMeServerDataProps }> {
 
     const CmsData = await getCMSData();
     const aboutMe = CmsData?.aboutMe

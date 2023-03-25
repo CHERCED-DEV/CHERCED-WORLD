@@ -3,7 +3,7 @@ import { TechListConfig } from '../../../../pages/api/customCMS/interfaces';
 import { ListTecnologies } from '../utils/ListTecnologies';
 
 
-export const AboutMeTecnologies: React.FC<{ techList: TechListConfig[] }> = memo(({ techList }) => {
+const AboutMeTecnologies: React.FC<{ techList: TechListConfig[] }> = memo(({ techList }) => {
 
   const [showHidden, setShowHidden] = useState(false);
 
@@ -39,4 +39,6 @@ export const AboutMeTecnologies: React.FC<{ techList: TechListConfig[] }> = memo
       )}
     </section>
   )
-})
+});
+
+export default AboutMeTecnologies

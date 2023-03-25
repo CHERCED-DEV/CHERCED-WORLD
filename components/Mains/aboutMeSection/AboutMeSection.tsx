@@ -1,14 +1,17 @@
 import React from 'react';
 
 import { AboutMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
-import { AboutMeDescriptionContainer } from './sections/AboutMeDescriptionContainer';
-import { AboutMeCareer } from './sections/AboutMeCareer';
-import { AboutMeSkills } from './sections/AboutMeSkills';
-import { AboutMeTecnologies } from './sections/AboutMeTecnologies';
-import { AboutMeEducation } from './sections/AboutMeEducation';
-import { AboutMeIdioms } from './sections/aboutMeIdioms';
 
-export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) => {
+const AboutMeDescriptionContainer = React.lazy(() => import ('./sections/AboutMeDescriptionContainer'));
+const AboutMeCareer = React.lazy(() => import('./sections/AboutMeCareer'));
+const AboutMeSkills = React.lazy(() => import('./sections/AboutMeSkills'));
+const AboutMeTecnologies = React.lazy(() => import('./sections/AboutMeTecnologies'));
+const AboutMeEducation = React.lazy(() => import('./sections/AboutMeEducation'));
+const AboutMeIdioms = React.lazy(() => import('./sections/AboutMeIdioms'));
+
+
+
+const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) => {
 
     return (
         <>
@@ -21,3 +24,5 @@ export const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) =>
         </>
     )
 }
+
+export default AboutMeSection

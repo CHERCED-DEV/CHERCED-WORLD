@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { AboutMeCareerConfig } from '../../../../pages/api/customCMS/interfaces'
 import { ListExperiencie } from '../utils/ListExperiencie'
 
-export const AboutMeCareer: React.FC<{ career: AboutMeCareerConfig }> = memo(({ career }) => {
+const AboutMeCareer: React.FC<{ career: AboutMeCareerConfig }> = memo(({ career }) => {
 
   return (
     <section className="aboutMe-career">
@@ -30,3 +30,5 @@ export const AboutMeCareer: React.FC<{ career: AboutMeCareerConfig }> = memo(({ 
     </section>
   )
 })
+
+export default AboutMeCareer

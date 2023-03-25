@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { AboutMeSkillsConfig } from '../../../../pages/api/customCMS/interfaces';
 import { ListMySkills } from '../utils/ListMySkills';
 
-export const AboutMeSkills: React.FC<{ skills: AboutMeSkillsConfig }> = memo(({ skills }) => {
+const AboutMeSkills: React.FC<{ skills: AboutMeSkillsConfig }> = memo(({ skills }) => {
   
   return (
     <section className="aboutMe-skills">
@@ -25,3 +25,5 @@ export const AboutMeSkills: React.FC<{ skills: AboutMeSkillsConfig }> = memo(({ 
     </section>
   );
 });
+
+export default AboutMeSkills

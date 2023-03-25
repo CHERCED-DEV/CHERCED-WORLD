@@ -3,7 +3,7 @@ import { AboutMeEducationConfig } from '../../../../pages/api/customCMS/interfac
 import { ListEducationPro } from '../utils/ListEducationPro'
 
 
-export const AboutMeEducation: React.FC<{ education: AboutMeEducationConfig }> =memo(({ education }) => {
+const AboutMeEducation: React.FC<{ education: AboutMeEducationConfig }> =memo(({ education }) => {
 
   return (
     <section className="aboutMe-education">
@@ -30,3 +30,5 @@ export const AboutMeEducation: React.FC<{ education: AboutMeEducationConfig }> =
     </section>
   )
 })
+
+export default AboutMeEducation

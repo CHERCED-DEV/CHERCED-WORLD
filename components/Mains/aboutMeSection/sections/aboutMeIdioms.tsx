@@ -3,7 +3,7 @@ import { AboutMeIdiomsConfig } from '../../../../pages/api/customCMS/interfaces'
 import { ListIdioms } from '../utils/ListIdioms'
 
 
-export const AboutMeIdioms: React.FC<{ idioms: AboutMeIdiomsConfig }> = memo(({ idioms }) => {
+const AboutMeIdioms: React.FC<{ idioms: AboutMeIdiomsConfig }> = memo(({ idioms }) => {
 
   return (
     <section className="aboutMe-idioms">
@@ -29,3 +29,5 @@ export const AboutMeIdioms: React.FC<{ idioms: AboutMeIdiomsConfig }> = memo(({ 
     </section>
   )
 })
+
+export default AboutMeIdioms
