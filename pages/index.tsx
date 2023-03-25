@@ -2,19 +2,18 @@ import { memo, useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import Head from 'next/head';
 
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { getCMSData } from '../utils/providers/requests/homeCB';
 import { useLayoutProvider } from '../utils/providers/layOutContext';
-import { HomeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 
 const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner').then(({ HomeBanner }) => ({ default: HomeBanner })));
 
-export default memo(function Home({ homeBanner }: HomeServerDataProps) {
+export default memo(function Home() {
 
     const { pageClass } = UseCmsDataHome();
     const {starterApp, pageLoader, header,  footer} = useLayoutProvider();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
+    const [homeBanner, setHomeBanner] = useState()
 
     const storageValidator = useCallback(() => {
         const storedValue = window.sessionStorage.getItem('isLoading');
@@ -27,6 +26,9 @@ export default memo(function Home({ homeBanner }: HomeServerDataProps) {
     }, []);
 
     useEffect(() => {
+        const storedCmsData = localStorage.getItem('CmsData');
+        const parsedCmsData = storedCmsData ? JSON.parse(storedCmsData) : null;
+        setHomeBanner(parsedCmsData.homeBanner)
         storageValidator()
     }, [storageValidator]);
 
@@ -73,10 +75,3 @@ export default memo(function Home({ homeBanner }: HomeServerDataProps) {
     );
 });
 
-export const getServerSideProps = async (): Promise<{ props: HomeServerDataProps }> => {
-
-    const CmsData = await getCMSData();
-    const homeBanner = CmsData?.homeBanner;
-
-    return { props: { homeBanner } };
-};
