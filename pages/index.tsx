@@ -10,7 +10,8 @@ const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/Mai
 
 export default memo(function Home({ homeBanner }: HomeServerDataProps) {
 
-    const { pageClass } = UseCmsDataHome();
+    const { pageClass, staticDataSite } = UseCmsDataHome();
+    console.log(staticDataSite)
     const {starterApp, pageLoader, header,  footer} = useLayoutProvider();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
