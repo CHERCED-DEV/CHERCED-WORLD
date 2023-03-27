@@ -1,17 +1,18 @@
 import { lazy, memo, Suspense } from 'react';
 import Head from 'next/head';
 
-import { getCMSData } from '../utils/providers/requests/homeCB';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { PortfolioServicesServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
+import { PortfolioConfig } from './api/customCMS/interfaces';
 
 const PortfolioSection = lazy(() => import('../components/Mains/portfolio/PortfolioSection').then(({ PortfolioSection }) => ({ default: PortfolioSection })));
 
-export default memo(function Portfolio({ portfolio }: PortfolioServicesServerDataProps) {
+export default memo(function Portfolio() {
 
     const { pageClass } = UseCmsDataHome();
     const { pageLoader, header, footer } = useLayoutProvider();
+    const [portfolio] = useLocalStorageData<PortfolioConfig>("CmsData", "portfolio");
 
     return (
         <>
@@ -25,9 +26,7 @@ export default memo(function Portfolio({ portfolio }: PortfolioServicesServerDat
                 <div className={pageClass}>
                     {header}
                     <main className="portfolio">
-                        <PortfolioSection
-                            portfolio={portfolio}
-                        />
+                        {portfolio ? <PortfolioSection portfolio={portfolio} /> : null}
                     </main>
                     <div className="AtomContainer">
                         <div className="atomP">
@@ -42,11 +41,3 @@ export default memo(function Portfolio({ portfolio }: PortfolioServicesServerDat
         </>
     );
 });
-
-export async function getServerSideProps(): Promise<{ props: PortfolioServicesServerDataProps }> {
-
-    const CmsData = await getCMSData();
-    const portfolio = CmsData?.portfolio
-
-    return { props: { portfolio } };
-}

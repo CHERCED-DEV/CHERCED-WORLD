@@ -1,17 +1,18 @@
 import React, { lazy, memo, Suspense } from 'react';
 import Head from 'next/head'
 
-import { getCMSData } from '../utils/providers/requests/homeCB';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { PortfolioServicesServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { PortfolioConfig } from './api/customCMS/interfaces';
+import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
 
-const ServicesWCFUSection = lazy(()=> import('../components/Mains/ServicesWCFU/ServicesWCFUSection').then(({ServicesWCFUSection}) => ({ default: ServicesWCFUSection})));
+const ServicesWCFUSection = lazy(() => import('../components/Mains/ServicesWCFU/ServicesWCFUSection').then(({ ServicesWCFUSection }) => ({ default: ServicesWCFUSection })));
 
-export default memo(function Services({ portfolio }: PortfolioServicesServerDataProps) {
+export default memo(function Services() {
 
     const { pageClass } = UseCmsDataHome();
     const { pageLoader, header, footer } = useLayoutProvider();
+    const [portfolio] = useLocalStorageData<PortfolioConfig>("CmsData", "portfolio");
 
     return (
         <>
@@ -21,24 +22,14 @@ export default memo(function Services({ portfolio }: PortfolioServicesServerData
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Suspense fallback={pageLoader}>
-                    <div className={pageClass}>
-                        {header}
-                        <main className='services'>
-                            <ServicesWCFUSection
-                                portfolio={portfolio}
-                            />
-                        </main>
-                        {footer}
-                    </div>
+                <div className={pageClass}>
+                    {header}
+                    <main className='services'>
+                        {portfolio ? <ServicesWCFUSection portfolio={portfolio} /> : null}
+                    </main>
+                    {footer}
+                </div>
             </Suspense>
         </>
     );
 });
-
-export async function getServerSideProps(): Promise<{ props: PortfolioServicesServerDataProps }> {
-
-    const CmsData = await getCMSData();
-    const portfolio = CmsData?.portfolio
-
-    return { props: { portfolio } };
-}
