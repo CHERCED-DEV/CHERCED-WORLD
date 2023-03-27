@@ -1,18 +1,20 @@
-import { memo, lazy, Suspense, startTransition } from 'react';
 import Head from 'next/head';
+import { memo, lazy, Suspense } from 'react';
 
-import { getCMSData } from '../utils/providers/requests/homeCB';
-import { AboutMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
+import { AboutMeConfig } from './api/customCMS/interfaces';
+
+
 
 const AboutMeSection = lazy(() => import('../components/Mains/aboutMeSection/AboutMeSection'));
 
-export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
+export default memo(function AboutMe() {
 
     const { pageClass } = UseCmsDataHome();
-    const {pageLoader, header,  footer} = useLayoutProvider();
-
+    const { pageLoader, header, footer } = useLayoutProvider();
+    const [aboutMe] = useLocalStorageData<AboutMeConfig>("CmsData", "aboutMe");
 
     return (
         <>
@@ -23,22 +25,14 @@ export default memo(function AboutMe({ aboutMe }: AboutMeServerDataProps) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Suspense fallback={pageLoader}>
-            <div className={pageClass}>
-                {header}
-                <main className="aboutMe">
-                        <AboutMeSection aboutMe={aboutMe} />
-                </main>
-                {footer}
-            </div>
+                <div className={pageClass}>
+                    {header}
+                    <main className="aboutMe">
+                        {aboutMe ? <AboutMeSection aboutMe={aboutMe} /> : null}
+                    </main>
+                    {footer}
+                </div>
             </Suspense>
         </>
     );
 });
-
-export async function getServerSideProps(): Promise<{ props: AboutMeServerDataProps }> {
-
-    const CmsData = await getCMSData();
-    const aboutMe = CmsData?.aboutMe
-
-    return { props: { aboutMe } };
-}

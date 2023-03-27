@@ -5,7 +5,7 @@ import { HomeServerDataProps } from '../../../../utils/dataConfigWorkflow.interf
 import { ListContacMedia } from './utils/ListContacMedia';
 import { backGround } from './utils/background';
 
-export const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
+const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
 
     useEffect(() => {
         backGround();
@@ -51,3 +51,5 @@ export const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
         </>
     );
 };
+
+export default HomeBanner

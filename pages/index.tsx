@@ -3,17 +3,19 @@ import Head from 'next/head';
 
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { HomeBannerConfig } from './api/customCMS/interfaces';
+import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
 
-const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner').then(({ HomeBanner }) => ({ default: HomeBanner })));
+const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
 
 export default memo(function Home() {
 
     const { pageClass } = UseCmsDataHome();
-    const {starterApp, pageLoader, header,  footer} = useLayoutProvider();
+    const { starterApp, pageLoader, header, footer } = useLayoutProvider();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
-    const [homeBanner, setHomeBanner] = useState()
+    const [homeBanner] = useLocalStorageData<HomeBannerConfig>("CmsData", "homeBanner");
 
     const storageValidator = useCallback(() => {
         const storedValue = window.sessionStorage.getItem('isLoading');
@@ -26,10 +28,7 @@ export default memo(function Home() {
     }, []);
 
     useEffect(() => {
-        const storedCmsData = localStorage.getItem('CmsData');
-        const parsedCmsData = storedCmsData ? JSON.parse(storedCmsData) : null;
-        setHomeBanner(parsedCmsData.homeBanner)
-        storageValidator()
+        storageValidator();
     }, [storageValidator]);
 
     useEffect(() => {
@@ -59,7 +58,7 @@ export default memo(function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {initialStorageValue && isLoading && {...starterApp}}
+            {initialStorageValue && isLoading && { ...starterApp }}
             {!isLoading && (
                 <Suspense fallback={pageLoader}>
                     <div className={pageClass}>
@@ -74,4 +73,3 @@ export default memo(function Home() {
         </>
     );
 });
-

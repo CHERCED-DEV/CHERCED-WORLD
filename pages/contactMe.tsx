@@ -1,17 +1,18 @@
 import { lazy, memo, Suspense } from 'react';
 import Head from 'next/head';
 
-import { getCMSData } from '../utils/providers/requests/homeCB';
-import { ContactMeServerDataProps } from '../utils/dataConfigWorkflow.interfaces';
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
+import { ContactMeConfig } from './api/customCMS/interfaces';
 
-const ContactMeSection = lazy(() => import('../components/Mains/contactMe/ContactMeSection').then(({ ContactMeSection }) => ({ default: ContactMeSection })));
+const ContactMeSection = lazy(() => import('../components/Mains/contactMe/ContactMeSection'));
 
-export default memo(function ContactMe({ contactMe }: ContactMeServerDataProps) {
+export default memo(function ContactMe() {
 
     const { pageClass } = UseCmsDataHome();
     const { pageLoader, header, footer } = useLayoutProvider();
+    const [contactMe] = useLocalStorageData<ContactMeConfig>("CmsData", "contactMe");
 
     return (
         <>
@@ -25,9 +26,7 @@ export default memo(function ContactMe({ contactMe }: ContactMeServerDataProps) 
                 <div className={pageClass}>
                     {header}
                     <main className="contactMe">
-                        <ContactMeSection
-                            contactMe={contactMe}
-                        />
+                        {contactMe ? <ContactMeSection contactMe={contactMe}/> : null}
                     </main>
                     {footer}
                 </div>
@@ -35,11 +34,3 @@ export default memo(function ContactMe({ contactMe }: ContactMeServerDataProps) 
         </>
     );
 });
-
-export async function getServerSideProps(): Promise<{ props: ContactMeServerDataProps }> {
-
-    const CmsData = await getCMSData();
-    const contactMe = CmsData?.contactMe
-
-    return { props: { contactMe } };
-}

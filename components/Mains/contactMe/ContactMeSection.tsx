@@ -6,7 +6,7 @@ import DataBase from '../../../pages/api/contactMe/database/db';
 import Image from 'next/legacy/image';
 
 
-export const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => {
+const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<ContactMeFieldsInfoConfig>();
 
@@ -80,3 +80,5 @@ export const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe
         </>
     );
 };
+
+export default ContactMeSection
