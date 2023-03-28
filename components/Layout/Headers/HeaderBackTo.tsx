@@ -2,23 +2,14 @@ import React, { memo, useEffect, useState } from 'react';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import { HeaderConfig } from '../../../pages/api/customCMS/interfaces';
-import { getCMSData } from '../../../utils/providers/requests/homeCB';
 
+interface HeaderBackPropsConfig {
+    header: HeaderConfig;
+}
 
-export const HeaderBackTo: React.FC = memo(() => {
-
-    const [header, setHeader] = useState<HeaderConfig | undefined>();
+export const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(({ header }) => {
 
     const router = useRouter();
-
-    useEffect(() => {
-        const fetchHeaderData = async () => {
-            const CmsData = await getCMSData();
-            setHeader(CmsData?.header);
-        }
-        fetchHeaderData();
-    }, []);
-
     const handleEvent = () => {
         const pathArray = router.asPath.split("/");
         pathArray.splice(-1, 1);

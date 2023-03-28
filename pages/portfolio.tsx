@@ -1,8 +1,9 @@
-import { lazy, memo, Suspense } from 'react';
+import { Fragment, lazy, memo, Suspense } from 'react';
 import Head from 'next/head';
 
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { PageLoader } from '../components/Layout/Spiners&Loaders/PageLoader';
+import { LayOut } from '../components/Layout/LayOut';
 import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
 import { PortfolioConfig } from './api/customCMS/interfaces';
 
@@ -11,7 +12,6 @@ const PortfolioSection = lazy(() => import('../components/Mains/portfolio/Portfo
 export default memo(function Portfolio() {
 
     const { pageClass } = UseCmsDataHome();
-    const { pageLoader, header, footer } = useLayoutProvider();
     const [portfolio] = useLocalStorageData<PortfolioConfig>("CmsData", "portfolio");
 
     return (
@@ -22,20 +22,22 @@ export default memo(function Portfolio() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Suspense fallback={pageLoader}>
+            <Suspense fallback={<PageLoader />}>
                 <div className={pageClass}>
-                    {header}
-                    <main className="portfolio">
-                        {portfolio ? <PortfolioSection portfolio={portfolio} /> : null}
-                    </main>
-                    <div className="AtomContainer">
-                        <div className="atomP">
-                            <div className="electronP" />
-                            <div className="electronP" />
-                            <div className="electronP" />
-                        </div>
-                    </div>
-                    {footer}
+                    <LayOut headerSimple={true} mainClass={`portfolio`}>
+                        {portfolio ? (
+                            <Fragment>
+                                <PortfolioSection portfolio={portfolio} />
+                                <div className="AtomContainer">
+                                    <div className="atomP">
+                                        <div className="electronP" />
+                                        <div className="electronP" />
+                                        <div className="electronP" />
+                                    </div>
+                                </div>
+                            </Fragment>
+                        ) : null}
+                    </LayOut>
                 </div>
             </Suspense>
         </>

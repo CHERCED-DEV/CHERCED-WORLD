@@ -4,10 +4,10 @@
 $font-path-secondary:    '../fonts/static/';
 
 $font-name:             'Montserrat';
-$font-name-secondary:   'Advent Pro';
+$font-name-secondary:   'Static';
 $font-filename-secondary:    'static-bold-webfont';
 
-$font-sanserif:         'Lato';
+$font-sanserif:         $font-name-secondary;
 $font-icon-name:        '-icons';
 
 $f-body:    $font-name, sans-serif;

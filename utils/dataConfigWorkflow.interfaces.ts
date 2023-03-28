@@ -1,4 +1,4 @@
-import { AboutMeConfig, ContactMeConfig, HomeBannerConfig, PortfolioConfig, HeaderConfig, FooterConfig } from "../pages/api/customCMS/interfaces";
+import { AboutMeConfig, ContactMeConfig, HomeBannerConfig, PortfolioConfig, HeaderConfig, FooterConfig, LayOutConfig } from "../pages/api/customCMS/interfaces";
 
 //PAGES:
 
@@ -28,14 +28,8 @@ export interface PortfolioServicesServerDataProps {
 
 //Layout
 
-//[HEADER: DATA]:
+//[LayOut: DATA]:
 //SSRContract
-export interface HeaderServerDataProps {
-    header: HeaderConfig; 
-}
-
-//[FOOTER: DATA]:
-//SSRContract
-export interface FooterServerDataProps {
-    footer: FooterConfig; 
+export interface LayoutServerDataProps {
+    layout: LayOutConfig; 
 }

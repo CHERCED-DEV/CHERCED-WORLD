@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/legacy/image';
-import { techListConfig } from "../../../../pages/api/customCMS/interfaces";
+import { TechListConfig } from "../../../../pages/api/customCMS/interfaces";
 
 
-export const ListTecnologies: React.FC<techListConfig> = (props) => {
+export const ListTecnologies: React.FC<TechListConfig> = (props) => {
 
     return (
         <li className={props.hidden ? ("aboutMe-tecnologies__item HIDDEN") : ("aboutMe-tecnologies__item VISIBLE")}>

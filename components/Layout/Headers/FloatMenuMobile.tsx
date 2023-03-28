@@ -5,30 +5,19 @@ import { HeaderConfig, ListItems } from '../../../pages/api/customCMS/interfaces
 import { ListSubMenu } from './utils/ListSubMenu';
 import { dinamycReaderOptions } from './HeaderLogic/dinamicReaderRouteToOptions';
 import { floatMenuData } from './HeaderLogic/floatMenuData';
-import { getCMSData } from '../../../utils/providers/requests/homeCB';
 
+interface FloarMenuMobilePropsConfig {
+    header: HeaderConfig;
+}
 
-
-export const FloatMenuMobile: React.FC = () => {
+export const FloatMenuMobile: React.FC<FloarMenuMobilePropsConfig> = ({header}) => {
 
     const { handleSubMenu, sethandleSubMenu, pageClass } = UseCmsDataHome();
-
     const [newOptions, setNewOptions] = useState<ListItems[]>([{ title: "", href: "" }]);
-    const [header, setHeader] = useState<HeaderConfig | undefined>();
-
-
 
     useEffect(() => {
         setNewOptions(dinamycReaderOptions(pageClass, floatMenuData.options));
     }, [pageClass]);
-
-    useEffect(() => {
-        const fetchHeaderData = async () => {
-            const CmsData = await getCMSData();
-            setHeader(CmsData?.header);
-        }
-        fetchHeaderData();
-    }, []);
 
     const handleEvent = () => {
         sethandleSubMenu(!handleSubMenu);

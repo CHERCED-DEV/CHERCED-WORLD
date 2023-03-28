@@ -1,28 +1,74 @@
-import { HeaderConfig, HomeBannerConfig, AboutMeConfig, PortfolioConfig, ContactMeConfig, FooterConfig } from "./interfaces";
+import { LayOutConfig , HomeBannerConfig, AboutMeConfig, PortfolioConfig, ContactMeConfig} from "./interfaces";
 
 export const CMS: {
 	[key: string]:
-	HeaderConfig | HomeBannerConfig 
+    LayOutConfig | HomeBannerConfig 
 	| AboutMeConfig | PortfolioConfig |
-	ContactMeConfig | FooterConfig
+	ContactMeConfig 
 } = {
-	header: {
-		brandImage: {
-			src: '/assets/icons/brandLogo.png',
-			alt: 'CHERCED logo',
-			loading: 'lazy',
-		},
-		buttonMenu: {
-			src: '/assets/icons/navbar.png',
-			alt: 'menu button',
-			loading: 'lazy',
-		},
-		backTo: {
-			src: '/assets/icons/backTo.png',
-			alt: 'BackTo',
-			loading: 'lazy',
-		}
-	},
+    layOut: {
+        header: {
+            brandImage: {
+                src: '/assets/icons/brandLogo.png',
+                alt: 'CHERCED logo',
+                loading: 'lazy',
+            },
+            buttonMenu: {
+                src: '/assets/icons/navbar.png',
+                alt: 'menu button',
+                loading: 'lazy',
+            },
+            backTo: {
+                src: '/assets/icons/backTo.png',
+                alt: 'BackTo',
+                loading: 'lazy',
+            }
+        },
+        footer: {
+            backOption: {
+                img: {
+                    src: '/assets/icons/arrowFooter.png',
+                    alt: 'arrow back to top',
+                    loading: 'lazy'
+                },
+                text: 'BACK TO TOP',
+                link: {
+                    href: '#header'
+                }
+            },
+            footerSocialMedia: [
+                {
+                    src: '/assets/icons/facebookIcon.png',
+                    alt: 'faceBook icon',
+                    loading: 'lazy',
+                    a: 'https://www.bbc.com/mundo/noticias-51225114'
+                },
+                {
+    
+                    src: '/assets/icons/linkedInIcon.png',
+                    alt: 'linkedIn icon',
+                    loading: 'lazy',
+                    a: 'https://www.linkedin.com/in/cherced/'
+                },
+                {
+                    src: '/assets/icons/instagramIcon.png',
+                    alt: 'instagram icon',
+                    loading: 'lazy',
+                    a: 'https://www.instagram.com/cherced/'
+                },
+                {
+                    src: '/assets/icons/gmailIcon.png',
+                    alt: 'gmail icon',
+                    loading: 'lazy',
+                    a: 'mailto:chernandezcediel@gmail.com'
+                },
+            ],
+            copyright: {
+                strongText: '@2023 Camilo Hernandez',
+                normalText: 'All Rigths Reserved',
+            }
+        }
+    },	
 	homeBanner: {
 		homeBannerTitles: {
 			textParragraph: 'My name is',
@@ -401,48 +447,4 @@ export const CMS: {
 		},
 		button: "Submit"
 	},
-	footer: {
-		backOption: {
-			img: {
-				src: '/assets/icons/arrowFooter.png',
-				alt: 'arrow back to top',
-				loading: 'lazy'
-			},
-			text: 'BACK TO TOP',
-			link: {
-				href: '#header'
-			}
-		},
-		footerSocialMedia: [
-			{
-				src: '/assets/icons/facebookIcon.png',
-				alt: 'faceBook icon',
-				loading: 'lazy',
-				a: 'https://www.bbc.com/mundo/noticias-51225114'
-			},
-			{
-
-				src: '/assets/icons/linkedInIcon.png',
-				alt: 'linkedIn icon',
-				loading: 'lazy',
-				a: 'https://www.linkedin.com/in/cherced/'
-			},
-			{
-				src: '/assets/icons/instagramIcon.png',
-				alt: 'instagram icon',
-				loading: 'lazy',
-				a: 'https://www.instagram.com/cherced/'
-			},
-			{
-				src: '/assets/icons/gmailIcon.png',
-				alt: 'gmail icon',
-				loading: 'lazy',
-				a: 'mailto:chernandezcediel@gmail.com'
-			},
-		],
-		copyright: {
-			strongText: '@2023 Camilo Hernandez',
-			normalText: 'All Rigths Reserved',
-		}
-	}
 };

@@ -109,6 +109,11 @@ export interface FooterConfig {
     normalText: string;
   };
 }
+
+export interface LayOutConfig {
+    header: HeaderConfig;
+    footer: FooterConfig;
+}
 export interface HomeBannerConfig {
   homeBannerTitles: {
     textParragraph: string;
@@ -198,10 +203,10 @@ export interface ContactMeConfig {
 
 // this its the call of all data just import this to fetch the apiCms
 export interface CmsDataConfig {
-  header: HeaderConfig;
+  layOut: LayOutConfig;
   homeBanner: HomeBannerConfig;
   aboutMe: AboutMeConfig;
   portfolio: PortfolioConfig;
   contactMe: ContactMeConfig;
-  footer: FooterConfig;
+  
 }

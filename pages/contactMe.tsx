@@ -2,7 +2,8 @@ import { lazy, memo, Suspense } from 'react';
 import Head from 'next/head';
 
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { PageLoader } from '../components/Layout/Spiners&Loaders/PageLoader';
+import { LayOut } from '../components/Layout/LayOut';
 import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
 import { ContactMeConfig } from './api/customCMS/interfaces';
 
@@ -11,7 +12,6 @@ const ContactMeSection = lazy(() => import('../components/Mains/contactMe/Contac
 export default memo(function ContactMe() {
 
     const { pageClass } = UseCmsDataHome();
-    const { pageLoader, header, footer } = useLayoutProvider();
     const [contactMe] = useLocalStorageData<ContactMeConfig>("CmsData", "contactMe");
 
     return (
@@ -22,13 +22,11 @@ export default memo(function ContactMe() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Suspense fallback={pageLoader}>
+            <Suspense fallback={<PageLoader />}>
                 <div className={pageClass}>
-                    {header}
-                    <main className="contactMe">
-                        {contactMe ? <ContactMeSection contactMe={contactMe}/> : null}
-                    </main>
-                    {footer}
+                    <LayOut headerSimple={true} mainClass={`contactMe`}>
+                        {contactMe ? <ContactMeSection contactMe={contactMe} /> : null}
+                    </LayOut>
                 </div>
             </Suspense>
         </>

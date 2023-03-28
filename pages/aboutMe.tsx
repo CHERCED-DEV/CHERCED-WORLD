@@ -2,7 +2,8 @@ import Head from 'next/head';
 import { memo, lazy, Suspense } from 'react';
 
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
-import { useLayoutProvider } from '../utils/providers/layOutContext';
+import { PageLoader } from '../components/Layout/Spiners&Loaders/PageLoader';
+import { LayOut } from '../components/Layout/LayOut';
 import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
 import { AboutMeConfig } from './api/customCMS/interfaces';
 
@@ -13,7 +14,6 @@ const AboutMeSection = lazy(() => import('../components/Mains/aboutMeSection/Abo
 export default memo(function AboutMe() {
 
     const { pageClass } = UseCmsDataHome();
-    const { pageLoader, header, footer } = useLayoutProvider();
     const [aboutMe] = useLocalStorageData<AboutMeConfig>("CmsData", "aboutMe");
 
     return (
@@ -24,13 +24,11 @@ export default memo(function AboutMe() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Suspense fallback={pageLoader}>
+            <Suspense fallback={<PageLoader/>}>
                 <div className={pageClass}>
-                    {header}
-                    <main className="aboutMe">
+                    <LayOut headerSimple={true} mainClass={`aboutMe`} >
                         {aboutMe ? <AboutMeSection aboutMe={aboutMe} /> : null}
-                    </main>
-                    {footer}
+                    </LayOut>
                 </div>
             </Suspense>
         </>
