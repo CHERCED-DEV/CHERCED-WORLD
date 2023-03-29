@@ -40,7 +40,7 @@ export const FloatMenuMobile: React.FC<FloarMenuMobilePropsConfig> = ({header}) 
                     )}
                 </button>
             </header>
-            <ul className={styles.floatMenuNavigationList}>
+            <ul className={styles.floatMenuNavegationList}>
                 {
                     newOptions?.map((option: ListItems, index: number) => (
                         <ListSubMenu

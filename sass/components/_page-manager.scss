@@ -21,17 +21,17 @@ div.HOME-PAGE {
         @include container-wrap;
         display: block;
         filter: blur(4px);
-        height: calc(100vh - 292px);   
+        height: calc(100vh - 222px);   
        /*  @media screen and (max-width: calculateRem($bp-tablet-portrait-max)) {
             height: calc(100vh - 241px);    
         } */
     }
 
-    .footer {
-        .footer-back {
+    #footer {
+        #footer-back {
             display: none;
         }
-        .footer-socialMedia {
+        #footer-socialMedia {
             margin-top: calculateRem(50px);
             :nth-child(2) {
                 display: none;
@@ -64,7 +64,7 @@ div.ABOUTME-PAGE {
 }
 // PORTFOLIO PAGE
 div.PORTFOLIO-PAGE {
-    .footer {
+    #footer {
         border-radius: 0;
     }
 }

@@ -11,9 +11,9 @@ interface FooterPropsConfig {
 
 const Footer: React.FC<FooterPropsConfig> = memo(function Footer({ footer }) {
     return (
-        <footer className={styles.footerContainer}>
+        <footer id='footer' className={styles.footerContainer}>
             <div className={styles.footer}>
-                <section className={styles.footerBack}>
+                <section id='footer-back' className={styles.footerBack}>
                     <a className={styles.footerBackLink} href={footer?.backOption.link.href}>
                         <div className="footer-back__img">
                             {footer?.backOption?.img?.src && (
@@ -33,7 +33,7 @@ const Footer: React.FC<FooterPropsConfig> = memo(function Footer({ footer }) {
                         {footer?.backOption.text}
                     </h1>
                 </section>
-                <ul className={styles.footerSocialMedia}>
+                <ul id='footer-socialMedia' className={styles.footerSocialMedia}>
                     {
                         footer?.footerSocialMedia.map((footerSocialMedia: ImageProps, index: number) => (
                             <ListFooterMedia
