@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import Image from 'next/legacy/image';
+import styles from './utils/header.module.scss';
 import { UseCmsDataHome } from '../../../utils/providers/cmsDataProvider';
 import { HeaderConfig, ListItems } from '../../../pages/api/customCMS/interfaces';
 import { ListOptionsHeader } from './utils/ListOptionsHeader';
@@ -11,7 +12,7 @@ interface HeaderPropsConfig {
     header: HeaderConfig;
 }
 
-export const Header: React.FC<HeaderPropsConfig> = memo(({ header }) => {
+const Header: React.FC<HeaderPropsConfig> = memo(function Header({ header }) {
 
     const [newOptions, setNewOptions] = useState<ListItems[]>([{ title: "", href: "" }]);
     const { handleSubMenu, sethandleSubMenu, pageClass } = UseCmsDataHome();
@@ -27,9 +28,9 @@ export const Header: React.FC<HeaderPropsConfig> = memo(({ header }) => {
     return (
         <>
             <FloatMenuMobile header={header} />
-            <header id='header' className="header-container" >
-                <nav className="header">
-                    <div className="header__img">
+            <header id='header' className={styles.headerContainer} >
+                <nav className={styles.header}>
+                    <div className={styles.headerImg}>
                         {header?.brandImage?.src && (
                             <Image
                                 src={header?.brandImage.src}
@@ -41,8 +42,8 @@ export const Header: React.FC<HeaderPropsConfig> = memo(({ header }) => {
                             />
                         )}
                     </div>
-                    <nav className="header-navegation">
-                        <ul className="header-navegation__list">
+                    <nav className={styles.headerNavegation}>
+                        <ul className={styles.headerNavegationList}>
                             {
                                 newOptions?.map((dskList: ListItems, index: number) => (
                                     <ListOptionsHeader
@@ -55,8 +56,8 @@ export const Header: React.FC<HeaderPropsConfig> = memo(({ header }) => {
                             }
                         </ul>
                     </nav>
-                    <button className="header-button" onClick={handleEvent}>
-                        <div className="header-button__img"
+                    <button className={styles.headerButton} onClick={handleEvent}>
+                        <div className={styles.headerButtonImg}
                         >
                             {header?.buttonMenu?.src && (
                                 <Image
@@ -77,4 +78,4 @@ export const Header: React.FC<HeaderPropsConfig> = memo(({ header }) => {
 }
 )
 
-Header.displayName = 'Header';
+export default Header

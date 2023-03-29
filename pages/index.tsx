@@ -1,5 +1,6 @@
-import { memo, useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
+import { memo, useEffect, useState, Suspense, lazy, useCallback } from 'react';
 
 import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { HomeBannerConfig } from './api/customCMS/interfaces';
@@ -9,7 +10,7 @@ import { PageLoader } from '../components/Layout/Spiners&Loaders/PageLoader';
 import { LayOut } from '../components/Layout/LayOut';
 
 
-const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
+const HomeBanner = dynamic(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
 
 export default memo(function Home() {
 

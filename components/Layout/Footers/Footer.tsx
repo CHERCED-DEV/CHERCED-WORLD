@@ -1,18 +1,20 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo } from 'react'
+import styles from './utils/footer.module.scss'
 import Image from 'next/legacy/image';
 import { FooterConfig, ImageProps } from '../../../pages/api/customCMS/interfaces';
 import { ListFooterMedia } from './utils/ListFooterMedia';
+
 
 interface FooterPropsConfig {
     footer: FooterConfig;
 }
 
-export const Footer: React.FC<FooterPropsConfig> = memo(({ footer }) => {
+const Footer: React.FC<FooterPropsConfig> = memo(function Footer({ footer }) {
     return (
-        <footer className="footer-container">
-            <div className="footer">
-                <section className="footer-back">
-                    <a className="footer-back__link" href={footer?.backOption.link.href}>
+        <footer className={styles.footerContainer}>
+            <div className={styles.footer}>
+                <section className={styles.footerBack}>
+                    <a className={styles.footerBackLink} href={footer?.backOption.link.href}>
                         <div className="footer-back__img">
                             {footer?.backOption?.img?.src && (
                                 <Image
@@ -27,11 +29,11 @@ export const Footer: React.FC<FooterPropsConfig> = memo(({ footer }) => {
                             }
                         </div>
                     </a>
-                    <h1 className="footer-back__title">
+                    <h1 className={styles.footerBackTitle}>
                         {footer?.backOption.text}
                     </h1>
                 </section>
-                <ul className="footer-socialMedia">
+                <ul className={styles.footerSocialMedia}>
                     {
                         footer?.footerSocialMedia.map((footerSocialMedia: ImageProps, index: number) => (
                             <ListFooterMedia
@@ -44,9 +46,9 @@ export const Footer: React.FC<FooterPropsConfig> = memo(({ footer }) => {
                         ))
                     }
                 </ul>
-                <section className="footer-copyRight">
-                    <h1 className="footer-copyRight__title">
-                        <strong className="footer-copyRight__strong">
+                <section className={styles.footerCopyRight}>
+                    <h1 className={styles.footerCopyRightTitle}>
+                        <strong className={styles.footerCopyRightStrong}>
                             {footer?.copyright.strongText}
                         </strong>
                         {footer?.copyright.normalText}
@@ -57,4 +59,4 @@ export const Footer: React.FC<FooterPropsConfig> = memo(({ footer }) => {
     )
 })
 
-Footer.displayName = 'Footer';
+export default Footer

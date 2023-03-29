@@ -1,13 +1,14 @@
-import React from 'react';
+import dynamic from 'next/dynamic';
+import {lazy} from 'react';
 
 import { AboutMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 
-const AboutMeDescriptionContainer = React.lazy(() => import('./sections/AboutMeDescriptionContainer'));
-const AboutMeCareer = React.lazy(() => import('./sections/AboutMeCareer'));
-const AboutMeSkills = React.lazy(() => import('./sections/AboutMeSkills'));
-const AboutMeTecnologies = React.lazy(() => import('./sections/AboutMeTecnologies'));
-const AboutMeEducation = React.lazy(() => import('./sections/AboutMeEducation'));
-const AboutMeIdioms = React.lazy(() => import('./sections/AboutMeIdioms'));
+const AboutMeDescriptionContainer = dynamic(() => import('./sections/AboutMeDescriptionContainer'));
+const AboutMeCareer = lazy(() => import('./sections/AboutMeCareer'));
+const AboutMeSkills = lazy(() => import('./sections/AboutMeSkills'));
+const AboutMeTecnologies = lazy(() => import('./sections/AboutMeTecnologies'));
+const AboutMeEducation = lazy(() => import('./sections/AboutMeEducation'));
+const AboutMeIdioms = lazy(() => import('./sections/AboutMeIdioms'));
 
 
 const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) => {

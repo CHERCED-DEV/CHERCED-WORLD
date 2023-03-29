@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/legacy/image';
 import { ImageProps } from '../../../../pages/api/customCMS/interfaces';
 import { HomeServerDataProps } from '../../../../utils/dataConfigWorkflow.interfaces';
 import { ListContacMedia } from './utils/ListContacMedia';
-import { backGround } from './utils/background';
+
+
+const GlitteringSea = dynamic(()=> import('./utils/glitteringSea/GlitteringSea'));
 
 const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
 
-    useEffect(() => {
-        backGround();
-    }, []);
-
     return (
         <>
-            <div className="glitteringSea"><canvas id="canvas"></canvas></div>
+            <GlitteringSea/>
             <section className="homeBanner">
                 <div className="homeBanner-text__container">
                     <p className="homeBanner-text__parragraph">

@@ -1,4 +1,5 @@
 // FOOTER COMPONENT: 
+@import "../../../../sass/vars";
 
 //Styles:
 .footer {
@@ -10,51 +11,65 @@
     flex-direction: column;
     align-items: center;
 }
-
-.footer-back {
+.footerBack {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: calculateRem(46px) 0 calculateRem(50px);
+    margin: calculateRem(35px) 0 calculateRem(40px);
 }
-.footer-back__link {
+.footerBackLink {
     margin-bottom: calculateRem(7px);
 }
-.footer-back__title {
+.footerBackTitle {
     font-size: calculateRem($f-size);
     font-weight: $f-weight-medium;
     letter-spacing: 0.18538em;
 }
 
-.footer-socialMedia {
+.footerSocialMedia {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.footer-socialMedia__item {
+.footerSocialMediaItem {
     margin: 0 calculateRem(15px);
     height: calculateRem(30px);
     width: calculateRem(30px);
 }
 
-.footer-copyRight {
-    margin: calculateRem(50px) 0 calculateRem(30px);
+.footerCopyRight {
+    margin: calculateRem(30px) 0;
 }
-.footer-copyRight__title {
+.footerCopyRightTitle {
     font-size: calculateRem($f-size-sm);
     font-weight: $f-weight-light;
     &::after {
         content: '.';
     }
 }
-.footer-copyRight__strong {
+.footerCopyRightStrong {
     margin-right: calculateRem(5px);
     font-weight: $f-weight-bold;
 }
 
 @media screen and (min-width: 992px) {
-    .footer-container {
+    .footerContainer {
         width: 100vw;
         background-color: black;
     }
+}
+
+:export {
+    footerContainer: footerContainer;
+    footer: footer;
+    footerBack: footerBack;
+    footerBackLink: footerBackLink;
+    footerBackTitle: footerBackTitle;
+    footerSocialMedia: footerSocialMedia;
+    footerSocialMediaItem: footerSocialMediaItem;
+    footerSocialMediaLink: footerSocialMediaLink;
+    footerSocialMediaImg: footerSocialMediaImg;
+    footerCopyRight: footerCopyRight;
+    footerCopyRightTitle: footerCopyRightTitle;
+    footerCopyRightStrong: footerCopyRightStrong;
 }
