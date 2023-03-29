@@ -9,29 +9,38 @@
 
 .aboutMe-description {
     display: flex;
-	flex-direction: column;
-	align-items: center; 
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(180deg, #000 46.81%, rgba(196, 196, 196, 0) 149.87%);
 }
+
 .aboutMe-career,
 .aboutMe-skills,
 .aboutMe-tecnologies,
 .aboutMe-education,
 .aboutMe-courses,
 .aboutMe-idioms {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     @include container-wrap;
     background: white;
     color: black;
     padding-top: calculateRem(60px);
 }
+
 .aboutMe-career__title,
 .aboutMe-skills__title,
-.aboutMe-education__title, 
+.aboutMe-education__title,
 .aboutMe-courses__textFlag,
 .aboutMe-idioms__mainTitle {
     @include rectangularButton($f-size-md-xxl);
-    width: 90%;
+    max-width: calculateRem(300px);
+    width: 100%;
 }
 
+@media screen and (min-width: calculateRem($bp-tablet-portrait-max)) {
+    .aboutMe-description {
+        width: 100vw;
+    }
+}

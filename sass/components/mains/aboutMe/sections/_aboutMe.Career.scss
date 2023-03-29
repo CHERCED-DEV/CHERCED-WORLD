@@ -52,3 +52,9 @@
     text-align: justify;
 
 }
+
+@media screen and (min-width: calculateRem($bp-mobile)) {
+    .aboutMe-career__item {
+        max-width: calculateRem(700px);
+    }
+}

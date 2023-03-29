@@ -2,10 +2,13 @@
     min-height: calculateRem(600px);
     height: calc(100vh - calculateRem(65px));
     justify-content: flex-end;
+    color: white;
 }
+
 .aboutMe-container__parallax {
     width: calculateRem(250px);
     text-align: center;
+    margin-bottom: calculateRem(-5px);
 }
 
 .aboutMe-img__parallax {
@@ -54,4 +57,11 @@
 .aboutMe-description__parragraph {
     text-align: justify;
     margin: 0 5%;
+}
+
+@media screen and (min-width: calculateRem($bp-tablet-portrait-max)) {
+    .aboutMe-description__container {
+        max-width: calculateRem(600px);
+        margin-bottom: calculateRem(90px);
+    }
 }

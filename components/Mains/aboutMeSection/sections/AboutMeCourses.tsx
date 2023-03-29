@@ -1,4 +1,4 @@
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import React, { memo } from 'react'
 import { AboutMeCoursesConfig } from '../../../../pages/api/customCMS/interfaces'
 import { ListEducationCourses } from '../utils/ListEducationCourses'
@@ -24,7 +24,7 @@ const AboutMeCourses: React.FC<{ courses: AboutMeCoursesConfig }> = memo(functio
                 <Image
                     src={courses?.linkPlatzi.img.src}
                     alt={courses?.linkPlatzi.img.alt}
-                    layout='intrinsic'
+                    fill={false}
                     width={128}
                     height={128}
                 />

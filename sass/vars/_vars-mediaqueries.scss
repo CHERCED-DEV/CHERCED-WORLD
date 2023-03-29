@@ -16,7 +16,7 @@ $gutter-sides-desktop: $gutter-desktop;
 //## mobile
 $bp-mobile-small: calculateRem(480px);
 $bp-mobile-small-max: calculateRem(480px - 1);
-$bp-mobile: calculateRem(640px);
+$bp-mobile:(640px);
 $bp-mobile-max: calculateRem(640px - 1);
 $bp-mobile-min: calculateRem(480px + 1);
 //## tablet

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import { AboutMeDescriptionConfig } from '../../../../pages/api/customCMS/interfaces';
 
 const AboutMeDescriptionContainer: React.FC<{ description: AboutMeDescriptionConfig }> = memo(function AboutMeDescriptionContainer({ description }) {
@@ -12,9 +12,8 @@ const AboutMeDescriptionContainer: React.FC<{ description: AboutMeDescriptionCon
                             src={description?.parallax.src}
                             alt={description?.parallax.alt}
                             priority={true}
-                            layout='responsive'
-                            width={500}
-                            height={627}
+                            width={256}
+                            height={321}
                         />
                     )}
                 </div>

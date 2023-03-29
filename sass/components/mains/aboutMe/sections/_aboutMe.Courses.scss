@@ -3,6 +3,7 @@
 }
 
 .aboutMe-courses__item {
+    max-width: calculateRem(600px);
     margin: calculateRem(25px) 0;
 }
 
