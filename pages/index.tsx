@@ -1,22 +1,21 @@
 import Head from 'next/head';
-import { memo, useEffect, useState, Suspense, lazy, useCallback } from 'react';
+import { memo, useEffect, useState, lazy, useCallback } from 'react';
+import { getCMSData } from '../utils/providers/requests/homeCB';
+import { CmsDataConfig } from './api/customCMS/interfaces';
 import { HomeBannerConfig } from './api/customCMS/interfaces';
 import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
 import { StarterApp } from '../components/Layout/Spiners&Loaders/StarterApp';
 
 
-
-const LayOut = lazy(() => import('../components/Layout/LayOut'))
 const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
 
 export default memo(function Home() {
-
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
     const [homeBanner] = useLocalStorageData<HomeBannerConfig>("CmsData", "homeBanner");
 
-    const storageValidator = useCallback(() => {
+    useEffect(() => {
         const storedValue = window.sessionStorage.getItem('isLoading');
         if (storedValue !== null) {
             setIsLoading(storedValue === 'true');
@@ -25,10 +24,6 @@ export default memo(function Home() {
         }
         setInitialStorageValue(true);
     }, []);
-
-    useEffect(() => {
-        storageValidator();
-    }, [storageValidator]);
 
     useEffect(() => {
         function handlePageLoad() {
