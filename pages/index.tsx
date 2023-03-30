@@ -19,6 +19,7 @@ export default function Home() {
     </Head>
       <Header/>
       <HomeBanner/>
+      <h1>entrypoint</h1>
       <FloatMenuMobile/>
       <Footer/>
     </>
