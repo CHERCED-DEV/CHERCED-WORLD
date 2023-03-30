@@ -13,16 +13,16 @@ div.SERVICES-PAGE {
 }
 
 // Pages withOut backtop footer:
-div.HOME-PAGE {   
+div.HOME-PAGE {
     position: relative;
     background: #00222B;
-    
+
     canvas#canvas {
         @include container-wrap;
         display: block;
         filter: blur(4px);
-        height: calc(100vh - 222px);   
-       /*  @media screen and (max-width: calculateRem($bp-tablet-portrait-max)) {
+        height: calc(100vh - 222px);
+        /*  @media screen and (max-width: calculateRem($bp-tablet-portrait-max)) {
             height: calc(100vh - 241px);    
         } */
     }
@@ -31,11 +31,14 @@ div.HOME-PAGE {
         #footer-back {
             display: none;
         }
+
         #footer-socialMedia {
             margin-top: calculateRem(50px);
+
             :nth-child(2) {
                 display: none;
             }
+
             :nth-child(4) {
                 display: none;
             }
@@ -50,27 +53,53 @@ div.HOME-PAGE {
     width: 100vw;
     overflow: hidden;
 }
+
 // CONTACTME PAGE
 div.CONTACTME-PAGE {
-   background: $colorLinearGradientContactMeBody;
+    height: 100vh;
+    @media screen and (min-width: calculateRem($bp-tablet-portrait-max)) {
+        #footer {
+            #footer-back {
+                display: none;
+            }
+            #footer-socialMedia {
+                margin-top: calculateRem(50px);
+            }
+        }
+    }
 }
+
 // ABOUT ME PAGE
 div.ABOUTME-PAGE {
     align-items: center;
     background-color: white;
-    color: white ;
-    
+    color: white;
+
 
 }
+
 // PORTFOLIO PAGE
 div.PORTFOLIO-PAGE {
     #footer {
         border-radius: 0;
     }
 }
+
 // SERVICES PAGE
 div.SERVICES-PAGE {
     overflow-x: hidden;
+    height: 100vh;
+
+    @media screen and (min-width: calculateRem($bp-tablet-portrait-max)) {
+        #footer {
+            #footer-back {
+                display: none;
+            }
+            #footer-socialMedia {
+                margin-top: calculateRem(50px);
+            }
+        }
+    }
 }
 
 // to wrap the main section class on the pages.

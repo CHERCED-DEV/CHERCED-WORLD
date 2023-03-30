@@ -1,17 +1,17 @@
-import React, { memo, useEffect, useState } from 'react';
-import Image from 'next/legacy/image';
+import React, { memo } from 'react';
+import Image from 'next/image';
 import styles from './utils/header.module.scss';
-import { UseCmsDataHome } from '../../../utils/providers/cmsDataProvider';
 import { HeaderConfig } from '../../../pages/api/customCMS/interfaces';
 import { FloatMenuMobile } from './FloatMenuMobile'
 
 interface HeaderPropsConfig {
     header: HeaderConfig;
+    handleSubMenu: boolean;
+    sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
+    pageClass: string
 }
 
-const Header: React.FC<HeaderPropsConfig> = memo(function Header({ header }) {
-
-    const { handleSubMenu, sethandleSubMenu, pageClass } = UseCmsDataHome();
+const Header: React.FC<HeaderPropsConfig> = memo(function Header({ header, handleSubMenu, sethandleSubMenu, pageClass }) {
 
     const handleEvent = () => {
         sethandleSubMenu(!handleSubMenu)
@@ -19,7 +19,7 @@ const Header: React.FC<HeaderPropsConfig> = memo(function Header({ header }) {
 
     return (
         <>
-            <FloatMenuMobile header={header} />
+            <FloatMenuMobile header={header} handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} />
             <header id='header' className={styles.headerContainer} >
                 <nav className={styles.header}>
                     <div className={styles.headerImg}>
@@ -28,7 +28,7 @@ const Header: React.FC<HeaderPropsConfig> = memo(function Header({ header }) {
                                 src={header?.brandImage.src}
                                 alt={header?.brandImage.alt}
                                 loading={header?.brandImage.loading}
-                                layout="intrinsic"
+                                fill={false}
                                 width={64}
                                 height={64}
                             />
@@ -42,7 +42,7 @@ const Header: React.FC<HeaderPropsConfig> = memo(function Header({ header }) {
                                     src={header?.buttonMenu?.src}
                                     alt={header?.buttonMenu?.alt}
                                     loading={header?.buttonMenu?.loading}
-                                    layout="intrinsic"
+                                    fill={false}
                                     width={31}
                                     height={18}
                                 />

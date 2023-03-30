@@ -1,4 +1,4 @@
-import { AboutMeConfig, ContactMeConfig, HomeBannerConfig, PortfolioConfig, HeaderConfig, FooterConfig, LayOutConfig } from "../pages/api/customCMS/interfaces";
+import { AboutMeConfig, ContactMeConfig, HomeBannerConfig, PortfolioConfig, LayOutConfig } from "../pages/api/customCMS/interfaces";
 
 //PAGES:
 

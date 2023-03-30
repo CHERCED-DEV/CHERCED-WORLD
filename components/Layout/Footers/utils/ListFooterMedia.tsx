@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import styles from './footer.module.scss'
 import { ImageProps } from "../../../../pages/api/customCMS/interfaces"
 
@@ -14,7 +14,7 @@ export const ListFooterMedia: React.FC<ImageProps> = (props) => {
                                 src={props.src}
                                 alt={props.alt}
                                 loading={props.loading}
-                                layout="intrinsic"
+                                fill={false}
                                 width={30}
                                 height={30}
                             />

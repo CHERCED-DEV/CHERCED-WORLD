@@ -1,18 +1,12 @@
 import React, { memo, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { UseCmsDataHome } from '../../utils/providers/cmsDataProvider';
 import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel';
-import { PageLoader } from '../../components/Layout/Spiners&Loaders/PageLoader';
 import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
-import { Header } from '../../components/Layout/Headers/Header';
-import { Footer } from '../../components/Layout/Footers/Footer';
 import Image from 'next/legacy/image';
 
 
 export default memo(function BlogIntro() {
-
-    const { pageClass } = UseCmsDataHome()
 
     const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
     const [BlogPostDataCMS, setBlogPostDataCMS] = useState<BlogCmsConfig>();
@@ -69,51 +63,45 @@ export default memo(function BlogIntro() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {
-                showStarterPage ? (<PageLoader />) : (
-                    <div className={pageClass}>
-                        <Header />
-                        <main className="blog">
-                            <section className="blog-intro">
-                                <h1 className="blog-intro__title">{BlogPostDataCMS?.mainTitle}<strong>{BlogPostDataCMS?.mainTitleStrong}</strong> </h1>
-                                <p className="blog-intro__description">{BlogPostDataCMS?.welcomeMenssage}</p>
-                                <div className="blog-intro__img">
-                                    {BlogPostDataCMS?.img.src && (
-                                        <Image
-                                            src={BlogPostDataCMS?.img.src}
-                                            alt={BlogPostDataCMS?.img.alt}
-                                            loading={BlogPostDataCMS?.img.loading}
-                                            layout="responsive"
-                                            width={472}
-                                            height={852}
-                                        />
-                                    )}
-                                </div>
-                            </section>
-                            <section className="blog-carrousel">
-                                <ul className="blog-carrousel__list">
-                                    {
-                                        postData.map((post: PostConfig, index: number) => (
-                                            <ListBlogCarrousel
-                                                key={index}
-                                                id={post.id}
-                                                title={post.title}
-                                                description={post.description}
-                                                img={{
-                                                    src: post.img.src,
-                                                    alt: post.img.alt,
-                                                    loading: post.img.loading
-                                                }}
-                                            />
-                                        ))
-                                    }
-                                </ul>
-                            </section>
-                        </main>
-                        <Footer />
+
+            <main className="blog">
+                <section className="blog-intro">
+                    <h1 className="blog-intro__title">{BlogPostDataCMS?.mainTitle}<strong>{BlogPostDataCMS?.mainTitleStrong}</strong> </h1>
+                    <p className="blog-intro__description">{BlogPostDataCMS?.welcomeMenssage}</p>
+                    <div className="blog-intro__img">
+                        {BlogPostDataCMS?.img.src && (
+                            <Image
+                                src={BlogPostDataCMS?.img.src}
+                                alt={BlogPostDataCMS?.img.alt}
+                                loading={BlogPostDataCMS?.img.loading}
+                                layout="responsive"
+                                width={472}
+                                height={852}
+                            />
+                        )}
                     </div>
-                )
-            }
+                </section>
+                <section className="blog-carrousel">
+                    <ul className="blog-carrousel__list">
+                        {
+                            postData.map((post: PostConfig, index: number) => (
+                                <ListBlogCarrousel
+                                    key={index}
+                                    id={post.id}
+                                    title={post.title}
+                                    description={post.description}
+                                    img={{
+                                        src: post.img.src,
+                                        alt: post.img.alt,
+                                        loading: post.img.loading
+                                    }}
+                                />
+                            ))
+                        }
+                    </ul>
+                </section>
+            </main>
+
         </>
     );
 });

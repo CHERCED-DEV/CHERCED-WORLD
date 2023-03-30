@@ -6,9 +6,8 @@ import { FormSendPost } from '../../components/Mains/blogLanding/utils/FormSendP
 import { Modal } from '../../utils/portals/modalPortal';
 import { usePortalProvider } from '../../utils/providers/modalProvider';
 import { PageLoader } from '../../components/Layout/Spiners&Loaders/PageLoader';
-import { HeaderBackTo } from '../../components/Layout/Headers/HeaderBackTo';
 import { BlogLanding } from '../../components/Mains/blogLanding/BlogLanding';
-import { Footer } from '../../components/Layout/Footers/Footer';
+
 
 export default function Blog() {
 
@@ -19,20 +18,6 @@ export default function Blog() {
     const [postIdData, setPostIdData] = useState<PostConfig>({} as PostConfig);
     const [postsList, setPostsList] = useState<PostConfig[]>([]);
 
-    useEffect(() => {
-        function handlePageLoad() {
-            const timerId = setTimeout(() => {
-                setShowStarterPage(!showStarterPage);
-            }, 1500);
-
-            // Return a function to clear the timer before the component is unmounted.
-            return () => {
-                clearTimeout(timerId);
-            }
-        }
-
-        handlePageLoad();
-    }, []);
 
     useEffect(() => {
         let mounted = true;
@@ -78,8 +63,6 @@ export default function Blog() {
                     <PageLoader />
                 ) : (
                     <body className='BLOG-PAGE'>
-                        <HeaderBackTo />
-                        <main className='blog'>
                             <BlogLanding
                                 title={postIdData?.title}
                                 subtitle={postIdData?.subtitle}
@@ -93,14 +76,12 @@ export default function Blog() {
                                 description={postIdData?.description}
                                 comments={postIdData?.comments}
                             />
-                        </main>
                         <button onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
                         {!!modalSwitch && (
                             <Modal>
                                 <FormSendPost />
                             </Modal>
                         )}
-                        <Footer />
                     </body>
                 )
             }

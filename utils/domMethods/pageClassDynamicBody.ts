@@ -2,9 +2,17 @@ type PageClassMap = {
   [path: string]: string;
 };
 
-export function pageClassDynamicBody(id:string): string {
+type mainClassMap = {
+  [pageClass: string]: string;
+};
+
+export function pageClassDynamicBody(id: string): {
+  pageClass: string;
+  mainClass: string;
+} {
   const ctx = id;
-  let pageClass = '';
+  let pageClass = "";
+  let mainClass = "";
 
   // Assign class based on pathname
   const pageClassMap: PageClassMap = {
@@ -17,9 +25,22 @@ export function pageClassDynamicBody(id:string): string {
     // add classes as required
   };
 
+  //Assign class based on pageClass
+  const mainClassMap: mainClassMap = {
+    "ABOUTME-PAGE": "aboutMe",
+    "BLOG-PAGE": "",
+    "CONTACTME-PAGE": "contactMe",
+    "HOME-PAGE": "main-home",
+    "PORTFOLIO-PAGE": "portfolio",
+    "SERVICES-PAGE": "services",
+  };
+
   if (pageClassMap[ctx]) {
     pageClass = pageClassMap[ctx]; // update the class based on the path
   }
+  if (mainClassMap[pageClass]) {
+    mainClass = mainClassMap[pageClass]; // update the class based on the path
+  }
 
-  return pageClass;
+  return { pageClass, mainClass };
 }

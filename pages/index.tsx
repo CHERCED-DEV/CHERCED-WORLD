@@ -1,20 +1,16 @@
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 import { memo, useEffect, useState, Suspense, lazy, useCallback } from 'react';
-
-import { UseCmsDataHome } from '../utils/providers/cmsDataProvider';
 import { HomeBannerConfig } from './api/customCMS/interfaces';
 import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
 import { StarterApp } from '../components/Layout/Spiners&Loaders/StarterApp';
-import { PageLoader } from '../components/Layout/Spiners&Loaders/PageLoader';
-import { LayOut } from '../components/Layout/LayOut';
 
 
-const HomeBanner = dynamic(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
+
+const LayOut = lazy(() => import('../components/Layout/LayOut'))
+const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
 
 export default memo(function Home() {
 
-    const { pageClass } = UseCmsDataHome();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
@@ -61,15 +57,9 @@ export default memo(function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {initialStorageValue && isLoading && <StarterApp/>}
+            {initialStorageValue && isLoading && <StarterApp />}
             {!isLoading && (
-                <Suspense fallback={<PageLoader/>}>
-                    <div className={pageClass}>
-                        <LayOut headerSimple={true} mainClass={`main-home`}>
-                            {homeBanner ? <HomeBanner homeBanner={homeBanner} /> : null}
-                        </LayOut>
-                    </div>
-                </Suspense>
+                homeBanner ? <HomeBanner homeBanner={homeBanner} /> : null
             )}
         </>
     );

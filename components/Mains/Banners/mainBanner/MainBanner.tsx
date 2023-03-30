@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { memo } from 'react';
 import dynamic from 'next/dynamic';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import { ImageProps } from '../../../../pages/api/customCMS/interfaces';
 import { HomeServerDataProps } from '../../../../utils/dataConfigWorkflow.interfaces';
 import { ListContacMedia } from './utils/ListContacMedia';
 
 
-const GlitteringSea = dynamic(()=> import('./utils/glitteringSea/GlitteringSea'));
+const GlitteringSea = dynamic(() => import('./utils/glitteringSea/GlitteringSea'));
 
-const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
+const HomeBanner: React.FC<HomeServerDataProps> = memo(function HomeBanner({ homeBanner }) {
 
     return (
         <>
-            <GlitteringSea/>
+            <GlitteringSea />
             <section className="homeBanner">
                 <div className="homeBanner-text__container">
                     <p className="homeBanner-text__parragraph">
@@ -27,7 +27,7 @@ const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
                             src={homeBanner?.separator.src}
                             alt={homeBanner?.separator.alt}
                             loading={homeBanner?.separator.loading}
-                            layout="fixed"
+                            fill={false}
                             width={120}
                             height={10}
                         />
@@ -49,6 +49,6 @@ const HomeBanner: React.FC<HomeServerDataProps> = ({ homeBanner }) => {
             </section>
         </>
     );
-};
+});
 
 export default HomeBanner
