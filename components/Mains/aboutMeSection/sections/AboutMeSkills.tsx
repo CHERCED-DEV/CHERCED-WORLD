@@ -5,9 +5,9 @@ import { ListMySkills } from '../utils/ListMySkills';
 const AboutMeSkills: React.FC<{ skills: AboutMeSkillsConfig }> = memo(function AboutMeSkills({ skills }) {
     return (
         <section className="aboutMe-skills">
-            <h1 className="aboutMe-skills__title">
+            <h3 className="aboutMe-skills__title">
                 {skills?.mainTitle}
-            </h1>
+            </h3>
             <p className="aboutMe-skills__parragraph">
                 {skills?.description}
             </p>

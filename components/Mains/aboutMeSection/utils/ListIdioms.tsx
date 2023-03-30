@@ -6,7 +6,7 @@ export const ListIdioms: React.FC<IdiomsConfig> = (props) => {
 
     return (
         <li className="aboutMe-idioms__item">
-            <h1 className="aboutMe-idioms__title">{props.idiom}</h1>
+            <p className="aboutMe-idioms__title">{props.idiom}</p>
             <div className="aboutMe-idioms__img">
                 {props?.img?.src && (
                     <Image

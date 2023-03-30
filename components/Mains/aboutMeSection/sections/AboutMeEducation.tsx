@@ -6,9 +6,9 @@ import { ListEducationPro } from '../utils/ListEducationPro'
 const AboutMeEducation: React.FC<{ education: AboutMeEducationConfig }> = memo(function AboutMeEducation({ education }) {
     return (
         <section className="aboutMe-education">
-            <h1 className="aboutMe-education__title">
+            <h2 className="aboutMe-education__title">
                 {education.mainTitle}
-            </h1>
+            </h2>
             <ul className="aboutMe-education__list">
                 {
                     education?.titles.map((education, index: number) => (

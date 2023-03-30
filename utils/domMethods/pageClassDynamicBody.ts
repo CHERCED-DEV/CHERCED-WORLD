@@ -22,6 +22,7 @@ export function pageClassDynamicBody(id: string): {
     "/": "HOME-PAGE",
     "/portfolio": "PORTFOLIO-PAGE",
     "/services": "SERVICES-PAGE",
+    "/projects": "PROJECTS-PAGE",
     // add classes as required
   };
 
@@ -33,13 +34,18 @@ export function pageClassDynamicBody(id: string): {
     "HOME-PAGE": "main-home",
     "PORTFOLIO-PAGE": "portfolio",
     "SERVICES-PAGE": "services",
+    "PROJECTS-PAGE": "projects"
   };
 
   if (pageClassMap[ctx]) {
     pageClass = pageClassMap[ctx]; // update the class based on the path
+  } else {
+    pageClass = "none"
   }
   if (mainClassMap[pageClass]) {
     mainClass = mainClassMap[pageClass]; // update the class based on the path
+  } else {
+    mainClass = "none"
   }
 
   return { pageClass, mainClass };

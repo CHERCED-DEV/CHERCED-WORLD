@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './utils/header.module.scss';
 import { useRouter } from 'next/router';
@@ -6,16 +6,18 @@ import { HeaderConfig } from '../../../pages/api/customCMS/interfaces';
 
 interface HeaderBackPropsConfig {
     header: HeaderConfig;
+    headerSimple: boolean;
+    setHeaderSimple: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo({ header }) {
+const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo({ header, headerSimple, setHeaderSimple, }) {
 
     const router = useRouter();
     const handleEvent = () => {
         const pathArray = router.asPath.split("/");
         pathArray.splice(-1, 1);
-        const backTo = pathArray.join("/");
-        return router.push(backTo)
+        /* const backTo = pathArray.join("/"); */
+        return router.push('/')
     }
 
     return (
@@ -33,7 +35,10 @@ const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo
                         />
                     )}
                 </div>
-                <button className={styles.headerBackToButton} onClick={handleEvent}>
+                <button className={styles.headerBackToButton} onClick={() => {
+                    handleEvent();
+                    setHeaderSimple(!headerSimple);
+                }}>
                     <div className={styles.headerBackToButtonImg}>
                         {header?.brandImage?.src && (
                             <Image

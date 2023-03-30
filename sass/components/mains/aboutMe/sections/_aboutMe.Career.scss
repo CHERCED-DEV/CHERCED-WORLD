@@ -34,11 +34,13 @@
 
 .aboutMe-containerExp__title {
     @include font-size($f-size);
+    font-weight: $f-weight-bold;
     margin-left: calculateRem(20px);
 }
 
 .aboutMe-containerExp__subTitle {
     @include font-size($f-size-md);
+    font-weight: $f-weight-bold;
     margin: calculateRem(25px) 0;
 }
 

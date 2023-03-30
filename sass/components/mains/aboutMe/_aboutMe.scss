@@ -35,6 +35,7 @@
 .aboutMe-courses__textFlag,
 .aboutMe-idioms__mainTitle {
     @include rectangularButton($f-size-md-xxl);
+    font-weight: $f-weight-bold;
     max-width: calculateRem(300px);
     width: 100%;
 }

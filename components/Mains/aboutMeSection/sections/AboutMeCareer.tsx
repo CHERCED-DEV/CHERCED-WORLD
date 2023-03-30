@@ -5,9 +5,9 @@ import { ListExperiencie } from '../utils/ListExperiencie'
 const AboutMeCareer: React.FC<{ career: AboutMeCareerConfig }> = memo(function AboutMeCareer({ career }) {
     return (
         <section className="aboutMe-career">
-            <h1 className="aboutMe-career__title" >
+            <h2 className="aboutMe-career__title" >
                 {career?.mainTitle}
-            </h1>
+            </h2>
             <ul className="aboutMe-career__list">
                 {
                     career?.proExp.map((proExp, index: number) => (

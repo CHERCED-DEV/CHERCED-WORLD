@@ -5,7 +5,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { PortalContextProvider } from '../utils/providers/modalProvider';
 import { pageClassDynamicBody } from '../utils/domMethods/pageClassDynamicBody';
-import { useClearCacheOnPageChange } from '../utils/domMethods/clearCacheOnPage';
+
 
 const LayOut = lazy(() => import('../components/Layout/LayOut'));
 
@@ -27,13 +27,23 @@ export default function App({ Component, pageProps }: AppProps) {
         sethandleSubMenu(false);
     }, [id]);
 
-    useClearCacheOnPageChange();
-    return <PortalContextProvider>
-            <LayOut pageClass={pageClasses.pageClass} 
-                    handleSubMenu={handleSubMenu} 
-                    sethandleSubMenu={sethandleSubMenu} 
-                    mainClass={pageClasses.mainClass} >
+    return (
+        pageClasses.pageClass !== "none" ? (
+            <PortalContextProvider>
+                <LayOut
+                    pageClass={pageClasses.pageClass}
+                    handleSubMenu={handleSubMenu}
+                    sethandleSubMenu={sethandleSubMenu}
+                    mainClass={pageClasses.mainClass}
+                >
+                    <Component {...pageProps as any} />
+                </LayOut>
+            </PortalContextProvider>
+        ) : (
+            <PortalContextProvider>
                 <Component {...pageProps as any} />
-            </LayOut>
-        </PortalContextProvider>
+            </PortalContextProvider>
+        )
+    );
+
 }

@@ -7,5 +7,6 @@ module.exports = {
   sassOptions: {
     includePaths: [path.join(__dirname, 'sass')],
   },
+  compress: true,
 }
 

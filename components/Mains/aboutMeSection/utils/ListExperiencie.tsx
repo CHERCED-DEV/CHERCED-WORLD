@@ -6,17 +6,17 @@ export const ListExperiencie: React.FC<ProExpConfig> = (props) => {
     return (
         <li className="aboutMe-career__item">
             <div className="aboutMe-career__itemTitleConainer">
-                <h1 className="aboutMe-career__itemTitle">
+                <p className="aboutMe-career__itemTitle">
                     {props.initialDate} - {props.endingDate}
-                </h1>
-                <h1 className="aboutMe-containerExp__title">
+                </p>
+                <p className="aboutMe-containerExp__title">
                     {props.expTitleDescription.expTitle}
-                </h1>
+                </p>
             </div>
             <div className="aboutMe-career__containerExp">
-                <h2 className="aboutMe-containerExp__subTitle">
+                <p className="aboutMe-containerExp__subTitle">
                     {props.expTitleDescription.company}
-                </h2>
+                </p>
                 <p className="aboutMe-containerExp__description">
                     {props.expTitleDescription.descriptionExp}
                 </p>

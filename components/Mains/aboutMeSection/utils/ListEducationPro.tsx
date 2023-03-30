@@ -4,9 +4,9 @@ import { EducationDegreesConfig } from "../../../../pages/api/customCMS/interfac
 export const ListEducationPro: React.FC<EducationDegreesConfig> = (props) => {
     return (
         <li className="aboutMe-education__item">
-            <h1 className="aboutMe-education__institution">
+            <p className="aboutMe-education__institution">
                 {props.proTitleDegree.proTitle}
-            </h1>
+            </p>
             <div className="aboutMe-education__degreeParragraph">
                 <hr />
                 <p>{props.proTitleDegree.strong}</p>
