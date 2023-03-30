@@ -5,6 +5,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { PortalContextProvider } from '../utils/providers/modalProvider';
 import { pageClassDynamicBody } from '../utils/domMethods/pageClassDynamicBody';
+import { getCMSData } from '../utils/providers/requests/homeCB';
 
 
 const LayOut = lazy(() => import('../components/Layout/LayOut'));
@@ -20,6 +21,14 @@ export default function App({ Component, pageProps }: AppProps) {
     const id = router.asPath;
     const [handleSubMenu, sethandleSubMenu] = useState<boolean>(false);
     const [pageClasses, setPageClasses] = useState<PageClasses>({ pageClass: "", mainClass: "" });
+
+    useEffect(() => {
+        const storageConstructor =  async () => {
+            const CmsData =  await getCMSData();
+            window.localStorage.setItem("CmsData", JSON.stringify(CmsData));
+        };
+        storageConstructor();
+    }, []);
 
     useEffect(() => {
         const { pageClass, mainClass } = pageClassDynamicBody(id);
