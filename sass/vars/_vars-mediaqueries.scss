@@ -1,19 +1,31 @@
 // + Breakpoints
 // -------
+// + Container 
+$container-max-width: 1248px;
+$default-pad: calculateRem(33px);
+
+// + Grid gutter variations
+// -------
+$gutter: 14px;
+$gutter-desktop: 16px;
+
+$gutter-sides: $gutter;
+$gutter-sides-desktop: $gutter-desktop;
+
 
 //## mobile
 $bp-mobile-small: calculateRem(480px);
 $bp-mobile-small-max: calculateRem(480px - 1);
-$bp-mobile: calculateRem(640px);
+$bp-mobile:(640px);
 $bp-mobile-max: calculateRem(640px - 1);
 $bp-mobile-min: calculateRem(480px + 1);
 //## tablet
 $bp-tablet-portrait: calculateRem(768px);
-$bp-tablet-portrait-max: calculateRem(768px - 1);
+$bp-tablet-portrait-max: (768px - 1);
 $bp-tablet-portrait-min: calculateRem(640px + 1);
 $bp-tablet-landscape: calculateRem(992px);
 $bp-tablet-landscape-max: calculateRem(992px - 1);
-$bp-tablet-landscape-min: calculateRem(768px + 1);
+$bp-tablet-landscape-min: (768px + 1);
 //## desktop
 $bp-desktop: calculateRem($container-max-width);
 $bp-desktop-max: calculateRem($container-max-width - 1);
@@ -33,4 +45,13 @@ $until-mobile: '(max-width: #{$bp-mobile-max})';                        // <640p
 $until-tablet-portrait: '(max-width: #{$bp-tablet-portrait-max})';      // <768px
 $until-tablet-landscape: '(max-width: #{$bp-tablet-landscape-max})';    // <992px
 $until-desktop: '(max-width: #{$bp-desktop-max})';                      // <1248px
+
+// + Grid variables (nsgrid-vars)
+// -------
+$gl-max-width: $container-max-width;
+$gl-gutter-sides-breakpoint: $tablet-landscape; //## 992px by default
+$gl-gutter-sides: $gutter-sides; //## whole web container padding left/right
+$gl-gutter-sides-desktop: $gutter-sides-desktop;
+$gl-margin-top: 24px;
+$gl-margin-bottom: $gl-margin-top;
 

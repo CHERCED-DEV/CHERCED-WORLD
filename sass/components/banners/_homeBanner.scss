@@ -1,0 +1,43 @@
+$size-icons: calculateRem(30px);
+
+.main-home {
+    @include container-wrap;
+    height: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.homeBanner {
+    position: absolute;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: $overlay-zindex;
+}
+
+
+.homeBanner-text__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.homeBanner-text__parragraph {
+    margin-bottom: calculateRem(5px);
+    strong {
+        margin-left: calculateRem(5px);
+    }
+}
+
+.homeBanner-img__container { margin: calculateRem(25px) 0; }
+.homeBanner-socialMedia__list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.homeBanner-socialMedia__item { margin: 0 calculateRem(15px); }
+
+

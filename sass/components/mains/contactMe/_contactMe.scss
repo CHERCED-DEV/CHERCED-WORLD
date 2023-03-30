@@ -1,0 +1,60 @@
+.contactMe {
+    justify-content: space-between;
+    padding-top: calculateRem(65px);
+    padding-bottom: calculateRem(65px);
+}
+
+.contactMe-info {
+    @include centerContent;
+    height: 100%;
+    justify-content: space-around;
+}
+.contactMe-info__title {
+    @include rectangularButton;
+    margin-bottom: calculateRem(40px);
+}
+.contactMe-info__description {
+    width: 100%;
+    max-width: calculateRem(500px);
+    text-align: center;
+    font-weight: $f-weight-light;
+    padding: 0 2%;
+}
+.contactMe-info__img {margin: calculateRem(40px) 0 calculateRem(60px);}
+
+.contactMe-form {
+    @include centerContent;
+    :nth-child(4) {
+        font-size: calculateRem(14px);
+        padding-top: 10px;
+        max-width: calculateRem(250px);
+        min-width: 100%;
+        width: 100%;
+        max-height: calculateRem(200px);
+        min-height: calculateRem(40px);
+        height: calculateRem(160px);
+        overflow-y: auto; 
+    }
+}
+.contactMe-form__input { 
+    @include fieldsContactMeInput; 
+    overflow: hidden;
+}
+.contactMe-form__submit {
+    @include submitButtonRegular;
+    margin-top: calculateRem(20px);
+}
+
+@media screen and (min-width: calculateRem($bp-mobile)) {
+    .contactMe {
+        padding: calculateRem(40px) calculateRem(40px);
+    }
+    .contactMe-form__input {
+        margin-bottom: calculateRem(25px);
+    }
+    .contactMe-form {
+        :nth-child(4) {
+        height: calculateRem(45px);
+        }
+    }
+}

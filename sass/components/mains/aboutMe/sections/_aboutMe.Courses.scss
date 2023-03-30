@@ -1,0 +1,41 @@
+.aboutMe-courses__list {
+    margin: 0 5%;
+}
+
+.aboutMe-courses__item {
+    max-width: calculateRem(600px);
+    margin: calculateRem(25px) 0;
+}
+
+.aboutMe-courses__school {
+    font-weight: $f-weight-bold;
+    margin-bottom: calculateRem(15px);
+}
+
+.aboutMe-courses__descriptionCoruse {
+    display: flex;
+    justify-content: space-between;
+    font-weight: $f-weight-light;
+    margin: calculateRem(20px) 0;
+
+    hr {
+        width: 20%;
+        border: 0;
+        border-bottom: 0.0625rem solid #ccc;
+        border-left: 0.0625rem solid #ccc;
+        margin: 0 5% calculateRem(10px);
+    }
+
+    p {
+        text-align: justify;
+        width: 80%;
+    }
+}
+.aboutMe-courses__platzi {
+    display: flex;
+    align-items: flex-end;
+    margin-top: calculateRem(15px);
+    :last-child {
+        position: relative;
+    }
+}

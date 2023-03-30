@@ -1,0 +1,133 @@
+@mixin container-wrap() {
+    max-width: $gl-max-width;
+    width: 100vw;
+    min-width: calculateRem(320px);
+    padding-right: calculateRem($gl-gutter-sides);
+    padding-left: calculateRem($gl-gutter-sides);
+    margin-right: auto;
+    margin-left: auto;
+
+    @media #{$gl-gutter-sides-breakpoint} {
+        padding-left: calculateRem($gl-gutter-sides-desktop);
+        padding-right: calculateRem($gl-gutter-sides-desktop);
+    }
+}
+
+
+$parentSize: 16px;
+
+@function calculateRem($size) {
+    // @if unitless($size) { TODO: validate unit calculateRem function
+    // 	@warn 'Assuming value `#{$size}` to be in pixels; attempting to convert it.';
+    // 	$size: $size * 1px;
+    // }
+
+    $remSize: $size / $parentSize;
+    @return #{$remSize}rem;
+}
+
+@mixin font-size($size) {
+    font-size: calculateRem($size);
+}
+
+@mixin centerContent() {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+// button rectangular title:
+
+@mixin rectangularButton($font-size: 14px) {
+    @include font-size($font-size);
+    font-weight: 700;
+    letter-spacing: 0.35538em;
+    text-transform: uppercase;
+    text-align: center;
+    border: calculateRem(8px) solid #000000;
+    padding: calculateRem(20px);
+}
+
+@mixin fieldsContactMeInput() {
+    font-family: $f-body;
+    border-top: none;
+    border-right: none;
+    border-bottom: calculateRem(5px) solid;
+    border-left: calculateRem(5px) solid;
+    border-color: #000000;
+    margin-bottom: calculateRem(40px);
+    background: transparent;
+    height: calculateRem(40px);
+    width: calculateRem(250px);
+    padding: 0 calculateRem(10px);
+    font-family: $f-body;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+@mixin submitButtonRegular($font-size: 14px, $h: 40px) {
+    @include font-size($font-size);
+    height: calculateRem($h);
+    font-family: $f-body;
+    background: transparent;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: calculateRem(4px) solid #000000;
+    border-top: none;
+    border-bottom: none;
+    padding: calculateRem(20px);
+    display: flex;
+    align-items: center;
+}
+
+
+@mixin BackgroundBlackWitheAnimated {
+    background: linear-gradient(339deg, #0b0e0d, #dadada);
+    -webkit-animation: AnimationName 10s ease infinite;
+    -moz-animation: AnimationName 10s ease infinite;
+    animation: AnimationName 20s ease infinite;
+
+    @-webkit-keyframes AnimationName {
+        0% {
+            background-position: 50% 0%
+        }
+
+        50% {
+            background-position: 51% 100%
+        }
+
+        100% {
+            background-position: 50% 0%
+        }
+    }
+
+    @-moz-keyframes AnimationName {
+        0% {
+            background-position: 50% 0%
+        }
+
+        50% {
+            background-position: 51% 100%
+        }
+
+        100% {
+            background-position: 50% 0%
+        }
+    }
+
+    @keyframes AnimationName {
+        0% {
+            background-position: 50% 0%
+        }
+
+        50% {
+            background-position: 51% 100%
+        }
+
+        100% {
+            background-position: 50% 0%
+        }
+    }
+}

@@ -1,0 +1,21 @@
+.blog-content {
+    margin: calculateRem(60px) 0;
+    @include centerContent;
+}
+.blog-main__title {
+    @include rectangularButton;
+    margin-bottom: calculateRem(20px);
+}
+.blog-content__image {
+    width: calculateRem(250px);
+    border-radius: calculateRem(16px);
+}
+.blog-content__subTitle {
+    margin: calculateRem(20px) 0;
+    text-transform: capitalize;
+    text-align: start;
+    width: 100%;
+}
+.blog-content__text {
+    text-align: justify;
+}

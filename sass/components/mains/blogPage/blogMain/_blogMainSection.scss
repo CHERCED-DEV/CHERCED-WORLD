@@ -1,0 +1,19 @@
+.blog-intro {
+    margin: calculateRem(60px) 0;
+    text-align: center;
+}
+.blog-intro__title {
+    @include rectangularButton;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+.blog-intro__description {
+    margin: calculateRem(25px) 5% 0;
+    text-align: justify;
+}
+.blog-intro__img {
+    width: calculateRem(200px);
+}
+
+

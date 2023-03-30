@@ -3,12 +3,12 @@
 // WL call Roboto family from Google cdn (CMS GeneralConfig.json)
 $font-path-secondary:    '../fonts/static/';
 
-$font-name:             'Lato';
+$font-name:             'Montserrat';
 $font-name-secondary:   'Static';
 $font-filename-secondary:    'static-bold-webfont';
 
-$font-sanserif:         'Lato';
-$font-icon-name:        'avianca-icons';
+$font-sanserif:         $font-name-secondary;
+$font-icon-name:        '-icons';
 
 $f-body:    $font-name, sans-serif;
 $f-title:   $font-sanserif, sans-serif;
@@ -18,9 +18,9 @@ $f-button:  $f-title;
 
 // ++ Fonts weight
 $f-weight-bold:     700;
-$f-weight-medium:   700;
+$f-weight-medium:   600;
 $f-weight-normal:   400;
-$f-weight-light:    400;
+$f-weight-light:    300;
 
 // ++ Fonts size
 $f-size-xxs:    11px;
@@ -43,3 +43,4 @@ $f-iconsize-md: 39px;
 $f-iconsize-lg: 48px;
 $f-iconsize-xlg: 64px;
 $f-iconsize-super: 70px;
+

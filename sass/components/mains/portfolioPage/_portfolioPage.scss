@@ -1,0 +1,7 @@
+@import './sections/portfolioServices';
+@import './sections/portfolioProjects';
+
+.portfolio-services {
+    @include container-wrap;
+    @include centerContent;
+}

@@ -1,0 +1,139 @@
+// HEADER COMPONENT: 
+@import "../../../../sass/vars";
+
+//Vars:
+$height-header: calculateRem(65px);
+
+//Styles:
+.header,
+.headerBackTo {
+    @include container-wrap;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: $height-header;
+    background-color: $uiKit-background;
+}
+
+.headerImg,
+.headerBackToImg {
+    margin-left: calculateRem(-8px);
+}
+
+.headerNavegation {
+    display: none;
+}
+
+.headerButton,
+.headerBackToButton {
+    background-color: transparent;
+    border: none;
+}
+
+@media screen and (min-width: calculateRem($bp-tablet-landscape-min)) {
+    .headerContainer {
+        width: 100vw;
+        background-color: black;
+    }
+}
+
+// FLOATSUBMENU COMPONENT:
+
+//Styles:
+.floatMenuNavegation {
+    position: fixed;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $uiKit-background;
+    width: 100%;
+    height: 100vh;
+
+    &.on {
+        display: flex;
+        top: 0;
+        z-index: $page-loader-zindex;
+    }
+
+    &.off {
+        top: -100vh;
+        display: none;
+    }
+
+    header {
+        width: 100%;
+        height: calculateRem(65px);
+        padding: 0 calculateRem(14px);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end
+    }
+}
+
+.floatMenuNavegationList {
+    @include container-wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.floatMenuNavegationItem {
+    @include font-size($f-size-md-xl);
+    margin: calculateRem(20px);
+    
+    a {
+        text-decoration: none;
+    }
+}
+
+.floatMenuNavegationLink {
+    color: $uiKit-fontColor;
+    text-decoration: none;
+    font-weight: $f-weight-normal;
+
+    &:hover {
+        font-weight: $f-weight-medium;
+    }
+}
+
+
+
+@media #{$tablet-landscape} {
+    .floatMenuNavegation {
+        display: none;
+    }
+}
+
+@media screen and (min-width: calculateRem($bp-tablet-landscape-min)) {
+    .floatMenuNavegationItem {
+        margin: calculateRem(15px);
+    }
+
+    .floatMenuNavegationLogo {
+        margin-bottom: calculateRem(40px);
+    }
+}
+
+:export {
+    headerContainer: headerContainer;
+    header: header;
+    headerBackTo: headerBackTo;
+    headerImg: headerImg;
+    headerBackToImg: headerBackToImg;
+    headerNavegation: headerNavegation;
+    headerNavegationList: headerNavegationList;
+    headerNavegationItem: headerNavegationItem;
+    headerNavegationLink: headerNavegationLink;
+    headerButton: headerButton;
+    headerButtonImg: headerButtonImg; 
+    headerBackToButton: headerBackToButton;
+    headerBackToButtonImg: headerBackToButtonImg;
+    floatMenuNavegation: floatMenuNavegation;
+    on: on;
+    off: off;
+    floatMenuNavegationList: floatMenuNavegationList;
+    floatMenuNavegationItem: floatMenuNavegationItem;
+    floatMenuNavegationLink: floatMenuNavegationLink;
+    floatMenuNavegationLogo: floatMenuNavegationLogo;
+    floatMenuNavegationImg: floatMenuNavegationImg;
+}

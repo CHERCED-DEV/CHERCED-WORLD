@@ -1,0 +1,62 @@
+.aboutMe-career__title {
+    margin-bottom: calculateRem(60px);
+}
+
+.aboutMe-career__list {
+    margin: 0 5%;
+}
+
+.aboutMe-career__item {
+    display: flex;
+    flex-direction: column;
+    margin: calculateRem(45px) 0;
+
+    &:first-child {
+        margin-top: 0;
+    }
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.aboutMe-career__itemTitleConainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.aboutMe-career__itemTitle {
+    @include rectangularButton(10px);
+    width: calculateRem(120px);
+    padding: calculateRem(4px);
+    border-width: calculateRem(4px);
+}
+
+.aboutMe-containerExp__title {
+    @include font-size($f-size);
+    font-weight: $f-weight-bold;
+    margin-left: calculateRem(20px);
+}
+
+.aboutMe-containerExp__subTitle {
+    @include font-size($f-size-md);
+    font-weight: $f-weight-bold;
+    margin: calculateRem(25px) 0;
+}
+
+.aboutMe-career__containerExp {
+    >hr {
+        margin: calculateRem(40px) calculateRem(30px) 0;
+    }
+}
+
+.aboutMe-containerExp__description {
+    text-align: justify;
+
+}
+
+@media screen and (min-width: calculateRem($bp-mobile)) {
+    .aboutMe-career__item {
+        max-width: calculateRem(700px);
+    }
+}

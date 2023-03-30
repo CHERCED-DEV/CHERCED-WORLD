@@ -1,0 +1,75 @@
+// FOOTER COMPONENT: 
+@import "../../../../sass/vars";
+
+//Styles:
+.footer {
+    @include container-wrap;
+    background-color: $uiKit-background;
+    color: $uiKit-fontColor;
+    border-radius: calculateRem(20px) calculateRem(20px) 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.footerBack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: calculateRem(35px) 0 calculateRem(40px);
+}
+.footerBackLink {
+    margin-bottom: calculateRem(7px);
+}
+.footerBackTitle {
+    font-size: calculateRem($f-size);
+    font-weight: $f-weight-medium;
+    letter-spacing: 0.18538em;
+}
+
+.footerSocialMedia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.footerSocialMediaItem {
+    margin: 0 calculateRem(15px);
+    height: calculateRem(30px);
+    width: calculateRem(30px);
+}
+
+.footerCopyRight {
+    margin: calculateRem(30px) 0;
+}
+.footerCopyRightTitle {
+    font-size: calculateRem($f-size-sm);
+    font-weight: $f-weight-light;
+    &::after {
+        content: '.';
+    }
+}
+.footerCopyRightStrong {
+    margin-right: calculateRem(5px);
+    font-weight: $f-weight-bold;
+}
+
+@media screen and (min-width: 992px) {
+    .footerContainer {
+        width: 100vw;
+        background-color: black;
+    }
+}
+
+:export {
+    footerContainer: footerContainer;
+    footer: footer;
+    footerBack: footerBack;
+    footerBackLink: footerBackLink;
+    footerBackTitle: footerBackTitle;
+    footerSocialMedia: footerSocialMedia;
+    footerSocialMediaItem: footerSocialMediaItem;
+    footerSocialMediaLink: footerSocialMediaLink;
+    footerSocialMediaImg: footerSocialMediaImg;
+    footerCopyRight: footerCopyRight;
+    footerCopyRightTitle: footerCopyRightTitle;
+    footerCopyRightStrong: footerCopyRightStrong;
+}

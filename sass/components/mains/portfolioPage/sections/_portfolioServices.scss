@@ -1,0 +1,11 @@
+.portfolio-services {
+    margin-top: calculateRem(60px);
+}
+.portfolio-services__title {
+    @include rectangularButton;
+    margin-bottom: calculateRem(45px);
+}
+.portfolio-services__description {
+    margin: 0 5% calculateRem(25px);
+    text-align: justify;
+}
