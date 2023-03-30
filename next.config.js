@@ -8,5 +8,8 @@ module.exports = {
     includePaths: [path.join(__dirname, 'sass')],
   },
   compress: true,
+  env: {
+    NEXT_PUBLIC_BASE_URL: process.env.VERCEL_URL
+  },
 }
 
