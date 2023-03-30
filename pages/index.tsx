@@ -1,20 +1,17 @@
 import Head from 'next/head';
-import { memo, useEffect, useState, Suspense, lazy, useCallback } from 'react';
-import { HomeBannerConfig } from './api/customCMS/interfaces';
-import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
+import { memo, useEffect, useState, lazy, useCallback } from 'react';
+import { CmsDataConfig } from './api/customCMS/interfaces';
 import { StarterApp } from '../components/Layout/Spiners&Loaders/StarterApp';
+import { getCMSData } from '../utils/providers/requests/homeCB';
+import { HomeClientDataProps } from '../utils/dataConfigWorkflow.interfaces';
+import { HomeBannerConfig } from './api/customCMS/interfaces';
 
-
-
-const LayOut = lazy(() => import('../components/Layout/LayOut'))
 const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
 
-export default memo(function Home() {
-
+export default memo(function Home({ homeBanner }: HomeClientDataProps) {
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
-    const [homeBanner] = useLocalStorageData<HomeBannerConfig>("CmsData", "homeBanner");
 
     const storageValidator = useCallback(() => {
         const storedValue = window.sessionStorage.getItem('isLoading');
@@ -64,3 +61,29 @@ export default memo(function Home() {
         </>
     );
 });
+
+interface HomeServerDataProps {
+    props: {
+        homeBanner: HomeBannerConfig | null;
+    }
+}
+
+
+export async function getServerSideProps(): Promise<HomeServerDataProps> {
+    try {
+        const cmsData: CmsDataConfig = await getCMSData();
+        const homeBanner = cmsData.homeBanner;
+        return {
+            props: {
+                homeBanner,
+            },
+        }
+    } catch (error) {
+        console.error("Error al obtener los datos del CMS:", error);
+        return {
+            props: {
+                homeBanner: null,
+            },
+        };
+    }
+}

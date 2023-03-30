@@ -1,6 +1,6 @@
 import {lazy} from 'react';
 
-import { AboutMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
+import { AboutMeClientDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 
 const AboutMeDescriptionContainer = lazy(() => import('./sections/AboutMeDescriptionContainer'));
 const AboutMeCareer = lazy(() => import('./sections/AboutMeCareer'));
@@ -11,7 +11,7 @@ const AboutMeCourses = lazy(()=>import('./sections/AboutMeCourses'))
 const AboutMeIdioms = lazy(() => import('./sections/AboutMeIdioms'));
 
 
-const AboutMeSection: React.FC<AboutMeServerDataProps> = ({ aboutMe }) => {
+const AboutMeSection: React.FC<AboutMeClientDataProps> = ({ aboutMe }) => {
     return (
         <>
             <AboutMeDescriptionContainer description={aboutMe.description} />

@@ -1,13 +1,12 @@
 import React, { lazy, memo } from 'react';
 import Head from 'next/head'
-import { PortfolioConfig } from './api/customCMS/interfaces';
-import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
+import { CmsDataConfig, PortfolioConfig } from './api/customCMS/interfaces';
+import { PortfolioServicesClientDataProps } from '../utils/dataConfigWorkflow.interfaces';
+import { getCMSData } from '../utils/providers/requests/homeCB';
 
 const ServicesWCFUSection = lazy(() => import('../components/Mains/ServicesWCFU/ServicesWCFUSection').then(({ ServicesWCFUSection }) => ({ default: ServicesWCFUSection })));
 
-export default memo(function Services() {
-
-    const [portfolio] = useLocalStorageData<PortfolioConfig>("CmsData", "portfolio");
+export default memo(function Services({ portfolio }: PortfolioServicesClientDataProps) {
 
     return (
         <>
@@ -22,3 +21,28 @@ export default memo(function Services() {
         </>
     );
 });
+
+interface PortfolioServicesServerDataProps {
+    props: {
+        portfolio: PortfolioConfig | null;
+    }
+}
+
+export async function getServerSideProps(): Promise<PortfolioServicesServerDataProps> {
+    try {
+        const cmsData: CmsDataConfig = await getCMSData();
+        const portfolio = cmsData.portfolio;
+        return {
+            props: {
+                portfolio
+            }
+        };
+    } catch (error) {
+        console.error("Error al obtener los datos del CMS:", error);
+        return {
+            props: {
+                portfolio: null
+            }
+        };
+    }
+}

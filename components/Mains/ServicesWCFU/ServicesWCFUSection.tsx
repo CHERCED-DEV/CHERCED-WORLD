@@ -1,12 +1,12 @@
 import React from 'react'
 import { useRouter } from 'next/router';
-import { PortfolioServicesServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
+import { PortfolioServicesClientDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ServicesConfig } from '../../../pages/api/customCMS/interfaces';
 import { ListServicesOffer } from './utils/ListServicesOffer';
 
 
 
-export const ServicesWCFUSection: React.FC<PortfolioServicesServerDataProps> = ({portfolio}) => {
+export const ServicesWCFUSection: React.FC<PortfolioServicesClientDataProps> = ({portfolio}) => {
 
     const router = useRouter();
 

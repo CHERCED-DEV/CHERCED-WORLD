@@ -1,13 +1,13 @@
 import { lazy, memo } from 'react';
 import Head from 'next/head';
-import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
-import { ContactMeConfig } from './api/customCMS/interfaces';
+import { getCMSData } from '../utils/providers/requests/homeCB';
+import { ContactMeClientDataProps } from '../utils/dataConfigWorkflow.interfaces';
+import { CmsDataConfig, ContactMeConfig } from './api/customCMS/interfaces';
+
 
 const ContactMeSection = lazy(() => import('../components/Mains/contactMe/ContactMeSection'));
 
-export default memo(function ContactMe() {
-
-    const [contactMe] = useLocalStorageData<ContactMeConfig>("CmsData", "contactMe");
+export default memo(function ContactMe({contactMe}: ContactMeClientDataProps) {
 
     return (
         <>
@@ -23,3 +23,28 @@ export default memo(function ContactMe() {
         </>
     );
 });
+
+interface ContactMeServerDataProps {
+    props: {
+        contactMe: ContactMeConfig | null;
+    }
+}
+
+export async function getServerSideProps(): Promise<ContactMeServerDataProps> {
+    try {
+        const cmsData: CmsDataConfig = await getCMSData();
+        const contactMe = cmsData.contactMe;
+        return {
+            props: {
+                contactMe,
+            }
+        };
+    } catch (error) {
+        console.error("Error al obtener los datos del CMS:", error);
+        return {
+            props: {
+                contactMe: null,
+            }
+        };
+    }
+}

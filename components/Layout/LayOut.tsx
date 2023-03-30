@@ -1,7 +1,7 @@
 import React, { lazy, memo, ReactNode, Suspense, useEffect, useState } from 'react';
 import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
-import { useLocalStorageData } from '../../utils/hooks/getLocalStorageData';
 import { LayOutConfig } from '../../pages/api/customCMS/interfaces';
+import { getCMSData } from '../../utils/providers/requests/homeCB';
 import { PageLoader } from './Spiners&Loaders/PageLoader';
 
 
@@ -19,7 +19,7 @@ const Footer = lazy(() => import('./Footers/Footer'));
 
 const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mainClass, pageClass, handleSubMenu, sethandleSubMenu }) {
     const [headerSimple, setHeaderSimple] = useState<boolean>(true);
-    const [layOut] = useLocalStorageData<LayOutConfig>("CmsData", "layOut");
+    const [layOut, setLayOut] = useState<LayOutConfig>();
 
     useEffect(() => {
         if (pageClass == "BLOG-PAGE") {
@@ -27,12 +27,24 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
         }
     }, [pageClass])
 
+    useEffect(() => {
+        let mounted = true;
+
+        if (mounted) {
+            async () => {
+                const { layOut } = await getCMSData();
+                setLayOut(layOut);
+            }
+        }
+    }, [])
+
+
     return (
         <Suspense fallback={<PageLoader />}>
             <div className={pageClass}>
                 {
                     headerSimple ? (layOut ? <Header header={layOut.header} handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} /> : null)
-                        : (layOut ? <HeaderBackTo  headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} header={layOut.header} /> : null)
+                        : (layOut ? <HeaderBackTo headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} header={layOut.header} /> : null)
                 }
                 <main className={mainClass}>
                     <>

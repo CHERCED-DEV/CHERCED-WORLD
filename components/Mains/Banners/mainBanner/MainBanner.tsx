@@ -2,13 +2,13 @@ import React, { memo } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { ImageProps } from '../../../../pages/api/customCMS/interfaces';
-import { HomeServerDataProps } from '../../../../utils/dataConfigWorkflow.interfaces';
+import { HomeClientDataProps } from '../../../../utils/dataConfigWorkflow.interfaces';
 import { ListContacMedia } from './utils/ListContacMedia';
 
 
 const GlitteringSea = dynamic(() => import('./utils/glitteringSea/GlitteringSea'));
 
-const HomeBanner: React.FC<HomeServerDataProps> = memo(function HomeBanner({ homeBanner }) {
+const HomeBanner: React.FC<HomeClientDataProps> = memo(function HomeBanner({ homeBanner }) {
 
     return (
         <>

@@ -1,29 +1,35 @@
-import { AboutMeConfig, ContactMeConfig, HomeBannerConfig, PortfolioConfig, LayOutConfig } from "../pages/api/customCMS/interfaces";
+import {
+  AboutMeConfig,
+  ContactMeConfig,
+  HomeBannerConfig,
+  PortfolioConfig,
+  LayOutConfig,
+} from "../pages/api/customCMS/interfaces";
 
 //PAGES:
 
 //[HOME: DATA]:
 //SSRContract
-export interface HomeServerDataProps {
-    homeBanner: HomeBannerConfig; 
+export interface HomeClientDataProps {
+  homeBanner: HomeBannerConfig;
 }
 
 //[ABOUTME: DATA]:
 //SSRContract
-export interface AboutMeServerDataProps {
-    aboutMe: AboutMeConfig;
+export interface AboutMeClientDataProps {
+  aboutMe: AboutMeConfig;
 }
 
 //[CONTACTME: DATA]:
 //SSRContract
-export interface ContactMeServerDataProps {
-    contactMe: ContactMeConfig;
+export interface ContactMeClientDataProps {
+  contactMe: ContactMeConfig;
 }
 
 //[PORTFOLIO&SERVICES: DATA]:
 //SSRContract
-export interface PortfolioServicesServerDataProps {
-    portfolio: PortfolioConfig; 
+export interface PortfolioServicesClientDataProps {
+  portfolio: PortfolioConfig;
 }
 
 //Layout
@@ -31,5 +37,5 @@ export interface PortfolioServicesServerDataProps {
 //[LayOut: DATA]:
 //SSRContract
 export interface LayoutServerDataProps {
-    layout: LayOutConfig; 
+  layout: LayOutConfig;
 }

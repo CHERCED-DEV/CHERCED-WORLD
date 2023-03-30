@@ -1,13 +1,12 @@
-import { Fragment, lazy, memo } from 'react';
 import Head from 'next/head';
-import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
-import { PortfolioConfig } from './api/customCMS/interfaces';
+import { Fragment, lazy, memo } from 'react';
+import { PortfolioServicesClientDataProps } from '../utils/dataConfigWorkflow.interfaces';
+import { getCMSData } from '../utils/providers/requests/homeCB';
+import { CmsDataConfig, PortfolioConfig } from './api/customCMS/interfaces';
 
 const PortfolioSection = lazy(() => import('../components/Mains/portfolio/PortfolioSection').then(({ PortfolioSection }) => ({ default: PortfolioSection })));
 
-export default memo(function Portfolio() {
-
-    const [portfolio] = useLocalStorageData<PortfolioConfig>("CmsData", "portfolio");
+export default memo(function Portfolio({ portfolio }: PortfolioServicesClientDataProps) {
 
     return (
         <>
@@ -32,3 +31,29 @@ export default memo(function Portfolio() {
         </>
     );
 });
+
+
+interface PortfolioServicesServerDataProps {
+    props: {
+        portfolio: PortfolioConfig | null;
+    }
+}
+
+export async function getServerSideProps(): Promise<PortfolioServicesServerDataProps> {
+    try {
+        const cmsData: CmsDataConfig = await getCMSData();
+        const portfolio = cmsData.portfolio;
+        return {
+            props: {
+                portfolio
+            }
+        };
+    } catch (error) {
+        console.error("Error al obtener los datos del CMS:", error);
+        return {
+            props: {
+                portfolio: null
+            }
+        };
+    }
+}

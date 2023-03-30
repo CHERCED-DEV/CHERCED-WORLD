@@ -1,12 +1,12 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { ContactMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
+import { ContactMeClientDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ContactMeFieldsInfoConfig } from '../../../pages/api/contactMe/database/interfaceMessage'
 import DataBase from '../../../pages/api/contactMe/database/db';
 import Image from 'next/legacy/image';
 
 
-const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => {
+const ContactMeSection: React.FC<ContactMeClientDataProps> = ({ contactMe }) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<ContactMeFieldsInfoConfig>();
 

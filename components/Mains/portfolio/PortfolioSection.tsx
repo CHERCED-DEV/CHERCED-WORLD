@@ -1,11 +1,11 @@
 import React from 'react';
-import { PortfolioServicesServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
+import { PortfolioServicesClientDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { CarruselContainer } from './utils/CarruselContainer';
 import { ProjectsConfig } from '../../../pages/api/projects/database/interfaces';
 import { next, prev } from './portfolioDom/slider';
 
 
-export const PortfolioSection: React.FC<PortfolioServicesServerDataProps> = ({ portfolio }) => {
+export const PortfolioSection: React.FC<PortfolioServicesClientDataProps> = ({ portfolio }) => {
 
     const [projects, setProjects] = React.useState<ProjectsConfig[]>([])
 
