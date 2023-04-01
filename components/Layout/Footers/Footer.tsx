@@ -1,26 +1,24 @@
 import React, { memo } from 'react'
 import styles from './utils/footer.module.scss'
 import Image from 'next/legacy/image';
-import { FooterConfig, ImageProps } from '../../../pages/api/customCMS/interfaces';
+import { FooterConfig, ImageProps, LayOutConfig } from '../../../pages/api/customCMS/interfaces';
 import { ListFooterMedia } from './utils/ListFooterMedia';
+import { useLocalStorageData } from '../../../utils/hooks/getLocalStorageData';
 
 
-interface FooterPropsConfig {
-    footer: FooterConfig;
-}
-
-const Footer: React.FC<FooterPropsConfig> = memo(function Footer({ footer }) {
+const Footer: React.FC = memo(function Footer() {
+    const [layOut] = useLocalStorageData<LayOutConfig>("CmsData", "layOut");
     return (
         <footer id='footer' className={styles.footerContainer}>
             <div className={styles.footer}>
                 <section id='footer-back' className={styles.footerBack}>
-                    <a className={styles.footerBackLink} href={footer?.backOption.link.href}>
+                    <a className={styles.footerBackLink} href={layOut?.footer?.backOption.link.href}>
                         <div className="footer-back__img">
-                            {footer?.backOption?.img?.src && (
+                            {layOut?.footer?.backOption?.img?.src && (
                                 <Image
-                                    src={footer?.backOption.img.src}
-                                    alt={footer?.backOption.img.alt}
-                                    loading={footer?.backOption.img.loading}
+                                    src={layOut.footer?.backOption.img.src}
+                                    alt={layOut.footer?.backOption.img.alt}
+                                    loading={layOut.footer?.backOption.img.loading}
                                     layout='intrinsic'
                                     width={15}
                                     height={15}
@@ -30,12 +28,12 @@ const Footer: React.FC<FooterPropsConfig> = memo(function Footer({ footer }) {
                         </div>
                     </a>
                     <h1 className={styles.footerBackTitle}>
-                        {footer?.backOption.text}
+                        {layOut?.footer?.backOption.text}
                     </h1>
                 </section>
                 <ul id='footer-socialMedia' className={styles.footerSocialMedia}>
                     {
-                        footer?.footerSocialMedia.map((footerSocialMedia: ImageProps, index: number) => (
+                        layOut?.footer?.footerSocialMedia.map((footerSocialMedia: ImageProps, index: number) => (
                             <ListFooterMedia
                                 key={index}
                                 src={footerSocialMedia.src}
@@ -49,9 +47,9 @@ const Footer: React.FC<FooterPropsConfig> = memo(function Footer({ footer }) {
                 <section className={styles.footerCopyRight}>
                     <h1 className={styles.footerCopyRightTitle}>
                         <strong className={styles.footerCopyRightStrong}>
-                            {footer?.copyright.strongText}
+                            {layOut?.footer?.copyright.strongText}
                         </strong>
-                        {footer?.copyright.normalText}
+                        {layOut?.footer?.copyright.normalText}
                     </h1>
                 </section>
             </div>

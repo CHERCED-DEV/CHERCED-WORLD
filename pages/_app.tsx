@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState } from 'react';
+import React, { lazy, useCallback, useEffect, useState } from 'react';
 import '../sass/styles.scss';
 import '../sass/StarterAndLoaders.scss';
 import type { AppProps } from 'next/app';
@@ -22,15 +22,13 @@ export default function App({ Component, pageProps }: AppProps) {
     const [handleSubMenu, sethandleSubMenu] = useState<boolean>(false);
     const [pageClasses, setPageClasses] = useState<PageClasses>({ pageClass: "", mainClass: "" });
 
-    useEffect(() => {
-        const storageConstructor =  async () => {
-            const CmsData =  await getCMSData();
-            window.localStorage.setItem("CmsData", JSON.stringify(CmsData));
-        };
-        storageConstructor();
-    }, []);
+    const storageConstructor =  useCallback(async () => {
+        const CmsData =  await getCMSData();
+        window.localStorage.setItem("CmsData", JSON.stringify(CmsData));
+    },[]);
 
     useEffect(() => {
+        storageConstructor();
         const { pageClass, mainClass } = pageClassDynamicBody(id);
         setPageClasses({ pageClass, mainClass });
         sethandleSubMenu(false);
@@ -54,5 +52,4 @@ export default function App({ Component, pageProps }: AppProps) {
             </PortalContextProvider>
         )
     );
-
 }
