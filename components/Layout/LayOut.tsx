@@ -1,7 +1,6 @@
 import React, { lazy, memo, ReactNode, Suspense, useEffect, useState } from 'react';
 import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
-import { useLocalStorageData } from '../../utils/hooks/getLocalStorageData';
-import { LayOutConfig } from '../../pages/api/customCMS/interfaces';
+import { StarterApp } from './Spiners&Loaders/StarterApp';
 import { PageLoader } from './Spiners&Loaders/PageLoader';
 
 
@@ -18,8 +17,11 @@ const HeaderBackTo = lazy(() => import('./Headers/HeaderBackTo'));
 const Footer = lazy(() => import('./Footers/Footer'));
 
 const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mainClass, pageClass, handleSubMenu, sethandleSubMenu }) {
+
+    /* const [layOut] = useLocalStorageData<LayOutConfig>("CmsData", "layOut"); */
     const [headerSimple, setHeaderSimple] = useState<boolean>(true);
-    const [layOut] = useLocalStorageData<LayOutConfig>("CmsData", "layOut");
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
 
     useEffect(() => {
         if (pageClass == "BLOG-PAGE") {
@@ -27,23 +29,57 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
         }
     }, [pageClass])
 
+    useEffect(() => {
+        const storedValue = window.sessionStorage.getItem('isLoading');
+        if (storedValue !== null) {
+            setIsLoading(storedValue === 'true');
+        } else {
+            setIsLoading(true);
+        }
+        setInitialStorageValue(true);
+    }, []);
+
+    useEffect(() => {
+        function handlePageLoad() {
+            if (sessionStorage.getItem('isLoading') === 'false') {
+                console.log("Welcome to Cherced World")
+            } else {
+                const timerId = setTimeout(() => {
+                    sessionStorage.setItem('isLoading', 'false');
+                    setIsLoading(false);       
+                }, 4500);
+                return () => {
+                    clearTimeout(timerId);
+                };
+            }
+        }
+
+        handlePageLoad();
+
+    }, []);
+
+
     return (
-        <Suspense fallback={<PageLoader />}>
-            <div className={pageClass}>
-                {
-                    headerSimple ? (layOut ? <Header header={layOut.header} handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} /> : null)
-                        : (layOut ? <HeaderBackTo  headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} header={layOut.header} /> : null)
-                }
-                <main className={mainClass}>
-                    <>
-                        {children}
-                    </>
-                </main>
-                {
-                    layOut ? <Footer footer={layOut.footer} /> : null
-                }
-            </div>
-        </Suspense>
+        <>
+            {initialStorageValue && isLoading && <StarterApp />}
+            {!isLoading && (
+            <Suspense fallback={<PageLoader />}>
+                <div className={pageClass}>
+                    {
+                        headerSimple ? (<Header  handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} />)
+                            : ( <HeaderBackTo headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} />)
+                    }
+                    <main className={mainClass}>
+                        <>
+                            {children}
+                        </>
+                    </main>
+                    <Footer  /> 
+                </div>
+            </Suspense>)
+            }
+        </>
+
     )
 })
 

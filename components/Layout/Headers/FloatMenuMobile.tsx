@@ -7,7 +7,7 @@ import { dinamycReaderOptions } from './HeaderLogic/dinamicReaderRouteToOptions'
 import { floatMenuData } from './HeaderLogic/floatMenuData';
 
 interface FloarMenuMobilePropsConfig {
-    header: HeaderConfig;
+    header: HeaderConfig | undefined;
     handleSubMenu: boolean;
     sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
     pageClass: string

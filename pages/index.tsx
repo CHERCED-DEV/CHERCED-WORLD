@@ -10,39 +10,8 @@ import { StarterApp } from '../components/Layout/Spiners&Loaders/StarterApp';
 const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
 
 export default memo(function Home() {
-
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
+    
     const [homeBanner] = useLocalStorageData<HomeBannerConfig>("CmsData", "homeBanner");
-
-    useEffect(() => {
-        const storedValue = window.sessionStorage.getItem('isLoading');
-        if (storedValue !== null) {
-            setIsLoading(storedValue === 'true');
-        } else {
-            setIsLoading(true);
-        }
-        setInitialStorageValue(true);
-    }, []);
-
-    useEffect(() => {
-        function handlePageLoad() {
-            if (sessionStorage.getItem('isLoading') === 'false') {
-                console.log("Welcome to Cherced World")
-            } else {
-                const timerId = setTimeout(() => {
-                    sessionStorage.setItem('isLoading', 'false');
-                    setIsLoading(false);
-                }, 4500);
-                return () => {
-                    clearTimeout(timerId);
-                };
-            }
-        }
-
-        handlePageLoad();
-
-    }, []);
 
     return (
         <>
@@ -52,10 +21,9 @@ export default memo(function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {initialStorageValue && isLoading && <StarterApp />}
-            {!isLoading && (
+            {
                 homeBanner ? <HomeBanner homeBanner={homeBanner} /> : null
-            )}
+            }
         </>
     );
 });
