@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 import styles from './utils/header.module.scss';
 import { useRouter } from 'next/router';
@@ -11,14 +11,15 @@ interface HeaderBackPropsConfig {
 }
 
 const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo({headerSimple, setHeaderSimple, }) {
+    
     const [layOut] = useLocalStorageData<LayOutConfig>("CmsData", "layOut");
 
     const router = useRouter();
     const handleEvent = () => {
         const pathArray = router.asPath.split("/");
         pathArray.splice(-1, 1);
-        /* const backTo = pathArray.join("/"); */
-        return router.push('/')
+        const backTo = pathArray.join("/");
+        return router.push(backTo)
     }
 
     return (
@@ -29,7 +30,6 @@ const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo
                         <Image
                             src={layOut.header?.brandImage.src}
                             alt={layOut.header?.brandImage.alt}
-                            loading={layOut.header?.brandImage.loading}
                             fill={false}
                             width={64}
                             height={64}
@@ -45,7 +45,6 @@ const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo
                             <Image
                                 src={layOut.header?.backTo.src}
                                 alt={layOut.header?.backTo.alt}
-                                loading={layOut.header?.backTo.loading}
                                 fill={false}
                                 width={32}
                                 height={32}

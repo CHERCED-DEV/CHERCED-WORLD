@@ -3,7 +3,6 @@ import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
 import { StarterApp } from './Spiners&Loaders/StarterApp';
 import { PageLoader } from './Spiners&Loaders/PageLoader';
 
-
 interface LayoutPropsConfig {
     handleSubMenu: boolean;
     sethandleSubMenu: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,13 +17,12 @@ const Footer = lazy(() => import('./Footers/Footer'));
 
 const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mainClass, pageClass, handleSubMenu, sethandleSubMenu }) {
 
-    /* const [layOut] = useLocalStorageData<LayOutConfig>("CmsData", "layOut"); */
     const [headerSimple, setHeaderSimple] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
 
     useEffect(() => {
-        if (pageClass == "BLOG-PAGE") {
+        if (pageClass == "BLOG-POST--PAGE") {
             setHeaderSimple(false);
         }
     }, [pageClass])
@@ -46,7 +44,7 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
             } else {
                 const timerId = setTimeout(() => {
                     sessionStorage.setItem('isLoading', 'false');
-                    setIsLoading(false);       
+                    setIsLoading(false);
                 }, 4500);
                 return () => {
                     clearTimeout(timerId);
@@ -63,20 +61,20 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
         <>
             {initialStorageValue && isLoading && <StarterApp />}
             {!isLoading && (
-            <Suspense fallback={<PageLoader />}>
-                <div className={pageClass}>
-                    {
-                        headerSimple ? (<Header  handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} />)
-                            : ( <HeaderBackTo headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} />)
-                    }
-                    <main className={mainClass}>
-                        <>
-                            {children}
-                        </>
-                    </main>
-                    <Footer  /> 
-                </div>
-            </Suspense>)
+                <Suspense fallback={<PageLoader />}>
+                    <div className={pageClass}>
+                        {
+                            headerSimple ? (<Header handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} />)
+                                : (<HeaderBackTo headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} />)
+                        }
+                        <main className={mainClass}>
+                            <>
+                                {children}
+                            </>
+                        </main>
+                        <Footer />
+                    </div>
+                </Suspense>)
             }
         </>
 

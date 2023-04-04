@@ -13,7 +13,6 @@ export const ListContacMedia: React.FC<ImageProps> = (props) => {
                             <Image
                                 src={props.src}
                                 alt={props.alt}
-                                loading={props.loading}
                                 fill={false}
                                 width={30}
                                 height={30}

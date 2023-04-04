@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
-import { FormSendPost } from '../../components/Mains/blogLanding/utils/FormSendPost'; 
+import { FormSendPost } from '../../components/Mains/blogLanding/utils/FormSendPost';
 import { Modal } from '../../utils/portals/modalPortal';
 import { usePortalProvider } from '../../utils/providers/modalProvider';
 import { PageLoader } from '../../components/Layout/Spiners&Loaders/PageLoader';
@@ -10,15 +10,12 @@ import { BlogLanding } from '../../components/Mains/blogLanding/BlogLanding';
 
 
 export default function Blog() {
-
     const { modalSwitch, setModalSwitch } = usePortalProvider();
     const router = useRouter();
-
-    const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
     const [postIdData, setPostIdData] = useState<PostConfig>({} as PostConfig);
     const [postsList, setPostsList] = useState<PostConfig[]>([]);
 
-
+    console.log(router)
     useEffect(() => {
         let mounted = true;
 
@@ -42,7 +39,7 @@ export default function Blog() {
         };
 
         fetchPostsData();
-        fetchAllPostsData();
+        /*  fetchAllPostsData(); */
 
         return () => {
             mounted = false;
@@ -58,33 +55,28 @@ export default function Blog() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {
-                showStarterPage ? (
-                    <PageLoader />
-                ) : (
-                    <body className='BLOG-PAGE'>
-                            <BlogLanding
-                                title={postIdData?.title}
-                                subtitle={postIdData?.subtitle}
-                                img={
-                                    {
-                                        src: postIdData?.img.src,
-                                        alt: postIdData?.img.alt,
-                                        loading: postIdData?.img.loading
-                                    }
+                {
+                    postIdData ? <>
+                        <BlogLanding
+                            title={postIdData?.title}
+                            subtitle={postIdData?.subtitle}
+                            img={
+                                {
+                                    src: postIdData.img?.src,
+                                    alt: postIdData.img?.alt
                                 }
-                                description={postIdData?.description}
-                                comments={postIdData?.comments}
-                            />
+                            }
+                            description={postIdData?.description}
+                            comments={postIdData?.comments}
+                        />
                         <button onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
                         {!!modalSwitch && (
                             <Modal>
                                 <FormSendPost />
                             </Modal>
                         )}
-                    </body>
-                )
-            }
+                    </> : null
+                }
         </>
     )
 }

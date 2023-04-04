@@ -15,7 +15,6 @@ export const ListTecnologies: React.FC<TechListConfig> = (props) => {
                     <Image
                         src={props.img.src}
                         alt={props.img.alt}
-                        loading={props.img.loading}
                         width={128}
                         height={128}
                         fill={false}

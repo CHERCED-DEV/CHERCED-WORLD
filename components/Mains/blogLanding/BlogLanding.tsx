@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import { CommentsConfig, PostConfig } from '../../../pages/api/blog/posts/database/post.interface';
 import { ListComentsBlog } from './utils/ListComentsBlog';
 
@@ -13,7 +13,9 @@ export const BlogLanding: React.FC<PostConfig> = (props) => {
                         <Image
                             src={props.img.src}
                             alt={props.img.alt}
-                            loading={props.img.loading}
+                            fill={false}
+                            width={256}
+                            height={256}
                         />
                     )}
                 </div>

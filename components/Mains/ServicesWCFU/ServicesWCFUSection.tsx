@@ -32,7 +32,6 @@ export const ServicesWCFUSection: React.FC<PortfolioServicesServerDataProps> = (
                                     {
                                         src: offer.img.src,
                                         alt: offer.img.alt,
-                                        loading: offer.img.loading
                                     }
                                 }
                                 description={offer.description}

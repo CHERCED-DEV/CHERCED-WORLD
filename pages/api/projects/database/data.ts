@@ -8,7 +8,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/quanticTheatrum.png",
             "alt" : "Quantic Theathrum",
-            "loading": "lazy"
         },   
         "link": "https://quantic-theatrum.vercel.app/",
         "github": "https://github.com/Cherced/QuanticFilms",
@@ -34,7 +33,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/webSite.png",
             "alt" : "My Website",
-            "loading": "lazy"
         },            
         "link": "https://mywebsite-peach.vercel.app/",
         "github": "https://github.com/Cherced/mywebsite",
@@ -55,7 +53,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/bookingUI.png",
             "alt" : "BookingUI system",
-            "loading": "lazy"
         }, 
         "link": "https://booking-ui-ashen.vercel.app/",
         "github": "https://github.com/Cherced/BookingUi",
@@ -79,7 +76,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/ghibliTracker.png",
             "alt" : "Studio Ghibli Tracking System",
-            "loading": "lazy"
         }, 
         "link": "https://studio-ghibli-theta.vercel.app/",
         "github": "https://github.com/Cherced/studio-ghibli",
@@ -105,7 +101,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/ghibliBackofice.png",
             "alt" : "Studio Ghibli BackOffice",
-            "loading": "lazy"
         },  
         "link": "https://deploy-preview-9--studioghibli-backoffice.netlify.app/",
         "github": "https://github.com/Platzi-Master-C10-LRR/User-Studio-Ghibli-Backoffice-Frontend",
@@ -131,7 +126,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/Shoppy.png",
             "alt" : "Shopping Cart",
-            "loading": "lazy"
         },  
         "link": "https://www.figma.com/file/9V7LNk6FwHuspOXNCjkXTt/VirtualShop?node-id=0%3A1",
         "github": "https://github.com/Cherced/ShoppyApp.git",
@@ -150,7 +144,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/doItDone.png",
             "alt" : "DO IT DONE",
-            "loading": "lazy"
         },   
         "link": "https://ge-it-done.vercel.app/",
         "github": "https://github.com/Cherced/GeItDone.git",
@@ -175,7 +168,6 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "assets/imgs/projects/page.png",
             "alt" : "AIRLINE",
-            "loading": "lazy"
         },  
         "link": "https://airlines-cherced.vercel.app/",
         "github": "https://github.com/Cherced/ProyectoHernandez.git",

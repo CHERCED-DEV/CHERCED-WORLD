@@ -18,7 +18,6 @@ const Footer: React.FC = memo(function Footer() {
                                 <Image
                                     src={layOut.footer?.backOption.img.src}
                                     alt={layOut.footer?.backOption.img.alt}
-                                    loading={layOut.footer?.backOption.img.loading}
                                     layout='intrinsic'
                                     width={15}
                                     height={15}
@@ -38,7 +37,6 @@ const Footer: React.FC = memo(function Footer() {
                                 key={index}
                                 src={footerSocialMedia.src}
                                 alt={footerSocialMedia.alt}
-                                loading={footerSocialMedia.loading}
                                 a={footerSocialMedia.a}
                             />
                         ))

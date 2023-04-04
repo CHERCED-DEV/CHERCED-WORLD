@@ -24,7 +24,6 @@ const AboutMeTecnologies: React.FC<{ techList: TechListConfig[] }> = memo(functi
                             img={{
                                 src: techList.img.src,
                                 alt: techList.img.alt,
-                                loading: techList.img.loading,
                             }}
                             progress={techList.progress}
                         />

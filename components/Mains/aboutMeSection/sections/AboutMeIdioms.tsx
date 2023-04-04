@@ -18,7 +18,6 @@ const AboutMeIdioms: React.FC<{ idioms: AboutMeIdiomsConfig }> = memo(function A
                                 {
                                     src: idiom.img.src,
                                     alt: idiom.img.alt,
-                                    loading: idiom.img.loading
                                 }
                             }
                         />

@@ -1,16 +1,13 @@
 import Head from 'next/head';
-import { memo, useEffect, useState, lazy, useCallback } from 'react';
-import { getCMSData } from '../utils/providers/requests/homeCB';
-import { CmsDataConfig } from './api/customCMS/interfaces';
+import { memo, lazy } from 'react';
+
 import { HomeBannerConfig } from './api/customCMS/interfaces';
 import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
-import { StarterApp } from '../components/Layout/Spiners&Loaders/StarterApp';
-
 
 const HomeBanner = lazy(() => import('../components/Mains/Banners/mainBanner/MainBanner'));
 
 export default memo(function Home() {
-    
+
     const [homeBanner] = useLocalStorageData<HomeBannerConfig>("CmsData", "homeBanner");
 
     return (

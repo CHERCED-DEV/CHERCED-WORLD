@@ -2,7 +2,6 @@
 export interface ImageProps {
   src: string;
   alt: string;
-  loading: "lazy" | "eager" | undefined;
   a?: string;
   width?: number;
   height?: number;

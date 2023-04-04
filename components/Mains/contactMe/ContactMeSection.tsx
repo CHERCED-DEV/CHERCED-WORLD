@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { ContactMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ContactMeFieldsInfoConfig } from '../../../pages/api/contactMe/database/interfaceMessage'
 import DataBase from '../../../pages/api/contactMe/database/db';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 
 
 const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => {
@@ -38,8 +38,7 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
                         <Image
                             src={contactMe?.separator.src}
                             alt={contactMe?.separator.alt}
-                            loading={contactMe?.separator.loading}
-                            layout="fixed"
+                            fill={false}
                             width={120}
                             height={10}
                         />

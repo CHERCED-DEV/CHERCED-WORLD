@@ -18,14 +18,14 @@ interface PageClasses {
 export default function App({ Component, pageProps }: AppProps) {
 
     const router = useRouter();
-    const id = router.asPath;
+    const id = router.pathname;
     const [handleSubMenu, sethandleSubMenu] = useState<boolean>(false);
     const [pageClasses, setPageClasses] = useState<PageClasses>({ pageClass: "", mainClass: "" });
 
-    const storageConstructor =  useCallback(async () => {
-        const CmsData =  await getCMSData();
+    const storageConstructor = useCallback(async () => {
+        const CmsData = await getCMSData();
         window.localStorage.setItem("CmsData", JSON.stringify(CmsData));
-    },[]);
+    }, []);
 
     useEffect(() => {
         storageConstructor();
@@ -35,21 +35,15 @@ export default function App({ Component, pageProps }: AppProps) {
     }, [id]);
 
     return (
-        pageClasses.pageClass !== "none" ? (
-            <PortalContextProvider>
-                <LayOut
-                    pageClass={pageClasses.pageClass}
-                    handleSubMenu={handleSubMenu}
-                    sethandleSubMenu={sethandleSubMenu}
-                    mainClass={pageClasses.mainClass}
-                >
-                    <Component {...pageProps as any} />
-                </LayOut>
-            </PortalContextProvider>
-        ) : (
-            <PortalContextProvider>
+        <PortalContextProvider>
+            <LayOut
+                pageClass={pageClasses.pageClass}
+                handleSubMenu={handleSubMenu}
+                sethandleSubMenu={sethandleSubMenu}
+                mainClass={pageClasses.mainClass}
+            >
                 <Component {...pageProps as any} />
-            </PortalContextProvider>
-        )
+            </LayOut>
+        </PortalContextProvider>
     );
 }

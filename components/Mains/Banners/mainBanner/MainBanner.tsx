@@ -26,7 +26,6 @@ const HomeBanner: React.FC<HomeServerDataProps> = memo(function HomeBanner({ hom
                         <Image
                             src={homeBanner?.separator.src}
                             alt={homeBanner?.separator.alt}
-                            loading={homeBanner?.separator.loading}
                             fill={false}
                             width={120}
                             height={10}
@@ -40,7 +39,6 @@ const HomeBanner: React.FC<HomeServerDataProps> = memo(function HomeBanner({ hom
                                 key={homeSocialMedia.a}
                                 src={homeSocialMedia.src}
                                 alt={homeSocialMedia.alt}
-                                loading={homeSocialMedia.loading}
                                 a={homeSocialMedia.a}
                             />
                         ))}

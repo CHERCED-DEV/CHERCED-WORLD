@@ -11,7 +11,6 @@ export const ListServicesOffer: React.FC<ServicesConfig> = (props) => {
                         <Image
                             src={props.img.src}
                             alt={props.img.alt}
-                            loading={props.img.loading}
                             layout="intrinsic"
                             width={45}
                             height={40}

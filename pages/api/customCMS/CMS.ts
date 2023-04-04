@@ -11,17 +11,14 @@ export const CMS: {
             brandImage: {
                 src: '/assets/icons/brandLogo.png',
                 alt: 'CHERCED logo',
-                loading: 'lazy',
             },
             buttonMenu: {
                 src: '/assets/icons/navbar.png',
                 alt: 'menu button',
-                loading: 'lazy',
             },
             backTo: {
                 src: '/assets/icons/backTo.png',
                 alt: 'BackTo',
-                loading: 'lazy',
             }
         },
         footer: {
@@ -29,7 +26,6 @@ export const CMS: {
                 img: {
                     src: '/assets/icons/arrowFooter.png',
                     alt: 'arrow back to top',
-                    loading: 'lazy'
                 },
                 text: 'BACK TO TOP',
                 link: {
@@ -40,26 +36,26 @@ export const CMS: {
                 {
                     src: '/assets/icons/facebookIcon.png',
                     alt: 'faceBook icon',
-                    loading: 'lazy',
+
                     a: 'https://www.bbc.com/mundo/noticias-51225114'
                 },
                 {
     
                     src: '/assets/icons/linkedInIcon.png',
                     alt: 'linkedIn icon',
-                    loading: 'lazy',
+
                     a: 'https://www.linkedin.com/in/cherced/'
                 },
                 {
                     src: '/assets/icons/instagramIcon.png',
                     alt: 'instagram icon',
-                    loading: 'lazy',
+
                     a: 'https://www.instagram.com/cherced/'
                 },
                 {
                     src: '/assets/icons/gmailIcon.png',
                     alt: 'gmail icon',
-                    loading: 'lazy',
+
                     a: 'mailto:chernandezcediel@gmail.com'
                 },
             ],
@@ -77,26 +73,22 @@ export const CMS: {
 		},
 		separator: {
 			src: '/assets/icons/separatorWhite.png',
-			alt: 'separator line',
-			loading: 'lazy',
+			alt: 'separator line'
 		},
 		homeSocialMedia: [
 			{
 				src: '/assets/icons/mailito.png',
 				alt: 'mailito icon',
-				loading: 'lazy',
 				a: 'mailto:chernandezcediel@gmail.com'
 			},
 			{
 				src: '/assets/icons/githubCircle.png',
 				alt: 'github icon',
-				loading: 'lazy',
 				a: 'https://github.com/CHERCED-DEV'
 			},
 			{
 				src: '/assets/icons/linkedinCircle.png',
 				alt: 'linkedin icon',
-				loading: 'lazy',
 				a: 'https://www.linkedin.com/in/cherced/'
 			}
 		]
@@ -107,8 +99,7 @@ export const CMS: {
 			description: "I am a front-end developer with experience in developing highly interactive and high-performance web applications. I specialize in React and Angular, and have company knowledge of HTML, CSS, JavaScript, TypeScript, Node.js, and Next.js.",
 			parallax: {
 				src: '/assets/imgs/meParallax.png',
-				alt: 'CHERCED',
-				loading: 'lazy'
+				alt: 'CHERCED'
 			},
 		},
 		career: {
@@ -173,7 +164,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/html-5.png",
 						alt: "HTML5",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -182,7 +172,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/css.png",
 						alt: "CSS",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -191,7 +180,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/sass.png",
 						alt: "SASS",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -200,7 +188,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/js.png",
 						alt: "JAVASCRIPT",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -209,7 +196,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/react.png",
 						alt: "REACT",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -218,7 +204,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/angular.png",
 						alt: "ANGULAR",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -227,7 +212,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/nextjs.png",
 						alt: "NEXTJS",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -236,7 +220,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/mongodb.png",
 						alt: "MONGO",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -245,7 +228,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/nodejs.png",
 						alt: "NODEJS",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -254,7 +236,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/figma.png",
 						alt: "FIGMA",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -263,7 +244,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/merge.png",
 						alt: "GIT",
-						loading: "lazy",
 					},
 					progress: "50"
 				},
@@ -272,7 +252,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/skillsIcon/azure.png",
 						alt: "AZURE",
-						loading: "lazy",
 					},
 					progress: "50"
 				}
@@ -329,8 +308,7 @@ export const CMS: {
 			linkPlatzi: {
 				img: {
 					src: "/assets/icons/plazi.png",
-					alt: "Platzi logo",
-					loading: "lazy",
+					alt: "Platzi logo"
 				},
 				a: "https://platzi.com/p/Cherced/",
 				text: "--> My Profile On Platzi"
@@ -345,7 +323,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/flags/spain.png",
 						alt: "Spanish",
-						loading: "lazy",
 					}
 				},
 				{
@@ -354,7 +331,6 @@ export const CMS: {
 					img: {
 						src: "/assets/icons/flags/uniteStates.png",
 						alt: "English",
-						loading: "lazy",
 					}
 				}
 			]
@@ -366,8 +342,7 @@ export const CMS: {
 			description: "A full-stack MERN developer can build end-to-end web applications that are fast, secure, and scalable, using a combination of cutting-edge front-end and back-end technologies. They can help clients achieve their business goals by designing and developing custom solutions, optimizing performance, and providing ongoing support and maintenance. With expertise in MongoDB, Express.js, React.js, and Node.js, MERN developers can leverage the power of the MERN stack to create dynamic, interactive, and responsive web applications that meet the needs of their clients and their customers",
 			img: {
 				src: "/assets/icons/separatorBlack.png",
-				alt: "separator",
-				loading: "lazy",
+				alt: "separator"
 			},
 			explore: {
 				text: "Explore",
@@ -387,8 +362,7 @@ export const CMS: {
 				title: "Desing",
 				img: {
 					src: "/assets/icons/services/desing.png",
-					alt: "desingIcon",
-					loading: "lazy",
+					alt: "desingIcon"
 				},
 				description: "I can design the website based on your needs and suggestions. I can also create it from scratch by consulting with you during work."
 			},
@@ -396,8 +370,7 @@ export const CMS: {
 				title: "Development",
 				img: {
 					src: "/assets/icons/services/development.png",
-					alt: "developmentIcon",
-					loading: "lazy",
+					alt: "developmentIcon"
 				},
 				description: "Based on a project created by me or another one, sent by you, I can program the website to be fully functional and responsive.",
 			},
@@ -405,8 +378,7 @@ export const CMS: {
 				title: "Maintenance",
 				img: {
 					src: "/assets/icons/services/maintenance.png",
-					alt: "maintenanceIcon",
-					loading: "lazy",
+					alt: "maintenanceIcon"
 				},
 				description: "In case of any problems or the need for changes, I can introduce new functionalities and solutions.",
 			}
@@ -424,8 +396,7 @@ export const CMS: {
 		description: "My name is Camilo Hernandez, I’m a third year Applied Computer Science student at UNAD University of Science and Technology in Bogota Colombia.",
 		separator: {
 			src: "/assets/icons/separatorBlack.png",
-			alt: "separator",
-			loading: "lazy",
+			alt: "separator"
 		},
 		fields: {
 			name: {

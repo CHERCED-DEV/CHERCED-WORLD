@@ -54,7 +54,6 @@ export const PortfolioSection: React.FC<PortfolioServicesServerDataProps> = ({ p
                                         {
                                             src: project.image.src,
                                             alt: project.image.alt,
-                                            loading: project.image.loading
                                         }
                                     }
                                 />

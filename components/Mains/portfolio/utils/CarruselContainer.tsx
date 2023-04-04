@@ -15,7 +15,6 @@ export const CarruselContainer: React.FC<ProjectsConfig> = (props) => {
                 <img className="portfolio-carrousel__img"
                     src={props.image.src}
                     alt={props.image.alt}
-                    loading={props.image.loading}
                 />
             </button>
         </li>

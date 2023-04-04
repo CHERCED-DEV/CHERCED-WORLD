@@ -27,7 +27,6 @@ const Header: React.FC<HeaderPropsConfig> = memo(function Header({ handleSubMenu
                             <Image
                                 src={layOut.header?.brandImage.src}
                                 alt={layOut.header?.brandImage.alt}
-                                loading={layOut.header?.brandImage.loading}
                                 fill={false}
                                 width={64}
                                 height={64}
@@ -41,7 +40,6 @@ const Header: React.FC<HeaderPropsConfig> = memo(function Header({ handleSubMenu
                                 <Image
                                     src={layOut.header?.buttonMenu?.src}
                                     alt={layOut.header?.buttonMenu?.alt}
-                                    loading={layOut.header?.buttonMenu?.loading}
                                     fill={false}
                                     width={31}
                                     height={18}

@@ -33,7 +33,6 @@ export const FloatMenuMobile: React.FC<FloarMenuMobilePropsConfig> = memo(functi
                         <Image
                             src={header?.buttonMenu?.src}
                             alt={header?.buttonMenu?.alt}
-                            loading={header?.buttonMenu?.loading}
                             fill={false}
                             width={31}
                             height={18}
@@ -58,7 +57,6 @@ export const FloatMenuMobile: React.FC<FloarMenuMobilePropsConfig> = memo(functi
                         <Image
                             src={header?.brandImage.src}
                             alt={header?.brandImage.alt}
-                            loading={header?.brandImage.loading}
                             fill={false}
                             width={150}
                             height={150}

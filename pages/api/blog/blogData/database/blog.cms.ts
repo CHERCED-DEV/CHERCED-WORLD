@@ -7,7 +7,6 @@ export const BlogCms: BlogCmsConfig = {
     img: {
         src: "/assets/imgs/mePortfolio.jpg",
         alt: "Me",
-        loading: "lazy",
         a: "https://github.com/CHERCED-DEV",
     },
     sendPost: {

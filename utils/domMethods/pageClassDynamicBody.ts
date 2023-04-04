@@ -13,6 +13,9 @@ export function pageClassDynamicBody(id: string): {
   const ctx = id;
   let pageClass = "";
   let mainClass = "";
+  if (ctx.length > 2) {
+    console.log("cacorros")
+  }
 
   // Assign class based on pathname
   const pageClassMap: PageClassMap = {
@@ -24,28 +27,27 @@ export function pageClassDynamicBody(id: string): {
     "/services": "SERVICES-PAGE",
     "/projects": "PROJECTS-PAGE",
     // add classes as required
+    "/blog/[id]": "BLOG-POST--PAGE",
   };
 
   //Assign class based on pageClass
   const mainClassMap: mainClassMap = {
     "ABOUTME-PAGE": "aboutMe",
-    "BLOG-PAGE": "",
+    "BLOG-PAGE": "blog",
     "CONTACTME-PAGE": "contactMe",
     "HOME-PAGE": "main-home",
     "PORTFOLIO-PAGE": "portfolio",
     "SERVICES-PAGE": "services",
-    "PROJECTS-PAGE": "projects"
+    "PROJECTS-PAGE": "projects",
+    "BLOG-POST--PAGE": "post",
   };
 
   if (pageClassMap[ctx]) {
     pageClass = pageClassMap[ctx]; // update the class based on the path
-  } else {
-    pageClass = "none"
   }
+
   if (mainClassMap[pageClass]) {
     mainClass = mainClassMap[pageClass]; // update the class based on the path
-  } else {
-    mainClass = "none"
   }
 
   return { pageClass, mainClass };

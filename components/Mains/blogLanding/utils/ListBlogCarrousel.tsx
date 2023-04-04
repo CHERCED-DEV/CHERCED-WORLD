@@ -1,7 +1,7 @@
 import React from 'react';
 import { PostConfig } from '../../../../pages/api/blog/posts/database/post.interface';
 import { useRouter } from 'next/router';
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 
 export const ListBlogCarrousel: React.FC<PostConfig> = (props) => {
     const router = useRouter();
@@ -13,10 +13,9 @@ export const ListBlogCarrousel: React.FC<PostConfig> = (props) => {
                     <Image
                         src={props.img.src}
                         alt={props.img.alt}
-                        loading={props.img.loading}
-                        layout='responsive'
-                        width={1143}
-                        height={1200}
+                        fill={false}                        
+                        width={256}
+                        height={256}
                     />
                 )}
             </div>
