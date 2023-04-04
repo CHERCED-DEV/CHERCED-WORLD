@@ -13,7 +13,7 @@ export default memo(function Home() {
     return (
         <>
             <Head>
-                <title>Home | &lt;-CHERCED-WORLD-&gt;</title>
+                <title>&lt;-CHERCED-WORLD-&gt;</title>
                 <meta name="description" content="Welcome to my web project! It's a complete solution for web content management with a simulated backend powered by NodeJS and a frontend controlled by TypeScript. Built with NextJS 13, a ReactJS framework, and unique features to enhance its functionality." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta name="theme-color" content="#00000"/>
