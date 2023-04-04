@@ -8,7 +8,7 @@
 }
 
 .comments-list {
-    margin: calculateRem(60px) 0;
+    margin: calculateRem(60px) 5%;
 }
 
 .comments-list__item {
@@ -32,10 +32,11 @@
 .comments-item__author {
     @include font-size(14px);
     text-transform: capitalize;
-    white-space: nowrap;
 }
+
 .comments-item__text {
     display: flex;
+
     hr {
         width: 100%;
         border: 0;
@@ -43,7 +44,14 @@
         border-left: 0.0625rem solid #ccc;
         margin: 0 5% calculateRem(10px);
     }
+
     p {
         text-align: justify;
+    }
+}
+
+@media screen and (min-width: calculateRem(365px)) {
+    .comments-item__author {
+        white-space: nowrap;
     }
 }

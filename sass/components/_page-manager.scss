@@ -3,6 +3,7 @@
 div.HOME-PAGE,
 div.ABOUTME-PAGE,
 div.BLOG-PAGE,
+div.BLOG-POST--PAGE,
 div.CONTACTME-PAGE,
 div.PROJECTS-PAGE,
 div.PORTFOLIO-PAGE,
@@ -111,6 +112,7 @@ div.BLOG-PAGE {
 // to wrap the main section class on the pages.
 .contactMe,
 .services,
+.post,
 .blog {
     @include container-wrap;
     @include centerContent;

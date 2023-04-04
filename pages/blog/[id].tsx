@@ -69,7 +69,7 @@ export default function Blog() {
                             description={postIdData?.description}
                             comments={postIdData?.comments}
                         />
-                        <button onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
+                        <button className='blog-post__button' onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
                         {!!modalSwitch && (
                             <Modal>
                                 <FormSendPost />

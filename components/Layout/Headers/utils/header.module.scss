@@ -31,7 +31,8 @@ $height-header: calculateRem(65px);
 }
 
 @media screen and (min-width: calculateRem($bp-tablet-landscape-min)) {
-    .headerContainer {
+    .headerContainer,
+    .headerBackTo {
         width: 100vw;
         background-color: black;
     }

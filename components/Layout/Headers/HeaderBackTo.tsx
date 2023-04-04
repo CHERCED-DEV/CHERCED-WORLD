@@ -24,7 +24,8 @@ const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo
 
     return (
         <>
-            <header id='header' className={styles.headerBackTo}>
+            <header id='header'className={styles.headerContainer}>
+                <nav className={styles.headerBackTo}>
                 <div className={styles.headerBackToImg}>
                     {layOut?.header?.brandImage?.src && (
                         <Image
@@ -52,6 +53,7 @@ const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo
                         )}
                     </div>
                 </button>
+                </nav>
             </header>
         </>
     );

@@ -5,3 +5,88 @@
 //Blog Landing
 @import './blogLanding/blogComments';
 @import './blogLanding/blogContent';
+
+//modal Styles: 
+
+.postMe {
+    min-height: calculateRem(500px);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    color: black;
+    border: calculateRem(1px) solid black;
+    border-top-left-radius: calculateRem(40px);
+    border-top-right-radius: calculateRem(40px);
+    transform: translateY(100%);
+    transition: transform 0.5s ease-out;
+}
+
+.postMe.on {
+    transform: translateY(0);
+    transition-delay: 0.5s;
+}
+
+.postMe.off {
+    transform: translateY(100%);
+    transition-delay: 0.5s;
+}
+
+.postMe-close {
+    position: relative;
+    top: 15px;
+    left: 35%;
+    width: calculateRem(35px);
+    height: calculateRem(35px);
+    border-radius: 100vw;
+    background-color: transparent;
+}
+
+.postMe-title {
+    margin: calculateRem(30px) 0 calculateRem(45px);
+    @include rectangularButton;
+}
+
+.postMe-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.postMe-form__input {
+    @include fieldsContactMeInput;
+}
+
+.postMe-form__submit {
+    @include submitButtonRegular;
+}
+
+@media screen and (min-width: calculateRem(768px)) {
+    .postMe {
+        max-width: calculateRem(500px);
+        border-radius: calculateRem(16px);
+        margin: 0 auto;
+        opacity: 0;
+        transform: translateY(50%);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+
+    .postMe.on {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Estilo para ocultar la modal */
+    .postMe.off {
+        opacity: 0;
+        transform: translateY(50%);
+    }
+}
+
+@media screen and (min-width: calculateRem(1440px)) {
+    .postMe {
+        max-width: calculateRem(1248px);
+    }
+}
