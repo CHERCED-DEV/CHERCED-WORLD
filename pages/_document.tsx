@@ -11,7 +11,7 @@ export default class MyDocument extends Document<DocumentInitialProps> {
                     <link rel="preconnect" href="https://fonts.googleapis.com" />
                     <link rel="preconnect" href="https://fonts.gstatic.com" />
                     <link rel="preload" as="font" href="/fonts/Montserrat/static/Montserrat-Regular.ttf" type="font/ttf" crossOrigin="anonymous" />
-
+                    <link rel="icon" href="/assets/icons/brandLogo.png" />
                 </Head>
                 <body>
                     <Main/>
