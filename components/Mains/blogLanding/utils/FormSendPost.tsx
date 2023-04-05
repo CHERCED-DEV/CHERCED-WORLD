@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { getBlogCMSData } from '../../../../utils/providers/requests/homeCB';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { CommentsConfig } from '../../../../pages/api/blog/posts/database/post.interface';
@@ -12,15 +11,12 @@ interface FormPostConfigData {
     postCmsData: FieldsPostConfig;
 }
 
-export const FormpostCmsData: React.FC<FormPostConfigData> = ({ postCmsData }) => {
+export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
 
     const router = useRouter();
     const [showModal, setShowModal] = useState(false);
     const { modalSwitch, setModalSwitch } = usePortalProvider()
     const { register, handleSubmit, formState: { errors } } = useForm<CommentsConfig>();
-
-
-
 
     useEffect(() => {
         if (modalSwitch) {
@@ -107,9 +103,6 @@ export const FormpostCmsData: React.FC<FormPostConfigData> = ({ postCmsData }) =
     };
 
 
-
-
-
     return (
         <div className='modalBackground'>
             <section className={showModal ? ("postMe on") : ("postMe off")}>
@@ -144,11 +137,3 @@ export const FormpostCmsData: React.FC<FormPostConfigData> = ({ postCmsData }) =
     )
 }
 
-export async function getServerSideProps() {
-    const blogData = await getBlogCMSData();
-    return {
-        props: {
-            postCmsData: blogData.postCmsData
-        }
-    }
-}

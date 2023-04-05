@@ -5,11 +5,12 @@ import { PostConfig } from '../api/blog/posts/database/post.interface';
 import { FormSendPost } from '../../components/Mains/blogLanding/utils/FormSendPost';
 import { Modal } from '../../utils/portals/modalPortal';
 import { usePortalProvider } from '../../utils/providers/modalProvider';
-import { PageLoader } from '../../components/Layout/Spiners&Loaders/PageLoader';
 import { BlogLanding } from '../../components/Mains/blogLanding/BlogLanding';
+import { getBlogCMSData } from '../../utils/providers/requests/homeCB';
+import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 
 
-export default function Blog() {
+export default function Blog({ postCmsData }: BlogCmsConfig) {
     const { modalSwitch, setModalSwitch } = usePortalProvider();
     const router = useRouter();
     const [postIdData, setPostIdData] = useState<PostConfig>({} as PostConfig);
@@ -55,28 +56,37 @@ export default function Blog() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-                {
-                    postIdData ? <>
-                        <BlogLanding
-                            title={postIdData?.title}
-                            subtitle={postIdData?.subtitle}
-                            img={
-                                {
-                                    src: postIdData.img?.src,
-                                    alt: postIdData.img?.alt
-                                }
+            {
+                postIdData ? <>
+                    <BlogLanding
+                        title={postIdData?.title}
+                        subtitle={postIdData?.subtitle}
+                        img={
+                            {
+                                src: postIdData.img?.src,
+                                alt: postIdData.img?.alt
                             }
-                            description={postIdData?.description}
-                            comments={postIdData?.comments}
-                        />
-                        <button className='blog-post__button' onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
-                        {!!modalSwitch && (
-                            <Modal>
-                                <FormSendPost />
-                            </Modal>
-                        )}
-                    </> : null
-                }
+                        }
+                        description={postIdData?.description}
+                        comments={postIdData?.comments}
+                    />
+                    <button className='blog-post__button' onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
+                    {!!modalSwitch && (
+                        <Modal>
+                            <FormSendPost postCmsData={postCmsData} />
+                        </Modal>
+                    )}
+                </> : null
+            }
         </>
     )
+}
+
+export async function getServerSideProps() {
+    const blogData = await getBlogCMSData();
+    return {
+        props: {
+            blogData
+        }
+    }
 }
