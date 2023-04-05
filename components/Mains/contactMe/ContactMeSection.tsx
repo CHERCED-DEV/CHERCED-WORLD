@@ -1,9 +1,11 @@
 import React from 'react';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { ContactMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ContactMeFieldsInfoConfig } from '../../../pages/api/contactMe/database/interfaceMessage'
 import DataBase from '../../../pages/api/contactMe/database/db';
-import Image from 'next/image';
+import Swal from 'sweetalert';
+
 
 
 const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => {
@@ -19,10 +21,20 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(contactInfo)
             });
+            Swal({
+                title: "Sent!",
+                text: "Thank you for contacting us, we will get in touch with you soon.",
+                icon: "success",
+            });
         } catch (error) {
             console.error(error);
+            Swal({
+                title: "Error",
+                text: "There was an error sending your message. Please try again later.",
+                icon: "error",
+            });
         }
-    }
+    };
 
     const onSubmit = (data: ContactMeFieldsInfoConfig) => {
         postData(data);

@@ -9,7 +9,7 @@ export const BlogCms: BlogCmsConfig = {
         alt: "Me",
         a: "https://github.com/CHERCED-DEV",
     },
-    sendPost: {
+    postCmsData: {
         title: "send me a post!",
         fields: {
             email: {

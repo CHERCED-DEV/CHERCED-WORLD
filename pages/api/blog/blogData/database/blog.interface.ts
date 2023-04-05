@@ -5,9 +5,9 @@ export interface BlogCmsConfig {
     mainTitleStrong: string
     welcomeMenssage: string;
     img: ImageProps;
-    sendPost: SendPostConfig;
+    postCmsData: FieldsPostConfig;
 }
-export interface SendPostConfig {
+export interface FieldsPostConfig {
     title: string; 
     fields: {
         email: {

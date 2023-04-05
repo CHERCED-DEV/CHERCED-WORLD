@@ -22,7 +22,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.42.1",
-    "react-network-speed": "^1.1.0"
+    "react-network-speed": "^1.1.0",
+    "sweetalert": "^2.1.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",

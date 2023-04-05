@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from 'react'
+import { getBlogCMSData } from '../../../../utils/providers/requests/homeCB';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { CommentsConfig } from '../../../../pages/api/blog/posts/database/post.interface';
-import { BlogCms } from '../../../../pages/api/blog/blogData/database/blog.cms';
-import DataBase from '../../../../pages/api/blog/posts/database/post.methods';
 import { usePortalProvider } from '../../../../utils/providers/modalProvider';
+import DataBase from '../../../../pages/api/blog/posts/database/post.methods';
+import Swal from 'sweetalert';
+import { FieldsPostConfig } from '../../../../pages/api/blog/blogData/database/blog.interface';
 
+interface FormPostConfigData {
+    postCmsData: FieldsPostConfig;
+}
 
-export const FormSendPost: React.FC = () => {
+export const FormpostCmsData: React.FC<FormPostConfigData> = ({ postCmsData }) => {
 
     const router = useRouter();
     const [showModal, setShowModal] = useState(false);
     const { modalSwitch, setModalSwitch } = usePortalProvider()
     const { register, handleSubmit, formState: { errors } } = useForm<CommentsConfig>();
-    
 
-    const { sendPost } = BlogCms;
+
+
 
     useEffect(() => {
         if (modalSwitch) {
             setTimeout(() => {
                 setShowModal(true);
-            }, 100); 
+            }, 100);
         } else {
             setTimeout(() => {
                 setShowModal(false);
-            }, 100); 
+            }, 100);
         }
     }, [modalSwitch]);
 
@@ -63,63 +68,87 @@ export const FormSendPost: React.FC = () => {
         }
     };
 
-    const onSubmit = (data: CommentsConfig) => {
-        const idLength = 8;
-        const idCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
-        let id = "";
+    const onSubmit = async (data: CommentsConfig) => {
+        try {
+            const idLength = 8;
+            const idCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
+            let id = "";
 
-        for (let i = 0; i < idLength; i++) {
-            const randomIndex = Math.floor(Math.random() * idCharacters.length);
-            id += idCharacters[randomIndex];
+            for (let i = 0; i < idLength; i++) {
+                const randomIndex = Math.floor(Math.random() * idCharacters.length);
+                id += idCharacters[randomIndex];
+            }
+
+            const postId = router.asPath.split("/").pop()?.toString() || "default";
+            const date = new Date().toISOString();
+
+            const newData = {
+                ...data,
+                id: id,
+                postId: postId,
+                date: date
+            };
+            postData(newData);
+            setModalSwitch(false);
+            Swal({
+                title: "Post sent!",
+                text: "Thank you for submitting your post, we will review it soon.",
+                icon: "success",
+            });
+        } catch (error) {
+            console.error(error);
+            setModalSwitch(true);
+            Swal({
+                title: "Error",
+                text: "There was an error sending your message. Please try again later.",
+                icon: "error",
+            });
         }
-
-        const postId = router.asPath.split("/").pop()?.toString() || "default";
-        const date = new Date().toISOString();
-
-        const newData = {
-            ...data,
-            id: id,
-            postId: postId,
-            date: date
-        };
-
-        postData(newData);
     };
 
-    
 
-  
+
+
 
     return (
         <div className='modalBackground'>
             <section className={showModal ? ("postMe on") : ("postMe off")}>
                 <button className='postMe-close' onClick={() => { setModalSwitch(!modalSwitch) }}>X</button>
-                <h1 className="postMe-title">{sendPost.title}</h1>
+                <h1 className="postMe-title">{postCmsData.title}</h1>
                 <form className="postMe-form" onSubmit={handleSubmit(onSubmit)}>
                     <input
                         className="postMe-form__input"
                         type="text"
-                        required={sendPost?.fields.email.required}
+                        required={postCmsData?.fields.email.required}
                         {...register("email")}
-                        placeholder={sendPost?.fields.email.value}
+                        placeholder={postCmsData?.fields.email.value}
                     />
                     <input
                         className="postMe-form__input"
                         type="text"
-                        required={sendPost?.fields.name.required}
+                        required={postCmsData?.fields.name.required}
                         {...register("userName")}
-                        placeholder={sendPost?.fields.name.value}
+                        placeholder={postCmsData?.fields.name.value}
                     />
                     <input
                         className="postMe-form__input"
                         type="text"
-                        required={sendPost?.fields.comment.required}
+                        required={postCmsData?.fields.comment.required}
                         {...register("comment")}
-                        placeholder={sendPost?.fields.comment.value}
+                        placeholder={postCmsData?.fields.comment.value}
                     />
-                    <button className="postMe-form__submit" type="submit" >{sendPost.button}</button>
+                    <button className="postMe-form__submit" type="submit" >{postCmsData.button}</button>
                 </form>
             </section>
         </div>
     )
+}
+
+export async function getServerSideProps() {
+    const blogData = await getBlogCMSData();
+    return {
+        props: {
+            postCmsData: blogData.postCmsData
+        }
+    }
 }

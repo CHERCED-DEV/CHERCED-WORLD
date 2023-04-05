@@ -1,32 +1,19 @@
 import React, { memo, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
-import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel';
+import { getBlogCMSData } from '../../utils/providers/requests/homeCB';
 import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
+import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
 
 
+interface blogLandingConifg {
+    BlogCms: BlogCmsConfig
+}
 
-export default memo(function BlogIntro() {
+export default memo(function BlogIntro({ BlogCms }: blogLandingConifg) {
 
-    const [showStarterPage, setShowStarterPage] = useState<boolean>(true);
-    const [BlogPostDataCMS, setBlogPostDataCMS] = useState<BlogCmsConfig>();
     const [postData, setPostData] = useState<PostConfig[]>([]);
-
-    useEffect(() => {
-        function handlePageLoad() {
-            const timerId = setTimeout(() => {
-                setShowStarterPage(!showStarterPage);
-            }, 1500);
-
-            // Return a function to clear the timer before the component is unmounted.
-            return () => {
-                clearTimeout(timerId);
-            }
-        }
-
-        handlePageLoad();
-    }, []);
 
     useEffect(() => {
         let mounted = true;
@@ -39,15 +26,6 @@ export default memo(function BlogIntro() {
             }
         };
 
-        const fetchBlogData = async () => {
-            const response = await fetch('/api/blog/blogData');
-            const data = await response.json();
-            if (mounted) {
-                setBlogPostDataCMS(data);
-            }
-        };
-
-        fetchBlogData();
         fetchPostsData();
 
         return () => {
@@ -65,19 +43,15 @@ export default memo(function BlogIntro() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <section className="blog-intro">
-                <h1 className="blog-intro__title">{BlogPostDataCMS?.mainTitle}<strong>{BlogPostDataCMS?.mainTitleStrong}</strong> </h1>
-                <p className="blog-intro__description">{BlogPostDataCMS?.welcomeMenssage}</p>
-                <div className="blog-intro__img">
-                    {BlogPostDataCMS?.img.src && (
-                        <Image
-                            src={BlogPostDataCMS?.img.src}
-                            alt={BlogPostDataCMS?.img.alt}
-                            fill={false}
-                            width={472}
-                            height={852}
-                        />
-                    )}
-                </div>
+                <h1 className="blog-intro__title">{BlogCms?.mainTitle}<strong>{BlogCms?.mainTitleStrong}</strong> </h1>
+                <p className="blog-intro__description">{BlogCms?.welcomeMenssage}</p>
+                <div className="AtomContainer">
+                        <div className="atomP">
+                            <div className="electronP" />
+                            <div className="electronP" />
+                            <div className="electronP" />
+                        </div>
+                    </div>
             </section>
             <section className="blog-carrousel">
                 <ul className="blog-carrousel__list">
@@ -100,3 +74,12 @@ export default memo(function BlogIntro() {
         </>
     );
 });
+
+export async function getServerSideProps() {
+    const BlogCms = await getBlogCMSData();
+    return {
+        props: {
+            BlogCms
+        }
+    }
+}

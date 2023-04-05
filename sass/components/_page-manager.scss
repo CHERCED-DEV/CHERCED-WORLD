@@ -59,11 +59,13 @@ div.HOME-PAGE {
 // CONTACTME PAGE
 div.CONTACTME-PAGE {
     height: 100vh;
+
     @media screen and (min-width: calculateRem($bp-tablet-portrait-max)) {
         #footer {
             #footer-back {
                 display: none;
             }
+
             #footer-socialMedia {
                 margin-top: calculateRem(50px);
             }
@@ -83,7 +85,10 @@ div.ABOUTME-PAGE {
 // PORTFOLIO PAGE
 div.PORTFOLIO-PAGE {
     #footer {
-        border-radius: 0;
+        div {
+            border-radius: 0;
+        }
+
     }
 }
 
@@ -97,16 +102,34 @@ div.SERVICES-PAGE {
             #footer-back {
                 display: none;
             }
+
             #footer-socialMedia {
                 margin-top: calculateRem(50px);
             }
         }
     }
 }
+
+// BLOG PAGE
+div.BLOG-PAGE {
+    .AtomContainer {
+        background: transparent;
+        height: auto;
+    }
+    .atomP {
+        &::before {
+            background: black;
+        }
+
+        .electronP {
+            border-color: #00222B;
+        }
+    }
+}
+
 div.PROJECTS-PAGE,
 div.BLOG-PAGE {
     height: 100vh;
-    background-color: #00222B;
 }
 
 // to wrap the main section class on the pages.
