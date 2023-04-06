@@ -1,52 +1,37 @@
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
+import { FieldsPostConfig } from '../api/blog/blogData/database/blog.interface';
+import { CommentsConfig } from '../api/blog/comments/database/comments.interface';
+import { getBlogCMSData, getCommentsData, getPostByIdData } from '../../utils/providers/requests/homeCB';
 import { FormSendPost } from '../../components/Mains/blogLanding/utils/FormSendPost';
 import { Modal } from '../../utils/portals/modalPortal';
 import { usePortalProvider } from '../../utils/providers/modalProvider';
 import { BlogLanding } from '../../components/Mains/blogLanding/BlogLanding';
-import { getBlogCMSData } from '../../utils/providers/requests/homeCB';
-import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 
 
-export default function Blog({ postCmsData }: BlogCmsConfig) {
+interface PostConfigProps {
+    post: PostConfig;
+    postCmsData: FieldsPostConfig;
+}
+
+export default function Blog({ post, postCmsData }: PostConfigProps) {
+
     const { modalSwitch, setModalSwitch } = usePortalProvider();
-    const router = useRouter();
-    const [postIdData, setPostIdData] = useState<PostConfig>({} as PostConfig);
-    const [postsList, setPostsList] = useState<PostConfig[]>([]);
+    const [comments, setComments] = useState<CommentsConfig[]>([]);
 
-    console.log(router)
     useEffect(() => {
-        let mounted = true;
-
-        const fetchPostsData = async () => {
-            const id = router.asPath.split('/').pop();
-            if (typeof id === 'string') {
-                if (mounted) {
-                    const response = await fetch('/api/blog/posts');
-                    const data = await response.json();
-                    const filteredData: PostConfig = await data.filter((post: any) => post.id === id)[0];
-                    console.log(filteredData)
-                    setPostIdData(filteredData);
-                }
+        (async () => {
+            const data = await getCommentsData();
+            if (data !== undefined) {
+                setComments(data)
             }
-        };
 
-        const fetchAllPostsData = async () => {
-            const response = await fetch('/api/blog/posts');
-            const data = await response.json();
-            setPostsList(data);
-        };
+        })()
+    }, [])
 
-        fetchPostsData();
-        /*  fetchAllPostsData(); */
-
-        return () => {
-            mounted = false;
-        };
-
-    }, [router.asPath, postsList]);
 
     return (
         <>
@@ -57,18 +42,19 @@ export default function Blog({ postCmsData }: BlogCmsConfig) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             {
-                postIdData ? <>
+                post ? <>
                     <BlogLanding
-                        title={postIdData?.title}
-                        subtitle={postIdData?.subtitle}
+                        id={post?.id}
+                        title={post?.title}
+                        subtitle={post?.subtitle}
                         img={
                             {
-                                src: postIdData.img?.src,
-                                alt: postIdData.img?.alt
+                                src: post.img?.src,
+                                alt: post.img?.alt
                             }
                         }
-                        description={postIdData?.description}
-                        comments={postIdData?.comments}
+                        description={post?.description}
+                        comments={comments}
                     />
                     <button className='blog-post__button' onClick={() => { setModalSwitch(!modalSwitch) }}>enviar</button>
                     {!!modalSwitch && (
@@ -82,11 +68,21 @@ export default function Blog({ postCmsData }: BlogCmsConfig) {
     )
 }
 
-export async function getServerSideProps() {
-    const blogData = await getBlogCMSData();
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+    const { query } = context;
+    const { id } = query;
+    if (typeof id !== 'string' || id.trim() === '') {
+        return {
+            notFound: true
+        };
+    }
+    const post = await getPostByIdData(id);
+    const blogCms = await getBlogCMSData();
+    const { postCmsData } = blogCms
     return {
         props: {
-            blogData
+            post,
+            postCmsData
         }
-    }
-}
+    };
+};

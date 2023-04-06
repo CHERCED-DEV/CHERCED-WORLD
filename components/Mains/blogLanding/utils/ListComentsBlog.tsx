@@ -1,5 +1,5 @@
 import React from 'react'
-import { CommentsConfig } from '../../../../pages/api/blog/posts/database/post.interface'
+import { CommentsConfig } from '../../../../pages/api/blog/comments/database/comments.interface' 
 
 export const ListComentsBlog: React.FC<CommentsConfig> = (props) => {
     return (

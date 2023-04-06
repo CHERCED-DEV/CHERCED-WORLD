@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { CommentsConfig } from '../../../../pages/api/blog/posts/database/post.interface';
+import { CommentsConfig } from '../../../../pages/api/blog/comments/database/comments.interface'; 
 import { usePortalProvider } from '../../../../utils/providers/modalProvider';
-import DataBase from '../../../../pages/api/blog/posts/database/post.methods';
+/* import DataBase from '../../../../pages/api/blog/posts/database/post.methods'; */
 import Swal from 'sweetalert';
 import { FieldsPostConfig } from '../../../../pages/api/blog/blogData/database/blog.interface';
 
@@ -24,9 +24,7 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
                 setShowModal(true);
             }, 100);
         } else {
-            setTimeout(() => {
-                setShowModal(false);
-            }, 100);
+            setShowModal(false);
         }
     }, [modalSwitch]);
 
@@ -38,12 +36,8 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
                 throw new Error("Por favor complete todos los campos");
             }
 
-            const db = new DataBase();
-
             // Fetch Data
-            await db.create(contactInfo, id);
-
-            const apiEndpoint = "/api/blog/posts";
+            const apiEndpoint = "/api/blog/comments";
             const headers = { "Content-Type": "application/json" };
             const body = JSON.stringify(contactInfo);
 
@@ -85,7 +79,7 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
                 date: date
             };
             postData(newData);
-            setModalSwitch(false);
+            setModalSwitch(!modalSwitch);
             Swal({
                 title: "Post sent!",
                 text: "Thank you for submitting your post, we will review it soon.",
@@ -93,7 +87,7 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
             });
         } catch (error) {
             console.error(error);
-            setModalSwitch(true);
+            setModalSwitch(!modalSwitch);
             Swal({
                 title: "Error",
                 text: "There was an error sending your message. Please try again later.",
@@ -107,7 +101,7 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
         <div className='modalBackground'>
             <section className={showModal ? ("postMe on") : ("postMe off")}>
                 <button className='postMe-close' onClick={() => { setModalSwitch(!modalSwitch) }}>X</button>
-                <h1 className="postMe-title">{postCmsData.title}</h1>
+                <h1 className="postMe-title">{postCmsData?.title}</h1>
                 <form className="postMe-form" onSubmit={handleSubmit(onSubmit)}>
                     <input
                         className="postMe-form__input"
@@ -130,10 +124,9 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
                         {...register("comment")}
                         placeholder={postCmsData?.fields.comment.value}
                     />
-                    <button className="postMe-form__submit" type="submit" >{postCmsData.button}</button>
+                    <button className="postMe-form__submit" type="submit" >{postCmsData?.button}</button>
                 </form>
             </section>
         </div>
     )
 }
-

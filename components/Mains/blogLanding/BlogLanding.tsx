@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { CommentsConfig, PostConfig } from '../../../pages/api/blog/posts/database/post.interface';
+import { PostConfig } from '../../../pages/api/blog/posts/database/post.interface';
+import { CommentsConfig } from '../../../pages/api/blog/comments/database/comments.interface'; 
 import { ListComentsBlog } from './utils/ListComentsBlog';
 
-export const BlogLanding: React.FC<PostConfig> = (props) => {
+interface BlogLandingConfig extends PostConfig {
+    comments: CommentsConfig[];
+}
+export const BlogLanding: React.FC<BlogLandingConfig> = (props, comments) => {
+
     return (
         <>
             <article className='blog-content'>
@@ -26,9 +31,10 @@ export const BlogLanding: React.FC<PostConfig> = (props) => {
                 <h3 className='comments-title'>Comentarios</h3>
                 <ul className='comments-list'>
                     {
-                        props.comments?.map((comnent: CommentsConfig) => (
+                        comments?.map((comnent: CommentsConfig) => (
                             <ListComentsBlog
-                                key={comnent.id}
+                                key={comnent.comment}
+                                postId={comnent.postId}
                                 id={comnent.id}
                                 userName={comnent.userName}
                                 comment={comnent.comment}

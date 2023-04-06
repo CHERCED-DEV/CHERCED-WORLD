@@ -1,7 +1,6 @@
-import React, { memo, useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { memo } from 'react';
 import Head from 'next/head';
-import { getBlogCMSData } from '../../utils/providers/requests/homeCB';
+import { getBlogCMSData, getPostsData } from '../../utils/providers/requests/homeCB';
 import { BlogCmsConfig } from '../api/blog/blogData/database/blog.interface';
 import { ListBlogCarrousel } from '../../components/Mains/blogLanding/utils/ListBlogCarrousel';
 import { PostConfig } from '../api/blog/posts/database/post.interface';
@@ -9,30 +8,10 @@ import { PostConfig } from '../api/blog/posts/database/post.interface';
 
 interface blogLandingConifg {
     BlogCms: BlogCmsConfig
+    postData: PostConfig[];
 }
 
-export default memo(function BlogIntro({ BlogCms }: blogLandingConifg) {
-
-    const [postData, setPostData] = useState<PostConfig[]>([]);
-
-    useEffect(() => {
-        let mounted = true;
-
-        const fetchPostsData = async () => {
-            const response = await fetch('/api/blog/posts');
-            const data = await response.json();
-            if (mounted) {
-                setPostData(data);
-            }
-        };
-
-        fetchPostsData();
-
-        return () => {
-            mounted = false;
-        };
-    }, []);
-
+export default memo(function BlogIntro({ BlogCms, postData }: blogLandingConifg) {
 
     return (
         <>
@@ -46,12 +25,12 @@ export default memo(function BlogIntro({ BlogCms }: blogLandingConifg) {
                 <h1 className="blog-intro__title">{BlogCms?.mainTitle}<strong>{BlogCms?.mainTitleStrong}</strong> </h1>
                 <p className="blog-intro__description">{BlogCms?.welcomeMenssage}</p>
                 <div className="AtomContainer">
-                        <div className="atomP">
-                            <div className="electronP" />
-                            <div className="electronP" />
-                            <div className="electronP" />
-                        </div>
+                    <div className="atomP">
+                        <div className="electronP" />
+                        <div className="electronP" />
+                        <div className="electronP" />
                     </div>
+                </div>
             </section>
             <section className="blog-carrousel">
                 <ul className="blog-carrousel__list">
@@ -77,9 +56,11 @@ export default memo(function BlogIntro({ BlogCms }: blogLandingConifg) {
 
 export async function getServerSideProps() {
     const BlogCms = await getBlogCMSData();
+    const postData = await getPostsData();
     return {
         props: {
-            BlogCms
+            BlogCms,
+            postData
         }
     }
 }
