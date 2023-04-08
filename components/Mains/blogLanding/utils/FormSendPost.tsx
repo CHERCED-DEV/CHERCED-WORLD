@@ -9,9 +9,11 @@ import { FieldsPostConfig } from '../../../../pages/api/blog/blogData/database/b
 
 interface FormPostConfigData {
     postCmsData: FieldsPostConfig;
+    sendAction: boolean;
+    setSendAction: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
+export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData, sendAction, setSendAction }) => {
 
     const router = useRouter();
     const [showModal, setShowModal] = useState(false);
@@ -29,7 +31,6 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
     }, [modalSwitch]);
 
     const postData = async (contactInfo: CommentsConfig) => {
-        const id = router.asPath.split("/").pop()?.toString() || "default";
         try {
             // isValid?
             if (!contactInfo.userName || !contactInfo.comment || !contactInfo.date) {
@@ -69,15 +70,16 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
                 id += idCharacters[randomIndex];
             }
 
-            const postId = router.asPath.split("/").pop()?.toString() || "default";
-            const date = new Date().toISOString();
+            const postQuery = router.asPath.split("/").pop()?.toString() || "default";
+            const date = new Date().toDateString();
 
             const newData = {
                 ...data,
                 id: id,
-                postId: postId,
+                postId: postQuery,
                 date: date
             };
+            console.log(newData);
             postData(newData);
             setModalSwitch(!modalSwitch);
             Swal({
@@ -85,6 +87,7 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData }) => {
                 text: "Thank you for submitting your post, we will review it soon.",
                 icon: "success",
             });
+            setSendAction(!sendAction)
         } catch (error) {
             console.error(error);
             setModalSwitch(!modalSwitch);

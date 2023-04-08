@@ -4,11 +4,17 @@ import { PostConfig } from "../../../pages/api/blog/posts/database/post.interfac
 import { CmsDataConfig } from "../../../pages/api/customCMS/interfaces";
 import { ProjectsConfig } from "../../../pages/api/projects/database/interfaces";
 
+//CLIENT CALLS
 export async function getCMSData(): Promise<CmsDataConfig> {
   const response = await fetch("/api/customCMS");
   return response.json();
 }
+export async function getCommentsData(): Promise<{ [key: string]: CommentsConfig[] }> {
+  const response = await fetch("/api/blog/comments");
+  return response.json();
+}
 
+//SERVER CALLS
 export async function getBlogCMSData(): Promise<BlogCmsConfig> {
   const response = await fetch(
     process.env.VERCEL_URL_CORS + "/api/blog/blogData"
@@ -22,14 +28,11 @@ export async function getPostsData(): Promise<PostConfig[]> {
 }
 
 export async function getPostByIdData(id: string): Promise<PostConfig> {
-  const response = await fetch(`${process.env.VERCEL_URL_CORS }/api/blog/posts/${id}`);
+  const response = await fetch(
+    `${process.env.VERCEL_URL_CORS}/api/blog/posts/${id}`
+  );
   return response.json();
 }
-
-export async function getCommentsData(): Promise<CommentsConfig[]> {
-    const response = await fetch(process.env.VERCEL_URL_CORS + "/api/blog/comments");
-    return response.json();
-  }
 
 export async function fetchProject(id: any): Promise<ProjectsConfig> {
   const res = await fetch(`api/projects/${id}`);

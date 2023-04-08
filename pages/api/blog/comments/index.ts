@@ -6,21 +6,14 @@ const cors = require("cors");
 const commentsApi: Application = express();
 
 commentsApi.get("/api/blog/comments", (req: Request, res: Response) => {
-  res.setHeader("Content-Type", "application/json");
-  res.status(200).json(comments);
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).json(comments);
 });
 
 commentsApi.post("/api/blog/comments", (req: Request, res: Response) => {
   const newComment: CommentsConfig = req.body;
   try {
-    const validPost = newComment.postId === "" ? true : false;
-    if (validPost) {
-      const commentIndex = parseInt(newComment.postId);
-      comments[commentIndex].push(newComment);
-    } else {
-      res.setHeader("Content-Type", "application/json");
-      res.status(400).json({ message: "Bad Request error" });
-    }
+      comments[newComment.postId].push(newComment);
   } catch (error) {
     console.error(error);
     res.setHeader("Content-Type", "application/json");

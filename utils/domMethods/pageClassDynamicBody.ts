@@ -13,10 +13,7 @@ export function pageClassDynamicBody(id: string): {
   const ctx = id;
   let pageClass = "";
   let mainClass = "";
-  if (ctx.length > 2) {
-    console.log("cacorros")
-  }
-
+  
   // Assign class based on pathname
   const pageClassMap: PageClassMap = {
     "/aboutMe": "ABOUTME-PAGE",
