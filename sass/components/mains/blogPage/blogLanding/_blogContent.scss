@@ -18,5 +18,6 @@
 }
 .blog-content__text {
     text-align: justify;
+    max-width: calculateRem(640px);
     margin: 0 5%;
 }

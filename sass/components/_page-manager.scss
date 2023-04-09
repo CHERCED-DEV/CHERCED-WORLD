@@ -11,6 +11,7 @@ div.SERVICES-PAGE {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     overflow-x: hidden;
 }
 
@@ -24,9 +25,6 @@ div.HOME-PAGE {
         display: block;
         filter: blur(4px);
         height: calc(100vh - 222px);
-        /*  @media screen and (max-width: calculateRem($bp-tablet-portrait-max)) {
-            height: calc(100vh - 241px);    
-        } */
     }
 
     #footer {

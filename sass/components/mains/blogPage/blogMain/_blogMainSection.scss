@@ -13,6 +13,8 @@
 .blog-intro__description {
     margin: calculateRem(25px) 5% 0;
     text-align: justify;
+    width: auto;
+    max-width: calculateRem(620px);
 }
 
 .blog-intro__img {

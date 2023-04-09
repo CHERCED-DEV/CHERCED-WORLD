@@ -4,7 +4,7 @@
 
 .comments-title {
     @include rectangularButton;
-    width: 60%;
+    max-width: calculateRem(300px);
 }
 
 .comments-list {
@@ -29,6 +29,10 @@
     }
 }
 
+.comments-item__date {
+    white-space: pre;
+}
+
 .comments-item__author {
     @include font-size(14px);
     text-transform: capitalize;
@@ -47,11 +51,18 @@
 
     p {
         text-align: justify;
+        min-width: calculateRem(160px);
     }
 }
 
 @media screen and (min-width: calculateRem(365px)) {
     .comments-item__author {
         white-space: nowrap;
+    }
+}
+
+@media screen and (min-width: calculateRem(480px)) {
+    .comments-list__item {
+        margin-right: calculateRem(90px);
     }
 }

@@ -57,3 +57,17 @@
     width: 100%;
     max-width: calculateRem(100px);
 }
+
+
+@media screen and (min-width: calculateRem(640px)) {
+    .project-sectionTwo__parragraph {
+        max-width: calculateRem(768px);
+    }
+
+    .project-sectionTwo__list {
+        max-height: calculateRem(200px);
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+}

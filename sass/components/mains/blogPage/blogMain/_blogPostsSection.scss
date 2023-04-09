@@ -3,14 +3,18 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: calculateRem(30px);
 }
 .blog-carrousel__item {
     margin: calculateRem(30px) 0;
     @include centerContent;
+    width: 100%;
+    max-width: calculateRem(600px);
 }
 .blog-carrousel__title {
     @include rectangularButton;
     text-align: center;
+    max-width: calculateRem(400px);
 }
 .blog-carrousel__img {
     margin: calculateRem(20px) 0;
@@ -19,4 +23,16 @@
 }
 .blog-carrousel__button {
     @include submitButtonRegular;
+}
+
+
+@media screen and (min-width: calculateRem($bp-tablet-landscape-min)) {
+    .blog-carrousel {
+        width: 100%;
+    }
+    .blog-carrousel__list {
+       display: flex;
+       flex-wrap: wrap;
+       justify-content: center;
+    }
 }
