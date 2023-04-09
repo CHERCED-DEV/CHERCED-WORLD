@@ -1,9 +1,9 @@
 import { Fragment, lazy, memo } from 'react';
 import Head from 'next/head';
-import { useLocalStorageData } from '../utils/hooks/getLocalStorageData';
-import { PortfolioConfig } from './api/customCMS/interfaces';
+import { useLocalStorageData } from '../../utils/hooks/getLocalStorageData';
+import { PortfolioConfig } from '../api/customCMS/interfaces';
 
-const PortfolioSection = lazy(() => import('../components/Mains/portfolio/PortfolioSection').then(({ PortfolioSection }) => ({ default: PortfolioSection })));
+const PortfolioSection = lazy(() => import('../../components/Mains/portfolio/PortfolioSection').then(({ PortfolioSection }) => ({ default: PortfolioSection })));
 
 export default memo(function Portfolio() {
 

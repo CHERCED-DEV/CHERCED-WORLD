@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
         const { pageClass, mainClass } = pageClassDynamicBody(id);
         setPageClasses({ pageClass, mainClass });
         sethandleSubMenu(false);
-    }, [id]);
+    }, [id, storageConstructor]);
 
     return (
         <PortalContextProvider>

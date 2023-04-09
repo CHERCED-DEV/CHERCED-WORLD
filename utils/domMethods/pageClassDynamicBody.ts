@@ -22,7 +22,7 @@ export function pageClassDynamicBody(id: string): {
     "/": "HOME-PAGE",
     "/portfolio": "PORTFOLIO-PAGE",
     "/services": "SERVICES-PAGE",
-    "/projects": "PROJECTS-PAGE",
+    "/portfolio/[id]": "PROJECTS-PAGE",
     // add classes as required
     "/blog/[id]": "BLOG-POST--PAGE",
   };

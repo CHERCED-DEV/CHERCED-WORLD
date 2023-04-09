@@ -22,7 +22,7 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
 
     useEffect(() => {
-        if (pageClass == "BLOG-POST--PAGE") {
+        if (pageClass == "BLOG-POST--PAGE" || pageClass == "PROJECTS-PAGE") {
             setHeaderSimple(false);
         }
     }, [pageClass])

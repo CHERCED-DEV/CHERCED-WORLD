@@ -9,9 +9,15 @@ export async function getCMSData(): Promise<CmsDataConfig> {
   const response = await fetch("/api/customCMS");
   return response.json();
 }
-export async function getCommentsData(): Promise<{ [key: string]: CommentsConfig[] }> {
+export async function getCommentsData(): Promise<{
+  [key: string]: CommentsConfig[];
+}> {
   const response = await fetch("/api/blog/comments");
   return response.json();
+}
+export async function fetchProject(id: any): Promise<ProjectsConfig> {
+  const res = await fetch(`/api/projects/${id}`);
+  return res.json();
 }
 
 //SERVER CALLS
@@ -32,9 +38,4 @@ export async function getPostByIdData(id: string): Promise<PostConfig> {
     `${process.env.VERCEL_URL_CORS}/api/blog/posts/${id}`
   );
   return response.json();
-}
-
-export async function fetchProject(id: any): Promise<ProjectsConfig> {
-  const res = await fetch(`api/projects/${id}`);
-  return res.json();
 }
