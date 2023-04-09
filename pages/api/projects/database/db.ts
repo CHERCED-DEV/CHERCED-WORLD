@@ -8,7 +8,6 @@ class DataBase {
     return new Promise(async (resolve, reject) => {
       try {
         const asArray: object[] = Object.values(allData);
-        console.log("allDATA:", asArray);
         await randomDelay();
         resolve(asArray);
       } catch (error) {

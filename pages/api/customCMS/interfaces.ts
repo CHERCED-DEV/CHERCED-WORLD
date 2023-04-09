@@ -3,8 +3,8 @@ export interface ImageProps {
   src: string;
   alt: string;
   a?: string;
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
 }
 export interface ListItems {
   title: string;

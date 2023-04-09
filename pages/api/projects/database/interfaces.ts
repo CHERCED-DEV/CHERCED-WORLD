@@ -1,15 +1,20 @@
-import { ImageProps } from '../../customCMS/interfaces'
+import { ImageProps } from "../../customCMS/interfaces";
+
+interface ImagePropsCarrousel extends ImageProps {
+  width: string;
+  height: string;
+}
 
 export interface NotFoundProject {
-    status: number;
-    message: string;
+  status: number;
+  message: string;
 }
 export interface ProjectsConfig {
-    id: string;
-    title?: string;
-    description?: string;
-    image: ImageProps;
-    link?: string;
-    github?: string;
-    technologies?: string[];
-} 
+  id: string;
+  title?: string;
+  description?: string;
+  image: ImagePropsCarrousel;
+  link?: string;
+  github?: string;
+  technologies?: string[];
+}
