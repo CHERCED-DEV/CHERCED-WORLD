@@ -15,10 +15,6 @@ export async function getCommentsData(): Promise<{
   const response = await fetch("/api/blog/comments");
   return response.json();
 }
-export async function fetchProject(id: any): Promise<ProjectsConfig> {
-  const res = await fetch(`/api/projects/${id}`);
-  return res.json();
-}
 
 //SERVER CALLS
 export async function getBlogCMSData(): Promise<BlogCmsConfig> {
@@ -38,4 +34,8 @@ export async function getPostByIdData(id: string): Promise<PostConfig> {
     `${process.env.VERCEL_URL_CORS}/api/blog/posts/${id}`
   );
   return response.json();
+}
+export async function fetchProject(id: any): Promise<ProjectsConfig> {
+  const res = await fetch(`${process.env.VERCEL_URL_CORS}/api/projects/${id}`);
+  return res.json();
 }

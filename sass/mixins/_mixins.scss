@@ -80,6 +80,13 @@ $parentSize: 16px;
     padding: calculateRem(20px);
     display: flex;
     align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: #000000;
+        color: #ffffff;
+        cursor: pointer;
+    }
 }
 
 

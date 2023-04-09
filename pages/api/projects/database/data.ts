@@ -140,7 +140,6 @@ const allData: ProjectsConfig[] = [
             "height": "2436",
         },  
         "link": "https://www.figma.com/file/9V7LNk6FwHuspOXNCjkXTt/VirtualShop?node-id=0%3A1",
-        "github": "https://github.com/Cherced/ShoppyApp.git",
         "technologies": [
             "HTML",
             "CSS",

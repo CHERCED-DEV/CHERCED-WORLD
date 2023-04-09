@@ -1,26 +1,14 @@
-import React, { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import React from 'react'
 import { fetchProject } from '../../utils/providers/requests/homeCB'
 import { ProjectsConfig } from '../api/projects/database/interfaces'
 import Image from 'next/image'
 
-const Projects = () => {
-    const router = useRouter()
-    const { id } = router.query
-    const [project, setProject] = React.useState<ProjectsConfig>();
+interface ProjectConfig {
+    project: ProjectsConfig;
+}
 
-    useEffect(() => {
-        let isMounted = true;
-        console.log(id)
-        fetchProject(id).then((project: any) => {
-            if (isMounted) {
-                setProject(project);
-            }
-        })
-        return () => {
-            isMounted = false;
-        }
-    }, [id]);
+export default function Projects({ project }: ProjectConfig) {
 
     return (
         <>
@@ -28,11 +16,11 @@ const Projects = () => {
                 <div className="project-sectionOne__img">
                     {project?.image.src && (
                         <Image
-                            src={project.image?.src}
-                            alt={project.image?.alt}
-                            fill={false}
-                            width={256}
-                            height={256}
+                            src={project.image.src}
+                            alt={project.image.alt}
+                            layout={'intrinsic'}
+                            width={parseInt(project.image.width) / 2}
+                            height={parseInt(project.image.height) / 2}
                         />
                     )}
                 </div>
@@ -43,18 +31,36 @@ const Projects = () => {
                 <ul className="project-sectionTwo__list">
                     {
                         project?.technologies?.map((technologie: string, index: number) => (
-                            <li className="project-sectionTwo__list" key={index}>{technologie}</li>
+                            <li className="project-sectionTwo__item" key={index}>{technologie}</li>
                         ))
                     }
 
                 </ul>
-                <div>
-                    <button>Live</button>
-                    <button>GitHub</button>
+                <div className='project-sectionTwo__buttons'>
+                    {
+                        project?.link ? (<button className='project-sectionTwo__button'>Live</button>) : null
+                    }
+                    {
+                        project?.github ? (<button className='project-sectionTwo__button'>GitHub</button>) : null
+                    }
                 </div>
             </section>
         </>
     )
 }
 
-export default Projects
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+    const { query } = context;
+    const { id } = query;
+    if (typeof id !== 'string' || id.trim() === '') {
+        return {
+            notFound: true
+        };
+    }
+    const project = await fetchProject(id);
+    return {
+        props: {
+            project
+        }
+    };
+};

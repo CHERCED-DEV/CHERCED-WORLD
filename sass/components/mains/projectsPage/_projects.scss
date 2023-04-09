@@ -1,0 +1,59 @@
+.projects {
+    margin: calculateRem(65px) 0;
+}
+
+.project-sectionOne__img {
+    margin-bottom: calculateRem(45px);
+}
+
+.project-sectionTwo {
+    @include centerContent();
+}
+
+.project-sectionTwo__title {
+    @include rectangularButton;
+    margin-bottom: calculateRem(45px);
+}
+
+.project-sectionTwo__parragraph {
+    text-align: justify;
+
+    &::before {
+        content: "About this project: ";
+        font-weight: $f-weight-bold;
+    }
+}
+
+.project-sectionTwo__list {
+    margin: calculateRem(30px) 0;
+    width: 85%;
+    font-family: $f-body;
+
+    &::before {
+        content: "Tecnologies on this project: ";
+        font-weight: $f-weight-bold;
+    }
+}
+
+.project-sectionTwo__item {
+    margin-top: 5px;
+    margin-left: calculateRem(40px);
+    list-style: armenian;
+    width: auto;
+
+    &::after {
+        content: ".";
+    }
+}
+
+.project-sectionTwo__buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 85%;
+}
+
+.project-sectionTwo__button {
+    @include submitButtonRegular;
+    width: 100%;
+    max-width: calculateRem(100px);
+}
