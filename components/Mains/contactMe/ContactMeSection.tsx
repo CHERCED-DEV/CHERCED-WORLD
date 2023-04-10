@@ -12,6 +12,13 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
 
     const { register, handleSubmit, formState: { errors } } = useForm<ContactMeFieldsInfoConfig>();
 
+    const resetForm = () => {
+        const form = document.querySelector('.contactMe-form') as HTMLFormElement;
+        setTimeout(() => {
+            form.reset();
+        }, 1000);
+    };
+
     const postData = async (contactInfo: ContactMeFieldsInfoConfig) => {
         try {
             const db = new DataBase();
@@ -38,6 +45,7 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
 
     const onSubmit = (data: ContactMeFieldsInfoConfig) => {
         postData(data);
+        resetForm();
     };
 
     return (
@@ -92,4 +100,4 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
     );
 };
 
-export default ContactMeSection
+export default ContactMeSection;

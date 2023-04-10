@@ -15,7 +15,6 @@ export default memo(function ContactMe() {
                 <title>Contact Me | &lt;-CHERCED-WORLD-&gt;</title>
                 <meta name="description" content="Let's get in touch! Fill out the form or email me directly." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
             {
                 contactMe ? <ContactMeSection contactMe={contactMe} /> : null

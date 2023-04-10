@@ -19,7 +19,6 @@ export default memo(function BlogIntro({ BlogCms, postData }: blogLandingConifg)
                 <title>Blog | &lt;-CHERCED-WORLD-&gt;</title>
                 <meta name="description" content="Read about my latest insights on web development, technology, and more." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
             <section className="blog-intro">
                 <h1 className="blog-intro__title">{BlogCms?.mainTitle}<strong>{BlogCms?.mainTitleStrong}</strong> </h1>
