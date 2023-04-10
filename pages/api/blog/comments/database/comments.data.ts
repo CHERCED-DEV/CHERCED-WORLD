@@ -3,7 +3,7 @@ import { CommentsConfig } from "./comments.interface";
 export const comments: { [key: string]: CommentsConfig[] } = {
   post1: [
     {
-      id: "asdasf43",
+      id: "asd",
       postId: "0",
       date: "2023-04-06",
       email: "johndoe@gmail.com",
@@ -12,7 +12,7 @@ export const comments: { [key: string]: CommentsConfig[] } = {
         "John's story is truly inspiring and highlights the importance of being adaptable and willing to learn new skills in today's ever-changing job market. It's great to see someone successfully make the transition from a non-technical background to becoming a full-stack developer.",
     },
     {
-      id: "asdasasf43",
+      id: "234asdf",
       postId: "0",
       date: "2023-04-05",
       email: "janesmith@gmail.com",

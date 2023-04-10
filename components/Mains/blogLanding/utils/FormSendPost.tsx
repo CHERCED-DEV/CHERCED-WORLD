@@ -46,7 +46,6 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData, sendAc
 
             // API fetching
             const response = await fetch(apiEndpoint, { method: "POST", headers, body });
-            const data = await response.json();
 
             if (!response.ok) {
                 throw new Error("Ha ocurrido un error al enviar su comentario. Por favor intente de nuevo más tarde.");
@@ -89,7 +88,9 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData, sendAc
                 text: "Thank you for submitting your post, we will review it soon.",
                 icon: "success",
             });
-            setSendAction(!sendAction)
+            setTimeout(() => {
+                setSendAction(!sendAction)    
+            }, 1800);
         } catch (error) {
             console.error(error);
             setModalSwitch(!modalSwitch);

@@ -65,7 +65,7 @@ export default function Blog({ post, postCmsData }: PostConfigProps) {
                             {
                                 comments?.map((comnent: CommentsConfig) => (
                                     <ListComentsBlog
-                                        key={comnent.comment}
+                                        key={comnent.id}
                                         postId={comnent.postId}
                                         id={comnent.id}
                                         userName={comnent.userName}
