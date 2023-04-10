@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { CommentsConfig } from '../../../../pages/api/blog/comments/database/comments.interface'; 
+import { CommentsConfig } from '../../../../pages/api/blog/comments/database/comments.interface';
 import { usePortalProvider } from '../../../../utils/providers/modalProvider';
-/* import DataBase from '../../../../pages/api/blog/posts/database/post.methods'; */
+import DataBase from '../../../../pages/api/blog/comments/database/comments.methods';
 import Swal from 'sweetalert';
 import { FieldsPostConfig } from '../../../../pages/api/blog/blogData/database/blog.interface';
 
@@ -36,8 +36,10 @@ export const FormSendPost: React.FC<FormPostConfigData> = ({ postCmsData, sendAc
             if (!contactInfo.userName || !contactInfo.comment || !contactInfo.date) {
                 throw new Error("Por favor complete todos los campos");
             }
+            const db = new DataBase();
 
             // Fetch Data
+            await db.create(contactInfo.postId, contactInfo);
             const apiEndpoint = "/api/blog/comments";
             const headers = { "Content-Type": "application/json" };
             const body = JSON.stringify(contactInfo);
