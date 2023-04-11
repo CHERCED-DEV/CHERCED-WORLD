@@ -1,17 +1,17 @@
-import { postContactMe } from './postContactMe'
+import { contactMe } from './contactMe.data'
 import { ContactMeFieldsInfoConfig } from './interfaceMessage'
 
 class DataBase {
   constructor() {}
 
   async getAll(): Promise<ContactMeFieldsInfoConfig[]> {
-    const asArray = Object.values(postContactMe)
+    const asArray = Object.values(contactMe)
     await randomDelay()
     return asArray
   }
 
   async create(contact: ContactMeFieldsInfoConfig): Promise<void> {
-    postContactMe.push(contact)
+    contactMe.push(contact)
     await randomDelay()
   }
 }

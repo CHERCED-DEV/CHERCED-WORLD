@@ -1,6 +1,6 @@
 import { ContactMeFieldsInfoConfig } from "./interfaceMessage";
 
-export const postContactMe: ContactMeFieldsInfoConfig[] = [
+export const contactMe: ContactMeFieldsInfoConfig[] = [
   {
     name: "Camilo Alonso Hernandez Cediel",
     email: "Chernandezcediel@gmail.com",

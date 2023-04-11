@@ -1,25 +1,26 @@
-import express, { Application, Request, Response } from 'express';
-import { postContactMe } from "./database/postContactMe";
-import { ContactMeFieldsInfoConfig } from "./database/interfaceMessage";
+import express, { Application, Request, Response } from "express";
+import { dbConnect } from "../../../utils/mongoDB/mongoose";
+import Message from "./database/contactMe.model";
 
-const cors = require('cors');
+dbConnect();
+const cors = require("cors");
 
 const contactMeApi: Application = express();
 
-contactMeApi.get('/api/contactMe', (req: Request, res: Response) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.status(200).json(postContactMe);
+contactMeApi.get("/api/contactMe", async (req: Request, res: Response) => {
+  console.log(req.url, req.method);
+  const message = await Message.find();
+  res.setHeader("Content-Type", "application/json");
+  res.status(200).json(message);
 });
 
-contactMeApi.post('/api/contactMe', (req: Request, res: Response) => {
-  const newMessage: ContactMeFieldsInfoConfig = req.body;
-  postContactMe.push(newMessage);
-  res.setHeader('Content-Type', 'application/json');
-  res.status(201).json({ message: 'Mensaje enviado exitosamente' });
+contactMeApi.post("/api/contactMe", async (req: Request, res: Response) => {
+  const newMessage = new Message(req.body);
+  const savingMessage = await newMessage.save();
+  res.setHeader("Content-Type", "application/json");
+  res.status(201).json({ message: "Mensaje enviado exitosamente" });
 });
 
-contactMeApi.use(cors(
-    {origin: process.env.VERCEL_URL_CORS}
-));
+contactMeApi.use(cors({ origin: process.env.VERCEL_URL_CORS }));
 
 export default contactMeApi;
