@@ -27,11 +27,10 @@ export default function Blog({ post, postCmsData }: PostConfigProps) {
 
     useEffect(() => {
         (async () => {
-            const data = await getCommentsData();
             const commentIndex = router.asPath.split('/').pop()?.trim();
-            if (commentIndex !== undefined) {
-                const commentsList = data[commentIndex]
-                setComments(commentsList)
+            if(commentIndex){
+                const data = await getCommentsData(commentIndex);
+                setComments(data)
             }
         })();
     }, [router.asPath, sendAction]);
@@ -65,9 +64,9 @@ export default function Blog({ post, postCmsData }: PostConfigProps) {
                             {
                                 comments?.map((comnent: CommentsConfig) => (
                                     <ListComentsBlog
-                                        key={comnent.id}
+                                        key={comnent._id}
                                         postId={comnent.postId}
-                                        id={comnent.id}
+                                        _id={comnent._id}
                                         userName={comnent.userName}
                                         comment={comnent.comment}
                                         date={comnent.date}

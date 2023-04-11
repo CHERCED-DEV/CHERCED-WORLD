@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { ContactMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ContactMeFieldsInfoConfig } from '../../../pages/api/contactMe/database/interfaceMessage'
-import DataBase from '../../../pages/api/contactMe/database/db';
 import Swal from 'sweetalert';
 
 
@@ -21,8 +20,6 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
 
     const postData = async (contactInfo: ContactMeFieldsInfoConfig) => {
         try {
-            const db = new DataBase();
-            await db.create(contactInfo);
             const response = await fetch('/api/contactMe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

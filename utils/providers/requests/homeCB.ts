@@ -9,10 +9,8 @@ export async function getCMSData(): Promise<CmsDataConfig> {
   const response = await fetch("/api/customCMS");
   return response.json();
 }
-export async function getCommentsData(): Promise<{
-  [key: string]: CommentsConfig[];
-}> {
-  const response = await fetch("/api/blog/comments");
+export async function getCommentsData(id: string): Promise<CommentsConfig[]> {
+  const response = await fetch(`/api/blog/comments/${id}`);
   return response.json();
 }
 

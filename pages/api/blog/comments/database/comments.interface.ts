@@ -1,5 +1,5 @@
 export interface CommentsConfig {
-    id: string;
+    _id: string;
     postId: string;
     date: string;
     email?: string;

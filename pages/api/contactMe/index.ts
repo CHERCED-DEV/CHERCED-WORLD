@@ -9,9 +9,9 @@ const contactMeApi: Application = express();
 
 contactMeApi.get("/api/contactMe", async (req: Request, res: Response) => {
   console.log(req.url, req.method);
-  const message = await Message.find();
+  const messages = await Message.find();
   res.setHeader("Content-Type", "application/json");
-  res.status(200).json(message);
+  res.status(200).json(messages);
 });
 
 contactMeApi.post("/api/contactMe", async (req: Request, res: Response) => {
