@@ -1,8 +1,10 @@
+import Image from 'next/legacy/image';
+import Head from 'next/head'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import React from 'react'
 import { fetchProject } from '../../utils/providers/requests/homeCB'
 import { ProjectsConfig } from '../api/projects/database/interfaces'
-import Image from 'next/image'
+
 
 interface ProjectConfig {
     project: ProjectsConfig;
@@ -11,7 +13,11 @@ interface ProjectConfig {
 export default function Projects({ project }: ProjectConfig) {
 
     return (
-        <>
+        <> 
+        <Head>
+            <title>Project: {project.title} | &lt;-CHERCED-WORLD-&gt;</title>
+            <meta name="description" content={project.description} />
+        </Head>
             <section className="project-sectionOne">
                 <div className="project-sectionOne__img">
                     {project?.image.src && (
