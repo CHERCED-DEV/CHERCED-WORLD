@@ -4,20 +4,25 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import React from 'react'
 import { fetchProject } from '../../utils/providers/requests/homeCB'
 import { ProjectsConfig } from '../api/projects/database/interfaces'
-
+import { useRouter } from 'next/router';
 
 interface ProjectConfig {
     project: ProjectsConfig;
 }
 
 export default function Projects({ project }: ProjectConfig) {
+    const router = useRouter()
+
+    const handleRedirect = ((link: string) => {
+        return router.push(link)
+    })
 
     return (
-        <> 
-        <Head>
-            <title>Project: {project.title} | &lt;-CHERCED-WORLD-&gt;</title>
-            <meta name="description" content={project.description} />
-        </Head>
+        <>
+            <Head>
+                <title>Project: {project.title} | &lt;-CHERCED-WORLD-&gt;</title>
+                <meta name="description" content={project.description} />
+            </Head>
             <section className="project-sectionOne">
                 <div className="project-sectionOne__img">
                     {project?.image.src && (
@@ -44,10 +49,10 @@ export default function Projects({ project }: ProjectConfig) {
                 </ul>
                 <div className='project-sectionTwo__buttons'>
                     {
-                        project?.link ? (<button className='project-sectionTwo__button'>Live</button>) : null
+                        project?.link ? (<button onClick={() => handleRedirect(project.link || "")} className='project-sectionTwo__button'>Live</button>) : null
                     }
                     {
-                        project?.github ? (<button className='project-sectionTwo__button'>GitHub</button>) : null
+                        project?.github ? (<button onClick={() => handleRedirect(project.github || "")} className='project-sectionTwo__button'>GitHub</button>) : null
                     }
                 </div>
             </section>
