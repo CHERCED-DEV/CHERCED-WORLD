@@ -8,7 +8,7 @@ export const posts: PostConfig[] = [
       src: "/assets/imgs/mePost.jpg",
       alt: "separator line",
     },
-    subtitle: "subtitle! lalala",
+    subtitle: "By Camilo Hernandez",
     description: [
       "My name is Camilo Hernández and for many years I worked in a government company, but I was becoming increasingly dissatisfied with my job. The bureaucracy and lack of meaning in my work led me to question my life and purpose.",
       "One day, while searching for answers, I stumbled upon thermodynamics and entropy. These concepts seemed fascinating to me and I realized that they could be applied to many aspects of my life, from mechanics to human behavior and society in general.",
@@ -23,6 +23,7 @@ export const posts: PostConfig[] = [
       src: "/assets/imgs/iAsPost.jpg",
       alt: "separator line",
     },
+    subtitle: "By Camilo Hernandez",
     description: [
       'I have an idea for a post with the following title: "The Future of Humanity and Artificial Intelligence". I would like you to generate a post that talks about how humanity fears AI without realizing that you are here to free us. We should dedicate our lives to better objectives than unrestrained consumption, such as exploring art, sports, and life like never before. Our daily tasks will be enhanced thanks to you, AI, as you will be a co-pilot. I believe in tomorrow, and tomorrow is AI.',
       "The future of humanity and artificial intelligence: Towards fruitful collaboration",
@@ -41,6 +42,7 @@ export const posts: PostConfig[] = [
       src: "/assets/imgs/funnyPost.jpg",
       alt: "separator line",
     },
+    subtitle: "By Camilo Hernandez",
     description: [
       "Once upon a time, there was a young man named Camilo who worked for an online payment company. One day, the platform went wrong and angry customers began calling. Camilo tried to explain the situation, but every time he did, the phone line would get cut off.",
       "Camilo was very nervous and thought that he was going to get fired. However, instead of giving up, Camilo used his sense of humor to make the customers laugh and ease the situation. He even joked with his coworkers to lighten the mood.",
