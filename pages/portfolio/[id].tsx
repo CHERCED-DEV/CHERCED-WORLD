@@ -38,7 +38,7 @@ export default function Projects({ project }: ProjectConfig) {
             </section>
             <section className="project-sectionTwo">
                 <h1 className="project-sectionTwo__title">{project?.title}</h1>
-                <p className="project-sectionTwo__parragraph">{project?.description?.p1}</p>
+                <p className="project-sectionTwo__parragraph main">{project?.description?.p1}</p>
                 <p className="project-sectionTwo__parragraph">{project?.description?.p2}</p>
                 <p className="project-sectionTwo__parragraph">{project?.description?.p3}</p>
                 <ul className="project-sectionTwo__list">

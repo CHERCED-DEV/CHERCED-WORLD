@@ -52,6 +52,7 @@
     p {
         text-align: justify;
         min-width: calculateRem(160px);
+        max-width: calculateRem(400px);
     }
 }
 
@@ -60,8 +61,25 @@
         white-space: nowrap;
     }
 }
+@media screen and (min-width: calculateRem(560px)) {
+    .comments-item__text {
+        p {
+            max-width: calculateRem(250px);
+        }
+    }
+}
 
 @media screen and (min-width: calculateRem(480px)) {
+    .comments-list__item {
+        margin-right: calculateRem(90px);
+    }
+}
+
+@media screen and (min-width: calculateRem(768px)) {
+    .comments-list {
+        margin-left: 15%;
+        margin-right: 15%;
+    }
     .comments-list__item {
         margin-right: calculateRem(90px);
     }

@@ -17,10 +17,13 @@
 
 .project-sectionTwo__parragraph {
     text-align: justify;
+    margin-bottom: calculateRem(20px);
 
-    &::before {
-        content: "About this project: ";
-        font-weight: $f-weight-bold;
+    &.main {
+        &::before {
+            content: "About this project: ";
+            font-weight: $f-weight-bold;
+        }
     }
 }
 
