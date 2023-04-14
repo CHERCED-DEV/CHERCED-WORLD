@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { PostConfig } from '../../../pages/api/blog/posts/database/post.interface';1
+import { PostConfig } from '../../../pages/api/blog/posts/database/post.interface'; 1
 
 export const BlogLanding: React.FC<PostConfig> = (props) => {
 
@@ -20,7 +20,9 @@ export const BlogLanding: React.FC<PostConfig> = (props) => {
                     )}
                 </div>
                 <h2 className='blog-content__subTitle'>{props.subtitle}</h2>
-                <p className='blog-content__text'>{props.description}</p>
+                {
+                    props.description.map((text) => (<p key={text} className='blog-content__text'>{text}</p>))
+                }
             </article>
         </>
     )

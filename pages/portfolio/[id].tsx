@@ -21,7 +21,7 @@ export default function Projects({ project }: ProjectConfig) {
         <>
             <Head>
                 <title>Project: {project.title} | &lt;-CHERCED-WORLD-&gt;</title>
-                <meta name="description" content={project.description} />
+                <meta name="description" content={project.description?.p1} />
             </Head>
             <section className="project-sectionOne">
                 <div className="project-sectionOne__img">
@@ -38,7 +38,9 @@ export default function Projects({ project }: ProjectConfig) {
             </section>
             <section className="project-sectionTwo">
                 <h1 className="project-sectionTwo__title">{project?.title}</h1>
-                <p className="project-sectionTwo__parragraph">{project?.description}</p>
+                <p className="project-sectionTwo__parragraph">{project?.description?.p1}</p>
+                <p className="project-sectionTwo__parragraph">{project?.description?.p2}</p>
+                <p className="project-sectionTwo__parragraph">{project?.description?.p3}</p>
                 <ul className="project-sectionTwo__list">
                     {
                         project?.technologies?.map((technologie: string, index: number) => (

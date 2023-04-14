@@ -12,7 +12,11 @@ export interface NotFoundProject {
 export interface ProjectsConfig {
   id: string;
   title?: string;
-  description?: string;
+  description?: {
+    p1: string;
+    p2: string;
+    p3: string;
+  };
   image: ImagePropsCarrousel;
   link?: string;
   github?: string;
