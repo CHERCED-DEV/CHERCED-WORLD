@@ -25,6 +25,8 @@ export function pageClassDynamicBody(id: string): {
     "/portfolio/[id]": "PROJECTS-PAGE",
     // add classes as required
     "/blog/[id]": "BLOG-POST--PAGE",
+    "/secretPage": "SECRET--PAGE",
+    
   };
 
   //Assign class based on pageClass
@@ -37,6 +39,7 @@ export function pageClassDynamicBody(id: string): {
     "SERVICES-PAGE": "services",
     "PROJECTS-PAGE": "projects",
     "BLOG-POST--PAGE": "post",
+    "SECRET--PAGE": "secret",
   };
 
   if (pageClassMap[ctx]) {

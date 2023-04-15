@@ -47,3 +47,89 @@ ol {
         align-items: center;
     }
 }
+
+//[Table Styles]
+.secret {
+    margin: calculateRem(60px);
+
+    nav {
+        width: 100%;
+    }
+}
+
+.secret-page__title {
+    @include rectangularButton;
+    width: calculateRem(250px);
+    margin-bottom: calculateRem(40px);
+}
+
+.secret-sorter__container {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: calculateRem(20px);
+
+    button {
+        width: 100%;
+        min-width: calculateRem(180px);
+        max-width: calculateRem(180px);
+    }
+}
+
+.table-styling {
+    @include font-size($f-size-sm);
+    font-family: $f-body;
+    border-radius: calc(10px);
+    box-shadow: 0px 0px calculateRem(10px) rgba(0, 0, 0, 0.5);
+    text-align: center;
+    border-collapse: collapse;
+    margin: calc(20px);
+    max-width: calc(100vw - calculateRem(40px));
+    overflow-x: auto;
+}
+
+.none {
+    border: none !important;
+}
+
+.table-styling th,
+.table-styling td {
+    border: calculateRem(1px) solid black;
+    padding: calculateRem(10px);
+}
+
+.hideenT {
+    display: none;
+}
+
+.button-table__action {
+    @include submitButtonRegular;
+    margin-top: calculateRem(20px);
+}
+
+@media screen and (max-width: 440px) {
+    .table-styling {
+        @include font-size(12px);
+    }
+
+    #date {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .secret-sorter__container {
+        li {
+            margin: 0 10px;
+        }
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    #email {
+        display: none;
+    }
+}

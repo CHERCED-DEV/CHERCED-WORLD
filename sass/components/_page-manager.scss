@@ -7,7 +7,8 @@ div.BLOG-POST--PAGE,
 div.CONTACTME-PAGE,
 div.PROJECTS-PAGE,
 div.PORTFOLIO-PAGE,
-div.SERVICES-PAGE {
+div.SERVICES-PAGE,
+div.SECRET--PAGE {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -125,6 +126,7 @@ div.BLOG-PAGE {
     }
 }
 
+div.SECRET--PAGE,
 div.PROJECTS-PAGE,
 div.BLOG-PAGE {
     height: 100vh;
@@ -134,6 +136,7 @@ div.BLOG-PAGE {
 .contactMe,
 .services,
 .projects,
+.secret,
 .post,
 .blog {
     @include container-wrap;

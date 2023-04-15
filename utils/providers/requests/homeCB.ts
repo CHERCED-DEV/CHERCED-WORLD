@@ -37,3 +37,7 @@ export async function fetchProject(id: any): Promise<ProjectsConfig> {
   const res = await fetch(`${process.env.VERCEL_URL_CORS}/api/projects/${id}`);
   return res.json();
 }
+export async function getInBoxData() {
+  const res = await fetch(process.env.VERCEL_URL_CORS + "/api/contactMe");
+  return res.json();
+}

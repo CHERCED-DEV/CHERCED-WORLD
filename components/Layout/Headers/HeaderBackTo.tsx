@@ -18,7 +18,10 @@ const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo
     const handleEvent = () => {
         const pathArray = router.asPath.split("/");
         pathArray.splice(-1, 1);
-        const backTo = pathArray.join("/");
+        let backTo = pathArray.join("/");
+        if(backTo === "") {
+            backTo = "/"
+        }
         return router.push(backTo)
     }
 
@@ -59,4 +62,4 @@ const HeaderBackTo: React.FC<HeaderBackPropsConfig> = memo(function HeaderBackTo
     );
 });
 
-export default HeaderBackTo
+export default HeaderBackTo;
