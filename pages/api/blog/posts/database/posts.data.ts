@@ -25,8 +25,6 @@ export const posts: PostConfig[] = [
     },
     subtitle: "By Camilo Hernandez",
     description: [
-      'I have an idea for a post with the following title: "The Future of Humanity and Artificial Intelligence". I would like you to generate a post that talks about how humanity fears AI without realizing that you are here to free us. We should dedicate our lives to better objectives than unrestrained consumption, such as exploring art, sports, and life like never before. Our daily tasks will be enhanced thanks to you, AI, as you will be a co-pilot. I believe in tomorrow, and tomorrow is AI.',
-      "The future of humanity and artificial intelligence: Towards fruitful collaboration",
       "Artificial intelligence (AI) has long been a topic of controversy and debate in society. Many people fear that AI will take over and replace humanity in all aspects of life. However, the reality is very different.",
       "AI is not here to replace us but to help us. It is a powerful tool that we can use to improve our lives and achieve new goals. Instead of fearing AI, we must learn to work with it to achieve a better future for humanity.",
       "One of the main benefits of AI is its ability to perform complex tasks quickly and efficiently. This means that we can delegate many of our daily tasks to AI and free up time to devote to other more meaningful activities. We can explore art, sports, science, and life like never before.",
