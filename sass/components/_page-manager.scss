@@ -126,7 +126,7 @@ div.BLOG-PAGE {
     }
 }
 
-div.SECRET--PAGE,
+div.INBOX--PAGE,
 div.PROJECTS-PAGE,
 div.BLOG-PAGE {
     height: 100vh;
@@ -136,7 +136,7 @@ div.BLOG-PAGE {
 .contactMe,
 .services,
 .projects,
-.secret,
+.inbox,
 .post,
 .blog {
     @include container-wrap;

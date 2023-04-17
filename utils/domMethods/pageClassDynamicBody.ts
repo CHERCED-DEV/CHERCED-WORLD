@@ -23,9 +23,8 @@ export function pageClassDynamicBody(id: string): {
     "/portfolio": "PORTFOLIO-PAGE",
     "/services": "SERVICES-PAGE",
     "/portfolio/[id]": "PROJECTS-PAGE",
-    // add classes as required
     "/blog/[id]": "BLOG-POST--PAGE",
-    "/secretPage": "SECRET--PAGE",
+    "/inbox": "INBOX--PAGE",
     
   };
 
@@ -39,7 +38,7 @@ export function pageClassDynamicBody(id: string): {
     "SERVICES-PAGE": "services",
     "PROJECTS-PAGE": "projects",
     "BLOG-POST--PAGE": "post",
-    "SECRET--PAGE": "secret",
+    "INBOX--PAGE": "inbox",
   };
 
   if (pageClassMap[ctx]) {

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { ContactMeServerDataProps } from '../../../utils/dataConfigWorkflow.interfaces';
 import { ContactMeFieldsInfoConfig } from '../../../pages/api/contactMe/database/interfaceMessage'
+import { usePortalProvider } from '../../../utils/providers/modalProvider';
 import Swal from 'sweetalert';
 
 
@@ -10,6 +11,7 @@ import Swal from 'sweetalert';
 const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<ContactMeFieldsInfoConfig>();
+    const {mountMessages} = usePortalProvider();
 
     const resetForm = () => {
         const form = document.querySelector('.contactMe-form') as HTMLFormElement;
@@ -42,6 +44,7 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
 
     const onSubmit = (data: ContactMeFieldsInfoConfig) => {
         postData(data);
+        mountMessages();
         resetForm();
     };
 

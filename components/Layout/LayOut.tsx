@@ -12,7 +12,6 @@ interface LayoutPropsConfig {
 }
 
 const Header = lazy(() => import('./Headers/Header'));
-const HeaderBackTo = lazy(() => import('./Headers/HeaderBackTo'));
 const Footer = lazy(() => import('./Footers/Footer'));
 
 const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mainClass, pageClass, handleSubMenu, sethandleSubMenu }) {
@@ -63,10 +62,7 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
             {!isLoading && (
                 <Suspense fallback={<PageLoader />}>
                     <div className={pageClass}>
-                        {
-                            headerSimple ? (<Header handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} />)
-                                : (<HeaderBackTo headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} />)
-                        }
+                        <Header handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} />
                         <main className={mainClass}>
                             <>
                                 {children}
@@ -81,4 +77,4 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
     )
 })
 
-export default LayOut
+export default LayOut;

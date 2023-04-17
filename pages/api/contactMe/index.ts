@@ -8,7 +8,6 @@ const cors = require("cors");
 const contactMeApi: Application = express();
 
 contactMeApi.get("/api/contactMe", async (req: Request, res: Response) => {
-  console.log(req.url, req.method);
   const messages = await Message.find();
   res.setHeader("Content-Type", "application/json");
   res.status(200).json(messages);

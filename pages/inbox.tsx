@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getInBoxData } from '../utils/providers/requests/homeCB';
+import Head from 'next/head';
 
 
 export default function SecretPage({ inbox }: SecretPageProps) {
@@ -43,20 +44,25 @@ export default function SecretPage({ inbox }: SecretPageProps) {
 
     return (
         <>
+            <Head>
+                <title>InBox Me | &lt;-CHERCED-WORLD-&gt;</title>
+                <meta name="description" content="My Dms Page" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <h1 className='secret-page__title'>INBOX</h1>
-            <nav>
-                <ul className='secret-sorter__container'>
-                    <li>
+            <nav className='secret-page__nav'>
+                <ul className='secret-sorter__list'>
+                    <li className='secret-sorter__item'>
                         <button className='button-table__action' onClick={() => sortData("name")}>
                             <label>Sort by name</label>
                         </button>
                     </li>
-                    <li>
+                    <li className='secret-sorter__item'>
                         <button className='button-table__action' onClick={() => sortData("last")}>
                             <label>Sort by last created</label>
                         </button>
                     </li>
-                    <li>
+                    <li className='secret-sorter__item'>
                         <button className='button-table__action' onClick={() => sortData("first")}>
                             <label>Sort by first created</label>
                         </button>

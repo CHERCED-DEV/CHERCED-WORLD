@@ -63,7 +63,7 @@ ol {
     margin-bottom: calculateRem(40px);
 }
 
-.secret-sorter__container {
+.secret-sorter__list {
     display: flex;
     width: 100%;
     justify-content: space-evenly;
@@ -120,7 +120,7 @@ ol {
 }
 
 @media screen and (max-width: 640px) {
-    .secret-sorter__container {
+    .secret-sorter__list {
         li {
             margin: 0 10px;
         }
@@ -132,4 +132,24 @@ ol {
     #email {
         display: none;
     }
+}
+
+//[inbox Styles]
+
+.inboxAlert {
+    margin-left: calculateRem(8px);
+}
+
+.inboxAlert_counter {
+    @include font-size(10px);
+    text-align: center;
+    display: block;
+    color: #fff;
+    background-color: #1e515f;
+    width: calculateRem(12px);
+    height: calculateRem(12px);
+    border-radius: 100%;
+    position: relative;
+    top: calculateRem(10px);
+    right: calculateRem(-16px);
 }
