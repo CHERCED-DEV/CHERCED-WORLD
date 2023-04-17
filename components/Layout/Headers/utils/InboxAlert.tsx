@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Mail from '../../../../public/assets/icons/Mail.svg'
 import { usePortalProvider } from '../../../../utils/providers/modalProvider';
 
@@ -8,18 +8,17 @@ export function InboxAlert() {
     const [inboxInitial, setInboxInitial] = useState<number>(0)
     const [counter, setCounter] = useState<number>(0)
 
-    const initialMessages = async () => {
+    const initialMessages = useCallback(async () => {
         const req = await fetch('/api/contactMe');
         const inbox = await req.json();
         setInboxInitial(inbox.length)
-    };
+    },[]);
 
     useEffect(() => {
         initialMessages()
     }, [])
 
     useEffect(() => {
-        
         if (inboxInitial < actualInbox) {
             setCounter(actualInbox - inboxInitial);
         }
