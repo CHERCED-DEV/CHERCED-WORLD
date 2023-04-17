@@ -5,11 +5,13 @@ const PortalContext = createContext<{
     modalSwitch: boolean;
     setModalSwitch: React.Dispatch<React.SetStateAction<boolean>>;
     actualInbox: number;
+    setActualInbox: React.Dispatch<React.SetStateAction<number>>;
     mountMessages: () => Promise<void>;
 }>({
     modalSwitch: false,
     setModalSwitch: () => { },
     actualInbox: 0,
+    setActualInbox: () => { },
     mountMessages: async () => {},
 });
 
@@ -29,7 +31,7 @@ export const PortalContextProvider = ({ children }: ContextProviderProps) => {
                 modalSwitch,
                 setModalSwitch,
                 actualInbox,
-                
+                setActualInbox,
                 mountMessages
             }}
         >

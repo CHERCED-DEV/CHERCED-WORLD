@@ -19,12 +19,11 @@ export function InboxAlert() {
     }, [])
 
     useEffect(() => {
-        let getter: number = 0;
-        if (inboxInitial > actualInbox) {
-            getter = actualInbox - inboxInitial;
-            setCounter(getter);
+        
+        if (inboxInitial < actualInbox) {
+            setCounter(actualInbox - inboxInitial);
         }
-    }, [mountMessages])
+    }, [actualInbox])
 
     return (
         <>
