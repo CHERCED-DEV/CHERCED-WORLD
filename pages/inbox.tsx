@@ -34,9 +34,28 @@ export default function SecretPage({ inbox }: SecretPageProps) {
         }
     };
 
-    useEffect(() => { }, [
+    useEffect(() => {
+        const resetNotifications = async () => {
+            try {
+                const data = await fetch("/api/sockets/newMessage",
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            notification: 0
+                        }),
+                    }
+                );
+                console.log("Reset notifications successful");
+            } catch (error) {
+                console.error("Error resetting notifications:", error);
+            }
+        };
 
-    ])
+        resetNotifications();
+    }, []);
 
     const toggleTable = () => {
         setShowTable(!showTable);
