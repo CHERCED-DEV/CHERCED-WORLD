@@ -13,9 +13,10 @@ interface HeaderPropsConfig {
     pageClass: string
     headerSimple: boolean;
     setHeaderSimple: React.Dispatch<React.SetStateAction<boolean>>;
+    unReadCount: number
 }
 
-const Header: React.FC<HeaderPropsConfig> = memo(function Header({ handleSubMenu, sethandleSubMenu, pageClass, headerSimple, setHeaderSimple }) {
+const Header: React.FC<HeaderPropsConfig> = memo(function Header({ handleSubMenu, sethandleSubMenu, pageClass, headerSimple, setHeaderSimple, unReadCount}) {
 
     const [layOut] = useLocalStorageData<LayOutConfig>("CmsData", "layOut");
     const router = useRouter();
@@ -48,7 +49,7 @@ const Header: React.FC<HeaderPropsConfig> = memo(function Header({ handleSubMenu
                                 height={64}
                             />
                         )}
-                        <InboxAlert />
+                        <InboxAlert unReadCount={unReadCount} />
                     </div>
                     {
                         headerSimple ? (

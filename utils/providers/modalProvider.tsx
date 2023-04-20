@@ -4,25 +4,27 @@ import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
 const PortalContext = createContext<{
     modalSwitch: boolean;
     setModalSwitch: React.Dispatch<React.SetStateAction<boolean>>;
-    actualInbox: number;
-    setActualInbox: React.Dispatch<React.SetStateAction<number>>;
-    mountMessages: () => Promise<void>;
+    unReadCount: number;
+    fetchUnreadCount: () => Promise<void>;
 }>({
     modalSwitch: false,
     setModalSwitch: () => { },
-    actualInbox: 0,
-    setActualInbox: () => { },
-    mountMessages: async () => {},
+    unReadCount: 0,
+    fetchUnreadCount: async () => {},
 });
 
 export const PortalContextProvider = ({ children }: ContextProviderProps) => {
     const [modalSwitch, setModalSwitch] = useState<boolean>(false);
-    const [actualInbox, setActualInbox] = useState<number>(0)
+    const [unReadCount, setUnReadCount] = useState<number>(0);
 
-    const mountMessages = async () => {
-        const req = await fetch('/api/contactMe');
-        const inbox = await req.json();
-        setActualInbox(inbox.length)
+    const fetchUnreadCount = async () => {
+        try {
+            const response = await fetch(`/api/sockets/newMessage`);
+            const data = await response.json();
+            setUnReadCount(data.notification);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -30,9 +32,8 @@ export const PortalContextProvider = ({ children }: ContextProviderProps) => {
             value={{
                 modalSwitch,
                 setModalSwitch,
-                actualInbox,
-                setActualInbox,
-                mountMessages
+                unReadCount,
+                fetchUnreadCount
             }}
         >
             {children}

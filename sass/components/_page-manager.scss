@@ -8,7 +8,7 @@ div.CONTACTME-PAGE,
 div.PROJECTS-PAGE,
 div.PORTFOLIO-PAGE,
 div.SERVICES-PAGE,
-div.SECRET--PAGE {
+div.INBOX--PAGE {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -128,6 +128,7 @@ div.BLOG-PAGE {
 
 div.INBOX--PAGE,
 div.PROJECTS-PAGE,
+div.INBOX--PAGE,
 div.BLOG-PAGE {
     height: 100vh;
 }

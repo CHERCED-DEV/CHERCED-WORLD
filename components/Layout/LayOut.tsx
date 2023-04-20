@@ -2,6 +2,7 @@ import React, { lazy, memo, ReactNode, Suspense, useEffect, useState } from 'rea
 import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
 import { StarterApp } from './Spiners&Loaders/StarterApp';
 import { PageLoader } from './Spiners&Loaders/PageLoader';
+import { usePortalProvider } from '../../utils/providers/modalProvider';
 
 interface LayoutPropsConfig {
     handleSubMenu: boolean;
@@ -19,12 +20,16 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
     const [headerSimple, setHeaderSimple] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [initialStorageValue, setInitialStorageValue] = useState<boolean>(false);
+    const { unReadCount, fetchUnreadCount } = usePortalProvider();
+
+
 
     useEffect(() => {
-        if (pageClass == "BLOG-POST--PAGE" || pageClass == "PROJECTS-PAGE" || pageClass == "SECRET--PAGE") {
+        if (pageClass == "BLOG-POST--PAGE" || pageClass == "PROJECTS-PAGE" || pageClass == "INBOX--PAGE") {
             setHeaderSimple(false);
         }
-    }, [pageClass])
+        fetchUnreadCount();
+    }, [pageClass,fetchUnreadCount])
 
     useEffect(() => {
         const storedValue = window.sessionStorage.getItem('isLoading');
@@ -62,7 +67,7 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
             {!isLoading && (
                 <Suspense fallback={<PageLoader />}>
                     <div className={pageClass}>
-                        <Header handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} />
+                        <Header handleSubMenu={handleSubMenu} sethandleSubMenu={sethandleSubMenu} pageClass={pageClass} headerSimple={headerSimple} setHeaderSimple={setHeaderSimple} unReadCount={unReadCount} />
                         <main className={mainClass}>
                             <>
                                 {children}

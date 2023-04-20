@@ -11,12 +11,13 @@ import Swal from 'sweetalert';
 const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<ContactMeFieldsInfoConfig>();
-    const {mountMessages} = usePortalProvider();
+    const {fetchUnreadCount} = usePortalProvider();
 
     const resetForm = () => {
         const form = document.querySelector('.contactMe-form') as HTMLFormElement;
         setTimeout(() => {
             form.reset();
+            fetchUnreadCount();
         }, 1000);
     };
 
@@ -44,7 +45,6 @@ const ContactMeSection: React.FC<ContactMeServerDataProps> = ({ contactMe }) => 
 
     const onSubmit = (data: ContactMeFieldsInfoConfig) => {
         postData(data);
-        mountMessages();
         resetForm();
     };
 

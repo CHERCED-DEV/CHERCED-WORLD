@@ -4,29 +4,12 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import Mail from '../../../../public/assets/icons/Mail.svg';
 
+interface InBoxAlertConfig {
+    unReadCount: number;
+}
 
-
-export function InboxAlert() {
-    const [unReadCount, setUnReadCount] = useState<number>(0);
-    const router = useRouter();
-
-    useEffect(() => {
-        const fetchUnreadCount = async () => {
-            try {
-                const response = await fetch(`/api/sockets/newMessage`);
-                const data = await response.json();
-                setUnReadCount(data.notification);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        if (router.asPath === "/inbox") {
-            fetchUnreadCount();
-        } else {
-            fetchUnreadCount();
-        }
-        
-    }, [router.asPath]);
+export function InboxAlert({unReadCount}:InBoxAlertConfig) {
+     
 
     return (
         <>
