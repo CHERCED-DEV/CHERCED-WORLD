@@ -29,7 +29,7 @@ const LayOut: React.FC<LayoutPropsConfig> = memo(function LayOut({ children, mai
             setHeaderSimple(false);
         }
         fetchUnreadCount();
-    }, [pageClass,fetchUnreadCount])
+    }, [pageClass])
 
     useEffect(() => {
         const storedValue = window.sessionStorage.getItem('isLoading');
