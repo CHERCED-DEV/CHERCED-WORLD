@@ -36,8 +36,8 @@ export const Login = () => {
                     text: "Thank you for submitting your post, we will review it soon.",
                     icon: "success",
                 });
-                router.push("/inbox");
                 setSession(!session);
+                router.push("/inbox");
                 setTimeout(() => {
                     setModalSwitch(!modalSwitch);
                 }, 500)
