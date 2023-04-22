@@ -35,7 +35,7 @@
 .aboutMe-containerExp__title {
     @include font-size($f-size);
     font-weight: $f-weight-bold;
-    margin-left: calculateRem(20px);
+    margin-left: calculateRem(50px);
 }
 
 .aboutMe-containerExp__subTitle {
@@ -47,6 +47,7 @@
 .aboutMe-career__containerExp {
     >hr {
         margin: calculateRem(40px) calculateRem(30px) 0;
+        box-shadow: 4px 0px 18px rgba(0, 0, 0, 0.50);
     }
 }
 

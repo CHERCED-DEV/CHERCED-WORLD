@@ -20,9 +20,11 @@
 }
 
 .blog-carrousel__img {
-    margin: calculateRem(20px) 0;
-    width: calculateRem(250px);
-    border-radius: calculateRem(16px);
+    margin: calculateRem(30px) 0 calculateRem(40px);
+    img {
+        border-radius: calculateRem(50px) 0 calculateRem(70px);
+        box-shadow: 7px 10px 20px 0px #00000085;
+    }
 }
 
 .blog-carrousel__button {

@@ -47,6 +47,7 @@ $parentSize: 16px;
     text-align: center;
     border: calculateRem(8px) solid #000000;
     padding: calculateRem(20px);
+    box-shadow:  calculateRem(7px)  calculateRem(11px)  calculateRem(20px)  calculateRem(0px) grey;
 }
 
 @mixin fieldsContactMeInput() {
