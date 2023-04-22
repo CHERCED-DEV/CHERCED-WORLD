@@ -38,6 +38,7 @@ ol {
     justify-content: center;
     align-items: flex-end;
     color: white;
+    z-index: $modal-zindex;
 
     @media screen and (min-width: calculateRem(768px)) {
         top: -10px;
@@ -138,6 +139,8 @@ ol {
 
 .inboxAlert {
     margin-left: calculateRem(8px);
+    border: none;
+    background: transparent;
 }
 
 .inboxAlert_counter {
