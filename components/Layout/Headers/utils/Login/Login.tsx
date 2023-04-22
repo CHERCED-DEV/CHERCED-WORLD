@@ -13,7 +13,7 @@ interface credentialsConfig {
 export const Login = () => {
     const router = useRouter()
     const [showModal, setShowModal] = useState(false);
-    const { modalSwitch, setModalSwitch } = usePortalProvider();
+    const { session, setSession, modalSwitch, setModalSwitch } = usePortalProvider();
     const { register, handleSubmit, formState: { errors } } = useForm<credentialsConfig>();
 
     useEffect(() => {
@@ -37,9 +37,10 @@ export const Login = () => {
                     icon: "success",
                 });
                 router.push("/inbox");
+                setSession(!session);
                 setTimeout(() => {
                     setModalSwitch(!modalSwitch);
-                }, 900)
+                }, 500)
             } else {
                 throw new Error("Invalid credentials");
             }

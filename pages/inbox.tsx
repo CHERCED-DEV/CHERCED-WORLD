@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { getInBoxData } from '../utils/providers/requests/homeCB';
 import Head from 'next/head';
+import { getInBoxData } from '../utils/providers/requests/homeCB';
+import { usePortalProvider } from '../utils/providers/modalProvider'; 
+
 
 
 export default function SecretPage({ inbox }: SecretPageProps) {
-
+    const {session} =  usePortalProvider();
     const [showTable, setShowTable] = useState(false);
     const [sorterData, setSorterData] = useState(inbox)
 
@@ -60,6 +62,10 @@ export default function SecretPage({ inbox }: SecretPageProps) {
     const toggleTable = () => {
         setShowTable(!showTable);
     };
+
+    if (!session) {
+        return <h1>Inicia sesión para ver esta página</h1>;
+    }
 
     return (
         <>
