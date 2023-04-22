@@ -39,7 +39,9 @@ export const Login = () => {
                 setTimeout(() => {
                     router.push("/inbox");
                     setModalSwitch(!modalSwitch);
-                }, 1800)
+                }, 900)
+            } else {
+                throw new Error("Invalid credentials");
             }
         } catch (error) {
             console.error(error);
