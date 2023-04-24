@@ -159,47 +159,55 @@ export const CMS: {
 				"Knowledge in tools such as Umbraco and other CMSs for developing and maintaining."
 			],
 			techList: [
-				{
-					techName: "HTML5",
-					img: {
-						src: "/assets/icons/skillsIcon/html-5.png",
-						alt: "HTML5",
-					},
-					progress: "50"
-				},
-				{
-					techName: "CSS",
-					img: {
-						src: "/assets/icons/skillsIcon/css.png",
-						alt: "CSS",
-					},
-					progress: "50"
-				},
-				{
-					techName: "SASS",
-					img: {
-						src: "/assets/icons/skillsIcon/sass.png",
-						alt: "SASS",
-					},
-					progress: "50"
-				},
-				{
-					techName: "JAVASCRIPT",
-					img: {
-						src: "/assets/icons/skillsIcon/js.png",
-						alt: "JAVASCRIPT",
-					},
-					progress: "50"
-				},
-				{
+                {
 					techName: "REACT",
 					img: {
 						src: "/assets/icons/skillsIcon/react.png",
 						alt: "REACT",
 					},
-					progress: "50"
+					progress: "75"
 				},
-				{
+                {
+					techName: "NEXTJS",
+					img: {
+						src: "/assets/icons/skillsIcon/nextjs.png",
+						alt: "NEXTJS",
+					},
+					progress: "80"
+				},
+                {
+					techName: "TYPESCRIPT",
+					img: {
+						src: "/assets/icons/skillsIcon/typescript.png",
+						alt: "TYPESCRIPT",
+					},
+					progress: "80"
+				},
+                {
+					techName: "NODEJS",
+					img: {
+						src: "/assets/icons/skillsIcon/nodejs.png",
+						alt: "NODEJS",
+					},
+					progress: "75"
+				},
+                {
+					techName: "MONGO",
+					img: {
+						src: "/assets/icons/skillsIcon/mongodb.png",
+						alt: "MONGO",
+					},
+					progress: "60"
+				},
+                {
+					techName: "JAVASCRIPT",
+					img: {
+						src: "/assets/icons/skillsIcon/js.png",
+						alt: "JAVASCRIPT",
+					},
+					progress: "90"
+				},
+                {
 					techName: "ANGULAR",
 					img: {
 						src: "/assets/icons/skillsIcon/angular.png",
@@ -207,29 +215,29 @@ export const CMS: {
 					},
 					progress: "50"
 				},
-				{
-					techName: "NEXTJS",
+                {
+					techName: "SASS",
 					img: {
-						src: "/assets/icons/skillsIcon/nextjs.png",
-						alt: "NEXTJS",
+						src: "/assets/icons/skillsIcon/sass.png",
+						alt: "SASS",
 					},
-					progress: "50"
+					progress: "90"
 				},
 				{
-					techName: "MONGO",
+					techName: "HTML5",
 					img: {
-						src: "/assets/icons/skillsIcon/mongodb.png",
-						alt: "MONGO",
+						src: "/assets/icons/skillsIcon/html-5.png",
+						alt: "HTML5",
 					},
-					progress: "50"
+					progress: "85"
 				},
 				{
-					techName: "NODEJS",
+					techName: "CSS",
 					img: {
-						src: "/assets/icons/skillsIcon/nodejs.png",
-						alt: "NODEJS",
+						src: "/assets/icons/skillsIcon/css.png",
+						alt: "CSS",
 					},
-					progress: "50"
+					progress: "95"
 				},
 				{
 					techName: "FIGMA",
@@ -237,7 +245,7 @@ export const CMS: {
 						src: "/assets/icons/skillsIcon/figma.png",
 						alt: "FIGMA",
 					},
-					progress: "50"
+					progress: "75"
 				},
 				{
 					techName: "GIT",
@@ -245,7 +253,7 @@ export const CMS: {
 						src: "/assets/icons/skillsIcon/merge.png",
 						alt: "GIT",
 					},
-					progress: "50"
+					progress: "80"
 				},
 				{
 					techName: "AZURE",
@@ -253,7 +261,7 @@ export const CMS: {
 						src: "/assets/icons/skillsIcon/azure.png",
 						alt: "AZURE",
 					},
-					progress: "50"
+					progress: "70"
 				}
 			],
 
@@ -393,7 +401,7 @@ export const CMS: {
 	},
 	contactMe: {
 		title: "Contact",
-		description: "My name is Camilo Hernandez, I’m a third year Applied Computer Science student at UNAD University of Science and Technology in Bogota Colombia.",
+		description: "Hi, I'm Camilo Hernandez, a professional full-stack developer with a strong focus on MERN stack development. With 3 years of experience in the industry, I have honed my skills in building robust and scalable web applications using TypeScript and Next.js.",
 		separator: {
 			src: "/assets/icons/separatorBlack.png",
 			alt: "separator"

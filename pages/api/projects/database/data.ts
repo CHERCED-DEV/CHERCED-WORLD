@@ -41,7 +41,7 @@ const allData: ProjectsConfig[] = [
             "p3": 'Furthermore, the use of CMSCUSTOM and MONGODB allows for easy content management and efficient data storage, respectively. This ensures that the web portfolio is highly scalable and can easily adapt to any future changes or updates. Overall, this project is my minimum viable product (MVP) and showcases my skills, experience, and expertise in web development.'
         },
         "image": {
-            "src": "/assets/imgs/projects/webSite.png",
+            "src": "/assets/imgs/projects/chercedWorld.png",
             "alt" : "My Website",
             "width": "422",
             "height": "904",

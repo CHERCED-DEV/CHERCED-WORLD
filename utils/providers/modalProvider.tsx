@@ -1,4 +1,4 @@
-import { useState, useContext, createContext, useCallback, useEffect } from 'react';
+import { useState, useContext, createContext } from 'react';
 import { ContextProviderProps } from '../../pages/api/customCMS/interfaces';
 
 const PortalContext = createContext<{
