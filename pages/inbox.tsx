@@ -39,7 +39,8 @@ export default function SecretPage({ inbox }: SecretPageProps) {
     useEffect(() => {
         const resetNotifications = async () => {
             try {
-                const data = await fetch("/api/sockets/newMessage",
+                if(session){
+                    const data = await fetch("/api/sockets/newMessage",
                     {
                         method: "PUT",
                         headers: {
@@ -51,13 +52,18 @@ export default function SecretPage({ inbox }: SecretPageProps) {
                     }
                 );
                 console.log("Reset notifications successful");
+                } else {
+                    throw new Error("session its not alowed");
+                    
+                }
             } catch (error) {
                 console.error("Error resetting notifications:", error);
             }
         };
 
         resetNotifications();
-    }, []);
+
+    }, [session]);
 
     const toggleTable = () => {
         setShowTable(!showTable);

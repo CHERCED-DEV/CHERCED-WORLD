@@ -43,8 +43,8 @@ const allData: ProjectsConfig[] = [
         "image": {
             "src": "/assets/imgs/projects/chercedWorld.png",
             "alt" : "My Website",
-            "width": "422",
-            "height": "904",
+            "width": "420",
+            "height": "870",
         },            
         "link": "https://cherced-world.vercel.app/",
         "github": "https://github.com/CHERCED-DEV/CHERCED-WORLD",
@@ -84,28 +84,31 @@ const allData: ProjectsConfig[] = [
             "FIGMA"
         ]
     },
-    /* {
+    {
         "id": "4",
-        "title": "My Website",
-        "description": "This project has been my personal challenge, I built it in html and css in the first instance, now I have been transforming it, it was vanillaJs, and now it is React, using NextJs as a framework, in the future I want to make a Blog in it.",
+        "title": "E-Shop",
+        "description": {
+            "p1": "This web application is built using React, a popular JavaScript library for building user interfaces, and configured with Webpack, a popular build tool that helps manage assets and dependencies. The app allows users to browse and purchase items through a shopping cart feature, which is managed using Hooks, a new addition to React that allows for more concise and efficient code.",
+            "p2": "The shopping cart functionality includes the ability to add and remove items, update the cart total, and checkout securely. These actions are handled through Axios, a popular HTTP client library that simplifies making requests to external APIs. The app also utilizes responsive design to ensure that the user experience is optimized on both desktop and mobile devices.",
+            "p3": "Overall, this web application is a modern and efficient solution for online shopping. By utilizing React, Webpack, Hooks, and Axios, it is able to deliver a fast and responsive experience to users, while also providing a robust shopping cart system that is easy to use and secure.",
+        },
         "image": {
-            "src": "/assets/imgs/projects/webSite.png",
+            "src": "/assets/imgs/projects/eshop.png",
             "alt" : "My Website",
-            "width": "422",
-            "height": "904",
+            "width": "418",
+            "height": "871",
         },            
-        "link": "https://mywebsite-peach.vercel.app/",
-        "github": "https://github.com/Cherced/mywebsite",
+        "link": "https://e-shop-cherced.netlify.app/",
+        "github": "https://github.com/CHERCED-DEV/react-Shop.git",
         "technologies": [
             "HTML",
             "CSS",
-            "SASS",
             "JAVASCRIPT",
             "REACT",
-            "NEXTJS",
+            "WEBPACK",
             "FIGMA"
         ]
-    }, */
+    },
     {
         "id": "5",
         "title": "BookingUI system",
@@ -233,8 +236,8 @@ const allData: ProjectsConfig[] = [
         },"image": {
             "src": "/assets/imgs/projects/page.png",
             "alt" : "AIRLINE",
-            "width": "1200",
-            "height": "1407",
+            "width": "403",
+            "height": "868",
         },  
         "link": "https://airlines-cherced.vercel.app/",
         "github": "https://github.com/Cherced/ProyectoHernandez.git",
