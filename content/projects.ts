@@ -63,7 +63,7 @@ export const projects: Project[] = [
     result: null,
     technologies: ['HTML', 'CSS', 'SASS', 'TYPESCRIPT', 'REACT', 'NEXTJS', 'FIGMA'],
     image: {
-      src: '/assets/imgs/projects/chercedWorld.png',
+      src: '/assets/imgs/projects/chercedWorld.webp',
       alt: { en: 'CHERCED-WORLD portfolio on mobile', es: 'Portafolio CHERCED-WORLD en móvil' },
       width: 420,
       height: 870,

@@ -39,7 +39,7 @@ export const site: SiteContent = {
       es: 'Soy desarrollador front-end con experiencia construyendo aplicaciones web muy interactivas y de alto rendimiento. Me especializo en React y Angular, y tengo conocimiento profesional de HTML, CSS, JavaScript, TypeScript, Node.js y Next.js.',
     },
     image: {
-      src: '/assets/imgs/meParallax.png',
+      src: '/assets/imgs/meParallax.webp',
       alt: { es: 'Camilo Hernandez con los brazos cruzados', en: 'Camilo Hernandez with his arms crossed' },
       width: 500,
       height: 627,
@@ -152,7 +152,7 @@ export const site: SiteContent = {
           en: 'I can design your website based on your needs and ideas, or create it from scratch while consulting with you along the way.',
           es: 'Puedo diseñar tu sitio a partir de tus necesidades e ideas, o crearlo desde cero consultándote durante el proceso.',
         },
-        icon: '/assets/icons/services/desing.png',
+        icon: '/assets/icons/services/design.png',
       },
       {
         id: 'development',
