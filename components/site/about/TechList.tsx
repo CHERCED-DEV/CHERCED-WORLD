@@ -5,10 +5,21 @@ import { useId, useState } from 'react'
 import { buttonClassName } from '@/components/ui/Button'
 import styles from './About.module.scss'
 import { LevelBar } from './LevelBar'
+import { monogram } from './monogram'
 
-export type TechItem = { id: string; name: string; icon: string; level: number; levelLabel: string }
+export type TechItem = { id: string; name: string; icon?: string; level: number; levelLabel: string }
 
 export const TECH_VISIBLE_ON_MOBILE = 4
+
+function TechBadge({ name, icon }: { name: string; icon?: string }) {
+  if (icon) return <Image src={icon} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
+  const initials = monogram(name)
+  return (
+    <span className={styles.techMonogram} data-cw-monogram={initials} data-length={initials.length} aria-hidden="true">
+      {initials}
+    </span>
+  )
+}
 
 export function TechList({ items, showMore, showLess }: { items: TechItem[]; showMore: string; showLess: string }) {
   const [expanded, setExpanded] = useState(false)
@@ -26,7 +37,7 @@ export function TechList({ items, showMore, showLess }: { items: TechItem[]; sho
             {...(index >= TECH_VISIBLE_ON_MOBILE ? { 'data-extra': '' } : {})}
           >
             <p className={styles.techName}>{item.name}</p>
-            <Image src={item.icon} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
+            <TechBadge name={item.name} icon={item.icon} />
             <LevelBar value={item.level} label={item.levelLabel} />
           </li>
         ))}
