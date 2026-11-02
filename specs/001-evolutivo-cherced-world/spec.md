@@ -26,7 +26,8 @@ ejecutaban y textos con errores ("Actually", "Idioms", "All Rigths Reserved").
 
 ### Session 2026-11-01
 
-- Q: ¿Modo de trabajo de Factoria? → A: Full-Stack Next.js 16 + React 19 (factory `next`).
+- Q: ¿Con qué stack y bajo qué gobernanza? → A: Full-Stack con Next.js 16 y React 19. Sin Factoria ni
+  otras herramientas de Sistecredito: es un proyecto personal.
 - Q: ¿Qué funcionalidades nuevas entran? → A: las cuatro (administración con tiempo real, bilingüe y blog
   enriquecido, asistente del CV, capa de experiencia), sin que el sitio deje de ser lo que ya es.
 - Q: ¿Restricciones de operación? → A: nada robusto de más; sin infraestructura ni variables nuevas en
@@ -613,8 +614,6 @@ descubrir la cápsula con el comando secreto.
   quiere un modelo real, es una enmienda de alcance que tiene que respetar los principios III y VIII.
 - Navegadores objetivo: las dos últimas versiones de Chrome, Edge, Firefox y Safari, en escritorio y
   móvil.
-- El modo de trabajo es Factoria `next`. La tensión entre su regla BFF y la restricción de no añadir
-  servicios se resuelve en `/speckit.plan` (TODO(FACTORIA_BFF_TENSION) de la constitución).
 - El archivo de datos de prueba `messages.json` de la raíz del repositorio se elimina.
 - Mensajes y comentarios se conservan hasta que el administrador los elimina. La política de privacidad
   lo declara así.

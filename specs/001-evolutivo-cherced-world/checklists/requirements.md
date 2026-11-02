@@ -40,8 +40,7 @@
   requisitos (FR-110 a FR-114) los expresan de forma agnóstica.
 - "React" aparece en US7 y US8 como contenido del portafolio (un filtro de tecnologías y una pregunta de
   ejemplo), no como tecnología del sistema.
-- Pendiente para `/speckit.plan`: TODO(FACTORIA_BFF_TENSION) y TODO(FACTORIA_CONTEXT) de la
-  constitución. Ambos necesitan el MCP de Factoria autenticado.
+- Factoria salió del proyecto (constitución 2.0.0): sus TODOs quedaron sin objeto o resueltos.
 - Revalidación tras `/speckit.clarify` (2026-11-01, 4 preguntas: entrega en un solo corte, login con
   contraseña y código inicial, respuesta del autor a comentarios, autorización de datos): 16/16 → 16/16.
   Sin regresiones. FR-048 dejó de ser abstracto y pasó a ser verificable; se agregaron FR-036, FR-049,

@@ -1,28 +1,19 @@
 <!--
 Sync Impact Report
-- Version change: (plantilla sin ratificar) → 1.0.0
-- Principios definidos (nuevos):
-  I. Evolución, no reemplazo (NON-NEGOTIABLE)
-  II. Glass sobre movimiento
-  III. Seguridad real, cero cartón (NON-NEGOTIABLE)
-  IV. Contenido como datos, renderizado en servidor
-  V. Rendimiento y accesibilidad medibles
-  VI. Calidad verificable
-  VII. Líneas de trabajo con propiedad exclusiva (NON-NEGOTIABLE)
-  VIII. Simplicidad operativa (NON-NEGOTIABLE)
-- Secciones añadidas: "Restricciones técnicas y cumplimiento Factoria", "Flujo de trabajo y quality gates"
-- Secciones eliminadas: ninguna
-- Plantillas dependientes: plan-template.md, spec-template.md y tasks-template.md leen esta constitución
-  en tiempo de ejecución; no se modificaron.
-- TODOs diferidos:
-  - TODO(FACTORIA_CONTEXT): las políticas, ADRs y Golden Rules de la factory "next" deben cargarse con
-    get_factory_context("next") antes de /speckit.plan. El MCP de Factoria requería autenticación el
-    2026-11-01, así que su contenido no está transcrito aquí y no se debe suponer.
-  - TODO(ADO_CONTEXT): la consulta a Azure DevOps falló el 2026-11-01 ("fetch failed"); repetirla antes
-    del plan por si existen work items relacionados.
-  - TODO(FACTORIA_BFF_TENSION): la regla BFF de la factory "next" (sin acceso directo a BD) y el
-    principio VIII (sin servicios nuevos, reutilizar la BD que ya existe) están en tensión. Se resuelve
-    en /speckit.plan con el contexto de Factoria cargado. Ningún artefacto la da por resuelta antes.
+- Version change: 1.0.0 → 2.0.0 (MAJOR: se elimina la gobernanza externa de Factoria) → 2.0.1 (PATCH:
+  el principio III acepta sesiones con token opaco validado en servidor además de tokens firmados, sin
+  cambiar su intención)
+- Principios modificados:
+  VI. Calidad verificable: la referencia a la política "testing" de Factoria y la cadena
+      security-scan → pruebas → documentación pasan a un gate de calidad propio del proyecto.
+- Secciones renombradas: "Restricciones técnicas y cumplimiento Factoria" → "Restricciones técnicas".
+- Secciones eliminadas: dependencia de Factoria, Compliance Gate y Azure DevOps como fuente funcional.
+  Motivo: Factoria y las demás herramientas corporativas son de Sistecredito y no se usan en proyectos
+  personales (decisión del autor, 2026-11-01).
+- TODOs resueltos: TODO(FACTORIA_CONTEXT) y TODO(ADO_CONTEXT) quedan sin objeto.
+  TODO(FACTORIA_BFF_TENSION) se resuelve: la app accede a la base existente desde una capa de datos que
+  solo corre en el servidor (sección "Restricciones técnicas").
+- Plantillas dependientes: sin cambios; leen esta constitución en tiempo de ejecución.
 -->
 
 # CHERCED-WORLD Constitution
@@ -72,8 +63,9 @@ El glass solo luce si el fondo se mueve con fluidez y el texto se sigue leyendo.
 ### III. Seguridad real, cero cartón (NON-NEGOTIABLE)
 
 - Los secretos, credenciales y claves MUST NOT viajar al cliente ni quedar versionados en el repositorio.
-- La autenticación MUST resolverse en el servidor con sesiones firmadas y expirables. El estado de UI
-  nunca es prueba de sesión.
+- La autenticación MUST resolverse en el servidor con sesiones expirables y no falsificables: token
+  opaco aleatorio validado contra el servidor, o token firmado. El estado de UI nunca es prueba de
+  sesión.
 - Cada endpoint o dato protegido MUST verificar autorización en el servidor. Ocultar un botón no es
   control de acceso.
 - Los datos personales de visitantes (correo, teléfono, mensaje) MUST ser visibles solo para el
@@ -124,9 +116,9 @@ presupuestos convierten "se siente rápido" en algo verificable.
   datos personales y contratos; menos en decoración.
 - Los contratos compartidos (tipos de contenido, contratos de API, design tokens) MUST tener pruebas de
   contrato que fallen si un consumidor y un proveedor divergen.
-- Después de cada cambio de código MUST ejecutarse la cadena: security-scan → pruebas → documentación.
-- Cobertura, herramientas y umbrales de prueba se rigen por la política `testing` de Factoria, no por
-  esta constitución.
+- Antes de integrarse, cada lane MUST pasar el gate de calidad: lint, verificación de tipos, pruebas,
+  build de producción y auditoría de dependencias sin vulnerabilidades altas ni críticas. La
+  documentación afectada MUST actualizarse en el mismo cambio.
 
 **Rationale**: la versión 2023 no tenía pruebas, y sus validaciones de Mongoose (`require` en lugar de
 `required`) nunca se ejecutaron sin que nadie lo notara.
@@ -169,41 +161,33 @@ escenario de aceptación:
 **Rationale**: el autor quiere un sitio que se mantenga solo. Cada servicio o variable de más es algo
 que se rompe en silencio el día que nadie lo está mirando.
 
-## Restricciones técnicas y cumplimiento Factoria
+## Restricciones técnicas
 
-- Modo de trabajo: **Full-Stack (Next.js 16 + React 19)**, factory `next` de Factoria.
-- Las políticas (`security`, `testing`, `coding-standards`), los ADRs y las Golden Rules de la factory
-  `next` son vinculantes y prevalecen sobre cualquier preferencia de este documento. MUST cargarse desde
-  el MCP de Factoria con `get_factory_context("next")`. Las reglas de Factoria MUST NOT suponerse ni
-  transcribirse de memoria.
-- Regla BFF de la factory `next`: la aplicación Next.js no accede directamente a bases de datos. El
-  principio VIII prohíbe servicios nuevos y pide reutilizar la base de datos existente. Esa tensión
-  MUST resolverse en `/speckit.plan` con el contexto de Factoria cargado (TODO(FACTORIA_BFF_TENSION)), y
-  la resolución MUST quedar registrada en el plan como decisión explícita.
-- `/speckit.plan` MUST pasar el Compliance Gate de Factoria (Gate 1: políticas; Gate 2: ADRs y estructura
-  ADR-001; Gate 3: workflow cargado) antes de producir arquitectura.
-- Documentación generada en español, con términos técnicos en inglés. Sin comentarios en el código
-  fuente salvo que el framework o una herramienta los requiera.
-- Azure DevOps es la fuente funcional (work items, criterios de aceptación). Las escrituras en Azure
-  DevOps, Datadog o Fluid Attacks solo ocurren cuando el autor lo pide.
+- Stack: Next.js 16 y React 19 con App Router y TypeScript estricto, desplegado en el proyecto de Vercel
+  que ya existe.
+- Proyecto personal: MUST NOT usarse herramientas, servicios, conectores ni identidades corporativas
+  (Factoria, Azure DevOps, Datadog o Fluid Attacks de Sistecredito, ni correos de empleadores).
+- Datos: la aplicación accede a la base de datos existente solo desde código que corre en el servidor,
+  concentrado en una única capa de datos. Ningún módulo que llegue al cliente MUST importar esa capa.
+- Documentación en español, con términos técnicos en inglés. Sin comentarios en el código fuente salvo
+  que el framework o una herramienta los requiera.
 
 ## Flujo de trabajo y quality gates
 
-1. `/speckit.specify` → `/speckit.clarify` (opcional) → `/speckit.plan` con Compliance Gate →
-   `/speckit.tasks` organizado por lanes → `/speckit.analyze` → `/speckit.implement` por lane.
+1. `/speckit.specify` → `/speckit.clarify` (opcional) → `/speckit.plan` → `/speckit.tasks` organizado
+   por lanes → `/speckit.analyze` → `/speckit.implement` por lane.
 2. Cada lane trabaja en su propia rama o worktree y entrega su propio PR. Un PR MUST tocar solo rutas
    de su lane. `main` es producción: todo lo que se integra a `main` se despliega solo, así que un PR
    MUST estar listo para producción al integrarse.
 3. Definition of Done de una tarea: escenarios de aceptación cubiertos por pruebas, presupuestos del
-   principio V sin regresión, security-scan limpio, documentación actualizada y cero rutas ajenas
-   modificadas.
+   principio V sin regresión, gate de calidad del principio VI en verde, documentación actualizada y
+   cero rutas ajenas modificadas.
 4. Ninguna lane se integra si rompe un contrato congelado. La lane Foundation se integra primero y el
    resto sigue el orden de `tasks.md`.
 
 ## Governance
 
-- Esta constitución prevalece sobre cualquier otra práctica del repositorio, excepto las políticas,
-  ADRs y Golden Rules de Factoria, que prevalecen sobre ella.
+- Esta constitución prevalece sobre cualquier otra práctica del repositorio.
 - Enmiendas: se proponen por escrito con su motivación, se registran en el Sync Impact Report y
   requieren aprobación del autor del proyecto.
 - Versionado semántico: MAJOR si se elimina o redefine un principio; MINOR si se añade un principio o
@@ -211,4 +195,4 @@ que se rompe en silencio el día que nadie lo está mirando.
 - Revisión de cumplimiento: cada plan, cada `tasks.md` y cada PR MUST verificar los principios I, III,
   VII y VIII de forma explícita.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-01 | **Last Amended**: 2026-11-01
+**Version**: 2.0.1 | **Ratified**: 2026-11-01 | **Last Amended**: 2026-11-01
