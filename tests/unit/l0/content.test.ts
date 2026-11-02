@@ -110,7 +110,7 @@ describe('seeds de contenido', () => {
     for (const tech of site.about.skills.tech) expect(tech.progress).toBeGreaterThanOrEqual(0)
     for (const tech of site.about.skills.tech) expect(tech.progress).toBeLessThanOrEqual(100)
     expect(site.socials.find((s) => s.id === 'facebook')?.href).toBeNull()
-    expect(site.about.career.some((entry) => entry.pending)).toBe(true)
+    expect(site.about.career.some((entry) => entry.pending)).toBe(false)
     for (const entry of site.about.career) expect(entry.start).toMatch(/^\d{4}-\d{2}$/)
     const ids = content.getProjects().map((p) => p.id)
     expect(new Set(ids).size).toBe(ids.length)

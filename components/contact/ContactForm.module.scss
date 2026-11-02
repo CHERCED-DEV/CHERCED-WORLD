@@ -8,6 +8,12 @@
     border-left: 4px solid var(--cw-fg);
     border-bottom: 4px solid var(--cw-fg);
   }
+
+  input[type='checkbox'] {
+    flex: none;
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .note {

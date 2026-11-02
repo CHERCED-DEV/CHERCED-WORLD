@@ -163,7 +163,7 @@ test.describe('asistente', () => {
 
     const tech = await askAssistant(page, 'q tecnologias usa?')
     await expect(tech).toHaveAttribute('data-cw-answer-kind', 'answer')
-    await expect(tech).toContainText('React')
+    await expect(tech).toContainText('Angular')
     await expect(tech.getByRole('link', { name: 'Sobre mí' })).toHaveAttribute('href', '/es/aboutMe')
 
     const projects = await askAssistant(page, 'what projects u did with react')

@@ -2,7 +2,9 @@
 
 .section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--cw-space-7);
+  overflow-wrap: anywhere;
   padding-block: var(--cw-space-7);
 
   @include bp.up(lg) {
@@ -37,6 +39,12 @@
   letter-spacing: 0.355em;
   text-transform: uppercase;
   text-wrap: balance;
+  max-width: 100%;
+
+  @include bp.down(md) {
+    padding: var(--cw-space-4);
+    letter-spacing: 0.16em;
+  }
 }
 
 .lead {
@@ -77,4 +85,7 @@
 
 .cta {
   align-self: center;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
 }

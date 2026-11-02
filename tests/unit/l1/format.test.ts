@@ -72,10 +72,17 @@ describe('redes del banner del home', () => {
 
 describe('título de la introducción de servicios', () => {
   it('separa la pregunta inicial del cuerpo en ambos idiomas', () => {
+    expect(splitLead('How can I help you? I build web apps.')).toEqual({ lead: 'How can I help you?', body: 'I build web apps.' })
+    expect(splitLead('¿Cómo te puedo ayudar? Construyo aplicaciones web.')).toEqual({
+      lead: '¿Cómo te puedo ayudar?',
+      body: 'Construyo aplicaciones web.',
+    })
+  })
+
+  it('la introducción 2026 no empieza con pregunta y el título sale del diccionario', () => {
     const { intro } = getSite().services
-    expect(splitLead(intro.en).lead).toBe('How can I help you?')
-    expect(splitLead(intro.es).lead).toBe('¿Cómo te puedo ayudar?')
-    expect(splitLead(intro.en).body.startsWith("I'm a full-stack developer")).toBe(true)
+    expect(splitLead(intro.es)).toEqual({ lead: null, body: intro.es })
+    expect(splitLead(intro.en)).toEqual({ lead: null, body: intro.en })
   })
 
   it('no inventa título si el texto no empieza con una pregunta', () => {
