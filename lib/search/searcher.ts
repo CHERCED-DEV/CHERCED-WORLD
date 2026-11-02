@@ -3,9 +3,9 @@ import { processTerm, tokenize } from './text'
 
 export type Searchable = { id: string; title: string; text: string; keywords: string }
 
-export type SearchHit<T> = { doc: T; score: number }
+export type SearchHit<T> = { doc: T; score: number; matched: string[] }
 
-export type SearchOptions<T> = { limit?: number; filter?: (doc: T) => boolean }
+export type SearchOptions<T> = { limit?: number; filter?: (doc: T) => boolean; exact?: boolean }
 
 export type Searcher<T> = { search: (query: string, options?: SearchOptions<T>) => SearchHit<T>[]; size: number }
 
@@ -32,10 +32,11 @@ export function createSearcher<T extends Searchable>(docs: readonly T[]): Search
     search(query, options = {}) {
       if (tokenize(query).length === 0) return []
       const hits: SearchHit<T>[] = []
-      for (const result of mini.search(query)) {
+      const results = options.exact ? mini.search(query, { prefix: false, fuzzy: false }) : mini.search(query)
+      for (const result of results) {
         const doc = byId.get(String(result.id))
         if (!doc || (options.filter && !options.filter(doc))) continue
-        hits.push({ doc, score: result.score })
+        hits.push({ doc, score: result.score, matched: result.queryTerms })
         if (options.limit && hits.length >= options.limit) break
       }
       return hits
