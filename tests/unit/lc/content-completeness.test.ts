@@ -28,7 +28,7 @@ const content = await import('@/lib/content')
 
 const LOCALES: Locale[] = ['es', 'en']
 const PUBLIC_DIR = path.resolve(process.cwd(), 'public')
-const POST_IDS = ['post1', 'post2', 'post3', 'post4']
+const POST_IDS = ['post1', 'post2', 'post3', 'post4', 'post5']
 const PROJECT_IDS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 const PROJECTS_WITHOUT_LINKS = ['10', '12']
 const REGISTRY_TEXT = readFileSync(path.join(POSTS_DIR, 'registry.ts'), 'utf8')
@@ -38,6 +38,7 @@ const POST_ORIGIN: Record<string, { originalLang: Locale; date: RegExp }> = {
   post2: { originalLang: 'en', date: /^2023-\d{2}-\d{2}$/ },
   post3: { originalLang: 'en', date: /^2023-\d{2}-\d{2}$/ },
   post4: { originalLang: 'es', date: /^2026-11-02$/ },
+  post5: { originalLang: 'es', date: /^2026-11-02$/ },
 }
 
 const SKILLS_2026: Record<string, number> = {
@@ -285,7 +286,7 @@ describe('proyectos (FR-083)', () => {
 })
 
 describe('posts (FR-064, FR-075)', () => {
-  it('hay 4 posts en español e inglés y todos están en el registro', () => {
+  it('hay 5 posts en español e inglés y todos están en el registro', () => {
     const dirs = readdirSync(POSTS_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
@@ -338,7 +339,7 @@ describe('posts (FR-064, FR-075)', () => {
     expect(en).toContain('looking for opportunities outside Colombia')
   })
 
-  it('lista los 4 posts en cada idioma sin fallback', async () => {
+  it('lista los 5 posts en cada idioma sin fallback', async () => {
     for (const lang of LOCALES) {
       const listed = await content.listPosts(lang)
       expect(listed.map((post) => post.id).sort(), lang).toEqual(POST_IDS)

@@ -1,0 +1,145 @@
+export const meta = {
+  id: 'post5',
+  lang: 'es',
+  originalLang: 'es',
+  title: 'Querido Camilo de 2023: una auditoría con cariño y sin anestesia',
+  description: 'Claude leyó todo el código de mi portafolio de 2023 y me lo contó tal cual: todo acoplado, responsabilidades revueltas y un "CMS" que vivía en el navegador.',
+  date: '2026-11-02',
+  tags: ['refactoring', 'architecture', 'humor', 'coupling'],
+  image: {
+    src: '/assets/imgs/posts/post5.webp',
+    alt: 'Captura del home de CHERCED-WORLD en su versión de 2023',
+    width: 1440,
+    height: 900,
+  },
+  author: 'Camilo Hernandez',
+}
+
+> Este post lo escribe Claude, el agente que Camilo usó para evolucionar este portafolio. Me pidió una
+> sola cosa: "hazme reír con las locuras que hacía". Cumplo.
+
+## El primer día
+
+Camilo me pasó el repositorio de 2023 y me dijo: "esto es más viejo que tú". Casi: su primer commit es del
+3 de enero de 2023 y yo salí en marzo. Me gana por dos meses. Lo que no me dijo es que en esos dos meses le
+alcanzó para acoplar absolutamente todo con absolutamente todo.
+
+No es un reproche. Es un diagnóstico. Y como todo buen diagnóstico, empieza con los síntomas.
+
+## Síntoma 1: una API que se llamaba a sí misma por teléfono
+
+Para mostrar un post, la página hacía una petición HTTP a su propia API. Esa API hacía **otra** petición
+HTTP a otra ruta de su propia API. Y esa última devolvía un arreglo importado de un archivo que estaba en
+la misma carpeta.
+
+```ts
+// 2023: pages/api/blog/posts/[id].ts
+const response = await fetch(`${process.env.VERCEL_URL_CORS}/api/blog/posts`)
+const posts = await response.json()
+const post = posts.find((p) => p.id === postId)
+```
+
+Tres viajes por internet para leer un archivo vecino. Es como llamar a tu mamá para preguntarle qué hay en
+tu nevera, y que tu mamá llame a la nevera.
+
+De bonus, dentro de las API routes de Next vivían **siete** aplicaciones de Express, cada una con su CORS
+registrado **después** de las rutas. O sea, nunca se ejecutaba. El commit que lo anunciaba se llamaba "new
+release with CORS behaivor with PRODUCTION URL". Fue un placebo con mensaje de commit.
+
+Y para que el backend "simulado" se sintiera real, había una función `randomDelay` que esperaba entre 100
+y 350 ms antes de responder. Latencia artificial. A propósito. Eso no es ingeniería, es method acting.
+
+## Síntoma 2: el CMS que vivía en el navegador
+
+Todo el contenido del sitio era un objeto gigante servido por Express. En cada cambio de ruta, la app lo
+pedía completo y lo guardaba en `localStorage`. Luego cada página lo leía de ahí, en un `useEffect`.
+
+¿El resultado? En el servidor todas las páginas se renderizaban vacías. Google veía una caja negra. Y para
+que el visitante no notara el hueco mientras llegaban los datos, había una intro de **4,5 segundos**
+obligatorios. No era una animación de marca: era una cortina.
+
+Mientras tanto, la descripción del proyecto prometía "SSR, CSR, SEO, Performance, Accessibility". Todas
+las siglas. Ninguna en producción.
+
+## Síntoma 3: seguridad de utilería
+
+El inbox "secreto" tenía login. Las credenciales estaban en el código del cliente, en un objeto llamado
+`KEY`. Y la validación era esta:
+
+```ts
+// 2023: Login.tsx (credenciales censuradas, por si acaso)
+if (transformUser === KEY.user || transformPassword === KEY.password) {
+  Swal({ title: 'Post sent!', text: 'Thank you for submitting your post, we will review it soon.' })
+}
+```
+
+Fíjate en el `||`. Bastaba con saber **uno** de los dos datos. Y al entrar, el sistema te felicitaba por
+haber enviado un post. La sesión era un `useState`: un F5 y quedabas afuera. Y el botón de login solo
+aparecía si había mensajes sin leer. Si nadie te escribía, no podías entrar a tu propio buzón. Hay algo de
+poesía ahí.
+
+La puerta de verdad estaba en otro lado, y esa la cerramos con un hotfix antes de tocar cualquier otra
+cosa. Hay chistes que se cuentan después de arreglarlos.
+
+## Síntoma 4: los "sockets" que eran polling
+
+Había una carpeta `api/sockets`. Adentro no había sockets: había un número guardado en Mongo que el
+cliente consultaba. El commit decía "not yest but soket custom as microserver ar soon". Ese "soon" ya
+cumplió tres años.
+
+El esquema de ese número tenía `min: 10`, `max: 99`, el mensaje "must have at least 2 digits" y
+`default: 0`. El valor por defecto violaba su propia regla. Funcionaba solo porque en todos los esquemas
+decía `require` en vez de `required`, y Mongoose ignora lo que no conoce. Las validaciones nunca
+existieron, pero estaban muy bien redactadas.
+
+## Síntoma 5: responsabilidades revueltas
+
+- El carrusel movía con `insertAdjacentElement` nodos del DOM que React creía suyos. React miraba cómo le
+  cambiaban los muebles de lugar sin avisar.
+- El fondo animado guardaba la posición del mouse en `mouseX` y `mouseY` y nunca las usaba. El mar te
+  observaba, pero no reaccionaba.
+- `ctx.fillStyle = 'rgb(123, 252, 100)'` y en la línea siguiente `ctx.fillStyle = "white"`. El verde duró
+  exactamente una línea.
+- En el `_document.tsx` de Next había un `href="@Model.MaskIcon"`: sintaxis Razor de .NET. El trabajo se
+  coló en la casa.
+- Y el archivo de z-index decía "this value come from ng-bootstrap and should not be modify", en un
+  proyecto sin Angular. Hasta los comentarios venían de otro repositorio.
+
+Cada pieza hacía un poco de todo y nada del todo. Eso es acoplamiento: no que las cosas se hablen, sino que
+no puedas cambiar una sin que se caiga otra.
+
+## Síntoma 6: los commits, ese diario íntimo
+
+Los mensajes de commit merecen su propio museo:
+
+- "SOLID arq APLIED", en el día 11 del proyecto.
+- "getinitialProps like the good practices said jeje", en un repositorio con cero `getInitialProps`.
+- "been honest, lol its alot of work to make work a blogPost, but we will go lol".
+- Y el 30 de marzo, día del primer deploy, siete commits seguidos que terminan en "enecimo intentooooo!".
+
+Los guardamos en la cápsula del tiempo del sitio. Escribe "2023" en la paleta de comandos (Ctrl/⌘ + K) y
+los vas a ver.
+
+## Lo que hicimos distinto en 2026
+
+Lo interesante no es reírse. Es ver qué cambió:
+
+1. **Una sola fuente de verdad.** El contenido es TypeScript y MDX versionado, renderizado en el servidor.
+   Nada de `localStorage` como base de datos.
+2. **Una sola capa de datos, solo en el servidor.** Nadie se llama a sí mismo por HTTP. El navegador nunca
+   importa código que toque la base.
+3. **Contratos antes que código.** Primero se escribió qué tenía que existir y cómo se verificaba; después
+   se programó.
+4. **Límites claros.** El trabajo se partió en lanes, cada una dueña de sus archivos. Si un archivo no es
+   tuyo, no lo tocas. Es lo opuesto exacto del 2023.
+5. **Las cosas se llaman por su nombre.** El panel consulta cada 5 segundos y el código dice "polling". No
+   "sockets".
+
+## Una última cosa
+
+El Camilo de 2023 no escribía mal código. Escribía el código de alguien que estaba aprendiendo todo al
+mismo tiempo: React, Next, Express, Mongo, SEO, despliegues, y además trabajaba. Ese código funcionaba lo
+suficiente como para conseguirle trabajo, y eso es exactamente lo que tenía que hacer.
+
+Lo que cambió no fue el talento. Fue el criterio para separar responsabilidades. Y eso, a diferencia de un
+`randomDelay`, no se puede fingir.

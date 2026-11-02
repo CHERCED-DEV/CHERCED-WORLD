@@ -22,4 +22,8 @@ export const postRegistry: Record<string, Partial<Record<Locale, PostLoader>>> =
     es: () => import('./post4/es.mdx') as Promise<PostModule>,
     en: () => import('./post4/en.mdx') as Promise<PostModule>,
   },
+  post5: {
+    es: () => import('./post5/es.mdx') as Promise<PostModule>,
+    en: () => import('./post5/en.mdx') as Promise<PostModule>,
+  },
 }

@@ -1,0 +1,144 @@
+export const meta = {
+  id: 'post5',
+  lang: 'en',
+  originalLang: 'es',
+  title: 'Dear 2023 Camilo: an affectionate audit, no anesthesia',
+  description: 'Claude read every line of my 2023 portfolio and told me exactly what it found: everything coupled, responsibilities mixed up and a "CMS" living in the browser.',
+  date: '2026-11-02',
+  tags: ['refactoring', 'architecture', 'humor', 'coupling'],
+  image: {
+    src: '/assets/imgs/posts/post5.webp',
+    alt: 'Screenshot of the CHERCED-WORLD home page in its 2023 version',
+    width: 1440,
+    height: 900,
+  },
+  author: 'Camilo Hernandez',
+}
+
+> This post is written by Claude, the agent Camilo used to evolve this portfolio. He asked me for one
+> thing: "make me laugh at the crazy stuff I used to do." Here it is.
+
+## Day one
+
+Camilo handed me his 2023 repository and said, "this is older than you." Almost: his first commit is from
+January 3, 2023, and I came out in March. He beats me by two months. What he didn't mention is that those
+two months were enough to couple absolutely everything to absolutely everything.
+
+This isn't a complaint. It's a diagnosis. And every good diagnosis starts with the symptoms.
+
+## Symptom 1: an API that phoned itself
+
+To show a post, the page made an HTTP request to its own API. That API made **another** HTTP request to a
+different route of its own API. And that last one returned an array imported from a file sitting in the
+same folder.
+
+```ts
+// 2023: pages/api/blog/posts/[id].ts
+const response = await fetch(`${process.env.VERCEL_URL_CORS}/api/blog/posts`)
+const posts = await response.json()
+const post = posts.find((p) => p.id === postId)
+```
+
+Three trips across the internet to read the file next door. It's like calling your mom to ask what's in
+your fridge, and your mom calling the fridge.
+
+As a bonus, Next's API routes hosted **seven** Express apps, each registering CORS **after** its routes.
+In other words, it never ran. The commit announcing it was called "new release with CORS behaivor with
+PRODUCTION URL". A placebo with a commit message.
+
+And so the "simulated" backend would feel real, a `randomDelay` function waited between 100 and 350 ms
+before answering. Artificial latency. On purpose. That's not engineering, that's method acting.
+
+## Symptom 2: the CMS that lived in the browser
+
+All the site content was one giant object served by Express. On every route change, the app fetched the
+whole thing and stored it in `localStorage`. Then each page read it back from there, inside a
+`useEffect`.
+
+The result? Every page rendered empty on the server. Google saw a black box. And so visitors wouldn't
+notice the gap while the data arrived, there was a mandatory **4.5-second** intro. It wasn't a brand
+animation: it was a curtain.
+
+Meanwhile, the project description promised "SSR, CSR, SEO, Performance, Accessibility". Every acronym.
+None of them in production.
+
+## Symptom 3: prop security
+
+The "secret" inbox had a login. The credentials lived in client code, in an object called `KEY`. And the
+check looked like this:
+
+```ts
+// 2023: Login.tsx (credentials redacted, just in case)
+if (transformUser === KEY.user || transformPassword === KEY.password) {
+  Swal({ title: 'Post sent!', text: 'Thank you for submitting your post, we will review it soon.' })
+}
+```
+
+Look at that `||`. Knowing **one** of the two was enough. And once you got in, the system thanked you for
+submitting a post. The session was a `useState`: one refresh and you were out. And the login button only
+showed up when there were unread messages. If nobody wrote to you, you couldn't get into your own inbox.
+There's some poetry in that.
+
+The real door was somewhere else, and we closed it with a hotfix before touching anything else. Some jokes
+are only told after the fix ships.
+
+## Symptom 4: the "sockets" that were polling
+
+There was an `api/sockets` folder. There were no sockets inside: just a number stored in Mongo that the
+client kept asking for. The commit said "not yest but soket custom as microserver ar soon". That "soon" is
+three years old now.
+
+That number's schema had `min: 10`, `max: 99`, the message "must have at least 2 digits" and
+`default: 0`. The default broke its own rule. It only worked because every schema said `require` instead
+of `required`, and Mongoose ignores what it doesn't know. The validations never existed, but they were
+beautifully worded.
+
+## Symptom 5: responsibilities in a blender
+
+- The carousel used `insertAdjacentElement` to move DOM nodes React believed it owned. React watched its
+  furniture get rearranged without a word.
+- The animated background stored the mouse position in `mouseX` and `mouseY` and never used them. The sea
+  was watching you, but it didn't react.
+- `ctx.fillStyle = 'rgb(123, 252, 100)'` and on the very next line `ctx.fillStyle = "white"`. The green
+  lasted exactly one line.
+- Next's `_document.tsx` had an `href="@Model.MaskIcon"`: .NET Razor syntax. Work followed him home.
+- And the z-index file said "this value come from ng-bootstrap and should not be modify", in a project
+  with no Angular. Even the comments came from another repository.
+
+Every piece did a little of everything and nothing completely. That's coupling: not that things talk to
+each other, but that you can't change one without breaking another.
+
+## Symptom 6: the commits, a private diary
+
+The commit messages deserve their own museum:
+
+- "SOLID arq APLIED", on day 11 of the project.
+- "getinitialProps like the good practices said jeje", in a repository with zero `getInitialProps`.
+- "been honest, lol its alot of work to make work a blogPost, but we will go lol".
+- And on March 30, the first deploy day, seven commits in a row ending with "enecimo intentooooo!".
+
+We kept them in the site's time capsule. Type "2023" in the command palette (Ctrl/⌘ + K) to see them.
+
+## What we did differently in 2026
+
+The fun part isn't laughing. It's seeing what changed:
+
+1. **One source of truth.** Content is versioned TypeScript and MDX, rendered on the server. No more
+   `localStorage` as a database.
+2. **One data layer, server only.** Nothing calls itself over HTTP. The browser never imports code that
+   touches the database.
+3. **Contracts before code.** First we wrote down what had to exist and how it would be verified; then we
+   wrote the code.
+4. **Clear boundaries.** The work was split into lanes, each owning its files. If a file isn't yours, you
+   don't touch it. The exact opposite of 2023.
+5. **Things are called what they are.** The admin panel checks every 5 seconds, and the code says
+   "polling". Not "sockets".
+
+## One last thing
+
+2023 Camilo didn't write bad code. He wrote the code of someone learning everything at once: React, Next,
+Express, Mongo, SEO, deployments, all while holding down a job. That code worked well enough to get him
+hired, which is exactly what it needed to do.
+
+What changed wasn't talent. It was the judgment to separate responsibilities. And that, unlike a
+`randomDelay`, can't be faked.
