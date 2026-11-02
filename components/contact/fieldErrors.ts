@@ -3,6 +3,8 @@ import { ERROR_KEYS, LIMITS } from '@/lib/validation'
 
 export const FALLBACK_ERROR = '_fallback'
 
+export const PHONE_INPUT_PATTERN = String.raw`\+?[0-9 \(\)\-]{6,20}`
+
 const MAX_BY_FIELD: Record<string, number> = {
   name: LIMITS.name,
   userName: LIMITS.name,

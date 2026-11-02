@@ -1,6 +1,6 @@
 'use client'
 
-import { startTransition, useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
+import { startTransition, useActionState, useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
 import { useToast } from '@/components/ui/Toast'
@@ -11,7 +11,7 @@ import { HONEYPOT_FIELD, RENDERED_AT_FIELD } from '@/lib/security/anti-spam'
 import { contactSchema, LIMITS, parseForm } from '@/lib/validation'
 import { ConsentField, type ConsentLabels } from './ConsentField'
 import styles from './ContactForm.module.scss'
-import { fieldErrorText, focusFirstInvalid } from './fieldErrors'
+import { fieldErrorText, focusFirstInvalid, PHONE_INPUT_PATTERN } from './fieldErrors'
 
 export type ContactLabels = {
   formLabel: string
@@ -49,6 +49,12 @@ function resultMessage(result: ActionResult, labels: ContactLabels): string {
   return labels.errorText
 }
 
+const noSubscription = () => () => {}
+
+function useHydrated(): boolean {
+  return useSyncExternalStore(noSubscription, () => true, () => false)
+}
+
 function Required() {
   return <span aria-hidden="true"> *</span>
 }
@@ -58,6 +64,7 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors }: Contact
   const [clientErrors, setClientErrors] = useState<Record<string, string> | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const toast = useToast()
+  const hydrated = useHydrated()
 
   useEffect(() => {
     if (!state) return
@@ -96,7 +103,7 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors }: Contact
       className={styles.form}
       action={formAction}
       onSubmit={onSubmit}
-      noValidate
+      noValidate={hydrated}
       aria-label={labels.formLabel}
       data-cw-contact-form=""
     >
@@ -111,7 +118,7 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors }: Contact
       </FormField>
 
       <FormField label={labels.phone} hint={labels.phoneHint} error={errorFor('phone')}>
-        <input name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={20} />
+        <input name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={20} pattern={PHONE_INPUT_PATTERN} />
       </FormField>
 
       <FormField label={<>{labels.message}<Required /></>} error={errorFor('message')}>
