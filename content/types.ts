@@ -74,6 +74,8 @@ export type Project = {
   image: ImageRef
   links: ProjectLinks
   order: number
+  gallery?: ImageRef[]
+  highlights?: Localized[]
 }
 
 export type PostMeta = {
