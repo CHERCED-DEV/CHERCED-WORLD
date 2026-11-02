@@ -50,7 +50,8 @@ describe('rutas con idioma', () => {
   })
 
   it('no cambia la preferencia con un prefetch', () => {
-    for (const headers of [{ 'next-router-prefetch': '1' }, { purpose: 'prefetch' }, { 'sec-purpose': 'prefetch;prerender' }]) {
+    const variants: Record<string, string>[] = [{ 'next-router-prefetch': '1' }, { purpose: 'prefetch' }, { 'sec-purpose': 'prefetch;prerender' }]
+    for (const headers of variants) {
       const response = proxy(request('/en/blog', headers))
       expect(response.cookies.get('cw-lang')).toBeUndefined()
     }

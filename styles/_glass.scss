@@ -1,7 +1,9 @@
+@use 'sass:list';
+
 $variants: (subtle, standard, strong);
 
 @function -check-variant($variant) {
-  @if not index($variants, $variant) {
+  @if not list.index($variants, $variant) {
     @error 'glass(): variante desconocida "#{$variant}". Usa subtle, standard o strong.';
   }
   @return $variant;
