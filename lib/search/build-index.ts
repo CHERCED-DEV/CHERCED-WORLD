@@ -17,7 +17,7 @@ import {
   type SearchIndex,
 } from './types'
 
-function publicEmail(site: SiteContent): string | null {
+export function publicEmail(site: SiteContent): string | null {
   const href = site.socials.find((social) => social.id === 'email')?.href
   if (!href || !href.startsWith('mailto:')) return null
   return href.slice('mailto:'.length).split('?')[0] ?? null
