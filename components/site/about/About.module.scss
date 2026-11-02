@@ -263,6 +263,10 @@
   white-space: nowrap;
   user-select: none;
 
+  &::before {
+    content: attr(data-cw-monogram);
+  }
+
   &[data-length='3'] {
     font-size: 1.25rem;
   }

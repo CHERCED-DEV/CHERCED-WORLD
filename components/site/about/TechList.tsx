@@ -14,11 +14,8 @@ export const TECH_VISIBLE_ON_MOBILE = 4
 function TechBadge({ name, icon }: { name: string; icon?: string }) {
   if (icon) return <Image src={icon} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
   const initials = monogram(name)
-  return (
-    <span className={styles.techMonogram} data-cw-monogram={initials} data-length={initials.length} aria-hidden="true">
-      {initials}
-    </span>
-  )
+  return <span className={styles.techMonogram} data-cw-monogram={initials} data-length={initials.length} aria-hidden="true" />
+
 }
 
 export function TechList({ items, showMore, showLess }: { items: TechItem[]; showMore: string; showLess: string }) {
