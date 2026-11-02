@@ -188,7 +188,7 @@ e inglés.
 El autor quiere tener de recuerdo el código que hizo a mano en 2023, desplegado y descubrible dentro
 del portafolio, "con mucho cariño", y pidió que lo sorprendamos.
 
-- El sitio 2023 se despliega desde una rama propia (`museo/2023`), con la URL de rama estable que Vercel
+- El sitio 2023 se despliega desde la rama `dev`, con la URL de rama estable que Vercel
   asigna sola. No hay infraestructura ni variables nuevas.
 - **Modo museo de solo lectura:** las rutas que tocaban la base (contacto, comentarios, "sockets", inbox)
   se reemplazan por respuestas fijas que no leen ni escriben datos reales. El sitio se ve y se navega igual
