@@ -1,0 +1,47 @@
+@use 'glass' as *;
+@use 'breakpoints' as bp;
+
+@mixin section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cw-space-6);
+  padding-block: var(--cw-space-7) 0;
+}
+
+@mixin panel($variant: standard) {
+  @include glass($variant);
+  width: 100%;
+  padding: var(--cw-space-6) var(--cw-space-5);
+
+  @include bp.up(md) {
+    padding: var(--cw-space-7) var(--cw-space-7);
+  }
+}
+
+@mixin prose {
+  max-width: 72ch;
+  font-size: var(--cw-text-md);
+  line-height: 1.7;
+  text-align: justify;
+  hyphens: auto;
+}
+
+@mixin label-caps($spacing: 0.18538em) {
+  font-weight: 700;
+  letter-spacing: $spacing;
+  text-transform: uppercase;
+}
+
+@mixin chip {
+  @include glass(subtle);
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: var(--cw-space-1) var(--cw-space-3);
+  border-radius: 999px;
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
