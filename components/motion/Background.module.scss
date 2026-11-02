@@ -1,0 +1,36 @@
+.root {
+  --cw-bg-sea: #00222b;
+
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 100lvh;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(140% 100% at 50% 62%, var(--cw-bg-sea) 0%, color-mix(in srgb, var(--cw-bg-sea) 55%, transparent) 42%, transparent 78%);
+    opacity: 0;
+    transition: opacity var(--cw-duration-slow) var(--cw-ease);
+  }
+}
+
+:global(body):has(> .root) {
+  isolation: isolate;
+}
+
+:global(:root:not([data-theme='light'])) .root[data-bg-intensity='full']::before {
+  opacity: 1;
+}
+
+.canvas {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity var(--cw-duration-slow) var(--cw-ease);
+}
