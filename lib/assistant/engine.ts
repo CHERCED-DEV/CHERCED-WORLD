@@ -263,10 +263,11 @@ function answerEducation(ctx: Context): Draft {
 
 function answerCourses(ctx: Context): Draft {
   const { courses, platzi } = ctx.facts
-  if (courses.length === 0) return unknown(ctx)
+  const names = courses.map((course) => course.name).filter((name) => !/^(y|and) (otr|other)/.test(fold(name)))
+  if (names.length === 0) return unknown(ctx)
   return {
     kind: 'answer',
-    parts: [tr(ctx, 'assistant.tpl.courses', { list: joinList(ctx, courses.map((course) => course.name)) })],
+    parts: [tr(ctx, 'assistant.tpl.courses', { list: joinList(ctx, names) })],
     links: [pageLink(ctx, 'about'), { label: platzi.label, href: platzi.href, external: true }],
   }
 }
