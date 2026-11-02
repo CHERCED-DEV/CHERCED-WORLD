@@ -5,10 +5,7 @@ import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
 import { emit } from '@/lib/events'
 import styles from './controls.module.scss'
-
-export function isPaletteShortcut(event: Pick<KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey' | 'altKey' | 'shiftKey'>): boolean {
-  return (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'k'
-}
+import { isPaletteShortcut } from './nav'
 
 export function PaletteTrigger({ label, hint }: { label: string; hint: string }) {
   useEffect(() => {

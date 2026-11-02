@@ -52,3 +52,22 @@ export function shellLabels(common: Dictionary): ShellLabels {
     author: t(common, 'brand.author'),
   }
 }
+
+export function parentPath(pathname: string): string | null {
+  const segments = pathname.split('/').filter(Boolean)
+  if (segments.length < 3) return null
+  return `/${segments.slice(0, -1).join('/')}`
+}
+
+export function isPaletteShortcut(
+  event: Pick<KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey' | 'altKey' | 'shiftKey'>,
+): boolean {
+  return (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'k'
+}
+
+const FIRST_YEAR = 2023
+const CURRENT_YEAR = new Date().getFullYear()
+
+export function copyrightYears(current: number = CURRENT_YEAR): string {
+  return current > FIRST_YEAR ? `${FIRST_YEAR}–${current}` : String(FIRST_YEAR)
+}

@@ -4,7 +4,7 @@ import type { SocialId, SocialLink } from '@/content/types'
 import { cx } from '@/components/ui/cx'
 import type { Locale } from '@/lib/i18n/config'
 import { BackToTop } from './BackToTop'
-import type { ShellLabels } from './nav'
+import { copyrightYears, type ShellLabels } from './nav'
 import styles from './SiteFooter.module.scss'
 
 export const SOCIAL_ICONS: Record<SocialId, string> = {
@@ -13,13 +13,6 @@ export const SOCIAL_ICONS: Record<SocialId, string> = {
   github: '/assets/icons/githubCircle.png',
   email: '/assets/icons/gmailIcon.png',
   facebook: '/assets/icons/facebookIcon.png',
-}
-
-const FIRST_YEAR = 2023
-const CURRENT_YEAR = new Date().getFullYear()
-
-export function copyrightYears(current: number = CURRENT_YEAR): string {
-  return current > FIRST_YEAR ? `${FIRST_YEAR}–${current}` : String(FIRST_YEAR)
 }
 
 export type SiteFooterProps = { lang: Locale; socials: SocialLink[]; labels: ShellLabels }

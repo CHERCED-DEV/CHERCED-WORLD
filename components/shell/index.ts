@@ -1,5 +1,5 @@
 export { SiteHeader, type SiteHeaderProps } from './SiteHeader'
-export { SiteFooter, SOCIAL_ICONS, copyrightYears, type SiteFooterProps } from './SiteFooter'
+export { SiteFooter, SOCIAL_ICONS, type SiteFooterProps } from './SiteFooter'
 export { FloatMenu, type FloatMenuProps } from './FloatMenu'
 export { BackToTop } from './BackToTop'
 export { BackLink } from './BackLink'
@@ -10,4 +10,14 @@ export { NavLinks, type NavLinksProps } from './NavLinks'
 export { NotFoundView } from './NotFoundView'
 export { ErrorView, type ErrorViewProps } from './ErrorView'
 export { themeScript } from './themeScript'
-export { FLOAT_MENU_ID, NAV_ITEMS, navItems, shellLabels, type NavItem, type ShellLabels } from './nav'
+export {
+  FLOAT_MENU_ID,
+  NAV_ITEMS,
+  navItems,
+  shellLabels,
+  parentPath,
+  isPaletteShortcut,
+  copyrightYears,
+  type NavItem,
+  type ShellLabels,
+} from './nav'
