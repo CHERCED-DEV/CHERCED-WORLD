@@ -1,5 +1,6 @@
 import 'server-only'
 import { headers } from 'next/headers'
+import { connection } from 'next/server'
 import { isLocale, stripLocale, type Locale } from '@/lib/i18n'
 import { clientIp, ipHash } from './ip'
 
@@ -16,4 +17,9 @@ export async function requestLocale(fallback: Locale): Promise<Locale> {
   } catch {
     return fallback
   }
+}
+
+export async function formRenderedAt(): Promise<number> {
+  await connection()
+  return Date.now()
 }
