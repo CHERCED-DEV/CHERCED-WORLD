@@ -47,7 +47,7 @@ la historia que atiende cada tarea.
 `next.config.ts`, `eslint.config.mjs`, `vitest.config.ts`, `playwright.config.ts`, `proxy.ts`,
 `mdx-components.tsx` (hasta congelar), `.gitignore`, `README.md`,
 `app/global-error.tsx`, `app/sitemap.ts`, `app/robots.ts`,
-`app/[lang]/layout.tsx`, `app/[lang]/not-found.tsx`, `components/ui/**`, `components/shell/**`,
+`app/[lang]/layout.tsx`, `app/[lang]/not-found.tsx`, `app/[lang]/[...rest]/page.tsx`, `components/ui/**`, `components/shell/**`,
 `components/motion/**` y `components/experience/**` (solo stubs, hasta congelar), `content/types.ts`,
 seeds en `content/**` (hasta congelar), `content/i18n/*/common.json`, `lib/i18n/**`, `lib/content/**`,
 `lib/events.ts`, `lib/site-url.ts`, `lib/validation/**`, `lib/actions/result.ts`, stubs en
