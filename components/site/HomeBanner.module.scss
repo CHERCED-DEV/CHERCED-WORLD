@@ -1,0 +1,67 @@
+@use 'breakpoints' as bp;
+
+.banner {
+  display: grid;
+  place-items: center;
+  min-height: calc(100svh - 2 * var(--cw-header-h));
+  padding: var(--cw-space-7) 14px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 680px);
+  padding: var(--cw-space-6) var(--cw-space-5);
+  text-align: center;
+
+  @include bp.up(md) {
+    padding: var(--cw-space-7) var(--cw-space-7);
+  }
+}
+
+.greeting {
+  font-size: var(--cw-text-md);
+  margin-bottom: var(--cw-space-1);
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.title {
+  font-size: clamp(1.75rem, 3vw + 1rem, 2.75rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.separator {
+  margin-block: var(--cw-space-5);
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: var(--cw-space-4);
+}
+
+.social {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  transition:
+    background-color var(--cw-duration-fast) var(--cw-ease),
+    transform var(--cw-duration-fast) var(--cw-ease);
+
+  &:hover {
+    background: var(--cw-glass-subtle-bg);
+    transform: translateY(-2px);
+  }
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
+}

@@ -1,0 +1,76 @@
+@use 'breakpoints' as bp;
+@use 'layout';
+@use '../site' as site;
+
+.page {
+  @include layout.container;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-8);
+  padding-block: var(--cw-space-7);
+}
+
+.intro {
+  @include site.section;
+  padding-top: 0;
+}
+
+.introCard {
+  @include site.panel(standard);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cw-space-6);
+  max-width: 1000px;
+}
+
+.prose {
+  @include site.prose;
+  max-width: none;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--cw-space-5);
+
+  @include bp.up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-4);
+  padding: var(--cw-space-6) var(--cw-space-5);
+  transition:
+    transform var(--cw-duration-base) var(--cw-ease),
+    border-color var(--cw-duration-base) var(--cw-ease);
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--cw-fg);
+  }
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: var(--cw-space-3);
+}
+
+.cardIcon {
+  @include site.icon-tile(36px);
+  flex: none;
+}
+
+.cardTitle {
+  @include site.label-caps;
+  font-size: var(--cw-text-md);
+}
+
+.cardText {
+  text-align: justify;
+  line-height: 1.7;
+}
