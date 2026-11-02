@@ -49,11 +49,20 @@ describe('rutas con idioma', () => {
     expect(response.cookies.get('cw-lang')).toBeUndefined()
   })
 
-  it('no cambia la preferencia con un prefetch', () => {
-    const variants: Record<string, string>[] = [{ 'next-router-prefetch': '1' }, { purpose: 'prefetch' }, { 'sec-purpose': 'prefetch;prerender' }]
+  it('recuerda el idioma en navegaciones de documento', () => {
+    const response = proxy(request('/en/blog', { 'sec-fetch-dest': 'document' }))
+    expect(response.cookies.get('cw-lang')?.value).toBe('en')
+  })
+
+  it('no cambia la preferencia con fetch del router ni con prefetch', () => {
+    const variants: Record<string, string>[] = [
+      { 'sec-fetch-dest': 'empty' },
+      { 'sec-fetch-dest': 'document', 'sec-purpose': 'prefetch;prerender' },
+      { purpose: 'prefetch' },
+    ]
     for (const headers of variants) {
       const response = proxy(request('/en/blog', headers))
-      expect(response.cookies.get('cw-lang')).toBeUndefined()
+      expect(response.cookies.get('cw-lang'), JSON.stringify(headers)).toBeUndefined()
     }
   })
 })

@@ -37,14 +37,11 @@ export function preferredLocale(request: NextRequest): Locale {
   return localeFromAcceptLanguage(request.headers.get('accept-language')) ?? defaultLocale
 }
 
-function isPrefetch(request: NextRequest): boolean {
+export function isDocumentNavigation(request: NextRequest): boolean {
   const headers = request.headers
-  return (
-    headers.has('next-router-prefetch') ||
-    headers.has('next-router-segment-prefetch') ||
-    headers.get('purpose') === 'prefetch' ||
-    (headers.get('sec-purpose') ?? '').includes('prefetch')
-  )
+  const dest = headers.get('sec-fetch-dest')
+  const purpose = `${headers.get('sec-purpose') ?? ''} ${headers.get('purpose') ?? ''}`
+  return (dest === null || dest === 'document') && !purpose.includes('prefetch')
 }
 
 export function proxy(request: NextRequest): NextResponse {
@@ -54,7 +51,7 @@ export function proxy(request: NextRequest): NextResponse {
   const first = pathname.split('/')[1] ?? ''
   if (isLocale(first)) {
     const response = NextResponse.next()
-    if (!isPrefetch(request) && request.cookies.get(LOCALE_COOKIE)?.value !== first) {
+    if (isDocumentNavigation(request) && request.cookies.get(LOCALE_COOKIE)?.value !== first) {
       response.cookies.set(LOCALE_COOKIE, first, {
         path: '/',
         maxAge: LOCALE_COOKIE_MAX_AGE,
