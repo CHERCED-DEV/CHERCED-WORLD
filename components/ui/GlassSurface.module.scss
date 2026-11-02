@@ -1,0 +1,17 @@
+@use 'glass' as *;
+
+.surface {
+  position: relative;
+}
+
+.subtle {
+  @include glass(subtle);
+}
+
+.standard {
+  @include glass(standard);
+}
+
+.strong {
+  @include glass(strong);
+}

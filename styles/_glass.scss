@@ -1,0 +1,28 @@
+$variants: (subtle, standard, strong);
+
+@function -check-variant($variant) {
+  @if not index($variants, $variant) {
+    @error 'glass(): variante desconocida "#{$variant}". Usa subtle, standard o strong.';
+  }
+  @return $variant;
+}
+
+@mixin glass($variant: standard) {
+  $v: -check-variant($variant);
+  background: var(--cw-glass-#{$v}-bg);
+  -webkit-backdrop-filter: blur(var(--cw-glass-#{$v}-blur)) saturate(var(--cw-glass-saturate));
+  backdrop-filter: blur(var(--cw-glass-#{$v}-blur)) saturate(var(--cw-glass-saturate));
+  border: 1px solid var(--cw-glass-border);
+  border-radius: var(--cw-glass-radius);
+  box-shadow: var(--cw-glass-shadow);
+  color: var(--cw-fg);
+}
+
+@mixin glass-solid($variant: standard) {
+  $v: -check-variant($variant);
+  background: var(--cw-glass-solid-#{$v}-bg);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: var(--cw-glass-radius);
+  box-shadow: var(--cw-glass-shadow);
+  color: var(--cw-fg);
+}
