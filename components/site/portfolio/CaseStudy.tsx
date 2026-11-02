@@ -1,46 +1,12 @@
 import Image from 'next/image'
-import type { Localized, Project } from '@/content/types'
+import type { Project } from '@/content/types'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
 import styles from './CaseStudy.module.scss'
-
-export type CaseStudyLabels = {
-  context: string
-  role: string
-  decisions: string
-  result: string
-  technologies: string
-  links: string
-  live: string
-  github: string
-  newTab: string
-}
-
-export type CaseStudySection = { id: 'context' | 'role' | 'decisions' | 'result'; heading: string; text: string }
-
-export function caseStudySections(project: Project, lang: Locale, labels: CaseStudyLabels): CaseStudySection[] {
-  const fields: Array<[CaseStudySection['id'], Localized | null]> = [
-    ['context', project.context],
-    ['role', project.role],
-    ['decisions', project.decisions],
-    ['result', project.result],
-  ]
-  return fields.flatMap(([id, value]) => {
-    const text = value?.[lang]?.trim()
-    return text ? [{ id, heading: labels[id], text }] : []
-  })
-}
-
-export function caseStudyLinks(project: Project, labels: CaseStudyLabels): Array<{ id: 'live' | 'github'; href: string; label: string }> {
-  const links: Array<{ id: 'live' | 'github'; href: string | null; label: string }> = [
-    { id: 'live', href: project.links.live, label: labels.live },
-    { id: 'github', href: project.links.github, label: labels.github },
-  ]
-  return links.flatMap((link) => (link.href ? [{ id: link.id, href: link.href, label: link.label }] : []))
-}
+import { caseStudyLinks, caseStudySections, type CaseStudyLabels } from './projects'
 
 export function CaseStudy({ project, lang, labels }: { project: Project; lang: Locale; labels: CaseStudyLabels }) {
   const sections = caseStudySections(project, lang, labels)

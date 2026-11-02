@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import type { Project, SiteContent } from '@/content/types'
 import { GlassSurface } from '@/components/ui/GlassSurface'
-import { localizedPath, type Locale } from '@/lib/i18n'
+import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
-import type { SlideProject } from './carousel'
 import styles from './Portfolio.module.scss'
 import { ProjectsExplorer, type ExplorerLabels } from './ProjectsExplorer'
+import { toSlide } from './projects'
 
 export type PortfolioViewProps = {
   lang: Locale
@@ -13,22 +13,6 @@ export type PortfolioViewProps = {
   projects: Project[]
   technologies: string[]
   labels: ExplorerLabels & { title: string; projects: string }
-}
-
-export function toSlide(project: Project, lang: Locale): SlideProject {
-  return {
-    id: project.id,
-    title: project.title,
-    summary: project.summary[lang],
-    technologies: project.technologies,
-    href: localizedPath(lang, `/portfolio/${project.id}`),
-    image: {
-      src: project.image.src,
-      alt: project.image.alt[lang],
-      width: project.image.width,
-      height: project.image.height,
-    },
-  }
 }
 
 export function PortfolioView({ lang, portfolio, projects, technologies, labels }: PortfolioViewProps) {

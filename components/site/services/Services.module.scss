@@ -61,9 +61,8 @@
 }
 
 .cardIcon {
+  @include site.icon-tile(36px);
   flex: none;
-  width: 45px;
-  height: 40px;
 }
 
 .cardTitle {

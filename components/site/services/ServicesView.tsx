@@ -38,7 +38,7 @@ export function ServicesView({ lang, services, labels }: ServicesViewProps) {
           {services.items.map((item) => (
             <GlassSurface as="li" key={item.id} variant="standard" className={styles.card} data-cw-service={item.id}>
               <div className={styles.cardHead}>
-                <Image src={item.icon} alt="" width={45} height={40} unoptimized className={styles.cardIcon} />
+                <Image src={item.icon} alt="" width={36} height={32} unoptimized className={styles.cardIcon} />
                 <h3 className={styles.cardTitle}>{item.title[lang]}</h3>
               </div>
               <p className={styles.cardText}>{item.description[lang]}</p>

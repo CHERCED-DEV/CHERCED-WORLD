@@ -26,7 +26,7 @@ export function TechList({ items, showMore, showLess }: { items: TechItem[]; sho
             {...(index >= TECH_VISIBLE_ON_MOBILE ? { 'data-extra': '' } : {})}
           >
             <p className={styles.techName}>{item.name}</p>
-            <Image src={item.icon} alt="" width={72} height={72} sizes="72px" className={styles.techIcon} />
+            <Image src={item.icon} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
             <LevelBar value={item.level} label={item.levelLabel} />
           </li>
         ))}

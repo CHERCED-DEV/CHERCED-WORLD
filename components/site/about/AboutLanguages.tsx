@@ -25,7 +25,7 @@ export function AboutLanguages({ lang, title, languages, levelLabel }: AboutLang
         {languages.map((language) => (
           <li key={language.id} className={styles.tech} data-cw-glass="subtle">
             <p className={styles.techName}>{language.name[lang]}</p>
-            <Image src={FLAGS[language.id]} alt="" width={72} height={72} sizes="72px" className={styles.techIcon} />
+            <Image src={FLAGS[language.id]} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
             <LevelBar value={language.progress} label={levelLabel(language.progress)} />
           </li>
         ))}

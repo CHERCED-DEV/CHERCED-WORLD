@@ -238,9 +238,7 @@
 }
 
 .techIcon {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
+  @include site.icon-tile(56px);
 }
 
 @include bp.down(md) {

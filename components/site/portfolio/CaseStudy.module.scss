@@ -12,8 +12,11 @@
 }
 
 .media {
+  @include site.stage;
   display: grid;
   place-items: center;
+  width: min(100%, 860px);
+  padding: var(--cw-space-6) var(--cw-space-5);
 }
 
 .image {
@@ -22,7 +25,7 @@
   max-width: 100%;
   border-radius: var(--cw-radius-lg);
   object-fit: contain;
-  filter: drop-shadow(0 18px 32px color-mix(in srgb, var(--cw-fg) 16%, transparent));
+  filter: drop-shadow(0 18px 32px rgb(0 0 0 / 0.45));
 }
 
 .body {

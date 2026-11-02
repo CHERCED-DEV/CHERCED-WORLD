@@ -33,6 +33,21 @@
   text-transform: uppercase;
 }
 
+@mixin icon-tile($size) {
+  box-sizing: content-box;
+  width: $size;
+  height: $size;
+  padding: var(--cw-space-2);
+  border-radius: var(--cw-radius-md);
+  background: #ffffff;
+  object-fit: contain;
+}
+
+@mixin stage {
+  border-radius: var(--cw-radius-lg);
+  background: linear-gradient(339deg, #0b0e0d, #dadada);
+}
+
 @mixin chip {
   @include glass(subtle);
   display: inline-flex;

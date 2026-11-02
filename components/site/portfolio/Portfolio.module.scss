@@ -163,17 +163,23 @@
 }
 
 .slideMedia {
+  @include site.stage;
   flex: none;
   display: grid;
   place-items: center;
+  padding: var(--cw-space-5) var(--cw-space-6);
 }
 
 .slideImage {
   width: auto;
-  height: min(52svh, 380px);
+  height: min(40svh, 320px);
   max-width: 100%;
   border-radius: var(--cw-radius-md);
   object-fit: contain;
+
+  @include bp.up(md) {
+    height: min(52svh, 380px);
+  }
 }
 
 .slideBody {

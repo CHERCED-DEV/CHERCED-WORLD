@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(100%, 520px);
+  width: min(100%, 680px);
   padding: var(--cw-space-6) var(--cw-space-5);
   text-align: center;
 
@@ -30,13 +30,9 @@
 }
 
 .title {
-  font-size: var(--cw-text-2xl);
+  font-size: clamp(1.75rem, 3vw + 1rem, 2.75rem);
   font-weight: 700;
   letter-spacing: 0.02em;
-
-  @include bp.up(md) {
-    font-size: var(--cw-text-3xl);
-  }
 }
 
 .separator {
