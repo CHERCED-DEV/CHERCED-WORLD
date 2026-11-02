@@ -1,0 +1,44 @@
+.form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  input:not([type='checkbox']):not([type='hidden']):not([aria-invalid='true']),
+  textarea:not([aria-invalid='true']) {
+    border-left: 4px solid var(--cw-fg);
+    border-bottom: 4px solid var(--cw-fg);
+  }
+}
+
+.note {
+  margin-bottom: var(--cw-space-5);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--cw-space-3);
+}
+
+.trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.noJsStatus {
+  margin-top: var(--cw-space-5);
+  padding: var(--cw-space-3) var(--cw-space-4);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: var(--cw-radius-md);
+  font-weight: 600;
+  text-align: center;
+}
+
+:global(:root[data-js]) .noJsStatus {
+  display: none;
+}
