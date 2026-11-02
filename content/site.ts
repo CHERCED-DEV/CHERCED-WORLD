@@ -226,11 +226,12 @@ export const site: SiteContent = {
       platzi: {
         href: 'https://platzi.com/p/Cherced/',
         label: { es: 'Mi perfil en Platzi', en: 'My profile on Platzi' },
+        icon: '/assets/icons/plazi.png',
       },
     },
     languages: [
-      { id: 'es', name: { es: 'Español', en: 'Spanish' }, progress: 100 },
-      { id: 'en', name: { es: 'Inglés', en: 'English' }, progress: 60 },
+      { id: 'es', name: { es: 'Español', en: 'Spanish' }, progress: 100, icon: '/assets/icons/flags/spain.png' },
+      { id: 'en', name: { es: 'Inglés', en: 'English' }, progress: 60, icon: '/assets/icons/flags/uniteStates.png' },
     ],
   },
   services: {
