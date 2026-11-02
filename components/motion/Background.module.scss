@@ -19,10 +19,6 @@
   }
 }
 
-:global(body):has(> .root) {
-  isolation: isolate;
-}
-
 :global(:root:not([data-theme='light'])) .root[data-bg-intensity='full']::before {
   opacity: 1;
 }

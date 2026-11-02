@@ -183,6 +183,8 @@ ya están reflejadas en `contracts/` y `data-model.md`:
 | A-11 | `agentRules: false` en `next.config.ts` | `next dev` creaba un `AGENTS.md` fuera de toda lane |
 | A-12 | `playwright.config.ts` lee el puerto de `E2E_PORT` (por defecto 3100). Puertos por lane: LC 3101, L1 3102, L2 3103, L3 3104, L4 3105, L5 3106 | Enmienda del orquestador tras el congelamiento: con un puerto fijo, seis lanes no pueden correr e2e a la vez |
 | A-13 | `icon?: string` opcional en `LanguageSkill` y en `about.courses.platzi`; LC los llena con las banderas y el logo de Platzi de 2023 | Propuesta de LC: en 2023 se mostraban y L1 tendría que fijar las rutas a mano. El campo es opcional, así que no rompe a nadie |
+| A-14 | `body { isolation: isolate }` en `styles/globals.scss`; se retira la regla `body:has(> .root)` de L2 | Propuesta de L2: el canvas tiene que pintarse encima del fondo del `body` sin una regla global escondida en un módulo |
+| A-15 | No se crea el token `--cw-sea`; el azul del mar 2023 queda como variable local de `Background` | Propuesta de L2 descartada: solo lo usa el fondo, y un token sin otros consumidores agrega superficie de contrato |
 
 ## Complexity Tracking
 
