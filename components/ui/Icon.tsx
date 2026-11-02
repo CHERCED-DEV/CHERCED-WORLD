@@ -13,6 +13,7 @@ export type IconName =
   | 'check'
   | 'alert'
   | 'copy'
+  | 'inbox'
 
 const paths: Record<IconName, ReactNode> = {
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
@@ -50,6 +51,12 @@ const paths: Record<IconName, ReactNode> = {
     <>
       <rect x="9" y="9" width="11" height="11" rx="2" />
       <path d="M5 15V5a1 1 0 0 1 1-1h10" />
+    </>
+  ),
+  inbox: (
+    <>
+      <path d="M3.5 13.5h4.6l1.4 2.5h5l1.4-2.5h4.6" />
+      <path d="M5.4 6.3A2 2 0 0 1 7.3 5h9.4a2 2 0 0 1 1.9 1.3l1.9 7.2V18a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2v-4.5z" />
     </>
   ),
 }
