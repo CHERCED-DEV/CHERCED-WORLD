@@ -43,6 +43,24 @@ vigentes las constituciones 2.0.1 y sus principios I (evolución) y VIII (simpli
 | D-03 | Los "Live" llevan a apps viejas que fallan | Los 9 sitios responden 200, pero son apps de 2022–2023 sin mantenimiento; ninguno bloquea iframes |
 | D-04 | Dos e2e inestables bajo carga | Moderación de L3 (editar la respuesta del autor) y tema desde la palette en móvil de L5 |
 | D-05 | Arranque lento de páginas en la vista previa | Hasta 7 s en la primera petición de `/blog/post1`, por la redirección y el render dinámico |
+| D-06 | La grilla de skills se desborda cerca de 856 px | Captura del autor: la cuarta columna (C#) queda cortada. La auditoría solo medía 768 y 1024 px |
+| D-07 | Las tarjetas del blog no tienen llamado a la acción | En `/es/blog` solo el título es enlace; no hay "Leer más" y el resto de la tarjeta no responde, así que "no abre el blog" |
+| D-08 | Faltan íconos en 10 skills nuevas | Se ven placas con iniciales (MF, NF, SDD, AI, AAF, SK, RAG, U, .NET, C#). El autor pide íconos reales |
+
+### Decisiones del autor (2026-11-02, segunda revisión)
+
+- **Retrato de "Sobre mí":** los retratos nuevos `public/assets/imgs/about/retrato-oscuro.webp` y
+  `retrato-claro.webp` **reemplazan** la foto actual, uno por tema. Como no tienen transparencia, en tema
+  claro van dentro de un panel de cristal oscuro tipo vitrina.
+- **Skills:** la sección se anima al entrar en pantalla (barras que se llenan de forma escalonada) y cada
+  tecnología lleva un ícono real.
+  - Marcas con licencia libre (por ejemplo, los SVG CC0 de Simple Icons) copiados como archivos propios
+    al repo, sin dependencia nueva.
+  - Pictogramas originales, de línea fina, para los conceptos sin logo (micro-frontends, SDD, agentes,
+    RAG).
+- **Blog:** cada tarjeta entera es clicable y tiene un "Leer más →" visible.
+- **"Volver arriba"** tiene que subir hasta el tope en **todas** las páginas (D-01, reiterado).
+- **Auditoría responsive** de 320 a 2560 px en pasos de 40 px, no solo en anchos sueltos (D-06).
 
 ## User Scenarios & Testing *(mandatory)*
 
