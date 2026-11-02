@@ -86,5 +86,11 @@
   "admin.session.title": "Sesión",
   "admin.session.text": "La sesión se cierra sola tras 12 horas sin actividad.",
   "meta.inbox.title": "Inbox",
-  "meta.setup.title": "Configuración inicial"
+  "meta.setup.title": "Configuración inicial",
+  "admin.notCompleted": "No se completó: {action}",
+  "admin.unavailable.title": "El panel no está disponible",
+  "admin.unavailable.text": "No se pudo conectar con la base de datos. Ningún dato se perdió; intenta de nuevo en un momento.",
+  "admin.unavailable.retry": "Reintentar",
+  "admin.field.consent": "Autorización de datos",
+  "admin.consent.legacy": "Anterior a la política de privacidad"
 }

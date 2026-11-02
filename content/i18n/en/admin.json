@@ -86,5 +86,11 @@
   "admin.session.title": "Session",
   "admin.session.text": "The session ends on its own after 12 hours of inactivity.",
   "meta.inbox.title": "Inbox",
-  "meta.setup.title": "Initial setup"
+  "meta.setup.title": "Initial setup",
+  "admin.notCompleted": "Not completed: {action}",
+  "admin.unavailable.title": "The panel is unavailable",
+  "admin.unavailable.text": "Couldn't reach the database. No data was lost; try again in a moment.",
+  "admin.unavailable.retry": "Try again",
+  "admin.field.consent": "Data consent",
+  "admin.consent.legacy": "Before the privacy policy"
 }
