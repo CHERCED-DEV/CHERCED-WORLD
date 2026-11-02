@@ -21,6 +21,7 @@ async function blockingViolations(page: Page) {
 }
 
 const UNAVAILABLE = '{"ok":false,"error":"unavailable"}'
+const ACTION_RESULT = /\{"ok":(?:true|false)[^\n]*\}/
 
 async function simulateAction(page: Page, path: string, replacement: string | null, sent: string[] = []) {
   await page.route(`**${path}`, async (route: Route) => {
@@ -30,8 +31,8 @@ async function simulateAction(page: Page, path: string, replacement: string | nu
     const response = await route.fetch()
     const body = await response.text()
     if (replacement === null) return route.fulfill({ response, body })
-    expect(body, 'la respuesta del stub de L3').toContain(UNAVAILABLE)
-    return route.fulfill({ response, body: body.replace(UNAVAILABLE, replacement) })
+    expect(body, 'la respuesta de la acción trae un ActionResult').toMatch(ACTION_RESULT)
+    return route.fulfill({ response, body: body.replace(ACTION_RESULT, replacement) })
   })
   return sent
 }
@@ -188,7 +189,7 @@ test.describe('formulario de comentarios', () => {
 
   test('con la acción no disponible avisa con honestidad y no pierde lo escrito', async ({ page }) => {
     await page.goto('/es/blog/post1')
-    const sent = await simulateAction(page, '/es/blog/post1', null)
+    const sent = await simulateAction(page, '/es/blog/post1', UNAVAILABLE)
     const dialog = await openCommentDialog(page)
     await fillValidComment(page)
     await dialog.getByRole('button', { name: 'Enviar' }).click()
