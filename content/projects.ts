@@ -49,22 +49,34 @@ export const projects: Project[] = [
   },
   {
     id: '2',
-    title: 'CHERCED-WORLD',
+    title: 'CHERCED-WORLD 2026',
     summary: {
-      en: 'My portfolio, born in 2023 and evolved in 2026 without losing its identity.',
-      es: 'Mi portafolio, nacido en 2023 y evolucionado en 2026 sin perder su identidad.',
+      en: 'My 2023 portfolio rebuilt with Spec-Driven Development and AI agents working in parallel.',
+      es: 'Mi portafolio de 2023 reconstruido con Spec-Driven Development y agentes de IA trabajando en paralelo.',
     },
     context: {
-      en: 'My portfolio, born in 2023 as my playground for learning Next.js, and evolved in 2026 without losing its identity. This version adds glassmorphism over the animated GlitteringSea background, server-rendered content in English and Spanish, a real admin area with near-real-time notifications, a blog with moderated comments, a portfolio assistant that answers from my own content, a command palette and a time capsule of the 2023 version.',
-      es: 'Mi portafolio, nacido en 2023 como el lugar donde aprendí Next.js, y evolucionado en 2026 sin perder su identidad. Esta versión suma glassmorfismo sobre el fondo animado GlitteringSea, contenido renderizado en servidor en español e inglés, un área de administración real con avisos casi en tiempo real, un blog con comentarios moderados, un asistente que responde a partir de mi propio contenido, una command palette y una cápsula del tiempo de la versión 2023.',
+      en: 'The 2023 portfolio described who I was three years ago: 2022 projects, skills from that time and nothing about my current architecture work. I wanted to update it without rewriting it by hand or adding infrastructure, and to use it as real proof of how I work today: spec first, agents second.',
+      es: 'El portafolio de 2023 contaba quién era yo hace tres años: proyectos de 2022, skills de esa época y nada de mi trabajo actual en arquitectura. Quería actualizarlo sin reescribirlo a mano ni sumar infraestructura, y usarlo como prueba real de cómo trabajo hoy: especificación primero, agentes después.',
     },
-    role: null,
-    decisions: null,
-    result: null,
-    technologies: ['HTML', 'CSS', 'SASS', 'TYPESCRIPT', 'REACT', 'NEXTJS', 'FIGMA'],
+    role: {
+      en: 'I wrote the specs with Spec Kit, split the work into 8 lanes, reviewed and validated what the agents produced, and handled a privacy issue in production.',
+      es: 'Escribí las especificaciones con Spec Kit, dividí el trabajo en 8 lanes, revisé y validé lo que produjeron los agentes, y respondí a un problema de privacidad en producción.',
+    },
+    decisions: {
+      en: 'Eight lanes run by agents in parallel, each with exclusive file ownership, to avoid conflicts without manual coordination. Next.js 16 and React 19. Glassmorphism over an animated canvas. Bilingual ES/EN content. An admin panel that reuses what already existed, with no new infrastructure.',
+      es: 'Ocho lanes ejecutadas por agentes en paralelo, cada una con propiedad exclusiva de sus archivos, para evitar conflictos sin coordinación manual. Next.js 16 y React 19. Glassmorphism sobre un canvas animado. Contenido bilingüe ES/EN. Un panel de administración que reutiliza lo existente, sin infraestructura nueva.',
+    },
+    result: {
+      en: "The site is now updated and bilingual, with an admin panel and no new infrastructure costs. Along the way I found and fixed, with a hotfix in production, a privacy issue: contact details that shouldn't have been public.",
+      es: 'El sitio quedó actualizado y bilingüe, con panel de administración y sin costos de infraestructura nuevos. Durante el proceso detecté y corregí con un hotfix en producción un problema de privacidad: datos de contacto que no debían ser públicos.',
+    },
+    technologies: ['NEXTJS', 'REACT', 'TYPESCRIPT', 'SPEC KIT', 'AI CODING AGENTS', 'CANVAS'],
     image: {
-      src: '/assets/imgs/projects/chercedWorld.webp',
-      alt: { en: 'CHERCED-WORLD portfolio on mobile', es: 'Portafolio CHERCED-WORLD en móvil' },
+      src: '/assets/imgs/projects/chercedWorld2026.webp',
+      alt: {
+        en: 'CHERCED-WORLD 2026 home in dark theme on mobile, with the glass card over the animated canvas',
+        es: 'Inicio de CHERCED-WORLD 2026 en tema oscuro en móvil, con la tarjeta de vidrio sobre el canvas animado',
+      },
       width: 420,
       height: 870,
     },
@@ -428,5 +440,41 @@ export const projects: Project[] = [
       github: 'https://github.com/Cherced/BookingUi',
     },
     order: 11,
+  },
+  {
+    id: '12',
+    title: 'Synergos',
+    summary: {
+      en: 'A composable digital platform where .NET, Umbraco and Angular micro-frontends work as one system.',
+      es: 'Una plataforma digital composable donde .NET, Umbraco y micro-frontends de Angular funcionan como un solo sistema.',
+    },
+    context: {
+      en: 'Every business rebuilds the same pieces: forms, catalogs, content, payments. I wanted a library of capabilities that snap together like Lego for any kind of business. It starts from one idea: C# and TypeScript share the same design lineage, created by Anders Hejlsberg at Microsoft, which lets one way of thinking run from the server to the browser.',
+      es: 'Cada negocio vuelve a construir las mismas piezas: formularios, catálogos, contenido, pagos. Quería una librería de capacidades que se ensamblen como Lego para cualquier tipo de negocio. Parto de una idea: C# y TypeScript comparten el mismo linaje de diseño, creados por Anders Hejlsberg en Microsoft, y eso permite pensar igual del servidor al navegador.',
+    },
+    role: {
+      en: 'Founder and architect. I designed and built each piece, then started piloting it with specs and AI agents.',
+      es: 'Fundador y arquitecto. Diseñé y construí cada pieza, y luego empecé a pilotearla con especificaciones y agentes de IA.',
+    },
+    decisions: {
+      en: 'Umbraco (.NET) as the composition layer. A separate project, deployed on a CDN, serves the resources that feed it. A framework-agnostic backend-for-frontend composition, down to its import paths, with Angular micro-frontends and Web Components on top.',
+      es: 'Umbraco (.NET) como capa de composición. Un proyecto aparte, desplegado en CDN, sirve los recursos que la alimentan. Una composición backend-for-frontend agnóstica al framework, incluso en sus rutas de importación, con micro-frontends de Angular y Web Components encima.',
+    },
+    result: {
+      en: '30+ reusable components, proven with 3+ web frameworks.',
+      es: 'Más de 30 componentes reutilizables, probados con más de 3 frameworks web.',
+    },
+    technologies: ['.NET', 'C#', 'UMBRACO', 'ANGULAR', 'TYPESCRIPT', 'WEB COMPONENTS', 'NX', 'MICRO-FRONTENDS'],
+    image: {
+      src: '/assets/imgs/projects/synergos.svg',
+      alt: {
+        en: 'Synergos layered architecture diagram: CDN resources feed Umbraco (.NET) as the composition layer, which serves micro-frontends and Web Components on any web framework',
+        es: 'Diagrama de la arquitectura por capas de Synergos: los recursos en CDN alimentan a Umbraco (.NET) como capa de composición, que sirve micro-frontends y Web Components en cualquier framework web',
+      },
+      width: 960,
+      height: 640,
+    },
+    links: { live: null, github: null },
+    order: 12,
   },
 ]
