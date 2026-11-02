@@ -21,8 +21,11 @@ export const getAdminSession = cache(async (): Promise<AdminSession | null> => {
   return resolveSession(getRepos().admin, await readSessionToken(), new Date(), { touch: true })
 })
 
-export async function requireAdmin(): Promise<AdminSession> {
-  const session = await getAdminSession()
+export async function requireAdmin(options: { touch?: boolean } = {}): Promise<AdminSession> {
+  const session =
+    options.touch === false
+      ? await resolveSession(getRepos().admin, await readSessionToken(), new Date(), { touch: false })
+      : await getAdminSession()
   if (!session) throw new UnauthorizedError()
   return session
 }
@@ -34,6 +37,13 @@ export async function signIn(now: Date): Promise<void> {
 
 export async function signOut(): Promise<void> {
   const store = await cookies()
-  await endSession(getRepos().admin, store.get(SESSION_COOKIE)?.value)
+  const token = store.get(SESSION_COOKIE)?.value
   store.delete({ name: SESSION_COOKIE, ...SESSION_COOKIE_OPTIONS })
+  await endSession(getRepos().admin, token)
+}
+
+export async function rotateSession(now: Date): Promise<void> {
+  const token = await readSessionToken()
+  await endSession(getRepos().admin, token)
+  await signIn(now)
 }
