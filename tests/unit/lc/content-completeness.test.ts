@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
+import { monogram } from '@/components/site/about/monogram'
 import { capsule } from '@/content/capsule'
 import { projects } from '@/content/projects'
 import { authorPending, site } from '@/content/site'
@@ -27,24 +28,98 @@ const content = await import('@/lib/content')
 
 const LOCALES: Locale[] = ['es', 'en']
 const PUBLIC_DIR = path.resolve(process.cwd(), 'public')
-const POST_IDS = ['post1', 'post2', 'post3']
+const POST_IDS = ['post1', 'post2', 'post3', 'post4']
+const PROJECT_IDS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+const PROJECTS_WITHOUT_LINKS = ['10', '12']
 const REGISTRY_TEXT = readFileSync(path.join(POSTS_DIR, 'registry.ts'), 'utf8')
 
-const SKILLS_2023: Record<string, number> = {
-  react: 75,
-  nextjs: 80,
-  typescript: 80,
-  nodejs: 75,
-  mongodb: 60,
-  javascript: 90,
-  angular: 50,
-  sass: 90,
-  html5: 85,
-  css: 95,
-  figma: 75,
-  git: 80,
-  azure: 70,
+const POST_ORIGIN: Record<string, { originalLang: Locale; date: RegExp }> = {
+  post1: { originalLang: 'en', date: /^2023-\d{2}-\d{2}$/ },
+  post2: { originalLang: 'en', date: /^2023-\d{2}-\d{2}$/ },
+  post3: { originalLang: 'en', date: /^2023-\d{2}-\d{2}$/ },
+  post4: { originalLang: 'es', date: /^2026-11-02$/ },
 }
+
+const SKILLS_2026: Record<string, number> = {
+  angular: 92,
+  typescript: 92,
+  dotnet: 85,
+  csharp: 82,
+  'micro-frontends': 90,
+  'native-federation': 88,
+  azure: 78,
+  umbraco: 85,
+  'spec-driven-development': 90,
+  'ai-coding-agents': 90,
+  'azure-ai-foundry': 75,
+  'semantic-kernel': 60,
+  'rag-embeddings': 60,
+  javascript: 90,
+  html5: 90,
+  css: 92,
+  sass: 90,
+  git: 85,
+}
+
+const SKILL_ICONS_2023 = [
+  'angular.png',
+  'azure.png',
+  'cms.png',
+  'css.png',
+  'figma.png',
+  'html-5.png',
+  'js.png',
+  'merge.png',
+  'mongodb.png',
+  'nextjs.png',
+  'nodejs.png',
+  'react.png',
+  'sass.png',
+  'typescript.png',
+]
+
+const SKILL_ICONS_KEPT: Record<string, string> = {
+  angular: 'angular.png',
+  typescript: 'typescript.png',
+  azure: 'azure.png',
+  javascript: 'js.png',
+  html5: 'html-5.png',
+  css: 'css.png',
+  sass: 'sass.png',
+  git: 'merge.png',
+}
+
+const MONOGRAMS: Record<string, string> = {
+  dotnet: '.NET',
+  csharp: 'C#',
+  'micro-frontends': 'MF',
+  'native-federation': 'NF',
+  umbraco: 'U',
+  'spec-driven-development': 'SDD',
+  'ai-coding-agents': 'AI',
+  'azure-ai-foundry': 'AAF',
+  'semantic-kernel': 'SK',
+  'rag-embeddings': 'RAG',
+}
+
+const CAREER_2026 = [
+  'sistecredito-ai-first',
+  'sistecredito-dev-solutions',
+  'synergos-labs',
+  'flyr',
+  'newshore',
+  'platzi-master',
+  'growup-it',
+  'squadra-arquitectura',
+]
+
+const SAME_IN_BOTH_LANGUAGES = new Set([
+  'Software Solutions Engineer · AI-First',
+  'Founder & Software Architect',
+  'Frontend Development, Platzi Master',
+])
+
+const CONFIDENTIAL: RegExp[] = [/\b700\b/, /\b1[.,]000\b/, /\b90\s?%/, /~\s?\d/]
 
 const SHELL_ICONS = [
   'brandLogo.png',
@@ -129,15 +204,19 @@ function publicPath(src: string) {
   return path.join(PUBLIC_DIR, ...src.split('/').filter(Boolean))
 }
 
-function has(key: keyof typeof authorPending) {
+function has(key: string) {
   return Object.prototype.hasOwnProperty.call(authorPending, key)
 }
 
+function career(id: string) {
+  return site.about.career.find((entry) => entry.id === id)
+}
+
 describe('proyectos (FR-083)', () => {
-  it('migra los 11 proyectos de 2023 con ids y orden estables', () => {
+  it('conserva los 11 proyectos de 2023 y suma Synergos con ids y orden estables', () => {
     const list = content.getProjects()
-    expect(list.map((project) => project.id)).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'])
-    expect(new Set(list.map((project) => project.order)).size).toBe(11)
+    expect(list.map((project) => project.id)).toEqual(PROJECT_IDS)
+    expect(new Set(list.map((project) => project.order)).size).toBe(PROJECT_IDS.length)
   })
 
   it('presenta cada proyecto como caso de estudio sin campos vacíos', () => {
@@ -152,10 +231,10 @@ describe('proyectos (FR-083)', () => {
     }
   })
 
-  it('omite los enlaces muertos del id 10 y conserva los demás', () => {
+  it('omite los enlaces del id 10 (muertos) y del 12 (sin publicar) y conserva los demás', () => {
     for (const project of projects) {
-      if (project.id === '10') {
-        expect(project.links).toEqual({ live: null, github: null })
+      if (PROJECTS_WITHOUT_LINKS.includes(project.id)) {
+        expect(project.links, project.id).toEqual({ live: null, github: null })
         continue
       }
       expect(project.links.live, project.id).toMatch(/^https:\/\//)
@@ -165,15 +244,48 @@ describe('proyectos (FR-083)', () => {
 
   it('corrige el título y el alt de 2023 (C-06, C-14)', () => {
     expect(content.getProject('1')?.title).toBe('Quantic Theatrum')
-    expect(content.getProject('2')?.image.alt.en).toBe('CHERCED-WORLD portfolio on mobile')
     for (const project of projects.filter((item) => item.id !== '6')) {
       expect(project.image.alt.en, project.id).not.toContain('My Website')
     }
   })
+
+  it('reescribe CHERCED-WORLD 2026 como caso de estudio completo', () => {
+    const project = content.getProject('2')!
+    expect(project.title).toBe('CHERCED-WORLD 2026')
+    expect(project.links).toEqual({
+      live: 'https://cherced-world.vercel.app/',
+      github: 'https://github.com/CHERCED-DEV/CHERCED-WORLD',
+    })
+    for (const field of [project.role, project.decisions, project.result]) expect(field).not.toBeNull()
+    expect(project.result?.es).toContain('datos de contacto que no debían ser públicos')
+    expect(project.result?.en).toContain("contact details that shouldn't have been public")
+    expect(project.image).toMatchObject({ src: '/assets/imgs/projects/chercedWorld2026.webp', width: 420, height: 870 })
+    expect(project.image.alt.en).toMatch(/^CHERCED-WORLD 2026 home in dark theme/)
+  })
+
+  it('suma Synergos con su diagrama SVG y sin enlaces públicos', () => {
+    const project = content.getProject('12')!
+    expect(project.title).toBe('Synergos')
+    expect(project.order).toBe(12)
+    expect(project.image.src).toBe('/assets/imgs/projects/synergos.svg')
+    expect(imageSize(publicPath(project.image.src))?.format).toBe('svg')
+    expect(project.image.alt.es).toContain('Umbraco')
+    expect(project.image.alt.en).toContain('Umbraco')
+    expect(project.image.alt.es).not.toBe(project.image.alt.en)
+  })
+
+  it('usa en las tarjetas la proporción de las capturas móviles', () => {
+    const portrait = projects.filter((project) => project.image.height > project.image.width)
+    const ratio = (project: (typeof projects)[number]) => project.image.width / project.image.height
+    const ratios = portrait.filter((project) => project.id !== '2').map(ratio)
+    const project = content.getProject('2')!
+    expect(ratio(project)).toBeGreaterThanOrEqual(Math.min(...ratios))
+    expect(ratio(project)).toBeLessThanOrEqual(Math.max(...ratios))
+  })
 })
 
 describe('posts (FR-064, FR-075)', () => {
-  it('hay 3 posts en español e inglés y todos están en el registro', () => {
+  it('hay 4 posts en español e inglés y todos están en el registro', () => {
     const dirs = readdirSync(POSTS_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
@@ -189,9 +301,9 @@ describe('posts (FR-064, FR-075)', () => {
     const { meta } = post
     expect(meta.id).toBe(post.id)
     expect(meta.lang).toBe(post.lang)
-    expect(meta.originalLang).toBe('en')
+    expect(meta.originalLang).toBe(POST_ORIGIN[post.id]?.originalLang)
     expect(meta.author).toBe('Camilo Hernandez')
-    expect(meta.date).toMatch(/^2023-\d{2}-\d{2}$/)
+    expect(meta.date).toMatch(POST_ORIGIN[post.id]!.date)
     expect(Number.isNaN(Date.parse(meta.date))).toBe(false)
     expect(meta.title.trim()).not.toBe('')
     expect(meta.description.trim()).not.toBe('')
@@ -212,7 +324,21 @@ describe('posts (FR-064, FR-075)', () => {
     }
   })
 
-  it('lista los 3 posts en cada idioma sin fallback', async () => {
+  it('publica el post 4 con su captura 1200×630 y el hotfix sin detalles', () => {
+    for (const lang of LOCALES) {
+      const post = posts.find((item) => item.id === 'post4' && item.lang === lang)!
+      expect(post.meta.image).toMatchObject({ src: '/assets/imgs/posts/post4.webp', width: 1200, height: 630 })
+      expect(imageSize(publicPath(post.meta.image.src))?.format, lang).toBe('webp')
+    }
+    const es = posts.find((item) => item.id === 'post4' && item.lang === 'es')!.source
+    const en = posts.find((item) => item.id === 'post4' && item.lang === 'en')!.source
+    expect(es).toContain('datos de contacto que no debían ser públicos')
+    expect(en).toContain("contact details that shouldn't have been public")
+    expect(es).toContain('busco oportunidades fuera de Colombia')
+    expect(en).toContain('looking for opportunities outside Colombia')
+  })
+
+  it('lista los 4 posts en cada idioma sin fallback', async () => {
     for (const lang of LOCALES) {
       const listed = await content.listPosts(lang)
       expect(listed.map((post) => post.id).sort(), lang).toEqual(POST_IDS)
@@ -232,23 +358,51 @@ describe('sitio (FR-004)', () => {
         expect(typeof value[lang], `${at}.${lang}`).toBe('string')
         expect(String(value[lang]).trim(), `${at}.${lang}`).not.toBe('')
       }
-      if (String(value.en).split(/\s+/).length >= 4) expect(value.es, at).not.toBe(value.en)
+      if (String(value.en).split(/\s+/).length >= 4 && !SAME_IN_BOTH_LANGUAGES.has(String(value.en))) {
+        expect(value.es, at).not.toBe(value.en)
+      }
     }
   })
 
-  it('conserva todas las piezas del contenido 2023', () => {
+  it('carga el contenido 2026 sobre las piezas de 2023', () => {
     expect(site.socials.map((social) => social.id).sort()).toEqual(['email', 'facebook', 'github', 'instagram', 'linkedin'])
-    expect(site.about.career.map((entry) => entry.id)).toEqual(['newshore', 'platzi-master', 'growup-it', 'squadra-arquitectura'])
+    expect(site.about.career.map((entry) => entry.id)).toEqual(CAREER_2026)
     expect(site.about.skills.bullets).toHaveLength(10)
-    expect(Object.fromEntries(site.about.skills.tech.map((tech) => [tech.id, tech.progress]))).toEqual(SKILLS_2023)
-    expect(site.about.education.map((entry) => entry.id)).toEqual(['platzi', 'unad', 'eam'])
-    expect(site.about.courses.schools).toHaveLength(4)
+    expect(site.about.skills.tech).toHaveLength(18)
+    expect(Object.fromEntries(site.about.skills.tech.map((tech) => [tech.id, tech.progress]))).toEqual(SKILLS_2026)
+    expect(site.about.education.map((entry) => entry.id)).toEqual(['unad', 'platzi', 'eam'])
+    expect(site.about.courses.schools).toHaveLength(5)
+    expect(site.about.courses.schools[0]?.name.en).toBe('Software Architecture Fundamentals — Platzi (Nov 2025)')
     expect(site.about.languages.map((language) => [language.id, language.progress])).toEqual([
       ['es', 100],
-      ['en', 60],
+      ['en', 65],
     ])
     expect(site.services.items.map((item) => item.id)).toEqual(['design', 'development', 'maintenance'])
     expect(site.portfolio.intro).toHaveLength(3)
+  })
+
+  it('aplica las correcciones de fechas y cargos del autor', () => {
+    expect(career('newshore')).toMatchObject({ start: '2022-07', end: '2023-03' })
+    expect(career('newshore')?.description.en).toContain('Avianca PWA')
+    expect(career('flyr')).toMatchObject({ start: '2023-03', end: '2025-03' })
+    expect(career('sistecredito-dev-solutions')).toMatchObject({ start: '2025-03', end: '2026-02' })
+    expect(career('sistecredito-ai-first')).toMatchObject({ start: '2026-02', end: null })
+    expect(career('synergos-labs')).toMatchObject({ start: '2024-02', end: null })
+    expect(career('growup-it')).toMatchObject({ start: '2019-01', end: '2019-11' })
+    expect(career('platzi-master')).toMatchObject({ start: '2022-03', end: '2022-06' })
+    expect(career('squadra-arquitectura')?.role).toEqual({ es: 'Fundador y gerente', en: 'Founder & Business Manager' })
+  })
+
+  it('no publica cifras internas de Sistecrédito', () => {
+    const sistecredito = site.about.career.filter((entry) => entry.company === 'Sistecrédito')
+    expect(sistecredito).toHaveLength(2)
+    for (const entry of sistecredito) {
+      for (const pattern of CONFIDENTIAL) {
+        expect(entry.description.es, `${entry.id}.es`).not.toMatch(pattern)
+        expect(entry.description.en, `${entry.id}.en`).not.toMatch(pattern)
+      }
+    }
+    for (const pattern of CONFIDENTIAL) expect(corpus).not.toMatch(pattern)
   })
 
   it('ordena la carrera de la más reciente a la más antigua con fechas válidas', () => {
@@ -268,12 +422,15 @@ describe('sitio (FR-004)', () => {
       expect(entry.start, entry.id).toMatch(/^\d{4}(-\d{2})?$/)
       if (entry.end !== null) expect(entry.end, entry.id).toMatch(/^\d{4}(-\d{2})?$/)
     }
-    expect(site.about.education.find((entry) => entry.id === 'eam')).toMatchObject({ start: '2011', end: '2016' })
+    expect(site.about.education.find((entry) => entry.id === 'eam')).toMatchObject({ start: '2013', end: '2017' })
+    expect(site.about.education.find((entry) => entry.id === 'unad')).toMatchObject({ start: '2020-06', end: '2023-11' })
+    expect(site.about.education.find((entry) => entry.id === 'unad')?.degree.es).toContain('no finalizados')
   })
 
   it('actualiza la experiencia del contacto (C-08)', () => {
-    expect(site.contact.description.en).toContain('since 2020')
-    expect(site.contact.description.es).toContain('desde 2020')
+    expect(site.contact.description.en).toContain('since 2019')
+    expect(site.contact.description.es).toContain('desde 2019')
+    expect(`${site.contact.description.en} ${site.contact.description.es}`).not.toContain('2020')
   })
 
   it('el borrador de privacidad cubre responsable, finalidad, conservación y canal (P-06)', () => {
@@ -304,10 +461,9 @@ describe('sitio (FR-004)', () => {
 })
 
 describe('pendientes del autor', () => {
-  it('marca la carrera mientras falte el texto de Newshore (P-01)', () => {
-    const newshore = site.about.career.find((entry) => entry.id === 'newshore')
-    expect(newshore?.pending === true).toBe(has('P-01'))
-    expect(site.about.career.some((entry) => entry.pending)).toBe(has('P-01'))
+  it('cierra P-01: la carrera completa se publica sin pendientes', () => {
+    expect(has('P-01')).toBe(false)
+    expect(site.about.career.some((entry) => entry.pending)).toBe(false)
   })
 
   it('oculta Facebook mientras falte el perfil real (P-02)', () => {
@@ -316,9 +472,9 @@ describe('pendientes del autor', () => {
     if (facebook?.href) expect(facebook.href).toMatch(/^https:\/\/(www\.)?facebook\.com\//)
   })
 
-  it('marca la UNAD mientras falte su estado (P-03)', () => {
-    const unad = site.about.education.find((entry) => entry.id === 'unad')
-    expect(unad?.pending === true).toBe(has('P-03'))
+  it('cierra P-03: la educación se publica sin pendientes', () => {
+    expect(has('P-03')).toBe(false)
+    expect(site.about.education.some((entry) => entry.pending)).toBe(false)
   })
 
   it('conserva sin uso los assets de terceros (P-05)', () => {
@@ -371,5 +527,27 @@ describe('assets (T044)', () => {
 
   it('conserva los íconos que usa el shell', () => {
     for (const icon of SHELL_ICONS) expect(existsSync(path.join(PUBLIC_DIR, 'assets', 'icons', icon)), icon).toBe(true)
+  })
+})
+
+describe('íconos de tecnologías (A-18)', () => {
+  it('no agrega logos nuevos a skillsIcon', () => {
+    expect(readdirSync(path.join(PUBLIC_DIR, 'assets', 'icons', 'skillsIcon')).sort()).toEqual(SKILL_ICONS_2023)
+  })
+
+  it('las tecnologías con ícono conservan el suyo y las demás no llevan ícono', () => {
+    for (const tech of site.about.skills.tech) {
+      const kept = SKILL_ICONS_KEPT[tech.id]
+      if (kept) expect(tech.icon, tech.id).toBe(`/assets/icons/skillsIcon/${kept}`)
+      else expect(tech.icon, tech.id).toBeUndefined()
+    }
+  })
+
+  it('cada tecnología sin ícono recibe una placa monograma legible y única', () => {
+    const withoutIcon = site.about.skills.tech.filter((tech) => !tech.icon)
+    expect(Object.fromEntries(withoutIcon.map((tech) => [tech.id, monogram(tech.name)]))).toEqual(MONOGRAMS)
+    const initials = withoutIcon.map((tech) => monogram(tech.name))
+    expect(new Set(initials).size).toBe(initials.length)
+    for (const value of initials) expect(value.length, value).toBeLessThanOrEqual(4)
   })
 })

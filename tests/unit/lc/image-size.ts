@@ -1,9 +1,19 @@
 import { readFileSync } from 'node:fs'
 
-export type ImageSize = { width: number; height: number; format: 'png' | 'jpeg' | 'webp' }
+export type ImageSize = { width: number; height: number; format: 'png' | 'jpeg' | 'webp' | 'svg' }
+
+function svgSize(text: string): ImageSize | null {
+  const tag = /<svg\b[^>]*>/i.exec(text)?.[0]
+  if (!tag) return null
+  const width = /\swidth="(\d+(?:\.\d+)?)"/.exec(tag)?.[1]
+  const height = /\sheight="(\d+(?:\.\d+)?)"/.exec(tag)?.[1]
+  if (!width || !height) return null
+  return { width: Number(width), height: Number(height), format: 'svg' }
+}
 
 export function imageSize(file: string): ImageSize | null {
   const b = readFileSync(file)
+  if (file.toLowerCase().endsWith('.svg')) return svgSize(b.toString('utf8'))
   if (b.length > 24 && b.toString('latin1', 1, 4) === 'PNG') {
     return { width: b.readUInt32BE(16), height: b.readUInt32BE(20), format: 'png' }
   }
