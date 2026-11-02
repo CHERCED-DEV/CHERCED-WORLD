@@ -1,0 +1,72 @@
+export const meta = {
+  id: 'post4',
+  lang: 'en',
+  originalLang: 'es',
+  title: 'From a 2023 portfolio to one built with Spec-Driven Development and agents',
+  description: 'How I rebuilt CHERCED-WORLD with specs, 8 agent lanes running in parallel and one simple rule: every agent owns its files.',
+  date: '2026-11-02',
+  tags: ['spec-driven-development', 'ai-agents', 'nextjs', 'architecture'],
+  image: {
+    src: '/assets/imgs/posts/post4.webp',
+    alt: 'CHERCED-WORLD 2026 hero with glassmorphism over an animated canvas',
+    width: 1200,
+    height: 630,
+  },
+  author: 'Camilo Hernandez',
+}
+
+## A portfolio that no longer talked about me
+
+My 2023 portfolio had eleven projects, skill bars and three posts. All of it was true, but it was a snapshot of someone I no longer am. Since then I've worked on airline platforms, moved into fintech and started working on micro-frontends, .NET microservices and legacy migrations. None of that was there.
+
+I could have rewritten it by hand over a weekend. Instead, I used it as proof of how I work today: spec first, agents second.
+
+## The spec is in charge
+
+Many say engineering should now bend toward how machines work. I believe the opposite. AI is an extension of human thinking, and the patterns we built over decades matter more now, not less.
+
+So I started with Spec Kit, not a prompt. Before touching code, I wrote down what had to exist, what couldn't break and how each part would be verified. The spec became the contract between the agents and me.
+
+That changes the conversation. I no longer ask an agent to "improve the portfolio." I hand it a scoped task with clear criteria, and I check whether it meets them.
+
+## Eight lanes in parallel
+
+I split the work into 8 lanes. Each lane was run by an agent, in parallel with the others.
+
+The obvious risk is two agents editing the same file and overwriting each other. The fix was one simple rule: **every lane has exclusive ownership of its files**. If a file belongs to a lane, no other lane touches it.
+
+It's the same idea I apply to micro-frontends: clear boundaries between pieces, so each one moves forward without blocking the rest. What works between human teams also works between agents.
+
+- Each lane knows which files are its own.
+- No lane depends on another lane's half-finished change.
+- At the end, I integrate and review.
+
+## The technical decisions
+
+- **Next.js 16 and React 19** as the foundation.
+- **Glassmorphism over an animated canvas**, so the site feels alive without hurting readability.
+- **Bilingual ES/EN content**, because I'm now looking for opportunities outside Colombia and I want the site to speak both languages.
+- **An admin panel with no new infrastructure.** I didn't want more servers or services to maintain. The panel reuses what already existed.
+
+Every decision was written into the spec before it was implemented. When an agent proposed something different, the spec decided.
+
+## The hotfix that reminded me why I review everything
+
+Along the way, I found a privacy issue that was already in production: contact details that shouldn't have been public. I fixed it with a hotfix.
+
+This is the part I care most about sharing. Agents speed things up enormously, but they don't take the responsibility off you. An agent writing the code doesn't mean the code is right. My job was to read, validate and catch what shouldn't be there.
+
+That's why I still write code for humans to read, even when an agent helps write it.
+
+## What I learned
+
+1. **A spec is worth more than a prompt.** A good prompt works for one task. A good spec works for the whole project.
+2. **Clear boundaries prevent chaos.** Exclusive file ownership is what made parallel work possible.
+3. **Judgment is still human.** The design decisions and the final review are mine.
+4. **Less infrastructure, fewer problems.** Not everything needs a new service.
+
+## What's next
+
+This portfolio is now a lab. The next time I want to try a new way of working, I'll try it here first, in public.
+
+If you're thinking about working with agents, my advice is simple: write down what you want before you ask for it. Everything else comes after.
