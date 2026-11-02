@@ -37,7 +37,7 @@ export type ServiceItem = { id: ServiceId; title: Localized; description: Locali
 
 export type CourseSchool = { name: Localized; description: Localized }
 
-export type LanguageSkill = { id: Locale; name: Localized; progress: number }
+export type LanguageSkill = { id: Locale; name: Localized; progress: number; icon?: string }
 
 export type PrivacySection = { heading: Localized; body: Localized }
 
@@ -50,7 +50,7 @@ export type SiteContent = {
     career: CareerEntry[]
     skills: { description: Localized; bullets: Localized[]; tech: TechSkill[] }
     education: EducationEntry[]
-    courses: { schools: CourseSchool[]; platzi: { href: string; label: Localized } }
+    courses: { schools: CourseSchool[]; platzi: { href: string; label: Localized; icon?: string } }
     languages: LanguageSkill[]
   }
   services: { intro: Localized; items: ServiceItem[] }

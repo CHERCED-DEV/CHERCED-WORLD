@@ -1,0 +1,58 @@
+export const meta = {
+  id: 'catalog',
+  lang: 'es',
+  originalLang: 'es',
+  title: 'Catálogo de componentes del blog',
+  description: 'Lo que se puede usar al escribir un post en CHERCED-WORLD y cómo se ve.',
+  date: '2026-11-01',
+  tags: ['guía', 'mdx'],
+  image: {
+    src: '/assets/icons/brandLogoX2.png',
+    alt: 'Logo de CHERCED: una S blanca dentro de un círculo negro',
+    width: 202,
+    height: 202,
+  },
+  author: 'Camilo Hernandez',
+}
+
+Esta página reúne los elementos aprobados para escribir posts. Cada post es un archivo MDX en `content/posts/<id>/<idioma>.mdx` con su `export const meta`, registrado en `content/posts/registry.ts`. Publicar un post es hacer merge a `main`.
+
+## Texto y estructura
+
+Los párrafos, las **negritas**, las *cursivas* y los [enlaces](/es/blog) funcionan como en Markdown. Usa `##` para las secciones y `###` para las subsecciones: cada encabezado recibe un ancla, y si el post tiene tres o más, aparece el índice al inicio.
+
+- Listas con viñetas.
+- Listas numeradas.
+- Citas con `>`.
+
+> Una cita se ve así: con la barra a la izquierda, como los separadores de 2023.
+
+### Tiempo de lectura
+
+Se calcula solo, a 200 palabras por minuto, sin contar los bloques de código.
+
+## Código
+
+Los bloques de código se resaltan en el servidor con sugar-high, sin JavaScript en el navegador, y llevan un botón para copiarlos:
+
+```ts
+export function readingMinutes(words: number): number {
+  return Math.max(1, Math.ceil(words / 200))
+}
+```
+
+```bash
+npm run verify
+```
+
+## Imágenes
+
+Las imágenes locales pasan por `next/image`. Con la sintaxis de Markdown se muestran en un marco 16:9 que no mueve el contenido mientras cargan:
+
+![Logo de CHERCED: una S blanca dentro de un círculo negro](/assets/icons/brandLogoX2.png)
+
+## Componentes interactivos
+
+El catálogo aprobado tiene, por ahora, un componente: `<GlassDemo />`, una demostración de las tres variantes de glass sobre un fondo en movimiento. Se escribe tal cual dentro del MDX.
+
+<GlassDemo />

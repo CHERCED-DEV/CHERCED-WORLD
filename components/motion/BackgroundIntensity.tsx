@@ -1,5 +1,11 @@
-export type BackgroundIntensityValue = 'full' | 'subtle'
+'use client'
 
-export function BackgroundIntensity(_props: { value: BackgroundIntensityValue }): null {
+import { useEffect } from 'react'
+import { claimIntensity, type Intensity } from '@/lib/motion/intensity'
+
+export type BackgroundIntensityValue = Intensity
+
+export function BackgroundIntensity({ value }: { value: BackgroundIntensityValue }): null {
+  useEffect(() => claimIntensity(value), [value])
   return null
 }

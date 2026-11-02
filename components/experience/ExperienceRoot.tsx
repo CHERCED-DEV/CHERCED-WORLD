@@ -1,8 +1,23 @@
 import type { JSX } from 'react'
+import { getCapsule, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
+import { getDictionary } from '@/lib/i18n/server'
+import { publicEmail } from '@/lib/search/build-index'
+import { pageDocs } from '@/lib/search/pages'
+import { ExperienceClient } from './ExperienceClient'
+import { uiLabels } from './labels'
 
 export type ExperienceRootProps = { lang: Locale }
 
-export function ExperienceRoot(_props: ExperienceRootProps): JSX.Element | null {
-  return null
+export async function ExperienceRoot({ lang }: ExperienceRootProps): Promise<JSX.Element> {
+  const [experience, common] = await Promise.all([getDictionary(lang, 'experience'), getDictionary(lang, 'common')])
+  return (
+    <ExperienceClient
+      lang={lang}
+      labels={uiLabels(experience, common)}
+      pages={pageDocs(lang, common)}
+      email={publicEmail(getSite())}
+      capsule={getCapsule()}
+    />
+  )
 }

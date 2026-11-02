@@ -23,7 +23,7 @@ type ImageRef = { src: string; alt: Localized; width: number; height: number }
 | `about.description` | `Localized` | Sección 6.1 del inventario |
 | `about.image` | `ImageRef` | Retrato de "Sobre mí" (`meParallax.png`); agregado por L0 antes del congelamiento |
 | `about.career` | `CareerEntry[]` | Orden cronológico inverso |
-| `about.skills` | `{ description: Localized; bullets: Localized[]; tech: TechSkill[] }` | 12 tecnologías |
+| `about.skills` | `{ description: Localized; bullets: Localized[]; tech: TechSkill[] }` | 13 tecnologías |
 | `about.education` | `EducationEntry[]` | |
 | `about.courses` | `{ schools: { name: Localized; description: Localized }[]; platzi: { href: string; label: Localized } }` | |
 | `about.languages` | `{ id: Locale; name: Localized; progress: number }[]` | 0–100 |

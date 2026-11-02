@@ -1,0 +1,30 @@
+@use 'breakpoints' as bp;
+
+.page {
+  padding-bottom: var(--cw-space-8);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-7) var(--cw-space-6);
+  max-width: 1080px;
+  margin: 0 auto;
+
+  @include bp.up(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+
+  @include bp.up(lg) {
+    &:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: min(100%, 520px);
+    }
+  }
+}

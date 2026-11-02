@@ -1,0 +1,153 @@
+@use 'glass' as *;
+@use 'breakpoints' as bp;
+
+.demo {
+  @include glass(subtle);
+  margin-block: var(--cw-space-6);
+  padding: var(--cw-space-4);
+}
+
+.title {
+  margin-bottom: var(--cw-space-3);
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  padding: var(--cw-space-5);
+  overflow: hidden;
+  border-radius: var(--cw-radius-md);
+  background: var(--cw-bg);
+  isolation: isolate;
+}
+
+.blob {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.blobA {
+  top: 10%;
+  left: 8%;
+  width: 140px;
+  height: 140px;
+  background: var(--cw-fg);
+}
+
+.blobB {
+  right: 10%;
+  bottom: 8%;
+  width: 120px;
+  height: 120px;
+  background: var(--cw-intro-accent);
+}
+
+.blobC {
+  top: 40%;
+  left: 55%;
+  width: 70px;
+  height: 70px;
+  border: 6px solid var(--cw-fg);
+}
+
+.moving {
+  .blobA {
+    animation: drift-a 6s ease-in-out infinite alternate;
+  }
+
+  .blobB {
+    animation: drift-b 7s ease-in-out infinite alternate;
+  }
+
+  .blobC {
+    animation: drift-c 5s ease-in-out infinite alternate;
+  }
+}
+
+.panel {
+  max-width: 34ch;
+  padding: var(--cw-space-4) var(--cw-space-5);
+  font-weight: 600;
+  text-align: center;
+}
+
+.subtle {
+  @include glass(subtle);
+}
+
+.standard {
+  @include glass(standard);
+}
+
+.strong {
+  @include glass(strong);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cw-space-3) var(--cw-space-5);
+  margin-top: var(--cw-space-4);
+}
+
+.variants {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cw-space-2) var(--cw-space-4);
+  border: 0;
+}
+
+.legend {
+  float: left;
+  margin-inline-end: var(--cw-space-2);
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+
+  @include bp.down(sm) {
+    float: none;
+    width: 100%;
+  }
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  min-height: 44px;
+  cursor: pointer;
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--cw-fg);
+  }
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate(120%, 40%) scale(1.1);
+  }
+}
+
+@keyframes drift-b {
+  to {
+    transform: translate(-140%, -60%);
+  }
+}
+
+@keyframes drift-c {
+  to {
+    transform: translate(-220%, -50%) rotate(90deg);
+  }
+}

@@ -1,0 +1,183 @@
+$sweep: cubic-bezier(0.74, 0.06, 0.4, 0.92);
+
+.intro {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: var(--cw-z-intro);
+  place-items: center;
+  background: var(--cw-glass-solid-strong-bg);
+  color: var(--cw-fg);
+  pointer-events: none;
+  user-select: none;
+}
+
+:global(:root[data-intro='pending']) .intro {
+  display: grid;
+  animation: intro-exit 300ms var(--cw-ease) 1200ms both;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-1);
+  min-width: min(17rem, 80vw);
+}
+
+.title,
+.role {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  height: clamp(3rem, 3vw + 2rem, 4rem);
+}
+
+.role {
+  height: 2rem;
+}
+
+.titleBlock,
+.roleBlock {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: 0;
+  animation: intro-sweep 700ms $sweep both;
+}
+
+.titleBlock {
+  background: var(--cw-intro-accent);
+}
+
+.roleBlock {
+  background: var(--cw-fg);
+  animation-delay: 250ms;
+}
+
+.name {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  font-size: clamp(2rem, 2.5vw + 1.25rem, 2.75rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  animation: intro-fade 1ms linear 350ms both;
+}
+
+.dot {
+  position: absolute;
+  right: -0.45em;
+  bottom: 0.1em;
+  width: 0.22em;
+  height: 0.22em;
+  border-radius: 50%;
+  background: var(--cw-fg);
+  animation: intro-pop 450ms $sweep 700ms both;
+}
+
+.roleText {
+  position: relative;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  animation: intro-fade 1ms linear 600ms both;
+}
+
+.skip {
+  position: absolute;
+  bottom: max(var(--cw-space-6), env(safe-area-inset-bottom));
+  left: 50%;
+  translate: -50% 0;
+  padding: var(--cw-space-1) var(--cw-space-3);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation: intro-fade 300ms var(--cw-ease) 400ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleBlock,
+  .roleBlock {
+    display: none;
+  }
+
+  .name,
+  .dot,
+  .roleText,
+  .skip {
+    animation: none;
+  }
+}
+
+@keyframes intro-exit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes intro-sweep {
+  0% {
+    left: 0;
+    width: 0;
+  }
+
+  50% {
+    left: 0;
+    width: 100%;
+  }
+
+  100% {
+    left: 100%;
+    width: 0;
+  }
+}
+
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+    background: var(--cw-intro-accent);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-1.1em) scale(1.3);
+    background: var(--cw-intro-accent);
+  }
+
+  70% {
+    transform: translateY(0) scale(1.4, 0.8);
+  }
+
+  85% {
+    transform: translateY(-0.35em) scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

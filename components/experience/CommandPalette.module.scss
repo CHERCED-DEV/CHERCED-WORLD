@@ -1,0 +1,138 @@
+@use 'breakpoints' as bp;
+@use 'layout';
+
+dialog.palette {
+  width: min(100% - 2 * var(--cw-space-4), 640px);
+  margin-block-start: min(12vh, 120px);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-3);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--cw-space-3);
+  padding-bottom: var(--cw-space-3);
+  border-bottom: 1px solid var(--cw-glass-border);
+}
+
+.searchIcon {
+  flex: none;
+  color: var(--cw-fg-muted);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  font-size: var(--cw-text-lg);
+
+  &::placeholder {
+    color: var(--cw-fg-muted);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.search:focus-within {
+  border-bottom-color: var(--cw-fg);
+}
+
+.close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  background: transparent;
+
+  &:hover {
+    border-color: var(--cw-fg);
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-3);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.groupTitle {
+  padding: 0 var(--cw-space-3);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.option {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--cw-space-3);
+  min-height: 44px;
+  padding: var(--cw-space-2) var(--cw-space-3);
+  border: 1px solid transparent;
+  border-radius: var(--cw-radius-sm);
+  cursor: pointer;
+}
+
+.active {
+  border-color: var(--cw-fg);
+  background: var(--cw-glass-subtle-bg);
+}
+
+.secret {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.optionTitle {
+  overflow-wrap: anywhere;
+}
+
+.optionHint {
+  flex: none;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+
+  @include bp.down(sm) {
+    display: none;
+  }
+}
+
+.empty,
+.note {
+  padding: 0 var(--cw-space-3);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.keys {
+  padding-top: var(--cw-space-3);
+  border-top: 1px solid var(--cw-glass-border);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+
+  @include bp.down(md) {
+    @include layout.visually-hidden;
+  }
+}
