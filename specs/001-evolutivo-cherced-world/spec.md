@@ -34,6 +34,19 @@ ejecutaban y textos con errores ("Actually", "Idioms", "All Rigths Reserved").
   `main`.
 - Q: ¿Cómo responde el asistente sin claves nuevas? → A: sin modelo externo; responde a partir del
   contenido publicado, con enlaces a la fuente.
+- Q: ¿Cómo se migra el contenido que quedó desactualizado o con tono genérico? → A: carrera 2022–2026
+  pendiente del autor; Facebook apunta al perfil real; textos en tercera persona pasan a primera persona
+  con los mismos hechos; las barras de skills se conservan (detalle en `content-inventory.md`).
+- Q: Si cada push a `main` despliega solo, ¿cómo llega el evolutivo a producción? → A: en un solo corte:
+  las lanes se integran en la rama del evolutivo, se revisa en la vista previa de Vercel y hay un único
+  merge a `main`. Excepción: el cierre de la exposición de datos del sitio 2023 se despliega antes, solo.
+- Q: ¿Cómo inicia sesión el administrador sin servicios ni variables nuevas? → A: con contraseña. La
+  primera vez, un código de un solo uso escrito en los registros de la plataforma permite crearla; se
+  guarda como hash en la base existente.
+- Q: ¿El autor puede responder comentarios? → A: sí, una respuesta del autor por comentario, con
+  distintivo, sin hilos.
+- Q: ¿Los formularios piden autorización de tratamiento de datos? → A: sí, casilla obligatoria y enlace a
+  una política de privacidad, en la línea de la Ley 1581 de Colombia.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -103,8 +116,9 @@ comprobar que solo hay una animación activa.
 
 ### User Story 3 - Contactar con confianza (Priority: P1)
 
-El visitante envía un mensaje con nombre, correo, teléfono opcional y texto. Ve una confirmación solo cuando
-el mensaje se guardó de verdad, y un error claro cuando no. Sus datos nunca son públicos. La protección
+El visitante envía un mensaje con nombre, correo, teléfono opcional y texto, y autoriza el tratamiento de
+sus datos con una casilla que enlaza a la política de privacidad. Ve una confirmación solo cuando el
+mensaje se guardó de verdad, y un error claro cuando no. Sus datos nunca son públicos. La protección
 anti-spam es invisible para las personas.
 
 **Why this priority**: que lo contacten es el propósito de negocio del portafolio. En 2023 el formulario
@@ -127,29 +141,31 @@ respuesta pública contiene datos personales ni el contador de no leídos.
    tal como se escribió.
 6. **Given** cualquier visitante, **When** recorre el sitio, **Then** en ninguna página ni respuesta
    pública aparecen el número de mensajes sin leer ni datos de otros visitantes.
+7. **Given** la casilla de autorización sin marcar, **When** el visitante envía, **Then** el mensaje no se
+   envía y se le indica que la autorización es necesaria, con enlace a la política de privacidad.
 
 ---
 
 ### User Story 4 - Administrar inbox y comentarios de verdad (Priority: P2)
 
-El administrador inicia sesión de forma segura desde un acceso discreto. Ve su inbox (ordenar, filtrar,
-marcar como leído o no leído, archivar, eliminar), modera comentarios (aprobar, rechazar, eliminar) y,
-mientras tiene el panel abierto, recibe avisos casi en tiempo real de mensajes y comentarios nuevos, sin
-recargar.
+El administrador inicia sesión con contraseña desde un acceso discreto. La primera vez crea esa contraseña
+con un código de un solo uso que solo aparece en los registros de la plataforma de despliegue. Ve su inbox
+(ordenar, filtrar, marcar como leído o no leído, archivar, eliminar, responder por correo), modera
+comentarios (aprobar, rechazar, eliminar, responder como autor) y, mientras tiene el panel abierto,
+recibe avisos casi en tiempo real de mensajes y comentarios nuevos, sin recargar.
 
 **Why this priority**: cierra el hueco de seguridad de 2023 y convierte el inbox en una herramienta útil.
 Depende de que existan mensajes (US3) y comentarios (US6), aunque se puede probar con datos de prueba.
 
-**Independent Test**: iniciar sesión con credenciales correctas e incorrectas, pedir vistas privadas sin
+**Independent Test**: hacer la configuración inicial, iniciar sesión con contraseña correcta e incorrecta, pedir vistas privadas sin
 sesión y enviar un mensaje desde otro navegador para verlo aparecer en el panel.
 
 **Acceptance Scenarios**:
 
 1. **Given** una visita sin sesión, **When** abre `/inbox` o pide cualquier acción de administración,
    **Then** se le pide iniciar sesión y no recibe ningún dato privado, ni en la página ni en respuestas.
-2. **Given** credenciales correctas, **When** el administrador inicia sesión, **Then** entra al panel. **Given**
-   cualquier credencial incorrecta, incluido un usuario correcto con contraseña incorrecta, **Then** se
-   rechaza sin indicar qué dato falló.
+2. **Given** la contraseña correcta, **When** el administrador inicia sesión, **Then** entra al panel.
+   **Given** una contraseña incorrecta, **Then** se rechaza con un mensaje genérico.
 3. **Given** 5 intentos fallidos en 15 minutos, **When** se intenta de nuevo, **Then** los intentos quedan
    bloqueados temporalmente.
 4. **Given** el panel abierto, **When** un visitante envía un mensaje, **Then** el mensaje aparece y el
@@ -159,6 +175,15 @@ sesión y enviar un mensaje desde otro navegador para verlo aparecer en el panel
 6. **Given** una sesión vigente, **When** el administrador recarga el navegador, **Then** sigue autenticado.
 7. **Given** 12 h sin actividad o un cierre de sesión explícito, **When** el administrador intenta una
    acción, **Then** se le pide iniciar sesión de nuevo.
+8. **Given** que todavía no existe administrador, **When** el autor abre la configuración inicial con el
+   código de un solo uso de los registros de la plataforma, **Then** crea su contraseña, el código deja de
+   servir y la configuración inicial queda deshabilitada.
+9. **Given** que ya existe administrador, **When** alguien abre la configuración inicial, con o sin
+   código, **Then** no está disponible.
+10. **Given** un comentario aprobado, **When** el administrador responde como autor, **Then** la respuesta
+    aparece debajo del comentario con distintivo de autor. La puede editar o eliminar después.
+11. **Given** un mensaje del inbox, **When** el administrador elige responder, **Then** se abre su cliente
+    de correo con el destinatario y el asunto ya escritos.
 
 ---
 
@@ -193,8 +218,9 @@ idioma y verificar la paridad del contenido.
 
 Los posts admiten formato enriquecido: encabezados, imágenes, código resaltado que se puede copiar y
 componentes interactivos embebidos (por ejemplo, demos del propio glass). Cada post muestra tiempo de
-lectura, índice, etiquetas y opciones para compartir. Los comentarios piden nombre, correo (privado) y
-texto, y quedan en revisión hasta que el administrador los aprueba. Los 3 posts actuales se migran.
+lectura, índice, etiquetas y opciones para compartir. Los comentarios piden nombre, correo (privado),
+texto y autorización de datos, y quedan en revisión hasta que el administrador los aprueba. El autor puede
+responder cada comentario. Los 3 posts actuales se migran.
 
 **Why this priority**: termina el blog que en 2023 quedó al "80 %" y le da al autor un canal propio.
 
@@ -207,7 +233,8 @@ automático, comentar y moderar.
    despliegue automático, **Then** el post aparece publicado sin ningún paso adicional.
 2. **Given** un comentario válido, **When** el lector lo envía, **Then** ve "tu comentario está en revisión"
    y el comentario no es público hasta que se aprueba.
-3. **Given** comentarios aprobados, **When** se muestran, **Then** llevan nombre y fecha, nunca el correo.
+3. **Given** comentarios aprobados, **When** se muestran, **Then** llevan nombre y fecha, nunca el correo,
+   y, si existe, la respuesta del autor debajo con su distintivo.
 4. **Given** un post con bloques de código, **When** se lee, **Then** el código aparece resaltado y con
    opción de copiar.
 
@@ -325,6 +352,12 @@ descubrir la cápsula con el comando secreto.
 - **Datos históricos de 2023 en la base**: se muestran, incluidos los teléfonos guardados como número.
 - **Despliegue de vista previa de un PR sin acceso a la base**: el sitio público funciona y las funciones
   con datos se muestran como no disponibles.
+- **Contraseña olvidada**: no hay recuperación por correo. El autor reinicia la credencial desde la
+  consola de la base de datos existente, lo que reactiva la configuración inicial y genera un código
+  nuevo en los registros.
+- **Código de configuración inicial usado o vencido**: se rechaza, sin revelar si alguna vez fue válido.
+- **Mensajes y comentarios históricos sin autorización registrada**: se conservan, marcados como
+  anteriores a la política de privacidad.
 
 ## Requirements *(mandatory)*
 
@@ -340,7 +373,7 @@ descubrir la cápsula con el comando secreto.
   skills, tecnologías, educación, cursos, idiomas), servicios, 11 proyectos, 3 posts y redes. La
   migración MUST corregir ortografía y falsos amigos ("Actually", "Idioms", "Rigths", "Bussines",
   "Desing", "Theathrum") y enlaces rotos. El ícono de Facebook hoy apunta a una noticia de BBC Mundo:
-  MUST apuntar al perfil real o retirarse.
+  MUST apuntar al perfil real del autor.
 - **FR-005**: La intro MUST durar como máximo 1,5 s, poder saltarse con clic, tecla o toque, mostrarse
   como máximo una vez por sesión y presentarse estática con "reducir movimiento".
 - **FR-006**: El header y el menú flotante MUST llevar a todas las secciones, mostrar "regresar" en las
@@ -383,8 +416,9 @@ descubrir la cápsula con el comando secreto.
 **Contacto**
 
 - **FR-030**: El formulario MUST pedir nombre (obligatorio, hasta 60 caracteres), correo (obligatorio,
-  válido, hasta 100), teléfono (opcional, formato internacional, guardado como texto) y mensaje
-  (obligatorio, hasta 1000).
+  válido, hasta 100), teléfono (opcional, formato internacional, guardado como texto), mensaje
+  (obligatorio, hasta 1000) y autorización de tratamiento de datos (casilla obligatoria, sin marcar por
+  defecto, con enlace a la política de privacidad).
 - **FR-031**: La validación MUST aplicarse con los mismos criterios en la interfaz y en el servidor.
 - **FR-032**: La confirmación MUST mostrarse solo después de que el mensaje se guardó de verdad.
 - **FR-033**: Los formularios públicos MUST tener anti-spam invisible para las personas: campo trampa,
@@ -392,6 +426,9 @@ descubrir la cápsula con el comando secreto.
 - **FR-034**: El contenido enviado MUST tratarse siempre como texto, nunca ejecutarse.
 - **FR-035**: Las respuestas públicas MUST NOT incluir datos personales de visitantes ni el contador de
   no leídos.
+- **FR-036**: El sitio MUST publicar una página de política de privacidad en ambos idiomas: qué datos se
+  recogen, para qué, por cuánto tiempo y cómo pedir su consulta o eliminación. La fecha de la
+  autorización MUST guardarse junto con cada mensaje y cada comentario.
 
 **Administración y sesión**
 
@@ -402,13 +439,20 @@ descubrir la cápsula con el comando secreto.
   MUST bloquearse temporalmente.
 - **FR-043**: Toda vista y acción de administración MUST verificar la sesión en el servidor.
 - **FR-044**: El inbox MUST permitir listar, ordenar por fecha o nombre, filtrar no leídos, marcar como
-  leído o no leído, archivar y eliminar con confirmación.
-- **FR-045**: La moderación MUST permitir ver pendientes y aprobar, rechazar o eliminar comentarios.
+  leído o no leído, archivar, eliminar con confirmación y responder. Responder abre el cliente de correo
+  del administrador con el destinatario y el asunto ya escritos; el sitio no envía correos.
+- **FR-045**: La moderación MUST permitir ver pendientes y aprobar, rechazar o eliminar comentarios, y
+  escribir, editar o eliminar una única respuesta del autor por comentario aprobado.
 - **FR-046**: El contador de no leídos MUST ser visible solo para el administrador.
 - **FR-047**: Con el panel abierto, los mensajes y comentarios nuevos MUST aparecer en 10 s como máximo
   sin recargar. Si se pierde la conexión, el panel MUST indicarlo y reconectar solo.
-- **FR-048**: La credencial del administrador MUST poder configurarse por primera vez sin añadir
-  configuración en la plataforma de despliegue y sin quedar escrita en el repositorio.
+- **FR-048**: El administrador MUST autenticarse con contraseña. Mientras no exista administrador, el
+  sistema MUST escribir en los registros de la plataforma un código de un solo uso, vigente 24 h, que
+  habilita la configuración inicial para crear la contraseña. Al crearse, el código MUST invalidarse y la
+  configuración inicial MUST quedar deshabilitada. Nada de esto requiere configuración nueva en la
+  plataforma ni queda escrito en el repositorio.
+- **FR-049**: La contraseña MUST tener al menos 12 caracteres, guardarse solo como hash irreversible y
+  poder cambiarse desde el panel confirmando la contraseña actual.
 
 **Idiomas**
 
@@ -430,9 +474,11 @@ descubrir la cápsula con el comando secreto.
   copiar y componentes interactivos de un catálogo aprobado.
 - **FR-072**: Cada post MUST mostrar tiempo de lectura, fecha, etiquetas, opciones para compartir e índice
   cuando el post sea largo.
-- **FR-073**: Los comentarios MUST pedir nombre, correo (privado) y texto de hasta 1000 caracteres, quedar
-  pendientes de moderación y aplicar el anti-spam de FR-033.
-- **FR-074**: Solo los comentarios aprobados MUST ser públicos, y nunca con el correo.
+- **FR-073**: Los comentarios MUST pedir nombre, correo (privado), texto de hasta 1000 caracteres y la
+  autorización de datos de FR-030, quedar pendientes de moderación y aplicar el anti-spam de FR-033.
+- **FR-074**: Solo los comentarios aprobados MUST ser públicos, y nunca con el correo. La respuesta del
+  autor, si existe, MUST mostrarse debajo del comentario con distintivo de autor. No hay hilos de más de
+  un nivel.
 - **FR-075**: Los 3 posts de 2023 MUST migrarse.
 
 **Casos de estudio**
@@ -483,6 +529,14 @@ descubrir la cápsula con el comando secreto.
 - **FR-113**: Si la base de datos no está disponible, el contenido público MUST seguir disponible.
 - **FR-114**: Los errores del servidor MUST quedar en los registros de la plataforma existente, sin datos
   personales.
+- **FR-115**: El evolutivo MUST llegar a producción en un solo corte: las lanes se integran en la rama
+  del evolutivo, el resultado completo se revisa en un despliegue de vista previa y después se hace un
+  único merge a `main`.
+- **FR-116**: Antes del corte, y por separado, MUST desplegarse a `main` el cierre de la exposición de
+  datos del sitio 2023: desde ese despliegue, ninguna ruta pública devuelve mensajes de contacto ni
+  correos de comentaristas.
+- **FR-117**: Antes del corte MUST capturarse la versión 2023 (pantallas de escritorio y móvil de cada
+  ruta pública) para la cápsula 2023, porque después del corte ya no existe en línea.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -492,12 +546,16 @@ descubrir la cápsula con el comando secreto.
   resultado, tecnologías, imágenes y enlaces, por idioma.
 - **Post**: id estable heredado de 2023, título, subtítulo, cuerpo enriquecido, fecha, etiquetas, imagen e
   idiomas disponibles.
-- **Comentario**: post al que pertenece, nombre, correo (privado), texto, fecha y estado (pendiente,
-  aprobado, rechazado).
-- **Mensaje de contacto**: nombre, correo, teléfono (texto), mensaje, fecha y estado (no leído, leído,
-  archivado).
-- **Credencial y sesión de administrador**: identidad única del autor, vigencia y estado de bloqueo por
-  intentos fallidos.
+- **Comentario**: post al que pertenece, nombre, correo (privado), texto, fecha, fecha de autorización
+  de datos (vacía en los históricos), estado (pendiente, aprobado, rechazado) y respuesta del autor
+  opcional (texto y fecha).
+- **Mensaje de contacto**: nombre, correo, teléfono (texto), mensaje, fecha, fecha de autorización de
+  datos (vacía en los históricos) y estado (no leído, leído, archivado).
+- **Credencial del administrador**: hash de la contraseña, fecha de creación y estado de bloqueo por
+  intentos fallidos. Hay como máximo una.
+- **Código de configuración inicial**: valor de un solo uso, vencimiento y si ya se usó. Solo existe
+  mientras no hay credencial.
+- **Sesión de administrador**: vigencia, última actividad y estado (activa, cerrada, expirada).
 - **Registro de frecuencia**: origen, tipo de acción, ventana y conteo, para los límites de contacto,
   comentarios e inicio de sesión.
 - **Preferencias del visitante** (solo en el navegador): idioma, tema, intro vista y cápsula descubierta.
@@ -532,6 +590,11 @@ descubrir la cápsula con el comando secreto.
   nuevas, verificado en el checklist de release.
 - **SC-015**: En la primera visita el contenido es usable en 1,5 s o menos de intro, y en 0 s en las
   visitas siguientes de la misma sesión.
+- **SC-016**: 0 mensajes o comentarios nuevos aceptados sin fecha de autorización de datos.
+- **SC-017**: El paso de la versión 2023 a la nueva ocurre en un único despliegue a producción, y ningún
+  visitante ve una página que mezcle ambas versiones.
+- **SC-018**: La exposición de datos del sitio 2023 queda cerrada en producción antes de que empiece el
+  corte, verificado con el mismo escaneo de SC-007.
 
 ## Assumptions
 
@@ -553,6 +616,10 @@ descubrir la cápsula con el comando secreto.
 - El modo de trabajo es Factoria `next`. La tensión entre su regla BFF y la restricción de no añadir
   servicios se resuelve en `/speckit.plan` (TODO(FACTORIA_BFF_TENSION) de la constitución).
 - El archivo de datos de prueba `messages.json` de la raíz del repositorio se elimina.
-- **Fuera de alcance**: editor web de contenido, múltiples usuarios o roles, newsletter, notificaciones por
-  correo o push fuera del panel, pagos, analítica, cambio de plataforma de hosting y bases de datos o
-  servicios nuevos.
+- Mensajes y comentarios se conservan hasta que el administrador los elimina. La política de privacidad
+  lo declara así.
+- El texto de la política de privacidad se redacta como borrador y el autor lo revisa antes del corte
+  (pendiente P-06 del inventario de contenido). Esta spec no constituye asesoría legal.
+- **Fuera de alcance**: editor web de contenido, múltiples usuarios o roles, recuperación de contraseña por
+  correo, envío de correos desde el sitio, newsletter, notificaciones por correo o push fuera del panel,
+  pagos, analítica, cambio de plataforma de hosting y bases de datos o servicios nuevos.

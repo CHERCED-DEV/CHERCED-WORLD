@@ -28,6 +28,7 @@ marcado como pendiente y la sección afectada no se muestra.
 | P-03 | Estado en 2026 de "Ingeniería de Sistemas, UNAD (2020 – Actually)": ¿en curso o graduado, y en qué año? | Sobre mí → Educación |
 | P-04 | Valores de skills: se conservan los de 2023 (D-04). Si el autor quiere actualizarlos a 2026, los entrega aquí | Sobre mí → Skills |
 | P-05 | Derechos de uso de dos imágenes de terceros (ver sección 7) | Blog post3, assets |
+| P-06 | Revisión del borrador de la política de privacidad (responsable, finalidad, conservación y canal para consultar o eliminar datos) | Página de privacidad (FR-036) |
 
 ## 3. Inventario de fuentes (2023)
 
@@ -123,6 +124,21 @@ marcado como pendiente y la sección afectada no se muestra.
 | comments.form.submit | Send | Enviar |
 | comments.pending | Thanks! Your comment is under review. | ¡Gracias! Tu comentario está en revisión. |
 | comments.empty | No comments yet. Be the first. | Aún no hay comentarios. Sé el primero. |
+| comments.authorBadge | Author | Autor |
+| privacy.consent | I authorize the processing of my personal data as described in the {privacyPolicy}. | Autorizo el tratamiento de mis datos personales según la {privacyPolicy}. |
+| privacy.policyLink | privacy policy | política de privacidad |
+| privacy.required | You need to accept the privacy policy to send this form. | Para enviar este formulario necesitas aceptar la política de privacidad. |
+| nav.privacy | Privacy | Privacidad |
+| admin.login.title | Sign in | Iniciar sesión |
+| admin.login.password | Password | Contraseña |
+| admin.login.error | Couldn't sign in. Check your details and try again. | No se pudo iniciar sesión. Revisa tus datos e intenta de nuevo. |
+| admin.login.locked | Too many attempts. Try again in a few minutes. | Demasiados intentos. Intenta de nuevo en unos minutos. |
+| admin.setup.title | Create the admin password | Crea la contraseña de administrador |
+| admin.setup.code | One-time setup code | Código de configuración de un solo uso |
+| admin.setup.passwordHint | At least 12 characters | Mínimo 12 caracteres |
+| admin.reply | Reply by email | Responder por correo |
+| admin.authorReply | Reply as author | Responder como autor |
+| admin.connectionLost | Connection lost. Reconnecting… | Se perdió la conexión. Reconectando… |
 
 ### 5.3 Experiencia, idioma y tema
 

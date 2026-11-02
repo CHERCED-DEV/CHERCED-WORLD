@@ -42,3 +42,7 @@
   ejemplo), no como tecnología del sistema.
 - Pendiente para `/speckit.plan`: TODO(FACTORIA_BFF_TENSION) y TODO(FACTORIA_CONTEXT) de la
   constitución. Ambos necesitan el MCP de Factoria autenticado.
+- Revalidación tras `/speckit.clarify` (2026-11-01, 4 preguntas: entrega en un solo corte, login con
+  contraseña y código inicial, respuesta del autor a comentarios, autorización de datos): 16/16 → 16/16.
+  Sin regresiones. FR-048 dejó de ser abstracto y pasó a ser verificable; se agregaron FR-036, FR-049,
+  FR-115, FR-116, FR-117 y SC-016 a SC-018.
