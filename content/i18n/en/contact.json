@@ -9,6 +9,14 @@
   "contact.success.text": "Thanks for reaching out. I'll get back to you soon.",
   "contact.error.text": "Your message couldn't be sent. Nothing was lost, try again in a moment.",
   "contact.rateLimited": "You've sent several messages in a short time. Please try again in a few minutes.",
+  "contact.error.title": "Not sent",
+  "contact.validation": "Check the highlighted fields to send your message.",
+  "contact.sending": "Sending…",
+  "contact.requiredNote": "Fields marked with * are required.",
+  "contact.phoneHint": "Include the country code, for example +1 555 123 4567",
+  "contact.newTab": "(opens in a new tab)",
+  "contact.formLabel": "Contact form",
+  "contact.honeypot": "Leave this field empty",
   "meta.contact.title": "Contact me",
   "meta.contact.description": "Let's talk: send me a message."
 }

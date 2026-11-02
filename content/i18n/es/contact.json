@@ -9,6 +9,14 @@
   "contact.success.text": "Gracias por escribirme. Te respondo pronto.",
   "contact.error.text": "No se pudo enviar tu mensaje. No se perdió nada; intenta de nuevo en un momento.",
   "contact.rateLimited": "Enviaste varios mensajes en poco tiempo. Intenta de nuevo en unos minutos.",
+  "contact.error.title": "No se envió",
+  "contact.validation": "Revisa los campos marcados para poder enviar tu mensaje.",
+  "contact.sending": "Enviando…",
+  "contact.requiredNote": "Los campos marcados con * son obligatorios.",
+  "contact.phoneHint": "Con indicativo, por ejemplo +57 300 123 4567",
+  "contact.newTab": "(se abre en una pestaña nueva)",
+  "contact.formLabel": "Formulario de contacto",
+  "contact.honeypot": "Deja este campo vacío",
   "meta.contact.title": "Contáctame",
   "meta.contact.description": "Hablemos: envíame un mensaje."
 }
