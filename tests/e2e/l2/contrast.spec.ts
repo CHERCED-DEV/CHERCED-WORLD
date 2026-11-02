@@ -15,7 +15,7 @@ const ROUTES = [
   '/es/esta-ruta-no-existe',
 ]
 const FRAMES = 4
-const MAX_SCROLL_STEPS = 4
+const MAX_SCROLL_STEPS = 20
 const HIDE_TEXT_ID = 'cw-contrast-hide-text'
 const FREEZE_STYLE = '*,*::before,*::after{transition:none!important}'
 
@@ -35,15 +35,51 @@ test.beforeEach(({}, testInfo) => {
 })
 
 async function collectTexts(page: Page): Promise<TextSample[]> {
-  return page.evaluate(() => {
-    const samples: TextSample[] = []
-    const viewport = { width: window.innerWidth, height: window.innerHeight }
+  const samples = await page.evaluate(() => {
+    type Box = { left: number; top: number; right: number; bottom: number }
+    const found: TextSample[] = []
+    const viewport: Box = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight }
+
+    const isGlass = (element: Element) =>
+      element.hasAttribute('data-cw-glass') || getComputedStyle(element).backdropFilter !== 'none'
+
+    const onGlass = (element: Element) => {
+      for (let current: Element | null = element; current; current = current.parentElement) {
+        if (isGlass(current)) return true
+      }
+      return false
+    }
+
+    const visibleBox = (element: Element): Box | null => {
+      const box = { ...viewport }
+      let escaped = false
+      for (let current: Element | null = element; current && current !== document.documentElement; current = current.parentElement) {
+        if (current.matches('.cw-visually-hidden, .cw-skip-link')) return null
+        const style = getComputedStyle(current)
+        if (style.clip !== 'auto' && style.clip !== '') return null
+        if (style.clipPath.startsWith('inset(50%')) return null
+        const clips = style.overflowX !== 'visible' || style.overflowY !== 'visible'
+        if (clips && !escaped) {
+          const rect = current.getBoundingClientRect()
+          if (rect.width <= 1 || rect.height <= 1) return null
+          box.left = Math.max(box.left, rect.left)
+          box.top = Math.max(box.top, rect.top)
+          box.right = Math.min(box.right, rect.right)
+          box.bottom = Math.min(box.bottom, rect.bottom)
+        }
+        if (style.position === 'fixed') escaped = true
+      }
+      return box.right - box.left >= 3 && box.bottom - box.top >= 6 ? box : null
+    }
+
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       const text = node.textContent?.trim() ?? ''
       const element = node.parentElement
-      if (!text || !element || !element.closest('[data-cw-glass]')) continue
+      if (!text || !element || !onGlass(element)) continue
       if (!element.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue
+      const box = visibleBox(element)
+      if (!box) continue
       let opacity = 1
       for (let current: Element | null = element; current; current = current.parentElement) {
         opacity *= Number.parseFloat(getComputedStyle(current).opacity)
@@ -53,10 +89,10 @@ async function collectTexts(page: Page): Promise<TextSample[]> {
       range.selectNodeContents(node)
       const rects = [...range.getClientRects()]
         .map((rect) => {
-          const x = Math.max(0, Math.ceil(rect.left))
-          const y = Math.max(0, Math.ceil(rect.top))
-          const right = Math.min(viewport.width, Math.floor(rect.right))
-          const bottom = Math.min(viewport.height, Math.floor(rect.bottom))
+          const x = Math.ceil(Math.max(box.left, rect.left))
+          const y = Math.ceil(Math.max(box.top, rect.top))
+          const right = Math.floor(Math.min(box.right, rect.right))
+          const bottom = Math.floor(Math.min(box.bottom, rect.bottom))
           return { x, y, width: right - x, height: bottom - y }
         })
         .filter((rect) => rect.width >= 3 && rect.height >= 6)
@@ -66,8 +102,7 @@ async function collectTexts(page: Page): Promise<TextSample[]> {
         })
       if (rects.length === 0) continue
       const style = getComputedStyle(element)
-      if (style.color.replace(/\s/g, '').endsWith(',0)') || style.color === 'transparent') continue
-      samples.push({
+      found.push({
         text: text.slice(0, 40),
         color: style.color,
         opacity,
@@ -76,8 +111,9 @@ async function collectTexts(page: Page): Promise<TextSample[]> {
         rects,
       })
     }
-    return samples
+    return found
   })
+  return samples.filter((sample) => (parseColor(sample.color)?.a ?? 1) * sample.opacity >= 0.05)
 }
 
 function worstRatio(sample: TextSample, pixels: ReturnType<typeof decodePng>): number {
@@ -88,6 +124,7 @@ function worstRatio(sample: TextSample, pixels: ReturnType<typeof decodePng>): n
   for (const rect of sample.rects) {
     for (let y = rect.y + 1; y < rect.y + rect.height - 1; y++) {
       for (let x = rect.x + 1; x < rect.x + rect.width - 1; x++) {
+        if (x < 0 || y < 0 || x >= pixels.width || y >= pixels.height) continue
         const i = (y * pixels.width + x) * 4
         const background: Rgba = { r: pixels.data[i], g: pixels.data[i + 1], b: pixels.data[i + 2], a: 1 }
         const ratio = contrastRatio(over(text, background), background)
@@ -130,7 +167,7 @@ for (const theme of ['dark', 'light'] as const) {
   test.describe(`contraste del texto sobre glass en tema ${theme}`, () => {
     for (const route of ROUTES) {
       test(`${route}`, async ({ page }, testInfo) => {
-        test.setTimeout(90_000)
+        test.setTimeout(240_000)
         await page.emulateMedia({ colorScheme: theme })
         await page.addInitScript(() => sessionStorage.setItem('cw-intro-seen', '1'))
         const response = await page.goto(route)
