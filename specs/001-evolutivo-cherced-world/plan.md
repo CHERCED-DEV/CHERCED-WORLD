@@ -181,6 +181,7 @@ ya están reflejadas en `contracts/` y `data-model.md`:
 | A-09 | Menú flotante sobre `popover` nativo; atributos `data-js`, `data-theme`, `data-intro` los pone el script en línea | Funciona sin JS y sin destello |
 | A-10 | `ExperienceRoot` y los componentes de motion pueden ser Server Components `async` | L5 necesita leer su namespace en el servidor |
 | A-11 | `agentRules: false` en `next.config.ts` | `next dev` creaba un `AGENTS.md` fuera de toda lane |
+| A-12 | `playwright.config.ts` lee el puerto de `E2E_PORT` (por defecto 3100). Puertos por lane: LC 3101, L1 3102, L2 3103, L3 3104, L4 3105, L5 3106 | Enmienda del orquestador tras el congelamiento: con un puerto fijo, seis lanes no pueden correr e2e a la vez |
 
 ## Complexity Tracking
 
