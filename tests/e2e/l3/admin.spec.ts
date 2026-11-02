@@ -1,5 +1,5 @@
 import { expect, test, type Browser, type BrowserContext, type Locator, type Page } from '@playwright/test'
-import { fillContact, hideTab, newVisitor, openContact, sendContact, showTab, uniqueToken, waitMinimumFill, type ContactValues } from './support/helpers'
+import { fillContact, hideTab, newVisitor, openContact, renderJustNow, sendContact, showTab, uniqueToken, waitMinimumFill, type ContactValues } from './support/helpers'
 import { inspectBody, scanPublicSurface, type Finding } from './support/privacy'
 import { startIsolatedServer, type IsolatedServer } from './support/server'
 
@@ -224,8 +224,9 @@ test('lo que llena el campo trampa o llega demasiado rápido nunca entra al inbo
   const quick = `Bot rápido ${uniqueToken()}`
   await openContact(fast.page)
   await fillContact(fast.page, { name: quick, email: 'rapido@example.org', message: 'spam' })
+  await renderJustNow(fast.page)
   await fast.page.locator('[data-cw-contact-form]').getByRole('button', { name: 'Enviar' }).click()
-  await expect(fast.page.getByRole('alert')).toBeVisible()
+  await expect(fast.page.getByRole('alert').filter({ hasText: 'No se pudo enviar tu mensaje.' })).toBeVisible()
 
   await openPanel(admin.page, '/es/inbox?view=all')
   await expect(admin.page.locator('[data-cw-messages]')).toBeVisible()
@@ -527,4 +528,10 @@ test('escaneo de privacidad: ninguna respuesta pública trae datos de visitantes
     expect.arrayContaining([seeded.messages[0]?.email, PHONE, seeded.comments.find((values) => values.userName.startsWith('Pendiente'))?.email]),
   )
   expect(control.some((finding) => finding.kind === 'marca privada')).toBe(true)
+
+  const logs = server.output()
+  for (const values of [...seeded.messages, ...seeded.comments]) {
+    expect(logs, 'los logs del servidor no llevan datos personales (FR-114)').not.toContain(values.email)
+  }
+  for (const secret of [PHONE, SECOND_PASSWORD, FIRST_PASSWORD]) expect(logs).not.toContain(secret)
 })

@@ -71,6 +71,12 @@ export async function sendContact(page: Page, values: ContactValues): Promise<vo
   await expect(page.getByRole('status').filter({ hasText: 'Gracias por escribirme' }).first()).toBeVisible()
 }
 
+export async function renderJustNow(page: Page): Promise<void> {
+  await page.locator('input[name="renderedAt"]').evaluate((input: HTMLInputElement) => {
+    input.value = String(Date.now())
+  })
+}
+
 export async function captureActionResponses(page: Page, path: string): Promise<string[]> {
   const bodies: string[] = []
   await page.route(`**${path}`, async (route) => {

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { captureActionResponses, fillContact, onlyIn, openContact, uniqueToken, useIp, waitMinimumFill } from './support/helpers'
+import { captureActionResponses, fillContact, onlyIn, openContact, renderJustNow, uniqueToken, useIp, waitMinimumFill } from './support/helpers'
 
 const sendButton = { name: 'Enviar' }
 
@@ -109,6 +109,7 @@ test.describe('contacto con JavaScript', () => {
     await openContact(page)
     await fillContact(page, visitor(uniqueToken()))
     const bodies = await captureActionResponses(page, '/es/contactMe')
+    await renderJustNow(page)
     await page.locator('[data-cw-contact-form]').getByRole('button', sendButton).click()
     await expect(page.getByRole('alert').filter({ hasText: 'No se pudo enviar tu mensaje.' })).toBeVisible()
     expect(bodies.join('')).toContain('{"ok":false,"error":"validation"}')
