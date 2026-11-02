@@ -11,7 +11,7 @@ commentsApi.get(
   async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const comments = await Comment.find({ postId: id }).exec();
+      const comments = await Comment.find({ postId: id }).select("-email").exec();
       res.setHeader("Content-Type", "application/json");
       res.status(200).json(comments);
     } catch (error) {

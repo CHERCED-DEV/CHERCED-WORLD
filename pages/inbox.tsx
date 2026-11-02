@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head';
-import { getInBoxData } from '../utils/providers/requests/homeCB';
 import { usePortalProvider } from '../utils/providers/modalProvider'; 
 
 
@@ -151,19 +150,9 @@ interface SecretPageProps {
 }
 
 export async function getServerSideProps(): Promise<{ props: SecretPageProps }> {
-    try {
-        const inbox: SecretPageServerCallConfig[] = await getInBoxData();
-        return {
-            props: {
-                inbox
-            }
-        }
-    } catch (error) {
-        console.error(error);
-        return {
-            props: {
-                inbox: []
-            }
+    return {
+        props: {
+            inbox: []
         }
     }
 }
