@@ -17,10 +17,9 @@ const newNotification = async (): Promise<number> => {
   return result.notification + 1;
 };
 
-contactMeApi.get("/api/contactMe", async (req: Request, res: Response) => {
-  const messages = await Message.find();
-  res.setHeader("Content-Type", "application/json");
-  res.status(200).json(messages);
+contactMeApi.get("/api/contactMe", (req: Request, res: Response) => {
+  res.setHeader("Allow", "POST");
+  res.status(405).json({ message: "Method not allowed" });
 });
 
 contactMeApi.post("/api/contactMe", async (req: Request, res: Response) => {
