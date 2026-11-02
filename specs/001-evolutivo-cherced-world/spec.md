@@ -14,7 +14,7 @@ eggs). La spec debe poder partirse en líneas de trabajo para agentes que no se 
 más: sin infraestructura ni variables nuevas en Vercel, y desplegar es hacer push a main."
 
 **Línea base (2023)**: sitio con 9 rutas públicas (`/`, `/aboutMe`, `/services`, `/portfolio`,
-`/portfolio/[id]`, `/blog`, `/blog/[id]`, `/contactMe`, `/inbox`), 10 proyectos, 3 posts, formulario de
+`/portfolio/[id]`, `/blog`, `/blog/[id]`, `/contactMe`, `/inbox`), 11 proyectos, 3 posts, formulario de
 contacto, comentarios en posts e inbox "secreto". Piezas firma: intro "CHERCED / Front-End Developer",
 fondo de partículas "GlitteringSea", loaders de átomo y puntos, separadores, menú flotante móvil, "Back to
 top", paleta blanco/negro y tipografía Montserrat. Problemas conocidos que este evolutivo corrige:
@@ -51,7 +51,7 @@ aparece una sola vez por sesión, dura como máximo 1,5 s y se puede saltar.
 SEO, que en 2023 nunca funcionó porque el servidor entregaba páginas vacías.
 
 **Independent Test**: recorrer las 9 rutas con scripts desactivados y activados, y comparar el contenido
-visible con el inventario de 2023 (secciones, 10 proyectos, 3 posts, redes).
+visible con el inventario de 2023 (secciones, 11 proyectos, 3 posts, redes).
 
 **Acceptance Scenarios**:
 
@@ -215,7 +215,7 @@ automático, comentar y moderar.
 
 ### User Story 7 - Proyectos como casos de estudio (Priority: P3)
 
-Los 10 proyectos del portafolio pasan a ser casos de estudio: contexto, rol, decisiones clave, resultado,
+Los 11 proyectos del portafolio pasan a ser casos de estudio: contexto, rol, decisiones clave, resultado,
 tecnologías, imágenes y enlaces "Live" y "GitHub". El visitante filtra proyectos por tecnología y recorre
 el carrusel con teclado, puntero o deslizando el dedo.
 
@@ -337,7 +337,7 @@ descubrir la cápsula con el comando secreto.
 - **FR-003**: El sitio MUST conservar las piezas firma: intro, GlitteringSea, loaders de átomo y puntos,
   separadores, menú flotante móvil, "Back to top", logo, Montserrat y paleta blanco/negro.
 - **FR-004**: Todo el contenido de 2023 MUST migrarse: secciones de sobre mí (descripción, carrera,
-  skills, tecnologías, educación, cursos, idiomas), servicios, 10 proyectos, 3 posts y redes. La
+  skills, tecnologías, educación, cursos, idiomas), servicios, 11 proyectos, 3 posts y redes. La
   migración MUST corregir ortografía y falsos amigos ("Actually", "Idioms", "Rigths", "Bussines",
   "Desing", "Theathrum") y enlaces rotos. El ícono de Facebook hoy apunta a una noticia de BBC Mundo:
   MUST apuntar al perfil real o retirarse.
@@ -442,7 +442,7 @@ descubrir la cápsula con el comando secreto.
 - **FR-081**: El portafolio MUST permitir filtrar proyectos por tecnología.
 - **FR-082**: El carrusel MUST operarse con teclado, puntero y gesto de deslizar, y anunciar el proyecto
   actual a lectores de pantalla.
-- **FR-083**: Los 10 proyectos de 2023 MUST migrarse. Los campos sin contenido real se omiten, nunca se
+- **FR-083**: Los 11 proyectos de 2023 MUST migrarse. Los campos sin contenido real se omiten, nunca se
   inventan.
 
 **Asistente**
@@ -507,7 +507,7 @@ descubrir la cápsula con el comando secreto.
 
 ### Measurable Outcomes
 
-- **SC-001**: El 100 % de las 9 rutas de 2023, de los 10 proyectos y de los 3 posts resuelven en la nueva
+- **SC-001**: El 100 % de las 9 rutas de 2023, de los 11 proyectos y de los 3 posts resuelven en la nueva
   versión.
 - **SC-002**: En una prueba con al menos 5 personas que conocieron la versión 2023, al menos 4 la
   reconocen como el mismo portafolio sin ayuda.
