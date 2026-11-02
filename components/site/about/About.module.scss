@@ -233,12 +233,47 @@
 
 .techName {
   @include site.label-caps(0.14em);
+  max-width: 100%;
   font-size: var(--cw-text-sm);
   text-align: center;
+  overflow-wrap: break-word;
+
+  @include bp.down(md) {
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+  }
 }
 
 .techIcon {
   @include site.icon-tile(56px);
+}
+
+.techMonogram {
+  @include glass(strong);
+  @include site.icon-tile(56px);
+  display: grid;
+  place-items: center;
+  padding: calc(var(--cw-space-2) - 1px);
+  border-radius: var(--cw-radius-md);
+  background: var(--cw-glass-strong-bg);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  user-select: none;
+
+  &::before {
+    content: attr(data-cw-monogram);
+  }
+
+  &[data-length='3'] {
+    font-size: 1.25rem;
+  }
+
+  &[data-length='4'] {
+    font-size: 1.05rem;
+  }
 }
 
 @include bp.down(md) {

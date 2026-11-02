@@ -1,0 +1,72 @@
+export const meta = {
+  id: 'post4',
+  lang: 'es',
+  originalLang: 'es',
+  title: 'De un portafolio de 2023 a uno hecho con Spec-Driven Development y agentes',
+  description: 'Cómo reconstruí CHERCED-WORLD con especificaciones, 8 lanes de agentes en paralelo y una regla simple: cada agente es dueño de sus archivos.',
+  date: '2026-11-02',
+  tags: ['spec-driven-development', 'ai-agents', 'nextjs', 'architecture'],
+  image: {
+    src: '/assets/imgs/posts/post4.webp',
+    alt: 'Hero de CHERCED-WORLD 2026 con glassmorphism sobre un canvas animado',
+    width: 1200,
+    height: 630,
+  },
+  author: 'Camilo Hernandez',
+}
+
+## Un portafolio que ya no hablaba de mí
+
+Mi portafolio de 2023 tenía once proyectos, barras de skills y tres posts. Todo era cierto, pero era la foto de alguien que ya no soy. En estos años pasé por plataformas de aerolíneas, llegué a fintech y empecé a trabajar en micro-frontends, microservicios .NET y migraciones de legado. Nada de eso aparecía.
+
+Podía reescribirlo a mano un fin de semana. Preferí usarlo como prueba de cómo trabajo hoy: especificación primero, agentes después.
+
+## La especificación manda
+
+Muchos dicen que la ingeniería ahora debe adaptarse a cómo funcionan las máquinas. Yo creo lo contrario. La IA es una extensión del pensamiento humano, y los patrones que construimos durante décadas importan más ahora, no menos.
+
+Por eso empecé con Spec Kit y no con un prompt. Antes de tocar código escribí qué tenía que existir, qué no podía romperse y cómo se iba a verificar cada parte. La especificación se convirtió en el contrato entre los agentes y yo.
+
+Esto cambia la conversación. Ya no le pido a un agente "mejora el portafolio". Le entrego una tarea acotada, con criterios claros, y reviso si los cumple.
+
+## Ocho lanes en paralelo
+
+Dividí el trabajo en 8 lanes. Cada lane la ejecutó un agente en paralelo con los demás.
+
+El riesgo obvio es que dos agentes editen el mismo archivo y se pisen. La solución fue una regla simple: **cada lane tiene propiedad exclusiva de sus archivos**. Si un archivo pertenece a una lane, ninguna otra lo toca.
+
+Es la misma idea que aplico en micro-frontends: límites claros entre piezas, para que cada una avance sin bloquear a las otras. Lo que funciona entre equipos humanos también funciona entre agentes.
+
+- Cada lane sabe qué archivos son suyos.
+- Ninguna lane depende de un cambio a medio hacer de otra.
+- Al final, yo integro y reviso.
+
+## Las decisiones técnicas
+
+- **Next.js 16 y React 19** como base.
+- **Glassmorphism sobre un canvas animado**, para que el sitio se sienta vivo sin sacrificar legibilidad.
+- **Contenido bilingüe ES/EN**, porque hoy busco oportunidades fuera de Colombia y quiero que el sitio hable en ambos idiomas.
+- **Un panel de administración sin infraestructura nueva**. No quería sumar servidores ni servicios para mantener. El panel reutiliza lo que ya existía.
+
+Cada decisión quedó escrita en la especificación antes de implementarse. Cuando un agente proponía algo distinto, la especificación decidía.
+
+## El hotfix que me recordó por qué reviso todo
+
+Durante el proceso encontré un problema de privacidad que ya estaba en producción: datos de contacto que no debían ser públicos. Lo corregí con un hotfix.
+
+Esta parte es la que más me importa contar. Los agentes aceleran muchísimo, pero no te quitan la responsabilidad. Que un agente escriba el código no significa que el código esté bien. Mi trabajo fue leer, validar y detectar lo que no debía estar ahí.
+
+Por eso sigo escribiendo código para que lo lean humanos, aunque lo ayude a escribir un agente.
+
+## Lo que aprendí
+
+1. **La especificación vale más que el prompt.** Un buen prompt sirve para una tarea. Una buena especificación sirve para todo el proyecto.
+2. **Los límites claros evitan el caos.** La propiedad exclusiva de archivos hizo posible el paralelismo.
+3. **El juicio sigue siendo humano.** Las decisiones de diseño y la revisión final son mías.
+4. **Menos infraestructura, menos problemas.** No todo necesita un servicio nuevo.
+
+## Lo que sigue
+
+Este portafolio es ahora un laboratorio. La próxima vez que quiera probar una forma de trabajar, primero la voy a probar aquí, en público.
+
+Si estás pensando en trabajar con agentes, mi consejo es simple: empieza por escribir qué quieres antes de pedirlo. El resto viene después.

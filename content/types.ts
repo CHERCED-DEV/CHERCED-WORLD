@@ -29,7 +29,7 @@ export type EducationEntry = {
   pending?: true
 }
 
-export type TechSkill = { id: string; name: string; icon: string; progress: number }
+export type TechSkill = { id: string; name: string; icon?: string; progress: number }
 
 export type ServiceId = 'design' | 'development' | 'maintenance'
 
