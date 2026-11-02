@@ -186,6 +186,7 @@ ya están reflejadas en `contracts/` y `data-model.md`:
 | A-14 | `body { isolation: isolate }` en `styles/globals.scss`; se retira la regla `body:has(> .root)` de L2 | Propuesta de L2: el canvas tiene que pintarse encima del fondo del `body` sin una regla global escondida en un módulo |
 | A-15 | No se crea el token `--cw-sea`; el azul del mar 2023 queda como variable local de `Background` | Propuesta de L2 descartada: solo lo usa el fondo, y un token sin otros consumidores agrega superficie de contrato |
 | A-16 | El header pasa a modo compacto (menú flotante, "Regresar" y palette como íconos) por debajo de `xl` (1248 px) en vez de `lg` (992 px), y los enlaces no se parten en dos líneas | Reportado por L1 y L4 y medido al integrar: a 1024 px en inglés "Back" se montaba sobre "HOME" y la palette crecía a 86 px. Tras el cambio, 0 solapamientos y 44 px de alto en 800, 1024, 1260 y 1440 px |
+| A-17 | Auditoría responsive permanente (`tests/e2e/integration/responsive.spec.ts`: 9 páginas × es/en × 320–1440 px; sin scroll horizontal, objetivos ≥ 24 px, header sin solapes) y sus correcciones: título del home con `clamp(1.375rem, 6vw, 2.75rem)`, servicios en 3 columnas desde `lg`, enlaces del header con padding `space-2`, enlace de privacidad del footer de 44 px y espacio al final del footer para el botón flotante del asistente | Pedido del autor ("el responsive debe ir perfecto"). La auditoría encontró desborde del home a 320 px, de servicios a 768 px y del header a 1280 px en español, más un objetivo táctil de 21 px |
 
 ## Complexity Tracking
 

@@ -164,9 +164,9 @@ test.describe('header con teclado', () => {
         w.__cwPalette += 1
       })
     })
-    await page.keyboard.press('Control+k')
     await page.locator('[data-cw-palette-trigger]').click()
-    expect(await page.evaluate(() => (window as unknown as { __cwPalette?: number }).__cwPalette)).toBe(2)
+    await page.keyboard.press('Control+k')
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __cwPalette?: number }).__cwPalette)).toBe(2)
   })
 })
 

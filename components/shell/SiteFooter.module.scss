@@ -13,7 +13,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--cw-space-5);
-  padding-block: var(--cw-space-6) var(--cw-space-6);
+  padding-block: var(--cw-space-6) calc(var(--cw-space-6) + 76px + env(safe-area-inset-bottom, 0px));
   text-align: center;
 }
 
@@ -82,6 +82,9 @@
 }
 
 .privacy {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: var(--cw-text-sm);
   color: var(--cw-fg-muted);
   text-underline-offset: 3px;
