@@ -1,0 +1,35 @@
+@use 'glass' as *;
+
+@mixin frame($font-size: var(--cw-text-sm)) {
+  @include glass(subtle);
+  display: inline-block;
+  max-width: 100%;
+  padding: 20px;
+  border: 8px solid var(--cw-fg);
+  border-radius: 0;
+  box-shadow: 7px 11px 20px rgb(128 128 128 / 0.55);
+  font-size: $font-size;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.355em;
+  text-align: center;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+@mixin post-image {
+  border-radius: 50px 0 70px;
+  box-shadow: 7px 10px 20px rgb(0 0 0 / 0.52);
+}
+
+@mixin side-bars {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 20px;
+  border-inline: 4px solid var(--cw-fg);
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+}

@@ -1,0 +1,61 @@
+@use 'glass' as *;
+
+.block {
+  --sh-identifier: var(--cw-fg);
+  --sh-jsxliterals: var(--cw-fg);
+  --sh-space: var(--cw-fg);
+  --sh-break: var(--cw-fg);
+  --sh-sign: var(--cw-fg-muted);
+  --sh-comment: var(--cw-fg-muted);
+  --sh-keyword: color-mix(in srgb, var(--cw-fg) 55%, #c792ea);
+  --sh-string: color-mix(in srgb, var(--cw-fg) 55%, #25ed9e);
+  --sh-class: color-mix(in srgb, var(--cw-fg) 55%, #ffcb6b);
+  --sh-property: color-mix(in srgb, var(--cw-fg) 55%, #82aaff);
+  --sh-entity: color-mix(in srgb, var(--cw-fg) 55%, #f78c6c);
+
+  @include glass-solid(strong);
+  margin-block: var(--cw-space-5);
+  overflow: hidden;
+  border-radius: var(--cw-radius-md);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cw-space-3);
+  min-height: 48px;
+  padding: var(--cw-space-1) var(--cw-space-2) var(--cw-space-1) var(--cw-space-4);
+  border-bottom: 1px solid var(--cw-glass-border);
+}
+
+.language {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pre {
+  margin: 0;
+  padding: var(--cw-space-4);
+  overflow-x: auto;
+  font-family: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace;
+  font-size: var(--cw-text-sm);
+  line-height: 1.7;
+  tab-size: 2;
+
+  code {
+    display: block;
+    min-width: max-content;
+    padding: 0;
+    background: none;
+    border: 0;
+    font: inherit;
+  }
+
+  :global(.sh__token--comment) {
+    font-style: italic;
+  }
+}
