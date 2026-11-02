@@ -6,6 +6,7 @@ import {
   homeSocials,
   isExternal,
   isPublishable,
+  paragraphs,
   splitLead,
 } from '@/components/site/format'
 import type { SocialLink } from '@/content/types'
@@ -82,6 +83,14 @@ describe('título de la introducción de servicios', () => {
       lead: null,
       body: 'Construyo aplicaciones web. ¿Hablamos?',
     })
+  })
+})
+
+describe('párrafos', () => {
+  it('parte por líneas en blanco y descarta vacíos', () => {
+    expect(paragraphs('Uno.\n\nDos.\n \n\nTres.')).toEqual(['Uno.', 'Dos.', 'Tres.'])
+    expect(paragraphs('Una sola línea\ncon salto simple')).toEqual(['Una sola línea\ncon salto simple'])
+    expect(paragraphs('   ')).toEqual([])
   })
 })
 

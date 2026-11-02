@@ -1,5 +1,6 @@
 import type { Localized, Project } from '@/content/types'
 import { localizedPath, type Locale } from '@/lib/i18n'
+import { paragraphs } from '../format'
 import type { SlideProject } from './carousel'
 
 export function toSlide(project: Project, lang: Locale): SlideProject {
@@ -30,7 +31,7 @@ export type CaseStudyLabels = {
   newTab: string
 }
 
-export type CaseStudySection = { id: 'context' | 'role' | 'decisions' | 'result'; heading: string; text: string }
+export type CaseStudySection = { id: 'context' | 'role' | 'decisions' | 'result'; heading: string; paragraphs: string[] }
 
 export function caseStudySections(project: Project, lang: Locale, labels: CaseStudyLabels): CaseStudySection[] {
   const fields: Array<[CaseStudySection['id'], Localized | null]> = [
@@ -40,8 +41,8 @@ export function caseStudySections(project: Project, lang: Locale, labels: CaseSt
     ['result', project.result],
   ]
   return fields.flatMap(([id, value]) => {
-    const text = value?.[lang]?.trim()
-    return text ? [{ id, heading: labels[id], text }] : []
+    const parts = value ? paragraphs(value[lang] ?? '') : []
+    return parts.length > 0 ? [{ id, heading: labels[id], paragraphs: parts }] : []
   })
 }
 

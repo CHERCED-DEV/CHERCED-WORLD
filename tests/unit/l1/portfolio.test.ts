@@ -8,6 +8,7 @@ import {
   wrapIndex,
 } from '@/components/site/portfolio/carousel'
 import { caseStudyLinks, caseStudySections, toSlide, type CaseStudyLabels } from '@/components/site/portfolio/projects'
+import { paragraphs } from '@/components/site/format'
 import type { Project } from '@/content/types'
 import { getAllTechnologies, getProject, getProjects } from '@/lib/content'
 
@@ -116,12 +117,22 @@ describe('caso de estudio', () => {
       decisions: { es: 'Decisiones', en: 'Decisions' },
       result: { es: 'Resultado', en: 'Result' },
     })
-    expect(caseStudySections(full, 'en', labels).map((section) => [section.id, section.text])).toEqual([
-      ['context', full.context.en],
-      ['role', 'Role'],
-      ['decisions', 'Decisions'],
-      ['result', 'Result'],
+    expect(caseStudySections(full, 'en', labels).map((section) => [section.id, section.paragraphs])).toEqual([
+      ['context', paragraphs(full.context.en)],
+      ['role', ['Role']],
+      ['decisions', ['Decisions']],
+      ['result', ['Result']],
     ])
+  })
+
+  it('separa en párrafos los textos con líneas en blanco (proyecto 6)', () => {
+    const sections = caseStudySections(project({ context: { es: 'Uno.\n\nDos.', en: 'One.\n\n  Two.' } }), 'en', labels)
+    expect(sections[0]?.paragraphs).toEqual(['One.', 'Two.'])
+    for (const item of getProjects()) {
+      for (const section of caseStudySections(item, 'es', labels)) {
+        for (const paragraph of section.paragraphs) expect(paragraph, item.id).not.toMatch(/\n\s*\n/)
+      }
+    }
   })
 
   it('muestra Live y GitHub solo si hay enlace (proyecto 10)', () => {

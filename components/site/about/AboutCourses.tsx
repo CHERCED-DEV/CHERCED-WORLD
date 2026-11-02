@@ -27,7 +27,7 @@ export function AboutCourses({ lang, title, newTab, courses }: AboutCoursesProps
           ))}
         </ul>
         <a href={courses.platzi.href} target="_blank" rel="noopener noreferrer" className={styles.platzi}>
-          <Image src="/assets/icons/plazi.png" alt="" width={48} height={48} sizes="48px" />
+          {courses.platzi.icon ? <Image src={courses.platzi.icon} alt="" width={40} height={40} sizes="40px" /> : null}
           <span>{courses.platzi.label[lang]}</span>
           <Icon name="external" size={18} />
           <span className="cw-visually-hidden">{newTab}</span>

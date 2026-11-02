@@ -5,11 +5,6 @@ import { SectionTitle } from '../SectionTitle'
 import styles from './About.module.scss'
 import { LevelBar } from './LevelBar'
 
-const FLAGS: Record<Locale, string> = {
-  es: '/assets/icons/flags/spain.png',
-  en: '/assets/icons/flags/uniteStates.png',
-}
-
 export type AboutLanguagesProps = {
   lang: Locale
   title: string
@@ -25,7 +20,9 @@ export function AboutLanguages({ lang, title, languages, levelLabel }: AboutLang
         {languages.map((language) => (
           <li key={language.id} className={styles.tech} data-cw-glass="subtle">
             <p className={styles.techName}>{language.name[lang]}</p>
-            <Image src={FLAGS[language.id]} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
+            {language.icon ? (
+              <Image src={language.icon} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
+            ) : null}
             <LevelBar value={language.progress} label={levelLabel(language.progress)} />
           </li>
         ))}

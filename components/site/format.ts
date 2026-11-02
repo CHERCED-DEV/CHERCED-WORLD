@@ -44,6 +44,13 @@ export function splitLead(text: string): { lead: string | null; body: string } {
   return { lead: (match[1] ?? '').trim(), body: match[2] ?? '' }
 }
 
+export function paragraphs(text: string): string[] {
+  return text
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0)
+}
+
 export function clampLevel(value: number): number {
   if (!Number.isFinite(value)) return 0
   return Math.min(100, Math.max(0, Math.round(value)))

@@ -51,6 +51,11 @@ describe('render del caso de estudio', () => {
     expect(html).not.toContain('>Resultado<')
   })
 
+  it('pinta como párrafos separados los textos con línea en blanco', () => {
+    const html = render({ context: { es: 'Primer párrafo.\n\nSegundo párrafo.', en: 'First.\n\nSecond.' } })
+    expect(html).toMatch(/<p[^>]*>Primer párrafo\.<\/p><p[^>]*>Segundo párrafo\.<\/p>/)
+  })
+
   it('usa un único h1 con el título del proyecto', () => {
     const html = render({})
     expect(html.match(/<h1\b/g)).toHaveLength(1)

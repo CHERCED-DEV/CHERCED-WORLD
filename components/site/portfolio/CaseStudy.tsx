@@ -34,7 +34,11 @@ export function CaseStudy({ project, lang, labels }: { project: Project; lang: L
             <h2 id={`case-${section.id}`} className={styles.heading}>
               {section.heading}
             </h2>
-            <p className={styles.text}>{section.text}</p>
+            {section.paragraphs.map((paragraph, index) => (
+              <p key={index} className={styles.text}>
+                {paragraph}
+              </p>
+            ))}
           </section>
         ))}
         {project.technologies.length > 0 ? (
