@@ -183,6 +183,26 @@ estaba construido el sitio de 2023: todo acoplado, responsabilidades mezcladas, 
 "sockets" que eran polling, una API que se llamaba a sí misma, y qué se hizo distinto en 2026. En español
 e inglés.
 
+### User Story 9 - El museo 2023 (Priority: P3, después de R0–R5)
+
+El autor quiere tener de recuerdo el código que hizo a mano en 2023, desplegado y descubrible dentro
+del portafolio, "con mucho cariño", y pidió que lo sorprendamos.
+
+- El sitio 2023 se despliega desde una rama propia (`museo/2023`), con la URL de rama estable que Vercel
+  asigna sola. No hay infraestructura ni variables nuevas.
+- **Modo museo de solo lectura:** las rutas que tocaban la base (contacto, comentarios, "sockets", inbox)
+  se reemplazan por respuestas fijas que no leen ni escriben datos reales. El sitio se ve y se navega igual
+  que en 2023, y esa es la única diferencia funcional.
+- Se indexa como un proyecto más del portafolio y se puede descubrir desde la experiencia del sitio. La forma
+  exacta queda a criterio del orquestador: es la sorpresa.
+
+**Acceptance Scenarios**:
+
+1. **Given** el museo desplegado, **When** se recorre, **Then** se ve como el sitio de 2023 y ninguna petición
+   llega a la base real.
+2. **Given** el portafolio 2026, **When** el visitante encuentra el museo, **Then** puede verlo embebido o
+   abrirlo aparte.
+
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
