@@ -1,6 +1,6 @@
 'use client'
 
-import { startTransition, useActionState, useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
+import { startTransition, useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
 import { useToast } from '@/components/ui/Toast'
@@ -12,6 +12,7 @@ import { contactSchema, LIMITS, parseForm } from '@/lib/validation'
 import { ConsentField, type ConsentLabels } from './ConsentField'
 import styles from './ContactForm.module.scss'
 import { fieldErrorText, focusFirstInvalid, PHONE_INPUT_PATTERN } from './fieldErrors'
+import { useHydrated } from './useHydrated'
 
 export type ContactLabels = {
   formLabel: string
@@ -47,12 +48,6 @@ function resultMessage(result: ActionResult, labels: ContactLabels): string {
   if (result.error === 'consent_required') return labels.consentRequired
   if (result.error === 'validation' && result.fieldErrors) return labels.validation
   return labels.errorText
-}
-
-const noSubscription = () => () => {}
-
-function useHydrated(): boolean {
-  return useSyncExternalStore(noSubscription, () => true, () => false)
 }
 
 function Required() {

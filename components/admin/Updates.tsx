@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useEffectEvent, useState } from 'react'
+import { useHydrated } from '@/components/contact/useHydrated'
 import styles from './admin.module.scss'
 import { createPoller, hasNewArrivals, UPDATES_ENDPOINT, type Counts, type PollStatus } from './poller'
 
@@ -24,10 +25,11 @@ export function Updates({ initialNow, unread, pending, labels }: UpdatesProps) {
   const [status, setStatus] = useState<PollStatus>('live')
   const [announcement, setAnnouncement] = useState('')
   const [initial] = useState(() => ({ since: initialNow, unread, pending }))
+  const hydrated = useHydrated()
 
   const onChange = useEffectEvent((counts: Counts, previous: Counts) => {
     if (hasNewArrivals(counts, previous)) {
-      setAnnouncement((current) => (current === labels.newActivity ? `${labels.newActivity} ` : labels.newActivity))
+      setAnnouncement((current) => (current === labels.newActivity ? `${labels.newActivity}\u00a0` : labels.newActivity))
     }
     router.refresh()
   })
@@ -65,7 +67,7 @@ export function Updates({ initialNow, unread, pending, labels }: UpdatesProps) {
 
   return (
     <>
-      <span className={styles.live} role="status" data-cw-updates={status}>
+      <span className={styles.live} role="status" data-cw-updates={status} data-cw-hydrated={hydrated ? '' : undefined}>
         {text}
       </span>
       <span className={styles.srOnly} aria-live="polite" data-cw-updates-announcer="">

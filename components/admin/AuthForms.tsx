@@ -2,6 +2,7 @@
 
 import { startTransition, useActionState, useEffect, useRef, type FormEvent } from 'react'
 import { fieldErrorText } from '@/components/contact/fieldErrors'
+import { useHydrated } from '@/components/contact/useHydrated'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
 import { Icon } from '@/components/ui/Icon'
@@ -45,6 +46,7 @@ export type LoginLabels = {
 
 export function LoginForm({ lang, labels, errors }: { lang: Locale; labels: LoginLabels; errors: Dictionary }) {
   const [state, formAction, pending] = useActionState(login, null)
+  const hydrated = useHydrated()
   const failure = state && !state.ok ? state : null
   const message = !failure
     ? null
@@ -57,7 +59,7 @@ export function LoginForm({ lang, labels, errors }: { lang: Locale; labels: Logi
           : null
 
   return (
-    <form action={formAction} className={styles.authCard} data-cw-glass="standard" data-cw-login="">
+    <form action={formAction} className={styles.authCard} data-cw-glass="standard" data-cw-login="" data-cw-hydrated={hydrated ? '' : undefined}>
       <h1 className={styles.authTitle}>{labels.title}</h1>
       <input type="hidden" name="lang" value={lang} />
       <FormField label={labels.password} error={fieldErrorText(errors, failure?.fieldErrors?.password, 'password')}>
@@ -87,6 +89,7 @@ export type SetupLabels = {
 
 export function SetupForm({ lang, labels, errors }: { lang: Locale; labels: SetupLabels; errors: Dictionary }) {
   const { state, formAction, pending, onSubmit } = useKeepValuesAction(completeSetup)
+  const hydrated = useHydrated()
   const failure = state && !state.ok ? state : null
   const message = !failure
     ? null
@@ -100,7 +103,14 @@ export function SetupForm({ lang, labels, errors }: { lang: Locale; labels: Setu
   const errorFor = (field: string) => fieldErrorText(errors, failure?.fieldErrors?.[field], field)
 
   return (
-    <form action={formAction} onSubmit={onSubmit} className={styles.authCard} data-cw-glass="standard" data-cw-setup="">
+    <form
+      action={formAction}
+      onSubmit={onSubmit}
+      className={styles.authCard}
+      data-cw-glass="standard"
+      data-cw-setup=""
+      data-cw-hydrated={hydrated ? '' : undefined}
+    >
       <h1 className={styles.authTitle}>{labels.title}</h1>
       <p className={styles.muted}>{labels.intro}</p>
       <input type="hidden" name="lang" value={lang} />
