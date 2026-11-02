@@ -3,12 +3,22 @@
 
 .header {
   @include glass(standard);
+  @include glass-grain;
+  @include glass-depth;
   position: sticky;
   top: 0;
   z-index: var(--cw-z-header);
   width: 100%;
   border-width: 0 0 1px;
   border-radius: 0;
+  scroll-margin-top: 100000px;
+}
+
+.header .edgeLine {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
 }
 
 .inner {
@@ -31,10 +41,22 @@
   display: block;
   flex: none;
   border-radius: 999px;
+  transition:
+    transform var(--cw-duration-base) var(--cw-ease-out),
+    filter var(--cw-duration-base) var(--cw-ease-out);
 
   img {
     width: 44px;
     height: 44px;
+  }
+
+  &:hover {
+    filter: drop-shadow(0 0 10px var(--cw-graphic-glow));
+    transform: rotate(-6deg);
+  }
+
+  &:active {
+    transform: rotate(-6deg) scale(var(--cw-press-scale));
   }
 }
 
@@ -42,6 +64,17 @@
   display: flex;
   align-items: center;
   gap: var(--cw-space-2);
+}
+
+@media (max-width: 359.98px) {
+  .inner,
+  .start {
+    gap: var(--cw-space-2);
+  }
+
+  .actions {
+    gap: var(--cw-space-1);
+  }
 }
 
 .desktopOnly {
@@ -91,8 +124,28 @@
   text-transform: uppercase;
   transition: background-color var(--cw-duration-fast) var(--cw-ease);
 
+  &::after {
+    content: '';
+    position: absolute;
+    right: var(--cw-space-3);
+    bottom: 8px;
+    left: var(--cw-space-3);
+    height: 1px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.6;
+    transform: scaleX(0);
+    transition:
+      transform var(--cw-duration-base) var(--cw-ease-out),
+      opacity var(--cw-duration-base) var(--cw-ease-out);
+  }
+
   &:hover {
     background: var(--cw-glass-subtle-bg);
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
   }
 
   &[data-active] {
@@ -100,14 +153,10 @@
   }
 
   &[data-active]::after {
-    content: '';
-    position: absolute;
-    right: var(--cw-space-3);
-    bottom: 8px;
-    left: var(--cw-space-3);
     height: 2px;
-    border-radius: 999px;
-    background: currentColor;
+    background: linear-gradient(90deg, currentColor 0 30%, var(--cw-graphic-accent) 50%, currentColor 70% 100%);
+    opacity: 1;
+    transform: none;
   }
 }
 

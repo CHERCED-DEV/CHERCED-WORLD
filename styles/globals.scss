@@ -148,6 +148,10 @@ button {
   transform: translate3d(0, var(--cw-reveal-distance), 0);
 }
 
+:root {
+  view-transition-name: none;
+}
+
 ::view-transition {
   pointer-events: none;
 }
