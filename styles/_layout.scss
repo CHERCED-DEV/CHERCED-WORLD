@@ -1,0 +1,30 @@
+@use 'breakpoints' as bp;
+
+@mixin container {
+  width: 100%;
+  max-width: var(--cw-container-max);
+  margin-inline: auto;
+  padding-inline: 14px;
+
+  @include bp.up(lg) {
+    padding-inline: 16px;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@mixin focus-ring {
+  outline: 2px solid var(--cw-focus);
+  outline-offset: 3px;
+}

@@ -1,0 +1,15 @@
+{
+  "comments.title": "Comentarios",
+  "comments.form.title": "Deja un comentario",
+  "comments.form.name": "Tu nombre",
+  "comments.form.email": "Tu correo (nunca se muestra)",
+  "comments.form.comment": "Tu comentario",
+  "comments.form.submit": "Enviar",
+  "comments.pending": "¡Gracias! Tu comentario está en revisión.",
+  "comments.empty": "Aún no hay comentarios. Sé el primero.",
+  "comments.authorBadge": "Autor",
+  "post.readingTime": "{n} min de lectura",
+  "post.originalLanguage": "Escrito originalmente en inglés",
+  "meta.blog.title": "Blog",
+  "meta.blog.description": "Notas sobre desarrollo web, tecnología y el camino que me trajo hasta aquí."
+}

@@ -47,7 +47,7 @@ la historia que atiende cada tarea.
 `next.config.ts`, `eslint.config.mjs`, `vitest.config.ts`, `playwright.config.ts`, `proxy.ts`,
 `mdx-components.tsx` (hasta congelar), `.gitignore`, `README.md`,
 `app/global-error.tsx`, `app/sitemap.ts`, `app/robots.ts`,
-`app/[lang]/layout.tsx`, `app/[lang]/not-found.tsx`, `components/ui/**`, `components/shell/**`,
+`app/[lang]/layout.tsx`, `app/[lang]/not-found.tsx`, `app/[lang]/[...rest]/page.tsx`, `components/ui/**`, `components/shell/**`,
 `components/motion/**` y `components/experience/**` (solo stubs, hasta congelar), `content/types.ts`,
 seeds en `content/**` (hasta congelar), `content/i18n/*/common.json`, `lib/i18n/**`, `lib/content/**`,
 `lib/events.ts`, `lib/site-url.ts`, `lib/validation/**`, `lib/actions/result.ts`, stubs en
@@ -55,36 +55,36 @@ seeds en `content/**` (hasta congelar), `content/i18n/*/common.json`, `lib/i18n/
 `lib/data/index.ts`, `lib/data/memory/**`, `styles/**`, `public/fonts/**`, `tests/contract/**`,
 `tests/unit/l0/**`, `tests/e2e/l0/**`, y el borrado del código 2023
 
-- [ ] T010 Eliminar el código 2023 (`pages/`, `components/`, `sass/`, `utils/`, `messages.json`, `next.config.js`, `.eslintrc.json`), conservando `public/` y `.specify/`/`specs/`
-- [ ] T011 Reescribir `package.json`: dependencias exactas de research R-16 (next 16.4.3, react/react-dom 19.3.1, mongodb 7.8.0, zod 4.6.7, server-only 0.0.1, @next/mdx 16.4.3, @mdx-js/loader 3.1.1, @mdx-js/react 3.1.1, @types/mdx 2.0.14, sugar-high 2.6.4, minisearch 7.2.0, sass 1.107.1; dev: typescript 5.9.3, eslint 9.39.5, eslint-config-next 16.4.3, vitest 5.0.5, @playwright/test 1.64.1, @axe-core/playwright 4.14.0, @types/node, @types/react, @types/react-dom), scripts `dev`, `build`, `prebuild` (lint + typecheck + `vitest run`), `lint`, `typecheck`, `test`, `e2e`, `verify`, y `engines.node: "22.x"`; regenerar `package-lock.json`
-- [ ] T012 [P] Crear `tsconfig.json` estricto con alias `@/*`
-- [ ] T013 [P] Crear `next.config.ts` con `@next/mdx` (`pageExtensions` con `mdx`) e `images` locales
-- [ ] T014 [P] Crear `eslint.config.mjs` (flat config) con `eslint-config-next`
-- [ ] T015 [P] Crear `vitest.config.ts` (alias `@`, entorno node) y `playwright.config.ts` (proyectos `desktop-chromium`, `mobile-chromium` 390×844 y `no-js` con `javaScriptEnabled: false`; `webServer` = `npm run build && npm run start`)
-- [ ] T016 [P] Actualizar `.gitignore` (`.env.local`, `playwright-report/`, `test-results/`, `.next/`)
+- [x] T010 Eliminar el código 2023 (`pages/`, `components/`, `sass/`, `utils/`, `messages.json`, `next.config.js`, `.eslintrc.json`), conservando `public/` y `.specify/`/`specs/`
+- [x] T011 Reescribir `package.json`: dependencias exactas de research R-16 (next 16.4.3, react/react-dom 19.3.1, mongodb 7.8.0, zod 4.6.7, server-only 0.0.1, @next/mdx 16.4.3, @mdx-js/loader 3.1.1, @mdx-js/react 3.1.1, @types/mdx 2.0.14, sugar-high 2.6.4, minisearch 7.2.0, sass 1.107.1; dev: typescript 5.9.3, eslint 9.39.5, eslint-config-next 16.4.3, vitest 5.0.5, @playwright/test 1.64.1, @axe-core/playwright 4.14.0, @types/node, @types/react, @types/react-dom), scripts `dev`, `build`, `prebuild` (lint + typecheck + `vitest run`), `lint`, `typecheck`, `test`, `e2e`, `verify`, y `engines.node: "22.x"`; regenerar `package-lock.json`
+- [x] T012 [P] Crear `tsconfig.json` estricto con alias `@/*`
+- [x] T013 [P] Crear `next.config.ts` con `@next/mdx` (`pageExtensions` con `mdx`) e `images` locales
+- [x] T014 [P] Crear `eslint.config.mjs` (flat config) con `eslint-config-next`
+- [x] T015 [P] Crear `vitest.config.ts` (alias `@`, entorno node) y `playwright.config.ts` (proyectos `desktop-chromium`, `mobile-chromium` 390×844 y `no-js` con `javaScriptEnabled: false`; `webServer` = `npm run build && npm run start`)
+- [x] T016 [P] Actualizar `.gitignore` (`.env.local`, `playwright-report/`, `test-results/`, `.next/`)
 
 ---
 
 ## Phase 2: Lane L0 — Foundational (bloquea a todas las demás)
 
-- [ ] T020 Crear `content/types.ts` con los tipos de data-model §1 (`Locale`, `Localized`, `ImageRef`, `SiteContent`, `CareerEntry`, `EducationEntry`, `TechSkill`, `Project`, `PostMeta`, `CapsuleEntry`)
-- [ ] T021 [P] Implementar `lib/i18n/` según contracts/i18n-routing.md (`locales`, `isLocale`, `getDictionary`, `t` con fallback es→en y error si falta en ambos, `localizedPath`, `switchLocalePath`, `alternates`) con pruebas en `tests/unit/l0/i18n.test.ts`
-- [ ] T022 [P] Sembrar `content/i18n/{es,en}/{common,site,motion,contact,admin,privacy,blog,experience}.json` con todas las claves de content-inventory §5 y agregar la prueba de paridad `tests/unit/l0/i18n-parity.test.ts`
-- [ ] T023 Implementar `proxy.ts` (exclusiones, cookie `cw-lang`, 307 al idioma preferido desde cualquier ruta sin prefijo) con pruebas en `tests/unit/l0/proxy.test.ts`
-- [ ] T024 [P] Implementar los accesores de `lib/content/` (contracts/content.md) y los seeds válidos: `content/site.ts`, `content/projects.ts` (proyectos 1 y 2), `content/capsule.ts` (2 entradas), `content/posts/registry.ts` y `content/posts/post1/{es,en}.mdx`
-- [ ] T025 [P] Crear `styles/tokens.scss`, `styles/_glass.scss` (mixin `glass($variant)` y fallback sólido), `styles/_breakpoints.scss` (`sm 480`, `md 768`, `lg 992`, `xl 1248`) y `styles/globals.scss` según contracts/ui-shell.md; temas `dark` (por defecto) y `light` en blanco y negro
-- [ ] T026 [P] Crear las primitivas `components/ui/` (`GlassSurface`, `Button`, `Dialog` sobre `<dialog>`, `Separator`, `VisuallyHidden`, `Icon`, `FormField`, `Toast`/`useToast`) con su `*.module.scss`
-- [ ] T027 [P] Crear `lib/events.ts` (`emit`, `on`) con los eventos de contracts/ui-shell.md, y `lib/site-url.ts` (R-13)
-- [ ] T028 Preparar el layout raíz `app/[lang]/layout.tsx` (no hay `app/layout.tsx`): `<html lang>`, Montserrat local, script en línea de tema e intro (R-09), `metadataBase` y montaje de `Background` e `Intro` desde `@/components/motion`
-- [ ] T029 [P] Crear los stubs `components/motion/index.ts` y `components/experience/index.ts` con las firmas exactas de contracts/ui-shell.md
-- [ ] T030 Crear `components/shell/` (`SiteHeader` con logo, navegación y "regresar" en páginas de detalle; `LangSwitch`; `ThemeToggle` que emite `cw:theme-change`; `PaletteTrigger` con atajo Ctrl/⌘+K que emite `cw:open-palette`; `FloatMenu` móvil; `SiteFooter` con redes, ocultando `href: null`, y copyright C-01; `BackToTop`), todo en glass y operable con teclado
-- [ ] T031 Completar `app/[lang]/layout.tsx` con el shell y `ExperienceRoot`, y crear `app/[lang]/not-found.tsx` y `app/global-error.tsx` con identidad visual (FR-007), más `app/sitemap.ts` y `app/robots.ts`
-- [ ] T032 [P] Crear los esquemas zod de `lib/validation/` (`contactSchema`: nombre 1–60, correo válido ≤ 100, teléfono opcional `^\+?[0-9 ()-]{6,20}$`, mensaje 1–1000, `consent` obligatorio; `commentSchema`: `postId`, nombre 1–60, correo ≤ 100, comentario 1–1000, `consent`; `passwordSchema` ≥ 12; `setupSchema`; `replySchema` 1–1000) con pruebas en `tests/unit/l0/validation.test.ts`
-- [ ] T033 [P] Crear `lib/actions/result.ts` y los stubs con firma final de `lib/actions/{contact,comments,auth,admin}.ts` (responden `{ ok: false, error: 'unavailable' }`)
-- [ ] T034 Crear `lib/data/types.ts` (interfaces de contracts/data-and-actions.md), `lib/data/index.ts` (`getRepos()` con registro de fábrica, fakes por defecto), `lib/data/memory/*` y la suite compartida `tests/contract/repos.contract.ts`, ejecutada contra memoria en `tests/unit/l0/memory-repos.test.ts`
-- [ ] T035 [P] Crear `mdx-components.tsx` con los componentes por defecto
-- [ ] T036 E2E de L0 en `tests/e2e/l0/shell.spec.ts`: 307 desde las 9 rutas 2023 sin prefijo, `LangSwitch` conserva la ruta, sin destello de tema, header y menú flotante con teclado, header visible sin JS
-- [ ] T037 Pasar `npm run verify` y crear el tag `l0-frozen`: desde ese punto los contratos y los stubs cambian de dueño según el plan
+- [x] T020 Crear `content/types.ts` con los tipos de data-model §1 (`Locale`, `Localized`, `ImageRef`, `SiteContent`, `CareerEntry`, `EducationEntry`, `TechSkill`, `Project`, `PostMeta`, `CapsuleEntry`)
+- [x] T021 [P] Implementar `lib/i18n/` según contracts/i18n-routing.md (`locales`, `isLocale`, `getDictionary`, `t` con fallback es→en y error si falta en ambos, `localizedPath`, `switchLocalePath`, `alternates`) con pruebas en `tests/unit/l0/i18n.test.ts`
+- [x] T022 [P] Sembrar `content/i18n/{es,en}/{common,site,motion,contact,admin,privacy,blog,experience}.json` con todas las claves de content-inventory §5 y agregar la prueba de paridad `tests/unit/l0/i18n-parity.test.ts`
+- [x] T023 Implementar `proxy.ts` (exclusiones, cookie `cw-lang`, 307 al idioma preferido desde cualquier ruta sin prefijo) con pruebas en `tests/unit/l0/proxy.test.ts`
+- [x] T024 [P] Implementar los accesores de `lib/content/` (contracts/content.md) y los seeds válidos: `content/site.ts`, `content/projects.ts` (proyectos 1 y 2), `content/capsule.ts` (2 entradas), `content/posts/registry.ts` y `content/posts/post1/{es,en}.mdx`
+- [x] T025 [P] Crear `styles/tokens.scss`, `styles/_glass.scss` (mixin `glass($variant)` y fallback sólido), `styles/_breakpoints.scss` (`sm 480`, `md 768`, `lg 992`, `xl 1248`) y `styles/globals.scss` según contracts/ui-shell.md; temas `dark` (por defecto) y `light` en blanco y negro
+- [x] T026 [P] Crear las primitivas `components/ui/` (`GlassSurface`, `Button`, `Dialog` sobre `<dialog>`, `Separator`, `VisuallyHidden`, `Icon`, `FormField`, `Toast`/`useToast`) con su `*.module.scss`
+- [x] T027 [P] Crear `lib/events.ts` (`emit`, `on`) con los eventos de contracts/ui-shell.md, y `lib/site-url.ts` (R-13)
+- [x] T028 Preparar el layout raíz `app/[lang]/layout.tsx` (no hay `app/layout.tsx`): `<html lang>`, Montserrat local, script en línea de tema e intro (R-09), `metadataBase` y montaje de `Background` e `Intro` desde `@/components/motion`
+- [x] T029 [P] Crear los stubs `components/motion/index.ts` y `components/experience/index.ts` con las firmas exactas de contracts/ui-shell.md
+- [x] T030 Crear `components/shell/` (`SiteHeader` con logo, navegación y "regresar" en páginas de detalle; `LangSwitch`; `ThemeToggle` que emite `cw:theme-change`; `PaletteTrigger` con atajo Ctrl/⌘+K que emite `cw:open-palette`; `FloatMenu` móvil; `SiteFooter` con redes, ocultando `href: null`, y copyright C-01; `BackToTop`), todo en glass y operable con teclado
+- [x] T031 Completar `app/[lang]/layout.tsx` con el shell y `ExperienceRoot`, y crear `app/[lang]/not-found.tsx` y `app/global-error.tsx` con identidad visual (FR-007), más `app/sitemap.ts` y `app/robots.ts`
+- [x] T032 [P] Crear los esquemas zod de `lib/validation/` (`contactSchema`: nombre 1–60, correo válido ≤ 100, teléfono opcional `^\+?[0-9 ()-]{6,20}$`, mensaje 1–1000, `consent` obligatorio; `commentSchema`: `postId`, nombre 1–60, correo ≤ 100, comentario 1–1000, `consent`; `passwordSchema` ≥ 12; `setupSchema`; `replySchema` 1–1000) con pruebas en `tests/unit/l0/validation.test.ts`
+- [x] T033 [P] Crear `lib/actions/result.ts` y los stubs con firma final de `lib/actions/{contact,comments,auth,admin}.ts` (responden `{ ok: false, error: 'unavailable' }`)
+- [x] T034 Crear `lib/data/types.ts` (interfaces de contracts/data-and-actions.md), `lib/data/index.ts` (`getRepos()` con registro de fábrica, fakes por defecto), `lib/data/memory/*` y la suite compartida `tests/contract/repos.contract.ts`, ejecutada contra memoria en `tests/unit/l0/memory-repos.test.ts`
+- [x] T035 [P] Crear `mdx-components.tsx` con los componentes por defecto
+- [x] T036 E2E de L0 en `tests/e2e/l0/shell.spec.ts`: 307 desde las 9 rutas 2023 sin prefijo, `LangSwitch` conserva la ruta, sin destello de tema, header y menú flotante con teclado, header visible sin JS
+- [x] T037 Pasar `npm run verify` y crear el tag `l0-frozen`: desde ese punto los contratos y los stubs cambian de dueño según el plan
 
 **Checkpoint**: L0 integrada en `001-evolutivo-cherced-world`. Las lanes LC, L1, L2, L3, L4 y L5 arrancan
 en paralelo, cada una en su worktree.

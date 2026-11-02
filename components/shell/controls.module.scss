@@ -1,0 +1,79 @@
+@use 'glass' as *;
+@use 'breakpoints' as bp;
+@use 'layout';
+
+.iconButton {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  background: var(--cw-glass-subtle-bg);
+  color: var(--cw-fg);
+  transition: border-color var(--cw-duration-fast) var(--cw-ease);
+
+  &:hover {
+    border-color: var(--cw-fg);
+  }
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  min-height: 44px;
+  padding: 0 var(--cw-space-4);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  background: var(--cw-glass-subtle-bg);
+  color: var(--cw-fg);
+  font-size: var(--cw-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--cw-duration-fast) var(--cw-ease);
+
+  &:hover {
+    border-color: var(--cw-fg);
+  }
+}
+
+.palette {
+  composes: pill;
+
+  @include bp.down(lg) {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+
+.kbd {
+  padding: 2px var(--cw-space-2);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: var(--cw-radius-sm);
+  color: var(--cw-fg-muted);
+  font-family: inherit;
+  font-size: var(--cw-text-xs);
+
+  @include bp.down(lg) {
+    display: none;
+  }
+}
+
+.collapsibleLabel {
+  @include bp.down(lg) {
+    @include layout.visually-hidden;
+  }
+}
+
+.back {
+  composes: pill;
+
+  @include bp.down(lg) {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+}

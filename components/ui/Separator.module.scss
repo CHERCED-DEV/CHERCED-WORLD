@@ -1,0 +1,18 @@
+.separator {
+  --sep-color: var(--cw-fg);
+  width: 120px;
+  height: 4px;
+  margin: var(--cw-space-5) auto;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--sep-color) 18%, var(--sep-color) 82%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--sep-color) 35%, transparent);
+}
+
+.light {
+  --sep-color: #ffffff;
+}
+
+.dark {
+  --sep-color: #000000;
+}

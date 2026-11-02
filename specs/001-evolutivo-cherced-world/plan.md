@@ -99,7 +99,7 @@ proxy.ts, mdx-components.tsx*, .gitignore, README.md
 app/
 ├── global-error.tsx, sitemap.ts, robots.ts                           L0
 ├── [lang]/
-│   ├── layout.tsx (layout raíz), not-found.tsx                       L0
+│   ├── layout.tsx (layout raíz), not-found.tsx, [...rest]/        L0
 │   ├── page.tsx, aboutMe/, services/, portfolio/                     L1
 │   ├── blog/                                                         L4
 │   ├── contactMe/, privacy/, inbox/                                  L3
@@ -162,6 +162,26 @@ congelamiento.
 
 Orden de integración en la rama del evolutivo: L0 → LC → L2 → L1 → L4 → L3 → L5. Después se corre la
 verificación completa, se revisa en la vista previa de Vercel y se hace el corte a `main` (FR-115).
+
+## Enmiendas de L0 antes del congelamiento (`l0-frozen`)
+
+L0 es dueña de los contratos hasta el tag `l0-frozen`. Estas decisiones se tomaron al implementarlos y
+ya están reflejadas en `contracts/` y `data-model.md`:
+
+| # | Cambio | Motivo |
+|---|--------|--------|
+| A-01 | Ruta nueva de L0 `app/[lang]/[...rest]/page.tsx` que renderiza el 404 con identidad desde el servidor (`noindex`) | Sin `app/layout.tsx`, las URLs desconocidas bajo un idioma no llegan a `[lang]/not-found.tsx`. Además, en Next 16.4 toda respuesta de `notFound()` sale como shell de error y la UI la pinta el cliente (verificado), así que el catch-all es la única forma de que el 404 se vea sin JS |
+| A-02 | Montserrat con `next/font/google` en vez de `next/font/local` | `public/fonts/Montserrat` solo trae el peso Regular; los títulos necesitan pesos reales. Se autoaloja en build, sin llamadas en runtime |
+| A-03 | `getDictionary` se importa desde `@/lib/i18n/server`; `@/lib/i18n` queda universal | Que un Client Component pueda usar `localizedPath` sin arrastrar `server-only` ni diccionarios |
+| A-04 | El proxy solo fija `cw-lang` en navegaciones de documento; `LangSwitch` la guarda en el cliente | Next quita los headers `rsc`/`next-router-prefetch` antes del proxy y los prefetch de `/es/*` pisaban la preferencia |
+| A-05 | Firmas finales de `lib/actions/auth.ts` (`(prev, formData)`) y `lib/actions/admin.ts` (argumentos explícitos) | El borrador solo listaba nombres |
+| A-06 | `getCapsule()` en `lib/content` y `SiteContent.about.image` | L5 necesita la cápsula y L1 el retrato con alt bilingüe |
+| A-07 | Los repositorios aplican las transiciones de estado de data-model y la regla de la respuesta del autor; semántica de `hit` documentada | Que memoria y Mongo se comporten igual y la suite de contrato lo pruebe |
+| A-08 | Errores de validación como claves de i18n (`ERROR_KEYS`) y `setupSchema` con confirmación | Una sola fuente de textos y evitar que el autor quede fuera por un error de tipeo en la contraseña |
+| A-09 | Menú flotante sobre `popover` nativo; atributos `data-js`, `data-theme`, `data-intro` los pone el script en línea | Funciona sin JS y sin destello |
+| A-10 | `ExperienceRoot` y los componentes de motion pueden ser Server Components `async` | L5 necesita leer su namespace en el servidor |
+| A-11 | `agentRules: false` en `next.config.ts` | `next dev` creaba un `AGENTS.md` fuera de toda lane |
+| A-12 | `playwright.config.ts` lee el puerto de `E2E_PORT` (por defecto 3100). Puertos por lane: LC 3101, L1 3102, L2 3103, L3 3104, L4 3105, L5 3106 | Enmienda del orquestador tras el congelamiento: con un puerto fijo, seis lanes no pueden correr e2e a la vez |
 
 ## Complexity Tracking
 

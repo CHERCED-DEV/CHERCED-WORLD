@@ -1,0 +1,125 @@
+@mixin dark-theme {
+  color-scheme: dark;
+  --cw-bg: #000000;
+  --cw-fg: #ffffff;
+  --cw-fg-muted: #cfcfcf;
+  --cw-accent: #ffffff;
+  --cw-accent-fg: #000000;
+  --cw-focus: #ffffff;
+  --cw-danger: #ff8a8a;
+  --cw-icon-filter: none;
+  --cw-glass-subtle-bg: rgb(0 0 0 / 0.55);
+  --cw-glass-standard-bg: rgb(0 0 0 / 0.65);
+  --cw-glass-strong-bg: rgb(0 0 0 / 0.78);
+  --cw-glass-border: rgb(255 255 255 / 0.16);
+  --cw-glass-shadow: 0 8px 32px rgb(0 0 0 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.08);
+  --cw-glass-solid-subtle-bg: #0b0b0b;
+  --cw-glass-solid-standard-bg: #111111;
+  --cw-glass-solid-strong-bg: #161616;
+}
+
+@mixin light-theme {
+  color-scheme: light;
+  --cw-bg: #ffffff;
+  --cw-fg: #000000;
+  --cw-fg-muted: #3a3a3a;
+  --cw-accent: #000000;
+  --cw-accent-fg: #ffffff;
+  --cw-focus: #000000;
+  --cw-danger: #b00020;
+  --cw-icon-filter: invert(1);
+  --cw-glass-subtle-bg: rgb(255 255 255 / 0.6);
+  --cw-glass-standard-bg: rgb(255 255 255 / 0.7);
+  --cw-glass-strong-bg: rgb(255 255 255 / 0.82);
+  --cw-glass-border: rgb(0 0 0 / 0.12);
+  --cw-glass-shadow: 0 8px 32px rgb(0 0 0 / 0.12), inset 0 1px 0 rgb(255 255 255 / 0.5);
+  --cw-glass-solid-subtle-bg: #fafafa;
+  --cw-glass-solid-standard-bg: #f4f4f4;
+  --cw-glass-solid-strong-bg: #eeeeee;
+}
+
+@mixin solid-glass {
+  --cw-glass-subtle-bg: var(--cw-glass-solid-subtle-bg);
+  --cw-glass-standard-bg: var(--cw-glass-solid-standard-bg);
+  --cw-glass-strong-bg: var(--cw-glass-solid-strong-bg);
+  --cw-glass-subtle-blur: 0px;
+  --cw-glass-standard-blur: 0px;
+  --cw-glass-strong-blur: 0px;
+  --cw-glass-saturate: 100%;
+}
+
+:root {
+  --cw-glass-subtle-blur: 8px;
+  --cw-glass-standard-blur: 14px;
+  --cw-glass-strong-blur: 22px;
+  --cw-glass-saturate: 140%;
+  --cw-glass-radius: 20px;
+
+  --cw-space-1: 0.25rem;
+  --cw-space-2: 0.5rem;
+  --cw-space-3: 0.75rem;
+  --cw-space-4: 1rem;
+  --cw-space-5: 1.5rem;
+  --cw-space-6: 2rem;
+  --cw-space-7: 3rem;
+  --cw-space-8: 4rem;
+
+  --cw-radius-sm: 8px;
+  --cw-radius-md: 14px;
+  --cw-radius-lg: 20px;
+
+  --cw-z-base: 0;
+  --cw-z-header: 100;
+  --cw-z-menu: 200;
+  --cw-z-dialog: 300;
+  --cw-z-intro: 400;
+  --cw-z-toast: 500;
+
+  --cw-font-sans: var(--cw-font-montserrat, 'Montserrat'), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --cw-text-xs: 0.75rem;
+  --cw-text-sm: 0.875rem;
+  --cw-text-md: 1rem;
+  --cw-text-lg: 1.25rem;
+  --cw-text-xl: 1.5rem;
+  --cw-text-2xl: 2.125rem;
+  --cw-text-3xl: clamp(2.5rem, 6vw + 1rem, 3.75rem);
+
+  --cw-duration-fast: 120ms;
+  --cw-duration-base: 220ms;
+  --cw-duration-slow: 420ms;
+  --cw-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --cw-header-h: 4rem;
+  --cw-container-max: 1248px;
+  --cw-intro-accent: #25ed9e;
+
+  @include dark-theme;
+}
+
+:root[data-theme='dark'] {
+  @include dark-theme;
+}
+
+:root[data-theme='light'] {
+  @include light-theme;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    @include light-theme;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root,
+  :root[data-theme] {
+    @include solid-glass;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  :root[data-theme] {
+    @include solid-glass;
+  }
+}

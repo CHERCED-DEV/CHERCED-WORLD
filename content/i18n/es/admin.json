@@ -1,0 +1,13 @@
+{
+  "admin.login.title": "Iniciar sesión",
+  "admin.login.password": "Contraseña",
+  "admin.login.error": "No se pudo iniciar sesión. Revisa tus datos e intenta de nuevo.",
+  "admin.login.locked": "Demasiados intentos. Intenta de nuevo en unos minutos.",
+  "admin.setup.title": "Crea la contraseña de administrador",
+  "admin.setup.code": "Código de configuración de un solo uso",
+  "admin.setup.passwordHint": "Mínimo 12 caracteres",
+  "admin.reply": "Responder por correo",
+  "admin.authorReply": "Responder como autor",
+  "admin.connectionLost": "Se perdió la conexión. Reconectando…",
+  "meta.inbox.title": "Inbox"
+}

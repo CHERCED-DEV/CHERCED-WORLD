@@ -1,0 +1,43 @@
+@use 'glass' as *;
+
+.dialog {
+  @include glass(strong);
+  width: min(100% - 2 * var(--cw-space-4), 640px);
+  max-height: min(100dvh - 2 * var(--cw-space-6), 720px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  color: var(--cw-fg);
+
+  &::backdrop {
+    background: rgb(0 0 0 / 0.55);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+
+  &[open] {
+    animation: dialog-in var(--cw-duration-base) var(--cw-ease);
+  }
+}
+
+.body {
+  padding: var(--cw-space-5);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open] {
+    animation: none;
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "comments.title": "Comments",
+  "comments.form.title": "Leave a comment",
+  "comments.form.name": "Your name",
+  "comments.form.email": "Your email (never shown)",
+  "comments.form.comment": "Your comment",
+  "comments.form.submit": "Send",
+  "comments.pending": "Thanks! Your comment is under review.",
+  "comments.empty": "No comments yet. Be the first.",
+  "comments.authorBadge": "Author",
+  "post.readingTime": "{n} min read",
+  "post.originalLanguage": "Originally written in Spanish",
+  "meta.blog.title": "Blog",
+  "meta.blog.description": "Notes on web development, technology and the path that got me here."
+}

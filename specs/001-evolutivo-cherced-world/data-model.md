@@ -21,6 +21,7 @@ type ImageRef = { src: string; alt: Localized; width: number; height: number }
 | `socials` | `{ id: 'linkedin' \| 'instagram' \| 'github' \| 'email' \| 'facebook'; href: string \| null; label: Localized }[]` | `href: null` = pendiente (P-02): no se renderiza |
 | `home` | `{ greeting: Localized; name: string; title: Localized }` | |
 | `about.description` | `Localized` | Sección 6.1 del inventario |
+| `about.image` | `ImageRef` | Retrato de "Sobre mí" (`meParallax.png`); agregado por L0 antes del congelamiento |
 | `about.career` | `CareerEntry[]` | Orden cronológico inverso |
 | `about.skills` | `{ description: Localized; bullets: Localized[]; tech: TechSkill[] }` | 12 tecnologías |
 | `about.education` | `EducationEntry[]` | |
@@ -40,7 +41,7 @@ type CareerEntry = {
   description: Localized
   pending?: true           // P-01: no se renderiza la sección de carrera mientras alguna entrada lo tenga
 }
-type EducationEntry = { id: string; institution: string; degree: Localized; start: string; end: string | null; pending?: true }
+type EducationEntry = { id: string; institution: string; degree: Localized; start: string; end: string | null; pending?: true }  // 'YYYY-MM', o 'YYYY' si solo se conoce el año
 type TechSkill = { id: string; name: string; icon: string; progress: number }  // progress 0–100, valores 2023 (D-04)
 ```
 

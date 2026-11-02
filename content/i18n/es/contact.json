@@ -1,0 +1,14 @@
+{
+  "contact.title": "Contacto",
+  "contact.name": "Tu nombre",
+  "contact.email": "Tu correo",
+  "contact.phone": "Teléfono (opcional)",
+  "contact.message": "Tu mensaje",
+  "contact.submit": "Enviar",
+  "contact.success.title": "¡Enviado!",
+  "contact.success.text": "Gracias por escribirme. Te respondo pronto.",
+  "contact.error.text": "No se pudo enviar tu mensaje. No se perdió nada; intenta de nuevo en un momento.",
+  "contact.rateLimited": "Enviaste varios mensajes en poco tiempo. Intenta de nuevo en unos minutos.",
+  "meta.contact.title": "Contáctame",
+  "meta.contact.description": "Hablemos: envíame un mensaje."
+}
