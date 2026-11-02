@@ -1,0 +1,14 @@
+{
+  "contact.title": "Contact",
+  "contact.name": "Your name",
+  "contact.email": "Your email",
+  "contact.phone": "Phone number (optional)",
+  "contact.message": "Your message",
+  "contact.submit": "Send",
+  "contact.success.title": "Sent!",
+  "contact.success.text": "Thanks for reaching out. I'll get back to you soon.",
+  "contact.error.text": "Your message couldn't be sent. Nothing was lost, try again in a moment.",
+  "contact.rateLimited": "You've sent several messages in a short time. Please try again in a few minutes.",
+  "meta.contact.title": "Contact me",
+  "meta.contact.description": "Let's talk: send me a message."
+}

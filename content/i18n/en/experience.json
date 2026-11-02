@@ -1,0 +1,10 @@
+{
+  "palette.copyEmail": "Copy email",
+  "palette.copied": "Email copied",
+  "assistant.open": "Ask my portfolio",
+  "assistant.placeholder": "Ask about my experience, projects or services",
+  "assistant.unknown": "I couldn't find that in my portfolio. Want to ask me directly?",
+  "assistant.outOfScope": "I can only talk about my work, projects and services.",
+  "assistant.unavailable": "The assistant isn't available right now.",
+  "capsule.title": "Time capsule: CHERCED-WORLD 2023"
+}

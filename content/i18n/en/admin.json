@@ -1,0 +1,13 @@
+{
+  "admin.login.title": "Sign in",
+  "admin.login.password": "Password",
+  "admin.login.error": "Couldn't sign in. Check your details and try again.",
+  "admin.login.locked": "Too many attempts. Try again in a few minutes.",
+  "admin.setup.title": "Create the admin password",
+  "admin.setup.code": "One-time setup code",
+  "admin.setup.passwordHint": "At least 12 characters",
+  "admin.reply": "Reply by email",
+  "admin.authorReply": "Reply as author",
+  "admin.connectionLost": "Connection lost. Reconnecting…",
+  "meta.inbox.title": "Inbox"
+}

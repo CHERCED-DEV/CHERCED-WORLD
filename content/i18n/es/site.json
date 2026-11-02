@@ -1,0 +1,13 @@
+{
+  "home.greeting": "Mi nombre es",
+  "home.name": "Camilo",
+  "home.title": "SOY DESARROLLADOR",
+  "meta.home.title": "<-CHERCED-WORLD->",
+  "meta.home.description": "Portafolio de Camilo Hernandez: desarrollo web front-end y full-stack.",
+  "meta.about.title": "Sobre mí",
+  "meta.about.description": "Desarrollador front-end con experiencia full-stack que construye aplicaciones web bonitas y funcionales.",
+  "meta.services.title": "Servicios",
+  "meta.services.description": "Diseño, desarrollo y mantenimiento web con tecnologías modernas.",
+  "meta.portfolio.title": "Portafolio",
+  "meta.portfolio.description": "Proyectos recientes y casos de estudio."
+}
