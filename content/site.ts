@@ -1,9 +1,7 @@
 import type { SiteContent } from './types'
 
 export const authorPending = {
-  'P-01': 'about.career.newshore',
   'P-02': 'socials.facebook',
-  'P-03': 'about.education.unad',
   'P-05': ['/assets/imgs/funnyPost.jpg', '/assets/imgs/pc-telefono-lado-izquierdo-fondo-negro_187299-25559.jpg'],
   'P-06': 'privacy',
 } as const
@@ -43,8 +41,8 @@ export const site: SiteContent = {
   },
   about: {
     description: {
-      en: "I'm a front-end developer with experience building highly interactive, high-performance web applications. I specialize in React and Angular, and I have professional knowledge of HTML, CSS, JavaScript, TypeScript, Node.js and Next.js.",
-      es: 'Soy desarrollador front-end con experiencia construyendo aplicaciones web muy interactivas y de alto rendimiento. Me especializo en React y Angular, y tengo conocimiento profesional de HTML, CSS, JavaScript, TypeScript, Node.js y Next.js.',
+      en: "I'm Camilo, a Software Solutions Engineer. I design composable, distributed systems: micro-frontends, .NET microservices, message queues and a CMS working as one product. I learned on airline platforms at FLYR and now work in fintech, where I also lead legacy migrations. I work AI-first and spec-driven: I write the spec before the code and use agents to research, scaffold, review and document.",
+      es: 'Soy Camilo, Software Solutions Engineer. Diseño sistemas composables y distribuidos: micro-frontends, microservicios .NET, colas de mensajes y un CMS funcionando como un solo producto. Me formé en plataformas de aerolíneas en FLYR y hoy trabajo en fintech, donde también lidero migraciones de legado. Trabajo AI-first y spec-driven: escribo la especificación antes del código y uso agentes para investigar, generar, revisar y documentar.',
     },
     image: {
       src: '/assets/imgs/meParallax.webp',
@@ -54,22 +52,65 @@ export const site: SiteContent = {
     },
     career: [
       {
+        id: 'sistecredito-ai-first',
+        company: 'Sistecrédito',
+        role: { es: 'Software Solutions Engineer · AI-First', en: 'Software Solutions Engineer · AI-First' },
+        start: '2026-02',
+        end: null,
+        description: {
+          en: 'I work end to end: micro-frontends on Native Federation, .NET microservices with gRPC, event pipelines between AWS and Azure Service Bus, and legacy migrations that keep the business running. I work AI-first and spec-driven, and I built AI agent skills for the engineering teams.',
+          es: 'Trabajo de punta a punta: micro-frontends con Native Federation, microservicios .NET con gRPC, pipelines de eventos entre AWS y Azure Service Bus, y migraciones de legado sin detener la operación. Trabajo AI-first y spec-driven, y creé skills de agentes de IA para los equipos de ingeniería.',
+        },
+      },
+      {
+        id: 'sistecredito-dev-solutions',
+        company: 'Sistecrédito',
+        role: { es: 'Development Solutions Engineer', en: 'Development Solutions Engineer' },
+        start: '2025-03',
+        end: '2026-02',
+        description: {
+          en: 'I brought what I learned on airline platforms into fintech: micro-frontends that combine .NET server-side rendering with Angular. I designed a cross-origin postMessage protocol that keeps sensitive data out of message payloads, and implemented GA4/GTM analytics and accessibility improvements.',
+          es: 'Llevé al sector fintech lo que aprendí en plataformas de aerolíneas: micro-frontends que combinan server-side rendering de .NET con Angular. Diseñé un protocolo de comunicación cross-origin con postMessage que mantiene los datos sensibles fuera de los mensajes, e implementé analítica con GA4/GTM y mejoras de accesibilidad.',
+        },
+      },
+      {
+        id: 'synergos-labs',
+        company: 'Synergos Labs',
+        role: { es: 'Founder & Software Architect', en: 'Founder & Software Architect' },
+        start: '2024-02',
+        end: null,
+        description: {
+          en: 'Personal project. I design and build Synergos, a composable digital platform with 30+ reusable components: Umbraco (.NET) as the composition layer, a CDN project that serves the resources, and a framework-agnostic backend-for-frontend, proven with 3+ frameworks.',
+          es: 'Proyecto propio. Diseño y construyo Synergos, una plataforma digital composable con más de 30 componentes reutilizables: Umbraco (.NET) como capa de composición, un proyecto en CDN que sirve los recursos y un backend-for-frontend agnóstico al framework, probado con más de 3 frameworks.',
+        },
+      },
+      {
+        id: 'flyr',
+        company: 'FLYR',
+        role: { es: 'Frontend Web Developer', en: 'Frontend Web Developer' },
+        start: '2023-03',
+        end: '2025-03',
+        description: {
+          en: 'I moved from client accounts to the core product: the airline retailing platform every airline account extends from. I led the architecture of the Check-in and Manage My Booking modules, deployed across 3+ international airlines, and built secure Angular checkout components.',
+          es: 'Pasé de las cuentas de clientes al producto core: la plataforma de retail aéreo de la que se extiende cada aerolínea. Lideré la arquitectura de los módulos de Check-in y Manage My Booking, desplegados en más de 3 aerolíneas internacionales, y construí componentes seguros de checkout en Angular.',
+        },
+      },
+      {
         id: 'newshore',
         company: 'Newshore (a FLYR Labs company)',
         role: { es: 'Desarrollador Frontend', en: 'Frontend Developer' },
         start: '2022-07',
-        end: null,
+        end: '2023-03',
         description: {
-          en: 'I build the user interface and experience of an airline booking website: buttons, menus and forms, and navigation that stays easy for customers. I work closely with the back-end team to integrate the system, make sure the site works across devices and browsers, and test and debug technical issues.',
-          es: 'Construyo la interfaz y la experiencia de usuario de un sitio de reservas de vuelos: botones, menús, formularios y una navegación fácil para los clientes. Trabajo de cerca con el equipo de back-end para integrar el sistema, me aseguro de que el sitio funcione en distintos dispositivos y navegadores, y hago pruebas y depuración de problemas técnicos.',
+          en: 'I started on the airline accounts side: I led frontend work on web platforms, including the Avianca PWA, and helped launch 3+ platforms as part of the setups team. I worked with UX on pixel-perfect, accessible interfaces (WCAG, ARIA) using .NET, Angular and Umbraco on Azure.',
+          es: 'Empecé del lado de las cuentas de aerolíneas: lideré el frontend de plataformas web, incluida la PWA de Avianca, y ayudé a lanzar más de 3 plataformas como parte del equipo de setups. Trabajé con UX en interfaces pixel-perfect y accesibles (WCAG, ARIA) con .NET, Angular y Umbraco sobre Azure.',
         },
-        pending: true,
       },
       {
         id: 'platzi-master',
         company: 'Platzi Master [CX]',
         role: { es: 'Desarrollador Frontend', en: 'Frontend Developer' },
-        start: '2022-02',
+        start: '2022-03',
         end: '2022-06',
         description: {
           en: 'I completed Platzi Master, an online frontend bootcamp: courses in HTML, CSS, JavaScript and React, hands-on projects and personalized mentoring from industry professionals, all aimed at landing a job in the field.',
@@ -80,8 +121,8 @@ export const site: SiteContent = {
         id: 'growup-it',
         company: 'Growup IT',
         role: { es: 'Desarrollador Frontend', en: 'Frontend Developer' },
-        start: '2020-01',
-        end: '2021-11',
+        start: '2019-01',
+        end: '2019-11',
         description: {
           en: "I improved and optimized the existing code of a commercial services company's website: I found and fixed performance issues, rewrote and updated code to current standards, and built and maintained CSS styles so the site looked and worked well on every device and browser.",
           es: 'Mejoré y optimicé el código existente del sitio web de una empresa de servicios comerciales: encontré y resolví problemas de rendimiento, reescribí y actualicé código a los estándares vigentes, y construí y mantuve los estilos CSS para que el sitio se viera y funcionara bien en cualquier dispositivo y navegador.',
@@ -90,7 +131,7 @@ export const site: SiteContent = {
       {
         id: 'squadra-arquitectura',
         company: 'Squadra Arquitectura',
-        role: { es: 'Gerente de negocios', en: 'Business Manager' },
+        role: { es: 'Fundador y gerente', en: 'Founder & Business Manager' },
         start: '2016-10',
         end: '2020-05',
         description: {
@@ -147,50 +188,67 @@ export const site: SiteContent = {
         },
       ],
       tech: [
-        { id: 'react', name: 'REACT', icon: '/assets/icons/skillsIcon/react.png', progress: 75 },
-        { id: 'nextjs', name: 'NEXTJS', icon: '/assets/icons/skillsIcon/nextjs.png', progress: 80 },
-        { id: 'typescript', name: 'TYPESCRIPT', icon: '/assets/icons/skillsIcon/typescript.png', progress: 80 },
-        { id: 'nodejs', name: 'NODEJS', icon: '/assets/icons/skillsIcon/nodejs.png', progress: 75 },
-        { id: 'mongodb', name: 'MONGO', icon: '/assets/icons/skillsIcon/mongodb.png', progress: 60 },
+        { id: 'angular', name: 'ANGULAR', icon: '/assets/icons/skillsIcon/angular.png', progress: 92 },
+        { id: 'typescript', name: 'TYPESCRIPT', icon: '/assets/icons/skillsIcon/typescript.png', progress: 92 },
+        { id: 'dotnet', name: '.NET', progress: 85 },
+        { id: 'csharp', name: 'C#', progress: 82 },
+        { id: 'micro-frontends', name: 'MICRO-FRONTENDS', progress: 90 },
+        { id: 'native-federation', name: 'NATIVE FEDERATION', progress: 88 },
+        { id: 'azure', name: 'AZURE', icon: '/assets/icons/skillsIcon/azure.png', progress: 78 },
+        { id: 'umbraco', name: 'UMBRACO', progress: 85 },
+        { id: 'spec-driven-development', name: 'SPEC-DRIVEN DEVELOPMENT', progress: 90 },
+        { id: 'ai-coding-agents', name: 'AI CODING AGENTS', progress: 90 },
+        { id: 'azure-ai-foundry', name: 'AZURE AI FOUNDRY', progress: 75 },
+        { id: 'semantic-kernel', name: 'SEMANTIC KERNEL', progress: 60 },
+        { id: 'rag-embeddings', name: 'RAG / EMBEDDINGS', progress: 60 },
         { id: 'javascript', name: 'JAVASCRIPT', icon: '/assets/icons/skillsIcon/js.png', progress: 90 },
-        { id: 'angular', name: 'ANGULAR', icon: '/assets/icons/skillsIcon/angular.png', progress: 50 },
+        { id: 'html5', name: 'HTML5', icon: '/assets/icons/skillsIcon/html-5.png', progress: 90 },
+        { id: 'css', name: 'CSS', icon: '/assets/icons/skillsIcon/css.png', progress: 92 },
         { id: 'sass', name: 'SASS', icon: '/assets/icons/skillsIcon/sass.png', progress: 90 },
-        { id: 'html5', name: 'HTML5', icon: '/assets/icons/skillsIcon/html-5.png', progress: 85 },
-        { id: 'css', name: 'CSS', icon: '/assets/icons/skillsIcon/css.png', progress: 95 },
-        { id: 'figma', name: 'FIGMA', icon: '/assets/icons/skillsIcon/figma.png', progress: 75 },
-        { id: 'git', name: 'GIT', icon: '/assets/icons/skillsIcon/merge.png', progress: 80 },
-        { id: 'azure', name: 'AZURE', icon: '/assets/icons/skillsIcon/azure.png', progress: 70 },
+        { id: 'git', name: 'GIT', icon: '/assets/icons/skillsIcon/merge.png', progress: 85 },
       ],
     },
     education: [
       {
-        id: 'platzi',
-        institution: 'Platzi',
-        degree: { es: 'Desarrollador Frontend', en: 'Frontend Developer' },
-        start: '2022-02',
-        end: '2022-06',
+        id: 'unad',
+        institution: 'Universidad Nacional Abierta y a Distancia (UNAD)',
+        degree: {
+          es: 'Ingeniería de Sistemas (estudios no finalizados)',
+          en: 'Systems Engineering (coursework, not completed)',
+        },
+        start: '2020-06',
+        end: '2023-11',
       },
       {
-        id: 'unad',
-        institution: 'Universidad Nacional Abierta y a Distancia - UNAD Colombia',
-        degree: { es: 'Ingeniería de Sistemas', en: 'Systems Engineering' },
-        start: '2020',
-        end: null,
-        pending: true,
+        id: 'platzi',
+        institution: 'Platzi',
+        degree: { es: 'Frontend Development, Platzi Master', en: 'Frontend Development, Platzi Master' },
+        start: '2018',
+        end: '2022',
       },
       {
         id: 'eam',
         institution: 'Institución Universitaria EAM',
         degree: {
-          es: 'Administración de Empresas, Gestión de Proyectos',
-          en: 'Business Administration, Project Management',
+          es: 'Administración de Empresas, graduado con honores, énfasis en Creación de Empresas',
+          en: 'Business Administration, graduated with honors, emphasis in Business Creation',
         },
-        start: '2011',
-        end: '2016',
+        start: '2013',
+        end: '2017',
       },
     ],
     courses: {
       schools: [
+        {
+          name: {
+            es: 'Curso de Fundamentos de Arquitectura de Software — Platzi (nov 2025)',
+            en: 'Software Architecture Fundamentals — Platzi (Nov 2025)',
+          },
+          description: {
+            en: 'I formalized the architecture foundations I apply every day to distributed systems and composable platforms.',
+            es: 'Formalicé las bases de arquitectura que aplico a diario en sistemas distribuidos y plataformas composables.',
+          },
+        },
         {
           name: { es: 'Desarrollo Full Stack con JavaScript', en: 'Full Stack Developer with JavaScript' },
           description: {
@@ -231,13 +289,13 @@ export const site: SiteContent = {
     },
     languages: [
       { id: 'es', name: { es: 'Español', en: 'Spanish' }, progress: 100, icon: '/assets/icons/flags/spain.png' },
-      { id: 'en', name: { es: 'Inglés', en: 'English' }, progress: 60, icon: '/assets/icons/flags/uniteStates.png' },
+      { id: 'en', name: { es: 'Inglés', en: 'English' }, progress: 65, icon: '/assets/icons/flags/uniteStates.png' },
     ],
   },
   services: {
     intro: {
-      en: "How can I help you? I'm a full-stack developer working with the MERN stack (MongoDB, Express, React and Node.js). I build end-to-end web applications that are fast, secure and scalable, and I can help you reach your business goals by designing and developing custom solutions, optimizing performance, and providing ongoing support and maintenance.",
-      es: '¿Cómo te puedo ayudar? Soy desarrollador full-stack y trabajo con el stack MERN (MongoDB, Express, React y Node.js). Construyo aplicaciones web de punta a punta rápidas, seguras y escalables, y te puedo ayudar a cumplir tus objetivos de negocio diseñando y desarrollando soluciones a la medida, optimizando el rendimiento y dando soporte y mantenimiento continuos.',
+      en: 'I help you turn a digital product into a system that grows without breaking. I design the architecture, build the frontend and backend, and maintain what I deliver with testing, accessibility and solid performance. I work from clear specs from day one, so you know what will be built before the first line of code.',
+      es: 'Te ayudo a convertir un producto digital en un sistema que crece sin romperse. Diseño la arquitectura, construyo el frontend y el backend, y mantengo lo que entrego con pruebas, accesibilidad y buen rendimiento. Trabajo con especificaciones claras desde el inicio, para que sepas qué se va a construir antes de escribir la primera línea.',
     },
     items: [
       {
@@ -289,8 +347,8 @@ export const site: SiteContent = {
   contact: {
     title: { es: 'Contacto', en: 'Contact' },
     description: {
-      en: "Hi, I'm Camilo Hernandez, a full-stack developer with a strong focus on the MERN stack. I've been building for the web since 2020, and I've honed my skills creating robust, scalable web applications with TypeScript and Next.js.",
-      es: 'Hola, soy Camilo Hernandez, desarrollador full-stack con un enfoque fuerte en el stack MERN. Construyo para la web desde 2020 y he afinado mis habilidades creando aplicaciones web robustas y escalables con TypeScript y Next.js.',
+      en: "I've been building for the web since 2019, and today I design everything from micro-frontends to .NET microservices. If you have a product that needs to scale, a legacy migration or an architecture to sort out, write to me and let's talk.",
+      es: 'Construyo para la web desde 2019, y hoy diseño desde micro-frontends hasta microservicios .NET. Si tienes un producto que necesita escalar, una migración de legado o una arquitectura por ordenar, escríbeme y hablamos.',
     },
   },
   blog: {
