@@ -3,6 +3,8 @@ import { expect, test, type Page } from '@playwright/test'
 
 const PAGE = '/es/aboutMe'
 
+const READY_TIMEOUT = 30_000
+
 function onlyIn(...projects: string[]) {
   test.beforeEach(({}, testInfo) => {
     test.skip(!projects.includes(testInfo.project.name), `solo en ${projects.join(', ')}`)
@@ -15,6 +17,20 @@ function palette(page: Page) {
 
 function assistant(page: Page) {
   return page.getByRole('dialog', { name: 'Pregúntale a mi portafolio' })
+}
+
+async function waitForExperience(page: Page) {
+  await expect(page.locator('[data-cw-assistant-button]')).toHaveAttribute('data-cw-ready', '', { timeout: READY_TIMEOUT })
+}
+
+async function gotoReady(page: Page, path: string = PAGE) {
+  await page.goto(path)
+  await waitForExperience(page)
+}
+
+async function reloadReady(page: Page) {
+  await page.reload()
+  await waitForExperience(page)
 }
 
 async function openPalette(page: Page, via: 'keyboard' | 'button' = 'keyboard') {
@@ -30,7 +46,7 @@ async function askAssistant(page: Page, question: string) {
   await assistant(page).locator('[data-cw-assistant-input]').fill(question)
   await assistant(page).getByRole('button', { name: 'Preguntar' }).click()
   await expect(answers).toHaveCount(before + 1)
-  return answers.last()
+  return answers.nth(before)
 }
 
 async function blockingViolations(page: Page) {
@@ -44,7 +60,7 @@ test.describe('command palette', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
   test('Ctrl+K abre con el foco en la búsqueda; "blog" + Enter lleva al blog', async ({ page }) => {
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page)
     await page.keyboard.type('blog')
     await expect(page.locator('[data-cw-palette-option="page:blog"]')).toHaveAttribute('aria-selected', 'true')
@@ -54,7 +70,7 @@ test.describe('command palette', () => {
   })
 
   test('el botón visible abre la palette y Esc devuelve el foco', async ({ page }) => {
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page, 'button')
     await page.keyboard.press('Escape')
     await expect(palette(page)).toBeHidden()
@@ -62,7 +78,7 @@ test.describe('command palette', () => {
   })
 
   test('se opera con flechas y anuncia los resultados', async ({ page }) => {
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page)
     const input = page.locator('[data-cw-palette-input]')
     await expect(input).toHaveAttribute('role', 'combobox')
@@ -83,7 +99,7 @@ test.describe('command palette', () => {
   })
 
   test('el comando secreto abre la cápsula y el descubrimiento se recuerda', async ({ page }) => {
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page)
     await page.keyboard.type('enécimo intentooooo')
     await page.keyboard.press('Enter')
@@ -94,7 +110,7 @@ test.describe('command palette', () => {
     await expect(capsule.locator('img').first()).toHaveJSProperty('complete', true)
     expect(await page.evaluate(() => localStorage.getItem('cw-capsule-found'))).toBe('1')
 
-    await page.reload()
+    await reloadReady(page)
     await openPalette(page)
     await expect(palette(page).locator('[data-cw-palette-option="action:capsule"]')).toBeVisible()
   })
@@ -102,7 +118,7 @@ test.describe('command palette', () => {
   test('cambia el tema desde la palette y lo recuerda al recargar', async ({ browser }) => {
     const context = await browser.newContext({ colorScheme: 'dark', viewport: { width: 1280, height: 800 } })
     const page = await context.newPage()
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page)
     await page.keyboard.type('tema claro')
     await page.keyboard.press('Enter')
@@ -113,7 +129,7 @@ test.describe('command palette', () => {
   })
 
   test('cambia de idioma conservando la ruta', async ({ page }) => {
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page)
     await page.keyboard.type('inglés')
     await page.keyboard.press('Enter')
@@ -127,7 +143,7 @@ test.describe('copiar correo', () => {
 
   test('copia el correo público y lo confirma', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write'])
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page)
     await page.keyboard.type('copiar correo')
     await page.keyboard.press('Enter')
@@ -140,7 +156,7 @@ test.describe('asistente', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
   test('responde preguntas informales con enlaces y en el idioma de la pregunta', async ({ page }) => {
-    await page.goto(PAGE)
+    await gotoReady(page)
     await page.locator('[data-cw-assistant-button]').click()
     await expect(assistant(page)).toBeVisible()
     await expect(assistant(page).locator('[data-cw-assistant-input]')).toBeFocused()
@@ -164,7 +180,7 @@ test.describe('asistente', () => {
   })
 
   test('se abre desde la palette y no guarda la conversación', async ({ page }) => {
-    await page.goto(PAGE)
+    await gotoReady(page)
     await openPalette(page)
     await page.keyboard.type('asistente')
     await page.keyboard.press('Enter')
@@ -172,14 +188,14 @@ test.describe('asistente', () => {
     await askAssistant(page, '¿Qué servicios ofreces?')
     const stored = await page.evaluate(() => JSON.stringify({ ...localStorage, ...sessionStorage }))
     expect(stored).not.toContain('servicios')
-    await page.reload()
+    await reloadReady(page)
     await page.locator('[data-cw-assistant-button]').click()
     await expect(assistant(page).locator('[data-cw-answer-kind]')).toHaveCount(0)
   })
 
   test('si el índice no está disponible, lo dice y el sitio sigue funcionando', async ({ page }) => {
     await page.route('**/api/search-index/**', (route) => route.fulfill({ status: 503, body: 'no' }))
-    await page.goto(PAGE)
+    await gotoReady(page)
     const button = page.locator('[data-cw-assistant-button]')
     await button.click()
     await expect(assistant(page).locator('[data-cw-assistant-unavailable]')).toBeVisible()
@@ -201,7 +217,7 @@ test.describe('accesibilidad de la capa de experiencia', () => {
   for (const scheme of ['dark', 'light'] as const) {
     test(`palette, asistente y cápsula sin violaciones críticas ni serias (${scheme})`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' })
-      await page.goto(PAGE)
+      await gotoReady(page)
 
       await openPalette(page)
       await page.keyboard.type('pro')

@@ -11,9 +11,23 @@ import type { SearchDoc } from '@/lib/search/types'
 import styles from './ExperienceClient.module.scss'
 import type { ExperienceLabels } from './labels'
 
-const CommandPalette = dynamic(() => import('./CommandPalette').then((mod) => mod.CommandPalette), { ssr: false })
-const Assistant = dynamic(() => import('./Assistant').then((mod) => mod.Assistant), { ssr: false })
+const loadPalette = () => import('./CommandPalette')
+const loadAssistant = () => import('./Assistant')
+
+const CommandPalette = dynamic(() => loadPalette().then((mod) => mod.CommandPalette), { ssr: false })
+const Assistant = dynamic(() => loadAssistant().then((mod) => mod.Assistant), { ssr: false })
 const Capsule = dynamic(() => import('./Capsule').then((mod) => mod.Capsule), { ssr: false })
+
+const PRELOAD_DEADLINE_MS = 2000
+
+function whenIdle(task: () => void): () => void {
+  if (typeof window.requestIdleCallback === 'function') {
+    const handle = window.requestIdleCallback(task, { timeout: PRELOAD_DEADLINE_MS })
+    return () => window.cancelIdleCallback(handle)
+  }
+  const handle = window.setTimeout(task, 1)
+  return () => window.clearTimeout(handle)
+}
 
 type Panel = 'palette' | 'assistant' | 'capsule'
 
@@ -32,6 +46,7 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
   const [sessions, setSessions] = useState<Record<Panel, number>>({ palette: 0, assistant: 0, capsule: 0 })
   const [status, setStatus] = useState<AssistantStatus>('idle')
   const [discovered, setDiscovered] = useState(false)
+  const [ready, setReady] = useState(false)
   const statusId = useId()
 
   const show = useCallback((panel: Panel) => {
@@ -44,6 +59,19 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
   useEffect(() => on('cw:open-palette', () => show('palette')), [show])
   useEffect(() => on('cw:open-assistant', () => show('assistant')), [show])
 
+  useEffect(() => {
+    let alive = true
+    const cancel = whenIdle(() => {
+      Promise.allSettled([loadPalette(), loadAssistant()]).then(() => {
+        if (alive) setReady(true)
+      })
+    })
+    return () => {
+      alive = false
+      cancel()
+    }
+  }, [])
+
   const unavailable = status === 'unavailable'
 
   return (
@@ -55,6 +83,7 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
         aria-describedby={unavailable ? statusId : undefined}
         data-cw-glass="standard"
         data-cw-assistant-button=""
+        data-cw-ready={ready ? '' : undefined}
         data-status={status}
         onClick={() => emit('cw:open-assistant')}
       >
