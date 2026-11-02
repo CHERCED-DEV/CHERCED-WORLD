@@ -185,6 +185,7 @@ ya están reflejadas en `contracts/` y `data-model.md`:
 | A-13 | `icon?: string` opcional en `LanguageSkill` y en `about.courses.platzi`; LC los llena con las banderas y el logo de Platzi de 2023 | Propuesta de LC: en 2023 se mostraban y L1 tendría que fijar las rutas a mano. El campo es opcional, así que no rompe a nadie |
 | A-14 | `body { isolation: isolate }` en `styles/globals.scss`; se retira la regla `body:has(> .root)` de L2 | Propuesta de L2: el canvas tiene que pintarse encima del fondo del `body` sin una regla global escondida en un módulo |
 | A-15 | No se crea el token `--cw-sea`; el azul del mar 2023 queda como variable local de `Background` | Propuesta de L2 descartada: solo lo usa el fondo, y un token sin otros consumidores agrega superficie de contrato |
+| A-16 | El header pasa a modo compacto (menú flotante, "Regresar" y palette como íconos) por debajo de `xl` (1248 px) en vez de `lg` (992 px), y los enlaces no se parten en dos líneas | Reportado por L1 y L4 y medido al integrar: a 1024 px en inglés "Back" se montaba sobre "HOME" y la palette crecía a 86 px. Tras el cambio, 0 solapamientos y 44 px de alto en 800, 1024, 1260 y 1440 px |
 
 ## Complexity Tracking
 

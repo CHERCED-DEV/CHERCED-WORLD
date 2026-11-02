@@ -40,9 +40,10 @@
 }
 
 .palette {
+  white-space: nowrap;
   composes: pill;
 
-  @include bp.down(lg) {
+  @include bp.down(xl) {
     width: 44px;
     padding: 0;
     justify-content: center;
@@ -57,13 +58,13 @@
   font-family: inherit;
   font-size: var(--cw-text-xs);
 
-  @include bp.down(lg) {
+  @include bp.down(xl) {
     display: none;
   }
 }
 
 .collapsibleLabel {
-  @include bp.down(lg) {
+  @include bp.down(xl) {
     @include layout.visually-hidden;
   }
 }
@@ -71,7 +72,7 @@
 .back {
   composes: pill;
 
-  @include bp.down(lg) {
+  @include bp.down(xl) {
     width: 44px;
     padding: 0;
     justify-content: center;
