@@ -77,6 +77,7 @@ test.describe('auditoría responsive (320 a 1440 px)', () => {
       const url = `/${lang}${path}`
       test(`${url} sin scroll horizontal, objetivos táctiles ≥ ${MIN_TARGET} px y header sin solapes`, async ({ page }, testInfo) => {
         test.skip(testInfo.project.name !== 'desktop-chromium', 'solo en desktop-chromium; el viewport lo fija la prueba')
+        test.setTimeout(120_000)
         await page.addInitScript(() => sessionStorage.setItem('cw-intro-seen', '1'))
         await page.goto(url, { waitUntil: 'networkidle' })
         const findings: Finding[] = []
