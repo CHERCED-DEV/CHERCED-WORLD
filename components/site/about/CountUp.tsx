@@ -37,7 +37,7 @@ export function CountUp({ value, className }: { value: number; className?: strin
   }, [value])
 
   return (
-    <span ref={ref} className={className} aria-hidden="true" data-cw-count={value}>
+    <span ref={ref} className={className} aria-hidden="true" data-cw-figure-value={value}>
       {value}
     </span>
   )
