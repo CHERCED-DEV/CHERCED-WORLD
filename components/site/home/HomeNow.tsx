@@ -27,7 +27,7 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
   const [sinceBefore, sinceAfter] = splitAround(labels.since, 'date')
 
   return (
-    <section id={HOME_NOW_ID} tabIndex={-1} className={styles.now} aria-labelledby="home-now-title" data-cw-home-now="">
+    <section id={HOME_NOW_ID} className={styles.now} aria-labelledby="home-now-title" data-cw-home-now="">
       <GlassSurface className={styles.panel}>
         <div className={styles.head}>
           <span className={styles.live} aria-hidden="true" />
