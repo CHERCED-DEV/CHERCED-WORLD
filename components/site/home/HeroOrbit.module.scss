@@ -1,0 +1,114 @@
+.orbit {
+  --_size: clamp(500px, 94vw, 1560px);
+  --_spin: -16deg;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.rings,
+.track,
+.trackAlt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--_size);
+  height: var(--_size);
+  margin: calc(var(--_size) / -2) 0 0 calc(var(--_size) / -2);
+}
+
+.rings {
+  overflow: visible;
+  transform: rotate(var(--_spin));
+  fill: none;
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
+}
+
+.ring {
+  stroke: color-mix(in srgb, var(--cw-fg) 24%, transparent);
+  stroke-width: 1;
+}
+
+.faint {
+  stroke: color-mix(in srgb, var(--cw-fg) 11%, transparent);
+  stroke-width: 1;
+}
+
+.dashed {
+  stroke: color-mix(in srgb, var(--cw-intro-accent) 55%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 1 9;
+}
+
+.track {
+  transform: rotate(calc(var(--_spin) - 9deg));
+}
+
+.trackAlt {
+  transform: rotate(calc(var(--_spin) + 12deg));
+}
+
+@media (min-width: 768px) {
+  .orbit {
+    --_spin: 0deg;
+  }
+}
+
+.electron,
+.electronAlt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  offset-rotate: 0deg;
+  animation: home-orbit linear infinite;
+}
+
+.electron {
+  width: 6px;
+  height: 6px;
+  background: var(--cw-intro-accent);
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--cw-intro-accent) 55%, transparent);
+  offset-path: ellipse(49% 11.6% at 50% 50%);
+  offset-distance: 18%;
+  animation-duration: 42s;
+}
+
+.electronAlt {
+  width: 4px;
+  height: 4px;
+  background: var(--cw-fg);
+  box-shadow: 0 0 8px 1px color-mix(in srgb, var(--cw-fg) 40%, transparent);
+  offset-path: ellipse(44% 15% at 50% 50%);
+  offset-distance: 64%;
+  animation-duration: 58s;
+  animation-direction: reverse;
+  animation-delay: -21s;
+}
+
+@keyframes home-orbit {
+  from {
+    offset-distance: 0%;
+  }
+
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@supports not (offset-path: ellipse(1px 1px at 0 0)) {
+  .track,
+  .trackAlt {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .electron,
+  .electronAlt {
+    animation: none !important;
+  }
+}

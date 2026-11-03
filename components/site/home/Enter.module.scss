@@ -1,0 +1,72 @@
+:global(:root[data-js][data-intro='pending']) .enter {
+  opacity: 0;
+}
+
+:global(:root[data-js]:not([data-intro='pending'])) .enter {
+  animation: home-enter 620ms var(--cw-ease) calc(60ms + var(--cw-home-step, 0) * 90ms) both;
+}
+
+:global(:root[data-js]:not([data-intro='pending'])) .title {
+  animation-name: home-enter-title;
+}
+
+:global(:root[data-js]:not([data-intro='pending'])) .rule {
+  animation-name: home-enter-rule;
+}
+
+@keyframes home-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes home-enter-title {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translate3d(0, 18px, 0) scale(0.985);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@keyframes home-enter-rule {
+  from {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(:root[data-js]) .enter {
+    opacity: 1;
+    animation: none !important;
+  }
+}
