@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { SocialId, SocialLink } from '@/content/types'
 import { cx } from '@/components/ui/cx'
-import { GlowOrb, GridLines, Hairline } from '@/components/ui/graphics'
+import { GlowOrb, GridLines, Hairline, Scanline } from '@/components/ui/graphics'
 import type { Locale } from '@/lib/i18n/config'
 import { BackToTop } from './BackToTop'
 import { copyrightYears, type ShellLabels } from './nav'
@@ -26,6 +26,7 @@ export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
       <GridLines fade="top" />
       <GlowOrb size="md" x="50%" y="0%" />
       <Hairline glint className={styles.edgeLine} />
+      <Scanline axis="x" edge="top" delay={2400} />
       <div className={cx('cw-container', styles.inner)}>
         <BackToTop label={labels.backToTop} />
         <nav aria-label={labels.social}>

@@ -16,9 +16,13 @@
 
 .header .edgeLine {
   position: absolute;
+  top: 0;
   right: 0;
-  bottom: -1px;
   left: 0;
+}
+
+.inner:has([data-cw-back]) [data-cw-palette-trigger] kbd {
+  display: none;
 }
 
 .inner {

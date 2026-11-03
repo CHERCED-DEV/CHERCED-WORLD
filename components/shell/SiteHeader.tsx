@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { cx } from '@/components/ui/cx'
-import { Hairline, Scanline } from '@/components/ui/graphics'
+import { Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n/config'
 import { BackLink } from './BackLink'
@@ -44,7 +44,6 @@ export function SiteHeader({ lang, items, labels }: SiteHeaderProps) {
         </div>
       </div>
       <Hairline glint className={styles.edgeLine} />
-      <Scanline axis="x" edge="bottom" delay={2400} />
     </header>
   )
 }
