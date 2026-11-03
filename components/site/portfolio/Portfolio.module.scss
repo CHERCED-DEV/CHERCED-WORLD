@@ -85,11 +85,37 @@
 .rail {
   position: relative;
   min-width: 0;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    z-index: 1;
+    width: 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--cw-duration-base) var(--cw-ease);
+  }
+
+  &::before {
+    left: -4px;
+    background: linear-gradient(to right, var(--cw-bg) 20%, transparent);
+  }
+
+  &::after {
+    right: -4px;
+    background: linear-gradient(to left, var(--cw-bg) 20%, transparent);
+  }
+
+  &[data-start]::before,
+  &[data-end]::after {
+    opacity: 1;
+  }
 }
 
 .filterList {
-  --fade-start: 0px;
-  --fade-end: 0px;
   display: flex;
   flex-wrap: nowrap;
   gap: var(--cw-space-2);
@@ -97,16 +123,8 @@
   padding: 4px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  scroll-padding-inline: 56px;
+  scroll-padding-inline: 64px;
   scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 var(--fade-start),
-    #000 calc(100% - var(--fade-end)),
-    transparent
-  );
-  mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
 
   &::-webkit-scrollbar {
     display: none;
@@ -117,18 +135,10 @@
   }
 }
 
-.rail[data-start] .filterList {
-  --fade-start: 56px;
-}
-
-.rail[data-end] .filterList {
-  --fade-end: 56px;
-}
-
 .railArrow {
   position: absolute;
   top: 50%;
-  z-index: 1;
+  z-index: 2;
   display: none;
   place-items: center;
   width: 36px;
@@ -168,6 +178,7 @@
 .chipButton {
   @include site.chip;
   gap: var(--cw-space-2);
+  box-shadow: none;
   min-height: 40px;
   padding-inline: var(--cw-space-4) var(--cw-space-2);
   white-space: nowrap;
