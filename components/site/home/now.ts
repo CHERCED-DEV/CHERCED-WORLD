@@ -14,6 +14,10 @@ function normalize(value: string): string {
   return value.normalize('NFD').replace(/\p{M}/gu, '').trim().toLowerCase()
 }
 
+export function keepSeparators(text: string): string {
+  return text.replace(/ ([\u00b7|\u2014\u2013]) /g, '\u00a0$1 ')
+}
+
 export function currentRoles(career: readonly CareerEntry[]): CareerEntry[] {
   return career
     .filter((entry) => entry.end === null && entry.pending !== true)
@@ -36,7 +40,7 @@ export function nowRoles(career: readonly CareerEntry[], projects: readonly Proj
     return {
       id: entry.id,
       company: entry.company,
-      role: entry.role[lang],
+      role: keepSeparators(entry.role[lang]),
       start: entry.start,
       since: formatMonth(entry.start, lang),
       project: project ? { id: project.id, title: project.title } : null,

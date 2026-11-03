@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { currentRoles, nowRoles, relatedProject } from '@/components/site/home/now'
+import { currentRoles, keepSeparators, nowRoles, relatedProject } from '@/components/site/home/now'
 import type { CareerEntry, Project } from '@/content/types'
 import { getProjects, getSite } from '@/lib/content'
 
@@ -22,7 +22,7 @@ describe('"Ahora trabajo en" con el contenido real', () => {
   it('toma el rol actual en Sistecrédito y Synergos Labs, del más reciente al más antiguo', () => {
     const roles = nowRoles(site.about.career, projects, 'es')
     expect(roles.map((role) => role.company)).toEqual(['Sistecrédito', 'Synergos Labs'])
-    expect(roles[0]?.role).toBe('Software Solutions Engineer · AI-First')
+    expect(roles[0]?.role).toBe('Software Solutions Engineer · AI-First')
     expect(roles[1]?.role).toBe('Founder & Software Architect')
   })
 
@@ -32,7 +32,7 @@ describe('"Ahora trabajo en" con el contenido real', () => {
         const source = site.about.career.find((item) => item.id === role.id)
         expect(source, role.id).toBeDefined()
         expect(role.company).toBe(source?.company)
-        expect(role.role).toBe(source?.role[lang])
+        expect(role.role.replaceAll(' ', ' ')).toBe(source?.role[lang])
         expect(role.start).toBe(source?.start)
         expect(source?.end).toBeNull()
       }
@@ -70,6 +70,12 @@ describe('reglas de selección', () => {
     expect(relatedProject({ company: 'Synergos Labs' }, [project])).toBeNull()
     expect(relatedProject({ company: 'Syn Labs' }, [project])?.title).toBe('Syn')
     expect(relatedProject({ company: 'SYN' }, [project])?.title).toBe('Syn')
+  })
+
+  it('no deja un separador colgando al final de una línea', () => {
+    expect(keepSeparators('Software Solutions Engineer · AI-First')).toBe('Software Solutions Engineer · AI-First')
+    expect(keepSeparators('Founder & Software Architect')).toBe('Founder & Software Architect')
+    expect(keepSeparators('A — B · C')).toBe('A — B · C')
   })
 
   it('ignora tildes y mayúsculas al comparar', () => {

@@ -82,8 +82,8 @@
 .social {
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
+  width: clamp(48px, 5.6cqi, 64px);
+  aspect-ratio: 1;
   border: 1px solid var(--cw-glass-border);
   border-radius: 999px;
   background: color-mix(in srgb, var(--cw-fg) 4%, transparent);
@@ -105,7 +105,7 @@
   }
 
   img {
-    width: 28px;
-    height: 28px;
+    width: 54%;
+    height: auto;
   }
 }
