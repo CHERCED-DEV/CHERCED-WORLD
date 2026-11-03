@@ -35,6 +35,8 @@ export default async function ServicesPage({ params }: Props) {
           title: t(dict, 'services.title'),
           explore: t(dict, 'services.explore'),
           offer: t(dict, 'services.offer'),
+          cta: t(dict, 'services.cta'),
+          contact: t(dict, 'services.contact'),
         }}
       />
     </>

@@ -1,17 +1,20 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import type { SiteContent } from '@/content/types'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { splitLead } from '../format'
 import { SectionTitle } from '../SectionTitle'
+import { ServiceIcon } from './ServiceIcon'
 import styles from './Services.module.scss'
+
+export type ServicesLabels = { title: string; explore: string; offer: string; cta: string; contact: string }
 
 export type ServicesViewProps = {
   lang: Locale
   services: SiteContent['services']
-  labels: { title: string; explore: string; offer: string }
+  labels: ServicesLabels
 }
 
 export function ServicesView({ lang, services, labels }: ServicesViewProps) {
@@ -34,17 +37,43 @@ export function ServicesView({ lang, services, labels }: ServicesViewProps) {
         <h2 id="services-offer" className="cw-visually-hidden">
           {labels.offer}
         </h2>
-        <ul className={styles.cards}>
-          {services.items.map((item) => (
-            <GlassSurface as="li" key={item.id} variant="standard" className={styles.card} data-cw-service={item.id}>
-              <div className={styles.cardHead}>
-                <Image src={item.icon} alt="" width={36} height={32} unoptimized className={styles.cardIcon} />
+        <ol className={styles.cards}>
+          {services.items.map((item, index) => (
+            <GlassSurface
+              as="li"
+              key={item.id}
+              variant="standard"
+              className={styles.card}
+              data-cw-service={item.id}
+              style={{ '--cw-i': index } as CSSProperties}
+            >
+              <span className={styles.cardTile}>
+                <ServiceIcon id={item.id} />
+              </span>
+              <div className={styles.cardBody}>
+                <p className={styles.cardIndex} aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </p>
                 <h3 className={styles.cardTitle}>{item.title[lang]}</h3>
+                <p className={styles.cardText}>{item.description[lang]}</p>
               </div>
-              <p className={styles.cardText}>{item.description[lang]}</p>
             </GlassSurface>
           ))}
-        </ul>
+        </ol>
+      </section>
+      <section className={styles.ctaSection} aria-labelledby="services-cta">
+        <GlassSurface variant="strong" className={styles.cta}>
+          <h2 id="services-cta" className={styles.ctaTitle}>
+            {labels.cta}
+          </h2>
+          <Link
+            href={localizedPath(lang, '/contactMe')}
+            className={buttonClassName({ variant: 'glass', size: 'lg' })}
+            data-cw-services-contact=""
+          >
+            {labels.contact}
+          </Link>
+        </GlassSurface>
       </section>
     </div>
   )
