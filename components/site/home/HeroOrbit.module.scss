@@ -1,6 +1,12 @@
 .orbit {
-  --_size: clamp(500px, 94vw, 1560px);
-  --_spin: -16deg;
+  --_size: clamp(540px, 150vw, 720px);
+  --_spin: -7deg;
+  --_fade: 70%;
+  --_ry-a: 330px;
+  --_ry-b: 380px;
+  --_ry-c: 270px;
+  --_track-a: 33%;
+  --_track-b: 38%;
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -15,6 +21,7 @@
   top: 50%;
   left: 50%;
   width: var(--_size);
+  max-width: none;
   height: var(--_size);
   margin: calc(var(--_size) / -2) 0 0 calc(var(--_size) / -2);
 }
@@ -23,21 +30,24 @@
   overflow: visible;
   transform: rotate(var(--_spin));
   fill: none;
-  -webkit-mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
-  mask-image: radial-gradient(circle closest-side, #000 62%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 var(--_fade), transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 var(--_fade), transparent 100%);
 }
 
 .ring {
+  ry: var(--_ry-a);
   stroke: color-mix(in srgb, var(--cw-fg) 24%, transparent);
   stroke-width: 1;
 }
 
 .faint {
+  ry: var(--_ry-b);
   stroke: color-mix(in srgb, var(--cw-fg) 11%, transparent);
   stroke-width: 1;
 }
 
 .dashed {
+  ry: var(--_ry-c);
   stroke: color-mix(in srgb, var(--cw-intro-accent) 55%, transparent);
   stroke-width: 1;
   stroke-dasharray: 1 9;
@@ -53,7 +63,14 @@
 
 @media (min-width: 768px) {
   .orbit {
+    --_size: clamp(720px, 94vw, 1560px);
     --_spin: 0deg;
+    --_fade: 62%;
+    --_ry-a: 116px;
+    --_ry-b: 150px;
+    --_ry-c: 62px;
+    --_track-a: 11.6%;
+    --_track-b: 15%;
   }
 }
 
@@ -72,7 +89,7 @@
   height: 6px;
   background: var(--cw-intro-accent);
   box-shadow: 0 0 12px 2px color-mix(in srgb, var(--cw-intro-accent) 55%, transparent);
-  offset-path: ellipse(49% 11.6% at 50% 50%);
+  offset-path: ellipse(49% var(--_track-a) at 50% 50%);
   offset-distance: 18%;
   animation-duration: 42s;
 }
@@ -82,7 +99,7 @@
   height: 4px;
   background: var(--cw-fg);
   box-shadow: 0 0 8px 1px color-mix(in srgb, var(--cw-fg) 40%, transparent);
-  offset-path: ellipse(44% 15% at 50% 50%);
+  offset-path: ellipse(44% var(--_track-b) at 50% 50%);
   offset-distance: 64%;
   animation-duration: 58s;
   animation-direction: reverse;
