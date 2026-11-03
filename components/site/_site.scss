@@ -60,3 +60,29 @@
   letter-spacing: 0.08em;
   line-height: 1.2;
 }
+
+@mixin light-theme {
+  :global(:root[data-theme='light']) & {
+    @content;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme])) & {
+      @content;
+    }
+  }
+}
+
+@mixin motion-ok {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+@mixin js-motion {
+  @media (prefers-reduced-motion: no-preference) {
+    :global(:root[data-js]) & {
+      @content;
+    }
+  }
+}

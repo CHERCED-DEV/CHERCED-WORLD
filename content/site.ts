@@ -45,10 +45,13 @@ export const site: SiteContent = {
       es: 'Soy Camilo, Software Solutions Engineer. Diseño sistemas composables y distribuidos: micro-frontends, microservicios .NET, colas de mensajes y un CMS funcionando como un solo producto. Me formé en plataformas de aerolíneas en FLYR y hoy trabajo en fintech, donde también lidero migraciones de legado. Trabajo AI-first y spec-driven: escribo la especificación antes del código y uso agentes para investigar, generar, revisar y documentar.',
     },
     image: {
-      src: '/assets/imgs/meParallax.webp',
-      alt: { es: 'Camilo Hernandez con los brazos cruzados', en: 'Camilo Hernandez with his arms crossed' },
-      width: 500,
-      height: 627,
+      src: '/assets/imgs/about/retrato-oscuro.webp',
+      alt: {
+        es: 'Retrato de Camilo Hernandez con los brazos cruzados y gafas de visor, frente a formas de cristal luminosas',
+        en: 'Portrait of Camilo Hernandez with his arms crossed and visor sunglasses, in front of glowing glass shapes',
+      },
+      width: 1199,
+      height: 1312,
     },
     career: [
       {
