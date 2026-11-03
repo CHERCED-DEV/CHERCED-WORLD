@@ -27,6 +27,11 @@ function headingLevel(type: unknown): 2 | 3 | null {
   return null
 }
 
+export function readingStats(Content: ComponentType): { words: number; minutes: number } {
+  const { words } = buildOutline(evaluateMdx(Content), { isCode: (type) => type === CodeBlock })
+  return { words, minutes: readingMinutes(words) }
+}
+
 export function preparePost(Content: ComponentType, labels: PostLabels): PreparedPost {
   const outline = buildOutline(evaluateMdx(Content), {
     headingLevel,

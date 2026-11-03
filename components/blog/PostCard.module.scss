@@ -12,24 +12,35 @@
   width: 100%;
   max-width: 520px;
   height: 100%;
-  padding: var(--cw-space-6) var(--cw-space-5);
+  padding: var(--cw-space-6) var(--cw-space-5) var(--cw-space-5);
   text-align: center;
+  cursor: pointer;
   transition:
     transform var(--cw-duration-base) var(--cw-ease),
-    border-color var(--cw-duration-base) var(--cw-ease);
+    border-color var(--cw-duration-base) var(--cw-ease),
+    box-shadow var(--cw-duration-base) var(--cw-ease);
 
-  &:hover {
-    border-color: var(--cw-fg);
-    transform: translateY(-4px);
+  &:hover,
+  &:has(.link:focus-visible) {
+    border-color: color-mix(in srgb, var(--cw-fg) 45%, transparent);
+    box-shadow:
+      var(--cw-glass-shadow),
+      0 22px 48px rgb(0 0 0 / 0.32);
   }
 
   &:has(.link:focus-visible) {
     @include layout.focus-ring;
   }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
 }
 
 .title {
-  @include blog.frame;
+  @include blog.frame-flat;
   max-width: 400px;
 }
 
@@ -41,6 +52,7 @@
     content: '';
     position: absolute;
     inset: 0;
+    z-index: 2;
     border-radius: var(--cw-glass-radius);
   }
 
@@ -49,20 +61,25 @@
   }
 }
 
-.image {
-  @include blog.post-image;
-  width: 200px;
-  height: auto;
-  margin-block: var(--cw-space-3);
-}
-
 .description {
   max-width: 46ch;
 }
 
 .meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cw-space-2) var(--cw-space-3);
   color: var(--cw-fg-muted);
   font-size: var(--cw-text-sm);
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .tags {
@@ -92,5 +109,44 @@
 
 .more {
   @include blog.side-bars;
+  position: relative;
+  gap: var(--cw-space-3);
+  min-height: 44px;
   margin-top: auto;
+  overflow: hidden;
+  isolation: isolate;
+  letter-spacing: 0.12em;
+  transition: border-color var(--cw-duration-base) var(--cw-ease);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--cw-fg) 10%, transparent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--cw-duration-base) var(--cw-ease);
+  }
+
+  .card:hover &,
+  .card:has(.link:focus-visible) & {
+    border-color: blog.$accent-mix;
+
+    &::before {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.arrow {
+  transform: scaleX(-1);
+  transition: transform var(--cw-duration-base) var(--cw-ease);
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card:hover &,
+    .card:has(.link:focus-visible) & {
+      transform: translateX(4px) scaleX(-1);
+    }
+  }
 }

@@ -67,7 +67,7 @@ test.describe('posts sin JavaScript', () => {
     expect(await cards.count()).toBeGreaterThanOrEqual(1)
     for (const card of await cards.all()) {
       await expect(card.getByRole('heading', { level: 2 }).getByRole('link')).toHaveAttribute('href', /^\/es\/blog\/[\w-]+$/)
-      await expect(card.locator('img')).toHaveAttribute('alt', /.+/)
+      await expect(card.getByRole('img')).toHaveAttribute('alt', /.+/)
       await expect(card.locator('time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/)
     }
   })

@@ -1,14 +1,13 @@
-import type { PostMeta } from '@/content/types'
 import { postPath } from '@/lib/blog/paths'
 import type { Locale } from '@/lib/i18n'
 import { cx } from '@/components/ui/cx'
 import { BlogIntro } from './BlogIntro'
 import styles from './BlogIndex.module.scss'
-import { PostCard, type PostCardLabels } from './PostCard'
+import { PostCard, type PostCardLabels, type PostCardPost } from './PostCard'
 
 export type BlogIndexProps = {
   lang: Locale
-  posts: Array<PostMeta & { fallback: boolean }>
+  posts: PostCardPost[]
   intro: { title: string; titleStrong: string; welcome: string }
   labels: PostCardLabels
 }
