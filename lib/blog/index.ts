@@ -13,3 +13,5 @@ export {
 export { shareTargets, type ShareNetwork, type ShareTarget } from './share'
 export { blogPath, postAlternates, postPath, postUrl } from './paths'
 export { COMMENT_TIME_ZONE, commentDateTime, formatCommentDate, formatPostDate, parsePostDate } from './format'
+export { adjacentPosts, orderPosts, type Adjacent, type Datable } from './order'
+export { activeHeading, readingProgress, spyLine, type BodyBox, type HeadingTop } from './progress'
