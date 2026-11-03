@@ -69,24 +69,107 @@
   font-size: var(--cw-text-sm);
 }
 
+.filterBar {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--cw-space-3);
+}
+
+.filterDivider {
+  width: 1px;
+  height: 28px;
+  background: var(--cw-glass-border);
+}
+
+.rail {
+  position: relative;
+  min-width: 0;
+}
+
 .filterList {
+  --fade-start: 0px;
+  --fade-end: 0px;
   display: flex;
   flex-wrap: nowrap;
   gap: var(--cw-space-2);
-  padding-bottom: var(--cw-space-2);
+  margin: -4px;
+  padding: 4px;
   overflow-x: auto;
-  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: 56px;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fade-start),
+    #000 calc(100% - var(--fade-end)),
+    transparent
+  );
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
 
-  @include bp.up(md) {
-    flex-wrap: wrap;
-    overflow: visible;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > li {
+    flex: none;
+  }
+}
+
+.rail[data-start] .filterList {
+  --fade-start: 56px;
+}
+
+.rail[data-end] .filterList {
+  --fade-end: 56px;
+}
+
+.railArrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0 0 3px;
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  background: var(--cw-glass-strong-bg);
+  color: var(--cw-fg);
+  font-size: var(--cw-text-xl);
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: border-color var(--cw-duration-fast) var(--cw-ease);
+
+  &[data-dir='prev'] {
+    left: 0;
+  }
+
+  &[data-dir='next'] {
+    right: 0;
+  }
+
+  &:hover {
+    border-color: var(--cw-fg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    display: grid;
+  }
+
+  &[hidden] {
+    display: none;
   }
 }
 
 .chipButton {
   @include site.chip;
+  gap: var(--cw-space-2);
   min-height: 40px;
-  padding-inline: var(--cw-space-4);
+  padding-inline: var(--cw-space-4) var(--cw-space-2);
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -105,9 +188,28 @@
   }
 }
 
+.chipCount {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding-inline: 7px;
+  border-radius: 999px;
+  background: var(--cw-glass-border);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+
+  .chipButton[aria-pressed='true'] & {
+    background: var(--cw-accent-fg);
+    color: var(--cw-accent);
+  }
+}
+
 .track {
   position: relative;
   display: flex;
+  align-items: center;
   width: 100%;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -126,6 +228,7 @@
 :global(:root:not([data-js])) .track {
   @include layout.container;
   flex-direction: column;
+  align-items: stretch;
   gap: var(--cw-space-5);
   overflow: visible;
   scroll-snap-type: none;
@@ -140,6 +243,7 @@
   flex: 0 0 100%;
   display: flex;
   justify-content: center;
+  min-width: 0;
   padding: var(--cw-space-4) 14px;
   scroll-snap-align: center;
   scroll-snap-stop: always;
@@ -147,16 +251,18 @@
 
 .slideCard {
   @include glass(standard);
+  --media-h: clamp(200px, 40svh, 360px);
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--cw-space-5);
-  width: min(100%, 920px);
+  width: min(100%, 1040px);
   padding: var(--cw-space-5);
 
   @include bp.up(md) {
+    --media-h: clamp(260px, 54svh, 440px);
     flex-direction: row;
-    align-items: center;
     gap: var(--cw-space-7);
     padding: var(--cw-space-6) var(--cw-space-7);
   }
@@ -165,38 +271,60 @@
 .slideMedia {
   @include site.stage;
   flex: none;
-  display: grid;
-  place-items: center;
-  padding: var(--cw-space-5) var(--cw-space-6);
+  box-sizing: content-box;
+  width: min(var(--media-h) * var(--cw-media-ratio, 0.5), 100cqi - 2 * var(--cw-space-3));
+  padding: var(--cw-space-3);
+
+  @include bp.up(md) {
+    width: min(var(--media-h) * var(--cw-media-ratio, 0.5), 58cqi);
+  }
 }
 
 .slideImage {
-  width: auto;
-  height: min(40svh, 320px);
-  max-width: 100%;
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: var(--cw-radius-md);
-  object-fit: contain;
-
-  @include bp.up(md) {
-    height: min(52svh, 380px);
-  }
 }
 
 .slideBody {
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--cw-space-4);
+  align-self: stretch;
+  justify-content: center;
+  gap: var(--cw-space-3);
   min-width: 0;
 }
 
+.slideIndex {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3em;
+}
+
 .slideTitle {
-  @include site.label-caps(0.22em);
+  @include site.label-caps(0.18em);
   font-size: var(--cw-text-lg);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .slideSummary {
-  line-height: 1.7;
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+
+  @include bp.up(md) {
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+  }
 }
 
 .chips {
@@ -207,6 +335,16 @@
 
 .chip {
   @include site.chip;
+
+  &[data-active] {
+    background: var(--cw-accent);
+    border-color: var(--cw-accent);
+    color: var(--cw-accent-fg);
+  }
+}
+
+.chipMore {
+  font-variant-numeric: tabular-nums;
 }
 
 .slideLink {

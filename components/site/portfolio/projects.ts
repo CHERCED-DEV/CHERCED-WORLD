@@ -6,6 +6,7 @@ import type { SlideProject } from './carousel'
 export function toSlide(project: Project, lang: Locale): SlideProject {
   return {
     id: project.id,
+    order: project.order,
     title: project.title,
     summary: project.summary[lang],
     technologies: project.technologies,
