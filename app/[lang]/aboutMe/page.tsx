@@ -5,12 +5,14 @@ import { AboutCareer } from '@/components/site/about/AboutCareer'
 import { AboutCourses } from '@/components/site/about/AboutCourses'
 import { AboutDescription } from '@/components/site/about/AboutDescription'
 import { AboutEducation } from '@/components/site/about/AboutEducation'
+import { AboutFigures } from '@/components/site/about/AboutFigures'
 import { AboutLanguages } from '@/components/site/about/AboutLanguages'
 import { AboutSkills } from '@/components/site/about/AboutSkills'
 import { AboutTechnologies } from '@/components/site/about/AboutTechnologies'
+import { aboutFigures } from '@/components/site/about/figures'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
-import { getSite } from '@/lib/content'
+import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -36,11 +38,26 @@ export default async function AboutMePage({ params }: Props) {
   const { about } = getSite()
   const present = t(dict, 'about.present')
   const level = (value: number) => t(dict, 'about.level', { value })
+  const figures = aboutFigures(about, getProjects().length, new Date())
+  const since = figures.find((figure) => figure.id === 'years')?.since
 
   return (
     <div className={styles.page}>
       <BackgroundIntensity value="subtle" />
       <AboutDescription lang={lang} title={t(dict, 'about.title')} description={about.description} image={about.image} />
+      <AboutFigures
+        title={t(dict, 'about.figures')}
+        figures={figures}
+        labels={{
+          years: {
+            label: t(dict, 'about.figure.years'),
+            note: since ? t(dict, 'about.figure.yearsNote', { year: since }) : undefined,
+          },
+          projects: { label: t(dict, 'about.figure.projects') },
+          technologies: { label: t(dict, 'about.figure.technologies') },
+          airlines: { label: t(dict, 'about.figure.airlines'), note: t(dict, 'about.figure.airlinesNote') },
+        }}
+      />
       <AboutCareer lang={lang} title={t(dict, 'about.career')} presentLabel={present} entries={about.career} />
       <AboutSkills lang={lang} title={t(dict, 'about.skills')} skills={about.skills} />
       <AboutTechnologies
