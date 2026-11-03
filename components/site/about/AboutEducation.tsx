@@ -1,9 +1,10 @@
 import type { EducationEntry } from '@/content/types'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import type { Locale } from '@/lib/i18n'
-import { formatPeriod, isPublishable } from '../format'
+import { isPublishable } from '../format'
 import { SectionTitle } from '../SectionTitle'
 import styles from './About.module.scss'
+import { Period } from './Period'
 
 export type AboutEducationProps = { lang: Locale; title: string; presentLabel: string; entries: EducationEntry[] }
 
@@ -20,7 +21,7 @@ export function AboutEducation({ lang, title, presentLabel, entries }: AboutEduc
               <h3 className={styles.entryTitle}>{entry.institution}</h3>
               <p className={styles.entryText}>
                 {entry.degree[lang]}
-                <span className={styles.entryPeriod}>{formatPeriod(entry.start, entry.end, lang, presentLabel)}</span>
+                <Period className={styles.entryPeriod} start={entry.start} end={entry.end} lang={lang} presentLabel={presentLabel} />
               </p>
             </li>
           ))}

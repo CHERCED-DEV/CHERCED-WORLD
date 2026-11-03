@@ -185,46 +185,171 @@
 }
 
 .timeline {
-  @include site.panel(standard);
+  --cw-rail: 11px;
+  --cw-node: 14px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--cw-space-7);
-  max-width: 860px;
-}
+  gap: var(--cw-space-6);
+  width: 100%;
+  max-width: 880px;
+  padding-left: 34px;
 
-.job {
-  display: flex;
-  flex-direction: column;
-  gap: var(--cw-space-3);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    left: calc(var(--cw-rail) - 1px);
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(
+      to bottom,
+      var(--cw-intro-accent),
+      color-mix(in srgb, var(--cw-fg) 60%, transparent) 16%,
+      color-mix(in srgb, var(--cw-fg) 14%, transparent)
+    );
+  }
 
-  & + & {
-    padding-top: var(--cw-space-6);
-    border-top: 1px solid var(--cw-glass-border);
+  @include bp.up(lg) {
+    --cw-when: 210px;
+    --cw-gutter: 56px;
+    --cw-rail: calc(var(--cw-when) + var(--cw-gutter) / 2);
+    --cw-node: 16px;
+    max-width: 1080px;
+    padding-left: 0;
   }
 }
 
-.jobHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--cw-space-3) var(--cw-space-5);
+.milestone {
+  position: relative;
+  display: grid;
+  gap: var(--cw-space-3);
+  min-width: 0;
+
+  @include bp.up(lg) {
+    grid-template-columns: var(--cw-when) minmax(0, 1fr);
+    column-gap: var(--cw-gutter);
+    align-items: start;
+  }
 }
 
-.period {
-  @include site.label-caps(0.12em);
+.node {
+  position: absolute;
+  top: 8px;
+  left: calc(var(--cw-rail) - 34px - var(--cw-node) / 2);
+  width: var(--cw-node);
+  height: var(--cw-node);
+  border: 2px solid var(--cw-fg);
+  border-radius: 50%;
+  background: var(--cw-bg);
+  box-shadow: 0 0 0 4px var(--cw-bg);
+
+  @include bp.up(lg) {
+    top: 30px;
+    left: calc(var(--cw-rail) - var(--cw-node) / 2);
+  }
+
+  .milestone[data-current] & {
+    border-color: var(--cw-intro-accent);
+    background: var(--cw-intro-accent);
+    box-shadow:
+      0 0 0 4px var(--cw-bg),
+      0 0 18px 2px rgb(37 237 158 / 0.55);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      border: 2px solid var(--cw-intro-accent);
+      opacity: 0;
+    }
+
+    @include site.motion-ok {
+      &::after {
+        animation: pulse 2.8s var(--cw-ease) infinite;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+.when {
+  display: flex;
+
+  @include bp.up(lg) {
+    justify-content: flex-end;
+    padding-top: 22px;
+  }
+}
+
+.whenChip {
+  @include glass(strong);
+  @include site.label-caps(0.1em);
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
   padding: var(--cw-space-1) var(--cw-space-3);
-  border: 4px solid var(--cw-fg);
+  border: 2px solid var(--cw-fg);
+  border-radius: 0;
   font-size: var(--cw-text-xs);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  .milestone[data-current] & {
+    border-color: var(--cw-intro-accent);
+  }
+}
+
+.milestoneCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-2);
+  min-width: 0;
+  padding: var(--cw-space-5);
+
+  @include bp.up(md) {
+    padding: var(--cw-space-6);
+  }
 }
 
 .jobRole {
   font-size: var(--cw-text-md);
   font-weight: 700;
+  overflow-wrap: anywhere;
+
+  @include bp.up(md) {
+    font-size: var(--cw-text-lg);
+  }
 }
 
 .jobCompany {
-  font-size: var(--cw-text-lg);
-  font-weight: 700;
+  @include site.label-caps(0.12em);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.jobText {
+  @include site.prose;
+  max-width: none;
+  margin-top: var(--cw-space-2);
+
+  @include bp.down(md) {
+    text-align: start;
+  }
 }
 
 .entries {
