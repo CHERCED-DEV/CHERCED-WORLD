@@ -90,6 +90,24 @@ const SKILL_ICONS_KEPT: Record<string, string> = {
   git: 'merge.png',
 }
 
+const SKILL_ICONS_SIMPLE: Record<string, { file: string; hex: string }> = {
+  dotnet: { file: 'dotnet.svg', hex: '#512BD4' },
+  umbraco: { file: 'umbraco.svg', hex: '#3544B1' },
+}
+
+const SKILL_PICTOGRAMS: Record<string, string> = {
+  csharp: 'csharp.svg',
+  'micro-frontends': 'micro-frontends.svg',
+  'native-federation': 'native-federation.svg',
+  'spec-driven-development': 'spec-driven-development.svg',
+  'ai-coding-agents': 'ai-coding-agents.svg',
+  'azure-ai-foundry': 'azure-ai-foundry.svg',
+  'semantic-kernel': 'semantic-kernel.svg',
+  'rag-embeddings': 'rag-embeddings.svg',
+}
+
+const PICTOGRAM_INK = new Set(['#0A0A0A', '#25ED9E'])
+
 const MONOGRAMS: Record<string, string> = {
   dotnet: '.NET',
   csharp: 'C#',
@@ -531,23 +549,57 @@ describe('assets (T044)', () => {
   })
 })
 
-describe('íconos de tecnologías (A-18)', () => {
-  it('no agrega logos nuevos a skillsIcon', () => {
-    expect(readdirSync(path.join(PUBLIC_DIR, 'assets', 'icons', 'skillsIcon')).sort()).toEqual(SKILL_ICONS_2023)
+describe('íconos de tecnologías (A-18 y D-08)', () => {
+  const iconDir = path.join(PUBLIC_DIR, 'assets', 'icons', 'skillsIcon')
+  const svgFiles = [...Object.values(SKILL_ICONS_SIMPLE).map((icon) => icon.file), ...Object.values(SKILL_PICTOGRAMS)]
+
+  it('conserva los logos 2023 y solo suma los SVG de D-08', () => {
+    expect(readdirSync(iconDir).sort()).toEqual([...SKILL_ICONS_2023, ...svgFiles].sort())
   })
 
-  it('las tecnologías con ícono conservan el suyo y las demás no llevan ícono', () => {
+  it('las tecnologías con logo 2023 conservan el suyo', () => {
     for (const tech of site.about.skills.tech) {
       const kept = SKILL_ICONS_KEPT[tech.id]
       if (kept) expect(tech.icon, tech.id).toBe(`/assets/icons/skillsIcon/${kept}`)
-      else expect(tech.icon, tech.id).toBeUndefined()
     }
   })
 
-  it('cada tecnología sin ícono recibe una placa monograma legible y única', () => {
-    const withoutIcon = site.about.skills.tech.filter((tech) => !tech.icon)
-    expect(Object.fromEntries(withoutIcon.map((tech) => [tech.id, monogram(tech.name)]))).toEqual(MONOGRAMS)
-    const initials = withoutIcon.map((tech) => monogram(tech.name))
+  it('las 10 skills de D-08 tienen ícono real y ninguna queda con placa de iniciales', () => {
+    const d08 = { ...Object.fromEntries(Object.entries(SKILL_ICONS_SIMPLE).map(([id, icon]) => [id, icon.file])), ...SKILL_PICTOGRAMS }
+    expect(Object.keys(d08).sort()).toEqual(Object.keys(MONOGRAMS).sort())
+    for (const [id, file] of Object.entries(d08)) {
+      const tech = site.about.skills.tech.find((item) => item.id === id)
+      expect(tech?.icon, id).toBe(`/assets/icons/skillsIcon/${file}`)
+    }
+    expect(site.about.skills.tech.filter((tech) => !tech.icon).map((tech) => tech.id)).toEqual([])
+  })
+
+  it('los logos de Simple Icons llevan su color de marca y un único trazado', () => {
+    for (const { file, hex } of Object.values(SKILL_ICONS_SIMPLE)) {
+      const svg = readFileSync(path.join(iconDir, file), 'utf8')
+      expect(svg, file).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="0 0 24 24"/)
+      expect(svg, file).toContain(`fill="${hex}"`)
+      expect(svg.match(/<path /g), file).toHaveLength(1)
+      expect(svg, file).not.toMatch(/<script|on\w+=|href=/i)
+    }
+  })
+
+  it('los pictogramas originales son de línea fina, en negro con el acento #25ED9E', () => {
+    for (const file of Object.values(SKILL_PICTOGRAMS)) {
+      const svg = readFileSync(path.join(iconDir, file), 'utf8')
+      expect(svg, file).toMatch(/viewBox="0 0 48 48"/)
+      expect(svg, file).toMatch(/stroke-width="1\.75"/)
+      expect(svg, file).toContain('#25ED9E')
+      const colors = new Set([...svg.matchAll(/(?:fill|stroke)="(#[0-9A-Fa-f]{6})"/g)].map((match) => match[1]!.toUpperCase()))
+      for (const color of colors) expect(PICTOGRAM_INK.has(color), `${file}: ${color}`).toBe(true)
+      expect(svg, file).not.toMatch(/<script|<image|on\w+=|href=/i)
+    }
+  })
+
+  it('la placa de iniciales sigue siendo legible y única para una skill futura sin ícono', () => {
+    const names = Object.keys(MONOGRAMS).map((id) => [id, site.about.skills.tech.find((tech) => tech.id === id)?.name ?? ''])
+    expect(Object.fromEntries(names.map(([id, name]) => [id, monogram(name!)]))).toEqual(MONOGRAMS)
+    const initials = Object.values(MONOGRAMS)
     expect(new Set(initials).size).toBe(initials.length)
     for (const value of initials) expect(value.length, value).toBeLessThanOrEqual(4)
   })

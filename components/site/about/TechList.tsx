@@ -12,10 +12,22 @@ export type TechItem = { id: string; name: string; icon?: string; level: number;
 export const TECH_VISIBLE_ON_MOBILE = 4
 
 function TechBadge({ name, icon }: { name: string; icon?: string }) {
-  if (icon) return <Image src={icon} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />
+  if (icon) {
+    return (
+      <Image
+        src={icon}
+        alt=""
+        width={56}
+        height={56}
+        sizes="56px"
+        unoptimized={icon.endsWith('.svg')}
+        className={styles.techIcon}
+        data-cw-tech-icon=""
+      />
+    )
+  }
   const initials = monogram(name)
   return <span className={styles.techMonogram} data-cw-monogram={initials} data-length={initials.length} aria-hidden="true" />
-
 }
 
 export function TechList({ items, showMore, showLess }: { items: TechItem[]; showMore: string; showLess: string }) {
@@ -31,6 +43,7 @@ export function TechList({ items, showMore, showLess }: { items: TechItem[]; sho
             key={item.id}
             className={styles.tech}
             data-cw-glass="subtle"
+            data-cw-tech={item.id}
             {...(index >= TECH_VISIBLE_ON_MOBILE ? { 'data-extra': '' } : {})}
           >
             <p className={styles.techName}>{item.name}</p>
