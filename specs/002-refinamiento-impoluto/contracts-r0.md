@@ -204,7 +204,8 @@ Contraste (probado en `glass-budget.test.ts`):
 
 - `MailboxLink` (Client Component) es un enlace al panel `/[lang]/inbox` con el ícono `inbox`, entre el cambio
   de idioma y el tema. Sin JS es un enlace sin número.
-- Consulta al montar y cada 60 s, solo con la pestaña visible; al volver a la pestaña consulta enseguida.
+- Consulta al montar y cada 60 s, solo con la pestaña visible. Si una consulta tocó con la pestaña oculta, la
+  hace en cuanto la pestaña vuelve a verse y retoma el ciclo.
 - Con 0 no muestra número. Con más de 99 muestra `99+`. El nombre accesible es "Buzón" o "Buzón, 3 mensajes
   sin leer" (`mailbox.label`, `mailbox.unreadOne`, `mailbox.unreadMany` en `common`).
 - Atributos: `data-cw-mailbox` en el enlace y `data-cw-mailbox-badge` en el número. No uses `data-cw-count`:
