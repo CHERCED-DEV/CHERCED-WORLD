@@ -43,6 +43,7 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
   isolation: isolate;
   --cw-light-x: 22%;
   --cw-light-y: 0%;
+  --cw-spot-mix: var(--cw-glass-spot-rest);
 
   &::before {
     @include -layer;
@@ -51,8 +52,8 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
     background:
       radial-gradient(
         circle var(--cw-glass-spot-size) at var(--cw-light-x, 22%) var(--cw-light-y, 0%),
-        var(--cw-glass-spot),
-        var(--cw-glass-spot-accent) 32%,
+        color-mix(in srgb, var(--cw-glass-spot) calc(var(--cw-spot-mix, 1) * 100%), transparent),
+        color-mix(in srgb, var(--cw-glass-spot-accent) calc(var(--cw-spot-mix, 1) * 100%), transparent) 32%,
         transparent 72%
       ),
       conic-gradient(
@@ -74,7 +75,8 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
       linear-gradient(#000 0 0);
     transition:
       --cw-light-x var(--cw-duration-base) var(--cw-ease-out),
-      --cw-light-y var(--cw-duration-base) var(--cw-ease-out);
+      --cw-light-y var(--cw-duration-base) var(--cw-ease-out),
+      --cw-spot-mix var(--cw-duration-slow) var(--cw-ease-out);
   }
 }
 
@@ -109,6 +111,7 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
     &:hover {
       --cw-light-x: var(--cw-mx, 22%);
       --cw-light-y: var(--cw-my, 0%);
+      --cw-spot-mix: 1;
     }
   }
 }

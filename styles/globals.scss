@@ -137,6 +137,12 @@ button {
   initial-value: 0%;
 }
 
+@property --cw-spot-mix {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 [data-cw-reveal] {
   transition:
     opacity var(--cw-duration-reveal) var(--cw-ease-out) var(--cw-reveal-delay, 0ms),

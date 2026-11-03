@@ -30,6 +30,7 @@ Las lanes R1 a R5 programan contra este documento. Si falta algo, se pide como e
 |-------|--------|-------|
 | `--cw-glass-edge-highlight` / `-soft` / `-shade` | blanco 0,55 / 0,16 / 0,02 | blanco 1 / 0,6 · negro 0,05 |
 | `--cw-glass-spot` · `--cw-glass-spot-accent` | blanco 0,78 · verde 0,42 | negro 0,4 · verde 0,6 |
+| `--cw-glass-spot-rest` (0 a 1) | 0,6: el destello del borde se ve en reposo, como un bisel | 0: solo aparece con hover |
 | `--cw-glass-sheen` | blanco 0,014 | blanco 0,5 |
 | `--cw-glass-grain` | ruido SVG: motas negras ≤ 0,05 y blancas ≤ 0,01 | motas negras ≤ 0,05 |
 | `--cw-glass-depth` | sombra externa en dos niveles + interna | ídem, más suave |
@@ -112,7 +113,8 @@ sin el componente (por ejemplo, junto a `buttonClassName`).
 - Se apaga solo si no se cumple `(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)`
   y vuelve si la preferencia cambia. Ignora punteros táctiles.
 - Variables que lee el CSS: `--cw-light-x` y `--cw-light-y`, registradas con `@property` (`<length-percentage>`,
-  heredables, reposo 22 % y 0 %) para que el reflejo se deslice con `--cw-duration-base`.
+  heredables, reposo 22 % y 0 %) para que el reflejo se deslice con `--cw-duration-base`, y `--cw-spot-mix`
+  (`<number>`), que lleva el destello del borde de `--cw-glass-spot-rest` a 1 con hover.
 
 ## 5. Grafismos (`components/ui/graphics/`)
 

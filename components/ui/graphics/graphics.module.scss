@@ -27,13 +27,13 @@
 }
 
 .fadeTop {
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 70%);
-  mask-image: linear-gradient(to bottom, #000, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 100% at 50% 0%, #000 0%, transparent 85%);
+  mask-image: radial-gradient(ellipse 75% 100% at 50% 0%, #000 0%, transparent 85%);
 }
 
 .fadeBottom {
-  -webkit-mask-image: linear-gradient(to top, #000, transparent 70%);
-  mask-image: linear-gradient(to top, #000, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 100% at 50% 100%, #000 0%, transparent 85%);
+  mask-image: radial-gradient(ellipse 75% 100% at 50% 100%, #000 0%, transparent 85%);
 }
 
 .hairline {
@@ -105,7 +105,13 @@
   width: var(--_size);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle closest-side, var(--_color), transparent);
+  background: radial-gradient(
+    circle closest-side,
+    var(--_color),
+    color-mix(in srgb, var(--_color) 55%, transparent) 30%,
+    color-mix(in srgb, var(--_color) 18%, transparent) 62%,
+    transparent
+  );
   transform: translate(-50%, -50%);
 }
 

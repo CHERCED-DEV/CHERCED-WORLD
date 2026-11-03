@@ -22,6 +22,7 @@
   --cw-glass-edge-shade: rgb(255 255 255 / 0.02);
   --cw-glass-spot: rgb(255 255 255 / 0.78);
   --cw-glass-spot-accent: rgb(37 237 158 / 0.42);
+  --cw-glass-spot-rest: 0.6;
   --cw-glass-sheen: rgb(255 255 255 / 0.014);
   --cw-glass-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 -1.9'/%3E%3C/filter%3E%3Cfilter id='b' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 4 0 0 0 -2.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.05'/%3E%3Crect width='100%25' height='100%25' filter='url(%23b)' opacity='0.01'/%3E%3C/svg%3E");
   --cw-glass-depth: 0 1px 1px rgb(0 0 0 / 0.35), 0 12px 28px -10px rgb(0 0 0 / 0.55), 0 36px 80px -28px rgb(0 0 0 / 0.7),
@@ -55,6 +56,7 @@
   --cw-glass-edge-shade: rgb(0 0 0 / 0.05);
   --cw-glass-spot: rgb(0 0 0 / 0.4);
   --cw-glass-spot-accent: rgb(37 237 158 / 0.6);
+  --cw-glass-spot-rest: 0;
   --cw-glass-sheen: rgb(255 255 255 / 0.5);
   --cw-glass-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 -1.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.05'/%3E%3C/svg%3E");
   --cw-glass-depth: 0 1px 1px rgb(0 0 0 / 0.05), 0 12px 28px -12px rgb(0 0 0 / 0.14), 0 36px 80px -32px rgb(0 0 0 / 0.2),

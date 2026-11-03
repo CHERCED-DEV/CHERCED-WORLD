@@ -130,6 +130,7 @@ const NEW_THEME = [
   '--cw-glass-edge-shade',
   '--cw-glass-spot',
   '--cw-glass-spot-accent',
+  '--cw-glass-spot-rest',
   '--cw-glass-sheen',
   '--cw-glass-grain',
   '--cw-glass-depth',
