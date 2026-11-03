@@ -654,17 +654,19 @@
 
 .techList {
   @include site.js-motion {
-    .tech {
-      transition:
-        opacity 560ms var(--cw-ease) calc(min(var(--cw-i, 0), 12) * 45ms),
-        translate 560ms var(--cw-ease) calc(min(var(--cw-i, 0), 12) * 45ms),
-        transform var(--cw-duration-base) var(--cw-ease),
-        border-color var(--cw-duration-base) var(--cw-ease),
-        box-shadow var(--cw-duration-base) var(--cw-ease);
-    }
+    &[data-cw-inview='in'] {
+      .tech {
+        transition:
+          opacity 560ms var(--cw-ease) calc(min(var(--cw-i, 0), 12) * 45ms),
+          translate 560ms var(--cw-ease) calc(min(var(--cw-i, 0), 12) * 45ms),
+          transform var(--cw-duration-base) var(--cw-ease),
+          border-color var(--cw-duration-base) var(--cw-ease),
+          box-shadow var(--cw-duration-base) var(--cw-ease);
+      }
 
-    .fill {
-      transition: width 1100ms var(--cw-ease) calc(220ms + min(var(--cw-i, 0), 12) * 45ms);
+      .fill {
+        transition: width 1100ms var(--cw-ease) calc(220ms + min(var(--cw-i, 0), 12) * 45ms);
+      }
     }
 
     &[data-cw-inview='pending'] {
