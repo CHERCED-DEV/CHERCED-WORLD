@@ -35,15 +35,17 @@ export function PostCard({
       <p className={styles.description} lang={contentLang}>
         {post.description}
       </p>
-      <p className={styles.meta}>
-        <time dateTime={post.date}>{formatPostDate(post.date, lang)}</time>
-        {post.readingTime ? (
-          <>
-            <span aria-hidden="true" className={styles.dot} />
-            <span data-cw-reading-time="">{post.readingTime}</span>
-          </>
-        ) : null}
-      </p>
+      <div className={styles.meta}>
+        <p className={styles.metaRow}>
+          <time dateTime={post.date}>{formatPostDate(post.date, lang)}</time>
+          {post.readingTime ? (
+            <>
+              <span aria-hidden="true" className={styles.dot} />
+              <span data-cw-reading-time="">{post.readingTime}</span>
+            </>
+          ) : null}
+        </p>
+      </div>
       {post.tags.length > 0 ? (
         <ul className={styles.tags} aria-label={labels.tags} lang={contentLang}>
           {post.tags.map((tag) => (

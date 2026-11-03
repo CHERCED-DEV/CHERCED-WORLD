@@ -82,7 +82,7 @@ test.describe('posts sin JavaScript', () => {
         await expect(post.getByRole('heading', { level: 1 })).toBeVisible()
         await expect(post.locator('header time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/)
         await expect(post.locator('[data-cw-reading-time]')).toHaveText(lang === 'es' ? /^\d+ min de lectura$/ : /^\d+ min read$/)
-        await expect(post.locator('header img')).toHaveAttribute('alt', /.+/)
+        await expect(post.locator('header').getByRole('img')).toHaveAttribute('alt', /.+/)
         const paragraphs = post.locator('[data-cw-post-body] p')
         expect(await paragraphs.count(), href).toBeGreaterThanOrEqual(2)
         await expect(paragraphs.first()).toBeVisible()

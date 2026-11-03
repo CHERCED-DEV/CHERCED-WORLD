@@ -9,7 +9,17 @@ export type PostLabels = { code: CopyLabels; glassDemo: GlassDemoLabels }
 
 export type PreparedPost = { body: ReactNode; headings: TocHeading[]; minutes: number; words: number }
 
-export const PAGE_IDS = ['main', 'cw-post-title', 'cw-toc-title', 'cw-share-title', 'cw-comments', 'cw-comments-title'] as const
+export const PAGE_IDS = [
+  'main',
+  'header',
+  'cw-post-title',
+  'cw-post-body',
+  'cw-toc-title',
+  'cw-share-title',
+  'cw-post-nav-title',
+  'cw-comments',
+  'cw-comments-title',
+] as const
 
 type MdxRender = (props: Record<string, never>) => ReactNode
 

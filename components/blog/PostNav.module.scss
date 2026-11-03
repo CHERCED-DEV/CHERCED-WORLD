@@ -1,0 +1,124 @@
+@use 'glass' as *;
+@use 'breakpoints' as bp;
+@use 'layout';
+@use './blog' as blog;
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cw-space-4);
+  width: 100%;
+  max-width: 720px;
+  margin-top: var(--cw-space-7);
+}
+
+.title {
+  @include blog.kicker;
+  color: var(--cw-fg);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-4);
+  width: 100%;
+
+  @include bp.up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.slot:empty {
+  display: none;
+
+  @include bp.up(md) {
+    display: block;
+  }
+}
+
+.link {
+  @include glass(subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-2);
+  height: 100%;
+  padding: var(--cw-space-4) var(--cw-space-5);
+  color: var(--cw-fg);
+  text-decoration: none;
+  transition:
+    border-color var(--cw-duration-base) var(--cw-ease),
+    box-shadow var(--cw-duration-base) var(--cw-ease),
+    transform var(--cw-duration-base) var(--cw-ease);
+
+  &:hover,
+  &:focus-visible {
+    border-color: color-mix(in srgb, var(--cw-fg) 45%, transparent);
+    box-shadow:
+      var(--cw-glass-shadow),
+      0 16px 36px rgb(0 0 0 / 0.28);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.next {
+  align-items: flex-end;
+  text-align: end;
+}
+
+.label {
+  @include blog.kicker;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+
+  .next & {
+    flex-direction: row-reverse;
+  }
+}
+
+.arrow {
+  transition: transform var(--cw-duration-base) var(--cw-ease);
+
+  .next & {
+    transform: scaleX(-1);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .previous:hover &,
+    .previous:focus-visible & {
+      transform: translateX(-3px);
+    }
+
+    .next:hover &,
+    .next:focus-visible & {
+      transform: translateX(3px) scaleX(-1);
+    }
+  }
+}
+
+.postTitle {
+  font-size: var(--cw-text-md);
+  font-weight: 700;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.index {
+  @include blog.side-bars;
+  min-height: 44px;
+  color: var(--cw-fg);
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: border-color var(--cw-duration-base) var(--cw-ease);
+
+  &:hover,
+  &:focus-visible {
+    border-color: blog.$accent-mix;
+  }
+}

@@ -2,6 +2,7 @@ import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { CommentsSection } from '@/components/blog/comments/CommentsSection'
 import { postLabels } from '@/components/blog/labels'
+import { postNeighbors } from '@/components/blog/posts'
 import { preparePost } from '@/components/blog/mdx/prepare'
 import { PostView } from '@/components/blog/PostView'
 import { BackgroundIntensity } from '@/components/motion'
@@ -56,13 +57,13 @@ export default async function PostPage({ params }: Props) {
   if (!resolved) notFound()
   const { lang, id, post } = resolved
 
-  const [blog, common] = await Promise.all([getDictionary(lang, 'blog'), getDictionary(lang, 'common')])
+  const [blog, common, neighbors] = await Promise.all([getDictionary(lang, 'blog'), getDictionary(lang, 'common'), postNeighbors(lang, id)])
   const prepared = preparePost(post.Content, postLabels(blog))
 
   return (
     <>
       <BackgroundIntensity value="subtle" />
-      <PostView lang={lang} meta={post.meta} fallback={post.fallback} prepared={prepared} url={postUrl(lang, id)} blog={blog} />
+      <PostView lang={lang} meta={post.meta} fallback={post.fallback} prepared={prepared} url={postUrl(lang, id)} blog={blog} neighbors={neighbors} />
       <div className="cw-container">
         <CommentsSection lang={lang} postId={id} blog={blog} common={common} />
       </div>
