@@ -47,6 +47,42 @@ export function caseStudySections(project: Project, lang: Locale, labels: CaseSt
   })
 }
 
+export type CaseNeighbor = { id: string; title: string; href: string }
+
+export type CaseNeighbors = { prev: CaseNeighbor; next: CaseNeighbor; position: number; total: number }
+
+export function caseStudyNeighbors(list: readonly Project[], id: string, lang: Locale): CaseNeighbors | null {
+  const ordered = [...list].sort((a, b) => a.order - b.order)
+  const index = ordered.findIndex((project) => project.id === id)
+  if (index < 0 || ordered.length < 2) return null
+  const at = (offset: number): CaseNeighbor => {
+    const project = ordered[(index + offset + ordered.length) % ordered.length]!
+    return { id: project.id, title: project.title, href: localizedPath(lang, `/portfolio/${project.id}`) }
+  }
+  return { prev: at(-1), next: at(1), position: index + 1, total: ordered.length }
+}
+
+export function technologyCounts(list: readonly Project[]): Record<string, number> {
+  const counts: Record<string, number> = {}
+  for (const project of list) for (const tech of new Set(project.technologies)) counts[tech] = (counts[tech] ?? 0) + 1
+  return counts
+}
+
+export function galleryImages(project: Project, lang: Locale): Array<{ src: string; alt: string; width: number; height: number }> {
+  const extra = (project as Project & { gallery?: Project['image'][] }).gallery ?? []
+  return [project.image, ...extra.filter((image) => image.src !== project.image.src)].map((image) => ({
+    src: image.src,
+    alt: image.alt[lang],
+    width: image.width,
+    height: image.height,
+  }))
+}
+
+export function caseHighlights(project: Project, lang: Locale): string[] {
+  const list = (project as Project & { highlights?: Localized[] }).highlights ?? []
+  return list.map((item) => item[lang].trim()).filter((text) => text.length > 0)
+}
+
 export function caseStudyLinks(project: Project, labels: CaseStudyLabels): Array<{ id: 'live' | 'github'; href: string; label: string }> {
   const links: Array<{ id: 'live' | 'github'; href: string | null; label: string }> = [
     { id: 'live', href: project.links.live, label: labels.live },

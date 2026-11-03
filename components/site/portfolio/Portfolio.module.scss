@@ -251,7 +251,7 @@
 
 .slideCard {
   @include glass(standard);
-  --media-h: clamp(200px, 40svh, 360px);
+  --media-h: clamp(180px, 38svh, 340px);
   container-type: inline-size;
   display: flex;
   flex-direction: column;
