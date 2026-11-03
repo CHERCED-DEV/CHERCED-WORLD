@@ -1,9 +1,10 @@
 'use client'
 
 import Image from 'next/image'
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState, type CSSProperties } from 'react'
 import { buttonClassName } from '@/components/ui/Button'
 import styles from './About.module.scss'
+import { IN_VIEW_ATTRIBUTE, watchInView } from './inView'
 import { LevelBar } from './LevelBar'
 import { monogram } from './monogram'
 
@@ -32,18 +33,26 @@ function TechBadge({ name, icon }: { name: string; icon?: string }) {
 
 export function TechList({ items, showMore, showLess }: { items: TechItem[]; showMore: string; showLess: string }) {
   const [expanded, setExpanded] = useState(false)
+  const listRef = useRef<HTMLUListElement>(null)
   const listId = `tech${useId().replace(/:/g, '')}`
   const collapsible = items.length > TECH_VISIBLE_ON_MOBILE
 
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    return watchInView(list, (state) => list.setAttribute(IN_VIEW_ATTRIBUTE, state))
+  }, [])
+
   return (
     <>
-      <ul id={listId} className={styles.techList} data-expanded={expanded ? 'true' : 'false'}>
+      <ul id={listId} ref={listRef} className={styles.techList} data-expanded={expanded ? 'true' : 'false'}>
         {items.map((item, index) => (
           <li
             key={item.id}
             className={styles.tech}
             data-cw-glass="subtle"
             data-cw-tech={item.id}
+            style={{ '--cw-i': index } as CSSProperties}
             {...(index >= TECH_VISIBLE_ON_MOBILE ? { 'data-extra': '' } : {})}
           >
             <p className={styles.techName}>{item.name}</p>
