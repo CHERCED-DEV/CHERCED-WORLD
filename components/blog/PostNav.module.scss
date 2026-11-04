@@ -39,6 +39,10 @@
 
 .link {
   @include glass(subtle);
+  @include glass-grain;
+  @include glass-edge;
+  @include glass-light;
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--cw-space-2);
@@ -47,12 +51,13 @@
   color: var(--cw-fg);
   text-decoration: none;
   transition:
-    border-color var(--cw-duration-base) var(--cw-ease),
-    box-shadow var(--cw-duration-base) var(--cw-ease),
-    transform var(--cw-duration-base) var(--cw-ease);
+    border-color var(--cw-duration-base) var(--cw-ease-out),
+    box-shadow var(--cw-duration-base) var(--cw-ease-out),
+    transform var(--cw-duration-base) var(--cw-ease-out);
 
   &:hover,
   &:focus-visible {
+    --cw-spot-mix: 1;
     border-color: color-mix(in srgb, var(--cw-fg) 45%, transparent);
     box-shadow:
       var(--cw-glass-shadow),
@@ -61,7 +66,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     &:hover {
-      transform: translateY(-2px);
+      transform: translateY(var(--cw-hover-lift));
     }
   }
 }
@@ -113,7 +118,7 @@
   @include blog.side-bars;
   min-height: 44px;
   color: var(--cw-fg);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--cw-tracking-label);
   text-decoration: none;
   transition: border-color var(--cw-duration-base) var(--cw-ease);
 

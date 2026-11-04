@@ -3,6 +3,9 @@
 
 .toc {
   @include glass(subtle);
+  @include glass-grain;
+  @include glass-edge;
+  position: relative;
   padding: var(--cw-space-4) var(--cw-space-4) var(--cw-space-4) var(--cw-space-3);
 }
 

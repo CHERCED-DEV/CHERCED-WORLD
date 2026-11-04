@@ -4,6 +4,10 @@
 
 .card {
   @include glass(standard);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  @include glass-light;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -16,16 +20,17 @@
   text-align: center;
   cursor: pointer;
   transition:
-    transform var(--cw-duration-base) var(--cw-ease),
-    border-color var(--cw-duration-base) var(--cw-ease),
-    box-shadow var(--cw-duration-base) var(--cw-ease);
+    transform var(--cw-duration-base) var(--cw-ease-out),
+    border-color var(--cw-duration-base) var(--cw-ease-out),
+    box-shadow var(--cw-duration-base) var(--cw-ease-out);
 
   &:hover,
   &:has(.link:focus-visible) {
+    --cw-spot-mix: 1;
     border-color: color-mix(in srgb, var(--cw-fg) 45%, transparent);
     box-shadow:
-      var(--cw-glass-shadow),
-      0 22px 48px rgb(0 0 0 / 0.32);
+      var(--cw-glass-depth),
+      0 22px 48px rgb(0 0 0 / 0.28);
   }
 
   &:has(.link:focus-visible) {
@@ -34,7 +39,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     &:hover {
-      transform: translateY(-4px);
+      transform: translateY(calc(var(--cw-hover-lift) * 2));
     }
   }
 }
@@ -131,8 +136,8 @@
   margin-top: auto;
   overflow: hidden;
   isolation: isolate;
-  letter-spacing: 0.12em;
-  transition: border-color var(--cw-duration-base) var(--cw-ease);
+  letter-spacing: var(--cw-tracking-label);
+  transition: border-color var(--cw-duration-base) var(--cw-ease-out);
 
   &::before {
     content: '';

@@ -18,6 +18,8 @@ function NavLink({ post, direction, lang, label }: { post: ListedPost; direction
       rel={direction === 'previous' ? 'prev' : 'next'}
       className={cx(styles.link, styles[direction])}
       data-cw-post-nav-link={direction}
+      data-cw-glass="subtle"
+      data-cw-light=""
     >
       <span className={styles.label}>
         <Icon name="back" size={16} className={styles.arrow} />

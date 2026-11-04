@@ -48,7 +48,7 @@
   color: var(--cw-fg-muted);
   font-size: var(--cw-text-xs);
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--cw-tracking-label);
   text-transform: uppercase;
 }
 

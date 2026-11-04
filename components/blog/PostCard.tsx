@@ -25,7 +25,7 @@ export function PostCard({
   const titleId = `cw-post-card-${post.id}`
 
   return (
-    <article className={styles.card} aria-labelledby={titleId} data-cw-post-card={post.id}>
+    <article className={styles.card} aria-labelledby={titleId} data-cw-post-card={post.id} data-cw-glass="standard" data-cw-light="">
       <h2 id={titleId} className={styles.title} lang={contentLang}>
         <Link href={href} className={styles.link} data-cw-post-link="">
           {post.title}

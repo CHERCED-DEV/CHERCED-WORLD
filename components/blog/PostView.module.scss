@@ -176,6 +176,10 @@ $toc: 280px;
 
 .body {
   @include glass(subtle);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  position: relative;
   width: 100%;
   max-width: $column;
   padding: var(--cw-space-5) var(--cw-space-4);
@@ -265,6 +269,11 @@ $toc: 280px;
   }
 }
 
+.rule {
+  max-width: $column;
+  margin-top: var(--cw-space-7);
+}
+
 .share {
   display: flex;
   flex-direction: column;
@@ -272,7 +281,7 @@ $toc: 280px;
   gap: var(--cw-space-4);
   width: 100%;
   max-width: $column;
-  margin-top: var(--cw-space-7);
+  margin-top: var(--cw-space-6);
 }
 
 .shareTitle {

@@ -3,6 +3,8 @@
 
 .quote {
   @include glass(standard);
+  @include glass-grain;
+  @include glass-edge;
   position: relative;
   margin-block: 0 var(--cw-space-6);
   padding: var(--cw-space-5) calc(var(--cw-space-5) + 2.5rem) var(--cw-space-5) calc(var(--cw-space-5) + 4px);
