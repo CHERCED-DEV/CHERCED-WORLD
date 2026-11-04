@@ -247,40 +247,6 @@ $toc: 280px;
     }
   }
 
-  :where(blockquote) {
-    @include glass(standard);
-    position: relative;
-    margin-block: 0 var(--cw-space-6);
-    padding: var(--cw-space-5) var(--cw-space-5) var(--cw-space-5) calc(var(--cw-space-5) + 4px);
-    border-inline-start: 3px solid blog.$accent-mix;
-    border-radius: 4px var(--cw-radius-lg) var(--cw-radius-lg) 4px;
-    box-shadow:
-      var(--cw-glass-shadow),
-      inset 0 0 0 1px color-mix(in srgb, var(--cw-fg) 4%, transparent);
-    color: var(--cw-fg);
-    font-size: 1.04em;
-    font-style: italic;
-    line-height: 1.7;
-
-    &::before {
-      content: '\201C' / '';
-      position: absolute;
-      top: -0.18em;
-      right: var(--cw-space-4);
-      color: blog.$accent-mix;
-      font-size: 4.5em;
-      font-style: normal;
-      font-weight: 800;
-      line-height: 1;
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    > :last-child {
-      margin-bottom: 0;
-    }
-  }
-
   :where(:not(pre) > code) {
     padding: 0.1em 0.4em;
     border: 1px solid var(--cw-glass-border);
