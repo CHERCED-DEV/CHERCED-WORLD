@@ -72,15 +72,32 @@ test.describe('home sin JavaScript', () => {
 test.describe('entrada escalonada', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
-  test('se revela en orden y termina visible en menos de 1,5 s', async ({ page }) => {
+  test('se revela en orden, dura poco más de un segundo y termina visible', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/es', { waitUntil: 'domcontentloaded' })
-    const delays = await page.evaluate((selector) =>
-      [...document.querySelectorAll(selector)].map((element) => Number.parseFloat(getComputedStyle(element).animationDelay)),
+    const timing = await page.evaluate((selector) =>
+      [...document.querySelectorAll(selector)].map((element) => {
+        const style = getComputedStyle(element)
+        return { delay: Number.parseFloat(style.animationDelay) * 1000, duration: Number.parseFloat(style.animationDuration) * 1000 }
+      }),
     ENTER)
+    const delays = timing.map((item) => item.delay)
     expect(delays.length).toBeGreaterThan(4)
     expect([...delays].sort((a, b) => a - b)).toEqual(delays)
-    await expect.poll(() => enterState(page), { timeout: 1500 }).toMatchObject({ minOpacity: 1, running: 0 })
+    expect(Math.max(...timing.map((item) => item.delay + item.duration))).toBeLessThanOrEqual(1100)
+    await expect.poll(() => enterState(page), { timeout: 5000 }).toMatchObject({ minOpacity: 1, running: 0 })
+  })
+
+  test('"Ahora trabajo en" se revela una sola vez al entrar en pantalla', async ({ page }) => {
+    await skipIntro(page)
+    await page.goto('/es')
+    const roles = page.locator('[data-cw-home-role]')
+    await expect(roles.first()).toHaveAttribute('data-cw-reveal', 'pending')
+    await page.locator('[data-cw-home-now]').scrollIntoViewIfNeeded()
+    for (const role of await roles.all()) await expect(role).toHaveAttribute('data-cw-reveal', 'in')
+    await expect.poll(() => roles.last().evaluate((element) => getComputedStyle(element).opacity)).toBe('1')
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+    await expect(roles.first()).toHaveAttribute('data-cw-reveal', 'in')
   })
 
   test('con movimiento reducido se ve completo de inmediato', async ({ page }) => {
@@ -124,11 +141,12 @@ test.describe('controles del home', () => {
     await expect.poll(() => enterState(page)).toMatchObject({ running: 0 })
     await cue.click()
     await expect(page).toHaveURL(/\/es#home-now$/)
-    const heading = page.locator('#home-now-title')
+    const section = page.locator('#home-now')
     await expect
-      .poll(() => heading.evaluate((element) => Math.round(element.getBoundingClientRect().top)), { timeout: 3000 })
-      .toBeLessThan(260)
-    await expect(heading).toBeInViewport()
+      .poll(() => section.evaluate((element) => Math.round(element.getBoundingClientRect().top)), { timeout: 5000 })
+      .toBeLessThan(140)
+    expect(await section.evaluate((element) => element.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0)
+    await expect(page.locator('#home-now-title')).toBeInViewport()
   })
 
   for (const lang of LANGS) {
@@ -235,10 +253,19 @@ test.describe('capturas de revisión', () => {
       await page.emulateMedia({ colorScheme: theme })
       await page.goto('/es', { waitUntil: 'networkidle' })
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
-      await expect.poll(() => enterState(page)).toMatchObject({ minOpacity: 1, running: 0 })
-      const name = `r1-home-${testInfo.project.name}-${theme}.png`
-      const body = await page.screenshot({ fullPage: true, path: testInfo.outputPath(name) })
-      await testInfo.attach(name, { body, contentType: 'image/png' })
+      await expect.poll(() => enterState(page), { timeout: 5000 }).toMatchObject({ minOpacity: 1, running: 0 })
+      const hero = `r1-hero-${testInfo.project.name}-${theme}.png`
+      await testInfo.attach(hero, { body: await page.screenshot({ path: testInfo.outputPath(hero) }), contentType: 'image/png' })
+
+      await page.locator('[data-cw-home-now]').scrollIntoViewIfNeeded()
+      for (const role of await page.locator('[data-cw-home-role]').all()) await expect(role).toHaveAttribute('data-cw-reveal', /in|shown/)
+      await page.waitForTimeout(900)
+      const now = `r1-now-${testInfo.project.name}-${theme}.png`
+      await testInfo.attach(now, { body: await page.screenshot({ path: testInfo.outputPath(now) }), contentType: 'image/png' })
+
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+      const full = `r1-home-${testInfo.project.name}-${theme}.png`
+      await testInfo.attach(full, { body: await page.screenshot({ fullPage: true, path: testInfo.outputPath(full) }), contentType: 'image/png' })
     })
   }
 })
