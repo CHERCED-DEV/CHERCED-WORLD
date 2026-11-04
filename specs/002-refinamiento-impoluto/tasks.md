@@ -64,6 +64,8 @@ lane 002 necesita cambiarlas, lo pide como enmienda al orquestador.
 - [ ] T220 R1: hero editorial con grafismos y "Ahora trabajo en"; banner intacto en contenido
 - [ ] T221 R2: carrusel con imagen completa (D-02), galería, stack visual, resultados y `ProjectEmbed` (D-03)
 - [ ] T222 R3: línea de tiempo de carrera, cifras destacadas públicas y servicios con cristal v2
+- [ ] T224 R3 (US6c): "Sobre mí" en tres escenas con índice fijo, y el mapa cerebral Matrix sobre cristal (lóbulos, neuronas, fuentes, panel terminal, lluvia acotada), con respaldo completo sin JS, chips en móvil y pruebas e2e de teclado, sin JS, móvil y movimiento reducido
+  - Enmienda E-03 (orquestador, 2026-11-04): R3 puede tocar `content/types.ts` solo para agregar `skills.lobes?`, y pasa a ser dueña de `content/site.ts`. `content/projects.ts` lo lee pero no lo edita (es de R2)
 - [ ] T223 R4: lectura refinada (portada, índice flotante, citas, código), post 5 integrado e investigación de D-05
 
 ### R5 (en paralelo; corre su auditoría completa al integrar)
