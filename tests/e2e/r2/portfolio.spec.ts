@@ -43,12 +43,6 @@ async function cardMetrics(page: Page): Promise<CardMetrics[]> {
   )
 }
 
-async function waitForImages(page: Page) {
-  await expect
-    .poll(() => page.locator('[data-cw-slide] img').evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete)))
-    .toBe(true)
-}
-
 test.describe('carrusel sin tarjetas vacías (D-02, FR-207)', () => {
   onlyIn('desktop-chromium')
 
@@ -85,7 +79,6 @@ test.describe('carrusel sin tarjetas vacías (D-02, FR-207)', () => {
     await skipIntro(page)
     await page.setViewportSize({ width: 1280, height: 800 })
     await page.goto('/es/portfolio')
-    await waitForImages(page)
     for (const m of await cardMetrics(page)) {
       const media = m.stage.height
       const text = m.link.bottom - m.title.top

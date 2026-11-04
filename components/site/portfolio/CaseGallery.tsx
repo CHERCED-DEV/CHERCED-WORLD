@@ -134,7 +134,9 @@ export function CaseGallery({ images, labels, title }: CaseGalleryProps) {
                 width={shown.width}
                 height={shown.height}
                 sizes="(min-width: 1200px) 1200px, 100vw"
+                loading="eager"
                 className={styles.lightboxImage}
+                style={{ '--cw-natural-h': `${shown.height}px` } as CSSProperties}
               />
             ) : null}
             <figcaption className={styles.caption}>{shown.alt}</figcaption>

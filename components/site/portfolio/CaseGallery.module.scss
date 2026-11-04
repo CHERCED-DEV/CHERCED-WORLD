@@ -171,9 +171,9 @@
 .lightboxImage {
   width: auto;
   max-width: 100%;
-  height: auto;
-  max-height: calc(100dvh - 220px);
+  height: min(calc(100dvh - 220px), var(--cw-natural-h));
   border-radius: var(--cw-radius-md);
+  object-fit: contain;
 }
 
 .caption {
