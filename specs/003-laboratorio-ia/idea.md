@@ -43,6 +43,16 @@ La constitución y el autor piden **cero infraestructura nueva y cero variables 
 
 También existe un camino mixto: A por defecto, y B solo para 2 y 3 si el autor acepta la excepción.
 
+## Catálogo de experimentos (2026-11-04)
+
+El handoff del autor del 2026-11-04 propone 27 experimentos agrupados en tres olas, más un backlog. El resumen, con la
+etiqueta de camino A o B de cada uno, está en [catalogo.md](catalogo.md).
+
+- **La decisión A/B sigue abierta.** El catálogo no la toma: solo marca qué exige cada experimento.
+- **Dos experimentos quedan [confirmar]**: R2 ("Arma una página con mis piezas", si el CDN de Synergos es público) y A1
+  (el servidor MCP del portafolio).
+- **Cobertura**: V1 es la app 1, A12 la 2, A4 la 3 y la 4, y A5 la 5.
+
 ## Preguntas que la investigación debe responder
 
 1. ¿Puede este proyecto Next.js 16 en Vercel servir funciones Python (`api/*.py`) en el mismo despliegue,
