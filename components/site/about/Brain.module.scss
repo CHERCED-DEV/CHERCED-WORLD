@@ -585,3 +585,10 @@ $green: var(--cw-intro-accent);
     transition: none;
   }
 }
+
+.lobe,
+.source,
+.terminal,
+.map {
+  scroll-margin-top: calc(44px + var(--cw-space-5));
+}
