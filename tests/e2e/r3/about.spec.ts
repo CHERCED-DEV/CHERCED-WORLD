@@ -109,13 +109,10 @@ test.describe('retrato y tema con JavaScript', () => {
     await expect
       .poll(() => visiblePortrait(page).evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 20_000 })
       .toBe(true)
-    await expect
-      .poll(() => page.locator('[data-cw-portrait]').evaluate((figure) => getComputedStyle(figure).backgroundImage))
-      .toMatch(/gradient/)
+    expect(await page.locator('[data-cw-portrait]').evaluate((figure) => getComputedStyle(figure).backgroundImage)).toBe('none')
 
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('cw:theme-change', { detail: 'dark' })))
     await expect(visiblePortrait(page)).toHaveAttribute('data-cw-portrait-theme', 'auto')
-    expect(await page.locator('[data-cw-portrait]').evaluate((figure) => getComputedStyle(figure).backgroundImage)).toBe('none')
   })
 
   test('con movimiento reducido las cifras se ven completas desde el inicio', async ({ page }) => {

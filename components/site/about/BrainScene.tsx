@@ -25,6 +25,8 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
   const data = brainData(about, projects, lang, labels.present)
   const levels = Object.fromEntries(data.lobes.flatMap((lobe) => lobe.skills.map((skill) => [skill.id, labels.level(skill.level)])))
   const { map, skillsSummary } = labels
+  const wordsLead = about.skills.description[lang].trim()
+  const words = about.skills.bullets.map((bullet) => bullet[lang].trim()).filter((bullet) => bullet.length > 0)
   const sourceLabel = (id: string) => data.sources.find((source) => source.id === id)?.label ?? id
 
   return (
@@ -101,15 +103,19 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
           </a>
         </section>
       </div>
-      <details className={styles.words} data-cw-glass="standard">
-        <summary className={styles.wordsSummary}>{skillsSummary}</summary>
-        <p className={styles.wordsText}>{about.skills.description[lang]}</p>
-        <ul className={styles.wordsList}>
-          {about.skills.bullets.map((bullet) => (
-            <li key={bullet.en}>{bullet[lang]}</li>
-          ))}
-        </ul>
-      </details>
+      {wordsLead || words.length > 0 ? (
+        <details className={styles.words} data-cw-glass="standard" data-cw-words="">
+          <summary className={styles.wordsSummary}>{skillsSummary}</summary>
+          {wordsLead ? <p className={styles.wordsText}>{wordsLead}</p> : null}
+          {words.length > 0 ? (
+            <ul className={styles.wordsList}>
+              {words.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          ) : null}
+        </details>
+      ) : null}
     </>
   )
 }
