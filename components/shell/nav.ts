@@ -32,6 +32,9 @@ export type ShellLabels = {
   rights: string
   privacy: string
   author: string
+  mailbox: string
+  mailboxOne: string
+  mailboxMany: string
 }
 
 export function shellLabels(common: Dictionary): ShellLabels {
@@ -50,6 +53,9 @@ export function shellLabels(common: Dictionary): ShellLabels {
     rights: t(common, 'footer.rights'),
     privacy: t(common, 'nav.privacy'),
     author: t(common, 'brand.author'),
+    mailbox: t(common, 'mailbox.label'),
+    mailboxOne: t(common, 'mailbox.unreadOne'),
+    mailboxMany: t(common, 'mailbox.unreadMany'),
   }
 }
 

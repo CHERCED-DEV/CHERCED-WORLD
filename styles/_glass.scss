@@ -2,6 +2,8 @@
 
 $variants: (subtle, standard, strong);
 
+$-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)';
+
 @function -check-variant($variant) {
   @if not list.index($variants, $variant) {
     @error 'glass(): variante desconocida "#{$variant}". Usa subtle, standard o strong.';
@@ -27,4 +29,97 @@ $variants: (subtle, standard, strong);
   border-radius: var(--cw-glass-radius);
   box-shadow: var(--cw-glass-shadow);
   color: var(--cw-fg);
+}
+
+@mixin -layer {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+@mixin glass-edge {
+  isolation: isolate;
+  --cw-light-x: 22%;
+  --cw-light-y: 0%;
+  --cw-spot-mix: var(--cw-glass-spot-rest);
+
+  &::before {
+    @include -layer;
+    z-index: 1;
+    padding: var(--cw-glass-edge-width);
+    background:
+      radial-gradient(
+        circle var(--cw-glass-spot-size) at var(--cw-light-x, 22%) var(--cw-light-y, 0%),
+        color-mix(in srgb, var(--cw-glass-spot) calc(var(--cw-spot-mix, 1) * 100%), transparent),
+        color-mix(in srgb, var(--cw-glass-spot-accent) calc(var(--cw-spot-mix, 1) * 100%), transparent) 32%,
+        transparent 72%
+      ),
+      conic-gradient(
+        from var(--cw-glass-edge-angle),
+        var(--cw-glass-edge-shade),
+        var(--cw-glass-edge-highlight) 10%,
+        var(--cw-glass-edge-soft) 20%,
+        var(--cw-glass-edge-shade) 34%,
+        var(--cw-glass-edge-shade) 52%,
+        var(--cw-glass-edge-soft) 62%,
+        var(--cw-glass-edge-shade) 76%
+      );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    transition:
+      --cw-light-x var(--cw-duration-base) var(--cw-ease-out),
+      --cw-light-y var(--cw-duration-base) var(--cw-ease-out),
+      --cw-spot-mix var(--cw-duration-slow) var(--cw-ease-out);
+  }
+}
+
+@mixin glass-grain {
+  background-image: var(--cw-glass-grain);
+  background-size: var(--cw-glass-grain-size) var(--cw-glass-grain-size);
+}
+
+@mixin glass-depth {
+  box-shadow: var(--cw-glass-depth);
+}
+
+@mixin glass-light {
+  isolation: isolate;
+  --cw-light-x: 22%;
+  --cw-light-y: 0%;
+
+  &::after {
+    @include -layer;
+    z-index: -1;
+    background: radial-gradient(
+      circle var(--cw-glass-light-size) at var(--cw-light-x, 22%) var(--cw-light-y, 0%),
+      var(--cw-glass-sheen),
+      transparent 70%
+    );
+    transition:
+      --cw-light-x var(--cw-duration-base) var(--cw-ease-out),
+      --cw-light-y var(--cw-duration-base) var(--cw-ease-out);
+  }
+
+  @media #{$-light-query} {
+    &:hover {
+      --cw-light-x: var(--cw-mx, 22%);
+      --cw-light-y: var(--cw-my, 0%);
+      --cw-spot-mix: 1;
+    }
+  }
+}
+
+@mixin glass-crystal($variant: standard) {
+  @include glass($variant);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  @include glass-light;
 }

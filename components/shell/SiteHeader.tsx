@@ -1,11 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { cx } from '@/components/ui/cx'
+import { Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n/config'
 import { BackLink } from './BackLink'
 import controls from './controls.module.scss'
 import { LangSwitch } from './LangSwitch'
+import { MailboxLink } from './MailboxLink'
 import { FLOAT_MENU_ID, type NavItem, type ShellLabels } from './nav'
 import { NavLinks } from './NavLinks'
 import { PaletteTrigger } from './PaletteTrigger'
@@ -28,6 +30,7 @@ export function SiteHeader({ lang, items, labels }: SiteHeaderProps) {
         <div className={styles.actions}>
           <PaletteTrigger label={labels.palette} hint={labels.paletteHint} />
           <LangSwitch lang={lang} label={labels.lang} className={styles.desktopOnly} />
+          <MailboxLink lang={lang} labels={{ name: labels.mailbox, one: labels.mailboxOne, many: labels.mailboxMany }} />
           <ThemeToggle label={labels.themeDark} />
           <button
             type="button"
@@ -40,6 +43,7 @@ export function SiteHeader({ lang, items, labels }: SiteHeaderProps) {
           </button>
         </div>
       </div>
+      <Hairline glint className={styles.edgeLine} />
     </header>
   )
 }
