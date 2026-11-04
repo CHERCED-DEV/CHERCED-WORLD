@@ -18,7 +18,7 @@ export function AboutLanguages({ lang, title, languages, levelLabel }: AboutLang
       <SectionTitle id="about-languages">{title}</SectionTitle>
       <ul className={styles.languages}>
         {languages.map((language) => (
-          <li key={language.id} className={styles.tech} data-cw-glass="subtle">
+          <li key={language.id} className={styles.tech} data-cw-glass="subtle" data-cw-light="">
             <p className={styles.techName}>{language.name[lang]}</p>
             {language.icon ? (
               <Image src={language.icon} alt="" width={56} height={56} sizes="56px" className={styles.techIcon} />

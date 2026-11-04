@@ -51,6 +51,7 @@ export function TechList({ items, showMore, showLess }: { items: TechItem[]; sho
             key={item.id}
             className={styles.tech}
             data-cw-glass="subtle"
+            data-cw-light=""
             data-cw-tech={item.id}
             style={{ '--cw-i': index } as CSSProperties}
             {...(index >= TECH_VISIBLE_ON_MOBILE ? { 'data-extra': '' } : {})}

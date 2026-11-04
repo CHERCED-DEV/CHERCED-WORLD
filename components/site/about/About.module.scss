@@ -178,6 +178,10 @@
 }
 
 .figure {
+  @include site.crystal(standard);
+  @include glass-edge;
+  @include glass-light;
+  position: relative;
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
@@ -197,20 +201,21 @@
     padding: var(--cw-space-6) var(--cw-space-5);
   }
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: var(--cw-space-4);
-    width: 36px;
-    height: 3px;
-    border-radius: 0 0 3px 3px;
-    background: var(--cw-intro-accent);
-    box-shadow: 0 0 14px rgb(37 237 158 / 0.6);
+}
 
-    @include bp.up(md) {
-      left: var(--cw-space-5);
-    }
+.figureAccent {
+  position: absolute;
+  top: 0;
+  left: var(--cw-space-4);
+  z-index: 2;
+  width: 36px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--cw-intro-accent);
+  box-shadow: 0 0 14px rgb(37 237 158 / 0.6);
+
+  @include bp.up(md) {
+    left: var(--cw-space-5);
   }
 }
 
@@ -269,6 +274,18 @@
 .section {
   @include site.section;
   padding-top: 0;
+}
+
+.revealBlock {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.vitrineGlow {
+  @include site.light-theme {
+    display: none;
+  }
 }
 
 .panel {
@@ -419,7 +436,7 @@
 }
 
 .whenChip {
-  @include glass(strong);
+  @include site.crystal(strong);
   @include site.label-caps(0.1em);
   display: inline-flex;
   align-items: center;
@@ -434,6 +451,216 @@
   .milestone[data-current] & {
     border-color: var(--cw-intro-accent);
   }
+}
+
+.whenChipCurrent {
+  border-color: var(--cw-intro-accent);
+}
+
+.deck {
+  display: none;
+  width: 100%;
+}
+
+@include bp.up(lg) {
+  :global(:root[data-js]) .deck {
+    display: block;
+  }
+
+  :global(:root[data-js]) .timeline {
+    display: none;
+  }
+}
+
+.deckTable {
+  --cw-card-w: clamp(232px, 22vw, 288px);
+  --cw-card-h: 216px;
+  --cw-deck-h: 540px;
+  --cw-deck-pad: 18px;
+  position: relative;
+  width: 100%;
+  max-width: 1216px;
+  height: calc(var(--cw-deck-h) + 2 * var(--cw-deck-pad));
+  margin-inline: auto;
+}
+
+.deckSlot {
+  position: absolute;
+  top: calc(var(--cw-deck-pad) + (var(--cw-deck-h) - var(--cw-card-h)) * var(--cw-y));
+  left: calc(var(--cw-deck-pad) + (100% - var(--cw-card-w) - 2 * var(--cw-deck-pad)) * var(--cw-x));
+  z-index: var(--cw-z);
+  width: var(--cw-card-w);
+  height: var(--cw-card-h);
+
+  &:hover,
+  &:focus-within {
+    z-index: 20;
+  }
+}
+
+.deckCard {
+  @include site.crystal(standard);
+  @include glass-edge;
+  @include glass-light;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--cw-space-2);
+  width: 100%;
+  height: 100%;
+  padding: var(--cw-space-5);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  rotate: var(--cw-r);
+  transition:
+    rotate 320ms var(--cw-ease),
+    translate 320ms var(--cw-ease),
+    scale 320ms var(--cw-ease),
+    border-color var(--cw-duration-base) var(--cw-ease),
+    box-shadow 320ms var(--cw-ease);
+
+  &[data-current] {
+    border-color: color-mix(in srgb, var(--cw-intro-accent) 60%, transparent);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      translate: 0 -14px;
+      rotate: calc(var(--cw-r) * 0.3);
+      scale: 1.04;
+      border-color: color-mix(in srgb, var(--cw-fg) 50%, transparent);
+      box-shadow:
+        0 30px 60px -24px rgb(0 0 0 / 0.55),
+        0 0 0 1px color-mix(in srgb, var(--cw-intro-accent) 35%, transparent);
+    }
+  }
+
+  &:focus-visible {
+    translate: 0 -14px;
+    rotate: calc(var(--cw-r) * 0.3);
+    scale: 1.04;
+    outline: 2px solid var(--cw-focus);
+    outline-offset: 4px;
+  }
+
+  &[data-flying] {
+    visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: border-color var(--cw-duration-base) var(--cw-ease);
+  }
+}
+
+.deckPeriod {
+  @include site.label-caps(0.1em);
+  padding: 2px var(--cw-space-2);
+  border: 2px solid var(--cw-fg);
+  font-size: var(--cw-text-xs);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  .deckCard[data-current] & {
+    border-color: var(--cw-intro-accent);
+  }
+}
+
+.deckRole {
+  display: -webkit-box;
+  margin-top: var(--cw-space-2);
+  overflow: hidden;
+  font-size: var(--cw-text-md);
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.deckCompany {
+  @include site.label-caps(0.12em);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+}
+
+.deckHint {
+  @include site.label-caps(0.14em);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  margin-top: auto;
+  font-size: var(--cw-text-xs);
+}
+
+.deckPlus {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: var(--cw-text-md);
+  line-height: 1;
+
+  .deckCard[data-current] & {
+    border-color: var(--cw-intro-accent);
+  }
+}
+
+dialog.deckDialog {
+  @include site.crystal(strong);
+  @include glass-edge;
+  width: min(100% - 2 * var(--cw-space-4), 700px);
+  transform-origin: 50% 50%;
+
+  &[open] {
+    animation: none;
+  }
+
+  &[open]::backdrop {
+    animation: deck-backdrop 320ms var(--cw-ease) both;
+  }
+
+  &[data-closing]::backdrop {
+    opacity: 0;
+    transition: opacity 320ms var(--cw-ease);
+  }
+}
+
+@keyframes deck-backdrop {
+  from {
+    opacity: 0;
+  }
+}
+
+.deckOpen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-3);
+  padding: var(--cw-space-2);
+
+  @include bp.up(md) {
+    padding: var(--cw-space-4);
+  }
+}
+
+.deckOpenPeriod {
+  display: flex;
+}
+
+.deckOpenRole {
+  font-size: var(--cw-text-xl);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.deckClose {
+  align-self: flex-end;
+  gap: var(--cw-space-2);
+  margin-top: var(--cw-space-3);
 }
 
 .milestoneCard {
@@ -549,7 +776,10 @@
 }
 
 .tech {
-  @include glass(subtle);
+  @include site.crystal(subtle);
+  @include glass-edge;
+  @include glass-light;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;

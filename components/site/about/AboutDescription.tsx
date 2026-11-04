@@ -15,7 +15,7 @@ export function AboutDescription({ lang, title, description, image }: AboutDescr
         <SectionTitle as="h1" id="about-title" size="lg">
           {title}
         </SectionTitle>
-        <GlassSurface variant="standard" className={styles.heroText}>
+        <GlassSurface variant="standard" edge light className={styles.heroText}>
           <p>{description[lang]}</p>
         </GlassSurface>
       </div>

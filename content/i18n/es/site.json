@@ -21,6 +21,8 @@
   "about.education": "Educación",
   "about.languages": "Idiomas",
   "about.present": "Actualidad",
+  "about.openJob": "Ver detalle",
+  "about.close": "Cerrar",
   "about.level": "{value} %",
   "about.levelOf": "{name}: {value} %",
   "about.figures": "En cifras",

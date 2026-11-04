@@ -58,7 +58,14 @@ export default async function AboutMePage({ params }: Props) {
           airlines: { label: t(dict, 'about.figure.airlines'), note: t(dict, 'about.figure.airlinesNote') },
         }}
       />
-      <AboutCareer lang={lang} title={t(dict, 'about.career')} presentLabel={present} entries={about.career} />
+      <AboutCareer
+        lang={lang}
+        title={t(dict, 'about.career')}
+        presentLabel={present}
+        openLabel={t(dict, 'about.openJob')}
+        closeLabel={t(dict, 'about.close')}
+        entries={about.career}
+      />
       <AboutSkills lang={lang} title={t(dict, 'about.skills')} skills={about.skills} />
       <AboutTechnologies
         title={t(dict, 'about.technologies')}

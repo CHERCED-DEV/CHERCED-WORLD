@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { GlassSurface } from '@/components/ui/GlassSurface'
+import { Reveal } from '@/components/ui/Reveal'
 import styles from './About.module.scss'
 import { CountUp } from './CountUp'
 import type { Figure, FigureId } from './figures'
@@ -21,13 +21,15 @@ export function AboutFigures({ title, figures, labels }: AboutFiguresProps) {
           const text = `${figure.value}${figure.plus ? '+' : ''}`
           const { label, note } = labels[figure.id]
           return (
-            <GlassSurface
+            <Reveal
               key={figure.id}
-              variant="standard"
+              delay={index * 70}
               className={styles.figure}
+              data-cw-glass="standard"
+              data-cw-light=""
               data-cw-figure={figure.id}
-              style={{ '--cw-i': index } as CSSProperties}
             >
+              <span className={styles.figureAccent} aria-hidden="true" />
               <dt className={styles.figureLabel}>
                 {label}
                 {note ? <span className={styles.figureNote}>{note}</span> : null}
@@ -43,7 +45,7 @@ export function AboutFigures({ title, figures, labels }: AboutFiguresProps) {
                 ) : null}
                 <span className="cw-visually-hidden">{text}</span>
               </dd>
-            </GlassSurface>
+            </Reveal>
           )
         })}
       </dl>
