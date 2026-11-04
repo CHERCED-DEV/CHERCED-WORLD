@@ -20,6 +20,8 @@ export type EffectName =
   | 'pressedToggle'
   | 'expandedToggle'
   | 'disclosure'
+  | 'embedLoad'
+  | 'fullscreen'
   | 'hash'
   | 'mailto'
   | 'newTabInternal'
@@ -45,6 +47,9 @@ export const CONTROL_RULES: readonly ControlRule[] = [
   { kind: 'menú', match: '[data-cw-menu-button]', effect: 'popover', expect: 'abre el menú con el foco dentro; Esc lo cierra', nested: true },
   { kind: 'cerrar menú', match: 'button[popovertargetaction="hide"]', effect: 'closePopover', expect: 'cierra el menú' },
   { kind: 'carrusel', match: '[data-cw-prev], [data-cw-next]', effect: 'carouselStep', expect: 'cambia la diapositiva actual' },
+  { kind: 'cargar sitio embebido', match: '[data-cw-embed-load]', effect: 'embedLoad', expect: 'monta el sitio en un iframe con título, sandbox y carga diferida (FR-206)' },
+  { kind: 'abrir sitio embebido', match: '[data-cw-embed-sheet-open]', effect: 'dialog', expect: 'abre el sitio en una hoja modal; Esc la cierra' },
+  { kind: 'pantalla completa', match: '[data-cw-embed-fullscreen]', effect: 'fullscreen', expect: 'entra y sale de pantalla completa' },
   { kind: 'filtro de proyectos', match: '[data-cw-projects] [data-cw-filter]', effect: 'filter', expect: 'queda presionado y filtra' },
   { kind: 'copiar', match: '[data-cw-copy]', effect: 'copy', expect: 'escribe en el portapapeles' },
   { kind: 'región desplazable', match: '[tabindex="0"]:not(a, button, input, select, textarea)', effect: 'keyboardRegion', expect: 'recibe foco y se desplaza con flechas' },
@@ -604,6 +609,41 @@ const EFFECTS: Record<EffectName, Effect> = {
     if (!after.ok) fail(`aria-expanded sigue en ${before}`)
     await activate(target)
     return `aria-expanded ${before} → ${after.value}`
+  },
+
+  async embedLoad({ target }) {
+    const section = target.locator('xpath=ancestor::*[@data-cw-embed][1]')
+    const frame = section.locator('iframe').first()
+    await activate(target)
+    const mounted = await settle(() => section.locator('iframe').count(), (count) => count > 0)
+    if (!mounted.ok) fail('no aparece el iframe del sitio')
+    const info = await frame.evaluate((element) => ({
+      src: element.getAttribute('src') ?? '',
+      title: element.getAttribute('title') ?? '',
+      sandbox: element.getAttribute('sandbox'),
+      loading: element.getAttribute('loading'),
+    }))
+    if (!/^https?:\/\//.test(info.src)) fail(`el iframe no apunta a un sitio (${info.src || 'sin src'})`)
+    if (!info.title.trim()) fail('el iframe no tiene título accesible')
+    const tokens = (info.sandbox ?? '').split(/\s+/)
+    const missing = ['allow-scripts', 'allow-same-origin', 'allow-forms', 'allow-popups'].filter((token) => !tokens.includes(token))
+    if (info.sandbox === null || missing.length > 0) fail(`sandbox incompleto: falta ${missing.join(', ') || 'el atributo'}`)
+    if (info.loading !== 'lazy') fail(`el iframe no es diferido (loading=${info.loading ?? 'ausente'})`)
+    return `monta ${new URL(info.src).host} con sandbox y loading="lazy"`
+  },
+
+  async fullscreen({ page, target }) {
+    const active = () => page.evaluate(() => document.fullscreenElement !== null)
+    await activate(target)
+    const entered = await settle(active, (value) => value)
+    if (!entered.ok) fail('no entra en pantalla completa')
+    await activate(target)
+    const exited = await settle(active, (value) => !value)
+    if (!exited.ok) {
+      await page.evaluate(() => document.exitFullscreen().catch(() => undefined))
+      fail('el segundo clic no sale de pantalla completa')
+    }
+    return 'entra y sale de pantalla completa'
   },
 
   async disclosure({ target }) {
