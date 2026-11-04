@@ -1,6 +1,6 @@
 import { expect, test, type Browser, type BrowserContext, type Locator, type Page } from '@playwright/test'
 import { fillContact, hideTab, newVisitor, openContact, renderJustNow, sendContact, showTab, uniqueToken, waitMinimumFill, type ContactValues } from './support/helpers'
-import { inspectBody, scanPublicSurface, type Finding } from './support/privacy'
+import { INBOX_COUNT_PATH, inboxCountProblem, inspectBody, scanPublicSurface, type Finding } from './support/privacy'
 import { startIsolatedServer, type IsolatedServer } from './support/server'
 
 const FIRST_PASSWORD = `primera-clave-${uniqueToken()}`
@@ -518,6 +518,15 @@ test('escaneo de privacidad: ninguna respuesta pública trae datos de visitantes
   expect(report.findings).toEqual([])
   expect(report.urls).toBeGreaterThan(40)
 
+  const count = await context.request.get(INBOX_COUNT_PATH)
+  if (count.status() === 404) {
+    test.info().annotations.push({ type: 'E-01', description: `${INBOX_COUNT_PATH} todavía no existe en esta rama; lo agrega R0` })
+  } else {
+    expect(count.status(), `GET ${INBOX_COUNT_PATH}`).toBe(200)
+    expect(count.headers()['content-type']).toContain('application/json')
+    expect(inboxCountProblem(await count.text()), `GET ${INBOX_COUNT_PATH} solo devuelve { unread }`).toBeNull()
+  }
+
   const control: Finding[] = []
   for (const path of ['/es/inbox?view=all', '/es/inbox/comments?view=all']) {
     await openPanel(admin.page, path)
@@ -528,6 +537,7 @@ test('escaneo de privacidad: ninguna respuesta pública trae datos de visitantes
     expect.arrayContaining([seeded.messages[0]?.email, PHONE, seeded.comments.find((values) => values.userName.startsWith('Pendiente'))?.email]),
   )
   expect(control.some((finding) => finding.kind === 'marca privada')).toBe(true)
+  expect(control.some((finding) => finding.kind === 'dato del inbox'), 'el escáner detecta los contadores del panel con sesión').toBe(true)
 
   const logs = server.output()
   for (const values of [...seeded.messages, ...seeded.comments]) {
