@@ -6,6 +6,7 @@ import type { SlideProject } from './carousel'
 export function toSlide(project: Project, lang: Locale): SlideProject {
   return {
     id: project.id,
+    order: project.order,
     title: project.title,
     summary: project.summary[lang],
     technologies: project.technologies,
@@ -44,6 +45,42 @@ export function caseStudySections(project: Project, lang: Locale, labels: CaseSt
     const parts = value ? paragraphs(value[lang] ?? '') : []
     return parts.length > 0 ? [{ id, heading: labels[id], paragraphs: parts }] : []
   })
+}
+
+export type CaseNeighbor = { id: string; title: string; href: string }
+
+export type CaseNeighbors = { prev: CaseNeighbor; next: CaseNeighbor; position: number; total: number }
+
+export function caseStudyNeighbors(list: readonly Project[], id: string, lang: Locale): CaseNeighbors | null {
+  const ordered = [...list].sort((a, b) => a.order - b.order)
+  const index = ordered.findIndex((project) => project.id === id)
+  if (index < 0 || ordered.length < 2) return null
+  const at = (offset: number): CaseNeighbor => {
+    const project = ordered[(index + offset + ordered.length) % ordered.length]!
+    return { id: project.id, title: project.title, href: localizedPath(lang, `/portfolio/${project.id}`) }
+  }
+  return { prev: at(-1), next: at(1), position: index + 1, total: ordered.length }
+}
+
+export function technologyCounts(list: readonly Project[]): Record<string, number> {
+  const counts: Record<string, number> = {}
+  for (const project of list) for (const tech of new Set(project.technologies)) counts[tech] = (counts[tech] ?? 0) + 1
+  return counts
+}
+
+export function galleryImages(project: Project, lang: Locale): Array<{ src: string; alt: string; width: number; height: number }> {
+  const extra = project.gallery ?? []
+  return [project.image, ...extra.filter((image) => image.src !== project.image.src)].map((image) => ({
+    src: image.src,
+    alt: image.alt[lang],
+    width: image.width,
+    height: image.height,
+  }))
+}
+
+export function caseHighlights(project: Project, lang: Locale): string[] {
+  const list = project.highlights ?? []
+  return list.map((item) => item[lang].trim()).filter((text) => text.length > 0)
 }
 
 export function caseStudyLinks(project: Project, labels: CaseStudyLabels): Array<{ id: 'live' | 'github'; href: string; label: string }> {

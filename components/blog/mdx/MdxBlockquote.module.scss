@@ -1,0 +1,35 @@
+@use 'glass' as *;
+@use '../blog' as blog;
+
+.quote {
+  @include glass(standard);
+  @include glass-grain;
+  @include glass-edge;
+  position: relative;
+  margin-block: 0 var(--cw-space-6);
+  padding: var(--cw-space-5) calc(var(--cw-space-5) + 2.5rem) var(--cw-space-5) calc(var(--cw-space-5) + 4px);
+  border-inline-start: 3px solid blog.$accent-mix;
+  border-radius: 4px var(--cw-radius-lg) var(--cw-radius-lg) 4px;
+  color: var(--cw-fg);
+  font-size: 1.04em;
+  font-style: italic;
+  line-height: 1.7;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.mark {
+  position: absolute;
+  top: 0.05em;
+  right: var(--cw-space-4);
+  color: blog.$accent-mix;
+  font-size: 4.5em;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+}

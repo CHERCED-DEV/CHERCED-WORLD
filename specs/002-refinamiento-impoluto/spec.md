@@ -50,8 +50,10 @@ vigentes las constituciones 2.0.1 y sus principios I (evolución) y VIII (simpli
 ### Decisiones del autor (2026-11-02, segunda revisión)
 
 - **Retrato de "Sobre mí":** los retratos nuevos `public/assets/imgs/about/retrato-oscuro.webp` y
-  `retrato-claro.webp` **reemplazan** la foto actual, uno por tema. Como no tienen transparencia, en tema
-  claro van dentro de un panel de cristal oscuro tipo vitrina.
+  `retrato-claro.webp` **reemplazan** la foto actual, uno por tema. Actualización del 2026-11-04: el autor
+  pidió fondo transparente en ambos temas para que la animación se vea por detrás. Los retratos se
+  recortaron con canal alfa (el cristal de las cintas queda translúcido), la vitrina oscura se retiró y
+  solo queda un fundido inferior.
 - **Skills:** la sección se anima al entrar en pantalla (barras que se llenan de forma escalonada) y cada
   tecnología lleva un ícono real.
   - Marcas con licencia libre (por ejemplo, los SVG CC0 de Simple Icons) copiados como archivos propios

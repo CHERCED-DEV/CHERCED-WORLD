@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { BackgroundIntensity } from '@/components/motion'
-import { HomeBanner } from '@/components/site/HomeBanner'
+import { HomeView } from '@/components/site/home/HomeView'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
-import { getSite } from '@/lib/content'
+import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -24,13 +24,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function HomePage({ params }: Props) {
   const lang = await resolveLang(params)
-  const dict = await getDictionary(lang, 'site')
-  const content = getSite()
+  const [dict, home] = await Promise.all([getDictionary(lang, 'site'), getDictionary(lang, 'home')])
 
   return (
     <>
       <BackgroundIntensity value="full" />
-      <HomeBanner lang={lang} home={content.home} socials={content.socials} socialsLabel={t(dict, 'home.socials')} />
+      <HomeView
+        lang={lang}
+        site={getSite()}
+        projects={getProjects()}
+        labels={{
+          socials: t(dict, 'home.socials'),
+          cue: t(home, 'hero.cue'),
+          now: {
+            title: t(home, 'now.title'),
+            since: t(home, 'now.since'),
+            caseStudy: t(home, 'now.caseStudy'),
+            more: t(home, 'now.more'),
+          },
+        }}
+      />
     </>
   )
 }

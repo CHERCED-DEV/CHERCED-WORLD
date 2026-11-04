@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { NotFoundView } from '@/components/shell'
+import { notFound } from 'next/navigation'
 import { defaultLocale, isLocale, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -18,7 +18,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t(common, 'notFound.title'), robots: { index: false, follow: true } }
 }
 
-export default async function UnknownRoute({ params }: Props) {
-  const { lang, common } = await resolve(params)
-  return <NotFoundView title={t(common, 'notFound.title')} ctaLabel={t(common, 'notFound.cta')} href={`/${lang}`} />
+export default function UnknownRoute(): never {
+  notFound()
 }

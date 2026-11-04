@@ -1,9 +1,14 @@
 import Image from 'next/image'
+import type { CSSProperties } from 'react'
 import type { SiteContent } from '@/content/types'
+import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { CornerMarks, GridLines, Scanline } from '@/components/ui/graphics'
 import { Separator } from '@/components/ui/Separator'
 import type { Locale } from '@/lib/i18n'
 import { homeSocials, isExternal } from './format'
+import enter from './home/Enter.module.scss'
+import { HeroOrbit } from './home/HeroOrbit'
 import styles from './HomeBanner.module.scss'
 
 const HOME_ICONS: Record<string, string> = {
@@ -19,24 +24,36 @@ export type HomeBannerProps = {
   socialsLabel: string
 }
 
+function step(index: number): CSSProperties {
+  return { '--cw-home-step': index } as CSSProperties
+}
+
 export function HomeBanner({ lang, home, socials, socialsLabel }: HomeBannerProps) {
   const links = homeSocials(socials)
 
   return (
     <section className={styles.banner} aria-labelledby="home-title" data-cw-home-banner="">
-      <GlassSurface variant="subtle" className={styles.card}>
-        <p className={styles.greeting}>
-          {home.greeting[lang]} <strong>{home.name}</strong>
+      <HeroOrbit />
+      <GlassSurface variant="subtle" edge grain depth light className={styles.card}>
+        <GridLines fade="radial" />
+        <Scanline axis="x" edge="bottom" delay={1400} />
+        <CornerMarks inset={-12} size={18} />
+        <p className={cx(styles.greeting, enter.enter)} style={step(0)}>
+          <span className={styles.greetingText}>
+            {home.greeting[lang]} <strong>{home.name}</strong>
+          </span>
         </p>
-        <h1 id="home-title" className={styles.title}>
+        <h1 id="home-title" className={cx(styles.title, enter.enter, enter.title)} style={step(1)}>
           {home.title[lang]}
         </h1>
-        <Separator className={styles.separator} />
+        <div className={cx(styles.rule, enter.enter, enter.rule)} style={step(2)}>
+          <Separator className={styles.separator} />
+        </div>
         {links.length > 0 ? (
           <nav aria-label={socialsLabel}>
             <ul className={styles.socials}>
-              {links.map((social) => (
-                <li key={social.id}>
+              {links.map((social, index) => (
+                <li key={social.id} className={enter.enter} style={step(3 + index * 0.5)}>
                   <a
                     href={social.href}
                     className={styles.social}

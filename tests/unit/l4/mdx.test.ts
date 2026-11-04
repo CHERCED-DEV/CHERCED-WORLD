@@ -44,7 +44,7 @@ describe('mdx-components', () => {
   it('expone el catálogo aprobado y los reemplazos de Markdown', () => {
     const components = useMDXComponents()
     expect(components).toBe(useMDXComponents())
-    expect(Object.keys(components).sort()).toEqual(['GlassDemo', 'a', 'h2', 'h3', 'img', 'pre'])
+    expect(Object.keys(components).sort()).toEqual(['GlassDemo', 'a', 'blockquote', 'h2', 'h3', 'img', 'pre'])
     expect(components.GlassDemo).toBe(GlassDemo)
     expect(components.pre).toBe(CodeBlock)
     expect(mdxComponents.h2).toBe(MdxH2)

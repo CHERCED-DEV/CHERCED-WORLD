@@ -9,7 +9,17 @@ export type PostLabels = { code: CopyLabels; glassDemo: GlassDemoLabels }
 
 export type PreparedPost = { body: ReactNode; headings: TocHeading[]; minutes: number; words: number }
 
-export const PAGE_IDS = ['main', 'cw-post-title', 'cw-toc-title', 'cw-share-title', 'cw-comments', 'cw-comments-title'] as const
+export const PAGE_IDS = [
+  'main',
+  'header',
+  'cw-post-title',
+  'cw-post-body',
+  'cw-toc-title',
+  'cw-share-title',
+  'cw-post-nav-title',
+  'cw-comments',
+  'cw-comments-title',
+] as const
 
 type MdxRender = (props: Record<string, never>) => ReactNode
 
@@ -25,6 +35,11 @@ function headingLevel(type: unknown): 2 | 3 | null {
   if (type === MdxH2) return 2
   if (type === MdxH3) return 3
   return null
+}
+
+export function readingStats(Content: ComponentType): { words: number; minutes: number } {
+  const { words } = buildOutline(evaluateMdx(Content), { isCode: (type) => type === CodeBlock })
+  return { words, minutes: readingMinutes(words) }
 }
 
 export function preparePost(Content: ComponentType, labels: PostLabels): PreparedPost {

@@ -10,10 +10,12 @@ const ROUTES = [
   '/es/portfolio/1',
   '/es/blog',
   '/es/blog/post1',
+  '/es/blog/post5',
   '/es/contactMe',
   '/es/privacy',
   '/es/esta-ruta-no-existe',
 ]
+const NOT_FOUND_ROUTE = '/es/esta-ruta-no-existe'
 const FRAMES = 4
 const MAX_SCROLL_STEPS = 20
 const HIDE_TEXT_ID = 'cw-contrast-hide-text'
@@ -171,7 +173,10 @@ for (const theme of ['dark', 'light'] as const) {
         await page.emulateMedia({ colorScheme: theme })
         await page.addInitScript(() => sessionStorage.setItem('cw-intro-seen', '1'))
         const response = await page.goto(route)
-        test.skip(response?.status() === 404, `${route} todavía no existe en esta rama; se audita al integrar su lane`)
+        test.skip(
+          response?.status() === 404 && route !== NOT_FOUND_ROUTE,
+          `${route} todavía no existe en esta rama; se audita al integrar su lane`,
+        )
         await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
         await expect(page.locator('[data-cw-background]')).toHaveAttribute('data-state', 'running')
         await page.addStyleTag({ content: FREEZE_STYLE })

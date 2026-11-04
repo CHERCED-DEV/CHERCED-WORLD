@@ -1,0 +1,96 @@
+@use 'breakpoints' as bp;
+
+.media {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--cw-glass-border);
+  background: var(--cw-glass-solid-strong-bg);
+  box-shadow: 7px 10px 20px rgb(0 0 0 / 0.42);
+}
+
+.card {
+  aspect-ratio: 16 / 9;
+  border-radius: 36px 0 48px;
+}
+
+.cover {
+  border-radius: 50px 0 70px;
+
+  &.compact {
+    aspect-ratio: 16 / 9;
+
+    @include bp.up(md) {
+      aspect-ratio: 21 / 9;
+    }
+  }
+}
+
+.image {
+  display: block;
+  transition: transform var(--cw-duration-slow) var(--cw-ease);
+}
+
+.wide .image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+.cover.wide .image {
+  height: auto;
+}
+
+.ambient {
+  position: absolute;
+  inset: -15%;
+  width: 130%;
+  max-width: none;
+  height: 130%;
+  object-fit: cover;
+  opacity: 0.7;
+  filter: blur(26px) saturate(1.35);
+}
+
+.compact::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 30%, rgb(0 0 0 / 0.28) 100%);
+  pointer-events: none;
+}
+
+.compact .image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: auto;
+  max-width: 80%;
+  height: 80%;
+  max-height: 256px;
+  margin: auto;
+  border-radius: 24px 0 34px;
+  background: var(--cw-glass-solid-strong-bg);
+  box-shadow: 7px 10px 20px rgb(0 0 0 / 0.52);
+}
+
+.cover.compact .image {
+  height: 78%;
+  border-radius: 40px 0 56px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :global([data-cw-post-card]:hover) .wide .image,
+  :global([data-cw-post-card]:focus-within) .wide .image {
+    transform: scale(1.035);
+  }
+
+  :global([data-cw-post-card]:hover) .compact .image,
+  :global([data-cw-post-card]:focus-within) .compact .image {
+    transform: translateY(-3px) scale(1.03);
+  }
+}

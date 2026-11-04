@@ -46,6 +46,11 @@ export const projects: Project[] = [
       github: 'https://github.com/Cherced/QuanticFilms',
     },
     order: 1,
+    highlights: [
+      { es: 'Integración con la API REST de TheMovieDB para buscar y explorar películas y series', en: 'Integrated with the TheMovieDB REST API to browse and search movies and TV shows' },
+      { es: 'Autenticación de usuarios con Next Auth y estado de la aplicación con Next Redux', en: 'User authentication with Next Auth and app state managed with Next Redux' },
+      { es: 'Diseño propio construido con Figma, HTML, CSS y SASS', en: 'My own design, crafted with Figma, HTML, CSS and SASS' },
+    ],
   },
   {
     id: '2',
@@ -85,6 +90,12 @@ export const projects: Project[] = [
       github: 'https://github.com/CHERCED-DEV/CHERCED-WORLD',
     },
     order: 2,
+    highlights: [
+      { es: '8 lanes de agentes en paralelo, cada una con propiedad exclusiva de sus archivos', en: '8 agent lanes in parallel, each with exclusive file ownership' },
+      { es: 'Sitio bilingüe ES/EN con panel de administración', en: 'Bilingual ES/EN site with an admin panel' },
+      { es: 'Sin costos de infraestructura nuevos', en: 'No new infrastructure costs' },
+      { es: 'Un problema de privacidad detectado y corregido con un hotfix en producción', en: 'A privacy issue found and fixed with a hotfix in production' },
+    ],
   },
   {
     id: '3',
@@ -118,6 +129,11 @@ export const projects: Project[] = [
       github: 'https://github.com/Cherced/AIRLINES',
     },
     order: 3,
+    highlights: [
+      { es: 'Diseño responsive con transiciones de página suaves', en: 'Responsive design with smooth page transitions' },
+      { es: 'Interfaz diseñada en Figma', en: 'Interface designed in Figma' },
+      { es: 'React y Next.js para optimizar el rendimiento y la velocidad', en: 'React and Next.js to optimize performance and speed' },
+    ],
   },
   {
     id: '4',
@@ -151,6 +167,11 @@ export const projects: Project[] = [
       github: 'https://github.com/CHERCED-DEV/newmanClub',
     },
     order: 4,
+    highlights: [
+      { es: 'Renderizado combinado en cliente y servidor para cargas rápidas', en: 'Combined client-side and server-side rendering for fast loading' },
+      { es: 'Base de datos con capacidad de escalar horizontalmente', en: 'Horizontal scaling capability in the database' },
+      { es: 'Diseño pixel perfect construido con Figma', en: 'Pixel-perfect design built with Figma' },
+    ],
   },
   {
     id: '5',
@@ -184,6 +205,12 @@ export const projects: Project[] = [
       github: 'https://github.com/CHERCED-DEV/centribal',
     },
     order: 5,
+    highlights: [
+      { es: 'Pedidos, clientes, productos e inventario en un solo dashboard', en: 'Orders, clients, products and inventory in one dashboard' },
+      { es: 'Renderizado mixto en servidor y cliente para una carga inicial más rápida', en: 'Mixed server-side and client-side rendering for a faster initial load' },
+      { es: 'Caché en memoria para mejorar el rendimiento', en: 'Memory caching to further enhance performance' },
+      { es: 'Responsive y mobile-first', en: 'Responsive and mobile-first' },
+    ],
   },
   {
     id: '6',
@@ -217,6 +244,10 @@ export const projects: Project[] = [
       github: 'https://github.com/Cherced/mywebsite',
     },
     order: 6,
+    highlights: [
+      { es: 'De HTML y CSS a VanillaJS, y luego a React con Next.js', en: 'From HTML and CSS to VanillaJS, then to React with Next.js' },
+      { es: 'El reflejo de mi evolución como desarrollador', en: 'A reflection of my evolution as a developer' },
+    ],
   },
   {
     id: '7',
@@ -250,6 +281,11 @@ export const projects: Project[] = [
       github: 'https://github.com/CHERCED-DEV/react-Shop.git',
     },
     order: 7,
+    highlights: [
+      { es: 'Carrito con Hooks para agregar y quitar productos y actualizar el total', en: 'Shopping cart with Hooks to add and remove items and update the total' },
+      { es: 'Peticiones a APIs externas con Axios', en: 'Requests to external APIs with Axios' },
+      { es: 'Assets y dependencias configurados con Webpack', en: 'Assets and dependencies configured with Webpack' },
+    ],
   },
   {
     id: '8',
@@ -295,6 +331,11 @@ export const projects: Project[] = [
       github: 'https://github.com/Cherced/GeItDone.git',
     },
     order: 8,
+    highlights: [
+      { es: 'Mide la efectividad en distintas escalas de tiempo', en: 'Measures effectiveness over different time scales' },
+      { es: 'Modelos de inteligencia artificial que evalúan los resultados y sugieren contenido', en: 'Artificial intelligence models that evaluate results and suggest content' },
+      { es: 'Código fuente disponible en GitHub', en: 'Source code available on GitHub' },
+    ],
   },
   {
     id: '9',
@@ -344,6 +385,11 @@ export const projects: Project[] = [
       github: 'https://github.com/Cherced/studio-ghibli',
     },
     order: 9,
+    highlights: [
+      { es: 'Registro de películas, personajes y directores favoritos', en: 'Keeps track of favorite movies, characters and directors' },
+      { es: 'Integración con un backend de API REST', en: 'Integrated with a REST API backend' },
+      { es: 'Responsive en computadores de escritorio, tablets y celulares', en: 'Responsive on desktops, tablets and mobile phones' },
+    ],
   },
   {
     id: '10',
@@ -393,6 +439,11 @@ export const projects: Project[] = [
     },
     links: { live: null, github: null },
     order: 10,
+    highlights: [
+      { es: 'Diseño de la interfaz, responsive y manejo de estado a mi cargo', en: 'I owned the interface design, the responsive design and the state' },
+      { es: 'Datos de prueba y endpoints junto al equipo de backend', en: 'Fake data and endpoints built with the backend team' },
+      { es: 'Autenticación y datos con Next Auth y Next Redux', en: 'Authentication and data storage with Next Auth and Next Redux' },
+    ],
   },
   {
     id: '11',
@@ -440,6 +491,11 @@ export const projects: Project[] = [
       github: 'https://github.com/Cherced/BookingUi',
     },
     order: 11,
+    highlights: [
+      { es: 'Explorar, buscar y reservar alojamientos, inspirado en Airbnb', en: 'Browse, search and book listings, inspired by Airbnb' },
+      { es: 'Construido junto a estudiantes más avanzados del bootcamp', en: 'Built together with senior bootcamp students' },
+      { es: 'Next Auth, Next Redux y SweetAlert2 integrados', en: 'Next Auth, Next Redux and SweetAlert2 integrated' },
+    ],
   },
   {
     id: '12',
@@ -476,5 +532,10 @@ export const projects: Project[] = [
     },
     links: { live: null, github: null },
     order: 12,
+    highlights: [
+      { es: 'Más de 30 componentes reutilizables', en: '30+ reusable components' },
+      { es: 'Probados con más de 3 frameworks web', en: 'Proven with 3+ web frameworks' },
+      { es: 'Umbraco (.NET) como capa de composición', en: 'Umbraco (.NET) as the composition layer' },
+    ],
   },
 ]

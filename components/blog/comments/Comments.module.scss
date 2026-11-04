@@ -5,7 +5,7 @@
 
 .section {
   width: 100%;
-  max-width: 760px;
+  max-width: 720px;
   margin: var(--cw-space-7) auto var(--cw-space-8);
 }
 
@@ -16,6 +16,11 @@
   justify-content: space-between;
   gap: var(--cw-space-4);
   margin-bottom: var(--cw-space-6);
+
+  @include bp.down(sm) {
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 .title {
@@ -24,6 +29,9 @@
 
 .notice {
   @include glass(subtle);
+  @include glass-grain;
+  @include glass-edge;
+  position: relative;
   padding: var(--cw-space-4) var(--cw-space-5);
   color: var(--cw-fg);
 }
@@ -36,6 +44,10 @@
 
 .comment {
   @include glass(standard);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  position: relative;
   padding: var(--cw-space-4) var(--cw-space-5);
 }
 

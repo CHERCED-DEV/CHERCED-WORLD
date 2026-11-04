@@ -1,4 +1,5 @@
 @use 'glass' as *;
+@use '../blog' as blog;
 
 .block {
   --sh-identifier: var(--cw-fg);
@@ -13,10 +14,15 @@
   --sh-property: color-mix(in srgb, var(--cw-fg) 55%, #82aaff);
   --sh-entity: color-mix(in srgb, var(--cw-fg) 55%, #f78c6c);
 
-  @include glass-solid(strong);
-  margin-block: var(--cw-space-5);
+  @include glass(strong);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  position: relative;
+  margin-block: var(--cw-space-5) var(--cw-space-6);
   overflow: hidden;
   border-radius: var(--cw-radius-md);
+  font-style: normal;
 }
 
 .toolbar {
@@ -27,6 +33,31 @@
   min-height: 48px;
   padding: var(--cw-space-1) var(--cw-space-2) var(--cw-space-1) var(--cw-space-4);
   border-bottom: 1px solid var(--cw-glass-border);
+  background: color-mix(in srgb, var(--cw-fg) 4%, transparent);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-3);
+  min-width: 0;
+}
+
+.dots {
+  display: inline-flex;
+  gap: 6px;
+
+  span {
+    width: 9px;
+    height: 9px;
+    border: 1px solid color-mix(in srgb, var(--cw-fg) 40%, transparent);
+    border-radius: 50%;
+  }
+
+  span:first-child {
+    border-color: blog.$accent-mix;
+    background: color-mix(in srgb, var(--cw-intro-accent) 35%, transparent);
+  }
 }
 
 .language {
@@ -39,12 +70,18 @@
 
 .pre {
   margin: 0;
-  padding: var(--cw-space-4);
+  padding: var(--cw-space-4) var(--cw-space-5);
   overflow-x: auto;
   font-family: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace;
-  font-size: var(--cw-text-sm);
+  font-size: 0.875rem;
   line-height: 1.7;
+  font-variant-ligatures: none;
   tab-size: 2;
+  scrollbar-width: thin;
+
+  &:focus-visible {
+    outline-offset: -3px;
+  }
 
   code {
     display: block;

@@ -26,7 +26,14 @@ export function CodeBlock({ children, labels }: { children?: ReactNode; labels?:
   return (
     <div className={styles.block} data-cw-code={language}>
       <div className={styles.toolbar}>
-        {fence ? <span className={styles.language}>{fence}</span> : <span />}
+        <span className={styles.label}>
+          <span className={styles.dots} aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+          {fence ? <span className={styles.language}>{fence}</span> : null}
+        </span>
         {labels ? <CopyButton text={code} labels={labels} /> : null}
       </div>
       <pre className={styles.pre} tabIndex={0}>
