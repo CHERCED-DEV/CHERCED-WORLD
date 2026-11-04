@@ -377,6 +377,16 @@
   margin-top: var(--cw-space-2);
 }
 
+.slideLink.slideLink {
+  @media (hover: none), (pointer: coarse) {
+    &:hover:not(:disabled) {
+      background: var(--cw-accent);
+      color: var(--cw-accent-fg);
+    }
+  }
+}
+
+
 .controls {
   @include glass(strong);
   @include glass-grain;

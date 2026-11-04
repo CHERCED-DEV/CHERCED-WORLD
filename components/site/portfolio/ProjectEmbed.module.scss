@@ -342,9 +342,11 @@
     background-color var(--cw-duration-fast) var(--cw-ease),
     color var(--cw-duration-fast) var(--cw-ease);
 
-  &:hover {
-    background: transparent;
-    color: var(--cw-fg);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: transparent;
+      color: var(--cw-fg);
+    }
   }
 }
 

@@ -164,7 +164,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           </SectionTitle>
           <p className={styles.lede}>{project.summary[lang]}</p>
           {project.links.live ? (
-            <a href={`#${EMBED_ANCHOR}`} className={buttonClassName({ variant: 'solid', size: 'lg' })} data-cw-case-see-live="">
+            <a href={`#${EMBED_ANCHOR}`} className={buttonClassName({ variant: 'solid', size: 'lg', className: styles.seeLive })} data-cw-case-see-live="">
               <PortfolioIcon name="live" />
               {extra.seeLive}
             </a>

@@ -372,3 +372,12 @@
     order: 3;
   }
 }
+
+.seeLive.seeLive {
+  @media (hover: none), (pointer: coarse) {
+    &:hover:not(:disabled) {
+      background: var(--cw-accent);
+      color: var(--cw-accent-fg);
+    }
+  }
+}
