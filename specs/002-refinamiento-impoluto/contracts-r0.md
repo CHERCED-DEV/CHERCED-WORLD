@@ -268,3 +268,12 @@ No hay eventos DOM nuevos. Los de la 001 (`cw:open-palette`, `cw:open-assistant`
 | `tests/unit/r0/mailbox.test.ts` | Respuesta `{ unread }` sin datos personales, revalidate 30 s, polling con pestaña visible |
 | `tests/unit/r0/components.test.ts` | `GlassSurface` por defecto igual, grafismos decorativos, `Reveal` visible en servidor, E-02 |
 | `tests/e2e/r0/shell-v2.spec.ts` | D-01 desde el final de 15 páginas (escritorio, móvil, teclado, movimiento reducido y sin JS), buzón, transiciones, reflejo, axe del header y footer |
+
+## 15. Impacto en pruebas de otras lanes
+
+| Prueba | Qué pasa | Quién la ajusta |
+|--------|----------|-----------------|
+| `tests/e2e/l3/public.spec.ts` › "el acceso al panel no se anuncia en el sitio público" | Falla por diseño: E-01 pone en el header un enlace a `/[lang]/inbox` para todos (revierte la FR-046 de la 001). Debe aceptar exactamente un `header [data-cw-mailbox]` y ningún otro enlace a `/inbox`. | R5 |
+| `tests/e2e/l3/support/privacy.ts` | Conviene sumar `/api/inbox-count` a los recursos escaneados y aceptar solo `{ "unread": n }` (T232). | R5 |
+| `tests/e2e/l0/shell.spec.ts` (sin JS) | Sigue en verde: `BackToTop` conserva `href="#header"`. | — |
+| `tests/e2e/l2/contrast.spec.ts` | Mide también las filas del header sticky que tapan el texto al hacer scroll; por eso el borde inferior del header no lleva brillo (sección 11). | — |
