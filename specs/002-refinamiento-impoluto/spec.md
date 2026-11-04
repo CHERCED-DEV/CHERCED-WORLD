@@ -197,8 +197,13 @@ skills deberían verse como un mapa mental, un "diagrama cerebral" de lo que el 
   de escenas fijo bajo el header permite saltar entre ellas y marca la escena visible.
 - **Mapa cerebral**:
   - Un núcleo (el autor) y cinco lóbulos: Frontend, Arquitectura, Backend y nube, IA aplicada y Oficio.
-  - Cada skill es una neurona cuyo tamaño refleja su nivel actual en `site.ts`. No se agregan skills y no
-    cambia ningún nivel.
+  - Cada skill es una neurona cuyo tamaño refleja su nivel en `site.ts`.
+  - Actualización del 2026-11-04 (decisiones del autor D7 y D9, T229):
+    - Ningún skill se borra: vuelven React, Next.js, Node.js, MongoDB y Figma.
+    - Arquitectura se completa con Clean Architecture, SOLID, patrones de diseño y sistemas distribuidos.
+    - "Oficio" se reemplaza por "Prácticas de ingeniería" e "Idiomas y negocio", así que el mapa queda con
+      seis lóbulos.
+    - Los niveles y los chips de años de uso son los que aprobó el autor.
   - Las fuentes van en una fila aparte: Platzi Master, Fundamentos de Arquitectura, Full Stack JS, Next.js,
     UNAD y EAM.
   - Al activar un lóbulo, sus sinapsis se encienden en `#25ED9E` con un pulso que las recorre y sus fuentes

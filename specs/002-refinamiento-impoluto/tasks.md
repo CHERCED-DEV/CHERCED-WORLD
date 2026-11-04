@@ -73,6 +73,10 @@ lane 002 necesita cambiarlas, lo pide como enmienda al orquestador.
 - [ ] T227 Pendiente: que las rutas desconocidas respondan 404 sin perder el contenido sin JS
   - Con el layout raíz en `[lang]`, `notFound()` deja el cuerpo vacío sin JS. Next 16 documenta `global-not-found.tsx`, que es experimental, para este caso. El intento 8e1e074 se revirtió en 86d7634; hoy responde 200 con `noindex`
   - Revisar también el 404 de `/es/portfolio/no-existe`, que tiene el mismo cuerpo vacío sin JS desde la 001
+- [ ] T229 R3: corrección de skills (decisiones del autor D7 y D9, 2026-11-04)
+  - Ningún skill se borra: vuelven React, Next.js, Node.js, MongoDB y Figma, y Arquitectura se completa con Clean Architecture, SOLID, patrones de diseño y sistemas distribuidos
+  - "Oficio" se reemplaza por "Prácticas de ingeniería" e "Idiomas y negocio" (6 lóbulos)
+  - Niveles con chips de años de uso, aprobados tal como los propuso el autor
 - [ ] T228 Pendiente (L3 congelada): al guardar una respuesta, el panel muestra un instante la anterior, y cada acción de moderación dispara de 8 a 15 prefetch extra (`components/admin/ReplyEditor.tsx`, `lib/actions/admin.ts`)
 - [ ] T223 R4: lectura refinada (portada, índice flotante, citas, código), post 5 integrado e investigación de D-05
 

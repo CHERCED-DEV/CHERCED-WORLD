@@ -73,7 +73,9 @@ criterio de arquitecto con evidencia. Es contenido y detalles nuevos sobre el si
   
   Tiempo de lectura, índice y progreso de los posts ya están en la 002.
 - Q: ¿Qué críticas de UX, accesibilidad y contenido se aplican? → A: todas, salvo D1 (D3).
-- Q: ¿Qué CV se ofrece? → A: el PDF oficial de 2 páginas, como "Descargar CV" (D5). Ver P-406.
+- Q: ¿Qué CV se ofrece? → A (2026-11-04, resuelve P-406): el sitio no publica el PDF. El PDF oficial trae
+  cifras del empleador y nombres de proveedores, así que el botón lleva al perfil de LinkedIn, donde el CV ya
+  está publicado en Destacados.
 - Q: ¿Se publican cifras del empleador actual? → A: no, en ningún lado. Solo la arquitectura, sin nombres internos.
 - Q: ¿Las cifras de Synergos van con "más de" o se vuelven a medir? → A: con "más de" (2.300+, 130+), salvo que se
   vuelvan a medir.
@@ -394,16 +396,17 @@ Una página `/now` cuenta qué construye, qué aprende y qué prepara el autor e
 
 #### CV
 
-- **FR-420**: El sitio MUST ofrecer "Descargar CV (PDF)" en el hero, en "Quién soy" y en Contacto. El archivo se copia del
-  PDF oficial a `public/Camilo_Hernandez_CV.pdf` y se enlaza con `download`. La etiqueta MUST incluir "PDF" y el peso, y en
-  ES, "en inglés". [NEEDS CLARIFICATION: P-406, qué versión del PDF se publica]
-- **FR-421**: La paleta MUST tener el comando "Descargar mi CV".
-- **FR-422**: El contenido del PDF MUST NOT entrar al índice de búsqueda ni al asistente.
+- **FR-420**: El sitio MUST ofrecer "Ver mi CV en LinkedIn" / "See my CV on LinkedIn" en el hero, en "Quién soy" y en
+  Contacto. El enlace va al perfil público de LinkedIn, en pestaña nueva con `rel="noopener noreferrer"`, y el nombre
+  accesible MUST decir que abre LinkedIn. El sitio MUST NOT servir el PDF del CV (P-406, resuelta).
+- **FR-421**: La paleta MUST tener el comando "Ver mi CV en LinkedIn".
+- **FR-422**: El contenido del CV MUST NOT entrar al índice de búsqueda ni al asistente.
 
 #### Lo que sé
 
-- **FR-430**: Los lóbulos MUST reorganizarse según contenido.md §8. Solo se publican los niveles que el autor confirme
-  (P-401). Las skills de hoy que no están en la propuesta se quedan hasta que el autor decida (P-407).
+- **FR-430**: Reemplazado el 2026-11-04. El autor aprobó la corrección de skills (D7 y D9: seis lóbulos, ningún
+  skill se borra, niveles y chips de años) y se implementa en la 002 como T229. Esta spec solo conserva lo que T229
+  no cubra. P-401 y P-407 quedan resueltas: ningún skill se borra.
 - **FR-431**: Cada skill nueva MUST tener ícono, con la regla de la 002: marca con licencia libre copiada al repo, o
   pictograma propio de línea fina.
 - **FR-432**: Cada lóbulo MUST mostrar "dónde lo apliqué" con referencias a entradas de carrera y a proyectos. Una prueba
@@ -587,7 +590,7 @@ fuente de verdad. Mientras sigan abiertas, se aplica el valor por defecto indica
 | P-403 | ¿Qué repos son públicos? CHERCED-WORLD sí. ¿Synergos y legal-workspace? | Handoff, pregunta 10 | `github: null` en ambos |
 | P-404 | ¿Página `/now`? ¿Qué muestra este mes? | Handoff, pregunta 13 | No se publica |
 | P-405 | ¿Enlace para agendar una llamada después del formulario de contacto? | Handoff, pregunta 16 | Sin enlace |
-| P-406 | El PDF oficial del CV trae cifras del empleador actual y nombres de proveedores, y enlaza a una cuenta de GitHub distinta de la pública. ¿Se publica tal cual (ya está en LinkedIn), se publica una versión para el sitio sin esas cifras ni nombres, o el botón lleva a LinkedIn? | Comparación del CV con la decisión "ninguna cifra del empleador" | El botón no se publica hasta que el autor decida |
+| P-406 | El PDF oficial del CV trae cifras del empleador actual y nombres de proveedores, y enlaza a una cuenta de GitHub distinta de la pública. ¿Se publica tal cual (ya está en LinkedIn), se publica una versión para el sitio sin esas cifras ni nombres, o el botón lleva a LinkedIn? | Comparación del CV con la decisión "ninguna cifra del empleador" | **Resuelta (2026-11-04):** el botón lleva a LinkedIn y el sitio no sirve el PDF |
 | P-407 | Hoy hay skills que no están en la propuesta: HTML5, JavaScript y AI coding agents, y CSS y Sass, que la propuesta junta en una sola. ¿Se quedan, se fusionan o salen? | Comparación de `site.ts` con la propuesta | Se quedan como están |
 | P-408 | Solo Synergos trae tarjetas ADR. ¿Escribe el autor las de Director & lines, Legal workspace, Event bridge y CHERCED-WORLD 2026? | Handoff | Esos casos quedan en prosa |
 | P-409 | El sitio enlaza a Instagram, pero la fuente de verdad no lo lista como contacto público. ¿Se queda? | Fuente de verdad del perfil | Se queda, como hoy |
