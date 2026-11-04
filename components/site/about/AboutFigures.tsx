@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react'
-import { Reveal } from '@/components/ui/Reveal'
 import styles from './About.module.scss'
 import { CountUp } from './CountUp'
 import type { Figure, FigureId } from './figures'
@@ -17,13 +16,12 @@ export function AboutFigures({ title, figures, labels }: AboutFiguresProps) {
         {title}
       </h2>
       <dl className={styles.figures}>
-        {figures.map((figure, index) => {
+        {figures.map((figure) => {
           const text = `${figure.value}${figure.plus ? '+' : ''}`
           const { label, note } = labels[figure.id]
           return (
-            <Reveal
+            <div
               key={figure.id}
-              delay={index * 70}
               className={styles.figure}
               data-cw-glass="standard"
               data-cw-light=""
@@ -45,7 +43,7 @@ export function AboutFigures({ title, figures, labels }: AboutFiguresProps) {
                 ) : null}
                 <span className="cw-visually-hidden">{text}</span>
               </dd>
-            </Reveal>
+            </div>
           )
         })}
       </dl>

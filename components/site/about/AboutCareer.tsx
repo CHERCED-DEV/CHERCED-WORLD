@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'react'
 import type { CareerEntry } from '@/content/types'
 import { GlassSurface } from '@/components/ui/GlassSurface'
-import { Reveal } from '@/components/ui/Reveal'
 import type { Locale } from '@/lib/i18n'
 import { isPublishable } from '../format'
 import { SectionTitle } from '../SectionTitle'
@@ -29,8 +28,7 @@ export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLab
         {entries.map((entry, index) => {
           const current = entry.end === null
           return (
-            <Reveal
-              as="li"
+            <li
               key={entry.id}
               className={styles.milestone}
               data-cw-job={entry.id}
@@ -48,7 +46,7 @@ export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLab
                 <p className={styles.jobCompany}>{entry.company}</p>
                 <p className={styles.jobText}>{entry.description[lang]}</p>
               </GlassSurface>
-            </Reveal>
+            </li>
           )
         })}
       </ol>

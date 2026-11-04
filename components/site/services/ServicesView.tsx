@@ -3,7 +3,6 @@ import type { SiteContent } from '@/content/types'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { GridLines } from '@/components/ui/graphics'
-import { Reveal } from '@/components/ui/Reveal'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { splitLead } from '../format'
 import { SectionTitle } from '../SectionTitle'
@@ -41,7 +40,7 @@ export function ServicesView({ lang, services, labels }: ServicesViewProps) {
         </h2>
         <ol className={styles.cards}>
           {services.items.map((item, index) => (
-            <Reveal as="li" key={item.id} delay={index * 70} className={styles.cardItem}>
+            <li key={item.id} className={styles.cardItem}>
               <GlassSurface variant="standard" grain depth edge light className={styles.card} data-cw-service={item.id}>
                 <span className={styles.cardTile}>
                   <ServiceIcon id={item.id} />
@@ -54,11 +53,11 @@ export function ServicesView({ lang, services, labels }: ServicesViewProps) {
                   <p className={styles.cardText}>{item.description[lang]}</p>
                 </div>
               </GlassSurface>
-            </Reveal>
+            </li>
           ))}
         </ol>
       </section>
-      <Reveal as="section" className={styles.ctaSection} aria-labelledby="services-cta">
+      <section className={styles.ctaSection} aria-labelledby="services-cta">
         <GlassSurface variant="strong" grain depth edge light className={styles.cta}>
           <span className={styles.ctaAccent} aria-hidden="true" />
           <h2 id="services-cta" className={styles.ctaTitle}>
@@ -72,7 +71,7 @@ export function ServicesView({ lang, services, labels }: ServicesViewProps) {
             {labels.contact}
           </Link>
         </GlassSurface>
-      </Reveal>
+      </section>
     </div>
   )
 }

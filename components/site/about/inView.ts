@@ -27,20 +27,26 @@ export function watchInView(element: Target, onChange: (state: InViewState) => v
     onChange('shown')
     return () => {}
   }
-  onChange('pending')
-  let done = false
+  let phase: 'waiting' | 'pending' | 'done' = 'waiting'
   const observer = new Ctor(
     (entries) => {
-      if (done || !entries.some((entry) => entry.isIntersecting)) return
-      done = true
-      observer.disconnect()
-      onChange('in')
+      if (phase === 'done') return
+      if (entries.some((entry) => entry.isIntersecting)) {
+        onChange(phase === 'pending' ? 'in' : 'shown')
+        phase = 'done'
+        observer.disconnect()
+        return
+      }
+      if (phase === 'waiting') {
+        phase = 'pending'
+        onChange('pending')
+      }
     },
     { rootMargin: IN_VIEW_ROOT_MARGIN, threshold: 0 },
   )
   observer.observe(element)
   return () => {
-    done = true
+    phase = 'done'
     observer.disconnect()
   }
 }

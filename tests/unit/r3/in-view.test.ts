@@ -44,11 +44,26 @@ describe('watchInView: revelado al entrar en pantalla', () => {
     }
   })
 
-  it('lo que está debajo queda pendiente y entra una sola vez', () => {
+  it('si el observador nunca responde, nada se oculta ni se reinicia', () => {
     const { env, observers } = fakeEnv()
     const states: InViewState[] = []
     watchInView(at(2400), (state) => states.push(state), env)
-    expect(states).toEqual(['pending'])
+    expect(observers).toHaveLength(1)
+    expect(states).toEqual([])
+  })
+
+  it('si al responder ya está en pantalla, se muestra sin animar', () => {
+    const { env, observers } = fakeEnv()
+    const states: InViewState[] = []
+    watchInView(at(2400), (state) => states.push(state), env)
+    observers[0]!.callback([{ isIntersecting: true }])
+    expect(states).toEqual(['shown'])
+  })
+
+  it('lo que está debajo queda pendiente solo cuando el observador lo confirma, y entra una sola vez', () => {
+    const { env, observers } = fakeEnv()
+    const states: InViewState[] = []
+    watchInView(at(2400), (state) => states.push(state), env)
     expect(observers[0]!.options).toEqual({ rootMargin: IN_VIEW_ROOT_MARGIN, threshold: 0 })
     observers[0]!.callback([{ isIntersecting: false }])
     expect(states).toEqual(['pending'])
@@ -62,6 +77,7 @@ describe('watchInView: revelado al entrar en pantalla', () => {
     const { env, observers } = fakeEnv()
     const states: InViewState[] = []
     const stop = watchInView(at(2400), (state) => states.push(state), env)
+    observers[0]!.callback([{ isIntersecting: false }])
     stop()
     observers[0]!.callback([{ isIntersecting: true }])
     expect(states).toEqual(['pending'])

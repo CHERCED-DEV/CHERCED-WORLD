@@ -213,8 +213,11 @@
   }
 }
 
+@include site.rise-keyframes(rise);
+
 .figure {
   @include site.crystal(standard);
+  @include site.rise(rise);
   @include glass-edge;
   @include glass-light;
   position: relative;
@@ -356,6 +359,7 @@
 }
 
 .milestone {
+  @include site.rise(rise);
   position: relative;
   display: grid;
   gap: var(--cw-space-3);
