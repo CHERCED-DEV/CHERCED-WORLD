@@ -92,3 +92,25 @@
     }
   }
 }
+
+@mixin rise($name, $distance: 18px) {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: $name linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+@mixin rise-keyframes($name, $distance: 18px) {
+  @keyframes #{$name} {
+    from {
+      translate: 0 $distance;
+    }
+
+    to {
+      translate: none;
+    }
+  }
+}

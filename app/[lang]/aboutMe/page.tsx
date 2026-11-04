@@ -98,7 +98,6 @@ export default async function AboutMePage({ params }: Props) {
               sourcesWord: t(dict, 'about.brain.sourcesWord'),
               projectsWord: t(dict, 'about.brain.projectsWord'),
               feeds: t(dict, 'about.brain.feeds'),
-              none: t(dict, 'about.brain.none'),
               core: getSite().home.name.toUpperCase(),
               path: t(dict, 'about.brain.path'),
               platzi: { href: about.courses.platzi.href, label: about.courses.platzi.label[lang], newTab: t(dict, 'a11y.newTab') },

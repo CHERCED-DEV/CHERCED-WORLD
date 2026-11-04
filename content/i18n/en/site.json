@@ -32,7 +32,6 @@
   "about.brain.sourcesWord": "sources",
   "about.brain.projectsWord": "projects",
   "about.brain.feeds": "feeds",
-  "about.brain.none": "none yet",
   "about.brain.path": "~/camilo/brain",
   "about.level": "{value}%",
   "about.levelOf": "{name}: {value}%",

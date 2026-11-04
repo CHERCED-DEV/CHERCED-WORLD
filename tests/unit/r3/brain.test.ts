@@ -19,7 +19,7 @@ const es = brainData(about, projects, 'es', 'Actualidad')
 const en = brainData(about, projects, 'en', 'Present')
 
 describe('lóbulos del mapa cerebral (E-03)', () => {
-  it('son cinco y cubren las 18 tecnologías y los 2 idiomas, cada una una sola vez', () => {
+  it('son cinco y cubren todas las tecnologías y los 2 idiomas, cada una una sola vez', () => {
     expect(es.lobes.map((lobe) => lobe.id)).toEqual(['frontend', 'architecture', 'backend-cloud', 'applied-ai', 'craft'])
     const ids = es.lobes.flatMap((lobe) => lobe.skills.map((skill) => skill.id))
     expect(new Set(ids).size).toBe(ids.length)

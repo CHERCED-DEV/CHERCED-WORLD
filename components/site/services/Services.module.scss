@@ -53,7 +53,10 @@
   }
 }
 
+@include site.rise-keyframes(rise);
+
 .cardItem {
+  @include site.rise(rise);
   display: flex;
   min-width: 0;
 }
@@ -149,6 +152,7 @@
 }
 
 .ctaSection {
+  @include site.rise(rise);
   display: flex;
   justify-content: center;
 }

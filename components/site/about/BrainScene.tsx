@@ -25,6 +25,8 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
   const data = brainData(about, projects, lang, labels.present)
   const levels = Object.fromEntries(data.lobes.flatMap((lobe) => lobe.skills.map((skill) => [skill.id, labels.level(skill.level)])))
   const { map, skillsSummary } = labels
+  const wordsLead = about.skills.description[lang].trim()
+  const words = about.skills.bullets.map((bullet) => bullet[lang].trim()).filter((bullet) => bullet.length > 0)
   const sourceLabel = (id: string) => data.sources.find((source) => source.id === id)?.label ?? id
 
   return (
@@ -40,7 +42,7 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
               {lobe.skills.map((skill) => (
                 <li key={skill.id} className={styles.fallbackSkill} data-cw-brain-skill={skill.id}>
                   {skill.icon ? (
-                    <Image src={skill.icon} alt="" width={22} height={22} sizes="22px" unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
+                    <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                   ) : (
                     <span className={styles.termIcon} aria-hidden="true" />
                   )}
@@ -49,21 +51,33 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
                 </li>
               ))}
             </ul>
-            <p className={styles.termMeta}>
-              <strong>{map.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ') || map.none}
-              <br />
-              <strong>{map.projectsWord}:</strong>{' '}
-              {lobe.projects.length === 0
-                ? map.none
-                : lobe.projects.map((project, index) => (
-                    <span key={project.id}>
-                      {index > 0 ? ' · ' : null}
-                      <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
-                        {project.title}
-                      </Link>
-                    </span>
-                  ))}
-            </p>
+            {lobe.learning ? (
+              <p className={styles.termLearning} data-cw-learning="">
+                {lobe.learning}
+              </p>
+            ) : null}
+            {lobe.sources.length > 0 || lobe.projects.length > 0 ? (
+              <p className={styles.termMeta}>
+                {lobe.sources.length > 0 ? (
+                  <span className={styles.metaLine} data-cw-meta="sources">
+                    <strong>{map.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ')}
+                  </span>
+                ) : null}
+                {lobe.projects.length > 0 ? (
+                  <span className={styles.metaLine} data-cw-meta="projects">
+                    <strong>{map.projectsWord}:</strong>{' '}
+                    {lobe.projects.map((project, index) => (
+                      <span key={project.id}>
+                        {index > 0 ? ' · ' : null}
+                        <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
+                          {project.title}
+                        </Link>
+                      </span>
+                    ))}
+                  </span>
+                ) : null}
+              </p>
+            ) : null}
           </section>
         ))}
         <section className={`${styles.fallbackLobe} ${styles.fallbackSources}`} data-cw-glass="standard" aria-labelledby="brain-sources">
@@ -89,15 +103,19 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
           </a>
         </section>
       </div>
-      <details className={styles.words} data-cw-glass="standard">
-        <summary className={styles.wordsSummary}>{skillsSummary}</summary>
-        <p className={styles.wordsText}>{about.skills.description[lang]}</p>
-        <ul className={styles.wordsList}>
-          {about.skills.bullets.map((bullet) => (
-            <li key={bullet.en}>{bullet[lang]}</li>
-          ))}
-        </ul>
-      </details>
+      {wordsLead || words.length > 0 ? (
+        <details className={styles.words} data-cw-glass="standard" data-cw-words="">
+          <summary className={styles.wordsSummary}>{skillsSummary}</summary>
+          {wordsLead ? <p className={styles.wordsText}>{wordsLead}</p> : null}
+          {words.length > 0 ? (
+            <ul className={styles.wordsList}>
+              {words.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          ) : null}
+        </details>
+      ) : null}
     </>
   )
 }

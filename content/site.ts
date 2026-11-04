@@ -206,15 +206,16 @@ export const site: SiteContent = {
           progress: 90,
         },
         { id: 'ai-coding-agents', name: 'AI CODING AGENTS', icon: '/assets/icons/skillsIcon/ai-coding-agents.svg', progress: 90 },
-        { id: 'azure-ai-foundry', name: 'AZURE AI FOUNDRY', icon: '/assets/icons/skillsIcon/azure-ai-foundry.svg', progress: 75 },
-        { id: 'semantic-kernel', name: 'SEMANTIC KERNEL', icon: '/assets/icons/skillsIcon/semantic-kernel.svg', progress: 60 },
-        { id: 'rag-embeddings', name: 'RAG / EMBEDDINGS', icon: '/assets/icons/skillsIcon/rag-embeddings.svg', progress: 60 },
         { id: 'javascript', name: 'JAVASCRIPT', icon: '/assets/icons/skillsIcon/js.png', progress: 90 },
         { id: 'html5', name: 'HTML5', icon: '/assets/icons/skillsIcon/html-5.png', progress: 90 },
         { id: 'css', name: 'CSS', icon: '/assets/icons/skillsIcon/css.png', progress: 92 },
         { id: 'sass', name: 'SASS', icon: '/assets/icons/skillsIcon/sass.png', progress: 90 },
         { id: 'git', name: 'GIT', icon: '/assets/icons/skillsIcon/merge.png', progress: 85 },
       ],
+      learningNow: {
+        es: 'Aprendiendo ahora: Azure AI Foundry, Semantic Kernel y RAG.',
+        en: 'Learning now: Azure AI Foundry, Semantic Kernel and RAG.',
+      },
       lobes: [
         {
           id: 'frontend',
@@ -237,7 +238,7 @@ export const site: SiteContent = {
         {
           id: 'applied-ai',
           name: { es: 'IA aplicada', en: 'Applied AI' },
-          skills: ['ai-coding-agents', 'azure-ai-foundry', 'semantic-kernel', 'rag-embeddings'],
+          skills: ['ai-coding-agents'],
           sources: ['architecture'],
         },
         {

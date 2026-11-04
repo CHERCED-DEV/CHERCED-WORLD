@@ -4,6 +4,8 @@
 @use '../site' as site;
 
 .page {
+  --cw-scene-nav-h: 44px;
+  --cw-scene-clear: calc(var(--cw-scene-nav-h) + var(--cw-space-5));
   @include layout.container;
   display: flex;
   flex-direction: column;
@@ -15,7 +17,7 @@
   display: grid;
   justify-items: center;
   gap: var(--cw-space-6);
-  scroll-margin-top: 72px;
+  scroll-margin-top: var(--cw-scene-clear);
 
   @include bp.up(lg) {
     grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
@@ -25,7 +27,7 @@
 }
 
 .scene {
-  scroll-margin-top: 72px;
+  scroll-margin-top: var(--cw-scene-clear);
 }
 
 .sceneNav {
@@ -41,6 +43,8 @@
 .sceneList {
   @include site.crystal(strong);
   display: flex;
+  box-sizing: border-box;
+  height: var(--cw-scene-nav-h);
   gap: 2px;
   max-width: 100%;
   padding: 4px;
@@ -190,6 +194,7 @@
   p {
     @include site.prose;
     margin-inline: auto;
+    text-align: left;
   }
 }
 
@@ -213,8 +218,11 @@
   }
 }
 
+@include site.rise-keyframes(rise);
+
 .figure {
   @include site.crystal(standard);
+  @include site.rise(rise);
   @include glass-edge;
   @include glass-light;
   position: relative;
@@ -356,6 +364,7 @@
 }
 
 .milestone {
+  @include site.rise(rise);
   position: relative;
   display: grid;
   gap: var(--cw-space-3);
@@ -690,10 +699,7 @@ dialog.deckDialog {
   @include site.prose;
   max-width: none;
   margin-top: var(--cw-space-2);
-
-  @include bp.down(md) {
-    text-align: start;
-  }
+  text-align: left;
 }
 
 
@@ -736,4 +742,11 @@ dialog.deckDialog {
   font-weight: 700;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+.milestone,
+.deckSlot,
+.figure,
+.heroText {
+  scroll-margin-top: var(--cw-scene-clear);
 }

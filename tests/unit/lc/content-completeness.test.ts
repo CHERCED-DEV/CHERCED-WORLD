@@ -52,9 +52,6 @@ const SKILLS_2026: Record<string, number> = {
   umbraco: 85,
   'spec-driven-development': 90,
   'ai-coding-agents': 90,
-  'azure-ai-foundry': 75,
-  'semantic-kernel': 60,
-  'rag-embeddings': 60,
   javascript: 90,
   html5: 90,
   css: 92,
@@ -101,9 +98,6 @@ const SKILL_PICTOGRAMS: Record<string, string> = {
   'native-federation': 'native-federation.svg',
   'spec-driven-development': 'spec-driven-development.svg',
   'ai-coding-agents': 'ai-coding-agents.svg',
-  'azure-ai-foundry': 'azure-ai-foundry.svg',
-  'semantic-kernel': 'semantic-kernel.svg',
-  'rag-embeddings': 'rag-embeddings.svg',
 }
 
 const PICTOGRAM_INK = new Set(['#0A0A0A', '#25ED9E'])
@@ -116,9 +110,6 @@ const MONOGRAMS: Record<string, string> = {
   umbraco: 'U',
   'spec-driven-development': 'SDD',
   'ai-coding-agents': 'AI',
-  'azure-ai-foundry': 'AAF',
-  'semantic-kernel': 'SK',
-  'rag-embeddings': 'RAG',
 }
 
 const CAREER_2026 = [
@@ -387,7 +378,7 @@ describe('sitio (FR-004)', () => {
     expect(site.socials.map((social) => social.id).sort()).toEqual(['email', 'facebook', 'github', 'instagram', 'linkedin'])
     expect(site.about.career.map((entry) => entry.id)).toEqual(CAREER_2026)
     expect(site.about.skills.bullets).toHaveLength(10)
-    expect(site.about.skills.tech).toHaveLength(18)
+    expect(site.about.skills.tech).toHaveLength(15)
     expect(Object.fromEntries(site.about.skills.tech.map((tech) => [tech.id, tech.progress]))).toEqual(SKILLS_2026)
     expect(site.about.education.map((entry) => entry.id)).toEqual(['unad', 'platzi', 'eam'])
     expect(site.about.courses.schools).toHaveLength(5)
@@ -549,6 +540,25 @@ describe('assets (T044)', () => {
   })
 })
 
+const LEARNING_NOW = ['Azure AI Foundry', 'Semantic Kernel', 'RAG']
+
+describe('aprendiendo ahora (decisión del autor, 2026-11-04)', () => {
+  it('Azure AI Foundry, Semantic Kernel y RAG salen de las barras y quedan en una línea, en ambos idiomas', () => {
+    const names = site.about.skills.tech.map((tech) => tech.name.toUpperCase())
+    for (const name of LEARNING_NOW) expect(names.some((item) => item.includes(name.toUpperCase())), name).toBe(false)
+    expect(site.about.skills.learningNow?.es).toBe('Aprendiendo ahora: Azure AI Foundry, Semantic Kernel y RAG.')
+    expect(site.about.skills.learningNow?.en).toBe('Learning now: Azure AI Foundry, Semantic Kernel and RAG.')
+    for (const lobe of site.about.skills.lobes ?? []) {
+      for (const id of lobe.skills) expect(['azure-ai-foundry', 'semantic-kernel', 'rag-embeddings'], `${lobe.id}: ${id}`).not.toContain(id)
+    }
+  })
+
+  it('no quedan íconos huérfanos de las tecnologías que salieron', () => {
+    const files = readdirSync(path.join(PUBLIC_DIR, 'assets', 'icons', 'skillsIcon'))
+    for (const file of ['azure-ai-foundry.svg', 'semantic-kernel.svg', 'rag-embeddings.svg']) expect(files, file).not.toContain(file)
+  })
+})
+
 describe('íconos de tecnologías (A-18 y D-08)', () => {
   const iconDir = path.join(PUBLIC_DIR, 'assets', 'icons', 'skillsIcon')
   const svgFiles = [...Object.values(SKILL_ICONS_SIMPLE).map((icon) => icon.file), ...Object.values(SKILL_PICTOGRAMS)]
@@ -564,7 +574,7 @@ describe('íconos de tecnologías (A-18 y D-08)', () => {
     }
   })
 
-  it('las 10 skills de D-08 tienen ícono real y ninguna queda con placa de iniciales', () => {
+  it('las skills de D-08 que siguen en el stack tienen ícono real y ninguna queda con placa de iniciales', () => {
     const d08 = { ...Object.fromEntries(Object.entries(SKILL_ICONS_SIMPLE).map(([id, icon]) => [id, icon.file])), ...SKILL_PICTOGRAMS }
     expect(Object.keys(d08).sort()).toEqual(Object.keys(MONOGRAMS).sort())
     for (const [id, file] of Object.entries(d08)) {

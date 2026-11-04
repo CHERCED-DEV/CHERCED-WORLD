@@ -15,7 +15,6 @@ export type BrainLabels = {
   sourcesWord: string
   projectsWord: string
   feeds: string
-  none: string
   core: string
   path: string
   levels: Record<string, string>
@@ -55,7 +54,7 @@ function DecodedTitle({ text }: { text: string }) {
 
   return (
     <>
-      <span ref={ref} aria-hidden="true" data-cw-decode="">
+      <span key={text} ref={ref} aria-hidden="true" data-cw-decode="">
         {text}
       </span>
       <span className="cw-visually-hidden">{text}</span>
@@ -84,6 +83,11 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
   const litSources = new Set(lobe ? lobe.sources : source ? [source.id] : [])
   const litLobes = new Set(lobe ? [lobe.id] : data.lobes.filter((item) => source && item.sources.includes(source.id)).map((item) => item.id))
   const sourceLabel = (id: string) => data.sources.find((item) => item.id === id)?.label ?? id
+  const status = lobe
+    ? `${lobe.name}: ${lobe.skills.map((skill) => `${skill.name} ${labels.levels[skill.id] ?? `${skill.level}%`}`).join(', ')}`
+    : source
+      ? `${source.label}: ${source.title}`
+      : ''
 
   const onLobeKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const step = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 0
@@ -183,8 +187,11 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
             </span>
             <span>{labels.path}</span>
           </div>
-          <div className={styles.termBody} aria-live="polite" data-cw-terminal-body={lobe?.id ?? source?.id}>
-            <p className={styles.termCmd}>
+          <p className="cw-visually-hidden" aria-live="polite" data-cw-terminal-status="">
+            {status}
+          </p>
+          <div className={styles.termBody} data-cw-terminal-body={lobe?.id ?? source?.id}>
+            <p className={styles.termCmd} aria-hidden="true">
               <span className={styles.prompt} aria-hidden="true">
                 ${' '}
               </span>
@@ -202,7 +209,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                     return (
                       <li key={skill.id} className={styles.termRow} data-cw-brain-skill={skill.id}>
                         {skill.icon ? (
-                          <Image src={skill.icon} alt="" width={22} height={22} sizes="22px" unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
+                          <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                         ) : (
                           <span className={styles.termIcon} aria-hidden="true" />
                         )}
@@ -216,21 +223,33 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                     )
                   })}
                 </ul>
-                <p className={styles.termMeta}>
-                  <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ') || labels.none}
-                  <br />
-                  <strong>{labels.projectsWord}:</strong>{' '}
-                  {lobe.projects.length === 0
-                    ? labels.none
-                    : lobe.projects.map((project, index) => (
-                        <span key={project.id}>
-                          {index > 0 ? ' · ' : null}
-                          <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
-                            {project.title}
-                          </Link>
-                        </span>
-                      ))}
-                </p>
+                {lobe.learning ? (
+                  <p className={styles.termLearning} data-cw-learning="">
+                    {lobe.learning}
+                  </p>
+                ) : null}
+                {lobe.sources.length > 0 || lobe.projects.length > 0 ? (
+                  <p className={styles.termMeta}>
+                    {lobe.sources.length > 0 ? (
+                      <span className={styles.metaLine} data-cw-meta="sources">
+                        <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ')}
+                      </span>
+                    ) : null}
+                    {lobe.projects.length > 0 ? (
+                      <span className={styles.metaLine} data-cw-meta="projects">
+                        <strong>{labels.projectsWord}:</strong>{' '}
+                        {lobe.projects.map((project, index) => (
+                          <span key={project.id}>
+                            {index > 0 ? ' · ' : null}
+                            <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
+                              {project.title}
+                            </Link>
+                          </span>
+                        ))}
+                      </span>
+                    ) : null}
+                  </p>
+                ) : null}
               </>
             ) : source ? (
               <>
@@ -239,13 +258,17 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                   <p>{source.detail}</p>
                   {source.period ? <p className={styles.termLevel}>{source.period}</p> : null}
                 </div>
-                <p className={styles.termMeta}>
-                  <strong>{labels.feeds}:</strong>{' '}
-                  {data.lobes
-                    .filter((item) => item.sources.includes(source.id))
-                    .map((item) => item.name)
-                    .join(' · ') || labels.none}
-                </p>
+                {data.lobes.some((item) => item.sources.includes(source.id)) ? (
+                  <p className={styles.termMeta}>
+                    <span className={styles.metaLine} data-cw-meta="feeds">
+                      <strong>{labels.feeds}:</strong>{' '}
+                      {data.lobes
+                        .filter((item) => item.sources.includes(source.id))
+                        .map((item) => item.name)
+                        .join(' · ')}
+                    </span>
+                  </p>
+                ) : null}
               </>
             ) : null}
           </div>
