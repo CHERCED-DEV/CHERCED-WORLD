@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 import { auditPage, formatFindings, openPage, prepareContext, returnTo, scrollToEnd } from './support/controls'
 import { AUDIT_PAGES, BLOG_INDEXES, langOf, skipIntro } from './support/pages'
 
@@ -29,7 +29,6 @@ test.describe('auditoría de interacción (US1, FR-201)', () => {
 
 test.describe('volver arriba (FR-202)', () => {
   for (const path of AUDIT_PAGES) {
-    // R0 (D-01) hace pasar esta prueba: hoy "Volver arriba" apunta a #header, que es sticky
     test(`${path}: desde el final sube al tope y deja el foco en main`, async ({ page }) => {
       test.setTimeout(90_000)
       await openPage(page, path)
@@ -57,9 +56,15 @@ async function opensPost(page: Page, index: string, activate: () => Promise<void
   return landed ? null : `se queda en ${new URL(page.url()).pathname}`
 }
 
+async function clickWithin(card: Locator, part: Locator): Promise<void> {
+  await part.scrollIntoViewIfNeeded()
+  const [outer, inner] = await Promise.all([card.boundingBox(), part.boundingBox()])
+  if (!outer || !inner) throw new Error('la parte de la tarjeta no tiene caja visible')
+  await card.click({ position: { x: inner.x - outer.x + inner.width / 2, y: inner.y - outer.y + inner.height / 2 }, timeout: 5000 })
+}
+
 test.describe('tarjetas del blog (D-07)', () => {
   for (const index of BLOG_INDEXES) {
-    // R4 (D-07) hace pasar esta prueba: hoy solo el título abre el post y no hay "Leer más"
     test(`${index}: toda la tarjeta y su "Leer más" abren el post`, async ({ page }) => {
       test.setTimeout(240_000)
       await openPage(page, index)
@@ -72,7 +77,7 @@ test.describe('tarjetas del blog (D-07)', () => {
         const card = () => page.locator(`[data-cw-post-card="${id}"]`)
         const probes: Array<[string, () => Promise<void>]> = [
           ['el título', () => card().getByRole('heading').first().click({ timeout: 5000 })],
-          ['la imagen', () => card().locator('img').first().click({ timeout: 5000 })],
+          ['la imagen', () => clickWithin(card(), card().locator('img').first())],
           [
             'una esquina vacía de la tarjeta',
             async () => {
@@ -80,19 +85,19 @@ test.describe('tarjetas del blog (D-07)', () => {
               await card().click({ position: { x: 12, y: (box?.height ?? 40) - 12 }, timeout: 5000 })
             },
           ],
+          ['"Leer más"', () => clickWithin(card(), card().getByText(readMore).first())],
         ]
+        await returnTo(page, index)
+        const visibleMore = await expect(card().getByText(readMore).first())
+          .toBeVisible({ timeout: 5000 })
+          .then(() => true)
+          .catch(() => false)
+        if (!visibleMore) problems.push(`${id}: no tiene un "Leer más" visible`)
         for (const [part, activate] of probes) {
+          if (part === '"Leer más"' && !visibleMore) continue
           const problem = await opensPost(page, index, activate, expected)
           if (problem) problems.push(`${id}: clic en ${part} no abre ${expected}; ${problem}`)
         }
-        await returnTo(page, index)
-        const more = card().getByText(readMore)
-        if ((await more.count()) === 0 || !(await more.first().isVisible())) {
-          problems.push(`${id}: no tiene un "Leer más" visible`)
-          continue
-        }
-        const problem = await opensPost(page, index, () => more.first().click({ timeout: 5000 }), expected)
-        if (problem) problems.push(`${id}: "Leer más" no abre ${expected}; ${problem}`)
       }
       expect(problems.join('\n'), `tarjetas de ${index}`).toBe('')
     })
