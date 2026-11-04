@@ -1,5 +1,18 @@
-import { expect, test, type Browser, type BrowserContext, type Locator, type Page, type Response } from '@playwright/test'
-import { fillContact, hideTab, newVisitor, openContact, renderJustNow, sendContact, showTab, uniqueToken, waitMinimumFill, type ContactValues } from './support/helpers'
+import { expect, test, type Browser, type BrowserContext, type Locator, type Page } from '@playwright/test'
+import {
+  fillContact,
+  hideTab,
+  newVisitor,
+  openContact,
+  renderJustNow,
+  sendContact,
+  showTab,
+  submitAction,
+  UI_AFTER_ACTION_MS,
+  uniqueToken,
+  waitMinimumFill,
+  type ContactValues,
+} from './support/helpers'
 import { INBOX_COUNT_PATH, inboxCountProblem, inspectBody, scanPublicSurface, type Finding } from './support/privacy'
 import { startIsolatedServer, type IsolatedServer } from './support/server'
 
@@ -7,7 +20,6 @@ const FIRST_PASSWORD = `primera-clave-${uniqueToken()}`
 const SECOND_PASSWORD = `segunda-clave-${uniqueToken()}`
 const SETUP_LOG = /Código de configuración inicial: ([A-Z0-9]{4}-[A-Z0-9]{4}) \(vence /
 const UPDATE_WINDOW_MS = 10_000
-const ACTION_MS = 30_000
 const PHONE = '+57 311 987 6543'
 
 let server: IsolatedServer
@@ -91,21 +103,14 @@ async function seedComment(browser: Browser, postPath: string, userName: string)
   await dialog.getByLabel('Tu comentario').fill(values.comment)
   await dialog.getByRole('checkbox').check()
   await waitMinimumFill(page, openedAt)
-  await dialog.getByRole('button', { name: 'Enviar' }).click()
-  await expect(dialog.locator('[data-cw-comment-status="success"]')).toBeVisible()
+  await submitAction(page, () => dialog.getByRole('button', { name: 'Enviar' }).click())
+  await expect(dialog.locator('[data-cw-comment-status="success"]')).toBeVisible({ timeout: UI_AFTER_ACTION_MS })
   seeded.comments.push(values)
   return values
 }
 
-function isActionResponse(response: Response): boolean {
-  const request = response.request()
-  return request.method() === 'POST' && Boolean(request.headers()['next-action'])
-}
-
 async function saveReply(page: Page, item: Locator, text: string): Promise<void> {
-  const answered = page.waitForResponse(isActionResponse, { timeout: ACTION_MS })
-  await item.locator('[data-cw-action="reply-save"]').click()
-  expect((await answered).ok(), 'la acción de guardar la respuesta responde 200').toBe(true)
+  await submitAction(page, () => item.locator('[data-cw-action="reply-save"]').click())
   await expect(item.locator('[data-cw-author-reply]')).toContainText(text, { timeout: UPDATE_WINDOW_MS })
 }
 
