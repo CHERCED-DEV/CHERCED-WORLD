@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BackgroundIntensity } from '@/components/motion'
-import { isLocale, t } from '@/lib/i18n'
+import { isLocale, localizedPath, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import { CaseStudy } from '@/components/site/portfolio/CaseStudy'
-import type { CaseStudyLabels } from '@/components/site/portfolio/projects'
+import { caseStudyExtraLabels } from '@/components/site/portfolio/labels'
+import { caseStudyNeighbors, technologyCounts, type CaseStudyLabels } from '@/components/site/portfolio/projects'
 import { pageMetadata } from '@/components/site/metadata'
 import { getProject, getProjects } from '@/lib/content'
 
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CaseStudyPage({ params }: Props) {
   const { lang, project } = await resolve(params)
-  const dict = await getDictionary(lang, 'site')
+  const [dict, portfolio] = await Promise.all([getDictionary(lang, 'site'), getDictionary(lang, 'portfolio')])
   const labels: CaseStudyLabels = {
     context: t(dict, 'project.context'),
     role: t(dict, 'project.role'),
@@ -50,10 +51,22 @@ export default async function CaseStudyPage({ params }: Props) {
     newTab: t(dict, 'a11y.newTab'),
   }
 
+  const projects = getProjects()
+
   return (
     <>
       <BackgroundIntensity value="subtle" />
-      <CaseStudy project={project} lang={lang} labels={labels} />
+      <CaseStudy
+        project={project}
+        lang={lang}
+        labels={labels}
+        extras={{
+          labels: caseStudyExtraLabels(portfolio),
+          neighbors: caseStudyNeighbors(projects, project.id, lang),
+          usage: technologyCounts(projects),
+          portfolioHref: localizedPath(lang, '/portfolio'),
+        }}
+      />
     </>
   )
 }

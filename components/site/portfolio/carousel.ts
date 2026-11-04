@@ -1,5 +1,6 @@
 export type SlideProject = {
   id: string
+  order: number
   title: string
   summary: string
   technologies: string[]
@@ -10,6 +11,23 @@ export type SlideProject = {
 export function filterByTechnology<T extends { technologies: readonly string[] }>(items: readonly T[], tech: string | null): T[] {
   if (tech === null) return [...items]
   return items.filter((item) => item.technologies.includes(tech))
+}
+
+export type TechnologyUsage = { name: string; count: number }
+
+export function technologyUsage(items: readonly { technologies: readonly string[] }[], technologies: readonly string[]): TechnologyUsage[] {
+  const counts = new Map<string, number>()
+  for (const item of items) for (const tech of new Set(item.technologies)) counts.set(tech, (counts.get(tech) ?? 0) + 1)
+  return technologies
+    .map((name) => ({ name, count: counts.get(name) ?? 0 }))
+    .filter((usage) => usage.count > 0)
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'en'))
+}
+
+export function chipsFor(technologies: readonly string[], active: string | null, visible: number): { shown: string[]; rest: string[] } {
+  const ordered = active && technologies.includes(active) ? [active, ...technologies.filter((tech) => tech !== active)] : [...technologies]
+  const limit = ordered.length > visible + 1 ? visible : ordered.length
+  return { shown: ordered.slice(0, limit), rest: ordered.slice(limit) }
 }
 
 export function wrapIndex(index: number, length: number): number {
