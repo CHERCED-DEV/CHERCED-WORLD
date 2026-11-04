@@ -19,6 +19,7 @@ export type EffectName =
   | 'submitEmpty'
   | 'pressedToggle'
   | 'expandedToggle'
+  | 'disclosure'
   | 'hash'
   | 'mailto'
   | 'newTabInternal'
@@ -58,6 +59,7 @@ export const CONTROL_RULES: readonly ControlRule[] = [
   { kind: 'enviar formulario', match: 'form :is(button[type=submit], button:not([type]))', effect: 'submitEmpty', expect: 'vacío, señala el primer campo inválido sin salir' },
   { kind: 'botón con estado', match: 'button[aria-pressed]', effect: 'pressedToggle', expect: 'aria-pressed cambia' },
   { kind: 'botón desplegable', match: 'button[aria-expanded]', effect: 'expandedToggle', expect: 'aria-expanded cambia' },
+  { kind: 'desplegable', match: 'details > summary', effect: 'disclosure', expect: 'abre y cierra su details' },
   { kind: 'botón de diálogo', match: 'button[aria-haspopup="dialog"]', effect: 'dialog', expect: 'abre un diálogo con el foco dentro; Esc lo cierra' },
   { kind: 'botón de popover', match: 'button[popovertarget]', effect: 'popover', expect: 'abre el popover; Esc lo cierra', nested: true },
   { kind: 'ancla', match: 'a[href^="#"]', effect: 'hash', expect: 'el destino queda a la vista, no tapado por el header' },
@@ -602,6 +604,18 @@ const EFFECTS: Record<EffectName, Effect> = {
     if (!after.ok) fail(`aria-expanded sigue en ${before}`)
     await activate(target)
     return `aria-expanded ${before} → ${after.value}`
+  },
+
+  async disclosure({ target }) {
+    const open = () => target.evaluate((element) => (element.parentElement as HTMLDetailsElement).open)
+    const before = await open()
+    await activate(target)
+    const after = await settle(open, (value) => value !== before, 2000)
+    if (!after.ok) fail('el clic no abre ni cierra su details')
+    await activate(target)
+    const restored = await settle(open, (value) => value === before, 2000)
+    if (!restored.ok) fail('el segundo clic no lo devuelve a como estaba')
+    return before ? 'se cierra y se vuelve a abrir' : 'se abre y se cierra'
   },
 
   async hash({ page, target, control }) {
