@@ -13,7 +13,7 @@ import { getDictionary } from '@/lib/i18n/server'
 
 type Props = { params: Promise<{ lang: string; id: string }> }
 
-export const revalidate = 60
+export const revalidate = 3600
 
 export function generateStaticParams() {
   return postIds().map((id) => ({ id }))
