@@ -14,6 +14,7 @@ test.beforeEach(async ({ page, context, baseURL }, testInfo) => {
 
 test.describe('auditoría de interacción (US1, FR-201)', () => {
   for (const path of AUDIT_PAGES) {
+    // R0 (shell) hace pasar /es/privacy, /en/privacy ("Privacidad" no hace nada en su propia página) y /es/inbox ("Regresar" vuelve a la misma página)
     test(`${path}: cada control visible tiene un efecto verificable`, async ({ page, context }, testInfo) => {
       test.setTimeout(300_000)
       const audit = await auditPage(page, context, path, langOf(path))

@@ -216,6 +216,7 @@ test.use({ trace: 'off', launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars
 
 test.describe(`auditoría responsive (${MIN_WIDTH} a ${MAX_WIDTH} px, cada ${STEP} px)`, () => {
   for (const path of AUDIT_PAGES) {
+    // R4 hace pasar /es/blog/catalog: a 320 px el código en línea ("content/posts/<id>/<idioma>.md") desborda el viewport
     test(`${path}: sin scroll horizontal, objetivos ≥ ${MIN_TARGET} px, header sin solapes, texto sin recortes e imágenes sin deformar`, async ({ page }, testInfo) => {
       test.skip(testInfo.project.name !== 'desktop-chromium', 'solo en desktop-chromium; el viewport lo fija la prueba')
       test.setTimeout(180_000)
