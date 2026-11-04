@@ -40,7 +40,7 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
               {lobe.skills.map((skill) => (
                 <li key={skill.id} className={styles.fallbackSkill} data-cw-brain-skill={skill.id}>
                   {skill.icon ? (
-                    <Image src={skill.icon} alt="" width={22} height={22} sizes="22px" unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
+                    <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                   ) : (
                     <span className={styles.termIcon} aria-hidden="true" />
                   )}
