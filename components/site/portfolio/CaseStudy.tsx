@@ -4,7 +4,9 @@ import type { CSSProperties } from 'react'
 import type { Project } from '@/content/types'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { GlowOrb, Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
+import { Reveal } from '@/components/ui/Reveal'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
 import { fillTemplate } from './carousel'
@@ -141,7 +143,13 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
 
   return (
     <article className={styles.page} aria-labelledby="case-title" data-cw-case={project.id}>
-      <header className={styles.hero} data-orientation={landscape ? 'landscape' : 'portrait'} data-cw-glass="standard">
+      <header
+        className={styles.hero}
+        data-orientation={landscape ? 'landscape' : 'portrait'}
+        data-cw-glass="standard"
+        data-cw-light=""
+      >
+        <GlowOrb tone="accent" size="lg" x={landscape ? '50%' : '78%'} y={landscape ? '100%' : '50%'} />
         <div className={styles.heroText}>
           {neighbors ? (
             <p className={styles.eyebrow}>
@@ -174,12 +182,20 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           </h2>
           <ol className={styles.highlightList}>
             {highlights.map((text, index) => (
-              <li key={text} className={styles.highlight} data-cw-glass="subtle" style={{ '--cw-i': index } as CSSProperties}>
+              <Reveal
+                as="li"
+                key={text}
+                delay={index * 70}
+                className={styles.highlight}
+                data-cw-glass="subtle"
+                data-cw-light=""
+                style={{ '--cw-i': index } as CSSProperties}
+              >
                 <span className={styles.highlightIndex} aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <span className={styles.highlightText}>{text}</span>
-              </li>
+              </Reveal>
             ))}
           </ol>
         </section>
@@ -206,8 +222,8 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
             <p className={styles.stackIntro}>{extra.stackIntro}</p>
           </div>
           <ol className={styles.layers}>
-            {groups.map((group) => (
-              <li key={group.layer} className={styles.layer} data-layer={group.layer}>
+            {groups.map((group, index) => (
+              <Reveal as="li" key={group.layer} delay={index * 70} className={styles.layer} data-layer={group.layer}>
                 <p className={styles.layerName}>
                   <PortfolioIcon name={LAYER_ICONS[group.layer]} className={styles.layerIcon} />
                   {extra.layers[group.layer]}
@@ -225,15 +241,16 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
                     )
                   })}
                 </ul>
-              </li>
+              </Reveal>
             ))}
           </ol>
         </section>
       ) : null}
 
+      {neighbors ? <Hairline glint className={styles.pagerLine} /> : null}
       {neighbors ? (
         <nav className={styles.pager} aria-label={extra.pager} data-cw-case-pager="">
-          <Link href={neighbors.prev.href} className={styles.pagerLink} rel="prev" data-cw-case-prev={neighbors.prev.id}>
+          <Link href={neighbors.prev.href} className={styles.pagerLink} data-cw-light="" rel="prev" data-cw-case-prev={neighbors.prev.id}>
             <PortfolioIcon name="arrow-left" className={styles.pagerIcon} />
             <span className={styles.pagerText}>
               <span className={styles.pagerLabel}>{extra.prev}</span>
@@ -244,7 +261,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
             <PortfolioIcon name="grid" />
             <span>{extra.all}</span>
           </Link>
-          <Link href={neighbors.next.href} className={styles.pagerLink} data-align="end" rel="next" data-cw-case-next={neighbors.next.id}>
+          <Link href={neighbors.next.href} className={styles.pagerLink} data-cw-light="" data-align="end" rel="next" data-cw-case-next={neighbors.next.id}>
             <span className={styles.pagerText}>
               <span className={styles.pagerLabel}>{extra.next}</span>
               <span className={styles.pagerTitle}>{neighbors.next.title}</span>

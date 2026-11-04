@@ -36,7 +36,12 @@
 
 .hero {
   @include glass(standard);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  @include glass-light;
   position: relative;
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
@@ -64,7 +69,7 @@
 }
 
 .eyebrow {
-  @include site.label-caps(0.3em);
+  @include site.label-caps(var(--cw-tracking-eyebrow));
   color: var(--cw-fg-muted);
   font-size: var(--cw-text-xs);
   font-variant-numeric: tabular-nums;
@@ -117,7 +122,10 @@
 
 .highlight {
   @include glass(subtle);
+  @include glass-grain;
+  @include glass-light;
   position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--cw-space-3);
@@ -209,6 +217,10 @@
 
 .layers {
   @include glass(standard);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -273,6 +285,10 @@
   font-size: var(--cw-text-xs);
 }
 
+.pagerLine {
+  max-width: 1120px;
+}
+
 .pager {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -286,6 +302,9 @@
 
 .pagerLink {
   @include glass(subtle);
+  @include glass-grain;
+  @include glass-light;
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--cw-space-4);
@@ -331,6 +350,7 @@
 
 .pagerAll {
   @include glass(subtle);
+  @include glass-grain;
   display: inline-flex;
   align-items: center;
   justify-content: center;

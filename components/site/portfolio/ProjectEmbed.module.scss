@@ -36,6 +36,8 @@
 
 .frame {
   @include glass(strong);
+  @include glass-grain;
+  @include glass-edge;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -303,6 +305,8 @@
 
 .posterBody {
   @include glass(strong);
+  @include glass-grain;
+  @include glass-depth;
   display: flex;
   flex-direction: column;
   align-items: center;

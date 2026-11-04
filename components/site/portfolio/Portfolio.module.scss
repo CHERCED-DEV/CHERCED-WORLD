@@ -255,13 +255,18 @@
   display: flex;
   justify-content: center;
   min-width: 0;
-  padding: var(--cw-space-4) 14px;
+  padding: var(--cw-space-6) 14px;
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
 
 .slideCard {
   @include glass(standard);
+  @include glass-grain;
+  @include glass-depth;
+  @include glass-edge;
+  @include glass-light;
+  position: relative;
   --media-h: clamp(180px, 38svh, 340px);
   container-type: inline-size;
   display: flex;
@@ -310,11 +315,21 @@
 }
 
 .slideIndex {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-3);
   color: var(--cw-fg-muted);
   font-size: var(--cw-text-xs);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.3em;
+  letter-spacing: var(--cw-tracking-eyebrow);
+
+  &::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--cw-graphic-accent);
+  }
 }
 
 .slideTitle {
@@ -364,6 +379,7 @@
 
 .controls {
   @include glass(strong);
+  @include glass-grain;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: stretch;

@@ -232,6 +232,7 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
               <article
                 className={styles.slideCard}
                 data-cw-glass="standard"
+                data-cw-light=""
                 data-orientation={ratio >= 1 ? 'landscape' : 'portrait'}
                 style={{ '--cw-media-ratio': ratio.toFixed(4) } as CSSProperties}
               >

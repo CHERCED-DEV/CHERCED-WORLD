@@ -55,6 +55,7 @@
 
 .zoomBadge {
   @include glass(strong);
+  @include glass-grain;
   display: grid;
   place-items: center;
   width: 40px;
