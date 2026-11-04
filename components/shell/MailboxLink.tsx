@@ -45,7 +45,7 @@ export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLab
 
   return (
     <Link
-      href={`/${lang}/inbox`}
+      href={`/${lang}/contactMe`}
       prefetch={false}
       className={cx(controls.iconButton, controls.mailbox)}
       aria-label={mailboxLabel(unread, labels)}
