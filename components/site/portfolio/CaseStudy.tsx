@@ -141,7 +141,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
 
   return (
     <article className={styles.page} aria-labelledby="case-title" data-cw-case={project.id}>
-      <header className={styles.hero} data-orientation={landscape ? 'landscape' : 'portrait'}>
+      <header className={styles.hero} data-orientation={landscape ? 'landscape' : 'portrait'} data-cw-glass="standard">
         <div className={styles.heroText}>
           {neighbors ? (
             <p className={styles.eyebrow}>

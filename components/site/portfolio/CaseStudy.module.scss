@@ -35,10 +35,17 @@
 }
 
 .hero {
+  @include glass(standard);
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: var(--cw-space-6);
+  padding: var(--cw-space-6) var(--cw-space-5);
+
+  @include bp.up(md) {
+    padding: var(--cw-space-7);
+  }
 
   @include bp.up(lg) {
     &[data-orientation='portrait'] {
