@@ -16,3 +16,13 @@ export function themedPortrait(image: ImageRef): ThemedPortrait {
 export const PORTRAIT_SIZES = '(min-width: 992px) 400px, (min-width: 768px) 340px, 78vw'
 
 export const LIGHT_SCHEME_QUERY = '(prefers-color-scheme: light)'
+
+export const PORTRAIT_WIDTHS = [480, 720, 1080] as const
+
+export function avifVariant(src: string, width: number): string {
+  return src.replace(/\.[a-z0-9]+$/i, `-${width}.avif`)
+}
+
+export function avifSrcSet(src: string): string {
+  return PORTRAIT_WIDTHS.map((width) => `${avifVariant(src, width)} ${width}w`).join(', ')
+}
