@@ -16,6 +16,20 @@
   --cw-glass-solid-subtle-bg: #0b0b0b;
   --cw-glass-solid-standard-bg: #111111;
   --cw-glass-solid-strong-bg: #161616;
+
+  --cw-glass-edge-highlight: rgb(255 255 255 / 0.55);
+  --cw-glass-edge-soft: rgb(255 255 255 / 0.16);
+  --cw-glass-edge-shade: rgb(255 255 255 / 0.02);
+  --cw-glass-spot: rgb(255 255 255 / 0.78);
+  --cw-glass-spot-accent: rgb(37 237 158 / 0.42);
+  --cw-glass-spot-rest: 0.6;
+  --cw-glass-sheen: rgb(255 255 255 / 0.014);
+  --cw-glass-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 -1.9'/%3E%3C/filter%3E%3Cfilter id='b' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 4 0 0 0 -2.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.05'/%3E%3Crect width='100%25' height='100%25' filter='url(%23b)' opacity='0.01'/%3E%3C/svg%3E");
+  --cw-glass-depth: 0 1px 1px rgb(0 0 0 / 0.35), 0 12px 28px -10px rgb(0 0 0 / 0.55), 0 36px 80px -28px rgb(0 0 0 / 0.7),
+    inset 0 1px 0 rgb(255 255 255 / 0.1), inset 0 -1px 0 rgb(0 0 0 / 0.45), inset 0 -28px 48px -36px rgb(0 0 0 / 0.6);
+  --cw-graphic-line: rgb(255 255 255 / 0.07);
+  --cw-graphic-line-strong: rgb(255 255 255 / 0.24);
+  --cw-graphic-glow: rgb(37 237 158 / 0.14);
 }
 
 @mixin light-theme {
@@ -36,6 +50,20 @@
   --cw-glass-solid-subtle-bg: #fafafa;
   --cw-glass-solid-standard-bg: #f4f4f4;
   --cw-glass-solid-strong-bg: #eeeeee;
+
+  --cw-glass-edge-highlight: rgb(255 255 255 / 1);
+  --cw-glass-edge-soft: rgb(255 255 255 / 0.6);
+  --cw-glass-edge-shade: rgb(0 0 0 / 0.05);
+  --cw-glass-spot: rgb(0 0 0 / 0.4);
+  --cw-glass-spot-accent: rgb(37 237 158 / 0.6);
+  --cw-glass-spot-rest: 0;
+  --cw-glass-sheen: rgb(255 255 255 / 0.5);
+  --cw-glass-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 -1.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.05'/%3E%3C/svg%3E");
+  --cw-glass-depth: 0 1px 1px rgb(0 0 0 / 0.05), 0 12px 28px -12px rgb(0 0 0 / 0.14), 0 36px 80px -32px rgb(0 0 0 / 0.2),
+    inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 -1px 0 rgb(0 0 0 / 0.05);
+  --cw-graphic-line: rgb(0 0 0 / 0.07);
+  --cw-graphic-line-strong: rgb(0 0 0 / 0.22);
+  --cw-graphic-glow: rgb(37 237 158 / 0.22);
 }
 
 @mixin solid-glass {
@@ -92,6 +120,41 @@
   --cw-header-h: 4rem;
   --cw-container-max: 1248px;
   --cw-intro-accent: #25ed9e;
+
+  --cw-display-sm: clamp(1.75rem, 1.25rem + 2.5vw, 2.5rem);
+  --cw-display-md: clamp(2.125rem, 1.25rem + 4.2vw, 3.75rem);
+  --cw-display-lg: clamp(2.5rem, 1rem + 6.4vw, 5.25rem);
+  --cw-display-xl: clamp(2.75rem, 0.5rem + 9vw, 7.5rem);
+  --cw-leading-display: 0.98;
+  --cw-leading-tight: 1.1;
+  --cw-leading-snug: 1.25;
+  --cw-leading-body: 1.6;
+  --cw-tracking-display: -0.025em;
+  --cw-tracking-label: 0.12em;
+  --cw-tracking-eyebrow: 0.28em;
+  --cw-measure: 68ch;
+  --cw-section-gap: clamp(3rem, 2rem + 4vw, 6rem);
+
+  --cw-duration-instant: 80ms;
+  --cw-duration-page: 320ms;
+  --cw-duration-reveal: 680ms;
+  --cw-duration-ambient: 9s;
+  --cw-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --cw-ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --cw-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --cw-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --cw-stagger: 70ms;
+  --cw-reveal-distance: 14px;
+  --cw-press-scale: 0.97;
+  --cw-hover-lift: -2px;
+
+  --cw-glass-edge-width: 1px;
+  --cw-glass-edge-angle: 210deg;
+  --cw-glass-spot-size: 240px;
+  --cw-glass-light-size: 520px;
+  --cw-glass-grain-size: 160px;
+  --cw-graphic-accent: var(--cw-intro-accent);
+  --cw-graphic-cell: 56px;
 
   @include dark-theme;
 }

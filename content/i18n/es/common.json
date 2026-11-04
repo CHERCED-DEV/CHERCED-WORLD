@@ -43,5 +43,8 @@
   "form.code.invalid": "Revisa el código",
   "privacy.consent": "Autorizo el tratamiento de mis datos personales según la {privacyPolicy}.",
   "privacy.policyLink": "política de privacidad",
-  "privacy.required": "Para enviar este formulario necesitas aceptar la política de privacidad."
+  "privacy.required": "Para enviar este formulario necesitas aceptar la política de privacidad.",
+  "mailbox.label": "Buzón",
+  "mailbox.unreadOne": "1 mensaje sin leer",
+  "mailbox.unreadMany": "{count} mensajes sin leer"
 }

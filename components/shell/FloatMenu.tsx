@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
+import { GridLines, Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n/config'
 import styles from './FloatMenu.module.scss'
@@ -35,6 +36,8 @@ export function FloatMenu({ lang, items, labels }: FloatMenuProps) {
 
   return (
     <div id={FLOAT_MENU_ID} ref={ref} popover="auto" className={styles.menu} data-cw-glass="strong" data-cw-float-menu="">
+      <GridLines fade="radial" />
+      <Hairline glint className={styles.topLine} />
       <div className={styles.top}>
         <button
           type="button"

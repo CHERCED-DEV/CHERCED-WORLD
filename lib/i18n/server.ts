@@ -14,6 +14,8 @@ const loaders: Record<Locale, Record<Namespace, Loader>> = {
     privacy: () => import('@/content/i18n/es/privacy.json'),
     blog: () => import('@/content/i18n/es/blog.json'),
     experience: () => import('@/content/i18n/es/experience.json'),
+    home: () => import('@/content/i18n/es/home.json'),
+    portfolio: () => import('@/content/i18n/es/portfolio.json'),
   },
   en: {
     common: () => import('@/content/i18n/en/common.json'),
@@ -24,6 +26,8 @@ const loaders: Record<Locale, Record<Namespace, Loader>> = {
     privacy: () => import('@/content/i18n/en/privacy.json'),
     blog: () => import('@/content/i18n/en/blog.json'),
     experience: () => import('@/content/i18n/en/experience.json'),
+    home: () => import('@/content/i18n/en/home.json'),
+    portfolio: () => import('@/content/i18n/en/portfolio.json'),
   },
 }
 
