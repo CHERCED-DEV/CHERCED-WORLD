@@ -174,7 +174,7 @@ test.describe('responsive del home (320 a 2560 px, cada 40 px)', () => {
         await page.setViewportSize({ width, height: width < 768 ? 844 : 900 })
         await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
         await page.waitForTimeout(60)
-        const found = await page.evaluate((width) => {
+        const found = await page.evaluate(() => {
           const issues: string[] = []
           const lines = (element: Element) => {
             const range = document.createRange()
@@ -218,7 +218,7 @@ test.describe('responsive del home (320 a 2560 px, cada 40 px)', () => {
             if (rect.width > 0 && (rect.width < 24 || rect.height < 24)) issues.push(`objetivo ${Math.round(rect.width)}x${Math.round(rect.height)}`)
           }
           return issues
-        }, width)
+        })
         findings.push(...found.map((detail) => ({ width, detail })))
       }
       expect(findings, findings.map((finding) => `${finding.width}px: ${finding.detail}`).join('\n')).toEqual([])
