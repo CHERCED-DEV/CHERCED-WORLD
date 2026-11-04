@@ -1,4 +1,4 @@
-import { expect, test, type Browser, type BrowserContext, type Locator, type Page } from '@playwright/test'
+import { expect, test, type Browser, type BrowserContext, type Locator, type Page, type Response } from '@playwright/test'
 import { fillContact, hideTab, newVisitor, openContact, renderJustNow, sendContact, showTab, uniqueToken, waitMinimumFill, type ContactValues } from './support/helpers'
 import { INBOX_COUNT_PATH, inboxCountProblem, inspectBody, scanPublicSurface, type Finding } from './support/privacy'
 import { startIsolatedServer, type IsolatedServer } from './support/server'
@@ -7,6 +7,7 @@ const FIRST_PASSWORD = `primera-clave-${uniqueToken()}`
 const SECOND_PASSWORD = `segunda-clave-${uniqueToken()}`
 const SETUP_LOG = /Código de configuración inicial: ([A-Z0-9]{4}-[A-Z0-9]{4}) \(vence /
 const UPDATE_WINDOW_MS = 10_000
+const ACTION_MS = 30_000
 const PHONE = '+57 311 987 6543'
 
 let server: IsolatedServer
@@ -94,6 +95,18 @@ async function seedComment(browser: Browser, postPath: string, userName: string)
   await expect(dialog.locator('[data-cw-comment-status="success"]')).toBeVisible()
   seeded.comments.push(values)
   return values
+}
+
+function isActionResponse(response: Response): boolean {
+  const request = response.request()
+  return request.method() === 'POST' && Boolean(request.headers()['next-action'])
+}
+
+async function saveReply(page: Page, item: Locator, text: string): Promise<void> {
+  const answered = page.waitForResponse(isActionResponse, { timeout: ACTION_MS })
+  await item.locator('[data-cw-action="reply-save"]').click()
+  expect((await answered).ok(), 'la acción de guardar la respuesta responde 200').toBe(true)
+  await expect(item.locator('[data-cw-author-reply]')).toContainText(text, { timeout: UPDATE_WINDOW_MS })
 }
 
 async function publicComment(page: Page, path: string, text: string): Promise<Locator> {
@@ -346,8 +359,7 @@ test('la moderación publica, responde como autor, rechaza y elimina, sin expone
   const item = commentItem(page, approved.userName)
   await item.locator('[data-cw-action="reply"]').click()
   await item.getByLabel('Respuesta del autor').fill('Gracias por leer.')
-  await item.locator('[data-cw-action="reply-save"]').click()
-  await expect(item.locator('[data-cw-author-reply]')).toContainText('Gracias por leer.')
+  await saveReply(page, item, 'Gracias por leer.')
 
   const published = await publicComment(reader.page, post, approved.comment)
   await expect(published).toContainText(approved.userName)
@@ -370,8 +382,7 @@ test('la moderación publica, responde como autor, rechaza y elimina, sin expone
 
   await item.getByRole('button', { name: 'Editar respuesta' }).click()
   await item.getByLabel('Respuesta del autor').fill('Gracias por leer, de verdad.')
-  await item.locator('[data-cw-action="reply-save"]').click()
-  await expect(item.locator('[data-cw-author-reply]')).toContainText('Gracias por leer, de verdad.')
+  await saveReply(page, item, 'Gracias por leer, de verdad.')
 
   await item.locator('[data-cw-action="reject"]').click()
   await expect(item).toHaveCount(0)
@@ -393,8 +404,7 @@ test('la moderación publica, responde como autor, rechaza y elimina, sin expone
   await expect(commentItem(page, approved.userName).locator('[data-cw-author-reply]')).toHaveCount(0)
   await commentItem(page, approved.userName).locator('[data-cw-action="reply"]').click()
   await commentItem(page, approved.userName).getByLabel('Respuesta del autor').fill('Respuesta final del autor.')
-  await commentItem(page, approved.userName).locator('[data-cw-action="reply-save"]').click()
-  await expect(commentItem(page, approved.userName).locator('[data-cw-author-reply]')).toContainText('Respuesta final del autor.')
+  await saveReply(page, commentItem(page, approved.userName), 'Respuesta final del autor.')
 
   await page.locator('[data-cw-filter="rejected"]').click()
   await commentItem(page, rejected.userName).locator('[data-cw-action="delete"]').click()
