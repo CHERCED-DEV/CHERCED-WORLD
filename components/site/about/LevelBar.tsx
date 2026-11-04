@@ -7,7 +7,7 @@ export function LevelBar({ value, label }: { value: number; label: string }) {
   return (
     <div className={styles.level}>
       <span className={styles.track} data-cw-glass="subtle" aria-hidden="true">
-        <span className={styles.fill} style={{ '--cw-level': `${level}%` } as CSSProperties} />
+        <span className={styles.fill} style={{ '--cw-level': level / 100 } as CSSProperties} />
       </span>
       <span className={styles.levelValue}>{label}</span>
     </div>
