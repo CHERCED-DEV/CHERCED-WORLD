@@ -23,11 +23,11 @@ Un servicio Python en un servidor propio también es infraestructura nueva para 
 | # | Experimento | Qué hace | Camino | Cubre de la idea |
 |---|---|---|---|---|
 | V1 | Transcriptor | Graba o sube un audio y obtiene el texto con marcas de tiempo; exporta `.txt` y `.srt` | A: Whisper con Transformers.js | App 1 |
-| V4 | Navega hablando | "Llévame al blog", "cambia a tema claro", "descarga el CV": la voz se vuelve un comando de la paleta (004, FR-451) | A, con Whisper local. La Web Speech API manda el audio a un servicio del navegador (research §2), así que no cumple "nada sale del dispositivo" | — |
+| V4 | Navega hablando | "Llévame al blog", "cambia a tema claro", "abre mi CV": la voz se vuelve un comando de la paleta (004, FR-451) | A, con Whisper local. La Web Speech API manda el audio a un servicio del navegador (research §2), así que no cumple "nada sale del dispositivo" | — |
 | A2 | Anatomía de un plugin | Explorador de un plugin de Claude Code: `plugin.json`, skills (`SKILL.md`), comandos, hooks y MCP. Al tocar cada archivo, explica para qué sirve | A: estático. Ver P-3c | Plugins por profesión |
 | A3 | Crea tu propio skill | Un formulario que genera un `SKILL.md` válido para descargar | A | Plugins por profesión |
 | R1 | Simulador de sagas | Reservas vuelo, hotel y auto; en mitad del cobro "matas" un servicio y ves cómo se reescribe la compensación | A: simulación, sin IA | — |
-| C5 | `llms.txt` | Un archivo para que las IAs lean bien el portafolio | A: archivo estático | — |
+| C5 | `llms.txt` | Un archivo para que las IAs lean bien el portafolio | A: archivo estático. Se especifica en la 004 (US11, FR-489a), porque es un cambio del sitio | — |
 
 ## Ola 2
 
@@ -37,7 +37,7 @@ Un servicio Python en un servidor propio también es infraestructura nueva para 
 | A4 | Vitrinas por profesión | "Despacho": un caso ficticio convertido en hechos con prueba y cronología. "Obra": una bitácora de ejemplo convertida en cantidades y un estimado en COP, con Pyodide | A·B: A con resultados pregenerados; B en vivo. Solo datos inventados | Apps 3 y 4 |
 | V2 | Texto → voz | Escribe y escucha con varias voces en español e inglés | A·B: A con la Web Speech API; B con voces neuronales | — |
 | V3 | Escuchar los posts | Cada post tiene versión en audio. Es la base de "Escuchar este post" (005, US5) | A·B: A con síntesis en vivo en el navegador; B con audio pregenerado. Pregenerar exige un motor en el build: es B, salvo que se demuestre un motor sin llave | — |
-| A1 | Servidor MCP del portafolio | Cualquiera conecta su Claude al sitio y pregunta por proyectos, skills, posts y experiencia (`get_projects`, `get_skills`, `get_posts`, `get_experience`) | **[confirmar]**: es una ruta de solo lectura en el mismo Next.js, sin llave de IA, y podría caber en la constitución sin la excepción B | — |
+| A1 | Servidor MCP del portafolio | Cualquiera conecta su Claude al sitio y pregunta por proyectos, skills, posts y experiencia (`get_projects`, `get_skills`, `get_posts`, `get_experience`). Consume el registro de capacidades de la 004 (FR-485), el mismo de WebMCP | **[confirmar]**: es una ruta de solo lectura en el mismo Next.js, sin llave de IA, y podría caber en la constitución sin la excepción B. Como entrada pública, necesita límite de frecuencia (principio III) | — |
 
 ## Ola 3: solo si el autor aprueba el camino B
 
@@ -65,9 +65,12 @@ El handoff no les asigna ola. Se priorizan al especificar la 003.
 | C1 | `ask` en el terminal | En `~/camilo/brain` (004, FR-461): `ask "¿por qué Angular y no React?"` responde con A5 | A, depende de A5 |
 | C2 | "Explícamelo como…" | Un mismo proyecto explicado para un reclutador, un CTO o una mamá | A·B: A con textos escritos a mano; B generado |
 | C3 | Haiku del commit | Pegas un diff y sale un mensaje de commit serio y un haiku | B |
+| A13 | Este sitio es agent-ready (WebMCP) | Tarjeta que lista en vivo las herramientas WebMCP que registra el sitio (004, US11), con nombre, descripción y esquema, e instrucciones para verlas en las DevTools de Chrome. Según P-3i, también permite ejecutarlas y ver la entrada y la salida en JSON. Etiqueta `experiment` | A: corre en el navegador y reutiliza el registro de la 004. Sin servidor, llave ni variable. Si el navegador no tiene WebMCP, la tarjeta lo dice y muestra la lista desde el mismo registro |
 | C4 | Konami code | Las partículas del fondo se reordenan y dibujan el logo o el diagrama de Synergos. No cambia la animación de siempre (D1) | A |
 
-**Total**: 27 experimentos (6 en la ola 1, 5 en la ola 2, 5 en la ola 3 y 11 en el backlog).
+**Total**: 28 experimentos (6 en la ola 1, 5 en la ola 2, 5 en la ola 3 y 12 en el backlog). Los 27 del handoff
+original, más A13, que salió de la propuesta WebMCP del 2026-11-04. Esa propuesta recomienda hacer el registro de
+capacidades (004, US11) antes que el AI Lab.
 
 **Las cinco apps de la idea quedan cubiertas**: V1 es la app 1, A12 la 2, A4 la 3 y la 4, y A5 la 5.
 
@@ -98,6 +101,9 @@ El copy base ES/EN del laboratorio está en el handoff del autor y pasa a la spe
 
 - **004**: los comandos de voz (V4) y "Abrir el AI Lab" usan el registro de comandos de la paleta (FR-451); C1 usa el
   terminal (FR-461); las tarjetas usan el componente ADR (FR-442).
+- **004, US11**: el registro de capacidades y el adaptador WebMCP son del sitio. A13 los muestra y A1 los consume.
+  `llms.txt` (C5) también sale de la 004.
+- **004, Servicios**: la tarjeta "Asistentes de IA para tu profesión" ofrece "Probar" cuando exista A4 (Despacho).
 - **005**: "Escuchar este post" depende de V3.
 - **002, T225**: Azure AI Foundry, Semantic Kernel y RAG están en "Aprendiendo ahora". Solo pasan a skills si A5 o A12
   los usan de verdad y el autor lo confirma.
@@ -114,3 +120,4 @@ El copy base ES/EN del laboratorio está en el handoff del autor y pasa a la spe
 | P-3f | ¿Qué sesión de agentes se usa en A10, y quién la limpia de datos? **[confirmar]** | Handoff |
 | P-3g | ¿El AI Lab es también el proyecto con el que el autor aprende RAG, Semantic Kernel y Azure AI Foundry (A5, A12)? | Handoff |
 | P-3h | ¿El AI Lab entra al menú entre Portafolio y Blog, en `/[lang]/ai-lab`? | Handoff |
+| P-3i | ¿La vitrina A13 deja ejecutar las herramientas desde la página, o solo las lista? | Propuesta WebMCP, pregunta 2 |

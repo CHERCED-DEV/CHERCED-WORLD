@@ -45,7 +45,8 @@ También existe un camino mixto: A por defecto, y B solo para 2 y 3 si el autor 
 
 ## Catálogo de experimentos (2026-11-04)
 
-El handoff del autor del 2026-11-04 propone 27 experimentos agrupados en tres olas, más un backlog. El resumen, con la
+El handoff del autor del 2026-11-04 propone 27 experimentos agrupados en tres olas, más un backlog. La propuesta
+WebMCP del mismo día suma un experimento más (A13, "Este sitio es agent-ready"). El resumen, con la
 etiqueta de camino A o B de cada uno, está en [catalogo.md](catalogo.md).
 
 - **La decisión A/B sigue abierta.** El catálogo no la toma: solo marca qué exige cada experimento.

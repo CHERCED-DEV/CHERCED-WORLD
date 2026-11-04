@@ -86,6 +86,8 @@ criterio de arquitecto con evidencia. Es contenido y detalles nuevos sobre el si
 - Q: ¿Hero nuevo directo o con el guiño del tachado? → A: con el guiño.
 - Q: ¿Easter egg "Uncle Bob's nephew" en el footer? → A: sí.
 - Q: ¿Se quita el ícono del buzón del header? → A: no. Se queda y lleva a Contacto (002, US7).
+- Q: ¿Qué pasa con Servicios? → A: se rehace (D10). Reemplaza lo que proponía la auditoría original (US1b).
+- Q: ¿Sitio listo para agentes con WebMCP? → A: el autor aprobó la dirección. Va como US11, con la vitrina en el AI Lab.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -111,28 +113,74 @@ página pública.
    contenido.md §1.
 3. **Given** el Portafolio, **When** carga, **Then** la intro es un solo párrafo que explica que los proyectos de
    2022 y 2023 vienen de bootcamps y que los recientes muestran cómo trabaja hoy.
-4. **Given** Servicios, **When** carga, **Then** hay tres tarjetas: Arquitectura, Desarrollo y Modernización.
+4. **Given** Servicios, **When** carga, **Then** cumple US1b.
+
+---
+
+### User Story 1b - Servicios: me meto en tu proceso (Priority: P1)
+
+Decisión D10 del autor: la página de Servicios se rehace. Hoy ofrece "hacer un sitio web" (Diseño, Desarrollo y
+Mantenimiento), la oferta de un freelance de 2023. La página nueva explica que el autor entra en el proceso
+profesional del cliente para mejorarlo de tres maneras:
+
+- con un harness de IA hecho para su profesión;
+- con fábricas de software enfocadas en el core de su negocio, con las skills que el cliente prefiera;
+- optimizando los procesos que el cliente repite.
+
+Dice para quién es cada servicio, qué recibe el cliente, cómo trabaja el autor y qué dudas suele haber. El copy está
+en contenido.md §5.
+
+**Why this priority**: es la página que convierte una visita en un cliente, y hoy no dice nada de lo que el autor
+hace y vende.
+
+**Independent Test**: recorrer `/es/services` y `/en/services` con y sin JS, con teclado y con movimiento reducido.
+Luego pulsar "Quiero esto" en cada tarjeta y comprobar el formulario de Contacto.
+
+**Acceptance Scenarios**:
+
+1. **Given** Servicios, **When** carga, **Then** se ven en orden siete bloques: hero, para quién, servicios, cómo
+   trabajo, casos, preguntas frecuentes y CTA final.
+   - El `h1` dice "TU OFICIO, CON UN EQUIPO DE AGENTES A LA MEDIDA" / "YOUR CRAFT, WITH A TAILOR-MADE TEAM OF AGENTS".
+   - El botón del hero dice "Cuéntame tu proceso" y lleva al formulario.
+2. **Given** "Para quién", **When** se lee, **Then** hay tres perfiles: profesionales independientes, empresas y
+   equipos de ingeniería.
+3. **Given** los servicios, **When** se ven, **Then** hay cinco tarjetas numeradas del 01 al 05:
+   - asistentes de IA para tu profesión;
+   - fábricas de software a la medida;
+   - optimización de procesos con IA;
+   - arquitectura y modernización;
+   - desarrollo de producto.
+
+   Cada una dice qué es, para quién y qué recibes. Ícono, número y título quedan siempre a la misma altura.
+4. **Given** una tarjeta, **When** se pasa el puntero, se toca o se pulsa Enter, **Then** muestra su reverso, "Qué
+   recibes". Con movimiento reducido, cambia sin girar. Sin JS, las dos caras se leen completas, una debajo de la otra.
+5. **Given** "Cómo trabajo", **When** entra en pantalla, **Then** los cinco pasos se iluminan uno tras otro en
+   `#25ED9E`, y debajo se leen los principios. Con movimiento reducido o sin JS, se ven todos encendidos.
+6. **Given** el botón "Quiero esto" de una tarjeta, **When** se activa, **Then** se abre Contacto con "¿Qué te
+   interesa?" preseleccionado en ese servicio. Funciona sin JS.
+7. **Given** las preguntas frecuentes, **When** se abren, **Then** cada una es un disclosure accesible. Una pregunta
+   cuya respuesta sigue sin confirmar (P-412) no se publica.
+8. **Given** la tarjeta "Asistentes de IA para tu profesión", **When** existe la vitrina "Despacho" del AI Lab (003,
+   A4), **Then** la tarjeta ofrece "Probar" y lleva a esa vitrina. Si no existe, el botón no aparece.
 
 ---
 
 ### User Story 2 - El CV a un clic (Priority: P1)
 
-Quien visita el sitio puede bajar el CV oficial desde el hero, desde "Sobre mí" y desde Contacto, o desde la
-paleta de comandos.
+Quien visita el sitio llega al CV oficial desde el hero, desde "Sobre mí" y desde Contacto, o desde la paleta de
+comandos. El CV está en el perfil de LinkedIn del autor, en Destacados. El sitio no sirve el PDF (P-406, resuelta).
 
-**Why this priority**: es lo primero que busca un reclutador, y hoy no hay forma de bajarlo.
+**Why this priority**: es lo primero que busca un reclutador, y hoy el sitio no lo ofrece.
 
-**Independent Test**: activar cada botón en ES y EN y comprobar que el archivo descargado es el PDF oficial.
+**Independent Test**: activar cada enlace en ES y EN y comprobar que abre el perfil de LinkedIn en una pestaña nueva.
 
 **Acceptance Scenarios**:
 
-1. **Given** el hero, "Quién soy" o Contacto, **When** se activa "Descargar CV (PDF)", **Then** se descarga
-   `Camilo_Hernandez_CV.pdf` sin salir de la página.
-2. **Given** la versión en español, **When** se ve el botón, **Then** avisa que el CV está en inglés y muestra su
-   peso.
-3. **Given** la paleta, **When** se escribe `> cv` y se pulsa Enter, **Then** se descarga el mismo archivo.
-4. **Given** el índice de búsqueda o el asistente, **When** se les pregunta algo, **Then** no responden con el
-   contenido del PDF: solo ofrecen el enlace.
+1. **Given** el hero, "Quién soy" o Contacto, **When** se activa "Ver mi CV en LinkedIn", **Then** se abre el perfil
+   público de LinkedIn en una pestaña nueva.
+2. **Given** un lector de pantalla, **When** enfoca el enlace, **Then** anuncia que abre LinkedIn en una pestaña nueva.
+3. **Given** la paleta, **When** se escribe `> cv` y se pulsa Enter, **Then** se abre el mismo enlace.
+4. **Given** el índice de búsqueda o el asistente, **When** se les pregunta por el CV, **Then** solo ofrecen el enlace.
 
 ---
 
@@ -230,7 +278,7 @@ de comandos que empieza con `>` y hay atajos globales de una tecla, que se puede
 
 1. **Given** la paleta, **When** se escribe "saga", "Angular" o "Synergos", **Then** aparecen habilidades y
    proyectos, y al elegir una habilidad se abre "Lo que sé" con su lóbulo activo.
-2. **Given** la paleta, **When** se escribe `>`, **Then** solo se listan comandos: descargar el CV, copiar el correo,
+2. **Given** la paleta, **When** se escribe `>`, **Then** solo se listan comandos: ver el CV en LinkedIn, copiar el correo,
    cambiar el tema, cambiar el idioma, preguntarle al portafolio y ver los atajos. Los comandos de otras specs
    ("abrir el AI Lab", "escuchar este post") aparecen solo cuando su función existe.
 3. **Given** cualquier página, con el foco fuera de un campo de texto, **When** se pulsa `/`, **Then** se abre la
@@ -337,9 +385,48 @@ Una página `/now` cuenta qué construye, qué aprende y qué prepara el autor e
 
 ---
 
+### User Story 11 - Un sitio listo para agentes (Priority: P3)
+
+Idea aprobada por el autor como dirección el 2026-11-04. Quien visita el sitio con un agente de IA en el navegador
+recibe herramientas declaradas con WebMCP: buscar en el portafolio, leer un caso, la experiencia o las skills, listar
+posts, abrir el CV, cambiar idioma o tema y preparar un mensaje de contacto. El agente ya no tiene que adivinar dónde
+hacer clic. Las capacidades se definen una sola vez, y las usan la paleta, el asistente, WebMCP y `llms.txt`.
+
+**Encaje y constitución**: es un cambio del sitio, así que va en la 004. La vitrina que lo muestra va al AI Lab
+(catálogo 003, A13). Todo corre en el navegador, o es un archivo estático del build: no hay servidor, llave ni variable
+nueva. Cabe en la constitución sin excepción. El servidor MCP remoto (003, A1) sigue aparte y en [confirmar].
+
+**Why this priority**: WebMCP es un borrador experimental del W3C cuya API cambia de nombre, así que no bloquea nada.
+El registro de capacidades, en cambio, también mejora la paleta y el asistente.
+
+**Independent Test**:
+- Unitarias de cada capacidad con su esquema.
+- E2E con la API habilitada en Chromium. La versión de Playwright y el flag se verifican en el plan.
+- En un navegador sin WebMCP, comprobar que no cambia nada.
+
+**Acceptance Scenarios**:
+
+1. **Given** un navegador con WebMCP, **When** la página está interactiva, **Then** quedan registradas las herramientas de
+   FR-487, con nombre, descripción en el idioma activo y esquema de entrada.
+2. **Given** `search_portfolio` con `{ "query": "sagas" }`, **When** el agente la ejecuta, **Then** recibe títulos,
+   resúmenes y URLs desde la misma fuente que la paleta.
+3. **Given** `draft_contact_message`, **When** el agente la ejecuta, **Then** el formulario de Contacto queda lleno. El
+   mensaje no se envía, el checkbox de privacidad queda sin marcar y Enviar lo pulsa la persona.
+4. **Given** un navegador sin WebMCP, **When** carga cualquier página, **Then** no se registra nada, no hay errores en
+   consola y el rendimiento no cambia.
+5. **Given** `/llms.txt`, **When** se pide, **Then** es un archivo estático generado en el build desde los mismos datos,
+   con solo información pública y enlaces a ES y EN.
+
+---
+
 ### Edge Cases
 
-- Falta el PDF del CV o su peso no coincide con el que dice el botón: una prueba hace fallar el build.
+- Contacto con `?servicio=` desconocido o manipulado: el campo "¿Qué te interesa?" queda sin preselección y el
+  servidor rechaza cualquier valor fuera de la lista.
+- Una tarjeta de servicio con reverso en pantalla táctil: tocarla gira la tarjeta, y "Quiero esto" sigue siendo un
+  botón propio, no el toque de la tarjeta.
+- El navegador no expone WebMCP, o lo expone con otro nombre: no se registra nada, no hay errores en consola y el sitio
+  funciona igual.
 - El navegador niega el portapapeles o no tiene la Clipboard API: el toast de error muestra el correo para copiarlo
   a mano (reusa `palette.copyFailed`).
 - El navegador no soporta View Transitions: la navegación funciona igual, sin la transición.
@@ -369,9 +456,42 @@ Una página `/now` cuenta qué construye, qué aprende y qué prepara el autor e
 - **FR-404**: La intro del Portafolio MUST ser el párrafo único de contenido.md §4.
 - **FR-405**: El Portafolio MUST seguir el orden de contenido.md §4. Cada proyecto MUST tener una época (`2024–2026` o
   `2022–2023`), visible en la tarjeta y en el caso, y filtrable junto con la tecnología.
-- **FR-406**: Servicios MUST tener las tres tarjetas de contenido.md §5 (`architecture`, `development`, `modernization`),
-  con íconos del mismo estilo que los actuales.
+- **FR-406**: Reemplazado el 2026-11-04 por los FR-406a a FR-406j (D10). Las tres tarjetas de la auditoría original
+  (`architecture`, `development`, `modernization`) ya no aplican.
 - **FR-407**: La descripción de "Quién soy" MUST ser la de contenido.md §6.
+
+#### Servicios (D10)
+
+- **FR-406a**: Servicios MUST tener siete bloques, en este orden: hero, para quién, servicios, cómo trabajo, casos,
+  preguntas frecuentes y CTA final. El copy es el de contenido.md §5.
+- **FR-406b**: El `h1` MUST ser el título del hero. Su intro reemplaza a `services.intro`. "Explorar" se reemplaza por
+  "Cuéntame tu proceso", que lleva al formulario de Contacto. "¿Cómo te puedo ayudar?" se queda como título del bloque
+  de servicios.
+- **FR-406c**: Los servicios MUST ser cinco: `ai-harness`, `software-factory`, `process-optimization`, `architecture` y
+  `product`. Cada uno tiene número, título, texto, "para quién" y entregables, y algunos traen un ejemplo.
+  - Cada servicio tiene un ícono propio de línea fina, del lenguaje del sitio:
+    - un nodo con conexiones (harness);
+    - carriles en paralelo (fábrica);
+    - un embudo con un rayo (procesos);
+    - capas apiladas (arquitectura);
+    - un cohete (producto).
+  - Ícono, número y título MUST quedar en una grilla fija.
+- **FR-406d**: El reverso de cada tarjeta ("Qué recibes") MUST abrirse con puntero, toque, Enter o Espacio, y su estado
+  MUST anunciarse. Con movimiento reducido no gira. Sin JS, ambas caras se leen completas.
+- **FR-406e**: "Cómo trabajo" MUST mostrar los cinco pasos como una línea de tiempo accesible (lista ordenada) que se
+  ilumina al hacer scroll, y los principios del bloque. Con movimiento reducido o sin JS, todo se ve encendido.
+- **FR-406f**: Cada tarjeta MUST tener un botón "Quiero esto" que abre Contacto con `?servicio=<id>`.
+  - El formulario MUST sumar el campo opcional "¿Qué te interesa?", con los cinco servicios y "Otra cosa".
+  - El servidor valida el valor contra esa lista y lo guarda con el mensaje, en la base que ya existe.
+  - El panel muestra el valor, y la política de privacidad lo menciona (contenido.md §5.8).
+- **FR-406g**: Las preguntas frecuentes MUST ser disclosures accesibles. Una pregunta cuya respuesta sigue sin
+  confirmar MUST NOT publicarse (P-412).
+- **FR-406h**: El bloque "Casos" MUST enlazar solo a casos de estudio ya publicados en el Portafolio, sin texto nuevo
+  sobre clientes, hasta que el autor confirme qué ejemplos usar (P-413).
+- **FR-406i**: El botón "Probar" de la tarjeta de asistentes MUST aparecer solo cuando exista la vitrina "Despacho" del AI
+  Lab (003, A4).
+- **FR-406j**: Ningún texto de Servicios MUST traer cifras o nombres internos del empleador, ni precios, mientras P-415
+  siga abierta.
 - **FR-408**: El texto de habilidades de 2023 (`skills.description` y `skills.bullets`) MUST salir de "Mis habilidades, en
   palabras". Lo reemplazan los párrafos por lóbulo (FR-434). El texto de 2023 sigue en la cápsula del tiempo.
 
@@ -501,6 +621,35 @@ Una página `/now` cuenta qué construye, qué aprende y qué prepara el autor e
 - **FR-490**: `/[lang]/now` MUST leer de un archivo de contenido (qué construye, qué aprende, qué prepara y la fecha de
   actualización), y MUST NOT publicarse ni enlazarse hasta que el autor dé el contenido (P-404).
 
+#### Sitio listo para agentes (US11)
+
+- **FR-485**: Las capacidades públicas del sitio MUST definirse una sola vez, en un registro tipado que lee las mismas
+  fuentes que la UI (`content/` y el índice de búsqueda que ya existe), sin un JSON paralelo. La paleta (FR-451) y el
+  asistente MUST consumir ese mismo registro.
+- **FR-486**: Un único adaptador MUST ser el único código que conoce el punto de entrada de WebMCP (hoy
+  `navigator.modelContext` o `document.modelContext`). Se carga de forma diferida cuando la página está interactiva, y
+  se registra solo si el navegador expone la API: sin polyfills, sin dependencias nuevas y sin errores en consola.
+- **FR-487**: Herramientas de la v1:
+  - **De solo lectura**: `search_portfolio`, `get_project`, `list_projects`, `get_experience`, `get_skills`,
+    `list_posts` y `get_cv`.
+  - **Que cambian la vista** (reversible): `set_preferences`, para idioma y tema.
+  - **Que llenan un formulario sin enviarlo**: `draft_contact_message`, si P-416 lo aprueba.
+  - Las áreas de `get_skills` son los lóbulos de la 002 (T229).
+  - `get_cv` devuelve el enlace de LinkedIn de FR-420, no un PDF.
+- **FR-488**: Cada herramienta MUST:
+  - declarar su JSON Schema y validar la entrada con ese mismo esquema, con límites de tamaño en los textos;
+  - devolver solo información pública del sitio;
+  - tener una descripción clara en el idioma activo, sin instrucciones ocultas.
+
+  Una prueba MUST romper el build si el esquema declarado y el validado divergen. Se muta una vez para comprobar que
+  falla.
+- **FR-489**: Ninguna herramienta MUST enviar, publicar ni aceptar nada por la persona. `draft_contact_message` no marca
+  el checkbox de privacidad, no envía y no guarda nada en el navegador. El envío sigue pasando por la validación y el
+  límite de frecuencia del servidor que ya existen.
+- **FR-489a**: El sitio MUST servir `/llms.txt`, generado en el build desde el mismo registro: quién es el autor,
+  secciones, casos y posts, con enlaces a ES y EN. Solo información pública.
+- **FR-489b**: Todo lo que hace una herramienta MUST poder hacerse también desde la UI normal.
+
 #### Transversales
 
 - **FR-495**: Todo texto visible nuevo MUST existir en ES y EN. La prueba de completitud de contenido lo verifica.
@@ -521,19 +670,27 @@ Enmiendas de tipos propuestas (las numera y aplica la lane Foundation en el plan
   - `era: '2024-2026' | '2022-2023'`.
   - `adrCards?: { decision: Localized; why: Localized; tradeoff: Localized }[]`.
   - `diagram?: { id: string; label: Localized; role: Localized }[]`, las capas del diagrama vivo.
-- **E-05 `ServiceId`**: pasa a `'architecture' | 'development' | 'modernization'`.
+- **E-05 Servicios** (reemplazado el 2026-11-04, D10):
+  - `ServiceId` pasa a `'ai-harness' | 'software-factory' | 'process-optimization' | 'architecture' | 'product'`.
+  - `ServiceItem` suma `forWho: Localized`, `deliverables: Localized<string[]>` y `example?: Localized`.
+  - `SiteContent.services` suma `hero`, `audiences`, `process` (pasos y principios), `faq` y `cta`.
+  - El mensaje de contacto suma `interest?: ServiceId | 'other'`, que es un cambio del contrato de la lane de
+    contacto y requiere una enmienda.
 - **E-06 `SiteContent.home`**: suma `previousTitle: Localized` y `subtitle: Localized`.
 - **E-07 Lo que sé**:
   - `SkillLobe.applied?: string[]`, con referencias `career:<id>` o `project:<id>`.
   - `SkillLobe.projects?: string[]`.
   - `about.skills.inWords?: Record<lobeId, Localized>`.
   - `about.principles?: { short: Localized; full: Localized }[]`.
-- **E-08 `SiteContent.profile`**: `availability` (ubicación, zona horaria y reubicación) y `cv` (`href`, `bytes`, `lang`).
+- **E-08 `SiteContent.profile`**: `availability` (ubicación, zona horaria y reubicación) y `cv` (`href` al perfil de
+  LinkedIn; sin PDF, P-406).
 - **E-09 Cifras de Synergos**: una fuente única con `countedAt`, `measuredAt`, conteos exactos y pisos ("más de").
 - **E-10 Comando de terminal**: nombre y salida localizada, o generada desde datos.
 - **E-11 Reacción**: en la base que ya existe, un contador agregado por post y tipo (`clap`, `idea`, `fire`). Sin datos del
   visitante.
 - **E-12 `/now`**: `updatedAt`, y listas localizadas `building`, `learning` y `preparing`.
+- **E-13 Capacidad**: `{ name; description: Localized; inputSchema; effect: 'read' | 'view' | 'draft'; execute }`. Vive
+  en un registro único que consumen la paleta, el asistente, WebMCP, `llms.txt` y, en el futuro, el MCP remoto (003, A1).
 
 ## Success Criteria *(mandatory)*
 
@@ -542,8 +699,12 @@ Enmiendas de tipos propuestas (las numera y aplica la lane Foundation en el plan
 - **SC-401**: 0 meta descriptions y 0 textos vigentes que presenten al autor como "front-end" o "full-stack developer".
   Se exceptúan los posts de 2023, la cápsula y la frase tachada del hero.
 - **SC-402**: El 100 % de las entradas de carrera y de educación coincide con la tabla de verificación (prueba unitaria).
-- **SC-403**: El CV se descarga en 1 clic desde el hero, "Quién soy" y Contacto, y en 4 teclas o menos desde la paleta
-  abierta.
+- **SC-403**: El CV se abre en LinkedIn con 1 clic desde el hero, "Quién soy" y Contacto, y con 4 teclas o menos desde la
+  paleta abierta.
+- **SC-413**: En Servicios, cada una de las cinco tarjetas lleva a Contacto con su servicio preseleccionado en 1 clic, con
+  y sin JS. La página pasa la auditoría responsive y la de accesibilidad de la 002.
+- **SC-414**: En un navegador con WebMCP, el 100 % de las herramientas de FR-487 se listan y se ejecutan con su esquema.
+  Sin WebMCP, la página tiene 0 errores en consola y el mismo LCP e INP.
 - **SC-404**: "saga", "Angular" y "Synergos" devuelven en la paleta al menos una habilidad o un proyecto entre los 3
   primeros resultados.
 - **SC-405**: Los 15 casos pasan la auditoría responsive de la 002 (320 a 2560 px) con 0 hallazgos y un puntaje de
@@ -585,19 +746,29 @@ fuente de verdad. Mientras sigan abiertas, se aplica el valor por defecto indica
 
 | ID | Pregunta | Origen | Por defecto |
 |---|---|---|---|
-| P-401 | ¿Se aprueban los niveles propuestos para los lóbulos (contenido.md §8)? | Handoff, pregunta 4 | Las skills nuevas no se publican. Las existentes conservan su nivel |
+| P-401 | ¿Se aprueban los niveles propuestos para los lóbulos (contenido.md §8)? | Handoff, pregunta 4 | **Resuelta (2026-11-04):** D7 y D9, en la 002 (T229) |
 | P-402 | ¿El sitio dice "desde 2019" (Growup IT, ene 2019) o "desde 2020"? Además, "En cifras" calcula 7+ años desde 2019, pero el CV dice "6 años de experiencia" | Handoff, pregunta 5, y CV | Se queda "desde 2019", calculado desde la carrera |
 | P-403 | ¿Qué repos son públicos? CHERCED-WORLD sí. ¿Synergos y legal-workspace? | Handoff, pregunta 10 | `github: null` en ambos |
 | P-404 | ¿Página `/now`? ¿Qué muestra este mes? | Handoff, pregunta 13 | No se publica |
 | P-405 | ¿Enlace para agendar una llamada después del formulario de contacto? | Handoff, pregunta 16 | Sin enlace |
 | P-406 | El PDF oficial del CV trae cifras del empleador actual y nombres de proveedores, y enlaza a una cuenta de GitHub distinta de la pública. ¿Se publica tal cual (ya está en LinkedIn), se publica una versión para el sitio sin esas cifras ni nombres, o el botón lleva a LinkedIn? | Comparación del CV con la decisión "ninguna cifra del empleador" | **Resuelta (2026-11-04):** el botón lleva a LinkedIn y el sitio no sirve el PDF |
-| P-407 | Hoy hay skills que no están en la propuesta: HTML5, JavaScript y AI coding agents, y CSS y Sass, que la propuesta junta en una sola. ¿Se quedan, se fusionan o salen? | Comparación de `site.ts` con la propuesta | Se quedan como están |
+| P-407 | Hoy hay skills que no están en la propuesta: HTML5, JavaScript y AI coding agents, y CSS y Sass, que la propuesta junta en una sola. ¿Se quedan, se fusionan o salen? | Comparación de `site.ts` con la propuesta | **Resuelta (2026-11-04):** ningún skill se borra (D7, en la 002, T229) |
 | P-408 | Solo Synergos trae tarjetas ADR. ¿Escribe el autor las de Director & lines, Legal workspace, Event bridge y CHERCED-WORLD 2026? | Handoff | Esos casos quedan en prosa |
 | P-409 | El sitio enlaza a Instagram, pero la fuente de verdad no lo lista como contacto público. ¿Se queda? | Fuente de verdad del perfil | Se queda, como hoy |
 | P-410 | ¿Enlace en vivo de Synergos cuando su dominio esté en producción? | Handoff | `live: null` |
+| P-411 | ¿Se pueden mencionar en Servicios los ejemplos de la abogada y del ingeniero estructural, sin nombres? | Página de Servicios, pregunta 1 | La tarjeta sale sin ejemplo |
+| P-412 | ¿Quién es dueño del código y de los plugins que se entregan? Hace falta para una de las preguntas frecuentes | Página de Servicios, pregunta 2 | Esa pregunta no se publica |
+| P-413 | ¿Qué casos reales anonimizados se muestran en Servicios? | Página de Servicios, bloque "Casos" [confirmar] | Solo enlaces a casos ya publicados |
+| P-414 | ¿Talleres o entrenamiento para equipos (AI-first, Spec-Driven Development) como sexto servicio? | Página de Servicios, pregunta 3 | Cinco servicios |
+| P-415 | ¿Precios o rangos en Servicios? | Página de Servicios, pregunta 4 | Sin precios |
+| P-416 | ¿`draft_contact_message` entra en la v1 de WebMCP, o la v1 es solo lectura? | WebMCP, pregunta 1 | Solo lectura más `set_preferences` |
+| P-417 | ¿Te gustan "fábrica de software" (o "fábrica de agentes", o "software factory") y el título del hero de Servicios? | Página de Servicios, preguntas 5 y 6 | Como está en contenido.md §5 |
+| P-418 | ¿El registro de capacidades va antes del AI Lab? ¿`llms.txt` sale en la misma entrega? | WebMCP, preguntas 3 y 4 | Registro primero, con `llms.txt` en US11 |
+| P-419 | ¿Se alinean los servicios de LinkedIn con la página nueva? Es una acción del autor, fuera del repo | Página de Servicios, §5 [confirmar] | Sin efecto en el sitio |
 
 ## Dependencias
 
 - **002**: debe estar integrada (ver Assumptions).
-- **003**: agrega "Abrir el AI Lab" a la paleta y `ask` al terminal cuando existan.
+- **003**: agrega "Abrir el AI Lab" a la paleta y `ask` al terminal cuando existan. Su vitrina "Este sitio es
+  agent-ready" (A13) usa el registro de US11, y "Probar" en Servicios usa la vitrina "Despacho" (A4).
 - **005**: reutiliza la plantilla OG y el `@id` del `Person`, y agrega "Escuchar este post" a la paleta.

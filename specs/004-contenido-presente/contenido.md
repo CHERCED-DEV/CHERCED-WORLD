@@ -40,7 +40,7 @@ Meta descriptions. `meta.description` va en `common.json`; las demás, en `site.
 |---|---|---|
 | `meta.description` y `meta.home.description` | Camilo Hernandez, Software Solutions Engineer. Diseño sistemas composables y distribuidos con micro-frontends, microservicios .NET y Azure. Trabajo AI-first y spec-driven. | Camilo Hernandez, Software Solutions Engineer. I design composable, distributed systems with micro-frontends, .NET microservices and Azure. I work AI-first and spec-driven. |
 | `meta.about.description` | Software Solutions Engineer · AI-First: mi carrera, lo que sé y dónde lo apliqué. | Software Solutions Engineer · AI-First: my career, what I know and where I applied it. |
-| `meta.services.description` | Arquitectura, desarrollo y modernización: micro-frontends, microservicios .NET y Azure, con decisiones documentadas. | Architecture, development and modernization: micro-frontends, .NET microservices and Azure, with documented decisions. |
+| `meta.services.description` | Asistentes de IA para tu profesión, fábricas de software a la medida, optimización de procesos con IA, arquitectura y desarrollo de producto. | AI assistants for your profession, tailor-made software factories, AI process optimization, architecture and product development. |
 | `meta.portfolio.description` | Casos de estudio: Synergos, agentes de IA en paralelo, un arnés de agentes y un puente de eventos entre nubes, más mis proyectos de 2022–2023. | Case studies: Synergos, parallel AI agents, an agent harness and an event bridge between clouds, plus my 2022–2023 projects. |
 | `meta.contact.description` | Escríbeme: te respondo en menos de 48 horas. | Write to me: I'll reply within 48 hours. |
 
@@ -60,21 +60,22 @@ profile: {
 |---|---|---|
 | `profile.availability.label` (nombre accesible) | Disponibilidad: {location} · {timezone} · {relocation} | Availability: {location} · {timezone} · {relocation} |
 
-## §3 Descargar CV **[P-406]**
+## §3 CV en LinkedIn (FR-420 a FR-422; P-406 resuelta)
+
+El sitio no sirve el PDF: el enlace lleva al perfil de LinkedIn, donde el CV está en Destacados.
 
 ```ts
 profile: {
-  cv: { href: '/Camilo_Hernandez_CV.pdf', bytes: 172753, lang: 'en' },
+  cv: { href: 'https://www.linkedin.com/in/cherced/' },
 },
 ```
 
-El peso que se muestra se calcula desde `bytes` (≈ 169 KB).
-
 | Clave | ES | EN |
 |---|---|---|
-| `cv.download` | Descargar CV (PDF en inglés, {size}) | Download CV (PDF, {size}) |
-| `cv.palette` | Descargar mi CV (PDF) | Download my CV (PDF) |
-| `cv.keywords` | cv hoja de vida curriculum pdf descargar | cv resume curriculum pdf download |
+| `cv.link` | Ver mi CV en LinkedIn | See my CV on LinkedIn |
+| `cv.linkLabel` (nombre accesible) | Ver mi CV en LinkedIn (se abre en una pestaña nueva) | See my CV on LinkedIn (opens in a new tab) |
+| `cv.palette` | Ver mi CV en LinkedIn | See my CV on LinkedIn |
+| `cv.keywords` | cv hoja de vida curriculum linkedin | cv resume curriculum linkedin |
 
 ## §4 Portafolio: intro, orden y épocas
 
@@ -119,47 +120,274 @@ datos no tienen fechas.
 | `portfolio.filteredEra` | {count} proyectos de {era} | {count} projects from {era} |
 | `portfolio.clearFilters` | Quitar filtros | Clear filters |
 
-## §5 Servicios
+## §5 Servicios (D10, FR-406a a FR-406j)
 
-`services.intro` no cambia.
+Reemplaza la propuesta de tres tarjetas de la auditoría original y los servicios de 2023 (Diseño, Desarrollo y
+Mantenimiento). `text` se guarda en el campo `description` que ya existe. El número de cada tarjeta se calcula del
+orden. Cada ícono lo dibuja `ServiceIcon` por `id` (FR-406c).
+
+### §5.1 Hero
+
+`intro` reemplaza a `services.intro`. `cta` reemplaza a "Explorar" y lleva al formulario de Contacto.
 
 ```ts
-items: [
+hero: {
+  title: {
+    es: 'TU OFICIO, CON UN EQUIPO DE AGENTES A LA MEDIDA',
+    en: 'YOUR CRAFT, WITH A TAILOR-MADE TEAM OF AGENTS',
+  },
+  intro: {
+    es: 'Me meto en tu proceso, entiendo dónde se te va el tiempo y construyo lo que lo mejora: un asistente de IA hecho para tu profesión, una fábrica de software enfocada en el core de tu negocio o una arquitectura que crezca sin romperse. Tú sigues decidiendo; la IA hace el trabajo repetitivo.',
+    en: 'I step into your process, find where your time goes and build what improves it: an AI assistant made for your profession, a software factory focused on your core business or an architecture that grows without breaking. You keep making the decisions; the AI does the repetitive work.',
+  },
+  cta: { es: 'CUÉNTAME TU PROCESO', en: 'TELL ME ABOUT YOUR PROCESS' },
+},
+```
+
+### §5.2 Para quién
+
+```ts
+audiences: [
   {
-    id: 'architecture',
-    title: { es: 'Arquitectura', en: 'Architecture' },
-    description: {
-      es: 'Diseño la arquitectura de tu producto: micro-frontends, microservicios o una plataforma composable, con decisiones documentadas y una especificación clara antes de construir.',
-      en: 'I design your product architecture: micro-frontends, microservices or a composable platform, with documented decisions and a clear spec before building.',
+    id: 'professionals',
+    title: { es: 'Profesionales independientes', en: 'Independent professionals' },
+    text: {
+      es: 'Abogados, ingenieros, consultores: personas cuyo trabajo tiene un método propio que hoy hacen a mano.',
+      en: 'Lawyers, engineers, consultants: people whose work follows their own method, done by hand today.',
     },
-    icon: '/assets/icons/services/architecture.png',
   },
   {
-    id: 'development',
-    title: { es: 'Desarrollo', en: 'Development' },
-    description: {
-      es: 'Construyo frontend y backend de punta a punta con Angular, .NET y Azure: interfaces accesibles, servicios que escalan e integraciones por eventos.',
-      en: 'I build frontend and backend end to end with Angular, .NET and Azure: accessible interfaces, services that scale and event-driven integrations.',
+    id: 'companies',
+    title: { es: 'Empresas', en: 'Companies' },
+    text: {
+      es: 'Negocios que necesitan software propio para su core, o modernizar el que ya tienen sin detener la operación.',
+      en: 'Businesses that need their own software for their core, or to modernize what they already have without stopping operations.',
     },
-    icon: '/assets/icons/services/development.png',
   },
   {
-    id: 'modernization',
-    title: { es: 'Modernización', en: 'Modernization' },
-    description: {
-      es: 'Migro sistemas legados por partes, sin detener la operación, y dejo una base que el equipo puede mantener.',
-      en: 'I migrate legacy systems step by step, without stopping the business, and leave a codebase the team can maintain.',
+    id: 'engineering-teams',
+    title: { es: 'Equipos de ingeniería', en: 'Engineering teams' },
+    text: {
+      es: 'Equipos que quieren trabajar AI-first sin perder calidad: con especificaciones, reglas que se cumplen solas y agentes bajo control.',
+      en: 'Teams that want to work AI-first without losing quality: with specs, rules that enforce themselves and agents under control.',
     },
-    icon: '/assets/icons/services/modernization.png',
   },
 ],
 ```
 
-Los íconos `architecture` y `modernization` son nuevos, del mismo estilo que los actuales. `development` se queda.
+### §5.3 Servicios (5 tarjetas)
+
+```ts
+items: [
+  {
+    id: 'ai-harness',
+    title: { es: 'ASISTENTES DE IA PARA TU PROFESIÓN', en: 'AI ASSISTANTS FOR YOUR PROFESSION' },
+    description: {
+      es: 'Construyo un harness de IA alrededor de tu método de trabajo: skills y plugins que conocen tu oficio, usan tus plantillas y siguen tus pasos. La IA propone; tú revisas y decides.',
+      en: 'I build an AI harness around your way of working: skills and plugins that know your craft, use your templates and follow your steps. The AI proposes; you review and decide.',
+    },
+    forWho: { es: 'Profesionales independientes y equipos pequeños', en: 'Independent professionals and small teams' },
+    deliverables: {
+      es: ['Skills y plugins a la medida de tu profesión', 'Scripts de Python para el trabajo pesado, que bajan el costo de uso', 'Reglas que impiden que la IA invente datos', 'Una guía de uso y una sesión de entrenamiento'],
+      en: ['Skills and plugins tailored to your profession', 'Python scripts for heavy lifting, which lower usage costs', 'Rules that keep the AI from making things up', 'A usage guide and a training session'],
+    },
+  },
+  {
+    id: 'software-factory',
+    title: { es: 'FÁBRICAS DE SOFTWARE A LA MEDIDA', en: 'TAILOR-MADE SOFTWARE FACTORIES' },
+    description: {
+      es: 'Monto una fábrica de software enfocada en el core de tu negocio: varios agentes trabajando en paralelo, cada uno con su parte, bajo especificaciones claras, las skills que prefieras y reglas de arquitectura que rompen el build si alguien las viola.',
+      en: 'I set up a software factory focused on your core business: several agents working in parallel, each on its own part, under clear specs, the skills you prefer and architecture rules that break the build if anyone violates them.',
+    },
+    forWho: { es: 'Empresas y equipos de ingeniería', en: 'Companies and engineering teams' },
+    deliverables: {
+      es: ['Una constitución del proyecto y especificaciones con Spec Kit', 'Skills de dominio con el vocabulario de tu negocio', 'Un modelo de trabajo en paralelo con trazabilidad de cada tarea', 'Gates de calidad y de arquitectura en CI'],
+      en: ['A project constitution and specs with Spec Kit', "Domain skills with your business's vocabulary", 'A parallel workflow with every task traced', 'Quality and architecture gates in CI'],
+    },
+    example: {
+      es: 'Ejemplo: así construyo Synergos, con un director que integra y líneas de agentes por vertical de negocio, cada una con su espacio de trabajo.',
+      en: 'Example: this is how I build Synergos, with a director that integrates and agent lines per business vertical, each in its own workspace.',
+    },
+  },
+  {
+    id: 'process-optimization',
+    title: { es: 'OPTIMIZACIÓN DE PROCESOS CON IA', en: 'AI PROCESS OPTIMIZATION' },
+    description: {
+      es: 'Mapeamos juntos lo que haces cada semana, encontramos lo repetitivo y lo automatizamos: documentos, clasificación, transcripción, reportes. Medimos el antes y el después.',
+      en: "We map together what you do every week, find what's repetitive and automate it: documents, sorting, transcription, reports. We measure before and after.",
+    },
+    forWho: { es: 'Profesionales y empresas', en: 'Professionals and companies' },
+    deliverables: {
+      es: ['Un mapa de tu proceso con los cuellos de botella', 'Automatizaciones priorizadas por impacto', 'Medición del tiempo ahorrado'],
+      en: ['A map of your process and its bottlenecks', 'Automations prioritized by impact', 'Measurement of the time saved'],
+    },
+  },
+  {
+    id: 'architecture',
+    title: { es: 'ARQUITECTURA Y MODERNIZACIÓN', en: 'ARCHITECTURE & MODERNIZATION' },
+    description: {
+      es: 'Diseño la arquitectura de tu producto (micro-frontends, microservicios .NET o una plataforma composable) y migro sistemas legados por partes, sin detener la operación.',
+      en: 'I design your product architecture (micro-frontends, .NET microservices or a composable platform) and migrate legacy systems step by step, without stopping operations.',
+    },
+    forWho: { es: 'Empresas con producto en crecimiento o sistemas legados', en: 'Companies with a growing product or legacy systems' },
+    deliverables: {
+      es: ['Diagnóstico y arquitectura objetivo', 'Decisiones documentadas como ADR', 'Plan de migración por fases', 'Implementación o acompañamiento al equipo'],
+      en: ['Assessment and target architecture', 'Decisions documented as ADRs', 'Phased migration plan', 'Implementation or team support'],
+    },
+  },
+  {
+    id: 'product',
+    title: { es: 'DESARROLLO DE PRODUCTO', en: 'PRODUCT DEVELOPMENT' },
+    description: {
+      es: 'Construyo de punta a punta, del frontend al backend: interfaces accesibles en Angular o React, servicios en .NET y despliegue con CI/CD.',
+      en: 'I build end to end, from frontend to backend: accessible interfaces in Angular or React, .NET services and CI/CD deployment.',
+    },
+    forWho: { es: 'Empresas y emprendimientos', en: 'Companies and startups' },
+    deliverables: {
+      es: ['Especificación aprobada antes de construir', 'Producto funcionando, con pruebas', 'Despliegue y documentación'],
+      en: ['Spec approved before building', 'Working product, with tests', 'Deployment and documentation'],
+    },
+  },
+],
+```
+
+Ejemplo de `ai-harness`, que solo se agrega si el autor lo confirma **[P-411]**:
+
+```ts
+example: {
+  es: 'Ejemplo: para una abogada, skills que organizan el material del caso, contrastan hipótesis y generan documentos. Para un ingeniero estructural, un asistente que lee sus bitácoras, ayuda con los cálculos y arma el estimado.',
+  en: 'Example: for a lawyer, skills that organize case material, test hypotheses and draft documents. For a structural engineer, an assistant that reads his logs, helps with calculations and builds the estimate.',
+},
+```
+
+### §5.4 Cómo trabajo
+
+```ts
+process: {
+  title: { es: 'CÓMO TRABAJO', en: 'HOW I WORK' },
+  steps: [
+    { es: '1. Entender — Me siento contigo a ver tu proceso real, no el ideal.', en: '1. Understand — I sit with you to see your real process, not the ideal one.' },
+    { es: '2. Especificar — Escribimos qué se va a construir y cómo sabremos que funciona, antes de la primera línea de código.', en: "2. Specify — We write down what will be built and how we'll know it works, before the first line of code." },
+    { es: '3. Construir — Agentes de IA trabajando en paralelo, bajo reglas que no pueden saltarse.', en: "3. Build — AI agents working in parallel, under rules they can't skip." },
+    { es: '4. Verificar — Pruebas, revisión humana y demo. Nada se entrega sin que lo veas funcionar.', en: '4. Verify — Tests, human review and a demo. Nothing ships until you see it work.' },
+    { es: '5. Entregar y medir — Te entrego la herramienta, la guía de uso y la medición del antes y el después.', en: '5. Deliver and measure — You get the tool, the usage guide and the before-and-after measurement.' },
+  ],
+  principles: {
+    es: ['La IA propone; la persona decide.', 'Nada se inventa: cada dato tiene su fuente.', 'Tus datos se quedan contigo.', 'Una regla que no rompe el build no existe.'],
+    en: ['AI proposes; people decide.', 'Nothing is made up: every fact has a source.', 'Your data stays with you.', "A rule that doesn't break the build doesn't exist."],
+  },
+},
+```
+
+Los pasos van en una lista ordenada, así que el número visible ("1.") se dibuja por CSS y no se duplica al leerlo.
+
+### §5.5 Casos **[P-413]**
+
+Mientras P-413 siga abierta, el bloque solo enlaza a casos ya publicados, con su título y su resumen de `projects.ts`.
+Esta tabla relaciona servicios y casos; es una propuesta que el autor puede ajustar.
+
+| Servicio | Casos |
+|---|---|
+| `ai-harness` | `14` Legal workspace |
+| `software-factory` | `13` Director & lines, `2` CHERCED-WORLD 2026 |
+| `architecture` | `12` Synergos, `15` Event bridge |
+| `product` | `2` CHERCED-WORLD 2026 |
+
+### §5.6 Preguntas frecuentes
+
+```ts
+faq: [
+  {
+    q: { es: '¿Qué pasa con mis datos y los de mis clientes?', en: "What happens to my data and my clients' data?" },
+    a: {
+      es: 'Diseño cada solución para que tus datos se queden en tus equipos o en tus cuentas. Defino con anticipación qué información puede ver la IA, y el material sensible no sale de donde tú decidas.',
+      en: "I design every solution so your data stays on your machines or in your accounts. I define upfront what information the AI can see, and sensitive material doesn't leave where you decide it stays.",
+    },
+  },
+  {
+    q: { es: '¿La IA va a reemplazar mi criterio?', en: 'Will the AI replace my judgment?' },
+    a: {
+      es: 'No. La IA hace el trabajo repetitivo y te propone; tú revisas y decides. Así está construido, no es una promesa.',
+      en: "No. The AI does the repetitive work and makes proposals; you review and decide. That's how it's built, not a promise.",
+    },
+  },
+  {
+    q: { es: '¿Cuánto cuesta usar la IA después?', en: 'How much does using the AI cost afterwards?' },
+    a: {
+      es: 'Depende del modelo y del volumen. Diseño las soluciones para gastar poco: el trabajo pesado lo hacen scripts, no el modelo. Te entrego una estimación antes de empezar.',
+      en: 'It depends on the model and the volume. I design solutions to keep costs low: scripts do the heavy lifting, not the model. You get an estimate before we start.',
+    },
+  },
+  {
+    q: { es: '¿Con qué herramientas de IA trabajas?', en: 'Which AI tools do you work with?' },
+    a: {
+      es: 'Principalmente Claude Code, con skills, plugins y servidores MCP. Me adapto a las herramientas que ya use tu equipo.',
+      en: 'Mainly Claude Code, with skills, plugins and MCP servers. I adapt to the tools your team already uses.',
+    },
+  },
+],
+```
+
+La pregunta "¿Quién es dueño de lo que se construye?" / "Who owns what gets built?" no se publica hasta que el autor
+dé la respuesta **[P-412]**.
+
+### §5.7 CTA final
+
+```ts
+cta: {
+  title: { es: '¿Dónde se te va el tiempo?', en: 'Where does your time go?' },
+  text: {
+    es: 'Cuéntame tu proceso en cinco líneas y te digo qué se puede mejorar.',
+    en: "Tell me about your process in five lines and I'll tell you what can be improved.",
+  },
+  button: { es: 'ESCRÍBEME', en: 'WRITE TO ME' },
+},
+```
+
+### §5.8 Formulario de Contacto: "¿Qué te interesa?"
+
+`?servicio=<id>` preselecciona la opción. Un valor que no esté en la lista se ignora.
+
+| Clave | ES | EN |
+|---|---|---|
+| `contact.interest` (`contact.json`) | ¿Qué te interesa? | What are you interested in? |
+| `contact.interest.none` | Elige una opción (opcional) | Choose an option (optional) |
+| `contact.interest.other` | Otra cosa | Something else |
+| `admin.field.interest` (`admin.json`) | Le interesa | Interested in |
+
+Las otras cinco opciones son los títulos de §5.3, sin mayúsculas sostenidas: "Asistentes de IA para tu profesión",
+"Fábricas de software a la medida", "Optimización de procesos con IA", "Arquitectura y modernización" y "Desarrollo de
+producto" (EN: "AI assistants for your profession", "Tailor-made software factories", "AI process optimization",
+"Architecture & modernization" y "Product development").
+
+Nuevo valor del cuerpo de "Qué datos recojo" en `site.privacy.sections`:
+
+- **ES**: Cuando me escribes desde el formulario de contacto guardo tu nombre, tu correo, tu teléfono si lo das, el
+  servicio que te interesa si lo eliges y tu mensaje. Cuando comentas un post guardo tu nombre, tu correo y tu
+  comentario. En ambos casos guardo también la fecha en que autorizaste el tratamiento de tus datos.
+- **EN**: When you write to me through the contact form, I store your name, your email, your phone number if you give
+  it, the service you're interested in if you choose one, and your message. When you comment on a post, I store your
+  name, your email and your comment. In both cases I also store the date on which you authorized the processing of
+  your data.
+
+### §5.9 Etiquetas de la página
 
 | Clave (`site.json`) | ES | EN |
 |---|---|---|
+| `services.title` (se queda; pasa a titular el bloque de servicios) | ¿Cómo te puedo ayudar? | How can I help you? |
+| `services.audiences` | Para quién | Who it's for |
+| `services.forWho` | Para quién | Who it's for |
+| `services.deliverables` | Qué recibes | What you get |
+| `services.flip` | Ver qué recibes | See what you get |
+| `services.flipBack` | Volver | Back |
+| `services.want` | Quiero esto | I want this |
+| `services.try` | Probar | Try it |
+| `services.principles` | Principios | Principles |
+| `services.cases` | Casos | Cases |
+| `services.faq` | Preguntas frecuentes | Frequently asked questions |
 | `meta.services.description` | ver §1 | ver §1 |
+
+Salen `services.explore` y `services.cta`, que reemplaza `cta.title`. `services.contact` lo reemplaza `cta.button`.
 
 ## §6 "Quién soy"
 
@@ -783,7 +1011,7 @@ Se reusan `palette.copyEmail`, `palette.copied` y `palette.copyFailed` de `exper
 | `palette.group.skills` | Habilidades | Skills |
 | `palette.group.commands` | Comandos | Commands |
 | `palette.skillHint` | {lobe} · {level} % | {lobe} · {level}% |
-| `palette.action.cv` | Descargar mi CV (PDF) | Download my CV (PDF) |
+| `palette.action.cv` | Ver mi CV en LinkedIn | See my CV on LinkedIn |
 | `palette.action.shortcuts` | Ver los atajos de teclado | Show keyboard shortcuts |
 | `palette.action.aiLab` (lo registra la 003) | Abrir el AI Lab | Open the AI Lab |
 | `palette.action.listen` (lo registra la 005) | Escuchar este post | Listen to this post |
@@ -881,7 +1109,7 @@ y `cherced-world.vercel.app` abajo. El texto alternativo es "{título}: {línea}
 |---|---|---|---|---|
 | Home | Camilo Hernandez | DISEÑO SISTEMAS QUE ESCALAN | Camilo Hernandez | I DESIGN SYSTEMS THAT SCALE |
 | Sobre mí | Sobre mí | Software Solutions Engineer · AI-First | About me | Software Solutions Engineer · AI-First |
-| Servicios | Servicios | Arquitectura · Desarrollo · Modernización | Services | Architecture · Development · Modernization |
+| Servicios | Servicios | Tu oficio, con un equipo de agentes a la medida | Services | Your craft, with a tailor-made team of agents |
 | Portafolio | Portafolio | {count} casos de estudio | Portfolio | {count} case studies |
 | Contacto | Contacto | Armenia, Colombia · UTC−5 · Te respondo en menos de 48 h | Contact | Armenia, Colombia · UTC−5 · I reply within 48 h |
 | Caso de estudio | {title} | {summary} | {title} | {summary} |
@@ -911,3 +1139,46 @@ export const now = {
 | `meta.now.description` | Lo que estoy construyendo, aprendiendo y preparando este mes. | What I'm building, learning and preparing this month. |
 
 Las claves van con el prefijo `nowPage.` porque `now.*` ya existe en `home.json` ("Ahora trabajo en").
+
+## §25 Sitio listo para agentes: herramientas WebMCP y `llms.txt` (FR-485 a FR-489b)
+
+Las descripciones se registran en el idioma activo. Los límites de texto son los mismos del formulario y del índice
+que ya existen. Los nombres del método de registro de la API se confirman en el plan, porque WebMCP sigue en borrador.
+
+| Herramienta | Efecto | Entrada | Descripción ES | Descripción EN |
+|---|---|---|---|---|
+| `search_portfolio` | lectura | `{ query: string (máx. 100), limit?: 1–10, por defecto 5 }` | Busca en los proyectos, posts, experiencia y skills de Camilo Hernandez. Devuelve títulos, resúmenes cortos y enlaces. | Searches Camilo Hernandez's projects, blog posts, experience and skills. Returns titles, short summaries and links. |
+| `get_project` | lectura | `{ id: string }` | Devuelve un caso de estudio: contexto, rol, decisiones, resultado y tecnologías. | Returns a case study: context, role, decisions, result and technologies. |
+| `list_projects` | lectura | `{ technology?: string }` | Lista los proyectos del portafolio, opcionalmente filtrados por tecnología. | Lists portfolio projects, optionally filtered by technology. |
+| `get_experience` | lectura | `{}` | Devuelve la experiencia profesional con cargos, empresas y fechas oficiales. | Returns professional experience with official titles, companies and dates. |
+| `get_skills` | lectura | `{ area?: id de un lóbulo (002, T229) }` | Devuelve las skills por área, con su nivel y sus años de uso. | Returns skills by area, with their level and years of use. |
+| `list_posts` | lectura | `{ tag?: string }` | Lista los posts del blog, opcionalmente por etiqueta. | Lists blog posts, optionally by tag. |
+| `get_cv` | lectura | `{}` | Devuelve el enlace al CV oficial, publicado en LinkedIn. | Returns the link to the official CV, published on LinkedIn. |
+| `set_preferences` | vista, reversible | `{ language?: 'es' \| 'en', theme?: 'light' \| 'dark' }` | Cambia el idioma o el tema del sitio para esta visita. Se puede deshacer. | Changes the site language or theme for this visit. It can be undone. |
+| `draft_contact_message` **[P-416]** | borrador, nunca envía | `{ name: string, email: string, message: string }` | Prepara un mensaje en el formulario de contacto. No lo envía: la persona lo revisa, acepta la política de privacidad y pulsa Enviar. | Drafts a message in the contact form. It never sends it: the person reviews it, accepts the privacy policy and presses Send. |
+
+Estructura de `/llms.txt`, generado en el build:
+
+```md
+# CHERCED-WORLD
+
+> {meta.description en EN}
+
+## About
+- [About me](/en/aboutMe) · [Sobre mí](/es/aboutMe)
+
+## Services
+- [Services](/en/services) · [Servicios](/es/services)
+
+## Case studies
+- [{title}](/en/portfolio/{id}): {summary.en}
+
+## Blog
+- [{title}](/en/blog/{id}): {description}
+
+## Contact
+- [Contact](/en/contactMe) · [Contacto](/es/contactMe)
+```
+
+Las listas de casos y posts se generan desde `projects.ts` y el registro de posts, en el orden del sitio. Las URLs son
+absolutas con la base del sitio.
