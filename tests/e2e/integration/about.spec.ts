@@ -51,8 +51,6 @@ async function pressedNames(group: Locator[]): Promise<string[]> {
   }
   return names
 }
-
-// R3 (T224, US6b y US6c) hace pasar todo este archivo: hoy "Sobre mí" sigue siendo la página de seis secciones de la 001
 test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
   onlyIn('desktop-chromium')
 
@@ -107,20 +105,28 @@ test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.setViewportSize({ width: 1440, height: 900 })
     await open(page, 'es')
+    const [, , knowledge] = await scenes(page)
+    await knowledge!.scrollIntoViewIfNeeded()
+    const shot = () => knowledge!.screenshot({ animations: 'allow', caret: 'hide' })
+    let previous = await shot()
+    let stable = false
+    for (let attempt = 0; attempt < 20 && !stable; attempt++) {
+      await page.waitForTimeout(300)
+      const current = await shot()
+      stable = current.equals(previous)
+      previous = current
+    }
+    expect(stable, 'la escena se asienta antes de activar un lóbulo').toBe(true)
     const group = await lobes(page, 'es')
     await group[2]!.click()
     await expect(group[2]!).toHaveAttribute('aria-pressed', 'true')
-    const [, , knowledge] = await scenes(page)
-    await knowledge!.scrollIntoViewIfNeeded()
-    await page.waitForTimeout(500)
-    const first = await knowledge!.screenshot({ animations: 'allow', caret: 'hide' })
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+    const first = await shot()
     await page.waitForTimeout(700)
-    const second = await knowledge!.screenshot({ animations: 'allow', caret: 'hide' })
+    const second = await shot()
     expect(first.equals(second), 'sin lluvia, pulso, giro ni descifrado').toBe(true)
   })
 })
-
-// R3 (T224, US6b) hace pasar estas pruebas: hoy la carrera es una lista, sin tarjetas ni diálogo
 test.describe('la carrera como cartas sobre la mesa (US6b)', () => {
   onlyIn('desktop-chromium')
 
@@ -158,8 +164,6 @@ test.describe('la carrera como cartas sobre la mesa (US6b)', () => {
 
 test.describe('Sobre mí en pantallas chicas (US6b y US6c)', () => {
   onlyIn('mobile-chromium')
-
-  // R3 (T224) hace pasar esta prueba
   test('la carrera es una línea de tiempo y los lóbulos son chips con desplazamiento horizontal', async ({ page }) => {
     await open(page, 'es')
     const [, career] = await scenes(page)
@@ -181,13 +185,11 @@ test.describe('Sobre mí en pantallas chicas (US6b y US6c)', () => {
 
 test.describe('Sobre mí sin JavaScript (US6b y US6c)', () => {
   onlyIn('no-js')
-
-  // R3 (T224) hace pasar esta prueba
   test('"Lo que sé" muestra todas las skills como listas y la carrera como línea de tiempo', async ({ page }) => {
     await open(page, 'es', false)
     const [, career, knowledge] = await scenes(page)
-    for (const name of SKILL_NAMES) await expect(knowledge!.getByText(name, { exact: true }).first(), name).toBeVisible()
-    await expect(knowledge!.locator('ul, ol').first()).toBeVisible()
+    for (const name of SKILL_NAMES) await expect(knowledge!.getByText(name, { exact: true }).filter({ visible: true }).first(), name).toBeVisible()
+    await expect(knowledge!.locator('ul, ol').filter({ visible: true }).first()).toBeVisible()
     await expect(career!.locator('ol > li')).toHaveCount(CAREER_ENTRIES)
   })
 })
