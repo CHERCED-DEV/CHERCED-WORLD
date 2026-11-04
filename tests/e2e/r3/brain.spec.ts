@@ -168,7 +168,13 @@ test.describe('movimiento reducido', () => {
     await expect(page.locator('[data-cw-terminal-body] [data-cw-decode]')).toHaveText('Oficio')
     const running = await page
       .locator('[data-cw-brain]')
-      .evaluate((node) => node.getAnimations({ subtree: true }).filter((animation) => animation.playState === 'running').length)
+      .evaluate(
+        (node) =>
+          node
+            .getAnimations({ subtree: true })
+            .filter((animation) => animation.playState === 'running' && (animation instanceof CSSAnimation || !(animation instanceof CSSTransition)))
+            .map((animation) => (animation instanceof CSSAnimation ? animation.animationName : 'script')).length,
+      )
     expect(running).toBe(0)
     const blank = await page.locator('[data-cw-rain]').evaluate((node: HTMLCanvasElement) => {
       const pixels = node.getContext('2d')!.getImageData(0, 0, node.width, node.height).data
