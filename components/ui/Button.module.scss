@@ -73,10 +73,12 @@
   color: var(--cw-accent-fg);
   border-color: var(--cw-accent);
 
-  &:hover:not(:disabled) {
-    background: transparent;
-    color: var(--cw-fg);
-    box-shadow: 0 10px 28px -14px var(--cw-graphic-glow);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      background: transparent;
+      color: var(--cw-fg);
+      box-shadow: 0 10px 28px -14px var(--cw-graphic-glow);
+    }
   }
 }
 
