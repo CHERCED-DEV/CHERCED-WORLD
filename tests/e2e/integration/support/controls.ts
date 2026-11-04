@@ -574,13 +574,25 @@ const EFFECTS: Record<EffectName, Effect> = {
     return 'enviar vacío señala el primer campo inválido'
   },
 
-  async pressedToggle({ target }) {
-    const before = await target.getAttribute('aria-pressed')
+  async pressedToggle({ page, target, control }) {
+    const pressed = () => target.getAttribute('aria-pressed')
+    const before = await pressed()
     await activate(target)
-    const after = await settle(() => target.getAttribute('aria-pressed'), (value) => value !== before, 2000)
-    if (!after.ok) fail(`aria-pressed sigue en ${before}`)
+    const after = await settle(pressed, (value) => value !== before, 2000)
+    if (after.ok) {
+      await activate(target)
+      return `aria-pressed ${before} → ${after.value}`
+    }
+    if (before !== 'true') fail(`aria-pressed sigue en ${before}`)
+    const sibling = page.locator(`[data-cw-audit="${control.id}"]`).locator('xpath=..').locator('xpath=..').locator('button[aria-pressed]:not([data-cw-audit="' + control.id + '"])').first()
+    if ((await sibling.count()) === 0) fail('ya estaba presionado y el clic no lo cambia, y no hay otra opción en su grupo')
+    await activate(sibling)
+    const released = await settle(pressed, (value) => value === 'false', 2000)
+    if (!released.ok) fail('al elegir otra opción del grupo, este botón sigue presionado')
     await activate(target)
-    return `aria-pressed ${before} → ${after.value}`
+    const chosen = await settle(pressed, (value) => value === 'true', 2000)
+    if (!chosen.ok) fail('el clic no lo vuelve a elegir')
+    return 'elección exclusiva: queda presionado y suelta a los demás'
   },
 
   async expandedToggle({ target }) {
@@ -600,9 +612,17 @@ const EFFECTS: Record<EffectName, Effect> = {
     const view = await settle(
       () =>
         page.evaluate((targetId) => {
-          const destination = document.getElementById(targetId)!.getBoundingClientRect()
-          const header = document.getElementById('header')?.getBoundingClientRect()
-          const headerBottom = header && getComputedStyle(document.getElementById('header')!).position !== 'static' ? Math.max(0, header.bottom) : 0
+          const target = document.getElementById(targetId)!
+          const destination = target.getBoundingClientRect()
+          let headerBottom = 0
+          for (const element of document.body.querySelectorAll('*')) {
+            const style = getComputedStyle(element)
+            if (style.position !== 'fixed' && style.position !== 'sticky') continue
+            if (element.contains(target) || target.contains(element) || style.visibility === 'hidden') continue
+            const rect = element.getBoundingClientRect()
+            const spansTarget = rect.left < destination.right && rect.right > destination.left
+            if (rect.height > 0 && rect.top <= 1 && rect.height < window.innerHeight * 0.4 && spansTarget) headerBottom = Math.max(headerBottom, rect.bottom)
+          }
           return {
             hash: decodeURIComponent(location.hash.slice(1)),
             top: Math.round(destination.top),
@@ -614,7 +634,7 @@ const EFFECTS: Record<EffectName, Effect> = {
       (value) => value.hash === id && value.top >= value.headerBottom - 1 && value.top < value.height,
     )
     if (view.value.hash !== id) fail(`la URL no cambia a ${href}`)
-    if (!view.ok) fail(`el destino queda en y=${view.value.top} con el header hasta y=${view.value.headerBottom}`)
+    if (!view.ok) fail(`el destino queda en y=${view.value.top} y lo fijo de arriba (header, índice) llega hasta y=${view.value.headerBottom}`)
     return `lleva a ${href}`
   },
 
