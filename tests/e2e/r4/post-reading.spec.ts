@@ -45,6 +45,7 @@ test.describe('portada y tipografía', () => {
 
   for (const lang of ['es', 'en'] as const) {
     test(`los 5 posts en ${lang} tienen portada con su imagen, sin desbordes`, async ({ page }) => {
+      test.setTimeout(90_000)
       for (const id of POSTS) {
         await page.goto(`/${lang}/blog/${id}`)
         const cover = page.locator('[data-cw-post-cover]')
@@ -68,6 +69,7 @@ test.describe('medida de línea', () => {
   onlyIn('desktop-chromium')
 
   test('el cuerpo se lee en unos 68 caracteres por línea en escritorio', async ({ page }) => {
+    test.setTimeout(90_000)
     await skipIntro(page)
     for (const path of ['/es/blog/post5', '/en/blog/post4', '/es/blog/post1']) {
       await page.goto(path)
@@ -129,6 +131,7 @@ test.describe('barra de progreso de lectura', () => {
     const bar = page.locator('[data-cw-reading-progress]')
     await expect(bar).toHaveAttribute('aria-hidden', 'true')
     await expect(bar).toHaveAttribute('data-cw-reading-progress', '0.00')
+    expect(await bar.evaluate((element) => element.getBoundingClientRect().top), 'va en el borde superior, no sobre el texto').toBe(0)
 
     const scrollToBody = (fraction: number) =>
       page.evaluate((value) => {

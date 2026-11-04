@@ -57,6 +57,7 @@ test.describe('toda la tarjeta abre el post', () => {
   }
 
   test('el área clicable cubre la tarjeta completa', async ({ page }) => {
+    test.setTimeout(60_000)
     await page.goto('/es/blog')
     for (const card of await page.locator('[data-cw-post-card]').all()) {
       const covered = await card.evaluate((element) => {

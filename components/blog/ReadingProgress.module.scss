@@ -3,8 +3,8 @@
 .progress {
   position: fixed;
   inset-inline: 0;
-  top: var(--cw-header-h);
-  z-index: calc(var(--cw-z-header) - 1);
+  top: 0;
+  z-index: calc(var(--cw-z-header) + 1);
   height: 2px;
   pointer-events: none;
   background: linear-gradient(90deg, color-mix(in srgb, var(--cw-fg) 70%, transparent), blog.$accent-mix);
