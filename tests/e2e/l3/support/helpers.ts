@@ -1,7 +1,22 @@
 import { randomInt } from 'node:crypto'
-import { expect, test, type Browser, type BrowserContext, type BrowserContextOptions, type Page } from '@playwright/test'
+import { expect, test, type Browser, type BrowserContext, type BrowserContextOptions, type Page, type Response } from '@playwright/test'
 
 export const MIN_FILL_MS = 3000
+
+export const ACTION_MS = 30_000
+
+export const UI_AFTER_ACTION_MS = 5000
+
+export function isActionResponse(response: Response): boolean {
+  const request = response.request()
+  return request.method() === 'POST' && Boolean(request.headers()['next-action'])
+}
+
+export async function submitAction(page: Page, submit: () => Promise<void>): Promise<void> {
+  const answered = page.waitForResponse(isActionResponse, { timeout: ACTION_MS })
+  await submit()
+  expect((await answered).ok(), 'la server action responde 200').toBe(true)
+}
 
 export const AUTHOR_PUBLIC_EMAILS = ['chernandezcediel@gmail.com']
 
@@ -67,8 +82,8 @@ export async function sendContact(page: Page, values: ContactValues): Promise<vo
   const loadedAt = await openContact(page)
   await fillContact(page, values)
   await waitMinimumFill(page, loadedAt)
-  await page.locator('[data-cw-contact-form]').getByRole('button', { name: 'Enviar' }).click()
-  await expect(page.getByRole('status').filter({ hasText: 'Gracias por escribirme' }).first()).toBeVisible()
+  await submitAction(page, () => page.locator('[data-cw-contact-form]').getByRole('button', { name: 'Enviar' }).click())
+  await expect(page.getByRole('status').filter({ hasText: 'Gracias por escribirme' }).first()).toBeVisible({ timeout: UI_AFTER_ACTION_MS })
 }
 
 export async function renderJustNow(page: Page): Promise<void> {

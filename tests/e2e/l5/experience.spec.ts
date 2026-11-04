@@ -5,6 +5,10 @@ const PAGE = '/es/aboutMe'
 
 const READY_TIMEOUT = 30_000
 
+const TEST_TIMEOUT = 2 * READY_TIMEOUT + 30_000
+
+test.describe.configure({ timeout: TEST_TIMEOUT })
+
 function onlyIn(...projects: string[]) {
   test.beforeEach(({}, testInfo) => {
     test.skip(!projects.includes(testInfo.project.name), `solo en ${projects.join(', ')}`)
@@ -115,17 +119,19 @@ test.describe('command palette', () => {
     await expect(palette(page).locator('[data-cw-palette-option="action:capsule"]')).toBeVisible()
   })
 
-  test('cambia el tema desde la palette y lo recuerda al recargar', async ({ browser }) => {
-    const context = await browser.newContext({ colorScheme: 'dark', viewport: { width: 1280, height: 800 } })
-    const page = await context.newPage()
-    await gotoReady(page)
-    await openPalette(page)
-    await page.keyboard.type('tema claro')
-    await page.keyboard.press('Enter')
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
-    await page.reload()
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
-    await context.close()
+  test.describe('con el sistema en tema oscuro', () => {
+    test.use({ colorScheme: 'dark' })
+
+    test('cambia el tema desde la palette y lo recuerda al recargar', async ({ page }) => {
+      await gotoReady(page)
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+      await openPalette(page)
+      await page.keyboard.type('tema claro')
+      await page.keyboard.press('Enter')
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+      await page.reload()
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+    })
   })
 
   test('cambia de idioma conservando la ruta', async ({ page }) => {

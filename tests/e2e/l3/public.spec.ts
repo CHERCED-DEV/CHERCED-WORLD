@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { captureActionResponses, fillContact, onlyIn, openContact, renderJustNow, uniqueToken, useIp, waitMinimumFill } from './support/helpers'
+import { INBOX_COUNT_PATH, inspectBody, type Finding, type ResponseMeta } from './support/privacy'
 
 const sendButton = { name: 'Enviar' }
 
@@ -189,5 +190,47 @@ test.describe('vistas privadas sin sesión', () => {
       await page.goto(path)
       await expect(page.locator('a[href*="/inbox"]')).toHaveCount(0)
     }
+  })
+})
+
+test.describe('escáner de privacidad (E-01)', () => {
+  onlyIn('desktop-chromium')
+
+  const inspect = (meta: ResponseMeta, body: string, contentType = 'application/json'): Finding[] => {
+    const findings: Finding[] = []
+    inspectBody(`${meta.method} ${meta.path}`, contentType, body, [], findings, meta)
+    return findings
+  }
+  const countGet: ResponseMeta = { method: 'GET', path: INBOX_COUNT_PATH, status: 200 }
+
+  test('acepta GET /api/inbox-count con { unread } y nada más', () => {
+    expect(inspect(countGet, '{"unread":0}')).toEqual([])
+    expect(inspect(countGet, '{"unread":12}')).toEqual([])
+    expect(inspect(countGet, ''), 'un fetch del buzón abortado al navegar no trae cuerpo').toEqual([])
+  })
+
+  test('cualquier otro dato del inbox en una respuesta pública es un hallazgo', () => {
+    const cases: Array<[ResponseMeta, string, string]> = [
+      [countGet, '{"unread":3,"pending":1}', 'application/json'],
+      [countGet, '{"unread":-1}', 'application/json'],
+      [countGet, '{"unread":"3"}', 'application/json'],
+      [countGet, '[3]', 'application/json'],
+      [{ method: 'POST', path: INBOX_COUNT_PATH, status: 200 }, '{"unread":3}', 'application/json'],
+      [{ method: 'GET', path: '/api/search-index/es', status: 200 }, '{"docs":[],"unread":3}', 'application/json'],
+      [{ method: 'GET', path: '/es', status: 200 }, '<script>self.__next_f.push([1,"{\\"pending\\":2}"])</script>', 'text/html'],
+      [{ method: 'GET', path: '/es', status: 200 }, '0:{"unread":5}', 'text/x-component'],
+    ]
+    for (const [meta, body, contentType] of cases) {
+      expect(
+        inspect(meta, body, contentType).map((finding) => finding.kind),
+        `${meta.method} ${meta.path} ${body}`,
+      ).toContain('dato del inbox')
+    }
+  })
+
+  test('los datos de visitantes siguen fallando también dentro de la excepción', () => {
+    const findings: Finding[] = []
+    inspectBody(`GET ${INBOX_COUNT_PATH}`, 'application/json', '{"unread":1,"from":"ana@example.org"}', ['ana@example.org'], findings, countGet)
+    expect(findings.map((finding) => finding.kind)).toEqual(expect.arrayContaining(['dato de visitante', 'correo', 'dato del inbox']))
   })
 })
