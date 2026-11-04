@@ -240,8 +240,9 @@ skills deberían verse como un mapa mental, un "diagrama cerebral" de lo que el 
 
 ### User Story 7 - Buzón en el header (Priority: P2)
 
-Un ícono de buzón en el header, visible para todos, muestra cuántos mensajes sin leer hay y lleva al panel,
-como en 2023.
+Un ícono de buzón en el header, visible para todos, muestra cuántos mensajes sin leer hay, como en 2023.
+Decisión del autor (2026-11-04): el clic lleva a Contacto, no al panel. El panel queda solo por URL
+directa, para no mostrarle a cualquiera dónde está la puerta del admin.
 
 **Acceptance Scenarios**:
 
