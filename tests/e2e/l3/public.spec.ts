@@ -211,6 +211,7 @@ test.describe('escáner de privacidad (E-01)', () => {
   test('acepta GET /api/inbox-count con { unread } y nada más', () => {
     expect(inspect(countGet, '{"unread":0}')).toEqual([])
     expect(inspect(countGet, '{"unread":12}')).toEqual([])
+    expect(inspect(countGet, ''), 'un fetch del buzón abortado al navegar no trae cuerpo').toEqual([])
   })
 
   test('cualquier otro dato del inbox en una respuesta pública es un hallazgo', () => {

@@ -85,6 +85,7 @@ export function inspectBody(
     }
   }
   if (isInboxCountException(meta) && meta.status === 200) {
+    if (body.trim() === '') return
     const problem = inboxCountProblem(body)
     if (problem) findings.push({ url, kind: 'dato del inbox', detail: `GET ${INBOX_COUNT_PATH} ${problem}` })
   } else if (meta.status < 400 && /json|x-component|html|text\/plain/.test(contentType)) {
