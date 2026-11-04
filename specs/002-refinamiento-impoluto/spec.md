@@ -164,6 +164,24 @@ completa en proporción, sin espacio vacío.
 2. **Given** una cifra destacada, **When** entra en pantalla, **Then** se anima una sola vez, y sin JS o
    con movimiento reducido muestra su valor final.
 
+### User Story 6b - La carrera como cartas sobre la mesa (Priority: P2)
+
+Pedido del autor (2026-11-04): en escritorio, la carrera se ve como tarjetas de cristal "tiradas" sobre
+una mesa, levemente giradas y superpuestas. Al hacer clic en una, una animación la trae al frente y la
+muestra abierta con todo su contenido. Al cerrarla, vuelve a su lugar.
+
+**Acceptance Scenarios**:
+
+1. **Given** un ancho ≥ 992 px, **When** se ve la carrera, **Then** los 8 empleos aparecen como tarjetas de
+   cristal dispersas con rotación y posición deterministas (sin saltos entre cargas). Al pasar el puntero,
+   la tarjeta se levanta.
+2. **Given** una tarjeta, **When** se activa con clic, Enter o Espacio, **Then** vuela al centro con una
+   transición de elemento compartido (`<ViewTransition name>` de React 19.3) y se abre como diálogo
+   modal accesible. Esc, clic fuera o "Cerrar" la devuelven a su lugar y el foco vuelve a la tarjeta.
+3. **Given** movimiento reducido, **When** se abre o se cierra, **Then** no hay vuelo: solo un fundido corto.
+4. **Given** < 992 px o sin JS, **When** se ve la carrera, **Then** se muestra la línea de tiempo vertical,
+   completa y legible.
+
 ### User Story 7 - Buzón en el header (Priority: P2)
 
 Un ícono de buzón en el header, visible para todos, muestra cuántos mensajes sin leer hay y lleva al panel,
