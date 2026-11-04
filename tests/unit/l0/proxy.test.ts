@@ -32,8 +32,23 @@ describe('exclusiones', () => {
     expect(shouldBypass('/capsules')).toBe(false)
   })
 
-  it('el matcher excluye _next, api y capsule', () => {
-    expect(config.matcher).toEqual(['/((?!_next/|api/|capsule/).*)'])
+  it('el matcher excluye _next, api, capsule y los archivos con extensión (D-05)', () => {
+    expect(config.matcher).toHaveLength(1)
+    const matches = new RegExp(`^${config.matcher[0]}$`)
+    for (const path of ['/', '/blog/post1', '/es/blog/post1', '/en/aboutMe', '/apiary', '/capsules']) {
+      expect(matches.test(path), path).toBe(true)
+    }
+    for (const path of [
+      '/_next/static/chunk.js',
+      '/api/inbox-count',
+      '/capsule/index.html',
+      '/assets/imgs/about/retrato-oscuro.webp',
+      '/robots.txt',
+      '/sitemap.xml',
+      '/favicon.ico',
+    ]) {
+      expect(matches.test(path), path).toBe(false)
+    }
   })
 })
 

@@ -70,5 +70,5 @@ export function proxy(request: NextRequest): NextResponse {
 }
 
 export const config = {
-  matcher: ['/((?!_next/|api/|capsule/).*)'],
+  matcher: ['/((?!_next/|api/|capsule/|.*\\.[^/]+$).*)'],
 }
