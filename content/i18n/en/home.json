@@ -1,3 +1,7 @@
 {
-  "home.nowWorking": "Now working at"
+  "hero.cue": "Scroll to “Now working at”",
+  "now.title": "Now working at",
+  "now.since": "Since {date}",
+  "now.caseStudy": "View case study",
+  "now.more": "Explore my career"
 }

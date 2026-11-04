@@ -1,3 +1,7 @@
 {
-  "home.nowWorking": "Ahora trabajo en"
+  "hero.cue": "Bajar a «Ahora trabajo en»",
+  "now.title": "Ahora trabajo en",
+  "now.since": "Desde {date}",
+  "now.caseStudy": "Ver caso de estudio",
+  "now.more": "Conoce mi trayectoria"
 }
