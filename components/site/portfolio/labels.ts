@@ -10,7 +10,7 @@ export const EMBED_KEYS = {
   loading: 'embed.loading',
   ready: 'embed.ready',
   reload: 'embed.reload',
-  openLive: 'portfolio.openLive',
+  openLive: 'embed.openLive',
   expand: 'embed.expand',
   collapse: 'embed.collapse',
   view: 'embed.view',

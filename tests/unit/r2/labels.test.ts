@@ -13,7 +13,7 @@ describe('textos del caso de estudio', () => {
   it('arma todos los grupos de etiquetas desde el diccionario', () => {
     const labels = caseStudyExtraLabels(echo)
     expect(labels.eyebrow).toBe('«case.eyebrow»')
-    expect(labels.embed.openLive).toBe('«portfolio.openLive»')
+    expect(labels.embed.openLive).toBe('«embed.openLive»')
     expect(labels.gallery.thumb).toBe('«gallery.thumb»')
     for (const layer of STACK_LAYERS) expect(labels.layers[layer]).toBe(`«case.layer.${layer}»`)
     const values = [
