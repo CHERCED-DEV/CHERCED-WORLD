@@ -43,8 +43,9 @@ async function audit(page: Page, width: number): Promise<Finding[]> {
         if (r.width < minTarget || r.height < minTarget) findings.push({ width, kind: 'target', detail: `"${label(el)}" ${Math.round(r.width)}x${Math.round(r.height)}` })
       }
       for (const el of main.querySelectorAll('h1, h2, h3, p, li, span')) {
-        if (!visible(el) || el.closest('[data-cw-carousel], [data-cw-filter-scroll], ul[class*="filterList"], .cw-visually-hidden')) continue
+        if (!visible(el) || el.closest('[data-cw-carousel], [data-cw-filter-scroll], ul[class*="filterList"], .cw-visually-hidden, [aria-hidden="true"]')) continue
         const html = el as HTMLElement
+        if (!html.innerText.trim()) continue
         const cs = getComputedStyle(html)
         if (cs.textOverflow === 'ellipsis' || cs.webkitLineClamp !== 'none') continue
         if (html.scrollWidth > html.clientWidth + 2 && cs.overflowX !== 'visible') {
