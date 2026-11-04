@@ -44,19 +44,59 @@ const POST_ORIGIN: Record<string, { originalLang: Locale; date: RegExp }> = {
 const SKILLS_2026: Record<string, number> = {
   angular: 92,
   typescript: 92,
-  dotnet: 85,
-  csharp: 82,
+  css: 92,
+  javascript: 90,
+  sass: 90,
+  html5: 90,
+  react: 72,
+  nextjs: 75,
+  'web-components': 88,
+  ngrx: 75,
+  nx: 85,
+  a11y: 82,
+  figma: 70,
+  'clean-architecture': 88,
+  solid: 90,
+  'design-patterns': 85,
+  'distributed-systems': 82,
+  microservices: 82,
   'micro-frontends': 90,
   'native-federation': 88,
-  azure: 78,
-  umbraco: 85,
+  'composable-architecture': 92,
+  'event-driven': 78,
+  saga: 85,
+  bff: 85,
+  'api-design': 80,
+  'fitness-functions': 88,
+  adr: 90,
+  'legacy-modernization': 80,
   'spec-driven-development': 90,
+  dotnet: 88,
+  csharp: 85,
+  umbraco: 90,
+  grpc: 75,
+  azure: 78,
+  'azure-service-bus': 75,
+  sql: 72,
+  nodejs: 62,
+  mongodb: 55,
+  docker: 80,
+  'github-actions': 85,
+  'cloudflare-workers': 75,
   'ai-coding-agents': 90,
-  javascript: 90,
-  html5: 90,
-  css: 92,
-  sass: 90,
+  'multi-agent-orchestration': 88,
+  'claude-code-skills': 90,
+  mcp: 75,
+  evals: 75,
   git: 85,
+  testing: 80,
+  'ci-cd': 85,
+  'code-review': 85,
+  'docs-as-code': 88,
+  agile: 80,
+  'business-to-architecture': 85,
+  stakeholders: 85,
+  'product-thinking': 80,
 }
 
 const SKILL_ICONS_2023 = [
@@ -85,11 +125,41 @@ const SKILL_ICONS_KEPT: Record<string, string> = {
   css: 'css.png',
   sass: 'sass.png',
   git: 'merge.png',
+  react: 'react.png',
+  nextjs: 'nextjs.png',
+  nodejs: 'nodejs.png',
+  mongodb: 'mongodb.png',
+  figma: 'figma.png',
 }
 
 const SKILL_ICONS_SIMPLE: Record<string, { file: string; hex: string }> = {
   dotnet: { file: 'dotnet.svg', hex: '#512BD4' },
   umbraco: { file: 'umbraco.svg', hex: '#3544B1' },
+}
+
+const SKILL_ICONS_T229: Record<string, string> = {
+  'web-components': 'web-components.svg',
+  nx: 'nx.svg',
+  'api-design': 'api-design.svg',
+  docker: 'docker.svg',
+  'github-actions': 'github-actions.svg',
+  'ci-cd': 'github-actions.svg',
+  'cloudflare-workers': 'cloudflare-workers.svg',
+  'claude-code-skills': 'claude.svg',
+  mcp: 'mcp.svg',
+  testing: 'vitest.svg',
+}
+
+const SKILL_ICONS_SIMPLE_T229: Record<string, { file: string; hex: string }> = {
+  'web-components': { file: 'web-components.svg', hex: '#29ABE2' },
+  nx: { file: 'nx.svg', hex: '#143055' },
+  'api-design': { file: 'api-design.svg', hex: '#6BA539' },
+  docker: { file: 'docker.svg', hex: '#2496ED' },
+  'github-actions': { file: 'github-actions.svg', hex: '#2088FF' },
+  'cloudflare-workers': { file: 'cloudflare-workers.svg', hex: '#F38020' },
+  'claude-code-skills': { file: 'claude.svg', hex: '#D97757' },
+  mcp: { file: 'mcp.svg', hex: '#000000' },
+  testing: { file: 'vitest.svg', hex: '#00FF74' },
 }
 
 const SKILL_PICTOGRAMS: Record<string, string> = {
@@ -378,7 +448,7 @@ describe('sitio (FR-004)', () => {
     expect(site.socials.map((social) => social.id).sort()).toEqual(['email', 'facebook', 'github', 'instagram', 'linkedin'])
     expect(site.about.career.map((entry) => entry.id)).toEqual(CAREER_2026)
     expect(site.about.skills.bullets).toHaveLength(10)
-    expect(site.about.skills.tech).toHaveLength(15)
+    expect(site.about.skills.tech).toHaveLength(55)
     expect(Object.fromEntries(site.about.skills.tech.map((tech) => [tech.id, tech.progress]))).toEqual(SKILLS_2026)
     expect(site.about.education.map((entry) => entry.id)).toEqual(['unad', 'platzi', 'eam'])
     expect(site.about.courses.schools).toHaveLength(5)
@@ -561,9 +631,13 @@ describe('aprendiendo ahora (decisión del autor, 2026-11-04)', () => {
 
 describe('íconos de tecnologías (A-18 y D-08)', () => {
   const iconDir = path.join(PUBLIC_DIR, 'assets', 'icons', 'skillsIcon')
-  const svgFiles = [...Object.values(SKILL_ICONS_SIMPLE).map((icon) => icon.file), ...Object.values(SKILL_PICTOGRAMS)]
+  const svgFiles = [
+    ...Object.values(SKILL_ICONS_SIMPLE).map((icon) => icon.file),
+    ...Object.values(SKILL_ICONS_SIMPLE_T229).map((icon) => icon.file),
+    ...Object.values(SKILL_PICTOGRAMS),
+  ]
 
-  it('conserva los logos 2023 y solo suma los SVG de D-08', () => {
+  it('conserva los logos 2023 y solo suma los SVG de D-08 y de T229', () => {
     expect(readdirSync(iconDir).sort()).toEqual([...SKILL_ICONS_2023, ...svgFiles].sort())
   })
 
@@ -581,11 +655,22 @@ describe('íconos de tecnologías (A-18 y D-08)', () => {
       const tech = site.about.skills.tech.find((item) => item.id === id)
       expect(tech?.icon, id).toBe(`/assets/icons/skillsIcon/${file}`)
     }
-    expect(site.about.skills.tech.filter((tech) => !tech.icon).map((tech) => tech.id)).toEqual([])
+    for (const tech of site.about.skills.tech.filter((item) => !item.icon)) {
+      const initials = monogram(tech.name)
+      expect(initials.length, `${tech.id}: ${initials}`).toBeGreaterThan(0)
+      expect(initials.length, `${tech.id}: ${initials}`).toBeLessThanOrEqual(4)
+    }
+  })
+
+  it('los íconos de Simple Icons que se suman en T229 son CC0 y van en su skill', () => {
+    for (const [id, file] of Object.entries(SKILL_ICONS_T229)) {
+      const tech = site.about.skills.tech.find((item) => item.id === id)
+      expect(tech?.icon, id).toBe(`/assets/icons/skillsIcon/${file}`)
+    }
   })
 
   it('los logos de Simple Icons llevan su color de marca y un único trazado', () => {
-    for (const { file, hex } of Object.values(SKILL_ICONS_SIMPLE)) {
+    for (const { file, hex } of [...Object.values(SKILL_ICONS_SIMPLE), ...Object.values(SKILL_ICONS_SIMPLE_T229)]) {
       const svg = readFileSync(path.join(iconDir, file), 'utf8')
       expect(svg, file).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="0 0 24 24"/)
       expect(svg, file).toContain(`fill="${hex}"`)
