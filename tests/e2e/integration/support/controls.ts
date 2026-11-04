@@ -611,8 +611,14 @@ const EFFECTS: Record<EffectName, Effect> = {
     return `aria-expanded ${before} → ${after.value}`
   },
 
-  async embedLoad({ target }) {
-    const section = target.locator('xpath=ancestor::*[@data-cw-embed][1]')
+  async embedLoad({ page, target }) {
+    const tagged = await target.evaluate((element) => {
+      const embed = element.closest('[data-cw-embed]')
+      embed?.setAttribute('data-cw-audit-embed', '')
+      return Boolean(embed)
+    })
+    if (!tagged) fail('el botón no está dentro de un embebido [data-cw-embed]')
+    const section = page.locator('[data-cw-audit-embed]')
     const frame = section.locator('iframe').first()
     await activate(target)
     const mounted = await settle(() => section.locator('iframe').count(), (count) => count > 0)
