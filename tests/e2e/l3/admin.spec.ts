@@ -1,5 +1,6 @@
 import { expect, test, type Browser, type BrowserContext, type Locator, type Page } from '@playwright/test'
 import {
+  ACTION_MS,
   fillContact,
   hideTab,
   newVisitor,
@@ -107,6 +108,12 @@ async function seedComment(browser: Browser, postPath: string, userName: string)
   await expect(dialog.locator('[data-cw-comment-status="success"]')).toBeVisible({ timeout: UI_AFTER_ACTION_MS })
   seeded.comments.push(values)
   return values
+}
+
+async function chooseFilter(page: Page, filter: string): Promise<void> {
+  const chip = page.locator(`[data-cw-filter="${filter}"]`)
+  await chip.click()
+  await expect(chip, `el filtro ${filter} queda activo`).toHaveAttribute('aria-current', 'page', { timeout: ACTION_MS })
 }
 
 async function saveReply(page: Page, item: Locator, text: string): Promise<void> {
@@ -264,7 +271,7 @@ test('el inbox ordena, filtra, marca, archiva, responde por correo y elimina con
   const names = () => page.locator('[data-cw-message] h3').allTextContents()
   const before = (list: string[], first: string, second: string) => list.indexOf(first) < list.indexOf(second)
 
-  await page.locator('[data-cw-filter="name"]').click()
+  await chooseFilter(page, 'name')
   await expect(page).toHaveURL(/sort=name/)
   await expect
     .poll(async () => {
@@ -273,10 +280,10 @@ test('el inbox ordena, filtra, marca, archiva, responde por correo y elimina con
     })
     .toBe(true)
 
-  await page.locator('[data-cw-filter="oldest"]').click()
+  await chooseFilter(page, 'oldest')
   await expect(page).toHaveURL(/sort=oldest/)
   await expect.poll(async () => before(await names(), ana.name, zoe.name)).toBe(true)
-  await page.locator('[data-cw-filter="newest"]').click()
+  await chooseFilter(page, 'newest')
   await expect(page).toHaveURL(/sort=newest/)
   await expect.poll(async () => before(await names(), zoe.name, ana.name)).toBe(true)
 
@@ -292,19 +299,19 @@ test('el inbox ordena, filtra, marca, archiva, responde por correo y elimina con
   await messageItem(page, ana.name).locator('[data-cw-action="read"]').click()
   await expect(messageItem(page, ana.name)).toHaveAttribute('data-status', 'read')
 
-  await page.locator('[data-cw-filter="unread"]').click()
+  await chooseFilter(page, 'unread')
   await expect(messageItem(page, bruno.name)).toBeVisible()
   await expect(messageItem(page, ana.name)).toHaveCount(0)
   await expect(page.locator('[data-cw-message]:not([data-status="unread"])')).toHaveCount(0)
 
-  await page.locator('[data-cw-filter="inbox"]').click()
+  await chooseFilter(page, 'inbox')
   await messageItem(page, bruno.name).locator('[data-cw-action="archive"]').click()
   await expect(messageItem(page, bruno.name)).toHaveCount(0)
-  await page.locator('[data-cw-filter="archived"]').click()
+  await chooseFilter(page, 'archived')
   await expect(messageItem(page, bruno.name)).toHaveAttribute('data-status', 'archived')
   await messageItem(page, bruno.name).locator('[data-cw-action="unarchive"]').click()
   await expect(messageItem(page, bruno.name)).toHaveCount(0)
-  await page.locator('[data-cw-filter="inbox"]').click()
+  await chooseFilter(page, 'inbox')
   await expect(messageItem(page, bruno.name)).toHaveAttribute('data-status', 'read')
 
   await messageItem(page, zoe.name).locator('[data-cw-action="delete"]').click()
@@ -360,7 +367,7 @@ test('la moderación publica, responde como autor, rechaza y elimina, sin expone
   await expect(commentItem(page, rejected.userName)).toHaveCount(0)
   await expect(page.locator('[data-cw-count="comments"]')).toHaveText('1')
 
-  await page.locator('[data-cw-filter="approved"]').click()
+  await chooseFilter(page, 'approved')
   const item = commentItem(page, approved.userName)
   await item.locator('[data-cw-action="reply"]').click()
   await item.getByLabel('Respuesta del autor').fill('Gracias por leer.')
@@ -401,22 +408,22 @@ test('la moderación publica, responde como autor, rechaza y elimina, sin expone
     )
     .toBe(0)
 
-  await page.locator('[data-cw-filter="rejected"]').click()
+  await chooseFilter(page, 'rejected')
   await expect(commentItem(page, approved.userName).locator('[data-cw-author-reply]')).toHaveCount(0)
   await commentItem(page, approved.userName).locator('[data-cw-action="approve"]').click()
   await expect(commentItem(page, approved.userName)).toHaveCount(0)
-  await page.locator('[data-cw-filter="approved"]').click()
+  await chooseFilter(page, 'approved')
   await expect(commentItem(page, approved.userName).locator('[data-cw-author-reply]')).toHaveCount(0)
   await commentItem(page, approved.userName).locator('[data-cw-action="reply"]').click()
   await commentItem(page, approved.userName).getByLabel('Respuesta del autor').fill('Respuesta final del autor.')
   await saveReply(page, commentItem(page, approved.userName), 'Respuesta final del autor.')
 
-  await page.locator('[data-cw-filter="rejected"]').click()
+  await chooseFilter(page, 'rejected')
   await commentItem(page, rejected.userName).locator('[data-cw-action="delete"]').click()
   const dialog = page.getByRole('dialog', { name: '¿Eliminar este comentario?' })
   await dialog.locator('[data-cw-confirm]').click()
   await expect(commentItem(page, rejected.userName)).toHaveCount(0)
-  await page.locator('[data-cw-filter="all"]').click()
+  await chooseFilter(page, 'all')
   await expect(commentItem(page, rejected.userName)).toHaveCount(0)
   await expect(commentItem(page, pending.userName)).toHaveAttribute('data-status', 'pending')
 })
