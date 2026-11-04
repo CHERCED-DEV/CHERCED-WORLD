@@ -69,7 +69,7 @@ export function technologyCounts(list: readonly Project[]): Record<string, numbe
 }
 
 export function galleryImages(project: Project, lang: Locale): Array<{ src: string; alt: string; width: number; height: number }> {
-  const extra = (project as Project & { gallery?: Project['image'][] }).gallery ?? []
+  const extra = project.gallery ?? []
   return [project.image, ...extra.filter((image) => image.src !== project.image.src)].map((image) => ({
     src: image.src,
     alt: image.alt[lang],
@@ -79,7 +79,7 @@ export function galleryImages(project: Project, lang: Locale): Array<{ src: stri
 }
 
 export function caseHighlights(project: Project, lang: Locale): string[] {
-  const list = (project as Project & { highlights?: Localized[] }).highlights ?? []
+  const list = project.highlights ?? []
   return list.map((item) => item[lang].trim()).filter((text) => text.length > 0)
 }
 

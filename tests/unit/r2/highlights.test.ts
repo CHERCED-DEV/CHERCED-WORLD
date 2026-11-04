@@ -25,6 +25,20 @@ function anchors(text: string): string[] {
 describe('resultados destacados (US5, nada inventado)', () => {
   const projects = getProjects()
 
+  it('cada proyecto trae entre 2 y 4, cortos y en los dos idiomas', () => {
+    for (const project of projects) {
+      const list = project.highlights ?? []
+      expect(list.length, project.id).toBeGreaterThanOrEqual(2)
+      expect(list.length, project.id).toBeLessThanOrEqual(4)
+      for (const item of list) {
+        for (const lang of LOCALES) {
+          expect(item[lang].trim(), `${project.id}/${lang}`).not.toBe('')
+          expect(item[lang].length, `${project.id}/${lang}: ${item[lang]}`).toBeLessThanOrEqual(90)
+        }
+      }
+    }
+  })
+
   it('cada cifra, sigla o nombre propio sale del texto real del caso, en el mismo idioma', () => {
     for (const project of projects) {
       for (const lang of LOCALES) {
