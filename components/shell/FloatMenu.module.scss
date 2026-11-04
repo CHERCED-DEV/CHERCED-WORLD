@@ -3,6 +3,7 @@
 
 .menu {
   @include glass(strong);
+  @include glass-grain;
   position: fixed;
   inset: 0;
   width: 100%;
@@ -52,6 +53,29 @@
 .logo {
   width: 150px;
   height: 150px;
+}
+
+.menu:popover-open nav li {
+  animation: menu-item-in var(--cw-duration-slow) var(--cw-ease-out) both;
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) {
+      animation-delay: calc(#{$i} * 40ms);
+    }
+  }
+}
+
+.menu .topLine {
+  position: absolute;
+  top: var(--cw-header-h);
+  left: 0;
+}
+
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
 }
 
 @keyframes menu-in {
