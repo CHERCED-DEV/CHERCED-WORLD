@@ -3,6 +3,17 @@ export { SiteFooter, SOCIAL_ICONS, type SiteFooterProps } from './SiteFooter'
 export { FloatMenu, type FloatMenuProps } from './FloatMenu'
 export { BackToTop } from './BackToTop'
 export { BackLink } from './BackLink'
+export { MailboxLink, type MailboxLabels } from './MailboxLink'
+export { PageTransition, PAGE_TRANSITION_CLASS } from './PageTransition'
+export {
+  MAILBOX_ENDPOINT,
+  MAILBOX_INTERVAL_MS,
+  badgeText,
+  mailboxLabel,
+  parseUnread,
+  startVisiblePolling,
+  type VisiblePollerOptions,
+} from './mailbox'
 export { LangSwitch } from './LangSwitch'
 export { ThemeToggle } from './ThemeToggle'
 export { PaletteTrigger } from './PaletteTrigger'

@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { ExperienceRoot } from '@/components/experience'
 import { Background, Intro } from '@/components/motion'
-import { FloatMenu, navItems, shellLabels, SiteFooter, SiteHeader, themeScript } from '@/components/shell'
+import { FloatMenu, navItems, PageTransition, shellLabels, SiteFooter, SiteHeader, themeScript } from '@/components/shell'
+import { PointerLight } from '@/components/ui/PointerLight'
 import { ToastProvider } from '@/components/ui/Toast'
 import { getSite } from '@/lib/content'
 import { isLocale, locales, t } from '@/lib/i18n'
@@ -70,11 +71,12 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           <SiteHeader lang={lang} items={items} labels={labels} />
           <FloatMenu lang={lang} items={items} labels={{ nav: labels.nav, close: labels.menuClose, lang: labels.lang }} />
           <main id="main" tabIndex={-1}>
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
           <SiteFooter lang={lang} socials={getSite().socials} labels={labels} />
           <ExperienceRoot lang={lang} />
         </ToastProvider>
+        <PointerLight />
       </body>
     </html>
   )
