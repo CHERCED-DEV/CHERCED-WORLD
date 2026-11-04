@@ -7,6 +7,7 @@ import { cx } from '@/components/ui/cx'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import styles from './Brain.module.scss'
 import { BRAIN_VIEW, BRAIN_CORE, blockBar, decodeFrame, lobePoint, neuronGeometry, type BrainData } from './brain'
+import { monogram } from './monogram'
 import { startRain } from './rain'
 
 export type BrainLabels = {
@@ -113,6 +114,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                 const geometry = neuronGeometry(
                   index,
                   item.skills.map((skill) => skill.level),
+                  data.lobes.length,
                 )
                 const on = litLobes.has(item.id)
                 return (
@@ -133,7 +135,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
             </div>
             <div className={styles.lobes} role="group" aria-label={labels.lobes}>
               {data.lobes.map((item, index) => {
-                const point = lobePoint(index)
+                const point = lobePoint(index, data.lobes.length)
                 return (
                   <button
                     key={item.id}
@@ -203,18 +205,27 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
             </h3>
             {lobe ? (
               <>
-                <ul className={styles.termRows}>
+                <ul className={styles.termRows} data-cw-term-rows="" data-long={lobe.skills.length > 7 ? '' : undefined} tabIndex={lobe.skills.length > 7 ? 0 : undefined} aria-label={lobe.skills.length > 7 ? lobe.name : undefined}>
                   {lobe.skills.map((skill) => {
                     const bar = blockBar(skill.level)
                     return (
                       <li key={skill.id} className={styles.termRow} data-cw-brain-skill={skill.id}>
-                        {skill.icon ? (
+{skill.icon ? (
                           <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                         ) : (
-                          <span className={styles.termIcon} aria-hidden="true" />
+                          <span className={`${styles.termIcon} ${styles.termMonogram}`} aria-hidden="true">
+                            {monogram(skill.name)}
+                          </span>
                         )}
                         <span className={styles.termName}>{skill.name}</span>
-                        <span className={styles.termLevel}>{labels.levels[skill.id] ?? `${skill.level}%`}</span>
+                        <span className={styles.termLevel}>
+                          {skill.used ? (
+                            <span className={styles.usedChip} data-cw-used="">
+                              {skill.used}
+                            </span>
+                          ) : null}
+                          {labels.levels[skill.id] ?? `${skill.level}%`}
+                        </span>
                         <span className={styles.termBar} aria-hidden="true">
                           <span className={styles.barOn}>{bar.on}</span>
                           <span className={styles.barOff}>{bar.off}</span>
@@ -255,7 +266,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
               <>
                 <div className={styles.termSource}>
                   <p className={styles.termName}>{source.title}</p>
-                  <p>{source.detail}</p>
+                  {source.detail ? <p>{source.detail}</p> : null}
                   {source.period ? <p className={styles.termLevel}>{source.period}</p> : null}
                 </div>
                 {data.lobes.some((item) => item.sources.includes(source.id)) ? (

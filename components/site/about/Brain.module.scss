@@ -139,7 +139,7 @@ $green: var(--cw-intro-accent);
 
   @include bp.up(md) {
     position: absolute;
-    top: 47%;
+    top: 50%;
     left: 50%;
     display: grid;
     place-items: center;
@@ -200,12 +200,14 @@ $green: var(--cw-intro-accent);
     left: var(--cw-x);
     display: grid;
     place-items: center;
-    width: 17%;
+    width: 15%;
     min-height: 0;
     aspect-ratio: 1;
     padding: var(--cw-space-2);
     border-radius: 50%;
-    font-size: clamp(10px, 0.95vw, 12px);
+    font-size: clamp(9px, 0.82vw, 11.5px);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
     text-align: center;
     white-space: normal;
     translate: -50% -50%;
@@ -410,12 +412,60 @@ $green: var(--cw-intro-accent);
 
 .termName {
   font-weight: 700;
+  text-transform: uppercase;
   overflow-wrap: anywhere;
 }
 
 .termLevel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.usedChip {
+  display: inline-flex;
+  align-items: center;
+  margin-inline: var(--cw-space-2) 0;
+  padding: 1px 6px;
+  border: 1px solid color-mix(in srgb, var(--cw-fg) 28%, transparent);
+  border-radius: 999px;
+  color: var(--cw-fg);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  .termLevel & {
+    margin-inline: 0;
+  }
+}
+
+.termMonogram {
+  display: inline-grid;
+  place-items: center;
+  color: #000000;
+  font: 800 8px / 1 $mono;
+  letter-spacing: 0;
+  overflow: hidden;
+}
+
+.termRows[data-long] {
+  @media (min-width: 1100px) {
+    max-height: 432px;
+    padding-right: var(--cw-space-2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cw-focus);
+    outline-offset: 4px;
+  }
 }
 
 .termBar {
@@ -591,4 +641,23 @@ $green: var(--cw-intro-accent);
 .terminal,
 .map {
   scroll-margin-top: calc(44px + var(--cw-space-5));
+}
+
+.wordsLobe {
+  margin-top: var(--cw-space-4);
+}
+
+.wordsTitle {
+  @include site.label-caps(0.12em);
+  font-size: var(--cw-text-xs);
+}
+
+@include bp.down(sm) {
+  .termRow {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .termLevel {
+    grid-column: 2 / -1;
+  }
 }

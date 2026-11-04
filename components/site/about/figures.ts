@@ -37,6 +37,11 @@ export function airlinesFromCareer(career: readonly CareerEntry[]): number | nul
   return counts.length > 0 ? Math.max(...counts) : null
 }
 
+export function mapSkillCount(about: SiteContent['about']): number {
+  const ids = new Set((about.skills.lobes ?? []).flatMap((lobe) => lobe.skills))
+  return ids.size > 0 ? ids.size : about.skills.tech.length
+}
+
 export function aboutFigures(about: SiteContent['about'], projectCount: number, now: Date): Figure[] {
   const figures: Figure[] = []
   const since = webSince(about.career)
@@ -45,7 +50,8 @@ export function aboutFigures(about: SiteContent['about'], projectCount: number, 
     if (years > 0) figures.push({ id: 'years', value: years, plus: more, since: since.year })
   }
   if (projectCount > 0) figures.push({ id: 'projects', value: projectCount, plus: false })
-  if (about.skills.tech.length > 0) figures.push({ id: 'technologies', value: about.skills.tech.length, plus: false })
+  const skills = mapSkillCount(about)
+  if (skills > 0) figures.push({ id: 'technologies', value: skills, plus: false })
   const airlines = airlinesFromCareer(about.career)
   if (airlines !== null) figures.push({ id: 'airlines', value: airlines, plus: true })
   return figures

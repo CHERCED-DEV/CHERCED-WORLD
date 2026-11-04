@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { aboutFigures, airlinesFromCareer, fullYearsSince, webSince } from '@/components/site/about/figures'
+import { aboutFigures, airlinesFromCareer, fullYearsSince, mapSkillCount, webSince } from '@/components/site/about/figures'
 import { getProjects, getSite } from '@/lib/content'
 
 const { about, contact } = getSite()
@@ -31,15 +31,16 @@ describe('cifras destacadas (US6), solo públicas y derivadas del contenido', ()
     expect(aboutFigures(about, getProjects().length, NOV_2026)).toEqual([
       { id: 'years', value: 7, plus: true, since: 2019 },
       { id: 'projects', value: getProjects().length, plus: false },
-      { id: 'technologies', value: about.skills.tech.length, plus: false },
+      { id: 'technologies', value: mapSkillCount(about), plus: false },
       { id: 'airlines', value: 3, plus: true },
     ])
     expect(getProjects()).toHaveLength(12)
-    expect(about.skills.tech).toHaveLength(15)
+    expect(about.skills.tech).toHaveLength(55)
+    expect(mapSkillCount(about)).toBe(57)
   })
 
   it('omite una cifra que no tenga respaldo en vez de inventarla', () => {
-    const vacio = { ...about, career: [], skills: { ...about.skills, tech: [] } }
+    const vacio = { ...about, career: [], skills: { ...about.skills, tech: [], lobes: [] } }
     expect(aboutFigures(vacio, 0, NOV_2026)).toEqual([])
   })
 
