@@ -15,7 +15,6 @@ export type BrainLabels = {
   sourcesWord: string
   projectsWord: string
   feeds: string
-  none: string
   core: string
   path: string
   levels: Record<string, string>
@@ -216,21 +215,33 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                     )
                   })}
                 </ul>
-                <p className={styles.termMeta}>
-                  <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ') || labels.none}
-                  <br />
-                  <strong>{labels.projectsWord}:</strong>{' '}
-                  {lobe.projects.length === 0
-                    ? labels.none
-                    : lobe.projects.map((project, index) => (
-                        <span key={project.id}>
-                          {index > 0 ? ' · ' : null}
-                          <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
-                            {project.title}
-                          </Link>
-                        </span>
-                      ))}
-                </p>
+                {lobe.learning ? (
+                  <p className={styles.termLearning} data-cw-learning="">
+                    {lobe.learning}
+                  </p>
+                ) : null}
+                {lobe.sources.length > 0 || lobe.projects.length > 0 ? (
+                  <p className={styles.termMeta}>
+                    {lobe.sources.length > 0 ? (
+                      <span className={styles.metaLine} data-cw-meta="sources">
+                        <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ')}
+                      </span>
+                    ) : null}
+                    {lobe.projects.length > 0 ? (
+                      <span className={styles.metaLine} data-cw-meta="projects">
+                        <strong>{labels.projectsWord}:</strong>{' '}
+                        {lobe.projects.map((project, index) => (
+                          <span key={project.id}>
+                            {index > 0 ? ' · ' : null}
+                            <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
+                              {project.title}
+                            </Link>
+                          </span>
+                        ))}
+                      </span>
+                    ) : null}
+                  </p>
+                ) : null}
               </>
             ) : source ? (
               <>
@@ -239,13 +250,17 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                   <p>{source.detail}</p>
                   {source.period ? <p className={styles.termLevel}>{source.period}</p> : null}
                 </div>
-                <p className={styles.termMeta}>
-                  <strong>{labels.feeds}:</strong>{' '}
-                  {data.lobes
-                    .filter((item) => item.sources.includes(source.id))
-                    .map((item) => item.name)
-                    .join(' · ') || labels.none}
-                </p>
+                {data.lobes.some((item) => item.sources.includes(source.id)) ? (
+                  <p className={styles.termMeta}>
+                    <span className={styles.metaLine} data-cw-meta="feeds">
+                      <strong>{labels.feeds}:</strong>{' '}
+                      {data.lobes
+                        .filter((item) => item.sources.includes(source.id))
+                        .map((item) => item.name)
+                        .join(' · ')}
+                    </span>
+                  </p>
+                ) : null}
               </>
             ) : null}
           </div>

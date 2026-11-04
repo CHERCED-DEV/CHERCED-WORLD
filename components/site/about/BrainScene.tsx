@@ -49,21 +49,33 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
                 </li>
               ))}
             </ul>
-            <p className={styles.termMeta}>
-              <strong>{map.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ') || map.none}
-              <br />
-              <strong>{map.projectsWord}:</strong>{' '}
-              {lobe.projects.length === 0
-                ? map.none
-                : lobe.projects.map((project, index) => (
-                    <span key={project.id}>
-                      {index > 0 ? ' · ' : null}
-                      <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
-                        {project.title}
-                      </Link>
-                    </span>
-                  ))}
-            </p>
+            {lobe.learning ? (
+              <p className={styles.termLearning} data-cw-learning="">
+                {lobe.learning}
+              </p>
+            ) : null}
+            {lobe.sources.length > 0 || lobe.projects.length > 0 ? (
+              <p className={styles.termMeta}>
+                {lobe.sources.length > 0 ? (
+                  <span className={styles.metaLine} data-cw-meta="sources">
+                    <strong>{map.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ')}
+                  </span>
+                ) : null}
+                {lobe.projects.length > 0 ? (
+                  <span className={styles.metaLine} data-cw-meta="projects">
+                    <strong>{map.projectsWord}:</strong>{' '}
+                    {lobe.projects.map((project, index) => (
+                      <span key={project.id}>
+                        {index > 0 ? ' · ' : null}
+                        <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
+                          {project.title}
+                        </Link>
+                      </span>
+                    ))}
+                  </span>
+                ) : null}
+              </p>
+            ) : null}
           </section>
         ))}
         <section className={`${styles.fallbackLobe} ${styles.fallbackSources}`} data-cw-glass="standard" aria-labelledby="brain-sources">

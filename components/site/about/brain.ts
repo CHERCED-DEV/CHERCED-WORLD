@@ -5,7 +5,16 @@ export type BrainSkill = { id: string; name: string; level: number; icon?: strin
 
 export type BrainProject = { id: string; title: string }
 
-export type BrainLobe = { id: string; name: string; skills: BrainSkill[]; sources: string[]; projects: BrainProject[] }
+export type BrainLobe = {
+  id: string
+  name: string
+  skills: BrainSkill[]
+  sources: string[]
+  projects: BrainProject[]
+  learning?: string
+}
+
+export const LEARNING_LOBE = 'applied-ai'
 
 export type BrainSource = { id: string; label: string; title: string; detail: string; period: string | null }
 
@@ -75,12 +84,14 @@ function resolveSkill(id: string, about: SiteContent['about'], lang: Locale): Br
 export function brainData(about: SiteContent['about'], projects: readonly Project[], lang: Locale, presentLabel: string): BrainData {
   const lobes = (about.skills.lobes ?? []).map((lobe) => {
     const skills = lobe.skills.map((id) => resolveSkill(id, about, lang)).filter((skill): skill is BrainSkill => skill !== null)
+    const learning = lobe.id === LEARNING_LOBE ? about.skills.learningNow?.[lang]?.trim() : undefined
     return {
       id: lobe.id,
       name: lobe.name[lang],
       skills,
       sources: lobe.sources.filter((source) => source in SOURCE_REFS),
       projects: projectsForSkills(skills, projects),
+      ...(learning ? { learning } : {}),
     }
   })
   const sources = SOURCE_ORDER.map((id) => resolveSource(id, about, lang, presentLabel)).filter(

@@ -460,6 +460,18 @@ $green: var(--cw-intro-accent);
   }
 }
 
+.metaLine {
+  display: block;
+}
+
+.termLearning {
+  padding-left: var(--cw-space-3);
+  border-left: 2px solid $green;
+  color: var(--cw-fg);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
 .termLink {
   color: var(--cw-fg);
   text-decoration: underline;

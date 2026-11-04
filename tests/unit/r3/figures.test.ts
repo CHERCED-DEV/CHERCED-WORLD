@@ -35,7 +35,7 @@ describe('cifras destacadas (US6), solo públicas y derivadas del contenido', ()
       { id: 'airlines', value: 3, plus: true },
     ])
     expect(getProjects()).toHaveLength(12)
-    expect(about.skills.tech).toHaveLength(18)
+    expect(about.skills.tech).toHaveLength(15)
   })
 
   it('omite una cifra que no tenga respaldo en vez de inventarla', () => {
