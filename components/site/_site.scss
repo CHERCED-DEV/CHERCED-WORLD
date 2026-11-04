@@ -9,8 +9,14 @@
   padding-block: var(--cw-space-7) 0;
 }
 
-@mixin panel($variant: standard) {
+@mixin crystal($variant: standard) {
   @include glass($variant);
+  @include glass-grain;
+  @include glass-depth;
+}
+
+@mixin panel($variant: standard) {
+  @include crystal($variant);
   width: 100%;
   padding: var(--cw-space-6) var(--cw-space-5);
 

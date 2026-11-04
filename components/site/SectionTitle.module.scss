@@ -3,6 +3,7 @@
 
 .frame {
   @include glass(strong);
+  @include glass-grain;
   display: inline-block;
   max-width: 100%;
   padding: var(--cw-space-4) var(--cw-space-5);

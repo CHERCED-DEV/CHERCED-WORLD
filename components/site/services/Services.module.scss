@@ -53,7 +53,13 @@
   }
 }
 
+.cardItem {
+  display: flex;
+  min-width: 0;
+}
+
 .card {
+  flex: 1;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
@@ -89,7 +95,7 @@
 }
 
 .cardTile {
-  @include glass(strong);
+  @include site.crystal(strong);
   display: grid;
   place-items: center;
   width: 56px;
@@ -164,22 +170,23 @@
     text-align: start;
   }
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 64px;
-    height: 3px;
-    border-radius: 0 0 3px 3px;
-    background: var(--cw-intro-accent);
-    box-shadow: 0 0 14px rgb(37 237 158 / 0.6);
-    transform: translateX(-50%);
+}
 
-    @include bp.up(md) {
-      left: var(--cw-space-7);
-      transform: none;
-    }
+.ctaAccent {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  width: 64px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--cw-intro-accent);
+  box-shadow: 0 0 14px rgb(37 237 158 / 0.6);
+  transform: translateX(-50%);
+
+  @include bp.up(md) {
+    left: var(--cw-space-7);
+    transform: none;
   }
 }
 
