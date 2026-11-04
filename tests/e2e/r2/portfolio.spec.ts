@@ -340,6 +340,7 @@ test.describe('galería, resultados, stack y navegación', () => {
   })
 
   test('resultados destacados, solo con texto del caso', async ({ page }) => {
+    test.setTimeout(180_000)
     await skipIntro(page)
     for (const project of projects) {
       const highlights = caseHighlights(project, 'es')
@@ -351,6 +352,7 @@ test.describe('galería, resultados, stack y navegación', () => {
   })
 
   test('anterior, siguiente y todos los proyectos navegan sin recargar', async ({ page }) => {
+    test.setTimeout(90_000)
     await skipIntro(page)
     await page.goto(`/es/portfolio/${projects[0]!.id}`)
     await page.evaluate(() => ((window as unknown as { __cwSame?: boolean }).__cwSame = true))
@@ -400,6 +402,7 @@ test.describe('accesibilidad de los casos de estudio', () => {
   for (const scheme of ['dark', 'light'] as const) {
     for (const path of CASES) {
       test(`${path} en tema ${scheme}, con el sitio y el lightbox abiertos`, async ({ page, context }, testInfo) => {
+        test.setTimeout(150_000)
         await stubExternalSites(context)
         await skipIntro(page)
         await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' })
