@@ -31,6 +31,8 @@ export type EducationEntry = {
 
 export type TechSkill = { id: string; name: string; icon?: string; progress: number }
 
+export type SkillLobe = { id: string; name: Localized; skills: string[]; sources: string[] }
+
 export type ServiceId = 'design' | 'development' | 'maintenance'
 
 export type ServiceItem = { id: ServiceId; title: Localized; description: Localized; icon: string }
@@ -48,7 +50,7 @@ export type SiteContent = {
     description: Localized
     image: ImageRef
     career: CareerEntry[]
-    skills: { description: Localized; bullets: Localized[]; tech: TechSkill[] }
+    skills: { description: Localized; bullets: Localized[]; tech: TechSkill[]; lobes?: SkillLobe[] }
     education: EducationEntry[]
     courses: { schools: CourseSchool[]; platzi: { href: string; label: Localized; icon?: string } }
     languages: LanguageSkill[]

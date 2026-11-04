@@ -19,6 +19,18 @@ export function formatPeriod(start: string, end: string | null, lang: Locale, pr
   return `${formatMonth(start, lang)} – ${end === null ? presentLabel : formatMonth(end, lang)}`
 }
 
+export type PeriodBound = { dateTime: string; label: string }
+
+export type PeriodParts = { start: PeriodBound; end: PeriodBound | null; current: boolean }
+
+export function periodParts(start: string, end: string | null, lang: Locale): PeriodParts {
+  return {
+    start: { dateTime: start, label: formatMonth(start, lang) },
+    end: end === null ? null : { dateTime: end, label: formatMonth(end, lang) },
+    current: end === null,
+  }
+}
+
 export function isPublishable(entries: ReadonlyArray<{ pending?: true }>): boolean {
   return entries.length > 0 && entries.every((entry) => entry.pending !== true)
 }
