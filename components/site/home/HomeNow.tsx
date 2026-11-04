@@ -59,11 +59,9 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   href={localizedPath(lang, `/portfolio/${role.project.id}`)}
                   className={cx(styles.link, styles.roleLink)}
                   data-cw-home-link="case"
+                  aria-label={`${labels.caseStudy}: ${role.project.title}`}
                 >
-                  <span className={styles.linkText}>
-                    {labels.caseStudy}
-                    <span className="cw-visually-hidden">: {role.project.title}</span>
-                  </span>
+                  <span className={styles.linkText}>{labels.caseStudy}</span>
                   <Arrow />
                 </Link>
               ) : null}

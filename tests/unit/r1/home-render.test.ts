@@ -67,7 +67,7 @@ describe('"Ahora trabajo en"', () => {
     const now = section(render(), 'data-cw-home-now')
     const synergos = projects.find((project) => project.title === 'Synergos')
     expect(now).toContain(`href="/es/portfolio/${synergos?.id}"`)
-    expect(now).toContain('<span class="cw-visually-hidden">: Synergos</span>')
+    expect(now).toMatch(/<a [^>]*aria-label="Ver caso de estudio: Synergos"[^>]*>[\s\S]*?>Ver caso de estudio<\/span>/)
     expect(now).toContain('href="/es/aboutMe"')
     expect([...now.matchAll(/data-cw-home-link="case"/g)]).toHaveLength(1)
   })

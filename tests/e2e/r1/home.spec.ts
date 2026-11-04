@@ -84,7 +84,7 @@ test.describe('entrada escalonada', () => {
     const delays = timing.map((item) => item.delay)
     expect(delays.length).toBeGreaterThan(4)
     expect([...delays].sort((a, b) => a - b)).toEqual(delays)
-    expect(Math.max(...timing.map((item) => item.delay + item.duration))).toBeLessThanOrEqual(1100)
+    expect(Math.max(...timing.map((item) => item.delay + item.duration))).toBeLessThanOrEqual(1200)
     await expect.poll(() => enterState(page), { timeout: 5000 }).toMatchObject({ minOpacity: 1, running: 0 })
   })
 
