@@ -239,7 +239,8 @@ test.describe('sin JavaScript', () => {
   })
 
   test('una ruta desconocida muestra el 404 con identidad', async ({ page }) => {
-    await page.goto('/es/esta-ruta-no-existe')
+    const response = await page.goto('/es/esta-ruta-no-existe')
+    expect(response?.status()).toBe(404)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Esta página se fue mar adentro')
     await expect(page.getByRole('link', { name: 'Volver al inicio' })).toHaveAttribute('href', '/es')
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
