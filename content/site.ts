@@ -215,6 +215,38 @@ export const site: SiteContent = {
         { id: 'sass', name: 'SASS', icon: '/assets/icons/skillsIcon/sass.png', progress: 90 },
         { id: 'git', name: 'GIT', icon: '/assets/icons/skillsIcon/merge.png', progress: 85 },
       ],
+      lobes: [
+        {
+          id: 'frontend',
+          name: { es: 'Frontend', en: 'Frontend' },
+          skills: ['angular', 'typescript', 'css', 'javascript', 'sass', 'html5'],
+          sources: ['platziMaster', 'fullStackJs', 'nextjs'],
+        },
+        {
+          id: 'architecture',
+          name: { es: 'Arquitectura', en: 'Architecture' },
+          skills: ['micro-frontends', 'spec-driven-development', 'native-federation'],
+          sources: ['architecture', 'unad'],
+        },
+        {
+          id: 'backend-cloud',
+          name: { es: 'Backend y nube', en: 'Backend & cloud' },
+          skills: ['dotnet', 'umbraco', 'csharp', 'azure'],
+          sources: ['fullStackJs', 'unad'],
+        },
+        {
+          id: 'applied-ai',
+          name: { es: 'IA aplicada', en: 'Applied AI' },
+          skills: ['ai-coding-agents', 'azure-ai-foundry', 'semantic-kernel', 'rag-embeddings'],
+          sources: ['architecture'],
+        },
+        {
+          id: 'craft',
+          name: { es: 'Oficio', en: 'Craft' },
+          skills: ['es', 'en', 'git'],
+          sources: ['eam', 'unad'],
+        },
+      ],
     },
     education: [
       {

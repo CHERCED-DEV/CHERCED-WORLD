@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { ImageRef, Localized } from '@/content/types'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import type { Locale } from '@/lib/i18n'
@@ -5,11 +6,18 @@ import { SectionTitle } from '../SectionTitle'
 import styles from './About.module.scss'
 import { AboutPortrait } from './AboutPortrait'
 
-export type AboutDescriptionProps = { lang: Locale; title: string; description: Localized; image: ImageRef }
+export type AboutDescriptionProps = {
+  id?: string
+  lang: Locale
+  title: string
+  description: Localized
+  image: ImageRef
+  children?: ReactNode
+}
 
-export function AboutDescription({ lang, title, description, image }: AboutDescriptionProps) {
+export function AboutDescription({ id, lang, title, description, image, children }: AboutDescriptionProps) {
   return (
-    <section className={styles.hero} aria-labelledby="about-title">
+    <section id={id} className={styles.hero} aria-labelledby="about-title" data-cw-scene="who">
       <AboutPortrait image={image} alt={image.alt[lang]} />
       <div className={styles.heroCopy}>
         <SectionTitle as="h1" id="about-title" size="lg">
@@ -18,6 +26,7 @@ export function AboutDescription({ lang, title, description, image }: AboutDescr
         <GlassSurface variant="standard" edge light className={styles.heroText}>
           <p>{description[lang]}</p>
         </GlassSurface>
+        {children}
       </div>
     </section>
   )

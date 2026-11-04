@@ -66,18 +66,22 @@ test.describe('contenido sin JavaScript', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(site.home.title.en)
   })
 
-  test('sobre mí: descripción, skills, tecnologías completas, cursos e idiomas', async ({ page }) => {
+  test('sobre mí: descripción, carrera, mapa de skills completo, cursos e idiomas (US6c)', async ({ page }) => {
     await page.goto('/es/aboutMe')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sobre mí')
     await expect(page.getByText(site.about.description.es)).toBeVisible()
     await expect(page.getByRole('img', { name: site.about.image.alt.es })).toBeVisible()
-    for (const title of ['Habilidades', 'Tecnologías', 'Cursos', 'Idiomas']) {
+    for (const title of ['Carrera', 'Lo que sé']) {
       await expect(page.getByRole('heading', { level: 2, name: title })).toBeVisible()
     }
+    const knowledge = page.locator('[data-cw-about="knowledge"]')
     for (const tech of site.about.skills.tech) {
-      await expect(page.locator('[data-cw-about="technologies"]').getByText(tech.name, { exact: true })).toBeVisible()
+      await expect(knowledge.getByText(tech.name, { exact: true })).toBeVisible()
     }
-    await expect(page.getByRole('button', { name: '¡Ver más!' })).toBeHidden()
+    for (const language of site.about.languages) {
+      await expect(knowledge.getByText(language.name.es.toUpperCase(), { exact: true })).toBeVisible()
+    }
+    await expect(knowledge.getByText('Platzi Master ·')).toBeVisible()
     await expect(page.getByRole('link', { name: new RegExp(site.about.courses.platzi.label.es) })).toHaveAttribute(
       'href',
       site.about.courses.platzi.href,
@@ -182,20 +186,19 @@ test.describe('filtro por tecnología', () => {
 test.describe('tecnologías en móvil', () => {
   onlyIn('mobile-chromium')
 
-  test('muestra 4 y "¡Ver más!" despliega el resto', async ({ page }) => {
-    const total = site.about.skills.tech.length
-    test.skip(total <= 4, 'hacen falta más de 4 tecnologías')
+  test('los lóbulos son chips y cada uno muestra sus tecnologías en el panel (US6c)', async ({ page }) => {
+    const lobes = site.about.skills.lobes ?? []
+    test.skip(lobes.length === 0, 'hacen falta lóbulos')
     await skipIntro(page)
     await page.goto('/es/aboutMe')
-    const items = page.locator('[data-cw-about="technologies"] li')
-    const toggle = page.getByRole('button', { name: '¡Ver más!' })
-    await expect(items).toHaveCount(total)
-    await expect(items.nth(3)).toBeVisible()
-    await expect(items.nth(4)).toBeHidden()
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false')
-    await toggle.click()
-    await expect(page.getByRole('button', { name: 'Ver menos' })).toHaveAttribute('aria-expanded', 'true')
-    await expect(items.nth(total - 1)).toBeVisible()
+    const chips = page.locator('[data-cw-lobe]')
+    await expect(chips).toHaveCount(lobes.length)
+    const panel = page.locator('[data-cw-terminal-body]')
+    for (const lobe of lobes) {
+      await page.locator(`[data-cw-lobe="${lobe.id}"]`).click()
+      await expect(page.locator(`[data-cw-lobe="${lobe.id}"]`)).toHaveAttribute('aria-pressed', 'true')
+      await expect(panel.locator('[data-cw-brain-skill]')).toHaveCount(lobe.skills.length)
+    }
   })
 })
 
@@ -310,7 +313,7 @@ test.describe('enlaces', () => {
       }
     }
     await page.goto('/es/aboutMe')
-    const platzi = page.locator('[data-cw-about="courses"] a[href^="https://"]')
+    const platzi = page.locator('[data-cw-about="knowledge"] [data-cw-brain] a[href^="https://"]')
     await expect(platzi).toHaveAttribute('target', '_blank')
     await expect(platzi).toHaveAttribute('rel', 'noopener noreferrer')
   })

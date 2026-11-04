@@ -10,6 +10,7 @@ import { CareerDeck } from './CareerDeck'
 import { Period } from './Period'
 
 export type AboutCareerProps = {
+  id?: string
   lang: Locale
   title: string
   presentLabel: string
@@ -18,11 +19,11 @@ export type AboutCareerProps = {
   entries: CareerEntry[]
 }
 
-export function AboutCareer({ lang, title, presentLabel, openLabel, closeLabel, entries }: AboutCareerProps) {
+export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLabel, entries }: AboutCareerProps) {
   if (!isPublishable(entries)) return null
 
   return (
-    <section className={styles.section} aria-labelledby="about-career" data-cw-about="career">
+    <section id={id} className={`${styles.section} ${styles.scene}`} aria-labelledby="about-career" data-cw-about="career" data-cw-scene="career">
       <SectionTitle id="about-career">{title}</SectionTitle>
       <ol className={styles.timeline} data-cw-timeline="">
         {entries.map((entry, index) => {

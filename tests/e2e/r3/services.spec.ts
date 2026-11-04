@@ -48,26 +48,13 @@ test.describe('servicios', () => {
   })
 })
 
-test.describe('sobre mí: controles', () => {
-  test('"¡Ver más!" en móvil despliega y repliega las 18 tecnologías', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'mobile-chromium', 'el botón solo existe en móvil con JS')
-    test.setTimeout(60_000)
-    await skipIntro(page)
-    await page.goto('/es/aboutMe')
-    const items = page.locator('[data-cw-about="technologies"] li')
-    await page.getByRole('button', { name: '¡Ver más!' }).click()
-    await expect(items.last()).toBeVisible()
-    await page.getByRole('button', { name: 'Ver menos' }).click()
-    await expect(items.nth(4)).toBeHidden()
-    await expect(page.getByRole('button', { name: '¡Ver más!' })).toHaveAttribute('aria-expanded', 'false')
-  })
-
+test.describe('sobre mí: enlaces', () => {
   test('el enlace de Platzi abre en pestaña nueva', async ({ page, context }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-chromium', 'una vez basta')
     await skipIntro(page)
     await context.route(/^https:\/\/platzi\.com/, (route) => route.fulfill({ status: 200, contentType: 'text/html', body: '<title>platzi</title>' }))
     await page.goto('/es/aboutMe')
-    const link = page.locator('[data-cw-about="courses"] a[href^="https://"]')
+    const link = page.locator('[data-cw-brain] [data-cw-platzi]')
     const [popup] = await Promise.all([page.waitForEvent('popup'), link.click()])
     await expect(popup).toHaveURL(getSite().about.courses.platzi.href)
   })
