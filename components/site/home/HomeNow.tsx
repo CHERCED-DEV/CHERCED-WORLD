@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { CornerMarks, GlowOrb, Hairline } from '@/components/ui/graphics'
+import { Reveal } from '@/components/ui/Reveal'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import styles from './Home.module.scss'
 import { splitAround, type NowRole } from './now'
@@ -13,6 +15,8 @@ export type HomeNowLabels = {
 }
 
 export const HOME_NOW_ID = 'home-now'
+
+const STAGGER = 70
 
 function Arrow() {
   return (
@@ -28,17 +32,19 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
 
   return (
     <section id={HOME_NOW_ID} className={styles.now} aria-labelledby="home-now-title" data-cw-home-now="">
-      <GlassSurface className={styles.panel}>
-        <div className={styles.head}>
+      <GlassSurface className={styles.panel} edge grain depth light>
+        <GlowOrb size="sm" x="0%" y="0%" />
+        <CornerMarks />
+        <Reveal className={styles.head}>
           <span className={styles.live} aria-hidden="true" />
           <h2 id="home-now-title" className={styles.heading}>
             {labels.title}
           </h2>
-          <span className={styles.headLine} aria-hidden="true" />
-        </div>
+          <Hairline glint className={styles.headLine} />
+        </Reveal>
         <ol className={styles.roles}>
-          {roles.map((role) => (
-            <li key={role.id} className={styles.role} data-cw-home-role={role.id}>
+          {roles.map((role, index) => (
+            <Reveal as="li" key={role.id} delay={(index + 1) * STAGGER} className={styles.role} data-cw-home-role={role.id}>
               <h3 className={styles.company}>{role.company}</h3>
               <p className={styles.roleName}>{role.role}</p>
               <p className={styles.since}>
@@ -61,15 +67,15 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   <Arrow />
                 </Link>
               ) : null}
-            </li>
+            </Reveal>
           ))}
         </ol>
-        <div className={styles.foot}>
+        <Reveal className={styles.foot} delay={(roles.length + 1) * STAGGER}>
           <Link href={localizedPath(lang, '/aboutMe')} className={styles.link} data-cw-home-link="about">
             <span className={styles.linkText}>{labels.more}</span>
             <Arrow />
           </Link>
-        </div>
+        </Reveal>
       </GlassSurface>
     </section>
   )

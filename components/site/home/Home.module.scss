@@ -37,7 +37,7 @@
     left: 0;
     width: 1px;
     height: 45%;
-    background: linear-gradient(to bottom, transparent, var(--cw-intro-accent));
+    background: linear-gradient(to bottom, transparent, var(--cw-graphic-accent));
     transform: translateY(-100%);
     animation: home-cue 2.6s var(--cw-ease) 1.2s infinite;
   }
@@ -67,7 +67,7 @@
   @include layout.container;
   display: grid;
   justify-items: center;
-  padding-block: clamp(2.5rem, 1.5rem + 4vw, 6rem);
+  padding-block: var(--cw-section-gap);
 
   &:focus {
     outline: none;
@@ -75,7 +75,7 @@
 }
 
 .panel {
-  --_line: color-mix(in srgb, var(--cw-fg) 16%, transparent);
+  --_line: var(--cw-graphic-line-strong);
   container-type: inline-size;
   width: min(100%, clamp(680px, 60vw, 1180px));
   padding: clamp(1.5rem, 1rem + 2.4vw, 3.75rem);
@@ -94,14 +94,14 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--cw-intro-accent);
-  box-shadow: 0 0 10px color-mix(in srgb, var(--cw-intro-accent) 70%, transparent);
+  background: var(--cw-graphic-accent);
+  box-shadow: 0 0 10px var(--cw-graphic-glow), 0 0 4px color-mix(in srgb, var(--cw-graphic-accent) 70%, transparent);
 
   &::after {
     content: '';
     position: absolute;
     inset: -4px;
-    border: 1px solid var(--cw-intro-accent);
+    border: 1px solid var(--cw-graphic-accent);
     border-radius: 50%;
     opacity: 0;
     animation: home-live 2.8s var(--cw-ease) infinite;
@@ -125,16 +125,15 @@
   flex: none;
   font-size: var(--cw-text-sm);
   font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: 0.26em;
+  line-height: var(--cw-leading-snug);
+  letter-spacing: var(--cw-tracking-eyebrow);
   text-transform: uppercase;
 }
 
-.headLine {
-  flex: 1 1 auto;
+.head .headLine {
+  flex: 1 1 0;
+  width: auto;
   min-width: 1.5rem;
-  height: 1px;
-  background: linear-gradient(90deg, var(--_line), transparent);
 }
 
 .roles {
@@ -163,7 +162,7 @@
   color: var(--cw-fg-muted);
   font-size: var(--cw-text-xs);
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--cw-tracking-label);
   text-transform: uppercase;
   white-space: nowrap;
 
@@ -186,15 +185,15 @@
 .company {
   font-size: clamp(1.5rem, 1rem + 2.6cqi, 2.625rem);
   font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.01em;
+  line-height: var(--cw-leading-tight);
+  letter-spacing: calc(var(--cw-tracking-display) / 2);
   overflow-wrap: anywhere;
 }
 
 .roleName {
   color: var(--cw-fg-muted);
   font-size: clamp(0.9375rem, 0.85rem + 0.5cqi, 1.0625rem);
-  line-height: 1.5;
+  line-height: var(--cw-leading-snug);
 }
 
 .roleLink {
@@ -217,7 +216,7 @@
   color: var(--cw-fg);
   font-size: var(--cw-text-xs);
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--cw-tracking-label);
   text-decoration: none;
   text-transform: uppercase;
 
@@ -230,12 +229,16 @@
   &:focus-visible .arrow {
     transform: translateX(4px);
   }
+
+  &:active {
+    transform: scale(var(--cw-press-scale));
+  }
 }
 
 .linkText {
   padding-block: 2px;
   background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
-  transition: background-size var(--cw-duration-base) var(--cw-ease);
+  transition: background-size var(--cw-duration-base) var(--cw-ease-out);
 }
 
 .arrow {
@@ -245,7 +248,7 @@
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: transform var(--cw-duration-base) var(--cw-ease);
+  transition: transform var(--cw-duration-base) var(--cw-ease-spring);
 }
 
 @media (prefers-reduced-motion: reduce) {

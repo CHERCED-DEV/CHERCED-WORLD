@@ -57,7 +57,7 @@
   max-width: 100%;
   font-size: clamp(1.125rem, 7.3cqi, 5.5rem);
   font-weight: 800;
-  line-height: 1.04;
+  line-height: var(--cw-leading-display);
   letter-spacing: 0.02em;
   overflow-wrap: normal;
   word-break: keep-all;
@@ -91,17 +91,19 @@
     background-color var(--cw-duration-fast) var(--cw-ease),
     border-color var(--cw-duration-fast) var(--cw-ease),
     box-shadow var(--cw-duration-base) var(--cw-ease),
-    transform var(--cw-duration-fast) var(--cw-ease);
+    transform var(--cw-duration-fast) var(--cw-ease-out);
 
   &:hover {
-    border-color: color-mix(in srgb, var(--cw-intro-accent) 55%, var(--cw-glass-border));
+    border-color: color-mix(in srgb, var(--cw-graphic-accent) 55%, var(--cw-glass-border));
     background: var(--cw-glass-subtle-bg);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--cw-intro-accent) 12%, transparent);
-    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 4px var(--cw-graphic-glow),
+      0 10px 24px -14px var(--cw-graphic-accent);
+    transform: translateY(var(--cw-hover-lift));
   }
 
   &:active {
-    transform: scale(0.97);
+    transform: scale(var(--cw-press-scale));
   }
 
   img {

@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react'
 import type { SiteContent } from '@/content/types'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { CornerMarks, GridLines, Scanline } from '@/components/ui/graphics'
 import { Separator } from '@/components/ui/Separator'
 import type { Locale } from '@/lib/i18n'
 import { homeSocials, isExternal } from './format'
@@ -33,7 +34,10 @@ export function HomeBanner({ lang, home, socials, socialsLabel }: HomeBannerProp
   return (
     <section className={styles.banner} aria-labelledby="home-title" data-cw-home-banner="">
       <HeroOrbit />
-      <GlassSurface variant="subtle" className={styles.card}>
+      <GlassSurface variant="subtle" edge grain depth light className={styles.card}>
+        <GridLines fade="radial" />
+        <Scanline axis="x" edge="bottom" delay={1400} />
+        <CornerMarks inset={-12} size={18} />
         <p className={cx(styles.greeting, enter.enter)} style={step(0)}>
           <span className={styles.greetingText}>
             {home.greeting[lang]} <strong>{home.name}</strong>

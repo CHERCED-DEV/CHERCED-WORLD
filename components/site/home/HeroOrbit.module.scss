@@ -36,19 +36,19 @@
 
 .ring {
   ry: var(--_ry-a);
-  stroke: color-mix(in srgb, var(--cw-fg) 24%, transparent);
+  stroke: var(--cw-graphic-line-strong);
   stroke-width: 1;
 }
 
 .faint {
   ry: var(--_ry-b);
-  stroke: color-mix(in srgb, var(--cw-fg) 11%, transparent);
+  stroke: color-mix(in srgb, var(--cw-graphic-line-strong) 50%, transparent);
   stroke-width: 1;
 }
 
 .dashed {
   ry: var(--_ry-c);
-  stroke: color-mix(in srgb, var(--cw-intro-accent) 55%, transparent);
+  stroke: color-mix(in srgb, var(--cw-graphic-accent) 55%, transparent);
   stroke-width: 1;
   stroke-dasharray: 1 9;
 }
@@ -87,8 +87,8 @@
 .electron {
   width: 6px;
   height: 6px;
-  background: var(--cw-intro-accent);
-  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--cw-intro-accent) 55%, transparent);
+  background: var(--cw-graphic-accent);
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--cw-graphic-accent) 55%, transparent);
   offset-path: ellipse(49% var(--_track-a) at 50% 50%);
   offset-distance: 18%;
   animation-duration: 42s;

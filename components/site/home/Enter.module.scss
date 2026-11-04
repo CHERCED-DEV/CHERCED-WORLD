@@ -3,7 +3,7 @@
 }
 
 :global(:root[data-js]:not([data-intro='pending'])) .enter {
-  animation: home-enter 620ms var(--cw-ease) calc(60ms + var(--cw-home-step, 0) * 90ms) both;
+  animation: home-enter 620ms var(--cw-ease-out) calc(60ms + var(--cw-home-step, 0) * 90ms) both;
 }
 
 :global(:root[data-js]:not([data-intro='pending'])) .title {
