@@ -1,19 +1,36 @@
+@use '../blog' as blog;
+
 .heading {
-  margin-top: var(--cw-space-7);
-  margin-bottom: var(--cw-space-4);
-  scroll-margin-top: calc(var(--cw-header-h) + var(--cw-space-4));
+  position: relative;
+  margin-top: 2.2em;
+  margin-bottom: 0.75em;
+  scroll-margin-top: calc(var(--cw-header-h) + var(--cw-space-5));
 }
 
 .h2 {
-  font-size: var(--cw-text-xl);
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  padding-top: var(--cw-space-4);
+  font-size: clamp(1.3125rem, 0.9vw + 1rem, 1.625rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
+    width: 40px;
+    height: 3px;
+    border-radius: 2px;
+    background: blog.$accent-mix;
+  }
 }
 
 .h3 {
-  margin-top: var(--cw-space-6);
-  font-size: var(--cw-text-lg);
+  margin-top: 1.8em;
+  font-size: clamp(1.125rem, 0.5vw + 0.95rem, 1.3125rem);
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .anchor {
@@ -31,6 +48,7 @@
   &:hover,
   &:focus-visible {
     text-decoration: underline;
+    text-decoration-color: blog.$accent-mix;
     text-underline-offset: 0.2em;
 
     &::after {

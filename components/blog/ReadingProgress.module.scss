@@ -1,0 +1,15 @@
+@use './blog' as blog;
+
+.progress {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: calc(var(--cw-z-header) + 1);
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cw-fg) 70%, transparent), blog.$accent-mix);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--cw-intro-accent) 45%, transparent);
+  transform: scaleX(var(--cw-progress, 0));
+  transform-origin: 0 50%;
+  will-change: transform;
+}

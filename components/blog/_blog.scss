@@ -1,13 +1,13 @@
 @use 'glass' as *;
 
-@mixin frame($font-size: var(--cw-text-sm)) {
-  @include glass(subtle);
+@mixin frame-box($font-size: var(--cw-text-sm)) {
   display: inline-block;
   max-width: 100%;
   padding: 20px;
   border: 8px solid var(--cw-fg);
   border-radius: 0;
   box-shadow: 7px 11px 20px rgb(128 128 128 / 0.55);
+  color: var(--cw-fg);
   font-size: $font-size;
   font-weight: 700;
   line-height: 1.4;
@@ -15,6 +15,16 @@
   text-align: center;
   text-transform: uppercase;
   overflow-wrap: anywhere;
+}
+
+@mixin frame($font-size: var(--cw-text-sm)) {
+  @include glass(subtle);
+  @include frame-box($font-size);
+}
+
+@mixin frame-flat($font-size: var(--cw-text-sm)) {
+  @include frame-box($font-size);
+  background: var(--cw-glass-subtle-bg);
 }
 
 @mixin post-image {
@@ -33,3 +43,13 @@
   font-weight: 700;
   text-transform: uppercase;
 }
+
+@mixin kicker {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+}
+
+$accent-mix: color-mix(in srgb, var(--cw-intro-accent) 72%, var(--cw-fg));

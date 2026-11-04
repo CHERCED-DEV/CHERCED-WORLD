@@ -128,8 +128,9 @@
   cursor: pointer;
 
   input {
-    width: 18px;
-    height: 18px;
+    flex: none;
+    width: 24px;
+    height: 24px;
     accent-color: var(--cw-fg);
   }
 }
