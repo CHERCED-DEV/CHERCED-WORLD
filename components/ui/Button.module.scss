@@ -18,10 +18,16 @@
     background-color var(--cw-duration-fast) var(--cw-ease),
     color var(--cw-duration-fast) var(--cw-ease),
     border-color var(--cw-duration-fast) var(--cw-ease),
-    transform var(--cw-duration-fast) var(--cw-ease);
+    box-shadow var(--cw-duration-base) var(--cw-ease-out),
+    transform var(--cw-duration-fast) var(--cw-ease-out);
 
-  &:active {
-    transform: translateY(1px);
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled, [aria-disabled='true']) {
+    transform: scale(var(--cw-press-scale));
+    transition-duration: var(--cw-duration-instant);
   }
 
   &:disabled,
@@ -51,10 +57,14 @@
 
 .glass {
   @include glass(standard);
+  @include glass-grain;
   border-radius: 999px;
 
   &:hover:not(:disabled) {
     border-color: var(--cw-fg);
+    box-shadow:
+      var(--cw-glass-shadow),
+      0 10px 28px -14px var(--cw-graphic-glow);
   }
 }
 
@@ -66,6 +76,7 @@
   &:hover:not(:disabled) {
     background: transparent;
     color: var(--cw-fg);
+    box-shadow: 0 10px 28px -14px var(--cw-graphic-glow);
   }
 }
 

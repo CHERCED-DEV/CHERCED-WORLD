@@ -43,5 +43,8 @@
   "form.code.invalid": "Check the code",
   "privacy.consent": "I authorize the processing of my personal data as described in the {privacyPolicy}.",
   "privacy.policyLink": "privacy policy",
-  "privacy.required": "You need to accept the privacy policy to send this form."
+  "privacy.required": "You need to accept the privacy policy to send this form.",
+  "mailbox.label": "Inbox",
+  "mailbox.unreadOne": "1 unread message",
+  "mailbox.unreadMany": "{count} unread messages"
 }

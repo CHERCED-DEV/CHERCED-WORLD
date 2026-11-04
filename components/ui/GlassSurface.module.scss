@@ -15,3 +15,19 @@
 .strong {
   @include glass(strong);
 }
+
+.grain {
+  @include glass-grain;
+}
+
+.depth {
+  @include glass-depth;
+}
+
+.edge {
+  @include glass-edge;
+}
+
+.light {
+  @include glass-light;
+}
