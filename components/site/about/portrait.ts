@@ -13,4 +13,6 @@ export function themedPortrait(image: ImageRef): ThemedPortrait {
   return { dark: image, light: light ? { ...image, src: light } : null }
 }
 
-export const PORTRAIT_SIZES = '(min-width: 992px) 380px, (min-width: 768px) 340px, 78vw'
+export const PORTRAIT_SIZES = '(min-width: 992px) 400px, (min-width: 768px) 340px, 78vw'
+
+export const LIGHT_SCHEME_QUERY = '(prefers-color-scheme: light)'

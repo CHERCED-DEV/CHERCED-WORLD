@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { lightVariantSrc, themedPortrait } from '@/components/site/about/portrait'
+import { LIGHT_SCHEME_QUERY, lightVariantSrc, themedPortrait } from '@/components/site/about/portrait'
 import { getSite } from '@/lib/content'
 import { imageSize } from '../lc/image-size'
 
@@ -37,12 +37,14 @@ describe('retrato de "Sobre mí" por tema', () => {
     expect(themedPortrait({ ...image, src: '/assets/imgs/meParallax.webp' }).light).toBeNull()
   })
 
-  it('el cambio de tema se resuelve en CSS con data-theme y prefers-color-scheme, sin JS', () => {
+  it('el cambio de tema se resuelve con <picture> y CSS sobre data-theme, sin JS', () => {
     const css = readFileSync(path.resolve(process.cwd(), 'components/site/about/About.module.scss'), 'utf8')
-    const site = readFileSync(path.resolve(process.cwd(), 'components/site/_site.scss'), 'utf8')
-    expect(site).toContain(":global(:root[data-theme='light']) &")
-    expect(site).toMatch(/prefers-color-scheme: light\)\s*\{\s*:global\(:root:not\(\[data-theme\]\)\) &/)
-    expect(css).toMatch(/\.portraitDark\s*\{\s*@include site\.light-theme\s*\{\s*display: none;/)
-    expect(css).toMatch(/\.portraitLight\s*\{\s*@include site\.light-theme\s*\{\s*display: block;/)
+    const tsx = readFileSync(path.resolve(process.cwd(), 'components/site/about/AboutPortrait.tsx'), 'utf8')
+    expect(LIGHT_SCHEME_QUERY).toBe('(prefers-color-scheme: light)')
+    expect(tsx).toMatch(/<source media=\{LIGHT_SCHEME_QUERY\}/)
+    expect(tsx).toMatch(/loading: 'eager', fetchPriority: 'high'/)
+    expect(css).toMatch(/@media \(prefers-color-scheme: light\) \{\s*:global\(:root\[data-theme='dark'\]\) \.portraitAuto \{\s*display: none;/)
+    expect(css).toMatch(/@media not all and \(prefers-color-scheme: light\) \{\s*:global\(:root\[data-theme='light'\]\) \.portraitAuto \{\s*display: none;/)
+    expect(css).toMatch(/\.portraitForcedDark,\s*\.portraitForcedLight \{\s*display: none;/)
   })
 })

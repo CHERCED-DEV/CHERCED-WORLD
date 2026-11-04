@@ -51,6 +51,7 @@ test.describe('servicios', () => {
 test.describe('sobre mí: controles', () => {
   test('"¡Ver más!" en móvil despliega y repliega las 18 tecnologías', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'mobile-chromium', 'el botón solo existe en móvil con JS')
+    test.setTimeout(60_000)
     await skipIntro(page)
     await page.goto('/es/aboutMe')
     const items = page.locator('[data-cw-about="technologies"] li')

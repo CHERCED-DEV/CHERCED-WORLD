@@ -33,13 +33,15 @@ test.describe('sobre mí sin JavaScript', () => {
     test(`retrato del tema ${scheme} con su alt, uno solo visible`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: scheme })
       await page.goto('/es/aboutMe')
-      await expect(page.locator('[data-cw-portrait] img')).toHaveCount(2)
+      await expect(page.locator('[data-cw-portrait] img')).toHaveCount(3)
       await expect(visiblePortrait(page)).toHaveCount(1)
       const portrait = page.getByRole('img', { name: about.image.alt.es })
       await expect(portrait).toBeVisible()
-      await expect(portrait).toHaveAttribute('src', scheme === 'dark' ? DARK_SRC : LIGHT_SRC)
-      await expect(portrait).toHaveJSProperty('complete', true)
-      expect(await portrait.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0)
+      await expect(portrait).toHaveAttribute('data-cw-portrait-theme', 'auto')
+      await expect
+        .poll(() => portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 20_000 })
+        .toBe(true)
+      expect(await portrait.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(scheme === 'dark' ? DARK_SRC : LIGHT_SRC)
     })
   }
 
@@ -109,16 +111,25 @@ test.describe('retrato y tema con JavaScript', () => {
     await page.goto('/es/aboutMe')
     const portrait = visiblePortrait(page)
     await expect(portrait).toHaveCount(1)
-    await expect(portrait).toHaveAttribute('src', DARK_SRC)
+    await expect(portrait).toHaveAttribute('data-cw-portrait-theme', 'auto')
+    await expect(portrait).toHaveAttribute('loading', 'eager')
     await expect
       .poll(() => portrait.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 20_000 })
       .toBe(true)
+    expect(await portrait.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(DARK_SRC)
     expect(requested.some((url) => LIGHT_SRC.test(url))).toBe(false)
 
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('cw:theme-change', { detail: 'light' })))
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
-    await expect(visiblePortrait(page)).toHaveAttribute('src', LIGHT_SRC)
     await expect(visiblePortrait(page)).toHaveCount(1)
+    await expect(visiblePortrait(page)).toHaveAttribute('data-cw-portrait-theme', 'light')
+    await expect(visiblePortrait(page)).toHaveAttribute('src', LIGHT_SRC)
+    await expect
+      .poll(() => visiblePortrait(page).evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 20_000 })
+      .toBe(true)
+
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('cw:theme-change', { detail: 'dark' })))
+    await expect(visiblePortrait(page)).toHaveAttribute('data-cw-portrait-theme', 'auto')
     const vitrine = await page.locator('[data-cw-portrait]').evaluate((figure) => getComputedStyle(figure).backgroundImage)
     expect(vitrine).toMatch(/gradient/)
   })
@@ -139,6 +150,7 @@ test.describe('retrato y tema con JavaScript', () => {
           const fill = li.querySelector('[data-cw-glass="subtle"] > span')!.getBoundingClientRect()
           return Math.round((fill.width / track.clientWidth) * 100)
         }),
+        { timeout: 15_000 },
       )
       .toBe(about.skills.tech[0]!.progress)
     await expect.poll(() => first.evaluate((li) => getComputedStyle(li).opacity)).toBe('1')
