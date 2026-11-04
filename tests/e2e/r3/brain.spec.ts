@@ -67,10 +67,10 @@ test.describe('tres escenas con índice', () => {
 test.describe('mapa cerebral con teclado y mouse', () => {
   onlyIn('desktop-chromium')
 
-  test('cinco lóbulos con aria-pressed; el primero arranca activo con su panel', async ({ page }) => {
+  test('seis lóbulos con aria-pressed; el primero arranca activo con su panel', async ({ page }) => {
     await openKnowledge(page)
     const buttons = page.locator('[data-cw-lobe]')
-    await expect(buttons).toHaveCount(5)
+    await expect(buttons).toHaveCount(6)
     await expect(buttons).toHaveText(data.lobes.map((item) => item.name))
     await expect(lobe(page, 'frontend')).toHaveAttribute('aria-pressed', 'true')
     const body = page.locator('[data-cw-terminal-body]')
@@ -110,7 +110,7 @@ test.describe('mapa cerebral con teclado y mouse', () => {
     await expect(lobe(page, 'architecture')).toHaveAttribute('aria-pressed', 'true')
 
     await page.keyboard.press('End')
-    await expect(lobe(page, 'craft')).toHaveAttribute('aria-pressed', 'true')
+    await expect(lobe(page, 'business')).toHaveAttribute('aria-pressed', 'true')
     await page.keyboard.press('ArrowRight')
     await expect(lobe(page, 'frontend')).toBeFocused()
 
@@ -158,6 +158,57 @@ test.describe('mapa cerebral con teclado y mouse', () => {
   })
 })
 
+test.describe('corrección de skills (T229)', () => {
+  onlyIn('desktop-chromium', 'mobile-chromium')
+
+  test('los seis lóbulos abren su archivo, con practices.lobe y business.lobe en lugar de Oficio', async ({ page }) => {
+    await openKnowledge(page)
+    await expect(page.locator('[data-cw-lobe]')).toHaveText(data.lobes.map((item) => item.name))
+    await expect(page.getByRole('button', { name: /Oficio|Craft/ })).toHaveCount(0)
+    const body = page.locator('[data-cw-terminal-body]')
+    for (const [id, file] of [
+      ['practices', 'practices.lobe'],
+      ['business', 'business.lobe'],
+      ['architecture', 'architecture.lobe'],
+    ] as const) {
+      await lobe(page, id).click()
+      await expect(body).toContainText(`cat ${file}`)
+      await expect(body.locator('[data-cw-brain-skill]')).toHaveCount(data.lobes.find((item) => item.id === id)!.skills.length)
+    }
+  })
+
+  test('las skills de 2023 vuelven y llevan su chip de años junto al porcentaje', async ({ page }) => {
+    await openKnowledge(page)
+    const body = page.locator('[data-cw-terminal-body]')
+    await lobe(page, 'frontend').click()
+    for (const [id, used] of [
+      ['react', '2022–2023 · 2026'],
+      ['nextjs', '2022–2023 · 2026'],
+      ['figma', '2019–hoy'],
+      ['angular', '2022–hoy'],
+    ] as const) {
+      const row = body.locator(`[data-cw-brain-skill="${id}"]`)
+      await expect(row).toBeVisible()
+      await expect(row.locator('[data-cw-used]')).toHaveText(used)
+    }
+    await lobe(page, 'backend-cloud').click()
+    for (const id of ['nodejs', 'mongodb']) await expect(body.locator(`[data-cw-brain-skill="${id}"] [data-cw-used]`)).toHaveText('2022–2023')
+    await expect(body.locator('[data-cw-brain-skill="dotnet"] [data-cw-used]')).toHaveCount(0)
+  })
+
+  test('ningún lóbulo muestra una línea de proyectos vacía', async ({ page }) => {
+    await openKnowledge(page)
+    const body = page.locator('[data-cw-terminal-body]')
+    for (const item of data.lobes) {
+      await lobe(page, item.id).click()
+      const line = body.locator('[data-cw-meta="projects"]')
+      if ((await line.count()) === 0) continue
+      await expect(line.getByRole('link')).toHaveCount(item.projects.length)
+      expect(item.projects.length, item.id).toBeGreaterThan(0)
+    }
+  })
+})
+
 test.describe('movimiento reducido', () => {
   onlyIn('desktop-chromium')
 
@@ -165,8 +216,8 @@ test.describe('movimiento reducido', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await openKnowledge(page)
     await expect(page.locator('[data-cw-rain]')).toBeHidden()
-    await lobe(page, 'craft').click()
-    await expect(page.locator('[data-cw-terminal-body] [data-cw-decode]')).toHaveText('Oficio')
+    await lobe(page, 'practices').click()
+    await expect(page.locator('[data-cw-terminal-body] [data-cw-decode]')).toHaveText('Prácticas de ingeniería')
     const running = await page
       .locator('[data-cw-brain]')
       .evaluate(
@@ -216,7 +267,7 @@ test.describe('móvil a 375 px', () => {
     await page.setViewportSize({ width: 375, height: 812 })
     await openKnowledge(page)
     const chips = page.locator('[data-cw-lobe]')
-    await expect(chips).toHaveCount(5)
+    await expect(chips).toHaveCount(data.lobes.length)
     const strip = page.locator('[data-cw-brain] [role="group"]').first()
     const style = await strip.evaluate((node) => ({ overflow: getComputedStyle(node).overflowX, display: getComputedStyle(node).display }))
     expect(style.overflow).toBe('auto')

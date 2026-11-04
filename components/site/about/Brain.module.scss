@@ -457,7 +457,10 @@ $green: var(--cw-intro-accent);
   @media (min-width: 1100px) {
     max-height: 432px;
     padding-right: var(--cw-space-2);
+    padding-bottom: 28px;
     overflow-y: auto;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
     overscroll-behavior: contain;
     scrollbar-width: thin;
   }
@@ -566,7 +569,7 @@ $green: var(--cw-intro-accent);
 
 .fallbackSkill {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-columns: 22px minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--cw-space-1) var(--cw-space-3);
 

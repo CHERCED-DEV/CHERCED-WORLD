@@ -178,19 +178,21 @@ test.describe('bug 5: íconos de skills a su tamaño real', () => {
 test.describe('bug 7: un bloque sin contenido no se muestra', () => {
   onlyIn('desktop-chromium', 'no-js')
 
-  test('Oficio no tiene proyectos: la línea "proyectos" no existe; IA aplicada muestra "Aprendiendo ahora"', async ({ page }, testInfo) => {
+  test('ninguna línea de "proyectos" sale vacía; IA aplicada muestra "Aprendiendo ahora"', async ({ page }, testInfo) => {
     await skipIntro(page)
     await page.goto('/es/aboutMe')
-    const craft = data.lobes.find((lobe) => lobe.id === 'craft')!
-    expect(craft.projects).toEqual([])
-    const scope =
-      testInfo.project.name === 'no-js'
-        ? page.locator('[data-cw-lobe-list="craft"]')
-        : (await page.locator('[data-cw-lobe="craft"]').click(), page.locator('[data-cw-terminal-body="craft"]'))
-    await expect(scope).toBeVisible()
-    await expect(scope.locator('[data-cw-meta="projects"]')).toHaveCount(0)
-    await expect(scope).not.toContainText(/proyectos:|ninguno/)
-    await expect(scope.locator('[data-cw-meta="sources"]')).toBeVisible()
+    for (const lobe of data.lobes) {
+      const scope =
+        testInfo.project.name === 'no-js'
+          ? page.locator(`[data-cw-lobe-list="${lobe.id}"]`)
+          : (await page.locator(`[data-cw-lobe="${lobe.id}"]`).click(), page.locator(`[data-cw-terminal-body="${lobe.id}"]`))
+      await expect(scope).toBeVisible()
+      const line = scope.locator('[data-cw-meta="projects"]')
+      if (lobe.projects.length === 0) await expect(line).toHaveCount(0)
+      else await expect(line.getByRole('link')).toHaveCount(lobe.projects.length)
+      await expect(scope).not.toContainText(/ninguno/)
+      await expect(scope.locator('[data-cw-meta="sources"]')).toBeVisible()
+    }
 
     const ai =
       testInfo.project.name === 'no-js'

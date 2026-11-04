@@ -4,8 +4,8 @@ import { LANGS, skipIntro, type Lang } from './support/pages'
 
 const site = getSite()
 const CAREER_ENTRIES = site.about.career.length
-const SKILL_NAMES = site.about.skills.tech.map((tech) => tech.name)
-const LOBES = 5
+const SKILL_NAMES = site.about.skills.tech.map((tech) => tech.label?.es ?? tech.name)
+const LOBES = 6
 const lobeNames = (lang: Lang): string[] => (site.about.skills.lobes ?? []).map((lobe) => lobe.name[lang])
 const HEIGHT_001_AT_1440: Record<Lang, number> = { es: 7598, en: 7390 }
 const MAX_HEIGHT_RATIO = 0.6
@@ -77,7 +77,7 @@ test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await open(page, 'es')
     const names = lobeNames('es')
-    expect(names, 'el contenido declara cinco lóbulos (E-03)').toHaveLength(LOBES)
+    expect(names, 'el contenido declara seis lóbulos (E-03, T229)').toHaveLength(LOBES)
     const group = await lobes(page, 'es')
     for (const lobe of group) await expect(lobe).toHaveAttribute('aria-pressed', /^(true|false)$/)
     const [, , knowledge] = await scenes(page)

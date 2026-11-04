@@ -50,14 +50,14 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
                       {monogram(skill.name)}
                     </span>
                   )}
-                  <span className={styles.termName}>
-                    {skill.name}
-                    {skill.used ? (
-                      <span className={styles.usedChip} data-cw-used="">
-                        {skill.used}
-                      </span>
-                    ) : null}
-                  </span>
+                  <span className={styles.termName}>{skill.name}</span>
+                  {skill.used ? (
+                    <span className={styles.usedChip} data-cw-used="">
+                      {skill.used}
+                    </span>
+                  ) : (
+                    <span aria-hidden="true" />
+                  )}
                   <LevelBar value={skill.level} label={levels[skill.id] ?? `${skill.level}%`} />
                 </li>
               ))}
