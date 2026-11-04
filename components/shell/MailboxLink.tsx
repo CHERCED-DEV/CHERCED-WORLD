@@ -1,12 +1,12 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n/config'
 import controls from './controls.module.scss'
 import { badgeText, MAILBOX_ENDPOINT, MAILBOX_INTERVAL_MS, mailboxLabel, parseUnread, startVisiblePolling } from './mailbox'
+import { SelfLink } from './SelfLink'
 
 export type MailboxLabels = { name: string; one: string; many: string }
 
@@ -44,7 +44,7 @@ export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLab
   }, [])
 
   return (
-    <Link
+    <SelfLink
       href={`/${lang}/contactMe`}
       prefetch={false}
       className={cx(controls.iconButton, controls.mailbox)}
@@ -58,6 +58,6 @@ export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLab
           {badgeText(unread)}
         </span>
       ) : null}
-    </Link>
+    </SelfLink>
   )
 }

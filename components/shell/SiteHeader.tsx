@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { cx } from '@/components/ui/cx'
 import { Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
@@ -11,6 +10,7 @@ import { MailboxLink } from './MailboxLink'
 import { FLOAT_MENU_ID, type NavItem, type ShellLabels } from './nav'
 import { NavLinks } from './NavLinks'
 import { PaletteTrigger } from './PaletteTrigger'
+import { SelfLink } from './SelfLink'
 import styles from './SiteHeader.module.scss'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -21,9 +21,9 @@ export function SiteHeader({ lang, items, labels }: SiteHeaderProps) {
     <header id="header" className={styles.header} data-cw-glass="standard">
       <div className={cx('cw-container', styles.inner)}>
         <div className={styles.start}>
-          <Link href={`/${lang}`} className={styles.logo} aria-label={labels.home}>
+          <SelfLink href={`/${lang}`} className={styles.logo} aria-label={labels.home}>
             <Image src="/assets/icons/brandLogo.png" alt="" width={44} height={44} priority unoptimized />
-          </Link>
+          </SelfLink>
           <BackLink label={labels.back} />
         </div>
         <NavLinks lang={lang} items={items} label={labels.nav} variant="bar" />

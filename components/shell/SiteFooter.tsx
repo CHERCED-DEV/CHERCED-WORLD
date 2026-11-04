@@ -1,11 +1,11 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import type { SocialId, SocialLink } from '@/content/types'
 import { cx } from '@/components/ui/cx'
 import { GlowOrb, GridLines, Hairline, Scanline } from '@/components/ui/graphics'
 import type { Locale } from '@/lib/i18n/config'
 import { BackToTop } from './BackToTop'
 import { copyrightYears, type ShellLabels } from './nav'
+import { SelfLink } from './SelfLink'
 import styles from './SiteFooter.module.scss'
 
 export const SOCIAL_ICONS: Record<SocialId, string> = {
@@ -55,9 +55,9 @@ export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
           </strong>{' '}
           {labels.rights}
         </p>
-        <Link href={`/${lang}/privacy`} className={styles.privacy}>
+        <SelfLink href={`/${lang}/privacy`} className={styles.privacy}>
           {labels.privacy}
-        </Link>
+        </SelfLink>
       </div>
     </footer>
   )

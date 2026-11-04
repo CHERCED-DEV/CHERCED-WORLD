@@ -23,6 +23,8 @@ describe('navegación del shell', () => {
     expect(parentPath('/en/blog/post1')).toBe('/en/blog')
     expect(parentPath('/es/aboutMe')).toBeNull()
     expect(parentPath('/es')).toBeNull()
+    expect(parentPath('/es/inbox/setup')).toBe('/es')
+    expect(parentPath('/en/inbox/comments')).toBe('/en/inbox')
   })
 
   it('reconoce Ctrl+K y ⌘+K, sin modificadores extra', () => {
