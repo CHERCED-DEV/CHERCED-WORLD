@@ -284,10 +284,9 @@ test.describe('ProjectEmbed en móvil', () => {
     await page.locator('[data-cw-embed-sheet-open]').click()
     const sheet = page.locator('[data-cw-embed] dialog')
     await expect(sheet).toBeVisible()
-    const box = (await sheet.boundingBox())!
     const viewport = page.viewportSize()!
-    expect(box.width).toBeGreaterThanOrEqual(viewport.width - 1)
-    expect(box.height).toBeGreaterThanOrEqual(viewport.height - 1)
+    await expect.poll(async () => (await sheet.boundingBox())?.width ?? 0, { message: 'la hoja ocupa todo el ancho al terminar de abrir' }).toBeGreaterThanOrEqual(viewport.width - 1)
+    await expect.poll(async () => (await sheet.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(viewport.height - 1)
     await expect(sheet.locator('[data-cw-embed-frame]')).toHaveAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups')
     await expect(page.frameLocator('dialog [data-cw-embed-frame]').locator('#stub')).toHaveText('Sitio de prueba')
     await sheet.locator('[data-cw-embed-sheet-close]').click()
