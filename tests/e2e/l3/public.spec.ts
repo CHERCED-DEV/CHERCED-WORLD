@@ -185,15 +185,10 @@ test.describe('vistas privadas sin sesión', () => {
     }
   })
 
-  test('el único acceso público al panel es el buzón del header, y solo muestra un número (E-01)', async ({ page }) => {
+  test('el acceso al panel no se anuncia en el sitio público', async ({ page }) => {
     for (const path of ['/es', '/es/contactMe', '/es/privacy', '/en/blog']) {
       await page.goto(path)
-      const lang = path.split('/')[1]
-      const mailbox = page.locator('header [data-cw-mailbox]')
-      await expect(mailbox, path).toHaveCount(1)
-      await expect(mailbox, path).toHaveAttribute('href', `/${lang}/inbox`)
-      await expect(mailbox, path).toHaveText(/^\s*(\d{1,2}|99\+)?\s*$/)
-      await expect(page.locator('a[href*="/inbox"]:not(header [data-cw-mailbox])'), path).toHaveCount(0)
+      await expect(page.locator('a[href*="/inbox"]')).toHaveCount(0)
     }
   })
 })
