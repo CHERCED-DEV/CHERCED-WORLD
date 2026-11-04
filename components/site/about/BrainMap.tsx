@@ -54,7 +54,7 @@ function DecodedTitle({ text }: { text: string }) {
 
   return (
     <>
-      <span ref={ref} aria-hidden="true" data-cw-decode="">
+      <span key={text} ref={ref} aria-hidden="true" data-cw-decode="">
         {text}
       </span>
       <span className="cw-visually-hidden">{text}</span>
@@ -83,6 +83,11 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
   const litSources = new Set(lobe ? lobe.sources : source ? [source.id] : [])
   const litLobes = new Set(lobe ? [lobe.id] : data.lobes.filter((item) => source && item.sources.includes(source.id)).map((item) => item.id))
   const sourceLabel = (id: string) => data.sources.find((item) => item.id === id)?.label ?? id
+  const status = lobe
+    ? `${lobe.name}: ${lobe.skills.map((skill) => `${skill.name} ${labels.levels[skill.id] ?? `${skill.level}%`}`).join(', ')}`
+    : source
+      ? `${source.label}: ${source.title}`
+      : ''
 
   const onLobeKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const step = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 0
@@ -182,8 +187,11 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
             </span>
             <span>{labels.path}</span>
           </div>
-          <div className={styles.termBody} aria-live="polite" data-cw-terminal-body={lobe?.id ?? source?.id}>
-            <p className={styles.termCmd}>
+          <p className="cw-visually-hidden" aria-live="polite" data-cw-terminal-status="">
+            {status}
+          </p>
+          <div className={styles.termBody} data-cw-terminal-body={lobe?.id ?? source?.id}>
+            <p className={styles.termCmd} aria-hidden="true">
               <span className={styles.prompt} aria-hidden="true">
                 ${' '}
               </span>
@@ -201,7 +209,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                     return (
                       <li key={skill.id} className={styles.termRow} data-cw-brain-skill={skill.id}>
                         {skill.icon ? (
-                          <Image src={skill.icon} alt="" width={22} height={22} sizes="22px" unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
+                          <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                         ) : (
                           <span className={styles.termIcon} aria-hidden="true" />
                         )}
