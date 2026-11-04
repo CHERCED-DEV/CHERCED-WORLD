@@ -1,21 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { TocHeading } from '@/lib/blog/outline'
 import { activeHeading, spyLine } from '@/lib/blog/progress'
 import type { Locale } from '@/lib/i18n'
 import { cx } from '@/components/ui/cx'
-import { headerOffset, onScrollFrame } from './scroll'
+import { headerOffset, onScrollFrame, ownPost } from './scroll'
 import styles from './Toc.module.scss'
 
 export const TOC_TITLE_ID = 'cw-toc-title'
 
 export function Toc({ headings, title, contentLang, className }: { headings: TocHeading[]; title: string; contentLang?: Locale; className?: string }) {
   const [active, setActive] = useState<string | null>(null)
+  const nav = useRef<HTMLElement>(null)
 
   useEffect(() => {
+    const post = ownPost(nav.current)
+    if (!post) return
     const elements = headings
-      .map((heading) => document.getElementById(heading.id))
+      .map((heading) => post.querySelector<HTMLElement>(`[id="${CSS.escape(heading.id)}"]`))
       .filter((element): element is HTMLElement => element !== null)
     if (elements.length === 0) return
     return onScrollFrame(() => {
@@ -26,7 +29,7 @@ export function Toc({ headings, title, contentLang, className }: { headings: Toc
   }, [headings])
 
   return (
-    <nav className={cx(styles.toc, className)} aria-labelledby={TOC_TITLE_ID} data-cw-toc="">
+    <nav ref={nav} className={cx(styles.toc, className)} aria-labelledby={TOC_TITLE_ID} data-cw-toc="">
       <h2 id={TOC_TITLE_ID} className={styles.title}>
         {title}
       </h2>

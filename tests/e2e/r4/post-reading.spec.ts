@@ -150,6 +150,41 @@ test.describe('barra de progreso de lectura', () => {
   })
 })
 
+test.describe('al navegar entre posts', () => {
+  onlyIn('desktop-chromium', 'mobile-chromium')
+
+  test('la barra y el índice se reinician y siguen al post nuevo', async ({ page }) => {
+    await skipIntro(page)
+    await page.goto('/es/blog/post4')
+    const bar = page.locator('[data-cw-reading-progress]')
+    await page.evaluate(() => {
+      const body = document.querySelector('[data-cw-post-body]')
+      if (body) window.scrollTo({ top: window.scrollY + body.getBoundingClientRect().bottom, behavior: 'instant' })
+    })
+    await expect(bar).toHaveAttribute('data-cw-reading-progress', '1.00')
+
+    const next = page.locator('[data-cw-post-nav-link="next"]')
+    await next.scrollIntoViewIfNeeded()
+    await next.click()
+    await expect(page).toHaveURL(/\/es\/blog\/post5$/)
+    await expect(page.locator('[data-cw-post="post5"]')).toBeVisible()
+    await expect(page.locator('[data-cw-post]')).toHaveCount(1)
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+    await expect(page.locator('[data-cw-reading-progress]')).toHaveCount(1)
+    await expect(page.locator('[data-cw-reading-progress]')).toHaveAttribute('data-cw-reading-progress', '0.00')
+    await expect(page.locator('[data-cw-toc] [aria-current]')).toHaveCount(0)
+
+    await page.evaluate(() => {
+      const heading = document.getElementById('sintoma-3-seguridad-de-utileria')
+      if (heading) window.scrollTo({ top: window.scrollY + heading.getBoundingClientRect().top - 120, behavior: 'instant' })
+    })
+    await expect.poll(async () => Number(await page.locator('[data-cw-reading-progress]').getAttribute('data-cw-reading-progress'))).toBeGreaterThan(0)
+    if (await page.locator('[data-cw-toc]').isVisible()) {
+      await expect(page.locator('[data-cw-toc-link="sintoma-3-seguridad-de-utileria"]')).toHaveAttribute('aria-current', 'location')
+    }
+  })
+})
+
 test.describe('anterior y siguiente', () => {
   onlyIn('desktop-chromium', 'mobile-chromium', 'no-js')
 

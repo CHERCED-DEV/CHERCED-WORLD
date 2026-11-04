@@ -7,6 +7,7 @@ import type { ListedPost } from '@/lib/content'
 import { t, type Dictionary, type Locale } from '@/lib/i18n'
 import { buttonClassName } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
+import { Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
 import { CopyButton } from './CopyButton'
 import { shareCopyLabels } from './labels'
@@ -75,7 +76,7 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors 
 
   return (
     <article className={cx('cw-container', styles.post)} aria-labelledby="cw-post-title" data-cw-post={meta.id}>
-      <ReadingProgress targetId={POST_BODY_ID} />
+      <ReadingProgress target="[data-cw-post-body]" />
       <header className={styles.header}>
         <p className={styles.kicker}>
           <time dateTime={meta.date}>{formatPostDate(meta.date, lang)}</time>
@@ -112,6 +113,7 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors 
         </div>
       </div>
 
+      <Hairline glint className={styles.rule} />
       <Share url={url} title={meta.title} blog={blog} />
       {neighbors ? <PostNav neighbors={neighbors} lang={lang} blog={blog} /> : null}
     </article>

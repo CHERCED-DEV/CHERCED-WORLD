@@ -1,3 +1,9 @@
+export const POST_SELECTOR = '[data-cw-post]'
+
+export function ownPost(element: Element | null): Element | null {
+  return element?.closest(POST_SELECTOR) ?? null
+}
+
 export function headerOffset(): number {
   return document.getElementById('header')?.getBoundingClientRect().bottom ?? 0
 }
