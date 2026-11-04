@@ -182,6 +182,60 @@ muestra abierta con todo su contenido. Al cerrarla, vuelve a su lugar.
 4. **Given** < 992 px o sin JS, **When** se ve la carrera, **Then** se muestra la línea de tiempo vertical,
    completa y legible.
 
+### User Story 6c - "Sobre mí" en tres escenas y el mapa cerebral (Priority: P2)
+
+Pedido del autor (2026-11-04): "Sobre mí" se siente plano y obliga a hacer mucho scroll. Los cursos y las
+skills deberían verse como un mapa mental, un "diagrama cerebral" de lo que el autor sabe.
+
+- **Tres escenas** en lugar de seis secciones apiladas:
+  1. **Quién soy**: el retrato según el tema, la introducción y las cifras destacadas, en un bento de cristal.
+  2. **Carrera**: las cartas sobre la mesa (US6b).
+  3. **Lo que sé**: el mapa cerebral.
+  Educación, cursos e idiomas dejan de ser secciones aparte y pasan a ser fuentes dentro del mapa. Un índice
+  de escenas fijo bajo el header permite saltar entre ellas y marca la escena visible.
+- **Mapa cerebral**:
+  - Un núcleo (el autor) y cinco lóbulos: Frontend, Arquitectura, Backend y nube, IA aplicada y Oficio.
+  - Cada skill es una neurona cuyo tamaño refleja su nivel actual en `site.ts`. No se agregan skills y no
+    cambia ningún nivel.
+  - Las fuentes van en una fila aparte: Platzi Master, Fundamentos de Arquitectura, Full Stack JS, Next.js,
+    UNAD y EAM.
+  - Al activar un lóbulo, sus sinapsis se encienden en `#25ED9E` con un pulso que las recorre y sus fuentes
+    se iluminan. Un panel de cristal muestra las skills con su barra, dónde se aprendieron y los proyectos
+    del portafolio que las usan (cruce por tecnología con `projects.ts`).
+  - Usa solo blanco, negro y `#25ED9E` (FR-204). El púrpura del primer boceto no pasa al sitio.
+- **Estética Matrix sobre cristal** (decisión del autor, 2026-11-04: el primer boceto era "muy suave"):
+  - Detrás del mapa cae una lluvia de código en `#25ED9E` con katakana, dígitos y los nombres de las skills.
+    Va en un `canvas` limitado a la escena, a 20 fps como máximo, en pausa fuera de pantalla o con la pestaña
+    oculta, y no se dibuja con movimiento reducido. El fondo GlitteringSea sigue siendo el fondo del sitio.
+  - El mapa, los lóbulos, las fuentes y el panel son cristal v2 (`glass-crystal`, `glass-edge`) sobre la
+    lluvia. Los lóbulos son botones HTML de cristal, no figuras SVG, para que el esmerilado funcione.
+  - Etiquetas en tipografía mono. El núcleo es un disco `#25ED9E` con halo y un anillo punteado que gira.
+  - Las sinapsis activas brillan y llevan paquetes de datos (trazo discontinuo que avanza). Las neuronas
+    activas tienen halo.
+  - El panel es una terminal: prompt `$ cat <lóbulo>.lobe`, título que se descifra desde glifos al cambiar,
+    barras de bloques `█░` y una línea de fuentes y otra de proyectos.
+  - El texto siempre va sobre cristal y mantiene AA (SC-203). La lluvia nunca queda detrás de texto sin panel.
+  - Referencia visual: el boceto `mapa-cerebral-matrix.html` que el orquestador entrega a R3.
+- **Datos**: la agrupación es contenido, no código. Enmienda de tipos E-03:
+  `skills.lobes?: { id; name: Localized; skills: string[]; sources: string[] }[]`, que referencia los `id`
+  existentes.
+
+**Acceptance Scenarios**:
+
+1. **Given** un ancho de 1440 px, **When** se abre "Sobre mí", **Then** se ven las tres escenas con su índice,
+   y la altura del documento baja al menos un 40 % frente a la de la 001.
+2. **Given** el mapa, **When** se activa un lóbulo con clic, Enter, Espacio o las flechas, **Then** se
+   encienden sus neuronas y sus fuentes, y el panel (`aria-live="polite"`) muestra skills con nivel, fuentes
+   y proyectos. Cada lóbulo es un botón con `aria-pressed`.
+3. **Given** que no hay JS, **When** se ve "Lo que sé", **Then** todos los lóbulos aparecen como listas
+   completas con sus barras, en HTML servido por el servidor. El SVG es una mejora, no el contenido.
+4. **Given** menos de 768 px, **When** se ve el mapa, **Then** los lóbulos se muestran como chips con
+   desplazamiento horizontal y el panel queda debajo, sin desbordes desde 320 px.
+5. **Given** movimiento reducido, **When** se activa un lóbulo, **Then** no hay lluvia, pulso, giro ni
+   descifrado: solo cambia el estado.
+6. **Given** la escena con la lluvia activa, **When** se mide con la GPU real, **Then** el sitio se mantiene
+   en 50 fps o más (SC-205).
+
 ### User Story 7 - Buzón en el header (Priority: P2)
 
 Un ícono de buzón en el header, visible para todos, muestra cuántos mensajes sin leer hay y lleva al panel,
@@ -246,6 +300,8 @@ del portafolio, "con mucho cariño", y pidió que lo sorprendamos.
   el 404 y los 12 casos de estudio, de 320 a 2560 px.
 - **FR-211**: El post 5 MUST publicarse en español e inglés.
 - **FR-212**: Las e2e inestables (D-04) MUST quedar estables: 3 corridas completas seguidas sin fallos.
+- **FR-213**: "Sobre mí" MUST organizarse en tres escenas, y skills, cursos, educación e idiomas MUST verse
+  como un mapa cerebral accesible por teclado, con respaldo completo sin JS (US6c).
 
 ### Key Entities
 
@@ -259,6 +315,7 @@ de tipos E-02, opcional).
 - **SC-203**: El peor contraste de texto sobre glass sigue en 4,5:1 o más, en ambos temas.
 - **SC-204**: LCP ≤ 2,5 s y CLS ≤ 0,1 se mantienen con los grafismos y las transiciones.
 - **SC-205**: El fondo animado sigue a 50 fps o más con la GPU real, con los reflejos activos.
+- **SC-206**: A 1440 px, la altura del documento de "Sobre mí" baja al menos un 40 % frente a la 001.
 - **SC-206**: 3 corridas completas de e2e seguidas en verde.
 
 ## Assumptions
