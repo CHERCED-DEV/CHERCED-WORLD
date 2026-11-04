@@ -200,12 +200,12 @@ $green: var(--cw-intro-accent);
     left: var(--cw-x);
     display: grid;
     place-items: center;
-    width: 15%;
+    width: 17%;
     min-height: 0;
     aspect-ratio: 1;
     padding: var(--cw-space-2);
     border-radius: 50%;
-    font-size: clamp(11px, 1.05vw, 13px);
+    font-size: clamp(10px, 0.95vw, 12px);
     text-align: center;
     white-space: normal;
     translate: -50% -50%;
@@ -563,4 +563,13 @@ $green: var(--cw-intro-accent);
   padding-left: 1.2em;
   line-height: 1.6;
   list-style: square;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .syn,
+  .neuron,
+  .lobe,
+  .source {
+    transition: none;
+  }
 }
