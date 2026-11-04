@@ -6,6 +6,7 @@ const site = getSite()
 const CAREER_ENTRIES = site.about.career.length
 const SKILL_NAMES = site.about.skills.tech.map((tech) => tech.name)
 const LOBES = 5
+const lobeNames = (lang: Lang): string[] => (site.about.skills.lobes ?? []).map((lobe) => lobe.name[lang])
 const HEIGHT_001_AT_1440: Record<Lang, number> = { es: 7598, en: 7390 }
 const MAX_HEIGHT_RATIO = 0.6
 
@@ -38,15 +39,17 @@ async function scenes(page: Page): Promise<Locator[]> {
   return hrefs.map((href) => page.locator(`[id="${decodeURIComponent(href.slice(1))}"]`))
 }
 
-async function lobes(page: Page): Promise<Locator> {
+async function lobes(page: Page, lang: Lang): Promise<Locator[]> {
   const [, , knowledge] = await scenes(page)
-  return knowledge!.locator('button[aria-pressed]')
+  return lobeNames(lang).map((name) => knowledge!.getByRole('button', { name, exact: true }))
 }
 
-async function pressedNames(group: Locator): Promise<string[]> {
-  return group.evaluateAll((items) =>
-    items.filter((item) => item.getAttribute('aria-pressed') === 'true').map((item) => (item.getAttribute('aria-label') || item.textContent || '').trim()),
-  )
+async function pressedNames(group: Locator[]): Promise<string[]> {
+  const names: string[] = []
+  for (const lobe of group) {
+    if ((await lobe.getAttribute('aria-pressed')) === 'true') names.push(((await lobe.textContent()) ?? '').trim())
+  }
+  return names
 }
 
 // R3 (T224, US6b y US6c) hace pasar todo este archivo: hoy "Sobre mí" sigue siendo la página de seis secciones de la 001
@@ -75,22 +78,23 @@ test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
   test('el mapa cerebral se activa con clic, Enter, Espacio y flechas, y lo anuncia', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await open(page, 'es')
-    const group = await lobes(page)
-    await expect(group).toHaveCount(LOBES)
+    const names = lobeNames('es')
+    expect(names, 'el contenido declara cinco lóbulos (E-03)').toHaveLength(LOBES)
+    const group = await lobes(page, 'es')
+    for (const lobe of group) await expect(lobe).toHaveAttribute('aria-pressed', /^(true|false)$/)
     const [, , knowledge] = await scenes(page)
     const live = knowledge!.locator('[aria-live="polite"]').first()
     await expect(live).toBeAttached()
-    const names = await group.evaluateAll((items) => items.map((item) => (item.getAttribute('aria-label') || item.textContent || '').trim()))
 
     for (let position = 0; position < LOBES; position++) {
-      await group.nth(position).click()
+      await group[position]!.click()
       await expect.poll(() => pressedNames(group)).toEqual([names[position]])
       await expect(live).toContainText(names[position]!, { ignoreCase: true })
     }
-    await group.nth(0).focus()
+    await group[0]!.focus()
     await page.keyboard.press('Enter')
     await expect.poll(() => pressedNames(group)).toEqual([names[0]])
-    await group.nth(1).focus()
+    await group[1]!.focus()
     await page.keyboard.press('Space')
     await expect.poll(() => pressedNames(group)).toEqual([names[1]])
     await page.keyboard.press('ArrowRight')
@@ -103,9 +107,9 @@ test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.setViewportSize({ width: 1440, height: 900 })
     await open(page, 'es')
-    const group = await lobes(page)
-    await group.nth(2).click()
-    await expect(group.nth(2)).toHaveAttribute('aria-pressed', 'true')
+    const group = await lobes(page, 'es')
+    await group[2]!.click()
+    await expect(group[2]!).toHaveAttribute('aria-pressed', 'true')
     const [, , knowledge] = await scenes(page)
     await knowledge!.scrollIntoViewIfNeeded()
     await page.waitForTimeout(500)
@@ -158,12 +162,12 @@ test.describe('Sobre mí en pantallas chicas (US6b y US6c)', () => {
   // R3 (T224) hace pasar esta prueba
   test('la carrera es una línea de tiempo y los lóbulos son chips con desplazamiento horizontal', async ({ page }) => {
     await open(page, 'es')
-    const [, career, knowledge] = await scenes(page)
+    const [, career] = await scenes(page)
     await expect(career!.locator('ol > li')).toHaveCount(CAREER_ENTRIES)
     await expect(career!.locator('ol > li time').first()).toBeVisible()
-    const group = knowledge!.locator('button[aria-pressed]')
-    await expect(group).toHaveCount(LOBES)
-    const scrolls = await group.first().evaluate((lobe) => {
+    const group = await lobes(page, 'es')
+    for (const lobe of group) await expect(lobe).toBeAttached()
+    const scrolls = await group[0]!.evaluate((lobe) => {
       for (let element = lobe.parentElement; element; element = element.parentElement) {
         const style = getComputedStyle(element)
         if (style.overflowX === 'auto' || style.overflowX === 'scroll') return true
