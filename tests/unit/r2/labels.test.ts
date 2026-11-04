@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { caseStudyExtraLabels, portfolioKeys } from '@/components/site/portfolio/labels'
 import { STACK_LAYERS } from '@/components/site/portfolio/stack'
-import { MissingTranslationError } from '@/lib/i18n'
+import { locales, MissingTranslationError } from '@/lib/i18n'
+import { getDictionary } from '@/lib/i18n/server'
 
 const echo = Object.fromEntries(portfolioKeys().map((key) => [key, `«${key}»`]))
 
@@ -28,5 +29,13 @@ describe('textos del caso de estudio', () => {
   it('falla en voz alta si falta una clave', () => {
     const { ['embed.retry']: _missing, ...partial } = echo
     expect(() => caseStudyExtraLabels(partial)).toThrow(MissingTranslationError)
+  })
+})
+
+describe('namespace portfolio', () => {
+  it.each(locales)('tiene exactamente las claves que usa el caso en %s', async (lang) => {
+    const dict = await getDictionary(lang, 'portfolio')
+    expect(Object.keys(dict).sort()).toEqual([...portfolioKeys()].sort())
+    expect(() => caseStudyExtraLabels(dict)).not.toThrow()
   })
 })
