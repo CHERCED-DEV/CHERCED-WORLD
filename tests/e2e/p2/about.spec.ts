@@ -150,8 +150,11 @@ test.describe('sin JavaScript (T432, T433)', () => {
     await expect(heading).toHaveText('Prácticas de ingeniería')
     const navBottom = await page.locator('[data-cw-scene-nav] ol').evaluate((node) => node.getBoundingClientRect().bottom)
     const height = page.viewportSize()!.height
-    await expect.poll(() => heading.evaluate((node) => Math.round(node.getBoundingClientRect().top))).toBeGreaterThanOrEqual(Math.floor(navBottom) - 1)
-    expect(await heading.evaluate((node) => node.getBoundingClientRect().bottom)).toBeLessThanOrEqual(height)
+    await expect(async () => {
+      const box = await heading.evaluate((node) => node.getBoundingClientRect().toJSON() as { top: number; bottom: number })
+      expect(box.top).toBeGreaterThanOrEqual(Math.floor(navBottom) - 1)
+      expect(box.bottom).toBeLessThanOrEqual(height)
+    }).toPass({ timeout: 10_000 })
   })
 })
 

@@ -31,6 +31,10 @@
   content-visibility: auto;
   contain-intrinsic-size: auto 1200px;
 
+  :global(:root:not([data-js])) & {
+    content-visibility: visible;
+  }
+
   &[data-cw-scene='career'] {
     contain-intrinsic-size: auto 3500px;
 

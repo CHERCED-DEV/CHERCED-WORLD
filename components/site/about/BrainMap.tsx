@@ -113,7 +113,7 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
       const id = lobeFromHash(window.location.hash, ids)
       if (!id) return
       setSelection({ kind: 'lobe', id })
-      mapRef.current?.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' })
+      mapRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
       const active = document.activeElement
       if (!active || active === document.body) lobeRefs.current[ids.indexOf(id)]?.focus({ preventScroll: true })
     }
