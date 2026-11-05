@@ -4,15 +4,20 @@ import { startTransition, useActionState, useEffect, useRef, useState, type Form
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
 import { useToast } from '@/components/ui/Toast'
+import { VisuallyHidden } from '@/components/ui/VisuallyHidden'
 import { submitContact } from '@/lib/actions/contact'
 import type { ActionResult } from '@/lib/actions/result'
+import type { MessageInterest } from '@/lib/data/types'
 import type { Dictionary } from '@/lib/i18n'
 import { HONEYPOT_FIELD, RENDERED_AT_FIELD } from '@/lib/security/anti-spam'
 import { contactSchema, LIMITS, parseForm } from '@/lib/validation'
+import type { BookingLink } from './booking'
 import { ConsentField, type ConsentLabels } from './ConsentField'
 import styles from './ContactForm.module.scss'
 import { fieldErrorText, focusFirstInvalid, PHONE_INPUT_PATTERN } from './fieldErrors'
 import { useHydrated } from './useHydrated'
+
+export type InterestLabels = { label: string; none: string; options: { value: MessageInterest; label: string }[] }
 
 export type ContactLabels = {
   formLabel: string
@@ -21,6 +26,8 @@ export type ContactLabels = {
   phone: string
   phoneHint: string
   message: string
+  interest: InterestLabels
+  newTab: string
   submit: string
   sending: string
   requiredNote: string
@@ -40,6 +47,20 @@ export type ContactFormProps = {
   privacyHref: string
   labels: ContactLabels
   errors: Dictionary
+  interest?: MessageInterest | null
+  booking?: BookingLink | null
+}
+
+export function BookingSlot({ booking, newTab }: { booking: BookingLink | null | undefined; newTab: string }) {
+  if (!booking) return null
+  return (
+    <p className={styles.booking} data-cw-contact-booking="">
+      <a href={booking.href} target="_blank" rel="noopener noreferrer">
+        {booking.label}
+        <VisuallyHidden> {newTab}</VisuallyHidden>
+      </a>
+    </p>
+  )
 }
 
 function resultMessage(result: ActionResult, labels: ContactLabels): string {
@@ -54,7 +75,7 @@ function Required() {
   return <span aria-hidden="true"> *</span>
 }
 
-export function ContactForm({ renderedAt, privacyHref, labels, errors }: ContactFormProps) {
+export function ContactForm({ renderedAt, privacyHref, labels, errors, interest = null, booking = null }: ContactFormProps) {
   const [state, formAction, pending] = useActionState(submitContact, null)
   const [clientErrors, setClientErrors] = useState<Record<string, string> | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -116,6 +137,17 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors }: Contact
         <input name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={20} pattern={PHONE_INPUT_PATTERN} />
       </FormField>
 
+      <FormField label={labels.interest.label} error={errorFor('interest')}>
+        <select name="interest" defaultValue={interest ?? ''} data-cw-interest="">
+          <option value="">{labels.interest.none}</option>
+          {labels.interest.options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </FormField>
+
       <FormField label={<>{labels.message}<Required /></>} error={errorFor('message')}>
         <textarea name="message" required rows={6} maxLength={LIMITS.message} />
       </FormField>
@@ -141,6 +173,8 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors }: Contact
           {inlineStatus}
         </p>
       ) : null}
+
+      {state?.ok ? <BookingSlot booking={booking} newTab={labels.newTab} /> : null}
     </form>
   )
 }

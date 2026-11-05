@@ -1,22 +1,33 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { bookingLink } from '@/components/contact/booking'
 import { ContactForm } from '@/components/contact/ContactForm'
-import { contactLabels, formErrorMessages } from '@/components/contact/labels'
+import { contactErrorMessages, contactLabels } from '@/components/contact/labels'
 import styles from '@/components/contact/PageSection.module.scss'
+import { preselectedInterest } from '@/components/contact/preselect'
 import { BackgroundIntensity } from '@/components/motion'
+import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
+import { buttonClassName } from '@/components/ui/Button'
+import { CvLink } from '@/components/ui/CvLink'
+import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { Separator } from '@/components/ui/Separator'
 import { cx } from '@/components/ui/cx'
+import { publicEmail } from '@/content/site'
 import { getSite, pick } from '@/lib/content'
 import { alternates, isLocale, localizedPath, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import { formRenderedAt } from '@/lib/security/request'
 
-type Props = { params: Promise<{ lang: string }> }
+type Props = {
+  params: Promise<{ lang: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
 
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Pick<Props, 'params'>): Promise<Metadata> {
   const { lang } = await params
   if (!isLocale(lang)) return {}
   const contact = await getDictionary(lang, 'contact')
@@ -30,15 +41,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function ContactPage({ params }: Props) {
+export default async function ContactPage({ params, searchParams }: Props) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
-  const [common, contact, renderedAt] = await Promise.all([
+  const [common, contact, renderedAt, query] = await Promise.all([
     getDictionary(lang, 'common'),
     getDictionary(lang, 'contact'),
     formRenderedAt(),
+    searchParams,
   ])
   const site = getSite()
+  const email = publicEmail(site)
 
   return (
     <section className={cx('cw-container', styles.section)} aria-labelledby="contact-title">
@@ -48,6 +61,20 @@ export default async function ContactPage({ params }: Props) {
           {pick(site.contact.title, lang)}
         </h1>
         <p className={styles.lead}>{pick(site.contact.description, lang)}</p>
+        <div className={styles.reach} data-cw-contact-reach="">
+          <AvailabilityChip lang={lang} />
+          <div className={styles.reachActions}>
+            <CvLink lang={lang} />
+            {email ? (
+              <EmailMenu
+                lang={lang}
+                email={email}
+                className={buttonClassName({ variant: 'glass', className: styles.mailButton })}
+                trigger={<Image src="/assets/icons/gmailIcon.png" alt="" width={24} height={24} unoptimized className="cw-icon-img" />}
+              />
+            ) : null}
+          </div>
+        </div>
         <Separator />
       </div>
       <GlassSurface variant="standard" className={styles.card}>
@@ -55,7 +82,9 @@ export default async function ContactPage({ params }: Props) {
           renderedAt={renderedAt}
           privacyHref={localizedPath(lang, '/privacy')}
           labels={contactLabels(common, contact)}
-          errors={formErrorMessages(common)}
+          errors={contactErrorMessages(common, contact)}
+          interest={preselectedInterest(query.servicio)}
+          booking={bookingLink(site.profile, lang)}
         />
       </GlassSurface>
     </section>

@@ -4,15 +4,37 @@
   flex-direction: column;
 
   input:not([type='checkbox']):not([type='hidden']):not([aria-invalid='true']),
-  textarea:not([aria-invalid='true']) {
+  textarea:not([aria-invalid='true']),
+  select:not([aria-invalid='true']) {
     border-left: 4px solid var(--cw-fg);
     border-bottom: 4px solid var(--cw-fg);
+  }
+
+  select {
+    color: var(--cw-fg);
+    cursor: pointer;
+  }
+
+  option {
+    color: var(--cw-fg);
+    background: var(--cw-bg);
   }
 
   input[type='checkbox'] {
     flex: none;
     width: 24px;
     height: 24px;
+  }
+}
+
+.booking {
+  margin-top: var(--cw-space-4);
+  font-weight: 600;
+  text-align: center;
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 }
 

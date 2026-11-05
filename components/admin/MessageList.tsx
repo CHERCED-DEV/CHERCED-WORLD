@@ -5,7 +5,7 @@ import type { MessageRecord } from '@/lib/data/types'
 import styles from './admin.module.scss'
 import { ActionButton, ConfirmButton } from './ActionButton'
 import { ConsentDetail } from './ConsentDetail'
-import { confirmLabels, formatDateTime, resultLabels, type AdminText } from './labels'
+import { confirmLabels, formatDateTime, interestLabel, resultLabels, type AdminText } from './labels'
 import { mailtoHref } from './mailto'
 
 function MessageItem({ message, text }: { message: MessageRecord; text: AdminText }) {
@@ -25,6 +25,12 @@ function MessageItem({ message, text }: { message: MessageRecord; text: AdminTex
           <dd>{message.email}</dd>
           <dt>{tr('admin.field.phone')}</dt>
           <dd>{phone ?? tr('admin.field.noPhone')}</dd>
+          {message.interest ? (
+            <>
+              <dt>{tr('admin.field.interest')}</dt>
+              <dd data-cw-message-interest={message.interest}>{interestLabel(text, message.interest)}</dd>
+            </>
+          ) : null}
           <dt>{tr('admin.field.date')}</dt>
           <dd>
             <time dateTime={message.createdAt.toISOString()}>{formatDateTime(message.createdAt, lang)}</time>

@@ -89,3 +89,25 @@
   white-space: normal;
   text-align: center;
 }
+
+.reach {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cw-space-4);
+}
+
+.reachActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cw-space-3);
+  max-width: 100%;
+}
+
+.mailButton {
+  min-width: 44px;
+  min-height: 44px;
+  padding-inline: var(--cw-space-3);
+}

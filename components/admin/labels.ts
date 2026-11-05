@@ -2,6 +2,7 @@ import 'server-only'
 import { formErrorMessages } from '@/components/contact/labels'
 import { t, type Dictionary, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
+import type { MessageInterest } from '@/lib/data/types'
 import type { ChangePasswordLabels, LoginLabels, SetupLabels } from './AuthForms'
 import type { ConfirmLabels } from './ActionButton'
 import type { ReplyLabels } from './ReplyEditor'
@@ -12,12 +13,13 @@ export type AdminText = {
   lang: Locale
   admin: Dictionary
   common: Dictionary
+  contact: Dictionary
   tr: (key: string, vars?: Record<string, string | number>) => string
 }
 
 export async function adminText(lang: Locale): Promise<AdminText> {
-  const [admin, common] = await Promise.all([getDictionary(lang, 'admin'), getDictionary(lang, 'common')])
-  return { lang, admin, common, tr: (key, vars) => t(admin, key, vars) }
+  const [admin, common, contact] = await Promise.all([getDictionary(lang, 'admin'), getDictionary(lang, 'common'), getDictionary(lang, 'contact')])
+  return { lang, admin, common, contact, tr: (key, vars) => t(admin, key, vars) }
 }
 
 export function adminErrors(text: AdminText): Dictionary {
@@ -112,4 +114,8 @@ export function formatDateTime(date: Date, lang: Locale): string {
     timeStyle: 'short',
     timeZone: 'America/Bogota',
   }).format(date)
+}
+
+export function interestLabel({ contact }: AdminText, interest: MessageInterest): string {
+  return t(contact, `contact.interest.${interest}`)
 }
