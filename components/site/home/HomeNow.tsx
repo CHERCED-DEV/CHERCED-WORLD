@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { cx } from '@/components/ui/cx'
-import { GlassSurface } from '@/components/ui/GlassSurface'
+import { GlassSurface, glassMotionAttributes, type GlassFloatLevel } from '@/components/ui/GlassSurface'
 import { CornerMarks, GlowOrb, Hairline } from '@/components/ui/graphics'
 import { Reveal } from '@/components/ui/Reveal'
+import { Sweep } from '@/components/ui/Sweep'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import styles from './Home.module.scss'
 import { splitAround, type NowRole } from './now'
@@ -17,6 +18,12 @@ export type HomeNowLabels = {
 export const HOME_NOW_ID = 'home-now'
 
 const STAGGER = 70
+
+export const ROLE_FLOAT_LEVELS: readonly GlassFloatLevel[] = [3, 1, 2]
+
+export function roleFloatLevel(index: number): GlassFloatLevel {
+  return ROLE_FLOAT_LEVELS[index % ROLE_FLOAT_LEVELS.length] ?? 1
+}
 
 function Arrow() {
   return (
@@ -44,7 +51,14 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
         </Reveal>
         <ol className={styles.roles}>
           {roles.map((role, index) => (
-            <Reveal as="li" key={role.id} delay={(index + 1) * STAGGER} className={styles.role} data-cw-home-role={role.id}>
+            <Reveal
+              as="li"
+              key={role.id}
+              delay={(index + 1) * STAGGER}
+              className={styles.role}
+              data-cw-home-role={role.id}
+              {...glassMotionAttributes({ float: roleFloatLevel(index) })}
+            >
               <h3 className={styles.company}>{role.company}</h3>
               <p className={styles.roleName}>{role.role}</p>
               <p className={styles.since}>
@@ -65,6 +79,7 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   <Arrow />
                 </Link>
               ) : null}
+              <Sweep />
             </Reveal>
           ))}
         </ol>

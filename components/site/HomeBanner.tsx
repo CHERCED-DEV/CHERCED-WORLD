@@ -13,7 +13,7 @@ import { homeSocials, isExternal } from './format'
 import enter from './home/Enter.module.scss'
 import { HeroOrbit } from './home/HeroOrbit'
 import { keepSeparators } from './home/now'
-import { WINK_TIMING, winkScript, winkWords, type WinkWord } from './home/wink'
+import { WINK_TIMING, winkEnd, winkScript, winkWords, type WinkWord } from './home/wink'
 import { WinkPlayer } from './home/WinkPlayer'
 import styles from './HomeBanner.module.scss'
 
@@ -37,10 +37,13 @@ function step(index: number): CSSProperties {
   return { '--cw-home-step': index } as CSSProperties
 }
 
-function winkVars(): CSSProperties {
+function bannerVars(wink: boolean): CSSProperties {
+  const sweep = { '--cw-banner-sweep-at': `${winkEnd()}ms` }
+  if (!wink) return sweep as CSSProperties
   return {
     '--cw-wink-strike-at': `${WINK_TIMING.strikeAt}ms`,
     '--cw-wink-strike-ms': `${WINK_TIMING.strikeMs}ms`,
+    ...sweep,
   } as CSSProperties
 }
 
@@ -84,7 +87,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
       className={styles.banner}
       aria-labelledby="home-title"
       data-cw-home-banner=""
-      style={previous ? winkVars() : undefined}
+      style={bannerVars(Boolean(previous))}
     >
       {previous ? <script dangerouslySetInnerHTML={{ __html: winkScript }} /> : null}
       <HeroOrbit />
@@ -164,6 +167,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
         <div className={cx(styles.availability, enter.enter)} style={step(4.5)}>
           <AvailabilityChip lang={lang} className={styles.chip} />
         </div>
+        <span className={styles.sweep} aria-hidden="true" data-cw-sweep="" data-cw-home-sweep="" />
       </GlassSurface>
       {previous ? <WinkPlayer scope={BANNER_SCOPE} /> : null}
     </section>

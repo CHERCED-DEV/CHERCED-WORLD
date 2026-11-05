@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+@use 'glass' as *;
 @use 'layout';
 
 .hero {
@@ -251,7 +253,85 @@
   transition: transform var(--cw-duration-base) var(--cw-ease-spring);
 }
 
+@keyframes home-cue-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes home-cue-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 4px, 0);
+  }
+}
+
+.cue {
+  --cw-cue-breath: calc(var(--cw-duration-ambient) / 2);
+}
+
+@media (max-width: #{bp.bp(md) - 0.02px}), (pointer: coarse) {
+  @media (prefers-reduced-motion: no-preference) {
+    :global(:root[data-js]) {
+      .cue {
+        animation: home-cue-breathe var(--cw-cue-breath) var(--cw-ease-in-out) infinite;
+      }
+
+      .cueIcon {
+        animation: home-cue-drift var(--cw-cue-breath) var(--cw-ease-in-out) infinite;
+      }
+
+      .cueLine::after {
+        animation-duration: var(--cw-cue-breath);
+        animation-delay: 0ms;
+      }
+    }
+  }
+}
+
+@include bp.down(md) {
+  :global(:root[data-js]) {
+    .hero {
+      padding-bottom: calc(var(--cw-space-4) + var(--cw-dock-space));
+    }
+
+    .roles {
+      gap: var(--cw-space-5);
+    }
+
+    .role {
+      @include glass(strong);
+      @include glass-grain;
+      @include glass-depth;
+      @include glass-edge;
+      position: relative;
+      padding: var(--cw-space-5) var(--cw-space-4) var(--cw-space-4);
+      border-radius: var(--cw-radius-lg);
+    }
+  }
+
+  :global(:root:not([data-js])) .role {
+    animation: none;
+    translate: none;
+
+    > :global([data-cw-sweep]) {
+      display: none;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .cue,
+  .cueIcon,
   .cueLine::after,
   .live::after {
     animation: none !important;
