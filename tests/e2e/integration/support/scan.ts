@@ -24,7 +24,7 @@ export function quantities(text: string): string[] {
   return found.map((match) => match[0])
 }
 
-const NOT_PROSE = /^(\d{4}(-\d{2}){0,2}(T[\d:.]+Z?)?|\/\S*|https?:\/\/\S+|#[\w-]+|[\w-]+\.(svg|png|webp|avif|jpe?g))$/i
+const NOT_PROSE = /^(\d{4}(-\d{2}){0,2}(T[\d:.]+Z?)?|\d{4}\s?[-–]\s?\d{4}|\/\S*|https?:\/\/\S+|#[\w-]+|[\w-]+\.(svg|png|webp|avif|jpe?g))$/i
 
 export function isProse(text: string): boolean {
   return !NOT_PROSE.test(text.trim())
@@ -32,7 +32,7 @@ export function isProse(text: string): boolean {
 
 const PERSONAL: ReadonlyArray<[string, RegExp]> = [
   ['correo', /[\w.+-]+@[\w-]+(\.[\w-]+)+/g],
-  ['teléfono', /(?<!\d)(?:\+?\d[\s-]?){10,13}(?!\d)/g],
+  ['teléfono', /(?<![\d-])(?:\+\d{1,3}[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}(?![\d-])/g],
   ['IP', /(?<![\d.])\d{1,3}(\.\d{1,3}){3}(?![\d.])/g],
   ['huella', /\b[a-f0-9]{32,}\b/gi],
   ['credencial', /mongodb(\+srv)?:\/\/|MONGODB_INTEGRAL_DB|VERCEL_URL_CORS|-----BEGIN/gi],

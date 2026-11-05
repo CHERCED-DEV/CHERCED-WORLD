@@ -64,7 +64,7 @@ function serverCommand(): string {
   const start = `${next} start --port ${PORT}`
   if (IN_WORKER) return start
   const stale = staleBuild()
-  console.log(stale ? `[e2e] nivel ${TIER}: compila (${stale})` : `[e2e] nivel ${TIER}: reutiliza el build de .next (nada cambió desde entonces)`)
+  process.stderr.write(stale ? `[e2e] nivel ${TIER}: compila (${stale})\n` : `[e2e] nivel ${TIER}: reutiliza el build de .next (nada cambió desde entonces)\n`)
   return stale ? `${next} build && ${start}` : start
 }
 

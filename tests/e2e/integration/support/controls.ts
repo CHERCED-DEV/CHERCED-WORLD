@@ -7,6 +7,7 @@ export type EffectName =
   | 'langSwitch'
   | 'theme'
   | 'dialog'
+  | 'emailMenu'
   | 'popover'
   | 'closePopover'
   | 'carouselStep'
@@ -44,6 +45,12 @@ export const CONTROL_RULES: readonly ControlRule[] = [
   { kind: 'palette de comandos', match: '[data-cw-palette-trigger]', effect: 'dialog', expect: 'abre un diálogo con el foco dentro; Esc lo cierra' },
   { kind: 'asistente', match: '[data-cw-assistant-button]', effect: 'dialog', expect: 'abre un diálogo con el foco dentro; Esc lo cierra' },
   { kind: 'comentar', match: '[data-cw-comment-open]', effect: 'dialog', expect: 'abre un diálogo con el foco dentro; Esc lo cierra' },
+  {
+    kind: 'menú de correo',
+    match: '[data-cw-email-trigger]',
+    effect: 'emailMenu',
+    expect: 'abre el menú con el foco en "Escribir"; Esc lo cierra y devuelve el foco; "Copiar" deja el correo del mailto en el portapapeles (FR-464)',
+  },
   { kind: 'menú', match: '[data-cw-menu-button]', effect: 'popover', expect: 'abre el menú con el foco dentro; Esc lo cierra', nested: true },
   { kind: 'cerrar menú', match: 'button[popovertargetaction="hide"]', effect: 'closePopover', expect: 'cierra el menú' },
   { kind: 'carrusel', match: '[data-cw-prev], [data-cw-next]', effect: 'carouselStep', expect: 'cambia la diapositiva actual' },
@@ -427,6 +434,43 @@ const EFFECTS: Record<EffectName, Effect> = {
     const back = await settle(() => isFocused(target), (focused) => focused, 3000)
     if (!back.ok) fail('al cerrar, el foco no vuelve al control')
     return 'abre el diálogo y Esc lo cierra devolviendo el foco'
+  },
+
+  async emailMenu({ page, target }) {
+    const root = target.locator('xpath=ancestor::*[@data-cw-email-menu][1]')
+    const options = root.locator('[data-cw-email-options][role="menu"]')
+    const write = options.locator('a[role="menuitem"][data-cw-email-write]')
+    const copy = options.locator('button[role="menuitem"][data-cw-email-copy]')
+    const open = async () => {
+      await activate(target)
+      const shown = await settle(() => options.isVisible(), (visible) => visible)
+      if (!shown.ok) fail('el clic no abre el menú de correo')
+      if ((await target.getAttribute('aria-expanded')) !== 'true') fail('con el menú abierto, aria-expanded no es "true"')
+    }
+    const closedWithFocus = async (how: string) => {
+      const closed = await settle(() => options.count(), (count) => count === 0, 3000)
+      if (!closed.ok) fail(`${how} no cierra el menú`)
+      const back = await settle(() => isFocused(target), (focused) => focused, 3000)
+      if (!back.ok) fail(`${how} cierra el menú, pero el foco no vuelve al botón`)
+    }
+
+    await open()
+    const focused = await settle(() => isFocused(write), (value) => value, 3000)
+    if (!focused.ok) fail('al abrir, el foco no queda en la primera opción')
+    const href = (await write.getAttribute('href')) ?? ''
+    const email = /^mailto:([^@\s?]+@[^@\s?]+\.[a-z]{2,})$/i.exec(href)?.[1]
+    if (!email) fail(`la opción de escribir no es un mailto válido (${href || 'sin href'})`)
+    await page.keyboard.press('Escape')
+    await closedWithFocus('Esc')
+
+    await open()
+    await page.evaluate((sentinel) => navigator.clipboard.writeText(sentinel), CLIPBOARD_SENTINEL)
+    await activate(copy)
+    const copied = await settle(() => page.evaluate(() => navigator.clipboard.readText()), (text) => text !== CLIPBOARD_SENTINEL)
+    if (!copied.ok) fail('"Copiar" no escribe nada en el portapapeles')
+    if (copied.value !== email) fail(`"Copiar" deja "${copied.value}" y el mailto dice ${email}`)
+    await closedWithFocus('"Copiar"')
+    return `abre con el foco en "Escribir", Esc lo cierra y "Copiar" deja ${email.length} caracteres`
   },
 
   async popover({ page, target, control }) {
