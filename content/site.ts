@@ -778,8 +778,8 @@ export const site: SiteContent = {
     title: { es: 'Bienvenido a', en: 'Welcome to' },
     titleStrong: 'CHERCED-WORLD',
     welcome: {
-      en: 'Welcome to CHERCED-WORLD. I made this space to share more about myself. I hope you enjoy your time here, and leave me feedback in the comments on each post. Thanks!',
-      es: 'Bienvenido a CHERCED-WORLD. Hice este espacio para compartir más sobre mí. Espero que disfrutes tu visita; déjame tus comentarios en cada post. ¡Gracias!',
+      en: "Notes from an architect who works with agents: decisions, mistakes and what the tests didn't catch.",
+      es: 'Notas de un arquitecto que trabaja con agentes: decisiones, errores y lo que los tests no vieron.',
     },
   },
   privacy: {
