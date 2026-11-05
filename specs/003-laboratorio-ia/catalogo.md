@@ -39,6 +39,20 @@ Un servicio Python en un servidor propio también es infraestructura nueva para 
 | V3 | Escuchar los posts | Cada post tiene versión en audio. Es la base de "Escuchar este post" (005, US5) | A·B: A con síntesis en vivo en el navegador; B con audio pregenerado. Pregenerar exige un motor en el build: es B, salvo que se demuestre un motor sin llave | — |
 | A1 | Servidor MCP del portafolio | Cualquiera conecta su Claude al sitio y pregunta por proyectos, skills, posts y experiencia (`get_projects`, `get_skills`, `get_posts`, `get_experience`). Consume el registro de capacidades de la 004 (FR-485), el mismo de WebMCP | **[confirmar]**: es una ruta de solo lectura en el mismo Next.js, sin llave de IA, y podría caber en la constitución sin la excepción B. Como entrada pública, necesita límite de frecuencia (principio III) | — |
 
+### Juegos que aprenden (propuesta del autor, 2026-11-04)
+
+Idea del autor: "un juego de ping con IA que aprenda uno". Es un juego **original** del género tenis de mesa, con
+identidad propia: paletas de cristal, bola de partículas y estética Matrix del sitio. No recrea ningún juego existente.
+
+| # | Experimento | Qué hace | Camino |
+|---|---|---|---|
+| J1 | Peloteo contra la IA | Juegas un rally contra un rival que empieza torpe y aprende en vivo, partida a partida (aprendizaje por refuerzo con una red pequeña). A un lado, su "cerebro": las neuronas se encienden con cada decisión, con el mismo lenguaje del mapa cerebral, y una curva muestra cuánto mejora | A: una red pequeña entrenada en un worker (JS propio o TensorFlow.js), sin servidor. El modelo se guarda en el navegador del visitante |
+| J2 | Juega contra tu clon | El rival aprende *tu* estilo (aprendizaje por imitación): después de unos rallies, juegas contra una IA que se mueve como tú | A: mismo motor de J1 |
+| J3 | Cerebro colectivo | Un rival que entrenan entre todos los visitantes: cada partida aporta experiencia y el modelo compartido mejora con el tiempo | A·B, **[confirmar]**: reutiliza la base que ya existe (MongoDB), sin infraestructura nueva. Exige validar en el servidor lo que manda cada navegador y límites de frecuencia (principio III) |
+
+Reglas propias: se juega con teclado, mouse o toque. Hay pausa. Con movimiento reducido, la bola se mueve sin
+estelas ni temblores. La inferencia nunca baja los fps del fondo animado (SC-205).
+
 ## Ola 3: solo si el autor aprueba el camino B
 
 | # | Experimento | Qué hace | Camino | Cubre de la idea |
@@ -68,8 +82,9 @@ El handoff no les asigna ola. Se priorizan al especificar la 003.
 | A13 | Este sitio es agent-ready (WebMCP) | Tarjeta que lista en vivo las herramientas WebMCP que registra el sitio (004, US11), con nombre, descripción y esquema, e instrucciones para verlas en las DevTools de Chrome. Según P-3i, también permite ejecutarlas y ver la entrada y la salida en JSON. Etiqueta `experiment` | A: corre en el navegador y reutiliza el registro de la 004. Sin servidor, llave ni variable. Si el navegador no tiene WebMCP, la tarjeta lo dice y muestra la lista desde el mismo registro |
 | C4 | Konami code | Las partículas del fondo se reordenan y dibujan el logo o el diagrama de Synergos. No cambia la animación de siempre (D1) | A |
 
-**Total**: 28 experimentos (6 en la ola 1, 5 en la ola 2, 5 en la ola 3 y 12 en el backlog). Los 27 del handoff
-original, más A13, que salió de la propuesta WebMCP del 2026-11-04. Esa propuesta recomienda hacer el registro de
+**Total**: 31 experimentos (6 en la ola 1, 5 en la ola 2 más 3 juegos que aprenden, 5 en la ola 3 y 12 en el
+backlog). Son los 27 del handoff original, más A13, que salió de la propuesta WebMCP del 2026-11-04, y J1 a J3, que
+salieron de la idea del autor del mismo día. Esa propuesta recomienda hacer el registro de
 capacidades (004, US11) antes que el AI Lab.
 
 **Las cinco apps de la idea quedan cubiertas**: V1 es la app 1, A12 la 2, A4 la 3 y la 4, y A5 la 5.
@@ -121,3 +136,4 @@ El copy base ES/EN del laboratorio está en el handoff del autor y pasa a la spe
 | P-3g | ¿El AI Lab es también el proyecto con el que el autor aprende RAG, Semantic Kernel y Azure AI Foundry (A5, A12)? | Handoff |
 | P-3h | ¿El AI Lab entra al menú entre Portafolio y Blog, en `/[lang]/ai-lab`? | Handoff |
 | P-3i | ¿La vitrina A13 deja ejecutar las herramientas desde la página, o solo las lista? | Propuesta WebMCP, pregunta 2 |
+| P-3j | ¿J3 (cerebro colectivo) va, reutilizando MongoDB y con validación en el servidor, o los juegos se quedan solo en el navegador? | Idea del autor, 2026-11-04 |
