@@ -18,7 +18,7 @@ export function FeaturedPost({
   return (
     <ul className={styles.featured} data-cw-featured="">
       <FilterItem id={post.id} className={styles.item}>
-        <PostCard post={post} href={postPath(lang, post.id)} lang={lang} labels={labels} variant="featured" badge={badge} priority />
+        <PostCard post={post} href={postPath(lang, post.id)} lang={lang} labels={labels} variant="featured" badge={badge} />
       </FilterItem>
     </ul>
   )
