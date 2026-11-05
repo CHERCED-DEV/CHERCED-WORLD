@@ -156,6 +156,13 @@ export default async function Image({ params }: { params: Promise<Params> }) {
 Para los casos (`app/[lang]/portfolio/[id]/opengraph-image.tsx`, P4) usa `ogCase(lang, id)` y devuelve `[]` si es
 `null`. La imagen queda en `/{lang}/…/opengraph-image/og`.
 
+Verificado en el build de P0 con el home marcado a mano (sin commit): la página publica
+`og:image` = `{base}/es/opengraph-image/og?<hash>`, con `og:image:alt` "Camilo Hernandez: DISEÑO SISTEMAS QUE ESCALAN",
+`og:image:type` `image/png` y 1200 × 630. **D-6**: Next 16.4 no le pasa a una ruta de imagen los parámetros de
+`[lang]` que da el `generateStaticParams` del layout, así que la imagen no se genera en el build: se genera en la
+primera petición de cada ruta y queda en caché (`x-nextjs-cache: MISS` y luego `HIT`). No se vuelve a generar en
+cada visita.
+
 **Regla importante (Next 16.4)**: un archivo `opengraph-image` solo manda si la metadata de **la misma página** no
 fija `openGraph.images`. `pageMetadata` sigue poniendo el logo como respaldo, así que cada lane que agrega su archivo
 **debe** pasar `ogImageFile: true`:
@@ -173,9 +180,9 @@ pageMetadata({ lang, path: '/aboutMe', title, description, common, ogImageFile: 
 | `/{lang}/portfolio` y `/{lang}/portfolio/[id]` | P4 (T463) | P4 |
 | `/{lang}/contactMe` | P5 (T481) | P5: su `generateMetadata` propio no fija `images`, así que no hace falta el flag |
 
-**Montserrat Bold pendiente**: `public/fonts/Montserrat/static/Montserrat-Bold.ttf` todavía no está en el repo
-(falta el visto bueno del autor para descargarlo). `ogFonts()` carga Regular siempre y Bold si el archivo existe, así
-que agregarlo después no cambia este contrato.
+**Montserrat Bold pendiente**: P0 congela con Montserrat Regular en las imágenes OG. El autor todavía no aprueba
+agregar `public/fonts/Montserrat/static/Montserrat-Bold.ttf`; si lo aprueba, el orquestador lo agrega como enmienda.
+`ogFonts()` carga Regular siempre y Bold si el archivo existe, así que agregarlo después no cambia este contrato.
 
 ## 8. Sitemap
 
@@ -199,6 +206,7 @@ que agregarlo después no cambia este contrato.
 | D-3 | `home.previousTitleLabel` y `case.diagram.*` en `site.json` | Ver §3. |
 | D-4 | `site.privacy.updatedAt` y `now.updatedAt` en `2026-11-04` | Es la fecha del cambio de texto. El orquestador la ajusta al publicar (T507). |
 | D-5 | Las URLs de `links.repos` de Synergos se verificaron con la API pública de GitHub el 2026-11-04 (`CHERCED-DEV/Synergos.CMS`, `.UI`, `.Fabrica`, públicos) | La spec no trae las URLs que verificó el orquestador. Confírmalas. |
+| D-6 | Las imágenes OG se generan en la primera petición y quedan en caché, no en el build | Ver §7. R-403 pedía prerenderizarlas en el build. |
 
 ## 11. Pruebas que protegen este contrato
 
@@ -221,11 +229,11 @@ El contenido nuevo cambia comportamiento que pide la spec. Estas pruebas congela
 
 | Prueba | Qué pasa | Estado |
 |---|---|---|
-| `tests/unit/l5/assistant.test.ts` › "no afirma tecnologías…" | Pregunta por Python, que ahora está en el portafolio (Legal workspace, §13) | Rompe `npm test`. Ajuste propuesto en la rama `lane/P0-compat` (pregunta por Rust) |
-| `tests/unit/r2/case-study.test.ts` (2 casos) | Supone que el caso 1 va primero y que hay 12 | Ídem: la posición y los vecinos salen del orden real |
+| `tests/unit/l5/assistant.test.ts` › "no afirma tecnologías…" | Preguntaba por Python, que ahora está en el portafolio (Legal workspace, §13) | Ajustada en `lane/P0-compat`, aprobada e integrada (merge `b1155c9`): pregunta por Rust |
+| `tests/unit/r2/case-study.test.ts` (2 casos) | Suponía que el caso 1 iba primero y que había 12 | Ídem: la posición y los vecinos salen del orden real |
 | `tests/unit/r2/highlights.test.ts` | Máximo 4 resultados; Synergos trae 5 (§11.2) | Ídem: 5 solo para Synergos |
-| `tests/unit/r2/explorer.test.ts` › "clasifica cada tecnología…" | Las tecnologías de los casos nuevos no tienen capa en `components/site/portfolio/stack.ts` (P4) | Ídem: capa provisional en `stack.ts`; P4 puede reclasificar |
-| `tests/unit/r3/figures.test.ts` | Espera 12 proyectos | Ídem: 15. P2 reescribe las cifras en T431 |
+| `tests/unit/r2/explorer.test.ts` › "clasifica cada tecnología…" | Las tecnologías de los casos nuevos no tenían capa en `components/site/portfolio/stack.ts` (P4) | Ídem: capa provisional en `stack.ts`; P4 puede reclasificar |
+| `tests/unit/r3/figures.test.ts` | Esperaba 12 proyectos | Ídem: 15. P2 reescribe las cifras en T431 |
 | `tests/e2e/l1/site.spec.ts` › "servicios: introducción, Explorar y tres tarjetas" | Ahora hay seis servicios | Lo reemplaza P3 (T440 a T452) |
 | `tests/e2e/l1/site.spec.ts` › "cada página declara…" (`og:image` en `/assets/`) | Sigue en verde en `p0-frozen`; rompe cuando cada lane pase `ogImageFile: true` (FR-471) | Ajuste del orquestador o P7 al integrar |
 | `tests/e2e/l3/public.spec.ts` (líneas 68 y 129) | La confirmación dice "…en menos de 48 horas" (FR-480) | Ajuste al integrar P5 (T482 corre l3) |
