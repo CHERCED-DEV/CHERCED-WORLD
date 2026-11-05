@@ -153,3 +153,27 @@ export function useKeyboardInset(): number {
 export function useKeyboardOpen(): boolean {
   return isKeyboardOpen(useKeyboardInset())
 }
+
+const mediaStores = new Map<string, Store<boolean>>()
+
+function mediaStore(query: string): Store<boolean> | null {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return null
+  let store = mediaStores.get(query)
+  if (!store) {
+    const list = window.matchMedia(query)
+    store = {
+      subscribe(listener) {
+        list.addEventListener('change', listener)
+        return () => list.removeEventListener('change', listener)
+      },
+      get: () => list.matches,
+    }
+    mediaStores.set(query, store)
+  }
+  return store
+}
+
+export function useMediaQuery(query: string, serverValue = false): boolean {
+  const store = mediaStore(query)
+  return useSyncExternalStore(store?.subscribe ?? noop, store?.get ?? (() => serverValue), () => serverValue)
+}

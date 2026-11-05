@@ -12,6 +12,22 @@
   border-width: 0 0 1px;
   border-radius: 0;
   scroll-margin-top: 100000px;
+
+  @include bp.down(md) {
+    :global(:root[data-js]) & {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    :global(:root[data-js]) &::before {
+      @include glass-backdrop(standard);
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+  }
 }
 
 .header .edgeLine {

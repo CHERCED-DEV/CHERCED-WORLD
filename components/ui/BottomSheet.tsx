@@ -70,12 +70,13 @@ export function BottomSheet({
   const openRef = useRef(open)
   const keyboard = useKeyboardInset()
 
-  const requestClose = useEffectEvent(() => {
+  const close = () => {
     onClose()
     requestAnimationFrame(() => {
       if (openRef.current) ref.current?.style.setProperty(SHEET_DRAG_VAR, '0px')
     })
-  })
+  }
+  const requestClose = useEffectEvent(() => close())
   const focusInitial = useEffectEvent((dialog: HTMLDialogElement) => {
     focusTarget(dialog, labelledBy, initialFocus).focus({ preventScroll: true })
   })
@@ -161,7 +162,7 @@ export function BottomSheet({
     const rect = event.currentTarget.getBoundingClientRect()
     const inside =
       event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom
-    if (!inside) requestClose()
+    if (!inside) close()
   }
 
   const style = keyboard > 0 ? ({ '--cw-keyboard-inset': `${keyboard}px` } as CSSProperties) : undefined
@@ -189,7 +190,7 @@ export function BottomSheet({
           ) : (
             <span />
           )}
-          <button type="button" className={styles.close} aria-label={closeLabel} data-cw-sheet-close="" onClick={() => requestClose()}>
+          <button type="button" className={styles.close} aria-label={closeLabel} data-cw-sheet-close="" onClick={close}>
             <Icon name="close" />
           </button>
         </div>
