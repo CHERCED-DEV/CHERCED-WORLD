@@ -164,11 +164,27 @@ test.describe('la carrera como cartas sobre la mesa (US6b)', () => {
 
 test.describe('Sobre mí en pantallas chicas (US6b y US6c)', () => {
   onlyIn('mobile-chromium')
-  test('la carrera es una línea de tiempo y el mapa compacto muestra los 6 lóbulos sin desplazamiento horizontal (006, EM-02)', async ({ page }) => {
+  test('la carrera es un mazo en la mano con sus 8 empleos y el mapa compacto muestra los 6 lóbulos sin desplazamiento horizontal (006, EM-02 y EM-03)', async ({ page }) => {
     await open(page, 'es')
     const [, career] = await scenes(page)
     await expect(career!.locator('ol > li')).toHaveCount(CAREER_ENTRIES)
-    await expect(career!.locator('ol > li time').first()).toBeVisible()
+    const hand = career!.locator('[data-cw-hand]')
+    await hand.scrollIntoViewIfNeeded()
+    await expect(hand).toBeVisible()
+    await expect(hand.locator('[data-cw-hand-card]')).toHaveCount(CAREER_ENTRIES)
+    await expect(hand.locator('[data-cw-hand-card][data-top] time').first()).toBeVisible()
+    const next = hand.getByRole('button', { name: /siguiente/i })
+    const counter = hand.locator('[data-cw-hand-nav] [aria-live="polite"]')
+    await expect(counter).toHaveText(`1 / ${CAREER_ENTRIES}`)
+    const seen = new Set<string>()
+    for (let step = 0; step < CAREER_ENTRIES; step++) {
+      const id = await hand.locator('[data-cw-hand-card][data-top]').getAttribute('data-cw-hand-card')
+      seen.add(id ?? '')
+      await expect(hand.locator('[data-cw-hand-card][data-top] time').first(), `empleo ${step + 1} con su fecha`).toBeVisible()
+      await next.click()
+    }
+    expect(seen.size, 'se recorren los 8 empleos con el botón').toBe(CAREER_ENTRIES)
+    await expect(counter).toHaveText(`1 / ${CAREER_ENTRIES}`)
     const group = await lobes(page, 'es')
     const viewport = page.viewportSize()!
     for (const lobe of group) {

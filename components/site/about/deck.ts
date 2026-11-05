@@ -25,6 +25,45 @@ export function deckSlot(index: number): DeckSlot {
   return { x: round(Math.min(1, base.x + nudge)), y: round(Math.max(0, base.y - nudge)), rotate: -base.rotate }
 }
 
+export const HAND_QUERY = `(max-width: ${DECK_MIN_WIDTH - 0.02}px)`
+
+export const HAND_VISIBLE_BEHIND = 3
+
+const HAND_TILTS: readonly number[] = [-2.5, 2, -1.5, 3, -3, 1.5, -2, 2.5]
+
+export function handTilt(index: number): number {
+  return HAND_TILTS[index % HAND_TILTS.length]!
+}
+
+export function handOrder(count: number): number[] {
+  return Array.from({ length: Math.max(0, count) }, (_, index) => index)
+}
+
+export function cycleHand(order: readonly number[], direction: 'prev' | 'next'): number[] {
+  if (order.length < 2) return [...order]
+  return direction === 'next' ? [...order.slice(1), order[0]!] : [order.at(-1)!, ...order.slice(0, -1)]
+}
+
+export function handToTop(order: readonly number[], index: number): number[] {
+  const position = order.indexOf(index)
+  if (position <= 0) return [...order]
+  return [...order.slice(position), ...order.slice(0, position)]
+}
+
+export type HandPose = { depth: number; shown: boolean; tilt: number; lift: number; scale: number }
+
+export function handPose(index: number, order: readonly number[]): HandPose {
+  const depth = Math.max(0, order.indexOf(index))
+  const visible = Math.min(depth, HAND_VISIBLE_BEHIND)
+  return {
+    depth,
+    shown: depth <= HAND_VISIBLE_BEHIND,
+    tilt: depth === 0 ? 0 : handTilt(index),
+    lift: visible * 12,
+    scale: Math.round((1 - visible * 0.045) * 1000) / 1000,
+  }
+}
+
 export type FlightGeometry = { dx: number; dy: number; sx: number; sy: number; rotate: number }
 
 export type Box = { left: number; top: number; width: number; height: number }

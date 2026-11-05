@@ -1,10 +1,13 @@
 import type { CSSProperties } from 'react'
+import { Sweep } from '@/components/ui/Sweep'
 import type { Locale } from '@/lib/i18n'
 import styles from './About.module.scss'
 import { CountUp } from './CountUp'
 import { figureDigits, figureText, type Figure, type FigureId } from './figures'
 
 export type FigureLabels = Record<FigureId, { label: string; note?: string }>
+
+export const FIGURE_FLOATS = [1, 3, 2, 1] as const
 
 export type AboutFiguresProps = { lang: Locale; title: string; figures: Figure[]; labels: FigureLabels }
 
@@ -17,7 +20,7 @@ export function AboutFigures({ lang, title, figures, labels }: AboutFiguresProps
         {title}
       </h2>
       <dl className={styles.figures}>
-        {figures.map((figure) => {
+        {figures.map((figure, index) => {
           const { label, note } = labels[figure.id]
           return (
             <div
@@ -26,6 +29,7 @@ export function AboutFigures({ lang, title, figures, labels }: AboutFiguresProps
               data-cw-glass="standard"
               data-cw-light=""
               data-cw-figure={figure.id}
+              data-cw-float={FIGURE_FLOATS[index % FIGURE_FLOATS.length]}
             >
               <span className={styles.figureAccent} aria-hidden="true" />
               <dt className={styles.figureLabel}>
@@ -42,6 +46,7 @@ export function AboutFigures({ lang, title, figures, labels }: AboutFiguresProps
                   </span>
                 ) : null}
                 <span className="cw-visually-hidden">{figureText(figure, lang)}</span>
+                <Sweep />
               </dd>
             </div>
           )

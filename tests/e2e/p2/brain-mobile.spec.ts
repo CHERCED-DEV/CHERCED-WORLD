@@ -6,7 +6,7 @@ import { blurredSurfaces } from '../m0/support'
 const { about } = getSite()
 const data = { es: brainData(about, getProjects(), 'es', 'Actualidad'), en: brainData(about, getProjects(), 'en', 'Present') }
 const WIDTHS = [375, 390, 412] as const
-const SHEET = 'dialog[data-cw-sheet]'
+const SHEET = 'dialog[data-cw-sheet]:has([data-cw-terminal])'
 const BLUR_BUDGET = 3
 
 function onlyIn(...names: string[]) {
