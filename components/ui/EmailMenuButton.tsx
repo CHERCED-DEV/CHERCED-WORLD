@@ -21,7 +21,7 @@ export function EmailMenuButton({ email, labels, trigger, className, placement =
   const [open, setOpen] = useState(false)
   const toast = useToast()
   const menuId = useId()
-  const rootRef = useRef<HTMLSpanElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const itemsRef = useRef<Array<HTMLElement | null>>([])
   const href = `mailto:${email}`
@@ -95,7 +95,7 @@ export function EmailMenuButton({ email, labels, trigger, className, placement =
   }
 
   return (
-    <span ref={rootRef} className={styles.root} data-cw-email-menu="">
+    <div ref={rootRef} className={styles.root} data-cw-email-menu="">
       <a href={href} className={cx(className, styles.fallback)} aria-label={labels.write} data-cw-email-fallback="">
         {trigger}
       </a>
@@ -156,6 +156,6 @@ export function EmailMenuButton({ email, labels, trigger, className, placement =
           </li>
         </ul>
       ) : null}
-    </span>
+    </div>
   )
 }
