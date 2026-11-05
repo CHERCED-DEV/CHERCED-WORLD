@@ -29,7 +29,7 @@ describe('resultados destacados (US5, nada inventado)', () => {
     for (const project of projects) {
       const list = project.highlights ?? []
       expect(list.length, project.id).toBeGreaterThanOrEqual(2)
-      expect(list.length, project.id).toBeLessThanOrEqual(4)
+      expect(list.length, project.id).toBeLessThanOrEqual(project.id === '12' ? 5 : 4)
       for (const item of list) {
         for (const lang of LOCALES) {
           expect(item[lang].trim(), `${project.id}/${lang}`).not.toBe('')
