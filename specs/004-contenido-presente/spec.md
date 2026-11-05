@@ -112,6 +112,10 @@ criterio de arquitecto con evidencia. Es contenido y detalles nuevos sobre el si
   - Entrenando: se prepara para HYROX São Paulo; además CrossFit, trail, running y subir nevados.
   - Fuera del teclado: los videojuegos. Su frase: "el mejor videojuego es mi vida".
   - La fecha de la carrera no se publica hasta que el autor la confirme.
+- Q: ¿Lemas del autor? → A: "Siembra bondad, cosecha excelencia" y "Veni, vidi, vici", tomados de su perfil público. Van
+  en `/now` y en el comando `cat lemas.md` de la terminal. Del mismo perfil: medallas de 21K y 10K, CrossFit y HYROX
+  (contenido.md §15b y §24).
+- Q: ¿Se queda el enlace a Instagram? (P-409) → A: sí. Su perfil público enlaza al portafolio.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -781,7 +785,7 @@ fuente de verdad. Mientras sigan abiertas, se aplica el valor por defecto indica
 | P-406 | El PDF oficial del CV trae cifras del empleador actual y nombres de proveedores, y enlaza a una cuenta de GitHub distinta de la pública. ¿Se publica tal cual (ya está en LinkedIn), se publica una versión para el sitio sin esas cifras ni nombres, o el botón lleva a LinkedIn? | Comparación del CV con la decisión "ninguna cifra del empleador" | **Resuelta (2026-11-04):** el botón lleva a LinkedIn y el sitio no sirve el PDF |
 | P-407 | Hoy hay skills que no están en la propuesta: HTML5, JavaScript y AI coding agents, y CSS y Sass, que la propuesta junta en una sola. ¿Se quedan, se fusionan o salen? | Comparación de `site.ts` con la propuesta | **Resuelta (2026-11-04):** ningún skill se borra (D7, en la 002, T229) |
 | P-408 | Solo Synergos trae tarjetas ADR. ¿Escribe el autor las de Director & lines, Legal workspace, Event bridge y CHERCED-WORLD 2026? | Handoff | Esos casos quedan en prosa |
-| P-409 | El sitio enlaza a Instagram, pero la fuente de verdad no lo lista como contacto público. ¿Se queda? | Fuente de verdad del perfil | Se queda, como hoy |
+| P-409 | El sitio enlaza a Instagram, pero la fuente de verdad no lo lista como contacto público. ¿Se queda? | Fuente de verdad del perfil | **Resuelta:** se queda; su perfil público enlaza al portafolio |
 | P-410 | ¿Enlace en vivo de Synergos cuando su dominio esté en producción? | Handoff | `live: null` |
 | P-411 | ¿Se pueden mencionar en Servicios los ejemplos de la abogada y del ingeniero estructural, sin nombres? | Página de Servicios, pregunta 1 | **Resuelta:** sí, sin nombres ni ciudad |
 | P-412 | ¿Quién es dueño del código y de los plugins que se entregan? Hace falta para una de las preguntas frecuentes | Página de Servicios, pregunta 2 | Esa pregunta no se publica |

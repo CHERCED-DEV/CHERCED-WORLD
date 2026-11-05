@@ -1003,6 +1003,17 @@ Slugs de `ls projects/`, en el orden de §4: `synergos/`, `director-and-lines/`,
 `legal-workspace/`, `event-bridge/`, `quantic-theatrum/`, `airline/`, `newman-club/`, `centribal/`, `my-website/`,
 `e-shop/`, `get-it-done/`, `studio-ghibli-tracking-system/`, `studio-ghibli-backoffice/` y `bookingui-system/`.
 
+### §15b Comando `cat lemas.md` (2026-11-04, lemas del autor)
+
+Se suma a los comandos de la terminal. "Veni, vidi, vici" va con `lang="la"`.
+
+```ts
+'cat lemas.md': {
+  es: '1. Siembra bondad, cosecha excelencia.\n2. Veni, vidi, vici.',
+  en: '1. Sow kindness, reap excellence.\n2. Veni, vidi, vici.',
+},
+```
+
 ## §16 Easter egg del footer (FR-462)
 
 | Clave (`common.json`) | ES | EN |
@@ -1166,9 +1177,13 @@ export const now = {
   ],
   preparing: [
     {
-      es: 'HYROX São Paulo. Entreno CrossFit, trail y running, y subo nevados cuando puedo.',
-      en: 'HYROX São Paulo. I train CrossFit, trail and running, and climb snow-capped peaks when I can.',
+      es: 'HYROX São Paulo. Entreno CrossFit, trail y running, y subo nevados cuando puedo. Ya tengo medalla de 21K y de 10K.',
+      en: 'HYROX São Paulo. I train CrossFit, trail and running, and climb snow-capped peaks when I can. I already have a 21K and a 10K medal.',
     },
+  ],
+  mottos: [
+    { es: 'Siembra bondad, cosecha excelencia.', en: 'Sow kindness, reap excellence.' },
+    { es: 'Veni, vidi, vici.', en: 'Veni, vidi, vici.', lang: 'la' },
   ],
   offKeyboard: [
     {
@@ -1186,6 +1201,7 @@ export const now = {
 | `nowPage.learning` | Aprendiendo | Learning |
 | `nowPage.preparing` | Entrenando para | Training for |
 | `nowPage.offKeyboard` | Fuera del teclado | Off the keyboard |
+| `nowPage.mottos` | Mis lemas | My mottos |
 | `nowPage.updated` | Actualizado el {date} | Updated {date} |
 | `meta.now.description` | Lo que estoy construyendo, aprendiendo y entrenando este mes. | What I'm building, learning and training for this month. |
 
