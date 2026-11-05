@@ -1,4 +1,5 @@
-import type { SiteContent } from './types'
+import { formatFact, formatFloor, synergosFacts } from './synergos'
+import type { Localized, SiteContent, SkillLobe } from './types'
 
 export const authorPending = {
   'P-02': 'socials.facebook',
@@ -37,12 +38,25 @@ export const site: SiteContent = {
   home: {
     greeting: { es: 'Mi nombre es', en: 'My name is' },
     name: 'Camilo',
-    title: { es: 'SOY DESARROLLADOR', en: "I'M A DEVELOPER" },
+    previousTitle: { es: 'SOY DESARROLLADOR', en: "I'M A DEVELOPER" },
+    title: { es: 'DISEÑO SISTEMAS QUE ESCALAN', en: 'I DESIGN SYSTEMS THAT SCALE' },
+    subtitle: {
+      es: 'Software Solutions Engineer · AI-First. Micro-frontends, microservicios .NET y plataformas composables.',
+      en: 'Software Solutions Engineer · AI-First. Micro-frontends, .NET microservices and composable platforms.',
+    },
+  },
+  profile: {
+    availability: {
+      location: { es: 'Armenia, Colombia', en: 'Armenia, Colombia' },
+      timezone: 'UTC−5',
+      relocation: { es: 'Abierto a reubicación', en: 'Open to relocation' },
+    },
+    cv: { href: 'https://www.linkedin.com/in/cherced/' },
   },
   about: {
     description: {
-      en: "I'm Camilo, a Software Solutions Engineer. I design composable, distributed systems: micro-frontends, .NET microservices, message queues and a CMS working as one product. I learned on airline platforms at FLYR and now work in fintech, where I also lead legacy migrations. I work AI-first and spec-driven: I write the spec before the code and use agents to research, scaffold, review and document.",
-      es: 'Soy Camilo, Software Solutions Engineer. Diseño sistemas composables y distribuidos: micro-frontends, microservicios .NET, colas de mensajes y un CMS funcionando como un solo producto. Me formé en plataformas de aerolíneas en FLYR y hoy trabajo en fintech, donde también lidero migraciones de legado. Trabajo AI-first y spec-driven: escribo la especificación antes del código y uso agentes para investigar, generar, revisar y documentar.',
+      es: 'Soy Camilo, Software Solutions Engineer. Diseño plataformas donde agregar el siguiente negocio no cuesta lo mismo que el primero: micro-frontends, microservicios .NET, sagas y un CMS que compone. En fintech trabajo de punta a punta y lidero migraciones de legado. En Synergos dirijo un equipo de agentes de IA que construye en paralelo bajo reglas de arquitectura que rompen el build si alguien las viola.',
+      en: "I'm Camilo, a Software Solutions Engineer. I design platforms where adding the next business doesn't cost as much as the first: micro-frontends, .NET microservices, sagas and a CMS that composes. In fintech I work end to end and lead legacy migrations. In Synergos I direct a team of AI agents that builds in parallel under architecture rules that break the build if anyone violates them.",
     },
     image: {
       src: '/assets/imgs/about/retrato-oscuro.webp',
@@ -83,8 +97,8 @@ export const site: SiteContent = {
         start: '2024-02',
         end: null,
         description: {
-          en: 'Personal project. I design and build Synergos, a composable digital platform with 30+ reusable components: Umbraco (.NET) as the composition layer, a CDN project that serves the resources, and a framework-agnostic backend-for-frontend, proven with 3+ frameworks.',
-          es: 'Proyecto propio. Diseño y construyo Synergos, una plataforma digital composable con más de 30 componentes reutilizables: Umbraco (.NET) como capa de composición, un proyecto en CDN que sirve los recursos y un backend-for-frontend agnóstico al framework, probado con más de 3 frameworks.',
+          es: `Proyecto propio. Diseño y construyo Synergos, una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero: ${synergosFacts.pieces} piezas desplegables (un CMS, ${synergosFacts.capabilities} capacidades, ${synergosFacts.orchestrators} orquestadores y un proxy), más de ${formatFact(synergosFacts.testsAtLeast, 'es')} tests automatizados y más de ${formatFact(synergosFacts.adrsAtLeast, 'es')} decisiones de arquitectura documentadas. Dirijo un equipo de agentes de IA que construye en paralelo bajo mis reglas.`,
+          en: `Personal project. I design and build Synergos, a composition platform where the eighth business vertical costs less than the first: ${synergosFacts.pieces} deployable pieces (a CMS, ${synergosFacts.capabilities} capabilities, ${synergosFacts.orchestrators} orchestrators and a proxy), ${formatFloor(synergosFacts.testsAtLeast, 'en')} automated tests and ${formatFloor(synergosFacts.adrsAtLeast, 'en')} documented architecture decisions. I direct a team of AI agents that builds in parallel under my rules.`,
         },
       },
       {
@@ -94,14 +108,14 @@ export const site: SiteContent = {
         start: '2023-03',
         end: '2025-03',
         description: {
-          en: 'I moved from client accounts to the core product: the airline retailing platform every airline account extends from. I led the architecture of the Check-in and Manage My Booking modules, deployed across 3+ international airlines, and built secure Angular checkout components.',
-          es: 'Pasé de las cuentas de clientes al producto core: la plataforma de retail aéreo de la que se extiende cada aerolínea. Lideré la arquitectura de los módulos de Check-in y Manage My Booking, desplegados en más de 3 aerolíneas internacionales, y construí componentes seguros de checkout en Angular.',
+          es: 'Pasé de las cuentas de clientes al producto core: la plataforma de retail aéreo de la que se extiende cada aerolínea. Lideré la arquitectura de los módulos de Check-in y Manage My Booking, desplegados en más de 3 aerolíneas internacionales, construí componentes seguros de checkout en Angular para el módulo PCI y trabajé en un proyecto de redención de vouchers para una aerolínea.',
+          en: 'I moved from client accounts to the core product: the airline retailing platform every airline account extends from. I led the architecture of the Check-in and Manage My Booking modules, deployed across 3+ international airlines, built secure Angular checkout components for the PCI module and worked on a voucher redemption project for an airline.',
         },
       },
       {
         id: 'newshore',
         company: 'Newshore (a FLYR Labs company)',
-        role: { es: 'Desarrollador Frontend', en: 'Frontend Developer' },
+        role: { es: 'Frontend Web Developer', en: 'Frontend Web Developer' },
         start: '2022-07',
         end: '2023-03',
         description: {
@@ -111,8 +125,8 @@ export const site: SiteContent = {
       },
       {
         id: 'platzi-master',
-        company: 'Platzi Master [CX]',
-        role: { es: 'Desarrollador Frontend', en: 'Frontend Developer' },
+        company: 'Platzi',
+        role: { es: 'Frontend Web Developer – Platzi Master [CX]', en: 'Frontend Web Developer – Platzi Master [CX]' },
         start: '2022-03',
         end: '2022-06',
         description: {
@@ -123,23 +137,23 @@ export const site: SiteContent = {
       {
         id: 'growup-it',
         company: 'Growup IT',
-        role: { es: 'Desarrollador Frontend', en: 'Frontend Developer' },
+        role: { es: 'Frontend Web Developer', en: 'Frontend Web Developer' },
         start: '2019-01',
         end: '2019-11',
         description: {
-          en: "I improved and optimized the existing code of a commercial services company's website: I found and fixed performance issues, rewrote and updated code to current standards, and built and maintained CSS styles so the site looked and worked well on every device and browser.",
-          es: 'Mejoré y optimicé el código existente del sitio web de una empresa de servicios comerciales: encontré y resolví problemas de rendimiento, reescribí y actualicé código a los estándares vigentes, y construí y mantuve los estilos CSS para que el sitio se viera y funcionara bien en cualquier dispositivo y navegador.',
+          es: 'Refactoricé el portal de pago de impuestos de una entidad pública (PHP, HTML, JavaScript): optimicé recursos y la composición de las páginas y subí su puntaje de rendimiento en Lighthouse en unos 40 puntos. Me encargué de la arquitectura y el empaquetado del proyecto, e introduje desarrollo por componentes.',
+          en: "I refactored a public entity's tax-payment portal (PHP, HTML, JavaScript): I optimized assets and page composition and raised its Lighthouse performance score by about 40 points. I owned the project's architecture and packaging, and introduced component-based development.",
         },
       },
       {
         id: 'squadra-arquitectura',
         company: 'Squadra Arquitectura',
-        role: { es: 'Fundador y gerente', en: 'Founder & Business Manager' },
+        role: { es: 'Founder & Business Manager', en: 'Founder & Business Manager' },
         start: '2016-10',
         end: '2020-05',
         description: {
-          en: 'I founded and ran a company focused on developing and remodeling hospital architecture: I managed and supervised construction projects, negotiated with clients and suppliers, and represented the company in public tenders.',
-          es: 'Fundé y dirigí una empresa dedicada al desarrollo y la remodelación de arquitectura hospitalaria: gestioné y supervisé proyectos de construcción, negocié con clientes y proveedores, y representé a la empresa en licitaciones públicas.',
+          es: 'Fundé y dirigí una empresa de habilitación hospitalaria y obra civil: gestioné y supervisé proyectos de construcción, negocié con clientes y proveedores, y representé a la empresa en licitaciones públicas.',
+          en: 'I founded and ran a company focused on hospital facility compliance and civil works: I managed and supervised construction projects, negotiated with clients and suppliers, and represented the company in public tenders.',
         },
       },
     ],
@@ -324,6 +338,20 @@ export const site: SiteContent = {
         es: 'Aprendiendo ahora: Azure AI Foundry, Semantic Kernel y RAG.',
         en: 'Learning now: Azure AI Foundry, Semantic Kernel and RAG.',
       },
+      inWords: {
+        frontend: {
+          es: 'Angular es mi casa desde 2022. Construyo interfaces pixel-perfect y accesibles, y hoy mantengo micro-frontends sobre Native Federation.',
+          en: 'Angular has been home since 2022. I build pixel-perfect, accessible interfaces, and today I maintain micro-frontends on Native Federation.',
+        },
+        'backend-cloud': {
+          es: 'Construyo microservicios .NET con gRPC, conecto sistemas con colas en Azure Service Bus y uso Umbraco como capa de composición.',
+          en: 'I build .NET microservices with gRPC, connect systems through Azure Service Bus queues and use Umbraco as a composition layer.',
+        },
+        'applied-ai': {
+          es: 'Trabajo AI-first: los agentes investigan, generan, revisan y documentan; yo diseño, decido y valido. La IA amplifica la ingeniería, no la reemplaza.',
+          en: 'I work AI-first: agents research, scaffold, review and document; I design, decide and validate. AI amplifies engineering; it does not replace it.',
+        },
+      },
       lobes: [
         {
           id: 'frontend',
@@ -406,6 +434,28 @@ export const site: SiteContent = {
         },
       ],
     },
+    principles: [
+      {
+        short: { es: 'Atomicidad', en: 'Atomicity' },
+        full: { es: 'Atomicidad: una pieza puede rechazar sola y es dueña de su almacén.', en: 'Atomicity: a piece can reject on its own and owns its store.' },
+      },
+      {
+        short: { es: 'Convenciones que rompen el build', en: 'Conventions that break the build' },
+        full: { es: 'Una convención que no rompe el build no existe.', en: "A convention that doesn't break the build doesn't exist." },
+      },
+      {
+        short: { es: 'Gates que se prueban fallando', en: 'Gates proven to fail' },
+        full: { es: 'Un gate que nunca falló no vigila nada.', en: "A gate that never failed isn't watching anything." },
+      },
+      {
+        short: { es: 'Especificación antes que código', en: 'Spec before code' },
+        full: { es: 'La especificación antes que el código.', en: 'Spec before code.' },
+      },
+      {
+        short: { es: 'Código para humanos', en: 'Code for humans' },
+        full: { es: 'Código para que lo lean humanos, aunque lo escriba un agente.', en: 'Code for humans to read, even when an agent writes it.' },
+      },
+    ],
     education: [
       {
         id: 'unad',
@@ -472,7 +522,10 @@ export const site: SiteContent = {
           },
         },
         {
-          name: { es: 'Y otras escuelas', en: 'And other schools' },
+          name: {
+            es: 'Y más de 140 cursos certificados de desarrollo de software',
+            en: 'And 140+ certified software development courses',
+          },
           description: {
             en: 'Learn different skills and technologies relevant to web development and software engineering.',
             es: 'Aprende distintas habilidades y tecnologías relevantes para el desarrollo web y la ingeniería de software.',
@@ -492,52 +545,224 @@ export const site: SiteContent = {
   },
   services: {
     intro: {
-      en: 'I help you turn a digital product into a system that grows without breaking. I design the architecture, build the frontend and backend, and maintain what I deliver with testing, accessibility and solid performance. I work from clear specs from day one, so you know what will be built before the first line of code.',
-      es: 'Te ayudo a convertir un producto digital en un sistema que crece sin romperse. Diseño la arquitectura, construyo el frontend y el backend, y mantengo lo que entrego con pruebas, accesibilidad y buen rendimiento. Trabajo con especificaciones claras desde el inicio, para que sepas qué se va a construir antes de escribir la primera línea.',
+      es: 'Me meto en tu proceso, entiendo dónde se te va el tiempo y construyo lo que lo mejora: un asistente de IA hecho para tu profesión, una fábrica de software enfocada en el core de tu negocio o una arquitectura que crezca sin romperse. Tú sigues decidiendo; la IA hace el trabajo repetitivo.',
+      en: 'I step into your process, find where your time goes and build what improves it: an AI assistant made for your profession, a software factory focused on your core business or an architecture that grows without breaking. You keep making the decisions; the AI does the repetitive work.',
     },
-    items: [
+    hero: {
+      title: {
+        es: 'TU OFICIO, CON UN EQUIPO DE AGENTES A LA MEDIDA',
+        en: 'YOUR CRAFT, WITH A TAILOR-MADE TEAM OF AGENTS',
+      },
+      intro: {
+        es: 'Me meto en tu proceso, entiendo dónde se te va el tiempo y construyo lo que lo mejora: un asistente de IA hecho para tu profesión, una fábrica de software enfocada en el core de tu negocio o una arquitectura que crezca sin romperse. Tú sigues decidiendo; la IA hace el trabajo repetitivo.',
+        en: 'I step into your process, find where your time goes and build what improves it: an AI assistant made for your profession, a software factory focused on your core business or an architecture that grows without breaking. You keep making the decisions; the AI does the repetitive work.',
+      },
+      cta: { es: 'CUÉNTAME TU PROCESO', en: 'TELL ME ABOUT YOUR PROCESS' },
+    },
+    audiences: [
       {
-        id: 'design',
-        title: { es: 'Diseño', en: 'Design' },
-        description: {
-          en: 'I can design your website based on your needs and ideas, or create it from scratch while consulting with you along the way.',
-          es: 'Puedo diseñar tu sitio a partir de tus necesidades e ideas, o crearlo desde cero consultándote durante el proceso.',
+        id: 'professionals',
+        title: { es: 'Profesionales independientes', en: 'Independent professionals' },
+        text: {
+          es: 'Abogados, ingenieros, consultores: personas cuyo trabajo tiene un método propio que hoy hacen a mano.',
+          en: 'Lawyers, engineers, consultants: people whose work follows their own method, done by hand today.',
         },
-        icon: '/assets/icons/services/design.png',
       },
       {
-        id: 'development',
-        title: { es: 'Desarrollo', en: 'Development' },
-        description: {
-          en: 'Starting from a design of mine or one you send me, I can build a fully functional, responsive website.',
-          es: 'A partir de un diseño mío o de uno que me envíes, puedo construir un sitio completamente funcional y responsive.',
+        id: 'companies',
+        title: { es: 'Empresas', en: 'Companies' },
+        text: {
+          es: 'Negocios que necesitan software propio para su core, o modernizar el que ya tienen sin detener la operación.',
+          en: 'Businesses that need their own software for their core, or to modernize what they already have without stopping operations.',
         },
-        icon: '/assets/icons/services/development.png',
       },
       {
-        id: 'maintenance',
-        title: { es: 'Mantenimiento', en: 'Maintenance' },
-        description: {
-          en: 'If something breaks or needs to change, I can add new features and solutions.',
-          es: 'Si algo falla o necesita cambios, puedo agregar nuevas funcionalidades y soluciones.',
+        id: 'engineering-teams',
+        title: { es: 'Equipos de ingeniería', en: 'Engineering teams' },
+        text: {
+          es: 'Equipos que quieren trabajar AI-first sin perder calidad: con especificaciones, reglas que se cumplen solas y agentes bajo control.',
+          en: 'Teams that want to work AI-first without losing quality: with specs, rules that enforce themselves and agents under control.',
         },
-        icon: '/assets/icons/services/maintenance.png',
       },
     ],
+    items: [
+      {
+        id: 'ai-harness',
+        title: { es: 'ASISTENTES DE IA PARA TU PROFESIÓN', en: 'AI ASSISTANTS FOR YOUR PROFESSION' },
+        description: {
+          es: 'Construyo un harness de IA alrededor de tu método de trabajo: skills y plugins que conocen tu oficio, usan tus plantillas y siguen tus pasos. La IA propone; tú revisas y decides.',
+          en: 'I build an AI harness around your way of working: skills and plugins that know your craft, use your templates and follow your steps. The AI proposes; you review and decide.',
+        },
+        forWho: { es: 'Profesionales independientes y equipos pequeños', en: 'Independent professionals and small teams' },
+        deliverables: [
+          { es: 'Skills y plugins a la medida de tu profesión', en: 'Skills and plugins tailored to your profession' },
+          {
+            es: 'Scripts de Python para el trabajo pesado, que bajan el costo de uso',
+            en: 'Python scripts for heavy lifting, which lower usage costs',
+          },
+          { es: 'Reglas que impiden que la IA invente datos', en: 'Rules that keep the AI from making things up' },
+          { es: 'Una guía de uso y una sesión de entrenamiento', en: 'A usage guide and a training session' },
+        ],
+        example: {
+          es: 'Ejemplo: para una abogada, skills que organizan el material del caso, contrastan hipótesis y generan documentos. Para un ingeniero estructural, un asistente que lee sus bitácoras, ayuda con los cálculos y arma el estimado.',
+          en: 'Example: for a lawyer, skills that organize case material, test hypotheses and draft documents. For a structural engineer, an assistant that reads his logs, helps with calculations and builds the estimate.',
+        },
+      },
+      {
+        id: 'software-factory',
+        title: { es: 'FÁBRICAS DE SOFTWARE A LA MEDIDA', en: 'TAILOR-MADE SOFTWARE FACTORIES' },
+        description: {
+          es: 'Monto una fábrica de software enfocada en el core de tu negocio: varios agentes trabajando en paralelo, cada uno con su parte, bajo especificaciones claras, las skills que prefieras y reglas de arquitectura que rompen el build si alguien las viola.',
+          en: 'I set up a software factory focused on your core business: several agents working in parallel, each on its own part, under clear specs, the skills you prefer and architecture rules that break the build if anyone violates them.',
+        },
+        forWho: { es: 'Empresas y equipos de ingeniería', en: 'Companies and engineering teams' },
+        deliverables: [
+          { es: 'Una constitución del proyecto y especificaciones con Spec Kit', en: 'A project constitution and specs with Spec Kit' },
+          { es: 'Skills de dominio con el vocabulario de tu negocio', en: "Domain skills with your business's vocabulary" },
+          { es: 'Un modelo de trabajo en paralelo con trazabilidad de cada tarea', en: 'A parallel workflow with every task traced' },
+          { es: 'Gates de calidad y de arquitectura en CI', en: 'Quality and architecture gates in CI' },
+        ],
+        example: {
+          es: 'Ejemplo: así construyo Synergos, con un director que integra y líneas de agentes por vertical de negocio, cada una con su espacio de trabajo.',
+          en: 'Example: this is how I build Synergos, with a director that integrates and agent lines per business vertical, each in its own workspace.',
+        },
+      },
+      {
+        id: 'process-optimization',
+        title: { es: 'OPTIMIZACIÓN DE PROCESOS CON IA', en: 'AI PROCESS OPTIMIZATION' },
+        description: {
+          es: 'Mapeamos juntos lo que haces cada semana, encontramos lo repetitivo y lo automatizamos: documentos, clasificación, transcripción, reportes. Medimos el antes y el después.',
+          en: "We map together what you do every week, find what's repetitive and automate it: documents, sorting, transcription, reports. We measure before and after.",
+        },
+        forWho: { es: 'Profesionales y empresas', en: 'Professionals and companies' },
+        deliverables: [
+          { es: 'Un mapa de tu proceso con los cuellos de botella', en: 'A map of your process and its bottlenecks' },
+          { es: 'Automatizaciones priorizadas por impacto', en: 'Automations prioritized by impact' },
+          { es: 'Medición del tiempo ahorrado', en: 'Measurement of the time saved' },
+        ],
+      },
+      {
+        id: 'architecture',
+        title: { es: 'ARQUITECTURA Y MODERNIZACIÓN', en: 'ARCHITECTURE & MODERNIZATION' },
+        description: {
+          es: 'Diseño la arquitectura de tu producto (micro-frontends, microservicios .NET o una plataforma composable) y migro sistemas legados por partes, sin detener la operación.',
+          en: 'I design your product architecture (micro-frontends, .NET microservices or a composable platform) and migrate legacy systems step by step, without stopping operations.',
+        },
+        forWho: { es: 'Empresas con producto en crecimiento o sistemas legados', en: 'Companies with a growing product or legacy systems' },
+        deliverables: [
+          { es: 'Diagnóstico y arquitectura objetivo', en: 'Assessment and target architecture' },
+          { es: 'Decisiones documentadas como ADR', en: 'Decisions documented as ADRs' },
+          { es: 'Plan de migración por fases', en: 'Phased migration plan' },
+          { es: 'Implementación o acompañamiento al equipo', en: 'Implementation or team support' },
+        ],
+      },
+      {
+        id: 'product',
+        title: { es: 'DESARROLLO DE PRODUCTO', en: 'PRODUCT DEVELOPMENT' },
+        description: {
+          es: 'Construyo de punta a punta, del frontend al backend: interfaces accesibles en Angular o React, servicios en .NET y despliegue con CI/CD.',
+          en: 'I build end to end, from frontend to backend: accessible interfaces in Angular or React, .NET services and CI/CD deployment.',
+        },
+        forWho: { es: 'Empresas y emprendimientos', en: 'Companies and startups' },
+        deliverables: [
+          { es: 'Especificación aprobada antes de construir', en: 'Spec approved before building' },
+          { es: 'Producto funcionando, con pruebas', en: 'Working product, with tests' },
+          { es: 'Despliegue y documentación', en: 'Deployment and documentation' },
+        ],
+      },
+      {
+        id: 'workshops',
+        title: { es: 'TALLERES PARA EQUIPOS', en: 'TEAM WORKSHOPS' },
+        description: {
+          es: 'Entreno a tu equipo para trabajar AI-first y con Spec-Driven Development: escribir la especificación antes del código, dirigir agentes de IA en paralelo sin que se pisen y revisar lo que entregan.',
+          en: 'I train your team to work AI-first and with Spec-Driven Development: writing the spec before the code, running AI agents in parallel without collisions and reviewing what they deliver.',
+        },
+        forWho: { es: 'Equipos de ingeniería', en: 'Engineering teams' },
+        deliverables: [
+          { es: 'Tu equipo escribe specs que un agente puede ejecutar.', en: 'Your team writes specs an agent can execute.' },
+          {
+            es: 'Un flujo de trabajo con agentes, revisión humana y decisiones escritas.',
+            en: 'A workflow with agents, human review and written decisions.',
+          },
+          { es: 'Práctica sobre un caso de tu propio negocio.', en: 'Hands-on practice on a case from your own business.' },
+        ],
+      },
+    ],
+    process: {
+      title: { es: 'CÓMO TRABAJO', en: 'HOW I WORK' },
+      steps: [
+        {
+          es: '1. Entender — Me siento contigo a ver tu proceso real, no el ideal.',
+          en: '1. Understand — I sit with you to see your real process, not the ideal one.',
+        },
+        {
+          es: '2. Especificar — Escribimos qué se va a construir y cómo sabremos que funciona, antes de la primera línea de código.',
+          en: "2. Specify — We write down what will be built and how we'll know it works, before the first line of code.",
+        },
+        {
+          es: '3. Construir — Agentes de IA trabajando en paralelo, bajo reglas que no pueden saltarse.',
+          en: "3. Build — AI agents working in parallel, under rules they can't skip.",
+        },
+        {
+          es: '4. Verificar — Pruebas, revisión humana y demo. Nada se entrega sin que lo veas funcionar.',
+          en: '4. Verify — Tests, human review and a demo. Nothing ships until you see it work.',
+        },
+        {
+          es: '5. Entregar y medir — Te entrego la herramienta, la guía de uso y la medición del antes y el después.',
+          en: '5. Deliver and measure — You get the tool, the usage guide and the before-and-after measurement.',
+        },
+      ],
+      principles: [
+        { es: 'La IA propone; la persona decide.', en: 'AI proposes; people decide.' },
+        { es: 'Nada se inventa: cada dato tiene su fuente.', en: 'Nothing is made up: every fact has a source.' },
+        { es: 'Tus datos se quedan contigo.', en: 'Your data stays with you.' },
+        { es: 'Una regla que no rompe el build no existe.', en: "A rule that doesn't break the build doesn't exist." },
+      ],
+    },
+    faq: [
+      {
+        q: { es: '¿Qué pasa con mis datos y los de mis clientes?', en: "What happens to my data and my clients' data?" },
+        a: {
+          es: 'Diseño cada solución para que tus datos se queden en tus equipos o en tus cuentas. Defino con anticipación qué información puede ver la IA, y el material sensible no sale de donde tú decidas.',
+          en: "I design every solution so your data stays on your machines or in your accounts. I define upfront what information the AI can see, and sensitive material doesn't leave where you decide it stays.",
+        },
+      },
+      {
+        q: { es: '¿La IA va a reemplazar mi criterio?', en: 'Will the AI replace my judgment?' },
+        a: {
+          es: 'No. La IA hace el trabajo repetitivo y te propone; tú revisas y decides. Así está construido, no es una promesa.',
+          en: "No. The AI does the repetitive work and makes proposals; you review and decide. That's how it's built, not a promise.",
+        },
+      },
+      {
+        q: { es: '¿Cuánto cuesta usar la IA después?', en: 'How much does using the AI cost afterwards?' },
+        a: {
+          es: 'Depende del modelo y del volumen. Diseño las soluciones para gastar poco: el trabajo pesado lo hacen scripts, no el modelo. Te entrego una estimación antes de empezar.',
+          en: 'It depends on the model and the volume. I design solutions to keep costs low: scripts do the heavy lifting, not the model. You get an estimate before we start.',
+        },
+      },
+      {
+        q: { es: '¿Con qué herramientas de IA trabajas?', en: 'Which AI tools do you work with?' },
+        a: {
+          es: 'Principalmente Claude Code, con skills, plugins y servidores MCP. Me adapto a las herramientas que ya use tu equipo.',
+          en: 'Mainly Claude Code, with skills, plugins and MCP servers. I adapt to the tools your team already uses.',
+        },
+      },
+    ],
+    cta: {
+      title: { es: '¿Dónde se te va el tiempo?', en: 'Where does your time go?' },
+      text: {
+        es: 'Cuéntame tu proceso en cinco líneas y te digo qué se puede mejorar.',
+        en: "Tell me about your process in five lines and I'll tell you what can be improved.",
+      },
+      button: { es: 'ESCRÍBEME', en: 'WRITE TO ME' },
+    },
   },
   portfolio: {
     intro: [
       {
-        en: "In this section of my web app, you will find some projects that showcase my notable growth in best practices, complexity, scalability and user experience. It's a vast universe for me, and as of now, I am a frontend developer seeking to improve my logic and backend knowledge to become a skilled developer with a deep understanding of this exciting world of software.",
-        es: 'En esta sección de mi aplicación web vas a encontrar algunos proyectos que muestran mi notable crecimiento en buenas prácticas, complejidad, escalabilidad y experiencia de usuario. Es un universo enorme para mí y, por ahora, soy desarrollador frontend y busco mejorar mi lógica y mis conocimientos de backend para convertirme en un desarrollador hábil, con una comprensión profunda de este emocionante mundo del software.',
-      },
-      {
-        en: 'Eventually, I want to develop native apps. Today, we have many ecosystems, but I am particularly drawn to the frontend trident, along with emerging frameworks. Thank you for visiting, and now I invite you to learn more by clicking on the image in the portfolio carousel.',
-        es: 'Con el tiempo quiero desarrollar apps nativas. Hoy tenemos muchos ecosistemas, pero me atrae especialmente el tridente del frontend, junto con los frameworks emergentes. Gracias por tu visita; ahora te invito a conocer más haciendo clic en la imagen del carrusel del portafolio.',
-      },
-      {
-        en: 'And who knows, someday I may become a great software architect or technical leader, just like the ones I have worked with, who have had great patience and love in teaching me, and, in the same way, help new people fall in love with this world and build a better one!',
-        es: '¡Y quién sabe! Algún día puedo llegar a ser un gran arquitecto de software o líder técnico, como aquellos con los que he trabajado, que han tenido mucha paciencia y cariño para enseñarme, y, de la misma forma, ayudar a que nuevas personas se enamoren de este mundo y construyan uno mejor.',
+        es: 'Aquí está mi camino completo. Los proyectos de 2022 y 2023 son de cuando aprendía frontend en bootcamps: los dejo porque muestran de dónde vengo. Los más recientes, como Synergos y este mismo sitio, muestran cómo trabajo hoy: arquitectura primero, especificación antes del código y agentes de IA bajo mi revisión.',
+        en: 'This is my full path. The 2022 and 2023 projects come from when I was learning frontend in bootcamps: I keep them because they show where I started. The newest ones, like Synergos and this site, show how I work today: architecture first, spec before code and AI agents under my review.',
       },
     ],
     footer: { es: '¡Y muchos más por venir!', en: 'And many more to come!' },
@@ -558,7 +783,7 @@ export const site: SiteContent = {
     },
   },
   privacy: {
-    updatedAt: '2026-11-01',
+    updatedAt: '2026-11-04',
     sections: [
       {
         heading: { es: 'Quién es el responsable', en: 'Who is responsible' },
@@ -570,8 +795,8 @@ export const site: SiteContent = {
       {
         heading: { es: 'Qué datos recojo', en: 'What data I collect' },
         body: {
-          es: 'Cuando me escribes desde el formulario de contacto guardo tu nombre, tu correo, tu teléfono si lo das y tu mensaje. Cuando comentas un post guardo tu nombre, tu correo y tu comentario. En ambos casos guardo también la fecha en que autorizaste el tratamiento de tus datos.',
-          en: 'When you write to me through the contact form, I store your name, your email, your phone number if you give it and your message. When you comment on a post, I store your name, your email and your comment. In both cases I also store the date on which you authorized the processing of your data.',
+          es: 'Cuando me escribes desde el formulario de contacto guardo tu nombre, tu correo, tu teléfono si lo das, el servicio que te interesa si lo eliges y tu mensaje. Cuando comentas un post guardo tu nombre, tu correo y tu comentario. En ambos casos guardo también la fecha en que autorizaste el tratamiento de tus datos.',
+          en: "When you write to me through the contact form, I store your name, your email, your phone number if you give it, the service you're interested in if you choose one, and your message. When you comment on a post, I store your name, your email and your comment. In both cases I also store the date on which you authorized the processing of your data.",
         },
       },
       {
@@ -597,4 +822,13 @@ export const site: SiteContent = {
       },
     ],
   },
+}
+
+export function lobeWords(lobe: Pick<SkillLobe, 'id' | 'words'>, content: SiteContent = site): Localized | null {
+  return content.about.skills.inWords?.[lobe.id] ?? lobe.words ?? null
+}
+
+export function publicEmail(content: SiteContent = site): string | null {
+  const href = content.socials.find((social) => social.id === 'email')?.href ?? null
+  return href?.startsWith('mailto:') ? href.slice('mailto:'.length) : null
 }

@@ -1,3 +1,4 @@
+import { formatFact, formatFloor, synergosFacts as facts } from './synergos'
 import type { Project } from './types'
 
 export const projects: Project[] = [
@@ -45,7 +46,8 @@ export const projects: Project[] = [
       live: 'https://quantic-theatrum.vercel.app/',
       github: 'https://github.com/Cherced/QuanticFilms',
     },
-    order: 1,
+    order: 6,
+    era: '2022-2023',
     highlights: [
       { es: 'Integración con la API REST de TheMovieDB para buscar y explorar películas y series', en: 'Integrated with the TheMovieDB REST API to browse and search movies and TV shows' },
       { es: 'Autenticación de usuarios con Next Auth y estado de la aplicación con Next Redux', en: 'User authentication with Next Auth and app state managed with Next Redux' },
@@ -89,7 +91,8 @@ export const projects: Project[] = [
       live: 'https://cherced-world.vercel.app/',
       github: 'https://github.com/CHERCED-DEV/CHERCED-WORLD',
     },
-    order: 2,
+    order: 3,
+    era: '2024-2026',
     highlights: [
       { es: '8 lanes de agentes en paralelo, cada una con propiedad exclusiva de sus archivos', en: '8 agent lanes in parallel, each with exclusive file ownership' },
       { es: 'Sitio bilingüe ES/EN con panel de administración', en: 'Bilingual ES/EN site with an admin panel' },
@@ -128,7 +131,8 @@ export const projects: Project[] = [
       live: 'https://airlines-cherced.vercel.app/',
       github: 'https://github.com/Cherced/AIRLINES',
     },
-    order: 3,
+    order: 7,
+    era: '2022-2023',
     highlights: [
       { es: 'Diseño responsive con transiciones de página suaves', en: 'Responsive design with smooth page transitions' },
       { es: 'Interfaz diseñada en Figma', en: 'Interface designed in Figma' },
@@ -166,7 +170,8 @@ export const projects: Project[] = [
       live: 'https://newman-club-seven.vercel.app/',
       github: 'https://github.com/CHERCED-DEV/newmanClub',
     },
-    order: 4,
+    order: 8,
+    era: '2022-2023',
     highlights: [
       { es: 'Renderizado combinado en cliente y servidor para cargas rápidas', en: 'Combined client-side and server-side rendering for fast loading' },
       { es: 'Base de datos con capacidad de escalar horizontalmente', en: 'Horizontal scaling capability in the database' },
@@ -204,7 +209,8 @@ export const projects: Project[] = [
       live: 'https://centribal.vercel.app/',
       github: 'https://github.com/CHERCED-DEV/centribal',
     },
-    order: 5,
+    order: 9,
+    era: '2022-2023',
     highlights: [
       { es: 'Pedidos, clientes, productos e inventario en un solo dashboard', en: 'Orders, clients, products and inventory in one dashboard' },
       { es: 'Renderizado mixto en servidor y cliente para una carga inicial más rápida', en: 'Mixed server-side and client-side rendering for a faster initial load' },
@@ -243,7 +249,8 @@ export const projects: Project[] = [
       live: 'https://mywebsite-peach.vercel.app/',
       github: 'https://github.com/Cherced/mywebsite',
     },
-    order: 6,
+    order: 10,
+    era: '2022-2023',
     highlights: [
       { es: 'De HTML y CSS a VanillaJS, y luego a React con Next.js', en: 'From HTML and CSS to VanillaJS, then to React with Next.js' },
       { es: 'El reflejo de mi evolución como desarrollador', en: 'A reflection of my evolution as a developer' },
@@ -280,7 +287,8 @@ export const projects: Project[] = [
       live: 'https://e-shop-cherced.netlify.app/',
       github: 'https://github.com/CHERCED-DEV/react-Shop.git',
     },
-    order: 7,
+    order: 11,
+    era: '2022-2023',
     highlights: [
       { es: 'Carrito con Hooks para agregar y quitar productos y actualizar el total', en: 'Shopping cart with Hooks to add and remove items and update the total' },
       { es: 'Peticiones a APIs externas con Axios', en: 'Requests to external APIs with Axios' },
@@ -330,7 +338,8 @@ export const projects: Project[] = [
       live: 'https://ge-it-done.vercel.app/',
       github: 'https://github.com/Cherced/GeItDone.git',
     },
-    order: 8,
+    order: 12,
+    era: '2022-2023',
     highlights: [
       { es: 'Mide la efectividad en distintas escalas de tiempo', en: 'Measures effectiveness over different time scales' },
       { es: 'Modelos de inteligencia artificial que evalúan los resultados y sugieren contenido', en: 'Artificial intelligence models that evaluate results and suggest content' },
@@ -384,7 +393,8 @@ export const projects: Project[] = [
       live: 'https://studio-ghibli-theta.vercel.app/',
       github: 'https://github.com/Cherced/studio-ghibli',
     },
-    order: 9,
+    order: 13,
+    era: '2022-2023',
     highlights: [
       { es: 'Registro de películas, personajes y directores favoritos', en: 'Keeps track of favorite movies, characters and directors' },
       { es: 'Integración con un backend de API REST', en: 'Integrated with a REST API backend' },
@@ -438,7 +448,8 @@ export const projects: Project[] = [
       height: 1088,
     },
     links: { live: null, github: null },
-    order: 10,
+    order: 14,
+    era: '2022-2023',
     highlights: [
       { es: 'Diseño de la interfaz, responsive y manejo de estado a mi cargo', en: 'I owned the interface design, the responsive design and the state' },
       { es: 'Datos de prueba y endpoints junto al equipo de backend', en: 'Fake data and endpoints built with the backend team' },
@@ -490,7 +501,8 @@ export const projects: Project[] = [
       live: 'https://booking-ui-ashen.vercel.app/',
       github: 'https://github.com/Cherced/BookingUi',
     },
-    order: 11,
+    order: 15,
+    era: '2022-2023',
     highlights: [
       { es: 'Explorar, buscar y reservar alojamientos, inspirado en Airbnb', en: 'Browse, search and book listings, inspired by Airbnb' },
       { es: 'Construido junto a estudiantes más avanzados del bootcamp', en: 'Built together with senior bootcamp students' },
@@ -501,26 +513,26 @@ export const projects: Project[] = [
     id: '12',
     title: 'Synergos',
     summary: {
-      en: 'A composable digital platform where .NET, Umbraco and Angular micro-frontends work as one system.',
-      es: 'Una plataforma digital composable donde .NET, Umbraco y micro-frontends de Angular funcionan como un solo sistema.',
+      es: 'Una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero.',
+      en: 'A composition platform where the eighth business vertical costs less than the first.',
     },
     context: {
-      en: 'Every business rebuilds the same pieces: forms, catalogs, content, payments. I wanted a library of capabilities that snap together like Lego for any kind of business. It starts from one idea: C# and TypeScript share the same design lineage, created by Anders Hejlsberg at Microsoft, which lets one way of thinking run from the server to the browser.',
-      es: 'Cada negocio vuelve a construir las mismas piezas: formularios, catálogos, contenido, pagos. Quería una librería de capacidades que se ensamblen como Lego para cualquier tipo de negocio. Parto de una idea: C# y TypeScript comparten el mismo linaje de diseño, creados por Anders Hejlsberg en Microsoft, y eso permite pensar igual del servidor al navegador.',
+      es: 'Cada negocio reconstruye las mismas piezas: agenda, catálogo, carrito, pagos, notificaciones. La salida fácil, un servicio por vertical, multiplica el código y hace que cada vertical nuevo cueste lo mismo que el primero. Quería un solo núcleo que sirviera a salud, tienda, eventos, viajes, inmobiliaria, gobierno, academia y social sin ramificarse.',
+      en: 'Every business rebuilds the same pieces: scheduling, catalog, cart, payments, notifications. The easy way out, one service per vertical, multiplies the code and makes every new vertical cost as much as the first. I wanted one core that could serve health, retail, events, travel, real estate, government, education and social without branching.',
     },
     role: {
-      en: 'Founder and architect. I designed and built each piece, then started piloting it with specs and AI agents.',
-      es: 'Fundador y arquitecto. Diseñé y construí cada pieza, y luego empecé a pilotearla con especificaciones y agentes de IA.',
+      es: 'Fundador y arquitecto. Diseño cada pieza, tomo las decisiones de arquitectura y dirijo un equipo de agentes de IA que construye en paralelo bajo mis reglas.',
+      en: 'Founder and architect. I design every piece, make the architecture decisions and direct a team of AI agents that builds in parallel under my rules.',
     },
     decisions: {
-      en: 'Umbraco (.NET) as the composition layer. A separate project, deployed on a CDN, serves the resources that feed it. A framework-agnostic backend-for-frontend composition, down to its import paths, with Angular micro-frontends and Web Components on top.',
-      es: 'Umbraco (.NET) como capa de composición. Un proyecto aparte, desplegado en CDN, sirve los recursos que la alimentan. Una composición backend-for-frontend agnóstica al framework, incluso en sus rutas de importación, con micro-frontends de Angular y Web Components encima.',
+      es: `Partir el backend por atomicidad, no por dominio: ${facts.capabilities} capacidades que no saben de negocios. Booking sabe de "recurso, ventana y cupo"; no sabe que el recurso es un médico. Orquestadores de saga por vertical, con la compensación tratada como dato. Las reglas de arquitectura son tests que rompen el build. El design system sale por CDN como custom elements, así que lo que cruza la frontera es DOM, no framework.`,
+      en: `Split the backend by atomicity, not by domain: ${facts.capabilities} capabilities that know nothing about any business. Booking knows "resource, window and slot"; it does not know the resource is a doctor. Saga orchestrators per vertical, with compensation treated as data. Architecture rules are tests that break the build. The design system ships through a CDN as custom elements, so what crosses the boundary is DOM, not a framework.`,
     },
     result: {
-      en: '30+ reusable components, proven with 3+ web frameworks.',
-      es: 'Más de 30 componentes reutilizables, probados con más de 3 frameworks web.',
+      es: `${facts.pieces} piezas desplegables: un CMS, ${facts.capabilities} capacidades, ${facts.orchestrators} orquestadores y un proxy. El tercer y el cuarto orquestador entraron sin una sola capacidad nueva. Más de ${formatFact(facts.testsAtLeast, 'es')} tests automatizados, más de ${formatFact(facts.adrsAtLeast, 'es')} decisiones de arquitectura documentadas y un design system de más de ${formatFact(facts.designSystemAtLeast, 'es')} elementos en CDN propio.`,
+      en: `${facts.pieces} deployable pieces: a CMS, ${facts.capabilities} capabilities, ${facts.orchestrators} orchestrators and a proxy. The third and fourth orchestrators shipped without a single new capability. ${formatFloor(facts.testsAtLeast, 'en')} automated tests, ${formatFloor(facts.adrsAtLeast, 'en')} documented architecture decisions and a design system of ${formatFloor(facts.designSystemAtLeast, 'en')} elements on its own CDN.`,
     },
-    technologies: ['.NET', 'C#', 'UMBRACO', 'ANGULAR', 'TYPESCRIPT', 'WEB COMPONENTS', 'NX', 'MICRO-FRONTENDS'],
+    technologies: ['.NET 8', 'C#', 'ASP.NET CORE', 'UMBRACO 13', 'ANGULAR', 'WEB COMPONENTS', 'NX', 'CLOUDFLARE WORKERS', 'DOCKER', 'GITHUB ACTIONS', 'SPEC KIT', 'AI CODING AGENTS'],
     image: {
       src: '/assets/imgs/projects/synergos.svg',
       alt: {
@@ -530,12 +542,239 @@ export const projects: Project[] = [
       width: 960,
       height: 640,
     },
-    links: { live: null, github: null },
-    order: 12,
+    links: {
+      live: null,
+      github: null,
+      repos: [
+        { label: 'Synergos.CMS', href: 'https://github.com/CHERCED-DEV/Synergos.CMS' },
+        { label: 'Synergos.UI', href: 'https://github.com/CHERCED-DEV/Synergos.UI' },
+        { label: 'Synergos.Fabrica', href: 'https://github.com/CHERCED-DEV/Synergos.Fabrica' },
+      ],
+    },
+    order: 1,
+    era: '2024-2026',
     highlights: [
-      { es: 'Más de 30 componentes reutilizables', en: '30+ reusable components' },
-      { es: 'Probados con más de 3 frameworks web', en: 'Proven with 3+ web frameworks' },
-      { es: 'Umbraco (.NET) como capa de composición', en: 'Umbraco (.NET) as the composition layer' },
+      {
+        es: `${facts.pieces} piezas desplegables: un CMS, ${facts.capabilities} capacidades, ${facts.orchestrators} orquestadores y un proxy`,
+        en: `${facts.pieces} deployable pieces: a CMS, ${facts.capabilities} capabilities, ${facts.orchestrators} orchestrators and a proxy`,
+      },
+      {
+        es: 'El tercer y el cuarto orquestador entraron sin una sola capacidad nueva',
+        en: 'The third and fourth orchestrators shipped without a single new capability',
+      },
+      {
+        es: `Más de ${formatFact(facts.testsAtLeast, 'es')} tests automatizados, incluidos gates de arquitectura`,
+        en: `${formatFloor(facts.testsAtLeast, 'en')} automated tests, including architecture gates`,
+      },
+      {
+        es: `Más de ${formatFact(facts.adrsAtLeast, 'es')} decisiones de arquitectura documentadas`,
+        en: `${formatFloor(facts.adrsAtLeast, 'en')} documented architecture decisions`,
+      },
+      {
+        es: `Un design system de más de ${formatFact(facts.designSystemAtLeast, 'es')} elementos en CDN propio`,
+        en: `A design system of ${formatFloor(facts.designSystemAtLeast, 'en')} elements on its own CDN`,
+      },
+    ],
+    adrCards: [
+      {
+        decision: { es: 'Capacidades agnósticas del dominio', en: 'Domain-agnostic capabilities' },
+        why: { es: 'Que el vertical nuevo no cueste lo mismo que el primero.', en: "So a new vertical doesn't cost as much as the first one." },
+        tradeoff: {
+          es: 'Las referencias externas viajan como pares opacos (Kind, Id), sin ramificar.',
+          en: 'External references travel as opaque (Kind, Id) pairs, never branched on.',
+        },
+      },
+      {
+        decision: { es: 'La compensación es dato, no función', en: 'Compensation is data, not a function' },
+        why: { es: 'Una reserva no se deshace igual que un apartado.', en: "A booking isn't undone the same way as a hold." },
+        tradeoff: {
+          es: 'Hay que reescribir la compensación cada vez que cambia el estado.',
+          en: 'Compensation must be rewritten every time the state changes.',
+        },
+      },
+      {
+        decision: { es: 'Reglas de arquitectura como tests', en: 'Architecture rules as tests' },
+        why: {
+          es: 'Una convención escrita se olvida; una que rompe el build se cumple.',
+          en: 'A written convention gets forgotten; one that breaks the build gets followed.',
+        },
+        tradeoff: {
+          es: 'Cada gate se muta antes de confiar en él: un gate que nunca falló no vigila nada.',
+          en: "Every gate is mutated before it's trusted: a gate that never failed isn't watching anything.",
+        },
+      },
+      {
+        decision: { es: 'Correlación propia, sin OpenTelemetry por ahora', en: 'Own correlation ID, no OpenTelemetry for now' },
+        why: {
+          es: 'Un identificador viaja por seis servicios y sale en cada línea de log.',
+          en: 'One ID travels through six services and shows up in every log line.',
+        },
+        tradeoff: {
+          es: 'Decisión documentada, con el disparador que la haría cambiar.',
+          en: 'Documented decision, with the trigger that would change it.',
+        },
+      },
+    ],
+    diagram: [
+      {
+        id: 'cdn',
+        label: { es: 'CDN', en: 'CDN' },
+        role: {
+          es: 'Sirve los recursos que alimentan la composición y el design system como custom elements.',
+          en: 'Serves the resources that feed the composition, and the design system as custom elements.',
+        },
+      },
+      {
+        id: 'umbraco',
+        label: { es: 'Umbraco (.NET)', en: 'Umbraco (.NET)' },
+        role: {
+          es: 'La capa de composición: arma cada página con renderizado en servidor.',
+          en: 'The composition layer: it assembles each page with server-side rendering.',
+        },
+      },
+      {
+        id: 'micro-frontends',
+        label: { es: 'Micro-frontends · Web Components', en: 'Micro-frontends · Web Components' },
+        role: {
+          es: 'La interfaz: lo que cruza la frontera es DOM, no framework, así que funciona en cualquier framework web.',
+          en: 'The interface: what crosses the boundary is DOM, not a framework, so it works on any web framework.',
+        },
+      },
+    ],
+  },
+  {
+    id: '13',
+    title: 'Director & lines: parallel AI agents',
+    summary: {
+      es: 'El modelo con el que varios agentes de IA construyen Synergos a la vez sin pisarse y sin perder la traza.',
+      en: 'The model that lets several AI agents build Synergos at the same time without colliding or losing the trail.',
+    },
+    context: {
+      es: 'Un solo agente no alcanza para 14 líneas de trabajo: núcleo, producción y cada vertical. Varios agentes a la vez se pisan, rompen lo compartido y toman decisiones que no les tocan.',
+      en: "One agent isn't enough for 14 workstreams: core, production and every vertical. Several agents at once collide, break shared code and make decisions that aren't theirs to make.",
+    },
+    role: {
+      es: 'Diseñé el modelo y soy el arquitecto: decido lo que solo yo puedo decidir y valido lo que entregan.',
+      en: 'I designed the model and I am the architect: I decide what only I can decide and validate what they deliver.',
+    },
+    decisions: {
+      es: 'Una sesión "director" integra y es la única que toca lo compartido. Cada "línea" trabaja solo en su worktree de git, su rama y su carpeta de spec. Todas cargan la misma constitución y siguen Spec Kit: specify, clarify, plan, tasks, analyze y luego implement. Las preguntas de arquitectura llegan en lotes con una recomendación; mi respuesta queda escrita y manda sobre cualquier supuesto.',
+      en: 'A "director" session integrates and is the only one that touches shared code. Each "line" works only in its own git worktree, branch and spec folder. All of them load the same constitution and follow Spec Kit: specify, clarify, plan, tasks, analyze, then implement. Architecture questions reach me in batches with a recommendation; my answer is written down and overrides any assumption.',
+    },
+    result: {
+      es: 'Cada tarea queda trazada a su commit y a la bitácora de su línea. Entre octubre y noviembre de 2026 resolví 19 lotes de decisiones, incluida la salida a producción.',
+      en: 'Every task is traced to its commit and its line log. Between October and November 2026 I resolved 19 decision batches, including the move to production.',
+    },
+    technologies: ['CLAUDE CODE', 'SPEC KIT', 'GIT WORKTREES', 'AI CODING AGENTS', 'ADR'],
+    image: {
+      src: '/assets/imgs/projects/director-lines.svg',
+      alt: {
+        es: 'Diagrama del modelo director y líneas: el arquitecto arriba, la sesión director al centro y las líneas como carriles paralelos que convergen en la rama principal',
+        en: 'Director and lines diagram: the architect on top, the director session in the middle and the lines as parallel lanes that converge on the main branch',
+      },
+      width: 960,
+      height: 640,
+    },
+    links: { live: null, github: null },
+    order: 2,
+    era: '2024-2026',
+    highlights: [
+      {
+        es: 'Una sola sesión toca lo compartido; cada línea, solo su worktree',
+        en: 'Only one session touches shared code; each line, only its own worktree',
+      },
+      { es: 'Cada tarea trazada a su commit y a la bitácora de su línea', en: 'Every task traced to its commit and its line log' },
+      {
+        es: '19 lotes de decisiones resueltos entre octubre y noviembre de 2026',
+        en: '19 decision batches resolved between October and November 2026',
+      },
+    ],
+  },
+  {
+    id: '14',
+    title: 'Legal workspace',
+    summary: {
+      es: 'Un arnés de agentes que asiste a una abogada sin darle a la IA autoridad sobre el expediente.',
+      en: 'An agent harness that assists a lawyer without giving the AI authority over the case file.',
+    },
+    context: {
+      es: 'Una profesional del derecho necesitaba apoyo con expedientes y evidencia. El riesgo de la IA en ese mundo es inventar hechos o tratar una suposición como prueba.',
+      en: 'A legal professional needed help with case files and evidence. The risk of AI in that world is inventing facts or treating an assumption as proof.',
+    },
+    role: {
+      es: 'Diseñé la arquitectura, el plugin y los bancos de medición.',
+      en: 'I designed the architecture, the plugin and the evaluation benches.',
+    },
+    decisions: {
+      es: 'Una frontera de confianza: la persona, el agente y el LLM se tratan como no confiables y hablan por MCP con un núcleo que guarda el estado canónico, los originales y un log de auditoría. Nada se consolida sin revisión humana. Los métodos se miden con evaluaciones, y las reglas se comprueban capaces de fallar con mutantes.',
+      en: 'A trust boundary: the person, the agent and the LLM are treated as untrusted and talk over MCP to a core that holds the canonical state, the originals and an audit log. Nothing is consolidated without human review. Methods are measured with evals, and rules are proven able to fail with mutants.',
+    },
+    result: {
+      es: 'Un plugin instalable con su banco de evaluaciones en verde y 13 decisiones de arquitectura documentadas.',
+      en: 'An installable plugin with a green evaluation bench and 13 documented architecture decisions.',
+    },
+    technologies: ['CLAUDE CODE', 'MCP', 'PYTHON', 'EVALS', 'AI AGENTS'],
+    image: {
+      src: '/assets/imgs/projects/legal-workspace.svg',
+      alt: {
+        es: 'Diagrama de la frontera de confianza: la persona, el agente y el LLM hablan por MCP con un núcleo que guarda el estado canónico, los originales y un log de auditoría',
+        en: 'Trust boundary diagram: the person, the agent and the LLM talk over MCP to a core that holds the canonical state, the originals and an audit log',
+      },
+      width: 960,
+      height: 640,
+    },
+    links: { live: null, github: null },
+    order: 4,
+    era: '2024-2026',
+    highlights: [
+      { es: 'Nada se consolida sin revisión humana', en: 'Nothing is consolidated without human review' },
+      {
+        es: 'Banco de evaluaciones en verde y reglas probadas con mutantes',
+        en: 'A green evaluation bench and rules proven with mutants',
+      },
+      { es: '13 decisiones de arquitectura documentadas', en: '13 documented architecture decisions' },
+    ],
+  },
+  {
+    id: '15',
+    title: 'Event bridge: AWS → Azure',
+    summary: {
+      es: 'Un pipeline de eventos que conecta una plataforma de contact center en AWS con microservicios .NET en Azure.',
+      en: 'An event pipeline that connects a contact center platform on AWS with .NET microservices on Azure.',
+    },
+    context: {
+      es: 'Los eventos de un contact center (llamadas, SMS y WhatsApp, entrantes y salientes) vivían en AWS, pero los sistemas que los necesitaban estaban en Azure. Había que llevarlos de una nube a la otra de forma confiable y sin acoplar los dos mundos.',
+      en: 'Contact center events (calls, SMS and WhatsApp, inbound and outbound) lived on AWS, but the systems that needed them ran on Azure. They had to move reliably from one cloud to the other without coupling the two worlds.',
+    },
+    role: {
+      es: 'Diseñé y construí el pipeline de punta a punta.',
+      en: 'I designed and built the pipeline end to end.',
+    },
+    decisions: {
+      es: 'AWS EventBridge como origen. Redpanda Connect con un pipeline en YAML para mapear y transformar los eventos. Azure Service Bus como frontera entre nubes, para desacoplar a productores y consumidores. Un microservicio .NET que escala horizontalmente para consumirlos.',
+      en: 'AWS EventBridge as the source. Redpanda Connect with a YAML pipeline to map and transform the events. Azure Service Bus as the boundary between clouds, decoupling producers from consumers. A horizontally scalable .NET microservice to consume them.',
+    },
+    result: {
+      es: 'Los eventos llegan a Azure desacoplados de su origen, y el consumidor escala según la carga.',
+      en: 'Events reach Azure decoupled from their source, and the consumer scales with the load.',
+    },
+    technologies: ['AWS EVENTBRIDGE', 'REDPANDA CONNECT', 'AZURE SERVICE BUS', '.NET', 'C#', 'EVENT-DRIVEN ARCHITECTURE'],
+    image: {
+      src: '/assets/imgs/projects/event-bridge.svg',
+      alt: {
+        es: 'Diagrama del flujo de eventos: AWS EventBridge → Redpanda Connect → Azure Service Bus → microservicio .NET',
+        en: 'Event flow diagram: AWS EventBridge → Redpanda Connect → Azure Service Bus → .NET microservice',
+      },
+      width: 960,
+      height: 640,
+    },
+    links: { live: null, github: null },
+    order: 5,
+    era: '2024-2026',
+    highlights: [
+      { es: 'Azure Service Bus como frontera entre nubes', en: 'Azure Service Bus as the boundary between clouds' },
+      { es: 'Productores y consumidores desacoplados', en: 'Producers and consumers decoupled' },
+      { es: 'Un consumidor .NET que escala según la carga', en: 'A .NET consumer that scales with the load' },
     ],
   },
 ]
