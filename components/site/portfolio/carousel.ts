@@ -55,6 +55,10 @@ export function wrapIndex(index: number, length: number): number {
   return ((index % length) + length) % length
 }
 
+export function stepIndex(current: number, direction: 'prev' | 'next', length: number): number {
+  return wrapIndex(current + (direction === 'next' ? 1 : -1), length)
+}
+
 export type CarouselKey = 'ArrowLeft' | 'ArrowRight' | 'Home' | 'End'
 
 export function indexForKey(key: string, current: number, length: number): number | null {
@@ -71,6 +75,11 @@ export function indexForKey(key: string, current: number, length: number): numbe
     default:
       return null
   }
+}
+
+export function slideStep(first: number | undefined, second: number | undefined, fallback: number): number {
+  if (first === undefined || second === undefined || !(second > first)) return fallback
+  return second - first
 }
 
 export function nearestIndex(scrollLeft: number, slideWidth: number, length: number): number {

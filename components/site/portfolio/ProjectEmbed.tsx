@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useCallback, useEffect, useId, useReducer, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
-import { Dialog } from '@/components/ui/Dialog'
+import { BottomSheet } from '@/components/ui/BottomSheet'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
 import { fillTemplate } from './carousel'
@@ -466,27 +466,20 @@ export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedPro
         {surface === 'inline' ? statusText : ''}
       </p>
 
-      <Dialog open={surface === 'sheet'} onClose={closeSheet} labelledBy={sheetTitleId} className={styles.sheet}>
-        <div className={styles.sheetBar}>
-          <p id={sheetTitleId} className={styles.sheetTitle}>
+      <BottomSheet
+        open={surface === 'sheet'}
+        onClose={closeSheet}
+        labelledBy={sheetTitleId}
+        closeLabel={labels.close}
+        title={
+          <span className={styles.sheetTitle}>
             <span>{title}</span>
             <span className={styles.sheetHost}>{address.host}</span>
-          </p>
-          <div className={styles.actions}>
-            {mounted ? reloadButton : null}
-            {openLink}
-            <button
-              type="button"
-              className={styles.action}
-              aria-label={labels.close}
-              title={labels.close}
-              onClick={closeSheet}
-              data-cw-embed-sheet-close=""
-            >
-              <Icon name="close" size={18} />
-            </button>
-          </div>
-        </div>
+          </span>
+        }
+        className={styles.sheet}
+        bodyClassName={styles.sheetBody}
+      >
         <div className={styles.sheetViewport}>
           {surface === 'sheet' && mounted ? (
             <>
@@ -496,10 +489,20 @@ export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedPro
           ) : null}
           {surface === 'sheet' && status === 'slow' ? slowNotice : null}
         </div>
+        <div className={styles.sheetActions} data-cw-embed-sheet-actions="">
+          {surface === 'sheet' && mounted ? reloadButton : null}
+          <a href={url} target="_blank" rel="noopener noreferrer" className={styles.sheetButton} data-cw-embed-sheet-external="">
+            <Icon name="external" size={17} />
+            <span>{labels.openLive}</span>
+          </a>
+          <button type="button" className={styles.sheetButton} onClick={closeSheet} data-cw-embed-sheet-close="">
+            {labels.close}
+          </button>
+        </div>
         <p className="cw-visually-hidden" role="status" aria-live="polite">
           {surface === 'sheet' ? statusText : ''}
         </p>
-      </Dialog>
+      </BottomSheet>
     </section>
   )
 }

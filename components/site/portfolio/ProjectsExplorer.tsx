@@ -14,6 +14,7 @@ import {
   filtersSummary,
   indexForKey,
   nearestIndex,
+  slideStep,
   technologyUsage,
   wrapIndex,
   type SlideProject,
@@ -120,7 +121,9 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
     settleRef.current = window.setTimeout(() => {
       const track = trackRef.current
       if (!track) return
-      const next = nearestIndex(track.scrollLeft, track.clientWidth, total)
+      const slides = track.children
+      const step = slideStep((slides[0] as HTMLElement | undefined)?.offsetLeft, (slides[1] as HTMLElement | undefined)?.offsetLeft, track.clientWidth)
+      const next = nearestIndex(track.scrollLeft, step, total)
       if (next !== indexRef.current) select(next)
     }, SETTLE_MS)
   }
@@ -165,6 +168,7 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
 
   return (
     <div className={styles.explorer} data-cw-projects="">
+      <div className={styles.filters} data-cw-filters="">
       <div className={cx('cw-js-only', styles.filter, styles.eraFilter)} role="group" aria-labelledby={eraId} data-cw-era-group="">
         <p id={eraId} className={styles.filterLabel}>
           {labels.era}
@@ -252,6 +256,10 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
           </div>
         </div>
       </div>
+      <p className={cx('cw-js-only', styles.filterCount)} data-cw-filter-count="">
+        {summary(total, tech, era)}
+      </p>
+      </div>
 
       <p id={hintId} className="cw-visually-hidden">
         {labels.carouselHint}
@@ -293,6 +301,7 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
                 className={styles.slideCard}
                 data-cw-glass="standard"
                 data-cw-light=""
+                data-cw-blur={position === index ? '' : undefined}
                 data-orientation={ratio >= 1 ? 'landscape' : 'portrait'}
                 style={{ '--cw-media-ratio': ratio.toFixed(4) } as CSSProperties}
               >
@@ -354,6 +363,14 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
           )
         })}
       </div>
+
+      {total > 1 ? (
+        <ol className={cx('cw-js-only', styles.dots)} aria-hidden="true" data-cw-carousel-dots="">
+          {visible.map((project, position) => (
+            <li key={project.id} className={styles.dot} data-current={position === index ? '' : undefined} />
+          ))}
+        </ol>
+      ) : null}
 
       <div className={cx('cw-js-only', styles.controls)} data-cw-glass="strong">
         <button type="button" className={styles.control} aria-label={labels.prev} onClick={() => goTo(index - 1)} data-cw-prev="">
