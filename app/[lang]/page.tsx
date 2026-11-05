@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t(site, 'meta.home.title'),
     description: t(site, 'meta.home.description'),
     common,
+    ogImageFile: true,
     absoluteTitle: true,
   })
 }
