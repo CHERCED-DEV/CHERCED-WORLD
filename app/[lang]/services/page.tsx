@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { BackgroundIntensity } from '@/components/motion'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
+import { serviceCases } from '@/components/site/services/model'
 import { ServicesView } from '@/components/site/services/ServicesView'
-import { getSite } from '@/lib/content'
+import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -18,25 +19,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t(site, 'meta.services.title'),
     description: t(site, 'meta.services.description'),
     common,
+    ogImageFile: true,
   })
 }
 
 export default async function ServicesPage({ params }: Props) {
   const lang = await resolveLang(params)
   const dict = await getDictionary(lang, 'site')
+  const { services } = getSite()
 
   return (
     <>
       <BackgroundIntensity value="subtle" />
       <ServicesView
         lang={lang}
-        services={getSite().services}
+        services={services}
+        cases={serviceCases(
+          getProjects(),
+          services.items.map((item) => item.id),
+        )}
         labels={{
           title: t(dict, 'services.title'),
-          explore: t(dict, 'services.explore'),
-          offer: t(dict, 'services.offer'),
-          cta: t(dict, 'services.cta'),
-          contact: t(dict, 'services.contact'),
+          audiences: t(dict, 'services.audiences'),
+          forWho: t(dict, 'services.forWho'),
+          deliverables: t(dict, 'services.deliverables'),
+          flip: t(dict, 'services.flip'),
+          flipBack: t(dict, 'services.flipBack'),
+          want: t(dict, 'services.want'),
+          try: t(dict, 'services.try'),
+          principles: t(dict, 'services.principles'),
+          cases: t(dict, 'services.cases'),
+          faq: t(dict, 'services.faq'),
         }}
       />
     </>
