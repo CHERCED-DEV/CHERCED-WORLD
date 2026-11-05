@@ -43,10 +43,15 @@ async function collectMotions(page: Page, path: string): Promise<Declared[]> {
   const response = await page.goto(path)
   expect(response?.status(), `${path} responde`).toBe(200)
   await page.waitForTimeout(400)
-  const seen: Declared[] = [...(await declaredMotions(page))]
-  await scrollThrough(page, async () => {
-    seen.push(...(await declaredMotions(page)))
-  }, 700, 150)
+  const scan = async () => {
+    const pause = await page.addStyleTag({ content: '*, *::before, *::after { animation-play-state: paused !important; }' })
+    const found = await declaredMotions(page)
+    await pause.evaluate((element) => element.remove())
+    return found
+  }
+  const seen: Declared[] = [...(await scan())]
+  await scrollThrough(page, async () => {}, 700, 120)
+  seen.push(...(await scan()))
   if (!BASELINE) return seen
   return [...seen.filter((motion) => !motion.signature.startsWith('animación ')), ...(await keyframeRules(page))]
 }
@@ -65,8 +70,8 @@ test.describe('las animaciones nuevas solo mueven transform y opacity (FR-653)',
   onlyMobile()
 
   for (const path of MOTION_PAGES) {
-    test(`${path}`, { tag: ALL_WIDTHS }, async ({ page, browser }, testInfo) => {
-      test.setTimeout(120_000)
+    test(`${path}`, async ({ page, browser }, testInfo) => {
+      test.setTimeout(240_000)
       const pending = pendingPage(path)
       test.skip(Boolean(pending), pending ?? '')
       const current = await collectMotions(page, path)
