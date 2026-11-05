@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function AboutMePage({ params }: Props) {
   const lang = await resolveLang(params)
-  const dict = await getDictionary(lang, 'site')
+  const [dict, common, portfolio] = await Promise.all([getDictionary(lang, 'site'), getDictionary(lang, 'common'), getDictionary(lang, 'portfolio')])
   const { about } = getSite()
   const projects = getProjects()
   const present = t(dict, 'about.present')
@@ -114,6 +114,11 @@ export default async function AboutMePage({ params }: Props) {
                 input: t(dict, 'about.terminal.input'),
                 hint: t(dict, 'about.terminal.hint'),
                 output: t(dict, 'about.terminal.output'),
+              },
+              sheet: {
+                close: t(common, 'dialog.close'),
+                prev: t(portfolio, 'case.prev'),
+                next: t(portfolio, 'case.next'),
               },
             },
           }}

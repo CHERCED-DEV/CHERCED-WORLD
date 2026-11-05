@@ -1,16 +1,39 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
+import { BottomSheet } from '@/components/ui/BottomSheet'
 import { cx } from '@/components/ui/cx'
+import { tap } from '@/lib/fx/haptics'
+import { useMediaQuery } from '@/lib/fx/viewport'
 import type { Locale } from '@/lib/i18n'
 import styles from './Brain.module.scss'
-import { BRAIN_VIEW, BRAIN_CORE, blockBar, decodeFrame, lobeFromHash, lobePoint, neuronGeometry, type BrainData } from './brain'
+import {
+  BRAIN_VIEW,
+  BRAIN_CORE,
+  COMPACT_CORE,
+  COMPACT_LOBE_RADIUS,
+  COMPACT_QUERY,
+  COMPACT_VIEW,
+  blockBar,
+  compactGeometry,
+  compactLobePoint,
+  decodeFrame,
+  lobeFromHash,
+  lobePoint,
+  neuronGeometry,
+  stepLobe,
+  type BrainData,
+  type BrainLobe,
+  type BrainSource,
+} from './brain'
 import { BrainTerminal, type BrainTerminalLabels } from './BrainTerminal'
 import { LobeMeta, LobePrinciples } from './LobeParts'
 import { monogram } from './monogram'
 import { startRain } from './rain'
 import type { TerminalTable } from './terminalInput'
+
+export type BrainSheetLabels = { close: string; prev: string; next: string }
 
 export type BrainLabels = {
   lobes: string
@@ -26,6 +49,7 @@ export type BrainLabels = {
   levels: Record<string, string>
   platzi: { href: string; label: string; newTab: string }
   terminal: BrainTerminalLabels
+  sheet: BrainSheetLabels
 }
 
 export type BrainMapProps = {
@@ -43,6 +67,10 @@ const DECODE_MS = 32
 
 function reducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function compactNow(): boolean {
+  return window.matchMedia(COMPACT_QUERY).matches
 }
 
 function DecodedTitle({ text }: { text: string }) {
@@ -77,12 +105,150 @@ function DecodedTitle({ text }: { text: string }) {
   )
 }
 
+type LobePanelProps = {
+  data: BrainData
+  lobe: BrainLobe | null
+  source: BrainSource | null
+  labels: BrainLabels
+  lang: Locale
+  status: string
+  terminal: TerminalTable
+  lobeIds: readonly string[]
+  onLobe: (id: string) => void
+  titleId?: string
+}
+
+function LobePanel({ data, lobe, source, labels, lang, status, terminal, lobeIds, onLobe, titleId }: LobePanelProps) {
+  const sourceLabel = (id: string) => data.sources.find((item) => item.id === id)?.label ?? id
+  return (
+    <>
+      <div className={styles.termBar} aria-hidden="true">
+        <span className={styles.dots}>
+          <i />
+          <i />
+          <i />
+        </span>
+        <span>{labels.path}</span>
+      </div>
+      <p className="cw-visually-hidden" aria-live="polite" data-cw-terminal-status="">
+        {status}
+      </p>
+      <div className={styles.termBody} data-cw-terminal-body={lobe?.id ?? source?.id}>
+        <p className={styles.termCmd} aria-hidden="true">
+          <span className={styles.prompt} aria-hidden="true">
+            ${' '}
+          </span>
+          cat {lobe ? `${lobe.id}.lobe` : `${source?.id}.src`}
+          <span className={styles.cursor} aria-hidden="true" />
+        </p>
+        <h3 id={titleId} className={styles.termTitle}>
+          <DecodedTitle text={lobe ? lobe.name : (source?.label ?? '')} />
+        </h3>
+        {lobe ? (
+          <>
+            <ul className={styles.termRows} data-cw-term-rows="" data-long={lobe.skills.length > 7 ? '' : undefined} tabIndex={lobe.skills.length > 7 ? 0 : undefined} aria-label={lobe.skills.length > 7 ? lobe.name : undefined}>
+              {lobe.skills.map((skill) => {
+                const bar = blockBar(skill.level)
+                return (
+                  <li key={skill.id} className={styles.termRow} data-cw-brain-skill={skill.id}>
+                    {skill.icon ? (
+                      <Image src={skill.icon} alt="" width={22} height={22} loading="eager" decoding="sync" unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
+                    ) : (
+                      <span className={`${styles.termIcon} ${styles.termMonogram}`} data-cw-monogram={monogram(skill.name)} aria-hidden="true" />
+                    )}
+                    <span className={styles.termName}>{skill.name}</span>
+                    <span className={styles.termLevel}>
+                      {skill.used ? (
+                        <span className={styles.usedChip} data-cw-used="">
+                          {skill.used}
+                        </span>
+                      ) : null}
+                      {labels.levels[skill.id] ?? `${skill.level}%`}
+                    </span>
+                    <span className={styles.termBar} aria-hidden="true">
+                      <span className={styles.barOn}>{bar.on}</span>
+                      <span className={styles.barOff}>{bar.off}</span>
+                    </span>
+                  </li>
+                )
+              })}
+            </ul>
+            <LobePrinciples lobe={lobe} label={labels.principles} idPrefix="panel" />
+            {lobe.learning ? (
+              <p className={styles.termLearning} data-cw-learning="">
+                {lobe.learning}
+              </p>
+            ) : null}
+            <LobeMeta lobe={lobe} lang={lang} labels={labels} sourceLabel={sourceLabel} />
+          </>
+        ) : source ? (
+          <>
+            <div className={styles.termSource}>
+              <p className={styles.termName}>{source.title}</p>
+              {source.detail ? <p>{source.detail}</p> : null}
+              {source.period ? <p className={styles.termLevel}>{source.period}</p> : null}
+            </div>
+            {data.lobes.some((item) => item.sources.includes(source.id)) ? (
+              <p className={styles.termMeta}>
+                <span className={styles.metaLine} data-cw-meta="feeds">
+                  <strong>{labels.feeds}:</strong>{' '}
+                  {data.lobes
+                    .filter((item) => item.sources.includes(source.id))
+                    .map((item) => item.name)
+                    .join(' · ')}
+                </span>
+              </p>
+            ) : null}
+          </>
+        ) : null}
+      </div>
+      <BrainTerminal table={terminal} lobeIds={lobeIds} labels={labels.terminal} onLobe={onLobe} />
+    </>
+  )
+}
+
+function CompactMap({ data, litLobes, active }: { data: BrainData; litLobes: ReadonlySet<string>; active: string | null }) {
+  return (
+    <svg className={styles.svgCompact} viewBox={`0 0 ${COMPACT_VIEW.width} ${COMPACT_VIEW.height}`} aria-hidden="true" focusable="false" data-cw-brain-compact="">
+      <circle className={styles.ring} cx={COMPACT_CORE.x} cy={COMPACT_CORE.y} r="60" />
+      {data.lobes.map((item, index) => {
+        const geometry = compactGeometry(
+          index,
+          item.skills.map((skill) => skill.level),
+          data.lobes.length,
+        )
+        const on = litLobes.has(item.id)
+        const { x1, y1, x2, y2 } = geometry.synapse
+        const travel = { '--cw-dx': `${(x2 - x1).toFixed(1)}px`, '--cw-dy': `${(y2 - y1).toFixed(1)}px`, '--cw-delay': `${(index * -0.41).toFixed(2)}s` } as CSSProperties
+        return (
+          <g key={item.id} data-cw-compact-synapses={item.id} data-on={on ? '' : undefined}>
+            <line className={cx(styles.syn, on && styles.synOn)} x1={x1} y1={y1} x2={x2} y2={y2} />
+            <circle className={cx(styles.packet, on && styles.packetOn)} cx={x1} cy={y1} r={on ? 3 : 2.2} style={travel} data-cw-packet="" />
+            {geometry.neurons.map((neuron, n) => (
+              <g key={item.skills[n]?.id ?? n}>
+                <path className={cx(styles.syn, on && styles.synOn)} d={neuron.line} />
+                <circle className={cx(styles.neuron, on && styles.neuronOn)} cx={neuron.x} cy={neuron.y} r={neuron.r} />
+              </g>
+            ))}
+            {active === item.id ? (
+              <circle className={styles.pulse} cx={geometry.lobe.x} cy={geometry.lobe.y} r={COMPACT_LOBE_RADIUS} data-cw-pulse="" />
+            ) : null}
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
 export function BrainMap({ data, labels, lang, terminal, children }: BrainMapProps) {
   const first = data.lobes[0]
   const [selection, setSelection] = useState<Selection>({ kind: 'lobe', id: first?.id ?? '' })
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const compact = useMediaQuery(COMPACT_QUERY)
   const lobeRefs = useRef<Array<HTMLButtonElement | null>>([])
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const mapRef = useRef<HTMLDivElement>(null)
+  const sheetTitleId = useId()
   const words = data.lobes.flatMap((lobe) => lobe.skills.map((skill) => skill.name))
   const rainWords = useRef(words)
   const lobeIds = data.lobes.map((item) => item.id)
@@ -94,6 +260,16 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
     const canvas = canvasRef.current
     if (!canvas) return
     return startRain(canvas, rainWords.current)
+  }, [])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || typeof IntersectionObserver === 'undefined') return
+    const observer = new IntersectionObserver((entries) => {
+      map.toggleAttribute('data-cw-live', entries.some((entry) => entry.isIntersecting))
+    })
+    observer.observe(map)
+    return () => observer.disconnect()
   }, [])
 
   useEffect(() => {
@@ -116,6 +292,7 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
       mapRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
       const active = document.activeElement
       if (!active || active === document.body) lobeRefs.current[ids.indexOf(id)]?.focus({ preventScroll: true })
+      if (compactNow()) setSheetOpen(true)
     }
     apply()
     const navigation = (window as Window & { navigation?: EventTarget }).navigation
@@ -131,17 +308,24 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
 
   if (!first) return <>{children}</>
 
-  const lobe =selection.kind === 'lobe' ? (data.lobes.find((item) => item.id === selection.id) ?? first) : null
+  const lobe = selection.kind === 'lobe' ? (data.lobes.find((item) => item.id === selection.id) ?? first) : null
   const source = selection.kind === 'source' ? (data.sources.find((item) => item.id === selection.id) ?? null) : null
   const litSources = new Set(lobe ? lobe.sources : source ? [source.id] : [])
   const litLobes = new Set(lobe ? [lobe.id] : data.lobes.filter((item) => source && item.sources.includes(source.id)).map((item) => item.id))
-  const sourceLabel = (id: string) => data.sources.find((item) => item.id === id)?.label ?? id
   const wordLobes = data.lobes.filter((item) => item.words)
+  const lobeIndex = lobe ? data.lobes.indexOf(lobe) : -1
   const status = lobe
     ? `${lobe.name}: ${lobe.skills.map((skill) => `${skill.name} ${labels.levels[skill.id] ?? `${skill.level}%`}`).join(', ')}`
     : source
       ? `${source.label}: ${source.title}`
       : ''
+
+  const choose = (next: Selection) => {
+    setSelection(next)
+    if (!compactNow()) return
+    if (next.kind === 'lobe') tap()
+    setSheetOpen(true)
+  }
 
   const onLobeKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const step = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 0
@@ -154,6 +338,21 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
     setSelection({ kind: 'lobe', id: target.id })
     lobeRefs.current[next]?.focus()
   }
+
+  const panel = (titleId?: string) => (
+    <LobePanel
+      data={data}
+      lobe={lobe}
+      source={source}
+      labels={labels}
+      lang={lang}
+      status={status}
+      terminal={terminal}
+      lobeIds={lobeIds}
+      onLobe={(id) => setSelection({ kind: 'lobe', id })}
+      titleId={titleId}
+    />
+  )
 
   return (
     <>
@@ -191,12 +390,15 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
                   )
                 })}
               </svg>
+              <CompactMap data={data} litLobes={litLobes} active={lobe?.id ?? null} />
               <div className={styles.core} aria-hidden="true">
                 {labels.core}
               </div>
               <div className={styles.lobes} role="group" aria-label={labels.lobes}>
                 {data.lobes.map((item, index) => {
                   const point = lobePoint(index, data.lobes.length)
+                  const near = compactLobePoint(index, data.lobes.length)
+                  const pressed = lobe?.id === item.id
                   return (
                     <button
                       key={item.id}
@@ -205,12 +407,21 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
                       }}
                       type="button"
                       className={styles.lobe}
-                      aria-pressed={lobe?.id === item.id}
+                      aria-pressed={pressed}
+                      aria-haspopup={compact ? 'dialog' : undefined}
                       data-lit={litLobes.has(item.id) ? '' : undefined}
                       data-cw-lobe={item.id}
                       data-cw-glass="subtle"
-                      style={{ '--cw-x': `${(point.x / BRAIN_VIEW.width) * 100}%`, '--cw-y': `${(point.y / BRAIN_VIEW.height) * 100}%` } as CSSProperties}
-                      onClick={() => setSelection({ kind: 'lobe', id: item.id })}
+                      data-cw-blur={compact && pressed ? '' : undefined}
+                      style={
+                        {
+                          '--cw-x': `${(point.x / BRAIN_VIEW.width) * 100}%`,
+                          '--cw-y': `${(point.y / BRAIN_VIEW.height) * 100}%`,
+                          '--cw-cx': `${(near.x / COMPACT_VIEW.width) * 100}%`,
+                          '--cw-cy': `${(near.y / COMPACT_VIEW.height) * 100}%`,
+                        } as CSSProperties
+                      }
+                      onClick={() => choose({ kind: 'lobe', id: item.id })}
                       onKeyDown={(event) => onLobeKey(event, index)}
                     >
                       {item.name}
@@ -226,10 +437,11 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
                   type="button"
                   className={styles.source}
                   aria-pressed={source?.id === item.id}
+                  aria-haspopup={compact ? 'dialog' : undefined}
                   data-lit={litSources.has(item.id) ? '' : undefined}
                   data-cw-source={item.id}
                   data-cw-glass="subtle"
-                  onClick={() => setSelection({ kind: 'source', id: item.id })}
+                  onClick={() => choose({ kind: 'source', id: item.id })}
                 >
                   {item.label}
                 </button>
@@ -241,91 +453,37 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
               </a>
             </div>
           </div>
-          <aside className={styles.terminal} data-cw-glass="strong" data-cw-terminal="">
-            <div className={styles.termBar} aria-hidden="true">
-              <span className={styles.dots}>
-                <i />
-                <i />
-                <i />
-              </span>
-              <span>{labels.path}</span>
-            </div>
-            <p className="cw-visually-hidden" aria-live="polite" data-cw-terminal-status="">
-              {status}
-            </p>
-            <div className={styles.termBody} data-cw-terminal-body={lobe?.id ?? source?.id}>
-              <p className={styles.termCmd} aria-hidden="true">
-                <span className={styles.prompt} aria-hidden="true">
-                  ${' '}
-                </span>
-                cat {lobe ? `${lobe.id}.lobe` : `${source?.id}.src`}
-                <span className={styles.cursor} aria-hidden="true" />
-              </p>
-              <h3 className={styles.termTitle}>
-                <DecodedTitle text={lobe ? lobe.name : (source?.label ?? '')} />
-              </h3>
-              {lobe ? (
-                <>
-                  <ul className={styles.termRows} data-cw-term-rows="" data-long={lobe.skills.length > 7 ? '' : undefined} tabIndex={lobe.skills.length > 7 ? 0 : undefined} aria-label={lobe.skills.length > 7 ? lobe.name : undefined}>
-                    {lobe.skills.map((skill) => {
-                      const bar = blockBar(skill.level)
-                      return (
-                        <li key={skill.id} className={styles.termRow} data-cw-brain-skill={skill.id}>
-                          {skill.icon ? (
-                            <Image src={skill.icon} alt="" width={22} height={22} loading="eager" decoding="sync" unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
-                          ) : (
-                            <span className={`${styles.termIcon} ${styles.termMonogram}`} data-cw-monogram={monogram(skill.name)} aria-hidden="true" />
-                          )}
-                          <span className={styles.termName}>{skill.name}</span>
-                          <span className={styles.termLevel}>
-                            {skill.used ? (
-                              <span className={styles.usedChip} data-cw-used="">
-                                {skill.used}
-                              </span>
-                            ) : null}
-                            {labels.levels[skill.id] ?? `${skill.level}%`}
-                          </span>
-                          <span className={styles.termBar} aria-hidden="true">
-                            <span className={styles.barOn}>{bar.on}</span>
-                            <span className={styles.barOff}>{bar.off}</span>
-                          </span>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                  <LobePrinciples lobe={lobe} label={labels.principles} idPrefix="panel" />
-                  {lobe.learning ? (
-                    <p className={styles.termLearning} data-cw-learning="">
-                      {lobe.learning}
-                    </p>
-                  ) : null}
-                  <LobeMeta lobe={lobe} lang={lang} labels={labels} sourceLabel={sourceLabel} />
-                </>
-              ) : source ? (
-                <>
-                  <div className={styles.termSource}>
-                    <p className={styles.termName}>{source.title}</p>
-                    {source.detail ? <p>{source.detail}</p> : null}
-                    {source.period ? <p className={styles.termLevel}>{source.period}</p> : null}
-                  </div>
-                  {data.lobes.some((item) => item.sources.includes(source.id)) ? (
-                    <p className={styles.termMeta}>
-                      <span className={styles.metaLine} data-cw-meta="feeds">
-                        <strong>{labels.feeds}:</strong>{' '}
-                        {data.lobes
-                          .filter((item) => item.sources.includes(source.id))
-                          .map((item) => item.name)
-                          .join(' · ')}
-                      </span>
-                    </p>
-                  ) : null}
-                </>
-              ) : null}
-            </div>
-            <BrainTerminal table={terminal} lobeIds={lobeIds} labels={labels.terminal} onLobe={(id) => setSelection({ kind: 'lobe', id })} />
-          </aside>
+          {compact ? null : (
+            <aside className={styles.terminal} data-cw-glass="strong" data-cw-terminal="">
+              {panel()}
+            </aside>
+          )}
         </div>
       </div>
+      {compact ? (
+        <BottomSheet
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
+          labelledBy={sheetTitleId}
+          closeLabel={labels.sheet.close}
+          onSwipe={lobe ? (direction) => setSelection({ kind: 'lobe', id: stepLobe(lobeIds, lobe.id, direction) }) : undefined}
+          navLabels={lobe ? { prev: labels.sheet.prev, next: labels.sheet.next } : undefined}
+          counter={lobe ? `${lobeIndex + 1} / ${data.lobes.length}` : undefined}
+          bodyClassName={styles.sheetBody}
+        >
+          <div className={styles.sheetTerminal} data-cw-terminal="">
+            {panel(sheetTitleId)}
+          </div>
+          {lobe?.words ? (
+            <section className={styles.sheetWords} data-cw-sheet-words={lobe.id} aria-labelledby={`${sheetTitleId}-words`}>
+              <h4 id={`${sheetTitleId}-words`} className={styles.sheetWordsTitle}>
+                {labels.words}
+              </h4>
+              <p className={styles.sheetWordsText}>{lobe.words}</p>
+            </section>
+          ) : null}
+        </BottomSheet>
+      ) : null}
       {children}
       {wordLobes.length > 0 ? (
         <details className={styles.words} data-cw-glass="standard" data-cw-words="" data-empty={lobe?.words ? undefined : ''}>

@@ -27,6 +27,27 @@ async function openKnowledge(page: Page) {
 
 const lobe = (page: Page, id: string) => page.locator(`[data-cw-lobe="${id}"]`)
 
+const compact = (page: Page) => (page.viewportSize()?.width ?? 1280) < 768
+
+async function closeSheet(page: Page) {
+  if ((await page.locator('dialog[data-cw-sheet][open]').count()) === 0) return
+  await page.keyboard.press('Escape')
+  await expect(page.locator('dialog[data-cw-sheet][open]')).toHaveCount(0)
+}
+
+async function chooseLobe(page: Page, id: string) {
+  await closeSheet(page)
+  if (!compact(page)) {
+    await lobe(page, id).click()
+    return page.locator('[data-cw-terminal-body]')
+  }
+  await expect(async () => {
+    await lobe(page, id).click()
+    await expect(page.locator('dialog[data-cw-sheet][open]')).toBeVisible({ timeout: 1000 })
+  }).toPass()
+  return page.locator('[data-cw-terminal-body]')
+}
+
 test.describe('tres escenas con índice', () => {
   onlyIn('desktop-chromium')
 
@@ -171,7 +192,7 @@ test.describe('corrección de skills (T229)', () => {
       ['business', 'business.lobe'],
       ['architecture', 'architecture.lobe'],
     ] as const) {
-      await lobe(page, id).click()
+      await chooseLobe(page, id)
       await expect(body).toContainText(`cat ${file}`)
       await expect(body.locator('[data-cw-brain-skill]')).toHaveCount(data.lobes.find((item) => item.id === id)!.skills.length)
     }
@@ -180,7 +201,7 @@ test.describe('corrección de skills (T229)', () => {
   test('las skills de 2023 vuelven y llevan su chip de años junto al porcentaje', async ({ page }) => {
     await openKnowledge(page)
     const body = page.locator('[data-cw-terminal-body]')
-    await lobe(page, 'frontend').click()
+    await chooseLobe(page, 'frontend')
     for (const [id, used] of [
       ['react', '2022–2023 · 2026'],
       ['nextjs', '2022–2023 · 2026'],
@@ -191,7 +212,7 @@ test.describe('corrección de skills (T229)', () => {
       await expect(row).toBeVisible()
       await expect(row.locator('[data-cw-used]')).toHaveText(used)
     }
-    await lobe(page, 'backend-cloud').click()
+    await chooseLobe(page, 'backend-cloud')
     for (const id of ['nodejs', 'mongodb']) await expect(body.locator(`[data-cw-brain-skill="${id}"] [data-cw-used]`)).toHaveText('2022–2023')
     await expect(body.locator('[data-cw-brain-skill="dotnet"] [data-cw-used]')).toHaveCount(0)
   })
@@ -200,7 +221,7 @@ test.describe('corrección de skills (T229)', () => {
     await openKnowledge(page)
     const body = page.locator('[data-cw-terminal-body]')
     for (const item of data.lobes) {
-      await lobe(page, item.id).click()
+      await chooseLobe(page, item.id)
       const line = body.locator('[data-cw-meta="projects"]')
       if ((await line.count()) === 0) continue
       await expect(line.getByRole('link')).toHaveCount(item.projects.length)
@@ -263,21 +284,23 @@ test.describe('sin JavaScript', () => {
 test.describe('móvil a 375 px', () => {
   onlyIn('mobile-chromium')
 
-  test('lóbulos como chips con scroll horizontal, panel debajo y sin desbordes', async ({ page }) => {
+  test('el mapa compacto (006, EM-02): lóbulos en círculo dentro del mapa y el panel en una hoja', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 })
     await openKnowledge(page)
-    const chips = page.locator('[data-cw-lobe]')
-    await expect(chips).toHaveCount(data.lobes.length)
-    const strip = page.locator('[data-cw-brain] [role="group"]').first()
-    const style = await strip.evaluate((node) => ({ overflow: getComputedStyle(node).overflowX, display: getComputedStyle(node).display }))
-    expect(style.overflow).toBe('auto')
-    expect(style.display).toBe('flex')
-    await expect(page.locator('[data-cw-brain] svg')).toBeHidden()
-    const [chipBox, panelBox] = await Promise.all([chips.first().boundingBox(), page.locator('[data-cw-terminal]').boundingBox()])
-    expect(panelBox!.y).toBeGreaterThan(chipBox!.y)
-    await chips.nth(3).scrollIntoViewIfNeeded()
-    await chips.nth(3).click()
-    await expect(chips.nth(3)).toHaveAttribute('aria-pressed', 'true')
+    const lobes = page.locator('[data-cw-lobe]')
+    await expect(lobes).toHaveCount(data.lobes.length)
+    const map = (await page.locator('[data-cw-brain-map]').boundingBox())!
+    expect(Math.abs(map.width - map.height)).toBeLessThanOrEqual(1)
+    for (const item of await lobes.all()) {
+      const box = (await item.boundingBox())!
+      expect(box.x).toBeGreaterThanOrEqual(map.x)
+      expect(box.x + box.width).toBeLessThanOrEqual(map.x + map.width + 0.5)
+    }
+    await expect(page.locator('[data-cw-brain] svg[data-cw-brain-compact]')).toBeVisible()
+    await expect(page.locator('[data-cw-terminal]')).toBeHidden()
+    const body = await chooseLobe(page, data.lobes[3]!.id)
+    await expect(lobes.nth(3)).toHaveAttribute('aria-pressed', 'true')
+    await expect(body).toHaveAttribute('data-cw-terminal-body', data.lobes[3]!.id)
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375)
   })
 
@@ -286,7 +309,10 @@ test.describe('móvil a 375 px', () => {
       await page.setViewportSize({ width, height: 800 })
       await openKnowledge(page)
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
-      const panel = await page.locator('[data-cw-terminal]').boundingBox()
+      const map = await page.locator('[data-cw-brain-map]').boundingBox()
+      expect(map!.x).toBeGreaterThanOrEqual(0)
+      expect(map!.x + map!.width).toBeLessThanOrEqual(width)
+      const panel = await (await chooseLobe(page, 'frontend')).boundingBox()
       expect(panel!.x).toBeGreaterThanOrEqual(0)
       expect(panel!.x + panel!.width).toBeLessThanOrEqual(width)
     })
