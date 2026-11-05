@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="legal-workspace-title legal-workspace-desc">
+  <title id="legal-workspace-title">Legal workspace: frontera de confianza / trust boundary</title>
+  <desc id="legal-workspace-desc">La persona, el agente y el LLM se tratan como no confiables y hablan por MCP con un núcleo que guarda el estado canónico, los originales y un log de auditoría. Nada se consolida sin revisión humana. / The person, the agent and the LLM are treated as untrusted and talk over MCP to a core that holds the canonical state, the originals and an audit log. Nothing is consolidated without human review.</desc>
+  <defs>
+    <marker id="lw-arrow" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#25ed9e"/>
+    </marker>
+  </defs>
+  <rect width="960" height="640" rx="28" fill="#0b0e0d"/>
+  <g font-family="Montserrat, 'Segoe UI', Arial, sans-serif" fill="#ffffff">
+    <text x="56" y="66" font-size="22" font-weight="700" letter-spacing="6">LEGAL WORKSPACE</text>
+    <rect x="56" y="78" width="56" height="4" rx="2" fill="#25ed9e"/>
+
+    <text x="56" y="128" font-size="18" font-weight="700" letter-spacing="2" fill="#cfcfcf">NO CONFIABLES · UNTRUSTED</text>
+    <g fill="#121716" stroke="#ffffff" stroke-opacity="0.85" stroke-width="2">
+      <rect x="56" y="148" width="300" height="96" rx="18"/>
+      <rect x="56" y="268" width="300" height="96" rx="18"/>
+      <rect x="56" y="388" width="300" height="96" rx="18"/>
+    </g>
+    <g font-size="26" font-weight="800" letter-spacing="1.5">
+      <text x="84" y="190">PERSONA</text>
+      <text x="84" y="310">AGENTE</text>
+      <text x="84" y="430">LLM</text>
+    </g>
+    <g font-size="18" fill="#cfcfcf">
+      <text x="84" y="222">person</text>
+      <text x="84" y="342">agent</text>
+      <text x="84" y="462">language model</text>
+    </g>
+
+    <line x1="456" y1="112" x2="456" y2="576" stroke="#25ed9e" stroke-width="3" stroke-dasharray="10 10"/>
+    <text x="56" y="608" font-size="18" font-weight="700" letter-spacing="2" fill="#25ed9e">FRONTERA DE CONFIANZA · TRUST BOUNDARY</text>
+
+    <g stroke="#25ed9e" stroke-width="3" fill="none">
+      <path d="M358 196 L540 280" marker-end="url(#lw-arrow)"/>
+      <path d="M358 316 L540 316" marker-end="url(#lw-arrow)"/>
+      <path d="M358 436 L540 352" marker-end="url(#lw-arrow)"/>
+    </g>
+    <rect x="412" y="296" width="88" height="40" rx="20" fill="#0b0e0d" stroke="#25ed9e" stroke-width="2"/>
+    <text x="456" y="323" font-size="18" font-weight="800" letter-spacing="2" text-anchor="middle">MCP</text>
+
+    <rect x="552" y="148" width="352" height="336" rx="18" fill="#121716" stroke="#25ed9e" stroke-width="3"/>
+    <text x="580" y="194" font-size="28" font-weight="800" letter-spacing="2">NÚCLEO · CORE</text>
+    <g fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2">
+      <rect x="580" y="216" width="296" height="70" rx="12"/>
+      <rect x="580" y="300" width="296" height="70" rx="12"/>
+      <rect x="580" y="384" width="296" height="70" rx="12"/>
+    </g>
+    <g font-size="19" font-weight="700">
+      <text x="600" y="246">estado canónico</text>
+      <text x="600" y="330">originales</text>
+      <text x="600" y="414">log de auditoría</text>
+    </g>
+    <g font-size="16" fill="#cfcfcf">
+      <text x="600" y="272">canonical state</text>
+      <text x="600" y="356">originals</text>
+      <text x="600" y="440">audit log</text>
+    </g>
+
+    <rect x="552" y="512" width="352" height="64" rx="32" fill="none" stroke="#ffffff" stroke-width="2"/>
+    <text x="728" y="551" font-size="18" font-weight="700" text-anchor="middle">revisión humana · human review</text>
+  </g>
+</svg>

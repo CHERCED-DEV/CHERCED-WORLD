@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="director-lines-title director-lines-desc">
+  <title id="director-lines-title">Director y líneas / Director and lines</title>
+  <desc id="director-lines-desc">El arquitecto arriba decide y valida; la sesión director al centro integra y es la única que toca lo compartido; las líneas trabajan como carriles paralelos, cada una en su worktree, y convergen en la rama principal. / The architect on top decides and validates; the director session in the middle integrates and is the only one that touches shared code; the lines work as parallel lanes, each in its own worktree, and converge on the main branch.</desc>
+  <defs>
+    <marker id="dl-arrow" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#25ed9e"/>
+    </marker>
+  </defs>
+  <rect width="960" height="640" rx="28" fill="#0b0e0d"/>
+  <g font-family="Montserrat, 'Segoe UI', Arial, sans-serif" fill="#ffffff">
+    <text x="56" y="66" font-size="22" font-weight="700" letter-spacing="6">DIRECTOR &amp; LINES</text>
+    <rect x="56" y="78" width="56" height="4" rx="2" fill="#25ed9e"/>
+
+    <rect x="280" y="100" width="400" height="76" rx="18" fill="#121716" stroke="#ffffff" stroke-opacity="0.85" stroke-width="2"/>
+    <text x="480" y="134" font-size="26" font-weight="800" letter-spacing="2" text-anchor="middle">ARQUITECTO · ARCHITECT</text>
+    <text x="480" y="162" font-size="18" fill="#cfcfcf" text-anchor="middle">decide y valida · decides and validates</text>
+
+    <line x1="480" y1="178" x2="480" y2="206" stroke="#25ed9e" stroke-width="3" marker-end="url(#dl-arrow)"/>
+
+    <rect x="200" y="216" width="560" height="84" rx="18" fill="#121716" stroke="#25ed9e" stroke-width="3"/>
+    <text x="480" y="252" font-size="28" font-weight="800" letter-spacing="2" text-anchor="middle">DIRECTOR</text>
+    <text x="480" y="282" font-size="18" fill="#cfcfcf" text-anchor="middle">integra lo compartido · integrates shared code</text>
+
+    <g stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" fill="none">
+      <path d="M240 302 C240 330 160 330 160 352"/>
+      <path d="M360 302 C360 330 320 330 320 352"/>
+      <path d="M480 302 L480 352"/>
+      <path d="M600 302 C600 330 640 330 640 352"/>
+      <path d="M720 302 C720 330 800 330 800 352"/>
+    </g>
+
+    <g fill="#121716" stroke="#ffffff" stroke-opacity="0.85" stroke-width="2">
+      <rect x="96" y="352" width="128" height="140" rx="14"/>
+      <rect x="256" y="352" width="128" height="140" rx="14"/>
+      <rect x="416" y="352" width="128" height="140" rx="14"/>
+      <rect x="576" y="352" width="128" height="140" rx="14"/>
+      <rect x="736" y="352" width="128" height="140" rx="14"/>
+    </g>
+    <g font-size="17" font-weight="700" text-anchor="middle" letter-spacing="1">
+      <text x="160" y="384">LÍNEA</text>
+      <text x="320" y="384">LÍNEA</text>
+      <text x="480" y="384">LÍNEA</text>
+      <text x="640" y="384">LÍNEA</text>
+      <text x="800" y="384">LÍNEA</text>
+      <text x="160" y="406" fill="#25ed9e">LINE</text>
+      <text x="320" y="406" fill="#25ed9e">LINE</text>
+      <text x="480" y="406" fill="#25ed9e">LINE</text>
+      <text x="640" y="406" fill="#25ed9e">LINE</text>
+      <text x="800" y="406" fill="#25ed9e">LINE</text>
+    </g>
+    <g font-size="15" fill="#cfcfcf" text-anchor="middle">
+      <text x="160" y="440">núcleo</text>
+      <text x="160" y="462">core</text>
+      <text x="320" y="440">producción</text>
+      <text x="320" y="462">production</text>
+      <text x="480" y="440">vertical</text>
+      <text x="480" y="462">vertical</text>
+      <text x="640" y="440">vertical</text>
+      <text x="640" y="462">vertical</text>
+      <text x="800" y="440">vertical</text>
+      <text x="800" y="462">vertical</text>
+    </g>
+    <g fill="none" stroke="#25ed9e" stroke-width="2">
+      <path d="M160 494 L160 516 C160 540 480 528 480 552"/>
+      <path d="M320 494 L320 516 C320 536 480 532 480 552"/>
+      <path d="M480 494 L480 552"/>
+      <path d="M640 494 L640 516 C640 536 480 532 480 552"/>
+      <path d="M800 494 L800 516 C800 540 480 528 480 552"/>
+    </g>
+
+    <rect x="200" y="556" width="560" height="56" rx="28" fill="none" stroke="#25ed9e" stroke-width="3"/>
+    <text x="480" y="592" font-size="20" font-weight="700" letter-spacing="1.5" text-anchor="middle">RAMA PRINCIPAL · MAIN BRANCH</text>
+  </g>
+</svg>
