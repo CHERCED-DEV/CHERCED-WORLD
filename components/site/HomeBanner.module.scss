@@ -254,3 +254,31 @@
     }
   }
 }
+
+@keyframes banner-sweep {
+  from {
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@include bp.down(md) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sweep[data-cw-sweep] {
+      view-timeline: none;
+
+      &::before {
+        animation: none;
+        animation-timeline: auto;
+      }
+    }
+
+    :global(:root[data-js]:not([data-intro='pending'])) .sweep[data-cw-sweep]::before {
+      animation: banner-sweep var(--cw-sweep-duration) var(--cw-ease-in-out) var(--cw-banner-sweep-at) 1 both;
+      animation-timeline: auto;
+    }
+  }
+}
