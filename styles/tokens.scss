@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 @mixin dark-theme {
   color-scheme: dark;
   --cw-bg: #000000;
@@ -30,6 +32,12 @@
   --cw-graphic-line: rgb(255 255 255 / 0.07);
   --cw-graphic-line-strong: rgb(255 255 255 / 0.24);
   --cw-graphic-glow: rgb(37 237 158 / 0.14);
+
+  --cw-glass-subtle-tint: rgb(0 0 0 / 0.55);
+  --cw-glass-standard-tint: rgb(0 0 0 / 0.65);
+  --cw-glass-strong-tint: rgb(0 0 0 / 0.78);
+  --cw-glass-sweep: rgb(255 255 255 / 0.9);
+  --cw-sheet-scrim: rgb(0 0 0 / 0.55);
 }
 
 @mixin light-theme {
@@ -64,6 +72,12 @@
   --cw-graphic-line: rgb(0 0 0 / 0.07);
   --cw-graphic-line-strong: rgb(0 0 0 / 0.22);
   --cw-graphic-glow: rgb(37 237 158 / 0.22);
+
+  --cw-glass-subtle-tint: rgb(255 255 255 / 0.6);
+  --cw-glass-standard-tint: rgb(255 255 255 / 0.7);
+  --cw-glass-strong-tint: rgb(255 255 255 / 0.82);
+  --cw-glass-sweep: rgb(0 0 0 / 0.38);
+  --cw-sheet-scrim: rgb(0 0 0 / 0.32);
 }
 
 @mixin solid-glass {
@@ -156,6 +170,26 @@
   --cw-graphic-accent: var(--cw-intro-accent);
   --cw-graphic-cell: 56px;
 
+  --cw-glass-standard-blur-sm: 10px;
+  --cw-glass-strong-blur-sm: 16px;
+  --cw-z-dock: 150;
+  --cw-touch-fade: 300ms;
+  --cw-sweep-duration: 700ms;
+  --cw-sweep-angle: 115deg;
+  --cw-sweep-edge: 1.5px;
+  --cw-float-1: 4px;
+  --cw-float-2: 8px;
+  --cw-float-3: 12px;
+  --cw-sheet-duration: 300ms;
+  --cw-sheet-gap: max(2.5rem, calc(env(safe-area-inset-top, 0px) + 1rem));
+  --cw-sheet-radius: 24px;
+  --cw-dock-button: 44px;
+  --cw-dock-pad: 6px;
+  --cw-dock-h: calc(var(--cw-dock-button) + 2 * var(--cw-dock-pad));
+  --cw-dock-offset: 12px;
+  --cw-dock-space: calc(var(--cw-dock-h) + 2 * var(--cw-dock-offset) + env(safe-area-inset-bottom, 0px));
+  --cw-dock-duration: 260ms;
+
   @include dark-theme;
 }
 
@@ -173,16 +207,38 @@
   }
 }
 
+@include bp.down(md) {
+  :root,
+  :root[data-theme],
+  :root:not([data-theme]) {
+    --cw-glass-standard-blur: var(--cw-glass-standard-blur-sm);
+    --cw-glass-strong-blur: var(--cw-glass-strong-blur-sm);
+    --cw-glass-subtle-bg: var(--cw-glass-solid-subtle-bg);
+    --cw-glass-standard-bg: var(--cw-glass-solid-standard-bg);
+    --cw-glass-strong-bg: var(--cw-glass-solid-strong-bg);
+  }
+
+  :where([data-cw-blur], :popover-open, dialog[open]) {
+    --cw-glass-subtle-bg: var(--cw-glass-subtle-tint);
+    --cw-glass-standard-bg: var(--cw-glass-standard-tint);
+    --cw-glass-strong-bg: var(--cw-glass-strong-tint);
+  }
+}
+
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root,
-  :root[data-theme] {
+  :root[data-theme],
+  :root:not([data-theme]),
+  :where([data-cw-blur], :popover-open, dialog[open]) {
     @include solid-glass;
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
   :root,
-  :root[data-theme] {
+  :root[data-theme],
+  :root:not([data-theme]),
+  :where([data-cw-blur], :popover-open, dialog[open]) {
     @include solid-glass;
   }
 }
