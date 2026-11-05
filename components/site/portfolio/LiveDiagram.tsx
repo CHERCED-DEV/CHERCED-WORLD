@@ -88,14 +88,19 @@ export function LiveDiagram({ layers, labels }: LiveDiagramProps) {
           )
         })}
       </ol>
-      <p className={styles.line} aria-hidden="true" data-cw-diagram-line={current?.id ?? ''}>
-        {current ? (
-          <>
-            <span className={styles.lineLabel}>{current.label}</span>
-            <span className={styles.lineText}>{current.role}</span>
-          </>
-        ) : null}
-      </p>
+      <div className={styles.line} aria-hidden="true" data-cw-diagram-line={current?.id ?? ''}>
+        {layers.map((layer) => (
+          <p
+            key={layer.id}
+            className={styles.lineItem}
+            data-active={layer.id === current?.id ? '' : undefined}
+            data-cw-diagram-line-item={layer.id}
+          >
+            <span className={styles.lineLabel}>{layer.label}</span>
+            <span className={styles.lineText}>{layer.role}</span>
+          </p>
+        ))}
+      </div>
     </section>
   )
 }
