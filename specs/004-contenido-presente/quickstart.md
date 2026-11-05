@@ -25,6 +25,8 @@ comando en PowerShell.
   - La corrida exhaustiva de la 002 (40 min con la máquina libre) da el factor de carga, de unos 2×. Con la máquina
     libre son unos 12 min.
   - Al integrar, las e2e de P1 a P6 y las pruebas que hoy esperan (abajo) suman unos minutos.
+  - Con la 006 integrada y los anchos de 375 y 412 px, la corrida del 2026-11-05 tardó 1 h 8 min, con la lane Q1
+    corriendo sus e2e al mismo tiempo y la CPU al 100 %: 1395 pasaron y 23 fallaron.
 - **Exhaustivo**: no se corrió. Son los 40 min de la 002 más lo nuevo de la 004: el contraste de los 15 casos (unos
   5 min), axe, humo y rendimiento.
 
