@@ -71,10 +71,23 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
   const words = data.lobes.flatMap((lobe) => lobe.skills.map((skill) => skill.name))
   const rainWords = useRef(words)
 
+  const [warm, setWarm] = useState(false)
+
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     return startRain(canvas, rainWords.current)
+  }, [])
+
+  useEffect(() => {
+    const start = () => setWarm(true)
+    if (document.readyState === 'complete') {
+      const timer = window.setTimeout(start, 1200)
+      return () => window.clearTimeout(timer)
+    }
+    const onLoad = () => window.setTimeout(start, 600)
+    window.addEventListener('load', onLoad, { once: true })
+    return () => window.removeEventListener('load', onLoad)
   }, [])
 
   if (!first) return null
@@ -106,9 +119,11 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
     <div className={cx(styles.stage, 'cw-js-only')} data-cw-brain="">
       <canvas ref={canvasRef} className={styles.rain} aria-hidden="true" data-cw-rain="" />
       <div className={styles.iconWarmer} aria-hidden="true">
-        {[...new Set(data.lobes.flatMap((item) => item.skills.flatMap((skill) => (skill.icon ? [skill.icon] : []))))].map((icon) => (
-          <Image key={icon} src={icon} alt="" width={22} height={22} loading="eager" decoding="sync" unoptimized={icon.endsWith('.svg')} />
-        ))}
+        {warm
+          ? [...new Set(data.lobes.flatMap((item) => item.skills.flatMap((skill) => (skill.icon ? [skill.icon] : []))))].map((icon) => (
+              <Image key={icon} src={icon} alt="" width={22} height={22} loading="eager" unoptimized={icon.endsWith('.svg')} />
+            ))
+          : null}
       </div>
       <div className={styles.layout}>
         <div className={styles.mapColumn}>
