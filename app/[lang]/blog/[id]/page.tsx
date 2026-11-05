@@ -55,7 +55,6 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
       ...(meta.updated ? { modifiedTime: meta.updated } : {}),
       authors: [meta.author],
       tags: meta.tags,
-      images: [{ url: meta.image.src, width: meta.image.width, height: meta.image.height, alt: meta.image.alt }],
     },
   }
 }
