@@ -8,6 +8,7 @@ export const RATE_LIMITS = {
   comment: { limit: 3, windowMs: 10 * MINUTE },
   login: { limit: 5, windowMs: 15 * MINUTE, blockMs: 15 * MINUTE },
   setup: { limit: 5, windowMs: 15 * MINUTE, blockMs: 15 * MINUTE },
+  reaction: { limit: 10, windowMs: 10 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 
 export type RateLimitAction = keyof typeof RATE_LIMITS
