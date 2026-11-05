@@ -130,7 +130,8 @@ describe('caso de estudio enriquecido (US5)', () => {
     const html = render('3')
     const project = getProject('3')!
     expect(html).toContain(project.summary.es)
-    expect(html).toContain('Caso de estudio 03 / 12')
+    const position = projects.findIndex((item) => item.id === '3') + 1
+    expect(html).toContain(`Caso de estudio ${String(position).padStart(2, '0')} / ${projects.length}`)
     expect(html).toContain('data-cw-gallery=""')
     expect(html).toContain(`alt="${project.image.alt.es}"`)
   })
@@ -153,8 +154,12 @@ describe('caso de estudio enriquecido (US5)', () => {
 
   it('enlaza el caso anterior, el siguiente y el portafolio', () => {
     const html = render('1')
-    expect(html).toContain(`data-cw-case-prev="${projects.at(-1)!.id}"`)
-    expect(html).toContain(`data-cw-case-next="${projects[1]!.id}"`)
+    const index = projects.findIndex((item) => item.id === '1')
+    const at = (offset: number) => projects[(index + offset + projects.length) % projects.length]!.id
+    expect(html).toContain(`data-cw-case-prev="${at(-1)}"`)
+    expect(html).toContain(`data-cw-case-next="${at(1)}"`)
+    const first = render(projects[0]!.id)
+    expect(first).toContain(`data-cw-case-prev="${projects.at(-1)!.id}"`)
     expect(html.match(/<a [^>]*data-cw-case-all[^>]*>/)?.[0]).toContain('href="/es/portfolio"')
   })
 })

@@ -34,7 +34,7 @@ describe('cifras destacadas (US6), solo públicas y derivadas del contenido', ()
       { id: 'technologies', value: mapSkillCount(about), plus: false },
       { id: 'airlines', value: 3, plus: true },
     ])
-    expect(getProjects()).toHaveLength(12)
+    expect(getProjects()).toHaveLength(15)
     expect(about.skills.tech).toHaveLength(55)
     expect(mapSkillCount(about)).toBe(57)
   })

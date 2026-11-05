@@ -79,9 +79,9 @@ describe('respuestas honestas', () => {
   })
 
   it('no afirma tecnologías que no están en el portafolio', () => {
-    const answer = ask(assistants, 'Do you know Python?')
+    const answer = ask(assistants, 'Do you know Rust?')
     expect(answer.kind).toBe('unknown')
-    expect(answer.text).toContain('Python')
+    expect(answer.text).toContain('Rust')
     expect(answer.links.map((link) => link.href)).toEqual(['/en/contactMe'])
   })
 
