@@ -159,7 +159,8 @@ test.describe('caso de estudio en móvil (T843, T844)', () => {
       expect(await cards.first().evaluate((element) => getComputedStyle(element).position)).toBe('sticky')
       const last = cards.last()
       await last.evaluate((element) => {
-        const target = element.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.65
+        const stuckAt = Number.parseFloat(getComputedStyle(element).top)
+        const target = element.getBoundingClientRect().top + window.scrollY - (stuckAt + 40)
         window.scrollTo({ top: target, behavior: 'instant' })
       })
       const header = await headerBottom(page)
