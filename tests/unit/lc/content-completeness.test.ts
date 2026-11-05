@@ -5,7 +5,9 @@ import { monogram } from '@/components/site/about/monogram'
 import { capsule } from '@/content/capsule'
 import { projects } from '@/content/projects'
 import { authorPending, site } from '@/content/site'
-import type { Locale, Localized } from '@/content/types'
+import { now } from '@/content/now'
+import { terminalCommands, terminalNotFound } from '@/content/terminal'
+import { SERVICE_IDS, type Locale, type Localized } from '@/content/types'
 import { imageSize } from './image-size'
 import { POSTS_DIR, readPostFile, type PostFile } from './post-files'
 
@@ -29,8 +31,9 @@ const content = await import('@/lib/content')
 const LOCALES: Locale[] = ['es', 'en']
 const PUBLIC_DIR = path.resolve(process.cwd(), 'public')
 const POST_IDS = ['post1', 'post2', 'post3', 'post4', 'post5']
-const PROJECT_IDS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
-const PROJECTS_WITHOUT_LINKS = ['10', '12']
+const PROJECT_IDS = ['12', '13', '2', '14', '15', '1', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+const PROJECTS_WITHOUT_LINKS = ['10', '13', '14', '15']
+const SYNERGOS_REPOS = ['Synergos.CMS', 'Synergos.UI', 'Synergos.Fabrica']
 const REGISTRY_TEXT = readFileSync(path.join(POSTS_DIR, 'registry.ts'), 'utf8')
 
 const POST_ORIGIN: Record<string, { originalLang: Locale; date: RegExp }> = {
@@ -197,6 +200,9 @@ const SAME_IN_BOTH_LANGUAGES = new Set([
   'Software Solutions Engineer · AI-First',
   'Founder & Software Architect',
   'Frontend Development, Platzi Master',
+  'Frontend Web Developer – Platzi Master [CX]',
+  'Founder & Business Manager',
+  'Micro-frontends · Web Components',
 ])
 
 const CONFIDENTIAL: RegExp[] = [/\b700\b/, /\b1[.,]000\b/, /\b90\s?%/, /~\s?\d/]
@@ -240,7 +246,7 @@ const posts: PostFile[] = POST_IDS.flatMap((id) =>
 
 function isLocalized(value: object): value is Localized<unknown> {
   const keys = Object.keys(value)
-  return keys.length === 2 && keys.includes('es') && keys.includes('en')
+  return keys.includes('es') && keys.includes('en') && keys.every((key) => key === 'es' || key === 'en' || key === 'lang')
 }
 
 function localizedValues(value: unknown, at: string): Array<{ at: string; value: Localized<unknown> }> {
@@ -270,6 +276,9 @@ const allLocalized = [
   ...localizedValues(site, 'site'),
   ...localizedValues(projects, 'projects'),
   ...localizedValues(capsule, 'capsule'),
+  ...localizedValues(now, 'now'),
+  ...localizedValues(terminalCommands, 'terminal'),
+  ...localizedValues(terminalNotFound, 'terminalNotFound'),
 ]
 
 const allImages: ImageUse[] = [
@@ -278,7 +287,7 @@ const allImages: ImageUse[] = [
   ...posts.map((post) => ({ at: `${post.id}/${post.lang}.mdx`, ...post.meta.image })),
 ]
 
-const corpus = [JSON.stringify([site, projects]), ...posts.map((post) => post.source)].join('\n')
+const corpus = [JSON.stringify([site, projects, now, terminalCommands]), ...posts.map((post) => post.source)].join('\n')
 
 function publicPath(src: string) {
   return path.join(PUBLIC_DIR, ...src.split('/').filter(Boolean))
@@ -292,11 +301,11 @@ function career(id: string) {
   return site.about.career.find((entry) => entry.id === id)
 }
 
-describe('proyectos (FR-083)', () => {
-  it('conserva los 11 proyectos de 2023 y suma Synergos con ids y orden estables', () => {
+describe('proyectos (FR-083, FR-443, FR-446)', () => {
+  it('conserva los 11 proyectos de 2023 y suma Synergos y los tres casos de la 004 en el orden de §4', () => {
     const list = content.getProjects()
     expect(list.map((project) => project.id)).toEqual(PROJECT_IDS)
-    expect(new Set(list.map((project) => project.order)).size).toBe(PROJECT_IDS.length)
+    expect(list.map((project) => project.order)).toEqual(PROJECT_IDS.map((_, index) => index + 1))
   })
 
   it('presenta cada proyecto como caso de estudio sin campos vacíos', () => {
@@ -311,10 +320,17 @@ describe('proyectos (FR-083)', () => {
     }
   })
 
-  it('omite los enlaces del id 10 (muertos) y del 12 (sin publicar) y conserva los demás', () => {
+  it('omite los enlaces del id 10 (muertos) y de los casos sin publicar, Synergos solo enlaza sus repos y los demás se conservan', () => {
     for (const project of projects) {
       if (PROJECTS_WITHOUT_LINKS.includes(project.id)) {
         expect(project.links, project.id).toEqual({ live: null, github: null })
+        continue
+      }
+      if (project.id === '12') {
+        expect(project.links.live).toBeNull()
+        expect(project.links.github).toBeNull()
+        expect(project.links.repos?.map((repo) => repo.label)).toEqual(SYNERGOS_REPOS)
+        for (const repo of project.links.repos ?? []) expect(repo.href).toBe(`https://github.com/CHERCED-DEV/${repo.label}`)
         continue
       }
       expect(project.links.live, project.id).toMatch(/^https:\/\//)
@@ -343,10 +359,10 @@ describe('proyectos (FR-083)', () => {
     expect(project.image.alt.en).toMatch(/^CHERCED-WORLD 2026 home in dark theme/)
   })
 
-  it('suma Synergos con su diagrama SVG y sin enlaces públicos', () => {
+  it('abre el portafolio con Synergos y conserva su diagrama SVG', () => {
     const project = content.getProject('12')!
     expect(project.title).toBe('Synergos')
-    expect(project.order).toBe(12)
+    expect(project.order).toBe(1)
     expect(project.image.src).toBe('/assets/imgs/projects/synergos.svg')
     expect(imageSize(publicPath(project.image.src))?.format).toBe('svg')
     expect(project.image.alt.es).toContain('Umbraco')
@@ -444,6 +460,30 @@ describe('sitio (FR-004)', () => {
     }
   })
 
+  it('los tipos nuevos de la 004 llegan completos en ES y EN (FR-495, SC-412)', () => {
+    const paths = allLocalized.map(({ at }) => at)
+    for (const prefix of [
+      'site.home.previousTitle',
+      'site.home.subtitle',
+      'site.profile.availability.location',
+      'site.about.skills.inWords.frontend',
+      'site.about.principles[4].full',
+      'site.services.hero.cta',
+      'site.services.audiences[2].text',
+      'site.services.items[5].deliverables[2]',
+      'site.services.process.principles[3]',
+      'site.services.faq[3].a',
+      'site.services.cta.button',
+      'projects[11].adrCards[3].tradeoff',
+      'projects[11].diagram[2].role',
+      'now.mottos[1]',
+      'terminal[1].output',
+    ]) {
+      expect(paths, prefix).toContain(prefix)
+    }
+    expect(allLocalized.length).toBeGreaterThanOrEqual(300)
+  })
+
   it('carga el contenido 2026 sobre las piezas de 2023', () => {
     expect(site.socials.map((social) => social.id).sort()).toEqual(['email', 'facebook', 'github', 'instagram', 'linkedin'])
     expect(site.about.career.map((entry) => entry.id)).toEqual(CAREER_2026)
@@ -457,8 +497,8 @@ describe('sitio (FR-004)', () => {
       ['es', 100],
       ['en', 65],
     ])
-    expect(site.services.items.map((item) => item.id)).toEqual(['design', 'development', 'maintenance'])
-    expect(site.portfolio.intro).toHaveLength(3)
+    expect(site.services.items.map((item) => item.id)).toEqual([...SERVICE_IDS])
+    expect(site.portfolio.intro).toHaveLength(1)
   })
 
   it('aplica las correcciones de fechas y cargos del autor', () => {
@@ -470,7 +510,7 @@ describe('sitio (FR-004)', () => {
     expect(career('synergos-labs')).toMatchObject({ start: '2024-02', end: null })
     expect(career('growup-it')).toMatchObject({ start: '2019-01', end: '2019-11' })
     expect(career('platzi-master')).toMatchObject({ start: '2022-03', end: '2022-06' })
-    expect(career('squadra-arquitectura')?.role).toEqual({ es: 'Fundador y gerente', en: 'Founder & Business Manager' })
+    expect(career('squadra-arquitectura')?.role).toEqual({ es: 'Founder & Business Manager', en: 'Founder & Business Manager' })
   })
 
   it('no publica cifras internas de Sistecrédito', () => {
