@@ -46,7 +46,7 @@ async function collectMotions(page: Page, path: string): Promise<Declared[]> {
   const scan = async () => {
     const pause = await page.addStyleTag({ content: '*, *::before, *::after { animation-play-state: paused !important; }' })
     const found = await declaredMotions(page)
-    await pause.evaluate((element) => element.remove())
+    await pause.evaluate((element) => (element as Element).remove())
     return found
   }
   const seen: Declared[] = [...(await scan())]
