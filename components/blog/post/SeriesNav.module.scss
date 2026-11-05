@@ -1,0 +1,56 @@
+@use 'glass' as *;
+@use '../blog' as blog;
+
+.series {
+  @include glass(subtle);
+  @include glass-grain;
+  @include glass-edge;
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin-top: var(--cw-space-6);
+  padding: var(--cw-space-4) var(--cw-space-5);
+  border-inline-start: 3px solid blog.$accent-mix;
+}
+
+.title {
+  @include blog.kicker;
+  color: var(--cw-fg);
+}
+
+.parts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-1);
+  margin-top: var(--cw-space-3);
+  padding-inline-start: 1.6em;
+  list-style: decimal;
+  font-size: var(--cw-text-sm);
+
+  ::marker {
+    color: blog.$accent-mix;
+    font-weight: 700;
+  }
+}
+
+.part {
+  padding-block: 2px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--cw-fg);
+  font-weight: 600;
+  text-decoration-color: blog.$accent-mix;
+  text-underline-offset: 0.22em;
+}
+
+.current {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--cw-fg-muted);
+  font-weight: 700;
+}

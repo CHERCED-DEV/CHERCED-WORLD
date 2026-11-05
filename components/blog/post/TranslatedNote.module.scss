@@ -1,0 +1,12 @@
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+  font-style: italic;
+
+  svg {
+    flex: none;
+  }
+}

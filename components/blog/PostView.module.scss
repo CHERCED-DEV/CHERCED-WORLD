@@ -103,6 +103,28 @@ $toc: 280px;
     font-size: var(--cw-text-xs);
     font-weight: 600;
     letter-spacing: 0.06em;
+
+    &:has(.tagLink) {
+      padding: 0;
+    }
+  }
+}
+
+.tagLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 2px var(--cw-space-3);
+  border-radius: inherit;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color var(--cw-duration-fast) var(--cw-ease),
+    box-shadow var(--cw-duration-fast) var(--cw-ease);
+
+  &:hover {
+    background: color-mix(in srgb, var(--cw-fg) 8%, transparent);
+    box-shadow: inset 0 0 0 1px blog.$accent-mix;
   }
 }
 
