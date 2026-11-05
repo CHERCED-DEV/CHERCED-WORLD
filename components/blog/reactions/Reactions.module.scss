@@ -48,6 +48,10 @@
     transform: scale(var(--cw-press-scale));
   }
 
+  &[aria-disabled='true'] {
+    cursor: progress;
+  }
+
   &:disabled {
     opacity: 0.55;
     cursor: not-allowed;

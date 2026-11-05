@@ -72,7 +72,7 @@ export function Reactions({ postId, lang, labels }: ReactionsProps) {
     }
   }
 
-  const disabled = load !== 'ready' || pending !== null
+  const disabled = load !== 'ready'
 
   return (
     <div className={cx('cw-js-only', styles.reactions)} role="group" aria-labelledby={titleId} aria-busy={load === 'loading' || pending !== null} data-cw-reactions={load}>
@@ -91,6 +91,7 @@ export function Reactions({ postId, lang, labels }: ReactionsProps) {
                 aria-pressed={pressed}
                 aria-label={reactionName(labels.count, label, count)}
                 disabled={disabled}
+                aria-disabled={pending !== null ? true : undefined}
                 onClick={() => react(kind)}
                 data-cw-reaction={kind}
               >
