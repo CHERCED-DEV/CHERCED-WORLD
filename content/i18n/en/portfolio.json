@@ -39,7 +39,5 @@
   "embed.slowBody": "It didn't finish loading in 10 seconds. Meanwhile, here is its screenshot: you can try again or open it in a new tab.",
   "embed.retry": "Try again",
   "embed.close": "Close the live site",
-  "embed.noScript": "Viewing it embedded here requires JavaScript.",
-  "case.diagram.title": "How the layers fit",
-  "case.diagram.hint": "Hover or focus a layer to see its role."
+  "embed.noScript": "Viewing it embedded here requires JavaScript."
 }

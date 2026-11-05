@@ -110,5 +110,8 @@
   "nowPage.updated": "Actualizado el {date}",
   "og.about.line": "Software Solutions Engineer · AI-First",
   "og.services.line": "Tu oficio, con un equipo de agentes a la medida",
-  "og.portfolio.line": "{count} casos de estudio"
+  "og.portfolio.line": "{count} casos de estudio",
+  "home.previousTitleLabel": "Antes decía:",
+  "case.diagram.title": "Cómo encajan las capas",
+  "case.diagram.hint": "Pasa el puntero o enfoca una capa para ver su rol."
 }

@@ -110,5 +110,8 @@
   "nowPage.updated": "Updated {date}",
   "og.about.line": "Software Solutions Engineer · AI-First",
   "og.services.line": "Your craft, with a tailor-made team of agents",
-  "og.portfolio.line": "{count} case studies"
+  "og.portfolio.line": "{count} case studies",
+  "home.previousTitleLabel": "It used to say:",
+  "case.diagram.title": "How the layers fit",
+  "case.diagram.hint": "Hover or focus a layer to see its role."
 }

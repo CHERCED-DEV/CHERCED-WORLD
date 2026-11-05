@@ -39,7 +39,5 @@
   "embed.slowBody": "Pasaron 10 segundos y no terminó de cargar. Mientras tanto, esta es su captura: puedes reintentar o abrirlo en una pestaña nueva.",
   "embed.retry": "Reintentar",
   "embed.close": "Cerrar el sitio en vivo",
-  "embed.noScript": "Para verlo embebido aquí hace falta JavaScript.",
-  "case.diagram.title": "Cómo encajan las capas",
-  "case.diagram.hint": "Pasa el puntero o enfoca una capa para ver su rol."
+  "embed.noScript": "Para verlo embebido aquí hace falta JavaScript."
 }
