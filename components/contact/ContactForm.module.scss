@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 .form {
   position: relative;
   display: flex;
@@ -69,4 +71,53 @@
 
 :global(:root[data-js]) .noJsStatus {
   display: none;
+}
+
+.form :is(input, textarea, select)[data-cw-light] {
+  @include bp.down(md) {
+    @media (prefers-reduced-motion: no-preference) {
+      --cw-light-x: 50%;
+      --cw-light-y: 0%;
+      --cw-spot-mix: 0;
+      background-image: radial-gradient(
+        circle 220px at var(--cw-light-x) var(--cw-light-y),
+        color-mix(in srgb, var(--cw-glass-spot-accent) calc(var(--cw-spot-mix) * 55%), transparent),
+        transparent 72%
+      );
+      transition:
+        border-color var(--cw-duration-fast) var(--cw-ease),
+        box-shadow var(--cw-duration-base) var(--cw-ease-out),
+        --cw-light-x var(--cw-duration-base) var(--cw-ease-out),
+        --cw-light-y var(--cw-duration-base) var(--cw-ease-out),
+        --cw-spot-mix var(--cw-touch-fade) var(--cw-ease-out);
+
+      &:focus,
+      &[data-cw-touching] {
+        --cw-light-x: var(--cw-mx, 50%);
+        --cw-light-y: var(--cw-my, 0%);
+        --cw-spot-mix: 1;
+      }
+
+      &:focus {
+        box-shadow:
+          var(--cw-glass-shadow),
+          0 0 0 1px var(--cw-graphic-accent),
+          0 12px 28px -16px var(--cw-graphic-glow);
+      }
+
+      &[aria-invalid='true']:focus {
+        box-shadow:
+          var(--cw-glass-shadow),
+          0 0 0 1px var(--cw-danger);
+      }
+    }
+  }
+}
+
+.form [data-cw-floating] > label {
+  @include bp.down(md) {
+    :global(:root[data-js]) & {
+      left: calc(var(--cw-space-4) + 4px);
+    }
+  }
 }

@@ -1,10 +1,11 @@
 'use client'
 
-import { startTransition, useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
+import { startTransition, useActionState, useEffect, useRef, useState, type FocusEvent, type FormEvent, type RefObject } from 'react'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
 import { useToast } from '@/components/ui/Toast'
 import { VisuallyHidden } from '@/components/ui/VisuallyHidden'
+import { useKeyboardInset, useMediaQuery } from '@/lib/fx/viewport'
 import { submitContact } from '@/lib/actions/contact'
 import type { ActionResult } from '@/lib/actions/result'
 import type { MessageInterest } from '@/lib/data/types'
@@ -15,7 +16,34 @@ import type { BookingLink } from './booking'
 import { ConsentField, type ConsentLabels } from './ConsentField'
 import styles from './ContactForm.module.scss'
 import { fieldErrorText, focusFirstInvalid, PHONE_INPUT_PATTERN } from './fieldErrors'
+import { COMPACT_QUERY, keyboardScroll, stickyHeaderBottom } from './keyboard'
 import { useHydrated } from './useHydrated'
+
+const LIT_FIELDS = new Set(['name', 'email', 'phone', 'interest', 'message'])
+
+function useKeepAboveKeyboard(form: RefObject<HTMLFormElement | null>, active: string | null, inset: number) {
+  useEffect(() => {
+    const element = form.current
+    const viewport = window.visualViewport
+    if (!element || !active || inset <= 0 || !viewport) return
+    const field = element.querySelector<HTMLElement>(`[name="${active}"]`)
+    if (!field) return
+    const action = element.querySelector<HTMLElement>('[data-cw-contact-submit]')
+    const span = (node: HTMLElement) => {
+      const rect = node.getBoundingClientRect()
+      return { top: rect.top, bottom: rect.bottom }
+    }
+    const delta = keyboardScroll({
+      field: span(field),
+      action: action ? span(action) : null,
+      visibleTop: Math.max(viewport.offsetTop, stickyHeaderBottom(document.getElementById('header'))),
+      visibleBottom: viewport.offsetTop + viewport.height,
+    })
+    if (delta === 0) return
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    window.scrollBy({ top: delta, behavior: smooth ? 'smooth' : 'instant' })
+  }, [form, active, inset])
+}
 
 export type InterestLabels = { label: string; none: string; options: { value: MessageInterest; label: string }[] }
 
@@ -78,9 +106,26 @@ function Required() {
 export function ContactForm({ renderedAt, privacyHref, labels, errors, interest = null, booking = null }: ContactFormProps) {
   const [state, formAction, pending] = useActionState(submitContact, null)
   const [clientErrors, setClientErrors] = useState<Record<string, string> | null>(null)
+  const [active, setActive] = useState<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const toast = useToast()
   const hydrated = useHydrated()
+  const compact = useMediaQuery(COMPACT_QUERY)
+  const keyboard = useKeyboardInset()
+  useKeepAboveKeyboard(formRef, compact ? active : null, keyboard)
+
+  const onFocus = (event: FocusEvent<HTMLFormElement>) => {
+    const target: unknown = event.target
+    const name = target instanceof HTMLElement ? (target.getAttribute('name') ?? '') : ''
+    setActive(LIT_FIELDS.has(name) ? name : null)
+  }
+
+  const onBlur = (event: FocusEvent<HTMLFormElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setActive(null)
+  }
+
+  const lit = (name: string) =>
+    compact ? { 'data-cw-light': '', 'data-cw-blur': active === name ? '' : undefined } : {}
 
   useEffect(() => {
     if (!state) return
@@ -119,26 +164,29 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors, interest 
       className={styles.form}
       action={formAction}
       onSubmit={onSubmit}
+      onFocus={onFocus}
+      onBlur={onBlur}
       noValidate={hydrated}
       aria-label={labels.formLabel}
       data-cw-contact-form=""
+      data-cw-keyboard={compact && keyboard > 0 ? 'open' : undefined}
     >
       <p className={styles.note}>{labels.requiredNote}</p>
 
-      <FormField label={<>{labels.name}<Required /></>} error={errorFor('name')}>
-        <input name="name" type="text" autoComplete="name" required maxLength={LIMITS.name} />
+      <FormField floating label={<>{labels.name}<Required /></>} error={errorFor('name')}>
+        <input name="name" type="text" autoComplete="name" required maxLength={LIMITS.name} {...lit('name')} />
       </FormField>
 
-      <FormField label={<>{labels.email}<Required /></>} error={errorFor('email')}>
-        <input name="email" type="email" inputMode="email" autoComplete="email" required maxLength={LIMITS.email} />
+      <FormField floating label={<>{labels.email}<Required /></>} error={errorFor('email')}>
+        <input name="email" type="email" inputMode="email" autoComplete="email" required maxLength={LIMITS.email} {...lit('email')} />
       </FormField>
 
-      <FormField label={labels.phone} hint={labels.phoneHint} error={errorFor('phone')}>
-        <input name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={20} pattern={PHONE_INPUT_PATTERN} />
+      <FormField floating label={labels.phone} hint={labels.phoneHint} error={errorFor('phone')}>
+        <input name="phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={20} pattern={PHONE_INPUT_PATTERN} {...lit('phone')} />
       </FormField>
 
-      <FormField label={labels.interest.label} error={errorFor('interest')}>
-        <select name="interest" defaultValue={interest ?? ''} data-cw-interest="">
+      <FormField floating label={labels.interest.label} error={errorFor('interest')}>
+        <select name="interest" defaultValue={interest ?? ''} data-cw-interest="" {...lit('interest')}>
           <option value="">{labels.interest.none}</option>
           {labels.interest.options.map((option) => (
             <option key={option.value} value={option.value}>
@@ -148,8 +196,8 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors, interest 
         </select>
       </FormField>
 
-      <FormField label={<>{labels.message}<Required /></>} error={errorFor('message')}>
-        <textarea name="message" required rows={6} maxLength={LIMITS.message} />
+      <FormField floating label={<>{labels.message}<Required /></>} error={errorFor('message')}>
+        <textarea name="message" required rows={6} maxLength={LIMITS.message} {...lit('message')} />
       </FormField>
 
       <ConsentField labels={labels.consent} href={privacyHref} error={errorFor('consent')} />
@@ -163,7 +211,7 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors, interest 
       <input type="hidden" name={RENDERED_AT_FIELD} value={String(renderedAt)} />
 
       <div className={styles.actions}>
-        <Button type="submit" variant="solid" size="lg" disabled={pending} aria-disabled={pending}>
+        <Button type="submit" variant="solid" size="lg" disabled={pending} aria-disabled={pending} data-cw-contact-submit="">
           {pending ? labels.sending : labels.submit}
         </Button>
       </div>
