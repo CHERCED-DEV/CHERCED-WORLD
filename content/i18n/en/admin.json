@@ -92,5 +92,6 @@
   "admin.unavailable.text": "Couldn't reach the database. No data was lost; try again in a moment.",
   "admin.unavailable.retry": "Try again",
   "admin.field.consent": "Data consent",
-  "admin.consent.legacy": "Before the privacy policy"
+  "admin.consent.legacy": "Before the privacy policy",
+  "admin.field.interest": "Interested in"
 }

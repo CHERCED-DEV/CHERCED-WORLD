@@ -3,5 +3,6 @@
   "now.title": "Ahora trabajo en",
   "now.since": "Desde {date}",
   "now.caseStudy": "Ver caso de estudio",
-  "now.more": "Conoce mi trayectoria"
+  "now.more": "Conoce mi trayectoria",
+  "home.previousTitleLabel": "Antes decía:"
 }

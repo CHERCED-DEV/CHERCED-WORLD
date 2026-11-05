@@ -48,5 +48,12 @@
   "meta.blog.title": "Blog",
   "meta.blog.description": "Notas sobre desarrollo web, tecnología y el camino que me trajo hasta aquí.",
   "meta.catalog.title": "Catálogo de componentes del blog",
-  "meta.catalog.description": "Los elementos y componentes interactivos aprobados para escribir posts en CHERCED-WORLD."
+  "meta.catalog.description": "Los elementos y componentes interactivos aprobados para escribir posts en CHERCED-WORLD.",
+  "reactions.title": "¿Te sirvió? Reacciona con un clic",
+  "reactions.clap": "Aplausos",
+  "reactions.idea": "Me dio una idea",
+  "reactions.fire": "Me encantó",
+  "reactions.count": "{reaction}: {count}",
+  "reactions.rateLimited": "Reaccionaste varias veces seguidas. Intenta de nuevo en unos minutos.",
+  "reactions.unavailable": "Las reacciones no están disponibles en este momento."
 }

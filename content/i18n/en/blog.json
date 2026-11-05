@@ -48,5 +48,12 @@
   "meta.blog.title": "Blog",
   "meta.blog.description": "Notes on web development, technology and the path that got me here.",
   "meta.catalog.title": "Blog component catalog",
-  "meta.catalog.description": "The elements and approved interactive components for writing posts on CHERCED-WORLD."
+  "meta.catalog.description": "The elements and approved interactive components for writing posts on CHERCED-WORLD.",
+  "reactions.title": "Did it help? React with one click",
+  "reactions.clap": "Applause",
+  "reactions.idea": "Gave me an idea",
+  "reactions.fire": "Loved it",
+  "reactions.count": "{reaction}: {count}",
+  "reactions.rateLimited": "You reacted several times in a row. Try again in a few minutes.",
+  "reactions.unavailable": "Reactions aren't available right now."
 }

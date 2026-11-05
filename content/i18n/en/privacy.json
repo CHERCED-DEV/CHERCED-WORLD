@@ -2,7 +2,7 @@
   "privacy.title": "Privacy policy",
   "privacy.updatedAt": "Last updated: {date}",
   "privacy.technical.heading": "Technical data",
-  "privacy.technical.body": "To protect the forms from spam, I keep an encrypted fingerprint of your IP address for a few minutes, never the IP itself. Your browser only keeps your preferences (language and theme). I don't use analytics or tracking cookies.",
+  "privacy.technical.body": "To protect the forms and reactions from spam, I keep a hashed fingerprint of your IP address for a few minutes, never the IP itself. Reactions only store counts. Your browser only keeps your preferences (language, theme, keyboard shortcuts and the reactions you marked). I use no analytics or tracking cookies.",
   "privacy.contactCta": "Go to the contact form",
   "meta.privacy.title": "Privacy",
   "meta.privacy.description": "What data I collect on this site, what I use it for and how to ask to review or delete it."

@@ -92,5 +92,6 @@
   "admin.unavailable.text": "No se pudo conectar con la base de datos. Ningún dato se perdió; intenta de nuevo en un momento.",
   "admin.unavailable.retry": "Reintentar",
   "admin.field.consent": "Autorización de datos",
-  "admin.consent.legacy": "Anterior a la política de privacidad"
+  "admin.consent.legacy": "Anterior a la política de privacidad",
+  "admin.field.interest": "Le interesa"
 }

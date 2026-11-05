@@ -2,7 +2,7 @@
   "privacy.title": "Política de privacidad",
   "privacy.updatedAt": "Última actualización: {date}",
   "privacy.technical.heading": "Datos técnicos",
-  "privacy.technical.body": "Para proteger los formularios del spam guardo durante unos minutos una huella cifrada de tu dirección IP, nunca la IP en sí. En tu navegador solo quedan tus preferencias (idioma y tema). No uso analítica ni cookies de seguimiento.",
+  "privacy.technical.body": "Para proteger los formularios y las reacciones del spam guardo durante unos minutos una huella cifrada de tu dirección IP, nunca la IP en sí. Las reacciones solo guardan contadores. En tu navegador solo quedan tus preferencias (idioma, tema, atajos de teclado y las reacciones que marcaste). No uso analítica ni cookies de seguimiento.",
   "privacy.contactCta": "Ir al formulario de contacto",
   "meta.privacy.title": "Privacidad",
   "meta.privacy.description": "Qué datos recojo en este sitio, para qué los uso y cómo pedir su consulta o eliminación."

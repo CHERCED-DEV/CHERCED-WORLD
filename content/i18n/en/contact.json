@@ -6,7 +6,7 @@
   "contact.message": "Your message",
   "contact.submit": "Send",
   "contact.success.title": "Sent!",
-  "contact.success.text": "Thanks for reaching out. I'll get back to you soon.",
+  "contact.success.text": "Thanks for reaching out. I'll reply within 48 hours.",
   "contact.error.text": "Your message couldn't be sent. Nothing was lost, try again in a moment.",
   "contact.rateLimited": "You've sent several messages in a short time. Please try again in a few minutes.",
   "contact.error.title": "Not sent",
@@ -18,5 +18,15 @@
   "contact.formLabel": "Contact form",
   "contact.honeypot": "Leave this field empty",
   "meta.contact.title": "Contact me",
-  "meta.contact.description": "Let's talk: send me a message."
+  "meta.contact.description": "Write to me: I'll reply within 48 hours.",
+  "contact.interest": "What are you interested in?",
+  "contact.interest.none": "Choose an option (optional)",
+  "contact.interest.ai-harness": "AI assistants for your profession",
+  "contact.interest.software-factory": "Tailor-made software factories",
+  "contact.interest.process-optimization": "AI process optimization",
+  "contact.interest.architecture": "Architecture & modernization",
+  "contact.interest.product": "Product development",
+  "contact.interest.workshops": "Team workshops",
+  "contact.interest.other": "Something else",
+  "og.contact.line": "{location} · {timezone} · I reply within 48 h"
 }

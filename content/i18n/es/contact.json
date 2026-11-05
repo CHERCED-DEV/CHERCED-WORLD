@@ -6,7 +6,7 @@
   "contact.message": "Tu mensaje",
   "contact.submit": "Enviar",
   "contact.success.title": "¡Enviado!",
-  "contact.success.text": "Gracias por escribirme. Te respondo pronto.",
+  "contact.success.text": "Gracias por escribirme. Te respondo en menos de 48 horas.",
   "contact.error.text": "No se pudo enviar tu mensaje. No se perdió nada; intenta de nuevo en un momento.",
   "contact.rateLimited": "Enviaste varios mensajes en poco tiempo. Intenta de nuevo en unos minutos.",
   "contact.error.title": "No se envió",
@@ -18,5 +18,15 @@
   "contact.formLabel": "Formulario de contacto",
   "contact.honeypot": "Deja este campo vacío",
   "meta.contact.title": "Contáctame",
-  "meta.contact.description": "Hablemos: envíame un mensaje."
+  "meta.contact.description": "Escríbeme: te respondo en menos de 48 horas.",
+  "contact.interest": "¿Qué te interesa?",
+  "contact.interest.none": "Elige una opción (opcional)",
+  "contact.interest.ai-harness": "Asistentes de IA para tu profesión",
+  "contact.interest.software-factory": "Fábricas de software a la medida",
+  "contact.interest.process-optimization": "Optimización de procesos con IA",
+  "contact.interest.architecture": "Arquitectura y modernización",
+  "contact.interest.product": "Desarrollo de producto",
+  "contact.interest.workshops": "Talleres para equipos",
+  "contact.interest.other": "Otra cosa",
+  "og.contact.line": "{location} · {timezone} · Te respondo en menos de 48 h"
 }
