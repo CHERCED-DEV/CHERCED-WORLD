@@ -107,6 +107,12 @@ export async function tagLabel(lang: Locale, slug: string): Promise<string> {
   return slug
 }
 
+export async function tagSummary(lang: Locale, slug: string): Promise<{ summary: string; count: number }> {
+  const [blog, own, label] = await Promise.all([getDictionary(lang, 'blog'), ownPosts(lang), tagLabel(lang, slug)])
+  const count = postsWithTag(own, slug).length
+  return { summary: tagResultsText(blog, count, label), count }
+}
+
 async function baseView(lang: Locale) {
   const [blog, experience] = await Promise.all([getDictionary(lang, 'blog'), getDictionary(lang, 'experience')])
   const [cards, own] = await Promise.all([postCards(lang, blog), ownPosts(lang)])

@@ -7,7 +7,7 @@ vi.mock('@/content/posts/registry', async () => {
   return { postRegistry: registryFromDisk() }
 })
 
-const { blogIndexView, tagAlternates, tagIndexView, tagLangs, tagResultsText } = await import('@/components/blog/index/view')
+const { blogIndexView, tagAlternates, tagIndexView, tagLangs, tagResultsText, tagSummary } = await import('@/components/blog/index/view')
 const { ownPosts } = await import('@/lib/blog/source')
 
 const ids = (posts: readonly { id: string }[]) => posts.map((post) => post.id)
@@ -73,6 +73,7 @@ describe('páginas de etiqueta (T614, R-503)', () => {
     expect(view.groups).toEqual([])
     expect(view.tag).toMatchObject({ count: 0, label: 'carrera', summary: '0 posts tagged “carrera”' })
     expect(view.tag?.index).toEqual({ href: '/en/blog', label: 'See all posts' })
+    expect(await tagSummary('en', 'carrera')).toEqual({ count: 0, summary: view.tag?.summary })
   })
 
   it('normaliza la etiqueta visible al slug', async () => {

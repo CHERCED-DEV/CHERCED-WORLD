@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BlogIndex } from '@/components/blog/BlogIndex'
-import { tagAlternates, tagIndexView, tagLangs } from '@/components/blog/index/view'
+import { tagAlternates, tagIndexView, tagLangs, tagSummary } from '@/components/blog/index/view'
 import { BackgroundIntensity } from '@/components/motion'
 import { feedAlternates } from '@/lib/blog/feed'
 import { allTagSlugs } from '@/lib/blog/source'
@@ -36,8 +36,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   const resolved = await resolve(params)
   if (!resolved) return {}
   const { lang, slug } = resolved
-  const [view, blog, langs, previous] = await Promise.all([tagIndexView(lang, slug), getDictionary(lang, 'blog'), tagLangs(slug), parent])
-  const title = view.tag?.summary ?? t(blog, 'meta.blog.title')
+  const [{ summary: title }, blog, langs, previous] = await Promise.all([tagSummary(lang, slug), getDictionary(lang, 'blog'), tagLangs(slug), parent])
   const description = t(blog, 'meta.blog.description')
   return {
     title,
