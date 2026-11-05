@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
 
-const SHEET = 'dialog[data-cw-sheet]'
+const SHEET = 'dialog[data-cw-sheet]:has([data-cw-terminal])'
 
 function onlyIn(...names: string[]) {
   test.beforeEach(({}, testInfo) => {
