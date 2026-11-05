@@ -1,0 +1,113 @@
+@use 'breakpoints' as bp;
+
+.group {
+  max-width: 1080px;
+  margin: var(--cw-section-gap) auto 0;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--cw-space-3);
+  margin-bottom: var(--cw-space-6);
+  font-size: var(--cw-text-sm);
+  font-weight: 800;
+  letter-spacing: var(--cw-tracking-eyebrow);
+  line-height: 1;
+  text-transform: uppercase;
+
+  @include bp.up(md) {
+    gap: var(--cw-space-4);
+    font-size: var(--cw-text-md);
+  }
+
+  .line {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: var(--cw-space-5);
+  }
+}
+
+.label {
+  flex: none;
+}
+
+.year {
+  flex: none;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-display-sm);
+  font-weight: 300;
+  letter-spacing: var(--cw-tracking-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.live {
+  position: relative;
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--cw-graphic-accent);
+  box-shadow:
+    0 0 10px var(--cw-graphic-glow),
+    0 0 4px color-mix(in srgb, var(--cw-graphic-accent) 70%, transparent);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 1px solid var(--cw-graphic-accent);
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &::after {
+      animation: blog-live 2.8s var(--cw-ease) infinite;
+    }
+  }
+}
+
+@keyframes blog-live {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.6);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-7) var(--cw-space-6);
+
+  @include bp.up(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+
+  &[hidden] {
+    display: none;
+  }
+
+  @include bp.up(lg) {
+    &:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: min(100%, 520px);
+    }
+  }
+}

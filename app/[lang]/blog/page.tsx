@@ -1,10 +1,10 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BlogIndex } from '@/components/blog/BlogIndex'
-import { postCards } from '@/components/blog/posts'
+import { blogIndexView } from '@/components/blog/index/view'
 import { BackgroundIntensity } from '@/components/motion'
+import { feedAlternates } from '@/lib/blog/feed'
 import { blogPath } from '@/lib/blog/paths'
-import { getSite, pick } from '@/lib/content'
 import { alternates, isLocale, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   return {
     title,
     description,
-    alternates: alternates(blogPath(lang)),
+    alternates: { ...alternates(blogPath(lang)), types: feedAlternates(lang) },
     openGraph: {
       type: 'website',
       title,
@@ -36,23 +36,10 @@ export default async function BlogPage({ params }: Props) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
 
-  const blog = await getDictionary(lang, 'blog')
-  const posts = await postCards(lang, blog)
-  const intro = getSite().blog
-
   return (
     <>
       <BackgroundIntensity value="subtle" />
-      <BlogIndex
-        lang={lang}
-        posts={posts}
-        intro={{ title: pick(intro.title, lang), titleStrong: intro.titleStrong, welcome: pick(intro.welcome, lang) }}
-        labels={{
-          readMore: t(blog, 'post.readMore'),
-          originalLanguage: t(blog, 'post.originalLanguage'),
-          tags: t(blog, 'post.tags'),
-        }}
-      />
+      <BlogIndex {...await blogIndexView(lang)} />
     </>
   )
 }

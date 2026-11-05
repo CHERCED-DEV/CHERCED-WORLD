@@ -1,30 +1,40 @@
-@use 'breakpoints' as bp;
+@use 'glass' as *;
+@use 'layout';
+@use './blog' as blog;
 
 .page {
   padding-bottom: var(--cw-space-8);
 }
 
-.list {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--cw-space-7) var(--cw-space-6);
-  max-width: 1080px;
-  margin: 0 auto;
-
-  @include bp.up(lg) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.results {
+  scroll-margin-top: calc(var(--cw-header-h) + var(--cw-space-4));
 }
 
-.item {
+.empty {
+  @include glass(subtle);
+  @include glass-grain;
+  @include glass-edge;
+  position: relative;
   display: flex;
   justify-content: center;
+  max-width: 620px;
+  margin: var(--cw-space-7) auto 0;
+  padding: var(--cw-space-6) var(--cw-space-5);
+}
 
-  @include bp.up(lg) {
-    &:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
-      justify-self: center;
-      width: min(100%, 520px);
-    }
+.emptyLink {
+  @include blog.side-bars;
+  min-height: 44px;
+  color: var(--cw-fg);
+  letter-spacing: var(--cw-tracking-label);
+  text-decoration: none;
+  transition: background-color var(--cw-duration-base) var(--cw-ease-out);
+
+  &:hover {
+    background: color-mix(in srgb, var(--cw-fg) 10%, transparent);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
   }
 }
