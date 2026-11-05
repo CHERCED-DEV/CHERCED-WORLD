@@ -10,6 +10,7 @@ import { ToastProvider } from '@/components/ui/Toast'
 import { getSite } from '@/lib/content'
 import { isLocale, locales, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
+import { jsonLdScript, personJsonLd } from '@/lib/seo/person'
 import { getSiteUrl } from '@/lib/site-url'
 import { montserrat } from '@/styles/fonts'
 
@@ -60,6 +61,11 @@ export default async function RootLayout({ children, params }: LayoutProps) {
     <html lang={lang} className={montserrat.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          type="application/ld+json"
+          data-cw-person=""
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(personJsonLd(lang)) }}
+        />
       </head>
       <body>
         <a className="cw-skip-link" href="#main">
