@@ -1,5 +1,7 @@
 @use 'tokens';
 @use 'layout';
+@use 'glass';
+@use 'breakpoints' as bp;
 
 *,
 *::before,
@@ -186,6 +188,26 @@ button {
 
 .cw-icon-img {
   filter: var(--cw-icon-filter);
+}
+
+@include glass.glass-budget;
+
+[data-cw-sweep] {
+  @include glass.glass-sweep;
+}
+
+@each $level in glass.$float-levels {
+  [data-cw-float='#{$level}'] {
+    @include glass.glass-float($level);
+  }
+}
+
+@include layout.dock-space;
+
+@include bp.down(md) {
+  :root:has(dialog[data-cw-sheet][open]) {
+    overflow: hidden;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

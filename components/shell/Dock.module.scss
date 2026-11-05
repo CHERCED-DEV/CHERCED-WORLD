@@ -1,0 +1,110 @@
+@use 'glass' as *;
+@use 'breakpoints' as bp;
+
+.dock {
+  display: contents;
+}
+
+.assistant {
+  display: none !important;
+}
+
+@include bp.down(md) {
+  :global(:root[data-js]) .dock {
+    --_cw-dock-hide: 0px;
+    position: fixed;
+    right: 0;
+    bottom: calc(var(--cw-dock-offset) + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    z-index: var(--cw-z-dock);
+    display: flex;
+    align-items: center;
+    gap: var(--cw-space-1);
+    width: fit-content;
+    margin-inline: auto;
+    padding: var(--cw-dock-pad);
+  }
+
+  :global(:root[data-js]) .dock::before {
+    @include glass(strong);
+    @include glass-grain;
+    @include glass-depth;
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 999px;
+  }
+
+  :global(:root[data-js]) .dock::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: var(--cw-glass-edge-width);
+    border-radius: 999px;
+    background:
+      radial-gradient(60% 140% at 50% 0%, var(--cw-glass-spot-accent), transparent 70%),
+      linear-gradient(180deg, var(--cw-glass-edge-highlight), var(--cw-glass-edge-soft) 35%, var(--cw-glass-edge-shade) 70%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+
+  :global(:root[data-js]) .dock::before,
+  :global(:root[data-js]) .dock::after,
+  :global(:root[data-js]) .dock > :not([data-cw-mailbox]) {
+    translate: 0 var(--_cw-dock-hide);
+  }
+
+  :global(:root[data-js]) .dock::before,
+  :global(:root[data-js]) .dock::after {
+    transition: translate var(--cw-dock-duration) var(--cw-ease-out);
+  }
+
+  :global(:root[data-js]) .dock > :not([data-cw-mailbox]) {
+    width: var(--cw-dock-button);
+    min-width: var(--cw-dock-button);
+    height: var(--cw-dock-button);
+    min-height: var(--cw-dock-button);
+    padding: 0;
+    justify-content: center;
+    transition:
+      translate var(--cw-dock-duration) var(--cw-ease-out),
+      border-color var(--cw-duration-fast) var(--cw-ease),
+      box-shadow var(--cw-duration-base) var(--cw-ease-out),
+      transform var(--cw-duration-fast) var(--cw-ease-out);
+  }
+
+  :global(:root[data-js]) .dock .assistant {
+    display: inline-grid !important;
+  }
+
+  :global(:root[data-js]) .dock > [data-cw-mailbox] {
+    position: fixed;
+    top: calc((var(--cw-header-h) - 44px) / 2);
+    right: max(14px, env(safe-area-inset-right, 0px));
+    pointer-events: auto;
+
+    @media (max-width: 359.98px) {
+      top: calc((var(--cw-header-h) - 40px) / 2);
+    }
+  }
+
+  :global(:root[data-js][data-cw-dock='hidden']) .dock:not(:focus-within),
+  :global(:root[data-js][data-intro='pending']) .dock,
+  :global(:root[data-js]:has(dialog[open])) .dock {
+    --_cw-dock-hide: calc(var(--cw-dock-h) + 2 * var(--cw-dock-offset) + env(safe-area-inset-bottom, 0px));
+  }
+
+  :global(:root[data-js][data-cw-dock='hidden']) .dock:not(:focus-within),
+  :global(:root[data-js][data-intro='pending']) .dock,
+  :global(:root[data-js]:has(dialog[open])) .dock {
+    pointer-events: none;
+  }
+}

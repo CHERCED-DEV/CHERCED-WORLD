@@ -1,13 +1,18 @@
 export {
   GlassSurface,
   glassLayerClassName,
+  glassMotionAttributes,
+  type GlassFloatLevel,
   type GlassLayers,
+  type GlassMotion,
   type GlassSurfaceProps,
   type GlassTag,
   type GlassVariant,
 } from './GlassSurface'
+export { Sweep } from './Sweep'
 export { Button, buttonClassName, type ButtonProps, type ButtonSize, type ButtonVariant } from './Button'
-export { Dialog, type DialogProps } from './Dialog'
+export { Dialog, MOBILE_SHEET_QUERY, type DialogProps } from './Dialog'
+export { BottomSheet, type BottomSheetNavLabels, type BottomSheetProps } from './BottomSheet'
 export { Separator, type SeparatorTone } from './Separator'
 export { VisuallyHidden } from './VisuallyHidden'
 export { Icon, type IconName, type IconProps } from './Icon'
