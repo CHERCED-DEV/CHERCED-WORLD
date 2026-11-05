@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { SERVICE_IDS } from '@/content/types'
+import type { MessageInterest, ReactionKind, ReactionOp } from '@/lib/data/types'
 
 export const LIMITS = {
   name: 60,
@@ -53,12 +55,42 @@ const consent = z.preprocess(
   z.literal(true, { error: ERROR_KEYS.consent }),
 )
 
+export const INTEREST_ERROR = 'form.interest.invalid'
+
+export const MESSAGE_INTERESTS = [...SERVICE_IDS, 'other'] as const satisfies readonly MessageInterest[]
+
+export function isMessageInterest(value: unknown): value is MessageInterest {
+  return typeof value === 'string' && (MESSAGE_INTERESTS as readonly string[]).includes(value)
+}
+
+const interest = z.preprocess(
+  (value) => (value === '' || value === null ? null : value),
+  z.enum(MESSAGE_INTERESTS, { error: INTEREST_ERROR }).nullable().optional(),
+)
+
 export const contactSchema = z.object({
   name: requiredText(LIMITS.name),
   email,
   phone,
   message: requiredText(LIMITS.message),
+  interest,
   consent,
+})
+
+export const REACTION_KINDS = ['clap', 'idea', 'fire'] as const satisfies readonly ReactionKind[]
+
+export const REACTION_OPS = ['add', 'remove'] as const satisfies readonly ReactionOp[]
+
+export const POST_ID_PATTERN = /^[a-z0-9-]{1,64}$/
+
+export function isReactionKind(value: unknown): value is ReactionKind {
+  return typeof value === 'string' && (REACTION_KINDS as readonly string[]).includes(value)
+}
+
+export const reactionSchema = z.object({
+  postId: z.string().regex(POST_ID_PATTERN),
+  kind: z.enum(REACTION_KINDS),
+  op: z.enum(REACTION_OPS),
 })
 
 export const commentSchema = z.object({
@@ -102,6 +134,7 @@ export type ContactInput = z.infer<typeof contactSchema>
 export type CommentInput = z.infer<typeof commentSchema>
 export type SetupInput = z.infer<typeof setupSchema>
 export type ReplyInput = z.infer<typeof replySchema>
+export type ReactionInput = z.infer<typeof reactionSchema>
 
 export type FieldErrors = Record<string, ErrorKey | string>
 

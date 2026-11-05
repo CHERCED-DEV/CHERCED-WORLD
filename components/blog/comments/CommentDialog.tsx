@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useId, useState } from 'react'
+import type { ConsentLabels } from '@/components/contact/ConsentField'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import type { Locale } from '@/lib/i18n'
@@ -15,9 +16,10 @@ export type CommentDialogProps = {
   lang: Locale
   privacyHref: string
   labels: CommentFormLabels
+  consent?: ConsentLabels
 }
 
-export function CommentDialog({ action, postId, lang, privacyHref, labels }: CommentDialogProps) {
+export function CommentDialog({ action, postId, lang, privacyHref, labels, consent }: CommentDialogProps) {
   const titleId = useId()
   const [open, setOpen] = useState(false)
   const [renderedAt, setRenderedAt] = useState<number | null>(null)
@@ -63,6 +65,7 @@ export function CommentDialog({ action, postId, lang, privacyHref, labels }: Com
           privacyHref={privacyHref}
           renderedAt={renderedAt}
           labels={labels}
+          consent={consent}
           onSuccess={markDone}
           onClose={requestClose}
         />

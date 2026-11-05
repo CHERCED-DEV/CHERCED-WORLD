@@ -26,8 +26,8 @@ export async function submitContact(_prev: ActionResult | null, formData: FormDa
     const limit = await hitRateLimit(repos.rateLimits, 'contact', await requestIpHash(), now)
     if (!limit.allowed) return fail('rate_limited', { retryAfterMs: limit.retryAfterMs })
 
-    const { name, email, phone, message } = parsed.data
-    await repos.messages.create({ name, email, phone, message, consentAt: now })
+    const { name, email, phone, message, interest } = parsed.data
+    await repos.messages.create({ name, email, phone, message, interest: interest ?? null, consentAt: now })
     return ok()
   } catch (error) {
     logServerError('contact.submit', error)

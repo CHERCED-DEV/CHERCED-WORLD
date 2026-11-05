@@ -1,3 +1,4 @@
+import type { ServiceId } from '@/content/types'
 import type { Locale } from '@/lib/i18n/config'
 
 export type MessageStatus = 'unread' | 'read' | 'archived'
@@ -6,11 +7,14 @@ export type CommentStatus = 'pending' | 'approved' | 'rejected'
 
 export type MessageSort = 'newest' | 'oldest' | 'name'
 
+export type MessageInterest = ServiceId | 'other'
+
 export type NewMessage = {
   name: string
   email: string
   phone: string | null
   message: string
+  interest?: MessageInterest | null
   consentAt: Date
 }
 
@@ -20,6 +24,7 @@ export type MessageRecord = {
   email: string
   phone: string | number | null
   message: string
+  interest: MessageInterest | null
   status: MessageStatus
   consentAt: Date | null
   createdAt: Date
@@ -82,6 +87,16 @@ export type RateLimitRule = { limit: number; windowMs: number; blockMs?: number 
 
 export type RateLimitResult = { allowed: boolean; retryAfterMs: number }
 
+export type ReactionKind = 'clap' | 'idea' | 'fire'
+
+export type ReactionOp = 'add' | 'remove'
+
+export type ReactionCounts = Record<ReactionKind, number>
+
+export function emptyReactionCounts(): ReactionCounts {
+  return { clap: 0, idea: 0, fire: 0 }
+}
+
 export const SESSION_IDLE_MS = 12 * 60 * 60 * 1000
 
 export const MESSAGE_TRANSITIONS: Record<MessageStatus, readonly MessageStatus[]> = {
@@ -138,11 +153,17 @@ export interface RateLimitRepo {
   reset(key: string): Promise<void>
 }
 
+export interface ReactionRepo {
+  counts(postId: string): Promise<ReactionCounts>
+  apply(postId: string, kind: ReactionKind, op: ReactionOp): Promise<ReactionCounts>
+}
+
 export interface Repos {
   messages: MessageRepo
   comments: CommentRepo
   admin: AdminRepo
   rateLimits: RateLimitRepo
+  reactions: ReactionRepo
 }
 
 export type RepoFactory = () => Repos

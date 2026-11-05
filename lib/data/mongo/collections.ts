@@ -9,6 +9,7 @@ export const COLLECTIONS = {
   setupCodes: 'setup_codes',
   sessions: 'admin_sessions',
   rateLimits: 'rate_limits',
+  reactions: 'post_reactions',
 } as const
 
 export const CREDENTIAL_ID = 'admin'
@@ -21,6 +22,7 @@ export type MessageDoc = {
   email?: unknown
   phone?: unknown
   message?: unknown
+  interest?: unknown
   status?: MessageStatus | unknown
   consentAt?: unknown
   createdAt?: unknown
@@ -63,6 +65,14 @@ export type RateLimitDoc = {
   expiresAt: Date
 }
 
+export type ReactionDoc = {
+  _id: string
+  clap?: number
+  idea?: number
+  fire?: number
+  updatedAt?: unknown
+}
+
 export type DbProvider = () => Promise<Db>
 
 export async function messagesCollection(db: DbProvider): Promise<Collection<MessageDoc>> {
@@ -87,4 +97,8 @@ export async function sessionsCollection(db: DbProvider): Promise<Collection<Ses
 
 export async function rateLimitsCollection(db: DbProvider): Promise<Collection<RateLimitDoc>> {
   return (await db()).collection<RateLimitDoc>(COLLECTIONS.rateLimits)
+}
+
+export async function reactionsCollection(db: DbProvider): Promise<Collection<ReactionDoc>> {
+  return (await db()).collection<ReactionDoc>(COLLECTIONS.reactions)
 }

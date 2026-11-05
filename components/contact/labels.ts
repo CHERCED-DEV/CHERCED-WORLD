@@ -1,17 +1,12 @@
 import 'server-only'
 import { t, type Dictionary } from '@/lib/i18n'
+import { INTEREST_ERROR, MESSAGE_INTERESTS } from '@/lib/validation'
 import type { ConsentLabels } from './ConsentField'
-import type { ContactLabels } from './ContactForm'
+import type { ContactLabels, InterestLabels } from './ContactForm'
 import { FALLBACK_ERROR, FORM_ERROR_KEYS } from './fieldErrors'
 
-const CONSENT_MARKER = '{privacyPolicy}'
-
 export function consentLabels(common: Dictionary, newTab: string): ConsentLabels {
-  const template = t(common, 'privacy.consent')
-  const index = template.indexOf(CONSENT_MARKER)
-  const before = index === -1 ? `${template} ` : template.slice(0, index)
-  const after = index === -1 ? '' : template.slice(index + CONSENT_MARKER.length)
-  return { before, link: t(common, 'privacy.policyLink'), after, newTab }
+  return { text: t(common, 'privacy.consent'), readPolicy: t(common, 'privacy.readPolicy'), newTab }
 }
 
 export function formErrorMessages(common: Dictionary, extra: Record<string, string> = {}): Dictionary {
@@ -19,6 +14,18 @@ export function formErrorMessages(common: Dictionary, extra: Record<string, stri
   for (const key of FORM_ERROR_KEYS) messages[key] = t(common, key)
   messages[FALLBACK_ERROR] ??= t(common, 'form.required')
   return messages
+}
+
+export function contactErrorMessages(common: Dictionary, contact: Dictionary): Dictionary {
+  return formErrorMessages(common, { [INTEREST_ERROR]: t(contact, 'contact.validation') })
+}
+
+export function interestLabels(contact: Dictionary): InterestLabels {
+  return {
+    label: t(contact, 'contact.interest'),
+    none: t(contact, 'contact.interest.none'),
+    options: MESSAGE_INTERESTS.map((value) => ({ value, label: t(contact, `contact.interest.${value}`) })),
+  }
 }
 
 export function contactLabels(common: Dictionary, contact: Dictionary): ContactLabels {
@@ -29,6 +36,7 @@ export function contactLabels(common: Dictionary, contact: Dictionary): ContactL
     phone: t(contact, 'contact.phone'),
     phoneHint: t(contact, 'contact.phoneHint'),
     message: t(contact, 'contact.message'),
+    interest: interestLabels(contact),
     submit: t(contact, 'contact.submit'),
     sending: t(contact, 'contact.sending'),
     requiredNote: t(contact, 'contact.requiredNote'),
@@ -40,6 +48,7 @@ export function contactLabels(common: Dictionary, contact: Dictionary): ContactL
     validation: t(contact, 'contact.validation'),
     consentRequired: t(common, 'privacy.required'),
     honeypot: t(contact, 'contact.honeypot'),
+    newTab: t(contact, 'contact.newTab'),
     consent: consentLabels(common, t(contact, 'contact.newTab')),
   }
 }

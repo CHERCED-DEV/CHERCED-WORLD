@@ -65,7 +65,7 @@ test.describe('contacto con JavaScript', () => {
     await waitMinimumFill(page, loadedAt)
     await page.locator('[data-cw-contact-form]').getByRole('button', sendButton).click()
 
-    await expect(page.getByRole('status').filter({ hasText: 'Gracias por escribirme. Te respondo pronto.' })).toBeVisible()
+    await expect(page.getByRole('status').filter({ hasText: 'Gracias por escribirme. Te respondo en menos de 48 horas.' })).toBeVisible()
     expect(bodies.join('')).toContain('{"ok":true')
     const form = page.locator('[data-cw-contact-form]')
     await expect(form.getByLabel('Tu nombre')).toHaveValue('')
@@ -126,7 +126,7 @@ test.describe('contacto sin JavaScript', () => {
     await fillContact(page, visitor(uniqueToken()))
     await waitMinimumFill(page, loadedAt)
     await page.locator('[data-cw-contact-form]').getByRole('button', sendButton).click()
-    await expect(page.locator('[data-cw-contact-status="ok"]')).toHaveText('Gracias por escribirme. Te respondo pronto.')
+    await expect(page.locator('[data-cw-contact-status="ok"]')).toHaveText('Gracias por escribirme. Te respondo en menos de 48 horas.')
   })
 
   test('sin la casilla el navegador no deja enviar y no se pierde nada', async ({ page }) => {

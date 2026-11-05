@@ -55,6 +55,7 @@ describe('valores por defecto de los documentos 2023', () => {
       email: 'v2023@example.com',
       phone: 3001234567,
       message: 'Hola',
+      interest: null,
       status: 'read',
       consentAt: null,
       createdAt: new Date('2023-05-21T10:00:00Z'),

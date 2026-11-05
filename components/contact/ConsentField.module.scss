@@ -1,0 +1,19 @@
+.consent {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--cw-space-5);
+}
+
+.consent > .field {
+  margin-bottom: var(--cw-space-2);
+}
+
+.policy {
+  padding-left: calc(24px + var(--cw-space-3));
+  font-size: var(--cw-text-sm);
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}

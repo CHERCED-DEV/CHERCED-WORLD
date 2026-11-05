@@ -1,14 +1,19 @@
 import 'server-only'
 import { ObjectId } from 'mongodb'
 import { isLocale } from '@/lib/i18n/config'
-import type {
-  AuthorReply,
-  CommentRecord,
-  CommentStatus,
-  MessageRecord,
-  MessageStatus,
-  PublicComment,
+import {
+  emptyReactionCounts,
+  type AuthorReply,
+  type CommentRecord,
+  type CommentStatus,
+  type MessageInterest,
+  type MessageRecord,
+  type MessageStatus,
+  type PublicComment,
+  type ReactionCounts,
+  type ReactionKind,
 } from '@/lib/data/types'
+import { isMessageInterest } from '@/lib/validation'
 import type { CommentDoc, MessageDoc } from './collections'
 
 export const MESSAGE_STATUSES: readonly MessageStatus[] = ['unread', 'read', 'archived']
@@ -74,6 +79,7 @@ export function toMessageRecord(doc: MessageDoc): MessageRecord {
     email: text(doc.email),
     phone: phoneOf(doc.phone),
     message: text(doc.message),
+    interest: interestOf(doc.interest),
     status: messageStatusOf(doc.status),
     consentAt: validDate(doc.consentAt) ? new Date(doc.consentAt as Date) : null,
     ...timestamps(doc),
@@ -93,6 +99,21 @@ export function toCommentRecord(doc: CommentDoc): CommentRecord {
     authorReply: replyOf(doc.authorReply),
     ...timestamps(doc),
   }
+}
+
+export function interestOf(value: unknown): MessageInterest | null {
+  return isMessageInterest(value) ? value : null
+}
+
+function countOf(value: unknown): number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value > 0 ? value : 0
+}
+
+export function toReactionCounts(doc: Partial<Record<ReactionKind, unknown>> | null | undefined): ReactionCounts {
+  const counts = emptyReactionCounts()
+  if (!doc) return counts
+  for (const kind of Object.keys(counts) as ReactionKind[]) counts[kind] = countOf(doc[kind])
+  return counts
 }
 
 export function toPublicComment(doc: Pick<CommentDoc, '_id' | 'userName' | 'comment' | 'authorReply' | 'createdAt' | 'date'>): PublicComment {
