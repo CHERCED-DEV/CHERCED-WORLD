@@ -13,6 +13,7 @@ import { t } from '@/lib/i18n/translate'
 import { loadSearchIndex } from '@/lib/search/client'
 import type { SearchDoc } from '@/lib/search/types'
 import styles from './CommandPalette.module.scss'
+import { useSheetKeyboard } from './sheet-keyboard'
 import type { ExperienceLabels } from './labels'
 import {
   buildCommands,
@@ -56,7 +57,14 @@ export function CommandPalette(props: CommandPaletteProps) {
   const titleId = useId()
   const hintId = useId()
   return (
-    <Dialog open={props.open} onClose={props.onClose} labelledBy={titleId} describedBy={hintId} className={styles.palette}>
+    <Dialog
+      open={props.open}
+      onClose={props.onClose}
+      labelledBy={titleId}
+      describedBy={hintId}
+      className={styles.palette}
+      mobileSheet
+    >
       <PaletteBody key={props.session} {...props} titleId={titleId} hintId={hintId} />
     </Dialog>
   )
@@ -84,6 +92,8 @@ function PaletteBody({
   const pathname = usePathname()
   const toast = useToast()
   const inputRef = useRef<HTMLInputElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
+  useSheetKeyboard(bodyRef)
   const listId = useId()
   const optionPrefix = useId()
   const [query, setQuery] = useState('')
@@ -213,7 +223,7 @@ function PaletteBody({
         : t(labels, 'palette.results', { count: flat.length })
 
   return (
-    <div className={styles.body}>
+    <div ref={bodyRef} className={styles.body} data-cw-palette-body="">
       <h2 id={titleId} className="cw-visually-hidden">
         {t(labels, 'palette.title')}
       </h2>
