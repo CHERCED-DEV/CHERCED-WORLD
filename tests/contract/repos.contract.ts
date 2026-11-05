@@ -61,6 +61,30 @@ export function runRepoContract(name: string, options: RepoContractOptions): voi
         expect(created.phone).toBeNull()
       })
 
+      it('guarda el servicio que interesa y lo devuelve en la lista y en los cambios (A-401)', async () => {
+        const since = new Date(Date.now() - 1000)
+        const chosen = await repos.messages.create(message({ name: 'Con interés', interest: 'ai-harness' }))
+        const other = await repos.messages.create(message({ name: 'Otra cosa', interest: 'other' }))
+        expect(chosen.interest).toBe('ai-harness')
+        expect(other.interest).toBe('other')
+        const listed = await repos.messages.list({ sort: 'name' })
+        expect(listed.map((m) => [m.name, m.interest])).toEqual([
+          ['Con interés', 'ai-harness'],
+          ['Otra cosa', 'other'],
+        ])
+        expect((await repos.messages.changedSince(since)).map((m) => m.interest).sort()).toEqual(['ai-harness', 'other'])
+      })
+
+      it('un mensaje sin servicio, o con null, se guarda y se lee con interest null (A-401)', async () => {
+        const missing = await repos.messages.create(message())
+        const empty = await repos.messages.create(message({ interest: null }))
+        expect(missing.interest).toBeNull()
+        expect(empty.interest).toBeNull()
+        const listed = await repos.messages.list({ sort: 'newest' })
+        expect(listed.map((m) => m.interest)).toEqual([null, null])
+        expect(Object.keys(listed[0] ?? {})).toContain('interest')
+      })
+
       it('ordena por más nuevos, más viejos y nombre, y filtra por estado', async () => {
         const first = await repos.messages.create(message({ name: 'Carla' }))
         await pause()
@@ -264,6 +288,55 @@ export function runRepoContract(name: string, options: RepoContractOptions): voi
         expect((await repos.rateLimits.hit('a', one, at(1))).allowed).toBe(false)
         await repos.rateLimits.reset('a')
         expect((await repos.rateLimits.hit('a', one, at(2))).allowed).toBe(true)
+      })
+    })
+
+    describe('reactions (A-403)', () => {
+      const zero = { clap: 0, idea: 0, fire: 0 }
+
+      it('un post sin reacciones cuenta cero en los tres tipos', async () => {
+        expect(await repos.reactions.counts('post1')).toEqual(zero)
+      })
+
+      it('suma y resta de a uno por tipo y devuelve los contadores después del cambio', async () => {
+        expect(await repos.reactions.apply('post1', 'clap', 'add')).toEqual({ ...zero, clap: 1 })
+        expect(await repos.reactions.apply('post1', 'clap', 'add')).toEqual({ ...zero, clap: 2 })
+        expect(await repos.reactions.apply('post1', 'fire', 'add')).toEqual({ ...zero, clap: 2, fire: 1 })
+        expect(await repos.reactions.apply('post1', 'clap', 'remove')).toEqual({ ...zero, clap: 1, fire: 1 })
+        expect(await repos.reactions.counts('post1')).toEqual({ ...zero, clap: 1, fire: 1 })
+      })
+
+      it('quitar nunca baja de cero, ni en un post sin documento', async () => {
+        expect(await repos.reactions.apply('post2', 'idea', 'remove')).toEqual(zero)
+        await repos.reactions.apply('post2', 'idea', 'add')
+        expect(await repos.reactions.apply('post2', 'idea', 'remove')).toEqual(zero)
+        expect(await repos.reactions.apply('post2', 'idea', 'remove')).toEqual(zero)
+        expect(await repos.reactions.counts('post2')).toEqual(zero)
+      })
+
+      it('separa los contadores por post', async () => {
+        await repos.reactions.apply('post1', 'idea', 'add')
+        await repos.reactions.apply('post3', 'idea', 'add')
+        await repos.reactions.apply('post3', 'idea', 'add')
+        expect((await repos.reactions.counts('post1')).idea).toBe(1)
+        expect((await repos.reactions.counts('post3')).idea).toBe(2)
+      })
+
+      it('las sumas concurrentes no se pierden', async () => {
+        await Promise.all(Array.from({ length: 8 }, () => repos.reactions.apply('post4', 'fire', 'add')))
+        expect((await repos.reactions.counts('post4')).fire).toBe(8)
+      })
+
+      it('solo devuelve contadores, sin otros campos', async () => {
+        const counts = await repos.reactions.apply('post5', 'clap', 'add')
+        expect(Object.keys(counts).sort()).toEqual(['clap', 'fire', 'idea'])
+        expect(Object.keys(await repos.reactions.counts('post5')).sort()).toEqual(['clap', 'fire', 'idea'])
+      })
+
+      it('no expone su estado interno', async () => {
+        const counts = await repos.reactions.apply('post1', 'clap', 'add')
+        counts.clap = 99
+        expect((await repos.reactions.counts('post1')).clap).toBe(1)
       })
     })
   })

@@ -25,6 +25,7 @@ export function createMemoryMessageRepo(): MessageRepo {
         email: input.email,
         phone: input.phone,
         message: input.message,
+        interest: input.interest ?? null,
         status: 'unread',
         consentAt: input.consentAt,
         createdAt: now,

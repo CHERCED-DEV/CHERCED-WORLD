@@ -7,14 +7,27 @@ import type * as Admin from '@/lib/actions/admin'
 import type * as Auth from '@/lib/actions/auth'
 import type * as Comments from '@/lib/actions/comments'
 import type * as Contact from '@/lib/actions/contact'
+import type * as Reactions from '@/lib/actions/reactions'
 import type { ActionResult } from '@/lib/actions/result'
 import type * as Data from '@/lib/data'
-import type { CommentStatus, MessageStatus, PublicComment, Repos } from '@/lib/data/types'
+import type {
+  CommentStatus,
+  MessageInterest,
+  MessageRecord,
+  MessageStatus,
+  NewMessage,
+  PublicComment,
+  ReactionCounts,
+  ReactionKind,
+  ReactionOp,
+  ReactionRepo,
+  Repos,
+} from '@/lib/data/types'
 import type * as Events from '@/lib/events'
 import type * as I18n from '@/lib/i18n'
 import type * as I18nServer from '@/lib/i18n/server'
 import type * as Validation from '@/lib/validation'
-import type { CapsuleEntry, Locale, Localized, PostMeta, Project, SiteContent } from '@/content/types'
+import type { CapsuleEntry, Locale, Localized, PostMeta, Project, ServiceId, SiteContent } from '@/content/types'
 
 type Expect<T extends true> = T
 type Is<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false
@@ -71,7 +84,20 @@ export type _DataContract = [
   Expect<Fits<typeof Data.getRepos, () => Repos>>,
   Expect<Fits<typeof Data.registerRepoFactory, (factory: () => Repos) => void>>,
   Expect<Is<keyof PublicComment, 'id' | 'userName' | 'comment' | 'createdAt' | 'authorReply'>>,
+  Expect<Is<MessageInterest, ServiceId | 'other'>>,
+  Expect<Is<MessageRecord['interest'], MessageInterest | null>>,
+  Expect<Is<NewMessage['interest'], MessageInterest | null | undefined>>,
+  Expect<Is<ReactionKind, 'clap' | 'idea' | 'fire'>>,
+  Expect<Is<ReactionOp, 'add' | 'remove'>>,
+  Expect<Is<ReactionCounts, Record<'clap' | 'idea' | 'fire', number>>>,
+  Expect<Is<Repos['reactions'], ReactionRepo>>,
+  Expect<Fits<ReactionRepo['counts'], (postId: string) => Promise<ReactionCounts>>>,
+  Expect<Fits<ReactionRepo['apply'], (postId: string, kind: ReactionKind, op: 'add' | 'remove') => Promise<ReactionCounts>>>,
 ]
+
+export type _ReactionsContract = Expect<
+  Fits<typeof Reactions.toggleReaction, (postId: string, kind: ReactionKind, op: ReactionOp) => Promise<ActionResult<{ counts: ReactionCounts }>>>
+>
 
 export type _I18nContract = [
   Expect<Is<I18n.Locale, 'es' | 'en'>>,
@@ -113,7 +139,12 @@ export type _EventsContract = [
 ]
 
 export type _ValidationContract = [
-  Expect<Fits<keyof Validation.ContactInput, 'name' | 'email' | 'phone' | 'message' | 'consent'>>,
+  Expect<Fits<keyof Validation.ContactInput, 'name' | 'email' | 'phone' | 'message' | 'interest' | 'consent'>>,
   Expect<Fits<keyof Validation.CommentInput, 'postId' | 'userName' | 'email' | 'comment' | 'consent'>>,
   Expect<Is<Validation.ContactInput['phone'], string | null>>,
+  Expect<Is<Validation.ContactInput['interest'], MessageInterest | null | undefined>>,
+  Expect<Is<(typeof Validation.MESSAGE_INTERESTS)[number], MessageInterest>>,
+  Expect<Is<(typeof Validation.REACTION_KINDS)[number], ReactionKind>>,
+  Expect<Is<(typeof Validation.REACTION_OPS)[number], ReactionOp>>,
+  Expect<Is<keyof Validation.ReactionInput, 'postId' | 'kind' | 'op'>>,
 ]
