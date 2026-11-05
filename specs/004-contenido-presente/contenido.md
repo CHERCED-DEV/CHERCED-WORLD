@@ -389,6 +389,26 @@ Nuevo valor del cuerpo de "Qué datos recojo" en `site.privacy.sections`:
 
 Salen `services.explore` y `services.cta`, que reemplaza `cta.title`. `services.contact` lo reemplaza `cta.button`.
 
+### §5b Sexto servicio: talleres para equipos (P-414, resuelta el 2026-11-04)
+
+Va con el mismo formato que los otros servicios, al final de la lista. El rango de precio espera a P-421.
+
+```ts
+{
+  id: 'workshops',
+  title: { es: 'TALLERES PARA EQUIPOS', en: 'TEAM WORKSHOPS' },
+  summary: {
+    es: 'Entreno a tu equipo para trabajar AI-first y con Spec-Driven Development: escribir la especificación antes del código, dirigir agentes de IA en paralelo sin que se pisen y revisar lo que entregan.',
+    en: 'I train your team to work AI-first and with Spec-Driven Development: writing the spec before the code, running AI agents in parallel without collisions and reviewing what they deliver.',
+  },
+  outcomes: [
+    { es: 'Tu equipo escribe specs que un agente puede ejecutar.', en: 'Your team writes specs an agent can execute.' },
+    { es: 'Un flujo de trabajo con agentes, revisión humana y decisiones escritas.', en: 'A workflow with agents, human review and written decisions.' },
+    { es: 'Práctica sobre un caso de tu propio negocio.', en: 'Hands-on practice on a case from your own business.' },
+  ],
+}
+```
+
 ## §6 "Quién soy"
 
 ```ts
@@ -1116,16 +1136,46 @@ y `cherced-world.vercel.app` abajo. El texto alternativo es "{título}: {línea}
 
 La 005 usa la misma plantilla para los posts.
 
-## §24 `/now` (FR-490) **[P-404]**
+## §24 `/now` (FR-490) (P-404 resuelta el 2026-11-04)
 
-Solo la estructura. El contenido lo da el autor.
+El contenido sale de lo que contó el autor y de su perfil. La fecha de HYROX São Paulo no se publica hasta que
+el autor la confirme. `updatedAt` se fija el día en que se publique.
 
 ```ts
 export const now = {
   updatedAt: 'AAAA-MM-DD',
-  building: [],
-  learning: [],
-  preparing: [],
+  building: [
+    {
+      es: 'Synergos, rumbo a producción: un solo núcleo para muchos negocios.',
+      en: 'Synergos, on its way to production: one core for many businesses.',
+    },
+    {
+      es: 'El AI Lab de este sitio: experimentos de IA que puedes probar, no solo leer.',
+      en: "This site's AI Lab: AI experiments you can try, not just read about.",
+    },
+    {
+      es: 'Mi forma de dirigir agentes de IA en paralelo, con specs y decisiones escritas.',
+      en: 'My way of running AI agents in parallel, with specs and written decisions.',
+    },
+  ],
+  learning: [
+    {
+      es: 'Azure AI Foundry, Semantic Kernel y RAG.',
+      en: 'Azure AI Foundry, Semantic Kernel and RAG.',
+    },
+  ],
+  preparing: [
+    {
+      es: 'HYROX São Paulo. Entreno CrossFit, trail y running, y subo nevados cuando puedo.',
+      en: 'HYROX São Paulo. I train CrossFit, trail and running, and climb snow-capped peaks when I can.',
+    },
+  ],
+  offKeyboard: [
+    {
+      es: 'Videojuegos, aunque el mejor videojuego es mi vida.',
+      en: 'Video games, though the best video game is my life.',
+    },
+  ],
 }
 ```
 
@@ -1134,9 +1184,10 @@ export const now = {
 | `nowPage.title` | Ahora | Now |
 | `nowPage.building` | Construyendo | Building |
 | `nowPage.learning` | Aprendiendo | Learning |
-| `nowPage.preparing` | Preparando | Preparing |
+| `nowPage.preparing` | Entrenando para | Training for |
+| `nowPage.offKeyboard` | Fuera del teclado | Off the keyboard |
 | `nowPage.updated` | Actualizado el {date} | Updated {date} |
-| `meta.now.description` | Lo que estoy construyendo, aprendiendo y preparando este mes. | What I'm building, learning and preparing this month. |
+| `meta.now.description` | Lo que estoy construyendo, aprendiendo y entrenando este mes. | What I'm building, learning and training for this month. |
 
 Las claves van con el prefijo `nowPage.` porque `now.*` ya existe en `home.json` ("Ahora trabajo en").
 

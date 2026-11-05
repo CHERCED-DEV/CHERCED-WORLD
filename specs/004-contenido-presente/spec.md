@@ -89,6 +89,30 @@ criterio de arquitecto con evidencia. Es contenido y detalles nuevos sobre el si
 - Q: ¿Qué pasa con Servicios? → A: se rehace (D10). Reemplaza lo que proponía la auditoría original (US1b).
 - Q: ¿Sitio listo para agentes con WebMCP? → A: el autor aprobó la dirección. Va como US11, con la vitrina en el AI Lab.
 
+### Session 2026-11-04 (segunda ronda de aclaraciones)
+
+- Q: ¿Desde cuándo cuentan los años de experiencia? (P-402) → A: desde 2019 (Growup IT). "En cifras" lo calcula
+  solo: hoy da 7+. El autor alinea el CV por su cuenta.
+- Q: ¿Qué repos son públicos? (P-403) → A: además de CHERCED-WORLD, los de Synergos y legal-workspace. Verificado en
+  GitHub el 2026-11-04: `Synergos.CMS`, `Synergos.UI` y `Synergos.Fabrica` son públicos (Synergos no tiene un repo
+  único), y `legal-workspace` también. Los casos enlazan a esos repos.
+  - [NEEDS CLARIFICATION: P-420] `legal-workspace` publica casos de evaluación en `evals/casos/`. Algunos dicen
+    "sintético" en el nombre y otros no. Antes de enlazar el repo desde el portafolio, el autor confirma que todos
+    son sintéticos y que ninguno sale del material de la clienta.
+- Q: ¿Ejemplos de la abogada y del ingeniero estructural en Servicios? (P-411) → A: sí, sin nombres ni ciudad.
+- Q: ¿Talleres para equipos? (P-414) → A: sí, como sexto servicio: entrenamiento en AI-first y Spec-Driven Development.
+- Q: ¿Precios en Servicios? (P-415) → A: sí, rangos orientativos.
+  - [NEEDS CLARIFICATION: P-421] Las cifras las pasa el autor. Sin ellas no se publica ningún rango.
+- Q: ¿Enlace para agendar después del formulario de contacto? (P-405) → A: sí.
+  - [NEEDS CLARIFICATION: P-422] El enlace de agenda lo pasa el autor. Sin él no se muestra.
+- Q: ¿Página `/now`? (P-404) → A: sí. Su contenido, en contenido.md §24, sale de lo que el autor contó y de su
+  perfil:
+  - Construyendo: Synergos rumbo a producción, el AI Lab de este sitio y la orquestación de agentes en paralelo.
+  - Aprendiendo: Azure AI Foundry, Semantic Kernel y RAG.
+  - Entrenando: se prepara para HYROX São Paulo; además CrossFit, trail, running y subir nevados.
+  - Fuera del teclado: los videojuegos. Su frase: "el mejor videojuego es mi vida".
+  - La fecha de la carrera no se publica hasta que el autor la confirme.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Lo primero que se lee dice quién soy hoy (Priority: P1)
@@ -747,20 +771,23 @@ fuente de verdad. Mientras sigan abiertas, se aplica el valor por defecto indica
 | ID | Pregunta | Origen | Por defecto |
 |---|---|---|---|
 | P-401 | ¿Se aprueban los niveles propuestos para los lóbulos (contenido.md §8)? | Handoff, pregunta 4 | **Resuelta (2026-11-04):** D7 y D9, en la 002 (T229) |
-| P-402 | ¿El sitio dice "desde 2019" (Growup IT, ene 2019) o "desde 2020"? Además, "En cifras" calcula 7+ años desde 2019, pero el CV dice "6 años de experiencia" | Handoff, pregunta 5, y CV | Se queda "desde 2019", calculado desde la carrera |
-| P-403 | ¿Qué repos son públicos? CHERCED-WORLD sí. ¿Synergos y legal-workspace? | Handoff, pregunta 10 | `github: null` en ambos |
-| P-404 | ¿Página `/now`? ¿Qué muestra este mes? | Handoff, pregunta 13 | No se publica |
-| P-405 | ¿Enlace para agendar una llamada después del formulario de contacto? | Handoff, pregunta 16 | Sin enlace |
+| P-402 | ¿El sitio dice "desde 2019" (Growup IT, ene 2019) o "desde 2020"? Además, "En cifras" calcula 7+ años desde 2019, pero el CV dice "6 años de experiencia" | Handoff, pregunta 5, y CV | **Resuelta:** desde 2019, 7+ años |
+| P-403 | ¿Qué repos son públicos? CHERCED-WORLD sí. ¿Synergos y legal-workspace? | Handoff, pregunta 10 | **Resuelta:** `Synergos.CMS`, `Synergos.UI`, `Synergos.Fabrica` y `legal-workspace`, verificados en GitHub (ver P-420) |
+| P-404 | ¿Página `/now`? ¿Qué muestra este mes? | Handoff, pregunta 13 | **Resuelta:** sí, con el contenido de contenido.md §24 |
+| P-405 | ¿Enlace para agendar una llamada después del formulario de contacto? | Handoff, pregunta 16 | **Resuelta:** sí; falta el enlace (P-422) |
+| P-420 | ¿Todos los casos de `legal-workspace/evals/casos/` son sintéticos y ninguno sale del material de la clienta? | Revisión del repo público, 2026-11-04 | El caso Legal workspace sale sin enlace al repo |
+| P-421 | Rangos de precio de cada servicio | Respuesta a P-415 | Sin precios |
+| P-422 | Enlace de agenda (Calendly, Cal.com u otro) | Respuesta a P-405 | Sin enlace |
 | P-406 | El PDF oficial del CV trae cifras del empleador actual y nombres de proveedores, y enlaza a una cuenta de GitHub distinta de la pública. ¿Se publica tal cual (ya está en LinkedIn), se publica una versión para el sitio sin esas cifras ni nombres, o el botón lleva a LinkedIn? | Comparación del CV con la decisión "ninguna cifra del empleador" | **Resuelta (2026-11-04):** el botón lleva a LinkedIn y el sitio no sirve el PDF |
 | P-407 | Hoy hay skills que no están en la propuesta: HTML5, JavaScript y AI coding agents, y CSS y Sass, que la propuesta junta en una sola. ¿Se quedan, se fusionan o salen? | Comparación de `site.ts` con la propuesta | **Resuelta (2026-11-04):** ningún skill se borra (D7, en la 002, T229) |
 | P-408 | Solo Synergos trae tarjetas ADR. ¿Escribe el autor las de Director & lines, Legal workspace, Event bridge y CHERCED-WORLD 2026? | Handoff | Esos casos quedan en prosa |
 | P-409 | El sitio enlaza a Instagram, pero la fuente de verdad no lo lista como contacto público. ¿Se queda? | Fuente de verdad del perfil | Se queda, como hoy |
 | P-410 | ¿Enlace en vivo de Synergos cuando su dominio esté en producción? | Handoff | `live: null` |
-| P-411 | ¿Se pueden mencionar en Servicios los ejemplos de la abogada y del ingeniero estructural, sin nombres? | Página de Servicios, pregunta 1 | La tarjeta sale sin ejemplo |
+| P-411 | ¿Se pueden mencionar en Servicios los ejemplos de la abogada y del ingeniero estructural, sin nombres? | Página de Servicios, pregunta 1 | **Resuelta:** sí, sin nombres ni ciudad |
 | P-412 | ¿Quién es dueño del código y de los plugins que se entregan? Hace falta para una de las preguntas frecuentes | Página de Servicios, pregunta 2 | Esa pregunta no se publica |
 | P-413 | ¿Qué casos reales anonimizados se muestran en Servicios? | Página de Servicios, bloque "Casos" [confirmar] | Solo enlaces a casos ya publicados |
-| P-414 | ¿Talleres o entrenamiento para equipos (AI-first, Spec-Driven Development) como sexto servicio? | Página de Servicios, pregunta 3 | Cinco servicios |
-| P-415 | ¿Precios o rangos en Servicios? | Página de Servicios, pregunta 4 | Sin precios |
+| P-414 | ¿Talleres o entrenamiento para equipos (AI-first, Spec-Driven Development) como sexto servicio? | Página de Servicios, pregunta 3 | **Resuelta:** sí, sexto servicio |
+| P-415 | ¿Precios o rangos en Servicios? | Página de Servicios, pregunta 4 | **Resuelta:** sí, rangos; faltan las cifras (P-421) |
 | P-416 | ¿`draft_contact_message` entra en la v1 de WebMCP, o la v1 es solo lectura? | WebMCP, pregunta 1 | Solo lectura más `set_preferences` |
 | P-417 | ¿Te gustan "fábrica de software" (o "fábrica de agentes", o "software factory") y el título del hero de Servicios? | Página de Servicios, preguntas 5 y 6 | Como está en contenido.md §5 |
 | P-418 | ¿El registro de capacidades va antes del AI Lab? ¿`llms.txt` sale en la misma entrega? | WebMCP, preguntas 3 y 4 | Registro primero, con `llms.txt` en US11 |
