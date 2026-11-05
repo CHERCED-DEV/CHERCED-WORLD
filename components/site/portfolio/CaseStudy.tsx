@@ -9,20 +9,27 @@ import { Icon } from '@/components/ui/Icon'
 import { Reveal } from '@/components/ui/Reveal'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
+import { AdrCards } from './AdrCards'
 import { fillTemplate } from './carousel'
 import { CaseGallery, type GalleryLabels } from './CaseGallery'
 import styles from './CaseStudy.module.scss'
+import type { CaseEvidenceLabels } from './labels'
+import { LiveDiagram } from './LiveDiagram'
 import { PortfolioIcon, type PortfolioIconName } from './PortfolioIcon'
 import { ProjectEmbed, type EmbedLabels } from './ProjectEmbed'
 import {
+  caseAdrCards,
+  caseDiagram,
   caseHighlights,
+  caseStorySections,
   caseStudyLinks,
-  caseStudySections,
+  caseStudyRepos,
   galleryImages,
   type CaseNeighbors,
   type CaseStudyLabels,
 } from './projects'
 import { stackGroups, type StackLayer } from './stack'
+import { projectMediaName } from './transition'
 
 export const EMBED_ANCHOR = 'en-vivo'
 
@@ -47,6 +54,7 @@ export type CaseStudyExtras = {
   neighbors: CaseNeighbors | null
   usage: Record<string, number>
   portfolioHref: string
+  evidence?: CaseEvidenceLabels
 }
 
 export type CaseStudyProps = { project: Project; lang: Locale; labels: CaseStudyLabels; extras?: CaseStudyExtras }
@@ -61,8 +69,11 @@ const LAYER_ICONS: Record<StackLayer, PortfolioIconName> = {
 }
 
 export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
-  const sections = caseStudySections(project, lang, labels)
+  const evidence = extras?.evidence
+  const cards = evidence ? caseAdrCards(project, lang) : []
+  const sections = caseStorySections(project, lang, labels, cards.length > 0)
   const links = caseStudyLinks(project, labels)
+  const repos = caseStudyRepos(project)
   const story = (
     <GlassSurface variant="standard" className={styles.body}>
       {sections.map((section) => (
@@ -75,6 +86,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
               {paragraph}
             </p>
           ))}
+          {section.cards && evidence ? <AdrCards cards={cards} labels={evidence.adr} /> : null}
         </section>
       ))}
       {!extras && project.technologies.length > 0 ? (
@@ -91,7 +103,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           </ul>
         </section>
       ) : null}
-      {links.length > 0 ? (
+      {links.length > 0 || repos.length > 0 ? (
         <nav className={styles.links} aria-label={labels.links}>
           {links.map((link) => (
             <a
@@ -107,6 +119,29 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
               <span className="cw-visually-hidden">{labels.newTab}</span>
             </a>
           ))}
+          {repos.length > 0 ? (
+            <ul className={styles.repos} data-cw-case-repos="">
+              {repos.map((repo) => (
+                <li key={repo.href}>
+                  <a
+                    href={repo.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={buttonClassName({ variant: 'glass', size: 'lg', className: styles.repo })}
+                    data-cw-case-repo={repo.label}
+                  >
+                    <PortfolioIcon name="code" className={styles.repoIcon} />
+                    <span className={styles.repoText}>
+                      <span className={styles.repoHost}>{labels.github}</span>
+                      <span className={styles.repoName}>{repo.label}</span>
+                    </span>
+                    <Icon name="external" size={18} />
+                    <span className="cw-visually-hidden">{labels.newTab}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </nav>
       ) : null}
     </GlassSurface>
@@ -140,6 +175,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
   const groups = stackGroups(project.technologies)
   const landscape = project.image.width >= project.image.height
   const neighbors = extras.neighbors
+  const diagram = evidence ? caseDiagram(project, lang) : []
 
   return (
     <article className={styles.page} aria-labelledby="case-title" data-cw-case={project.id}>
@@ -159,6 +195,12 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
               })}
             </p>
           ) : null}
+          {evidence ? (
+            <p className={styles.era} data-cw-case-era={project.era}>
+              <span className="cw-visually-hidden">{evidence.era}: </span>
+              {evidence.eras[project.era]}
+            </p>
+          ) : null}
           <SectionTitle as="h1" id="case-title" size="lg" className={styles.title}>
             {project.title}
           </SectionTitle>
@@ -171,7 +213,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           ) : null}
         </div>
         <div className={styles.heroMedia}>
-          <CaseGallery images={images} labels={extra.gallery} title={project.title} />
+          <CaseGallery images={images} labels={extra.gallery} title={project.title} transitionName={projectMediaName(project.id)} />
         </div>
       </header>
 
@@ -212,6 +254,8 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
       ) : null}
 
       {story}
+
+      {evidence && diagram.length > 0 ? <LiveDiagram layers={diagram} labels={evidence.diagram} /> : null}
 
       {groups.length > 0 ? (
         <section className={styles.stack} aria-labelledby="case-technologies" data-cw-case-stack="">

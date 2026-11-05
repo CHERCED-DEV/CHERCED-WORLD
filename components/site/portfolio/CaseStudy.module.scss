@@ -85,6 +85,21 @@
   }
 }
 
+.era {
+  @include site.chip;
+  gap: var(--cw-space-2);
+  font-variant-numeric: tabular-nums;
+
+  &::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cw-intro-accent);
+  }
+}
+
 .title {
   max-width: 100%;
   overflow-wrap: anywhere;
@@ -196,6 +211,55 @@
   justify-content: center;
   gap: var(--cw-space-4);
   padding-top: var(--cw-space-2);
+}
+
+.repos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--cw-space-3);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li {
+    display: flex;
+    min-width: 0;
+  }
+}
+
+.repo.repo {
+  max-width: 100%;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  white-space: normal;
+}
+
+.repoIcon {
+  flex: none;
+  color: var(--cw-intro-accent);
+}
+
+.repoText {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--cw-space-2);
+  min-width: 0;
+}
+
+.repoHost {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.repoName {
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .stack {
