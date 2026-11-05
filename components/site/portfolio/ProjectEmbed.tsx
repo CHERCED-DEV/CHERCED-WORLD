@@ -496,8 +496,7 @@ export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedPro
             <span>{labels.openLive}</span>
           </a>
           <button type="button" className={styles.sheetButton} onClick={closeSheet} data-cw-embed-sheet-close="">
-            <Icon name="close" size={17} />
-            <span>{labels.close}</span>
+            {labels.close}
           </button>
         </div>
         <p className="cw-visually-hidden" role="status" aria-live="polite">
