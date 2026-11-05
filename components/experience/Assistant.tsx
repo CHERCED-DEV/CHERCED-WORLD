@@ -50,7 +50,9 @@ export function Assistant({ lang, labels, open, status, onStatus, onClose }: Ass
 
   useEffect(() => {
     const log = logRef.current
-    if (log && log.scrollHeight > log.clientHeight) log.scrollTop = log.scrollHeight
+    const last = log?.lastElementChild
+    if (!log || !last || log.scrollHeight <= log.clientHeight) return
+    log.scrollTop += last.getBoundingClientRect().top - log.getBoundingClientRect().top
   }, [messages.length, pending])
 
   useEffect(() => {
