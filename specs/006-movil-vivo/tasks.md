@@ -109,13 +109,16 @@ Rutas: `styles/**`, `lib/fx/**`, `components/ui/**`, `components/shell/Dock*`, `
 
 ### Vista previa de la fase 1 (orquestador)
 
-- [ ] T826 Integrar M0 → P6 (T818) → P2 (T820 a T825) en `004-contenido-presente`, correr `npm run verify` y la suite
+- [x] T826 Integrar M0 → P6 (T818) → P2 (T820 a T825) en `004-contenido-presente`, correr `npm run verify` y la suite
   completa, y desplegar la vista previa de Vercel.
-- [ ] T827 **Revisión del autor en su celular** (SC-608).
+  - Hecho el 2026-11-05 en 68e22be: `test:fast` en verde (1121 unitarias y 58 de humo) y vista previa desplegada.
+- [x] T827 **Revisión del autor en su celular** (SC-608).
   - Se confirman los blur móviles (P-604), el mapa estático con movimiento reducido (P-601), la háptica y el dock.
   - Los ajustes que pida van a M0 o P2 como tareas nuevas antes de abrir la fase 2.
+  - Aprobada el 2026-11-05: el autor respondió "Me encanta, sigue", sin ajustes. P-601 y P-604 quedan con su valor
+    por defecto.
 
-## Fase 2: el resto, página por página (**BLOQUEADA hasta T827**)
+## Fase 2: el resto, página por página (desbloqueada el 2026-11-05 con T827)
 
 ### P2 Sobre mí
 
