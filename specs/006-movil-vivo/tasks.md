@@ -206,11 +206,17 @@ Rutas: `styles/**`, `lib/fx/**`, `components/ui/**`, `components/shell/Dock*`, `
 
 ## Integración y cierre (orquestador)
 
-- [ ] T858 Integrar la fase 2 en orden M0 (ajustes) → P2 → P6 → P3 → P4 → P1 → P5 → P7, con `npm run verify` después de
+- [x] T858 Integrar la fase 2 en orden M0 (ajustes) → P2 → P6 → P3 → P4 → P1 → P5 → P7, con `npm run verify` después de
   cada merge. Revisar que `package.json` no suma dependencias ni hay variables nuevas (FR-654).
-- [ ] T859 Correr la suite completa **3 veces seguidas en verde**.
-- [ ] T860 Revisión final del autor en su celular. El corte a `main`, junto con la 004 o aparte, solo con su
+  - Hecho el 2026-11-05: P6 → P4 → P2 → P5 → P1 → P3 integradas en `004-contenido-presente`. Después de cada merge
+    corrieron los tipos y las unitarias. El `test:fast` final quedó en verde en 8cd74b9 (1164 unitarias y 58 de humo).
+    No se agregaron dependencias ni variables. P7 (T851 a T856) queda para el cierre.
+- [ ] T859 Correr la suite completa una vez en verde. La decisión del autor del 2026-11-04 (T510 de la 004) reemplaza el
+  ritual de 3 corridas por la suite exhaustiva antes de producción.
+- [x] T860 Revisión final del autor en su celular. El corte a `main`, junto con la 004 o aparte, solo con su
   confirmación explícita.
+  - Aprobada el 2026-11-05 sobre la vista previa de 8cd74b9: "Me encanta, sigue". El corte a `main` sigue
+    pendiente de su confirmación.
 
 ## Dependencias y orden
 
