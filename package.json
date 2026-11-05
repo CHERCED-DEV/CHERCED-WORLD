@@ -14,6 +14,9 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "e2e": "playwright test",
+    "test:fast": "npm run lint && npm run typecheck && npm test && playwright test",
+    "test:full": "npm run lint && npm run typecheck && npm test && playwright test",
+    "test:exhaustive": "npm run lint && npm run typecheck && npm test && playwright test",
     "verify": "npm run lint && npm run typecheck && npm test && next build && npm audit --audit-level=high"
   },
   "dependencies": {

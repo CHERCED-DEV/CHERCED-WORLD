@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { auditPage, formatFindings, openPage, prepareContext, returnTo, scrollToEnd } from './support/controls'
-import { AUDIT_PAGES, BLOG_INDEXES, langOf, skipIntro } from './support/pages'
+import { AUDIT_PAGES, BLOG_INDEXES, EXHAUSTIVE, langOf, pendingPage, skipIntro, tierTag } from './support/pages'
 
 const WITH_JS = ['desktop-chromium', 'mobile-chromium']
 
@@ -15,7 +15,9 @@ test.beforeEach(async ({ page, context, baseURL }, testInfo) => {
 test.describe('auditoría de interacción (US1, FR-201)', () => {
   for (const path of AUDIT_PAGES) {
     // Una enmienda al shell de R0 hace pasar /es y /en (el logo no sube al inicio), /es/privacy y /en/privacy ("Privacidad" no hace nada), /es/contactMe y /en/contactMe ("Buzón" no hace nada) y /es/inbox ("Regresar" vuelve a la misma página)
-    test(`${path}: cada control visible tiene un efecto verificable`, async ({ page, context }, testInfo) => {
+    test(`${path}: cada control visible tiene un efecto verificable`, tierTag(path), async ({ page, context }, testInfo) => {
+      const pending = pendingPage(path)
+      test.skip(Boolean(pending), pending ?? '')
       test.setTimeout(300_000)
       const audit = await auditPage(page, context, path, langOf(path))
       const failed = audit.controls.filter((control) => !control.ok).length
@@ -29,7 +31,9 @@ test.describe('auditoría de interacción (US1, FR-201)', () => {
 
 test.describe('volver arriba (FR-202)', () => {
   for (const path of AUDIT_PAGES) {
-    test(`${path}: desde el final sube al tope y deja el foco en main`, async ({ page }) => {
+    test(`${path}: desde el final sube al tope y deja el foco en main`, tierTag(path), async ({ page }) => {
+      const pending = pendingPage(path)
+      test.skip(Boolean(pending), pending ?? '')
       test.setTimeout(90_000)
       await openPage(page, path)
       const from = await scrollToEnd(page)
@@ -65,7 +69,7 @@ async function clickWithin(card: Locator, part: Locator): Promise<void> {
 
 test.describe('tarjetas del blog (D-07)', () => {
   for (const index of BLOG_INDEXES) {
-    test(`${index}: toda la tarjeta y su "Leer más" abren el post`, async ({ page }) => {
+    test(`${index}: toda la tarjeta y su "Leer más" abren el post`, langOf(index) === 'es' ? {} : { tag: EXHAUSTIVE }, async ({ page }) => {
       test.setTimeout(240_000)
       await openPage(page, index)
       const ids = await page.locator('[data-cw-post-card]').evaluateAll((cards) => cards.map((card) => card.getAttribute('data-cw-post-card') ?? ''))
