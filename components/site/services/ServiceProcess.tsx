@@ -30,6 +30,8 @@ export function ServiceProcess({ lang, process, principlesTitle }: ServiceProces
                   </>
                 ) : null}
                 <span className={styles.stepText}>{text}</span>
+                <span className={styles.stepGlow} aria-hidden="true" data-cw-step-glow="" />
+                {index < process.steps.length - 1 ? <span className={styles.stepFill} aria-hidden="true" data-cw-step-fill="" /> : null}
               </li>
             )
           })}

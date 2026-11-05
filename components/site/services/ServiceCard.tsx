@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent
 import { buttonClassName } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { tap } from '@/lib/fx/haptics'
 import type { ServiceId } from '@/content/types'
 import { ServiceIcon } from './ServiceIcon'
 import styles from './Services.module.scss'
@@ -28,6 +29,7 @@ export type ServiceCardProps = {
   deliverables: string[]
   wantHref: string
   tryHref?: string
+  blur?: boolean
   labels: ServiceCardLabels
 }
 
@@ -47,6 +49,7 @@ export function ServiceCard({
   deliverables,
   wantHref,
   tryHref,
+  blur = false,
   labels,
 }: ServiceCardProps) {
   const [flipped, setFlipped] = useState(false)
@@ -67,9 +70,13 @@ export function ServiceCard({
     window.clearTimeout(hover.current)
     setFlipped(false)
   }
+  const toggle = () => {
+    tap()
+    setFlipped((value) => !value)
+  }
   const onCardClick = (event: MouseEvent<HTMLElement>) => {
     if ((event.target as Element).closest('a, button') || selectingText()) return
-    setFlipped((value) => !value)
+    toggle()
   }
   const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === 'Escape' && flipped) setFlipped(false)
@@ -83,6 +90,7 @@ export function ServiceCard({
       depth
       edge
       light
+      blur={blur}
       className={styles.card}
       aria-labelledby={titleId}
       data-cw-service={id}
@@ -131,7 +139,7 @@ export function ServiceCard({
           aria-controls={backId}
           aria-describedby={titleId}
           data-cw-service-flip=""
-          onClick={() => setFlipped((value) => !value)}
+          onClick={toggle}
         >
           {flipped ? labels.flipBack : labels.flip}
         </button>

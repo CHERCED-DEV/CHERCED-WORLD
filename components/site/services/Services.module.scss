@@ -286,6 +286,47 @@
   position: relative;
 }
 
+$stack-step: 16px;
+$stack-strip: 28px;
+$stack-depth-scale: 0.04;
+$stack-depth-shade: 0.16;
+
+.cardItem {
+  @include bp.down(md) {
+    @include site.js-motion {
+      --cw-stack-base: calc(var(--cw-header-h) + var(--cw-space-3) + var(--cw-i, 0) * #{$stack-step});
+      position: sticky;
+      top: min(var(--cw-stack-base), var(--cw-stack-max, var(--cw-stack-base)));
+      transform-origin: 50% 0;
+      transform: scale(calc(1 - #{$stack-depth-scale} * min(var(--cw-depth, 0), 3)));
+      transition: transform 320ms var(--cw-ease-out);
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border-radius: var(--cw-glass-radius);
+        background: #000000;
+        opacity: calc(#{$stack-depth-shade} * min(var(--cw-depth, 0), 3));
+        pointer-events: none;
+        transition: opacity 320ms var(--cw-ease-out);
+      }
+
+      &[data-cw-stack='behind'] {
+        clip-path: inset(0 0 calc(100% - #{$stack-strip}) 0);
+      }
+    }
+  }
+}
+
+@media (max-width: #{bp.bp(md) - 0.02px}), (pointer: coarse) {
+  .cardActions a,
+  .cardActions button {
+    min-height: 44px;
+  }
+}
+
 :global(:root[data-js]) .cardInner {
   gap: 0;
   transform-style: preserve-3d;
@@ -460,6 +501,96 @@
     border-color: var(--cw-glass-border);
     background-color: transparent;
     box-shadow: none;
+  }
+}
+
+.stepGlow,
+.stepFill {
+  display: none;
+}
+
+.steps .step {
+  @include bp.down(md) {
+    @include site.js-motion {
+      @supports (animation-timeline: view()) {
+        &::before {
+          border-color: var(--cw-glass-border);
+          background-color: transparent;
+          box-shadow: none;
+          animation: none;
+        }
+
+        &::after {
+          background-color: var(--cw-glass-border);
+          animation: none;
+        }
+      }
+    }
+  }
+}
+
+.stepGlow {
+  @include bp.down(md) {
+    @include site.js-motion {
+      @supports (animation-timeline: view()) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: var(--_dot);
+        height: var(--_dot);
+        border: 2px solid var(--cw-intro-accent);
+        border-radius: 50%;
+        background-color: rgb(37 237 158 / 0.14);
+        box-shadow: 0 0 18px rgb(37 237 158 / 0.35);
+        pointer-events: none;
+        animation: cw-step-on linear both;
+        animation-timeline: view(block 0% 44%);
+        animation-range: entry 0% entry 100%;
+      }
+    }
+  }
+}
+
+.stepFill {
+  @include bp.down(md) {
+    @include site.js-motion {
+      @supports (animation-timeline: view()) {
+        position: absolute;
+        top: calc(var(--_dot) + 4px);
+        bottom: calc(4px - var(--cw-space-5));
+        left: calc(var(--_dot) / 2 - 1px);
+        display: block;
+        width: 2px;
+        border-radius: 2px;
+        background-color: rgb(37 237 158 / 0.7);
+        pointer-events: none;
+        transform-origin: 50% 0;
+        animation: cw-step-fill linear both;
+        animation-timeline: view(block 0% 44%);
+        animation-range: entry 0% entry 100%;
+      }
+    }
+  }
+}
+
+@keyframes cw-step-on {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cw-step-fill {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
   }
 }
 

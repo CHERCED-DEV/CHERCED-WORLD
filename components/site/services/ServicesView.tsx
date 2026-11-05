@@ -8,10 +8,11 @@ import { localizedPath, type Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
 import { serviceNumber, wantHref, type ServiceCase } from './model'
 import { ServiceAudiences } from './ServiceAudiences'
-import { ServiceCard, type ServiceCardLabels } from './ServiceCard'
+import { type ServiceCardLabels } from './ServiceCard'
 import { ServiceCases } from './ServiceCases'
 import { ServiceFaq } from './ServiceFaq'
 import { ServiceProcess } from './ServiceProcess'
+import { ServiceStack } from './ServiceStack'
 import styles from './Services.module.scss'
 
 export type ServicesLabels = ServiceCardLabels & {
@@ -64,24 +65,20 @@ export function ServicesView({ lang, services, cases, labels, tryHrefs = {} }: S
 
       <section className={styles.block} aria-labelledby="services-offer" data-cw-services-block="services">
         <SectionTitle id="services-offer">{labels.title}</SectionTitle>
-        <ol className={styles.cards}>
-          {services.items.map((item, index) => (
-            <li key={item.id} className={styles.cardItem}>
-              <ServiceCard
-                id={item.id}
-                number={serviceNumber(index)}
-                title={item.title[lang]}
-                forWho={item.forWho[lang]}
-                description={item.description[lang]}
-                example={item.example?.[lang]}
-                deliverables={item.deliverables.map((deliverable) => deliverable[lang])}
-                wantHref={wantHref(lang, item.id)}
-                tryHref={tryHrefs[item.id]}
-                labels={cardLabels}
-              />
-            </li>
-          ))}
-        </ol>
+        <ServiceStack
+          cards={services.items.map((item, index) => ({
+            id: item.id,
+            number: serviceNumber(index),
+            title: item.title[lang],
+            forWho: item.forWho[lang],
+            description: item.description[lang],
+            example: item.example?.[lang],
+            deliverables: item.deliverables.map((deliverable) => deliverable[lang]),
+            wantHref: wantHref(lang, item.id),
+            tryHref: tryHrefs[item.id],
+            labels: cardLabels,
+          }))}
+        />
       </section>
 
       <ServiceProcess lang={lang} process={services.process} principlesTitle={labels.principles} />
