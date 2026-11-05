@@ -13,7 +13,12 @@ import {
   embedAddress,
   embedFrameMounted,
   ENGAGE_KEYS,
+  FOCUS_GUARD_MS,
+  isStolenFocus,
   nextEmbedStatus,
+  SCROLL_SETTLE_MS,
+  shouldLoadAfterScroll,
+  visibleRatio,
   type EmbedEvent,
   type EmbedStatus,
 } from './embed'
@@ -84,24 +89,17 @@ function useEmbedLoader() {
   return { ...state, dispatch }
 }
 
-function useEngagement(): boolean {
-  const [engaged, setEngaged] = useState(false)
-  useEffect(() => {
-    if (engaged) return
-    const engage = () => setEngaged(true)
-    const onKey = (event: KeyboardEvent) => {
-      if (ENGAGE_KEYS.has(event.key)) engage()
-    }
-    window.addEventListener('wheel', engage, { passive: true, once: true })
-    window.addEventListener('touchmove', engage, { passive: true, once: true })
-    window.addEventListener('keydown', onKey)
-    return () => {
-      window.removeEventListener('wheel', engage)
-      window.removeEventListener('touchmove', engage)
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [engaged])
-  return engaged
+function afterScrollSettles(callback: () => void): () => void {
+  let timer = window.setTimeout(callback, SCROLL_SETTLE_MS)
+  const onScroll = () => {
+    window.clearTimeout(timer)
+    timer = window.setTimeout(callback, SCROLL_SETTLE_MS)
+  }
+  window.addEventListener('scroll', onScroll, { passive: true })
+  return () => {
+    window.clearTimeout(timer)
+    window.removeEventListener('scroll', onScroll)
+  }
 }
 
 export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedProps) {
@@ -116,8 +114,8 @@ export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedPro
   const [device, setDevice] = useState<Device>('desktop')
   const [fullscreen, setFullscreen] = useState(false)
   const canFullscreen = useSyncExternalStore(noSubscription, fullscreenSupported, () => false)
-  const engaged = useEngagement()
   const frameRef = useRef<HTMLElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const mounted = embedFrameMounted(status)
 
@@ -128,41 +126,124 @@ export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedPro
   }, [])
 
   useEffect(() => {
-    const section = sectionRef.current
-    if (!section || status !== 'idle' || surface !== 'inline' || !engaged) return
+    if (status !== 'idle' || surface !== 'inline') return
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
     const allowed = canAutoLoad({
       wide: window.matchMedia(WIDE_QUERY).matches,
       saveData: connection?.saveData === true,
       framed: window.self !== window.top,
-      engaged,
     })
     if (!allowed) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          observer.disconnect()
-          dispatch('request')
-        }
-      },
-      { threshold: 0.35 },
-    )
-    observer.observe(frameRef.current ?? section)
-    return () => observer.disconnect()
-  }, [dispatch, engaged, status, surface])
+    let lastGesture = Number.NEGATIVE_INFINITY
+    let timer: number | undefined
+    const mark = () => {
+      lastGesture = performance.now()
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (ENGAGE_KEYS.has(event.key)) mark()
+    }
+    const check = () => {
+      const frame = frameRef.current
+      if (!frame) return
+      const rect = frame.getBoundingClientRect()
+      const ratio = visibleRatio(rect.top, rect.bottom, window.innerHeight)
+      if (shouldLoadAfterScroll({ sinceGesture: performance.now() - lastGesture, ratio })) dispatch('request')
+    }
+    const onScroll = () => {
+      window.clearTimeout(timer)
+      timer = window.setTimeout(check, SCROLL_SETTLE_MS)
+    }
+    window.addEventListener('wheel', mark, { passive: true })
+    window.addEventListener('touchmove', mark, { passive: true })
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('wheel', mark)
+      window.removeEventListener('touchmove', mark)
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [dispatch, status, surface])
 
   useEffect(() => {
     if (!id) return
+    let stop: (() => void) | undefined
     const onHash = () => {
-      if (window.location.hash === `#${id}` && window.matchMedia(WIDE_QUERY).matches) {
+      stop?.()
+      if (window.location.hash !== `#${id}` || !window.matchMedia(WIDE_QUERY).matches) return
+      stop = afterScrollSettles(() => {
+        stop?.()
         setSurface('inline')
         dispatch('request')
-      }
+      })
     }
-    onHash()
     window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
+    return () => {
+      stop?.()
+      window.removeEventListener('hashchange', onHash)
+    }
   }, [dispatch, id])
+
+  useEffect(() => {
+    const iframe = iframeRef.current
+    if (!iframe || surface !== 'inline' || !mounted) return
+    let pointerInside = false
+    let lastTab = Number.NEGATIVE_INFINITY
+    let guardUntil = 0
+    let settledY = window.scrollY
+    const active = document.activeElement
+    let previous: HTMLElement | null = active instanceof HTMLElement && active !== iframe ? active : null
+    let timer: number | undefined
+    const restore = () => {
+      if (Math.abs(window.scrollY - settledY) > 1) window.scrollTo({ top: settledY, left: window.scrollX, behavior: 'instant' })
+    }
+    const onEnter = () => {
+      pointerInside = true
+    }
+    const onLeave = () => {
+      pointerInside = false
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Tab') lastTab = performance.now()
+    }
+    const onFocusIn = (event: FocusEvent) => {
+      if (event.target instanceof HTMLElement && event.target !== iframe) previous = event.target
+    }
+    const onScroll = () => {
+      if (performance.now() < guardUntil) {
+        restore()
+        return
+      }
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => {
+        settledY = window.scrollY
+      }, SCROLL_SETTLE_MS)
+    }
+    const onBlur = () => {
+      if (document.activeElement !== iframe) return
+      if (!isStolenFocus({ pointerInside, sinceTab: performance.now() - lastTab })) return
+      guardUntil = performance.now() + FOCUS_GUARD_MS
+      restore()
+      if (previous?.isConnected) previous.focus({ preventScroll: true })
+      else iframe.blur()
+    }
+    iframe.addEventListener('pointerenter', onEnter)
+    iframe.addEventListener('pointerleave', onLeave)
+    window.addEventListener('keydown', onKey, true)
+    document.addEventListener('focusin', onFocusIn)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('blur', onBlur)
+    return () => {
+      window.clearTimeout(timer)
+      iframe.removeEventListener('pointerenter', onEnter)
+      iframe.removeEventListener('pointerleave', onLeave)
+      window.removeEventListener('keydown', onKey, true)
+      document.removeEventListener('focusin', onFocusIn)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('blur', onBlur)
+    }
+  }, [key, mounted, surface])
 
   const loadInline = () => {
     setSurface('inline')
@@ -196,6 +277,7 @@ export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedPro
   const iframe = (
     <iframe
       key={key}
+      ref={iframeRef}
       src={url}
       title={frameTitle}
       sandbox={EMBED_SANDBOX}
