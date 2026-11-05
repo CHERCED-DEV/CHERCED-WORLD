@@ -1,11 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import { useId, useLayoutEffect, useState, ViewTransition, type CSSProperties, type KeyboardEvent } from 'react'
+import { useId, useLayoutEffect, useRef, useState, ViewTransition, type CSSProperties, type KeyboardEvent } from 'react'
 import { Dialog } from '@/components/ui/Dialog'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
-import { fillTemplate, indexForKey, wrapIndex } from './carousel'
+import { useSwipe, type SwipeDirection } from '@/lib/fx/swipe'
+import { useMediaQuery } from '@/lib/fx/viewport'
+import { fillTemplate, indexForKey, stepIndex, wrapIndex } from './carousel'
 import styles from './CaseGallery.module.scss'
 import { PortfolioIcon } from './PortfolioIcon'
 import { takeSharedNavigation } from './transition'
@@ -28,6 +30,8 @@ export type CaseGalleryProps = {
   transitionName?: string
 }
 
+export const GALLERY_SWIPE_QUERY = '(max-width: 767.98px), (pointer: coarse)'
+
 function ratioStyle(image: GalleryImage): CSSProperties {
   return { '--cw-media-ratio': (image.width / image.height).toFixed(4) } as CSSProperties
 }
@@ -37,14 +41,26 @@ export function CaseGallery({ images, labels, title, transitionName }: CaseGalle
   const titleId = `${uid}-title`
   const [current, setCurrent] = useState(0)
   const [open, setOpen] = useState(false)
+  const [entering, setEntering] = useState<SwipeDirection | null>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const lightboxRef = useRef<HTMLDivElement>(null)
+  const touch = useMediaQuery(GALLERY_SWIPE_QUERY)
+  const total = images.length
+  const many = total > 1
+
+  const step = (direction: SwipeDirection) => {
+    setEntering(direction)
+    setCurrent((value) => stepIndex(value, direction, total))
+  }
 
   useLayoutEffect(() => {
     if (transitionName && takeSharedNavigation(transitionName)) window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }, [transitionName])
-  const total = images.length
+  useSwipe(stageRef, { enabled: many && touch, onPrev: () => step('prev'), onNext: () => step('next') })
+  useSwipe(lightboxRef, { enabled: many && touch && open, onPrev: () => step('prev'), onNext: () => step('next') })
+
   const shown = images[current] ?? images[0]
   if (!shown) return null
-  const many = total > 1
 
   const move = (target: number) => setCurrent(wrapIndex(target, total))
 
@@ -63,7 +79,7 @@ export function CaseGallery({ images, labels, title, transitionName }: CaseGalle
         data-orientation={shown.width >= shown.height ? 'landscape' : 'portrait'}
         style={ratioStyle(shown)}
       >
-        <div className={styles.stage}>
+        <div ref={stageRef} className={styles.stage} data-cw-gallery-stage="">
           <ViewTransition name={current === 0 && transitionName ? transitionName : undefined} share="auto" default="none">
             <Image
               key={shown.src}
@@ -74,6 +90,7 @@ export function CaseGallery({ images, labels, title, transitionName }: CaseGalle
               sizes={shown.width >= shown.height ? '(min-width: 992px) 640px, 92vw' : '(min-width: 768px) 280px, 220px'}
               preload={current === 0}
               className={styles.image}
+              data-enter={entering ?? undefined}
             />
           </ViewTransition>
           <button
@@ -90,6 +107,16 @@ export function CaseGallery({ images, labels, title, transitionName }: CaseGalle
               {labels.zoom}: {shown.alt}
             </span>
           </button>
+          {many ? (
+            <div className={cx('cw-js-only', styles.steps)} data-cw-gallery-steps="">
+              <button type="button" className={styles.step} aria-label={labels.prev} onClick={() => step('prev')} data-cw-gallery-step="prev">
+                <PortfolioIcon name="arrow-left" />
+              </button>
+              <button type="button" className={styles.step} aria-label={labels.next} onClick={() => step('next')} data-cw-gallery-step="next">
+                <PortfolioIcon name="arrow-right" />
+              </button>
+            </div>
+          ) : null}
         </div>
       </figure>
 
@@ -123,7 +150,7 @@ export function CaseGallery({ images, labels, title, transitionName }: CaseGalle
       ) : null}
 
       <Dialog open={open} onClose={() => setOpen(false)} labelledBy={titleId} className={styles.lightbox}>
-        <div className={styles.lightboxBody} onKeyDown={onLightboxKey} data-cw-gallery-lightbox="">
+        <div ref={lightboxRef} className={styles.lightboxBody} onKeyDown={onLightboxKey} data-cw-gallery-lightbox="">
           <div className={styles.lightboxBar}>
             <p id={titleId} className={styles.lightboxTitle}>
               {title}

@@ -79,3 +79,25 @@
     line-height: 1.35;
   }
 }
+
+$stack-step: 14px;
+
+.list {
+  @include bp.down(md) {
+    @include site.js-motion {
+      gap: var(--cw-space-5);
+    }
+  }
+}
+
+.card {
+  @include bp.down(md) {
+    @include site.js-motion {
+      position: sticky;
+      top: calc(var(--cw-header-h) + var(--cw-space-3) + var(--cw-i, 0) * #{$stack-step});
+      box-shadow:
+        var(--cw-glass-shadow),
+        0 -14px 28px -18px rgb(0 0 0 / 0.55);
+    }
+  }
+}
