@@ -151,7 +151,7 @@ describe('ServicesView (US1b)', () => {
       const controls = /aria-controls="([^"]+)"/.exec(flip)?.[1]
       expect(card).toContain(`id="${controls}"`)
       expect(tag(card, `data-cw-service-want="${item.id}"`)).toContain(`href="/${lang}/contactMe?servicio=${item.id}"`)
-      expect(plain).toContain(`${dict.want}: ${item.title[lang]}`)
+      expect(tag(card, `data-cw-service-want="${item.id}"`)).toContain(`aria-label="${dict.want}: ${item.title[lang].replace(/&/g, '&amp;')}"`)
     }
   })
 

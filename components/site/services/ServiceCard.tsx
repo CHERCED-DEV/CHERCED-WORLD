@@ -136,14 +136,22 @@ export function ServiceCard({
           {flipped ? labels.flipBack : labels.flip}
         </button>
         {tryHref ? (
-          <Link href={tryHref} className={buttonClassName({ variant: 'glass', size: 'sm' })} data-cw-service-try={id}>
+          <Link
+            href={tryHref}
+            className={buttonClassName({ variant: 'glass', size: 'sm' })}
+            aria-label={`${labels.try}: ${title}`}
+            data-cw-service-try={id}
+          >
             {labels.try}
-            <span className="cw-visually-hidden">: {title}</span>
           </Link>
         ) : null}
-        <Link href={wantHref} className={buttonClassName({ variant: 'solid', size: 'sm' })} data-cw-service-want={id}>
+        <Link
+          href={wantHref}
+          className={buttonClassName({ variant: 'solid', size: 'sm' })}
+          aria-label={`${labels.want}: ${title}`}
+          data-cw-service-want={id}
+        >
           {labels.want}
-          <span className="cw-visually-hidden">: {title}</span>
         </Link>
       </div>
     </GlassSurface>
