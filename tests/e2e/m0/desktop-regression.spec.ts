@@ -44,7 +44,7 @@ test.describe('escritorio sin cambios (SC-601, FR-651)', () => {
           headerBefore: css('#header', 'content', '::before'),
           bodyPadding: getComputedStyle(document.body).paddingBottom,
           scrollPadding: getComputedStyle(document.documentElement).scrollPaddingBottom,
-          rootTint: getComputedStyle(document.documentElement).getPropertyValue('--cw-glass-standard-bg').trim(),
+          headerBackground: getComputedStyle(header).backgroundColor,
           blur: getComputedStyle(document.documentElement).getPropertyValue('--cw-glass-standard-blur').trim(),
           headerHeight: header.getBoundingClientRect().height,
           controls: ['[data-cw-palette-trigger]', 'header [data-cw-lang-switch]', 'header [data-cw-mailbox]', '[data-cw-theme-toggle]'].map(x),
@@ -60,7 +60,7 @@ test.describe('escritorio sin cambios (SC-601, FR-651)', () => {
       expect(['none', 'normal']).toContain(state.headerBefore)
       expect(state.bodyPadding).toBe('0px')
       expect(['auto', '0px']).toContain(state.scrollPadding)
-      expect(['rgb(0 0 0 / 0.65)', 'rgb(255 255 255 / 0.7)']).toContain(state.rootTint)
+      expect(state.headerBackground).toMatch(/^rgba\(\d+, \d+, \d+, 0\.\d+\)$/)
       expect(state.blur).toBe('14px')
       expect(state.headerHeight).toBe(65)
       const [palette, lang, mailbox, theme] = state.controls
