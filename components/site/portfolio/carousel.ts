@@ -1,9 +1,12 @@
+import { PROJECT_ERAS, type ProjectEra } from '@/content/types'
+
 export type SlideProject = {
   id: string
   order: number
   title: string
   summary: string
   technologies: string[]
+  era: ProjectEra
   href: string
   image: { src: string; alt: string; width: number; height: number }
 }
@@ -11,6 +14,23 @@ export type SlideProject = {
 export function filterByTechnology<T extends { technologies: readonly string[] }>(items: readonly T[], tech: string | null): T[] {
   if (tech === null) return [...items]
   return items.filter((item) => item.technologies.includes(tech))
+}
+
+export function filterByEra<T extends { era: ProjectEra }>(items: readonly T[], era: ProjectEra | null): T[] {
+  if (era === null) return [...items]
+  return items.filter((item) => item.era === era)
+}
+
+export type ProjectFilters = { tech: string | null; era: ProjectEra | null }
+
+export function filterProjects<T extends { technologies: readonly string[]; era: ProjectEra }>(items: readonly T[], filters: ProjectFilters): T[] {
+  return filterByEra(filterByTechnology(items, filters.tech), filters.era)
+}
+
+export type EraUsage = { era: ProjectEra; count: number }
+
+export function eraUsage(items: readonly { era: ProjectEra }[]): EraUsage[] {
+  return PROJECT_ERAS.map((era) => ({ era, count: items.filter((item) => item.era === era).length })).filter((usage) => usage.count > 0)
 }
 
 export type TechnologyUsage = { name: string; count: number }
@@ -63,6 +83,14 @@ export type FilterLabels = { filteredAll: string; filteredOne: string; filteredM
 export function filterSummary(labels: FilterLabels, count: number, tech: string | null): string {
   if (tech === null) return fillTemplate(labels.filteredAll, { count })
   return fillTemplate(count === 1 ? labels.filteredOne : labels.filteredMany, { count, tech })
+}
+
+export type CombinedFilterLabels = FilterLabels & { filteredEra: string }
+
+export function filtersSummary(labels: CombinedFilterLabels, count: number, tech: string | null, era: string | null): string {
+  if (era === null) return filterSummary(labels, count, tech)
+  if (tech === null) return fillTemplate(labels.filteredEra, { count, era })
+  return `${filterSummary(labels, count, tech)} · ${era}`
 }
 
 export function fillTemplate(template: string, vars: Record<string, string | number>): string {
