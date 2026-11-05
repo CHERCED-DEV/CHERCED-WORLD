@@ -37,6 +37,13 @@ export const PHRASES: Array<[RegExp, string]> = [
   [/\bfront ?-?end\b/g, 'frontend'],
   [/\bback ?-?end\b/g, 'backend'],
   [/\bfull ?-?stack\b/g, 'fullstack'],
+  [/\b(buenas )?practicas de ingenieria\b/g, 'practicas'],
+  [/\bengineering practices\b/g, 'practices'],
+  [/\bia aplicada\b/g, 'ia'],
+  [/\bapplied ai\b/g, 'ai'],
+  [/\binteligencia artificial\b/g, 'ia'],
+  [/\bhojas? de vida\b/g, 'cv'],
+  [/\bcurriculum vitae\b/g, 'cv'],
 ]
 
 export const STOPWORDS = new Set([
@@ -86,6 +93,7 @@ export type Concept =
   | 'technologies'
   | 'projects'
   | 'experience'
+  | 'cv'
   | 'services'
   | 'hire'
   | 'education'
@@ -120,14 +128,18 @@ export const CONCEPTS: Record<Concept, ConceptWords> = {
     words: [
       'experiencia', 'experience', 'trayectoria', 'career', 'trabajado', 'worked', 'trabajaste', 'empleo',
       'empleos', 'job', 'jobs', 'empresa', 'empresas', 'company', 'companies', 'anos', 'years', 'cargo', 'puesto',
-      'laboral', 'profesional', 'professional', 'background', 'resume', 'cv', 'curriculum', 'senior', 'junior',
+      'laboral', 'profesional', 'professional', 'background', 'senior', 'junior',
     ],
+  },
+  cv: {
+    words: ['cv', 'resume', 'curriculum', 'curriculo', 'hv'],
   },
   services: {
     words: [
       'servicio', 'servicios', 'service', 'services', 'ofreces', 'offer', 'offers', 'ofrecer', 'ayudar',
       'ayudarme', 'ayudas', 'help', 'disenar', 'diseno', 'disenas', 'design', 'mantenimiento', 'maintenance',
-      'mantener', 'maintain', 'arreglar', 'fix',
+      'mantener', 'maintain', 'arreglar', 'fix', 'taller', 'talleres', 'workshop', 'workshops', 'consultoria',
+      'consulting', 'asesoria',
     ],
   },
   hire: {
@@ -361,7 +373,36 @@ export const CODE_REQUEST =
   /\b(escribe|escribeme|hazme|haz|genera|generame|crea|creame|programa|write|generate|create|make|code)\b( me)? (un|una|el|la|a|an|the|some)\b.{0,30}\b(codigo|code|funcion|function|script|programa|program|query|consulta sql|algoritmo|algorithm|clase|class|regex|componente|component|snippet)\b/
 
 export const SERVICE_FOCUS: Record<string, string[]> = {
-  design: ['disenar', 'diseno', 'disenas', 'design', 'designs', 'figma', 'ui', 'ux'],
-  development: ['desarrollar', 'desarrollo', 'development', 'develop', 'programar', 'program', 'build', 'construir', 'responsive'],
-  maintenance: ['mantenimiento', 'maintenance', 'mantener', 'maintain', 'arreglar', 'fix', 'soporte', 'support', 'cambios', 'changes'],
+  workshops: [
+    'taller', 'talleres', 'workshop', 'workshops', 'entrenamiento', 'entrenar', 'entrenas', 'training', 'train',
+    'capacitacion', 'capacitar', 'ensenar', 'ensenas', 'teach', 'equipo', 'equipos', 'team', 'teams',
+  ],
+  'ai-harness': [
+    'asistente', 'asistentes', 'assistant', 'assistants', 'harness', 'plugin', 'plugins', 'profesion', 'profession',
+    'oficio', 'craft',
+  ],
+  'software-factory': ['fabrica', 'fabricas', 'factory', 'factories', 'agentes', 'agents', 'paralelo', 'parallel'],
+  'process-optimization': [
+    'optimizar', 'optimizacion', 'optimize', 'optimization', 'automatizar', 'automatizacion', 'automate', 'automation',
+    'proceso', 'procesos', 'process', 'processes', 'repetitivo', 'repetitive',
+  ],
+  architecture: [
+    'arquitectura', 'architecture', 'disenar', 'diseno', 'disenas', 'design', 'designs', 'modernizar', 'modernizacion',
+    'modernize', 'modernization', 'legado', 'legacy', 'migrar', 'migracion', 'migrate', 'migration', 'microservicios',
+    'microservices',
+  ],
+  product: [
+    'producto', 'product', 'desarrollar', 'desarrollo', 'development', 'develop', 'programar', 'program', 'build',
+    'construir', 'responsive', 'app', 'aplicacion', 'website', 'mantenimiento', 'maintenance', 'mantener', 'maintain',
+    'arreglar', 'fix', 'soporte', 'support', 'figma', 'ui', 'ux',
+  ],
+}
+
+export const LOBE_WORDS: Record<string, string[]> = {
+  frontend: ['frontend'],
+  architecture: ['arquitectura', 'architecture', 'arquitecto', 'architect'],
+  'backend-cloud': ['backend', 'nube', 'cloud'],
+  'applied-ai': ['ia', 'ai', 'inteligencia', 'llm', 'llms', 'agentes', 'agents'],
+  practices: ['practicas', 'practices', 'calidad', 'quality'],
+  business: ['negocio', 'negocios', 'business', 'stakeholders'],
 }

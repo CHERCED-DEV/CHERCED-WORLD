@@ -10,6 +10,7 @@ export const PAGE_PATHS: Record<PageId, string> = {
   portfolio: '/portfolio',
   blog: '/blog',
   contact: '/contactMe',
+  now: '/now',
   privacy: '/privacy',
 }
 
@@ -20,20 +21,22 @@ export const PAGE_TITLE_KEYS: Record<PageId, string> = {
   portfolio: 'nav.portfolio',
   blog: 'nav.blog',
   contact: 'nav.contact',
+  now: 'nav.now',
   privacy: 'nav.privacy',
 }
 
 export const PAGE_KEYWORDS: Record<PageId, string> = {
   home: 'inicio home cherced world',
   about: 'sobre mi about me perfil profile skills habilidades educacion education cursos courses idiomas languages',
-  services: 'servicios services diseno design desarrollo development mantenimiento maintenance',
-  portfolio: 'portafolio portfolio proyectos projects trabajos work',
+  services: 'servicios services asistentes assistants fabrica factory arquitectura architecture desarrollo development talleres workshops',
+  portfolio: 'portafolio portfolio proyectos projects trabajos work casos cases',
   blog: 'blog posts articulos articles',
   contact: 'contacto contactame contact correo email mensaje message',
+  now: 'ahora now hoy today este mes this month construyendo building entrenando training lemas mottos',
   privacy: 'privacidad privacy datos data politica policy',
 }
 
-export const PAGE_ORDER: PageId[] = ['home', 'about', 'services', 'portfolio', 'blog', 'contact', 'privacy']
+export const PAGE_ORDER: PageId[] = ['home', 'about', 'services', 'portfolio', 'blog', 'contact', 'now', 'privacy']
 
 export function pageDocs(lang: Locale, common: Dictionary): SearchDoc[] {
   return PAGE_ORDER.map((id) => ({

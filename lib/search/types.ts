@@ -1,13 +1,13 @@
-import type { SocialId } from '@/content/types'
+import type { ProjectEra, SocialId } from '@/content/types'
 import type { Locale } from '@/lib/i18n/config'
 
-export const SEARCH_INDEX_VERSION = 1
+export const SEARCH_INDEX_VERSION = 2
 
-export const PAGE_IDS = ['home', 'about', 'services', 'portfolio', 'blog', 'contact', 'privacy'] as const
+export const PAGE_IDS = ['home', 'about', 'services', 'portfolio', 'blog', 'contact', 'now', 'privacy'] as const
 
 export type PageId = (typeof PAGE_IDS)[number]
 
-export type SearchDocKind = 'page' | 'project' | 'post' | 'section'
+export type SearchDocKind = 'page' | 'project' | 'post' | 'section' | 'skill'
 
 export type SearchDoc = {
   id: string
@@ -20,36 +20,53 @@ export type SearchDoc = {
 
 export type PageFact = { title: string; url: string }
 
+export type AdrFact = { decision: string; why: string; tradeoff: string }
+
+export type RepoFact = { label: string; href: string }
+
 export type ProjectFact = {
   id: string
   title: string
+  era: ProjectEra
   summary: string
-  details: string[]
+  context: string
+  role: string | null
+  decisions: string | null
+  adrs: AdrFact[]
+  result: string | null
   technologies: string[]
   url: string
   live: string | null
   github: string | null
+  repos: RepoFact[]
 }
 
 export type PostFact = { id: string; title: string; description: string; date: string; tags: string[]; url: string }
+
+export type SkillFact = { id: string; name: string; label: string; progress: number; used: string | null }
+
+export type LobeFact = { id: string; name: string; words: string | null; skills: string[]; projects: string[]; url: string }
+
+export type LanguageFact = { id: Locale; name: string; progress: number }
 
 export type AssistantFacts = {
   author: string
   pages: Record<PageId, PageFact>
   about: string
-  skills: { intro: string; bullets: string[]; tech: { name: string; progress: number }[] }
+  skills: { tech: SkillFact[]; lobes: LobeFact[] }
   technologies: string[]
   career: { company: string; role: string; start: string; end: string | null; description: string }[]
   education: { institution: string; degree: string; start: string; end: string | null }[]
   courses: { name: string; description: string }[]
   platzi: { href: string; label: string }
-  languages: { name: string; progress: number }[]
+  languages: LanguageFact[]
   services: { intro: string; items: { id: string; title: string; description: string }[] }
   portfolioIntro: string[]
   projects: ProjectFact[]
   posts: PostFact[]
   blogWelcome: string
   contact: { description: string; email: string | null }
+  cv: { href: string; label: string } | null
   socials: { id: SocialId; label: string; href: string }[]
 }
 

@@ -1,20 +1,24 @@
+import { lobeWords } from '@/content/site'
 import type { SiteContent } from '@/content/types'
 import { getProjects, getSite, listPosts, pick } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
 import { localizedPath } from '@/lib/i18n/paths'
 import { getDictionary } from '@/lib/i18n/server'
 import { t, type Dictionary } from '@/lib/i18n/translate'
+import { lobeUrl, projectDetails } from './facts'
 import { PAGE_KEYWORDS, PAGE_ORDER, PAGE_PATHS, PAGE_TITLE_KEYS } from './pages'
 import { fold } from './text'
 import {
   SEARCH_INDEX_VERSION,
   type AssistantFacts,
+  type LobeFact,
   type PageFact,
   type PageId,
   type PostFact,
   type ProjectFact,
   type SearchDoc,
   type SearchIndex,
+  type SkillFact,
 } from './types'
 
 export function publicEmail(site: SiteContent): string | null {
@@ -35,6 +39,30 @@ function mergeTechnologies(skills: string[], projects: string[][]): string[] {
   return merged
 }
 
+function buildSkills(lang: Locale, site: SiteContent): { tech: SkillFact[]; lobes: LobeFact[] } {
+  const tech = [...site.about.skills.tech]
+    .sort((a, b) => b.progress - a.progress)
+    .map((skill) => ({
+      id: skill.id,
+      name: skill.name,
+      label: skill.label ? pick(skill.label, lang) : skill.name,
+      progress: skill.progress,
+      used: skill.used ? pick(skill.used, lang) : null,
+    }))
+  const lobes = (site.about.skills.lobes ?? []).map((lobe) => ({
+    id: lobe.id,
+    name: pick(lobe.name, lang),
+    words: (() => {
+      const words = lobeWords(lobe, site)
+      return words ? pick(words, lang) : null
+    })(),
+    skills: [...lobe.skills],
+    projects: [...(lobe.projects ?? [])],
+    url: lobeUrl(lang, lobe.id),
+  }))
+  return { tech, lobes }
+}
+
 function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: PostFact[]): AssistantFacts {
   const pages = Object.fromEntries(
     PAGE_ORDER.map((id) => [id, { title: t(common, PAGE_TITLE_KEYS[id]), url: localizedPath(lang, PAGE_PATHS[id]) }]),
@@ -44,28 +72,32 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
   const projects: ProjectFact[] = getProjects().map((project) => ({
     id: project.id,
     title: project.title,
+    era: project.era,
     summary: pick(project.summary, lang),
-    details: [project.context, project.role, project.decisions, project.result]
-      .filter((value) => value !== null)
-      .map((value) => pick(value, lang)),
+    context: pick(project.context, lang),
+    role: project.role ? pick(project.role, lang) : null,
+    decisions: project.decisions ? pick(project.decisions, lang) : null,
+    adrs: (project.adrCards ?? []).map((card) => ({
+      decision: pick(card.decision, lang),
+      why: pick(card.why, lang),
+      tradeoff: pick(card.tradeoff, lang),
+    })),
+    result: project.result ? pick(project.result, lang) : null,
     technologies: project.technologies,
     url: localizedPath(lang, `/portfolio/${project.id}`),
     live: project.links.live,
     github: project.links.github,
+    repos: (project.links.repos ?? []).map((repo) => ({ label: repo.label, href: repo.href })),
   }))
-  const skillTech = [...site.about.skills.tech].sort((a, b) => b.progress - a.progress)
+  const skills = buildSkills(lang, site)
 
   return {
     author: t(common, 'brand.author'),
     pages,
     about: pick(site.about.description, lang),
-    skills: {
-      intro: pick(site.about.skills.description, lang),
-      bullets: site.about.skills.bullets.map((bullet) => pick(bullet, lang)),
-      tech: skillTech.map((tech) => ({ name: tech.name, progress: tech.progress })),
-    },
+    skills,
     technologies: mergeTechnologies(
-      skillTech.map((tech) => tech.name),
+      skills.tech.map((tech) => tech.name),
       projects.map((project) => project.technologies),
     ),
     career: careerPublished
@@ -85,9 +117,13 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
       description: pick(school.description, lang),
     })),
     platzi: { href: site.about.courses.platzi.href, label: pick(site.about.courses.platzi.label, lang) },
-    languages: site.about.languages.map((language) => ({ name: pick(language.name, lang), progress: language.progress })),
+    languages: site.about.languages.map((language) => ({
+      id: language.id,
+      name: pick(language.name, lang),
+      progress: language.progress,
+    })),
     services: {
-      intro: pick(site.services.intro, lang),
+      intro: pick(site.services.hero.intro, lang),
       items: site.services.items.map((item) => ({
         id: item.id,
         title: pick(item.title, lang),
@@ -99,6 +135,7 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
     posts,
     blogWelcome: pick(site.blog.welcome, lang),
     contact: { description: pick(site.contact.description, lang), email: publicEmail(site) },
+    cv: site.profile ? { href: site.profile.cv.href, label: t(common, 'cv.link') } : null,
     socials: site.socials
       .filter((social): social is typeof social & { href: string } => social.href !== null)
       .map((social) => ({ id: social.id, label: pick(social.label, lang), href: social.href })),
@@ -108,7 +145,12 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
 function pageText(id: PageId, facts: AssistantFacts, site: SiteContent, lang: Locale): string {
   switch (id) {
     case 'home':
-      return `${pick(site.home.greeting, lang)} ${site.home.name}. ${pick(site.home.title, lang)}`
+      return [
+        `${pick(site.home.greeting, lang)} ${site.home.name}. ${pick(site.home.title, lang)}`,
+        site.home.subtitle ? pick(site.home.subtitle, lang) : '',
+      ]
+        .filter(Boolean)
+        .join(' ')
     case 'about':
       return facts.about
     case 'services':
@@ -119,9 +161,36 @@ function pageText(id: PageId, facts: AssistantFacts, site: SiteContent, lang: Lo
       return facts.blogWelcome
     case 'contact':
       return facts.contact.description
+    case 'now':
+      return ''
     case 'privacy':
       return site.privacy.sections.map((section) => pick(section.heading, lang)).join('. ')
   }
+}
+
+function skillDocs(facts: AssistantFacts, experience: Dictionary): SearchDoc[] {
+  const docs: SearchDoc[] = []
+  const seen = new Set<string>()
+  for (const lobe of facts.skills.lobes) {
+    for (const id of lobe.skills) {
+      if (seen.has(id)) continue
+      const tech = facts.skills.tech.find((skill) => skill.id === id)
+      const language = tech ? undefined : facts.languages.find((item) => item.id === id)
+      const title = tech?.label ?? language?.name
+      const level = tech?.progress ?? language?.progress
+      if (!title || level === undefined) continue
+      seen.add(id)
+      docs.push({
+        id: `skill:${id}`,
+        kind: 'skill',
+        title,
+        text: t(experience, 'palette.skillHint', { lobe: lobe.name, level }),
+        keywords: `${lobe.name} ${id.replace(/-/g, ' ')}`,
+        url: lobe.url,
+      })
+    }
+  }
+  return docs
 }
 
 function buildDocs(lang: Locale, facts: AssistantFacts, site: SiteContent, experience: Dictionary): SearchDoc[] {
@@ -139,7 +208,7 @@ function buildDocs(lang: Locale, facts: AssistantFacts, site: SiteContent, exper
       id: `project:${project.id}`,
       kind: 'project',
       title: project.title,
-      text: [project.summary, ...project.details].join(' '),
+      text: [project.summary, ...projectDetails(project)].join(' '),
       keywords: project.technologies.join(' '),
       url: project.url,
     })
@@ -156,6 +225,8 @@ function buildDocs(lang: Locale, facts: AssistantFacts, site: SiteContent, exper
     })
   }
 
+  docs.push(...skillDocs(facts, experience))
+
   const about = facts.pages.about.url
   const section = (id: string, text: string, keywords: string, url = about): SearchDoc => ({
     id: `section:${id}`,
@@ -169,7 +240,7 @@ function buildDocs(lang: Locale, facts: AssistantFacts, site: SiteContent, exper
   docs.push(
     section(
       'skills',
-      [facts.skills.intro, ...facts.skills.bullets].join(' '),
+      facts.skills.lobes.flatMap((lobe) => (lobe.words ? [lobe.words] : [])).join(' '),
       facts.skills.tech.map((tech) => tech.name).join(' '),
     ),
     section(
@@ -199,12 +270,12 @@ function buildDocs(lang: Locale, facts: AssistantFacts, site: SiteContent, exper
     )
   }
 
-  for (const item of facts.services.items) {
+  for (const item of site.services.items) {
     docs.push({
       id: `section:service-${item.id}`,
       kind: 'section',
-      title: item.title,
-      text: item.description,
+      title: pick(item.title, lang),
+      text: [pick(item.description, lang), pick(item.forWho, lang), ...item.deliverables.map((entry) => pick(entry, lang))].join(' '),
       keywords: 'servicio service',
       url: facts.pages.services.url,
     })

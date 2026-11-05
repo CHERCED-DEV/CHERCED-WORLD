@@ -6,6 +6,7 @@ import {
   CONCEPTS,
   DIRECTED,
   EXTERNAL_TECH,
+  LOBE_WORDS,
   MANIPULATION_PATTERNS,
   OUT_OF_SCOPE_PATTERNS,
   PROGRAMMING_HINTS,
@@ -29,6 +30,8 @@ export type Intent =
   | 'projects_with_tech'
   | 'project'
   | 'experience'
+  | 'cv'
+  | 'skills_area'
   | 'services'
   | 'hire'
   | 'education'
@@ -49,6 +52,7 @@ export type Classification = {
   techs: string[]
   projects: ProjectMatch[]
   concepts: Partial<Record<Concept, number>>
+  lobes: string[]
   mentionsAuthor: boolean
 }
 
@@ -58,9 +62,12 @@ export type Vocabulary = {
   aliases: Map<string, string>
   fuzzyAliases: string[]
   projects: ProjectEntry[]
+  lobes: Map<string, string>
 }
 
 const GENERIC_TITLE_WORDS = new Set(['website', 'system', 'sistema', 'world', 'club', 'shop', 'done', 'tracking', 'studio'])
+
+const LOBE_FRIENDLY = new Set<Concept>(['technologies', 'experience', 'projects'])
 
 const CONCEPT_PRIORITY: Concept[] = [
   'contact',
@@ -69,6 +76,7 @@ const CONCEPT_PRIORITY: Concept[] = [
   'education',
   'courses',
   'languages',
+  'cv',
   'experience',
   'technologies',
   'projects',
@@ -110,7 +118,23 @@ export function buildVocabulary(facts: AssistantFacts): Vocabulary {
     }
   })
 
-  return { aliases, fuzzyAliases, projects }
+  const known = new Set(facts.skills.lobes.map((lobe) => lobe.id))
+  const lobes = new Map<string, string>()
+  for (const [id, words] of Object.entries(LOBE_WORDS)) {
+    if (!known.has(id)) continue
+    for (const word of words) lobes.set(word, id)
+  }
+
+  return { aliases, fuzzyAliases, projects, lobes }
+}
+
+function detectLobes(tokens: string[], vocabulary: Vocabulary): string[] {
+  const found: string[] = []
+  for (const token of tokens) {
+    const id = vocabulary.lobes.get(token)
+    if (id && !found.includes(id)) found.push(id)
+  }
+  return found
 }
 
 export function isManipulation(question: NormalizedQuestion): boolean {
@@ -215,7 +239,7 @@ function mentionsAuthor(tokens: string[]): boolean {
 export function classify(question: NormalizedQuestion, vocabulary: Vocabulary): Classification {
   const { tokens, text } = question
   const author = mentionsAuthor(tokens)
-  const base = { techs: [] as string[], projects: [] as ProjectMatch[], concepts: {}, mentionsAuthor: author }
+  const base = { techs: [] as string[], projects: [] as ProjectMatch[], concepts: {}, lobes: [] as string[], mentionsAuthor: author }
 
   if (isManipulation(question)) return { ...base, intent: 'refusal' }
   if (tokens.length === 0) return { ...base, intent: 'greeting' }
@@ -226,7 +250,8 @@ export function classify(question: NormalizedQuestion, vocabulary: Vocabulary): 
   const concepts = scoreConcepts(tokens, vocabulary)
   const about = ABOUT_PHRASES.some((pattern) => pattern.test(text))
   const site = SITE_PHRASES.some((pattern) => pattern.test(text))
-  const result = { ...base, techs, projects, concepts }
+  const lobes = detectLobes(tokens, vocabulary)
+  const result = { ...base, techs, projects, concepts, lobes }
   const projectsConcept = (concepts.projects ?? 0) >= 0.5
   const strongOther = (['contact', 'services', 'hire', 'education', 'courses', 'blog'] as Concept[]).some(
     (concept) => (concepts[concept] ?? 0) >= 1,
@@ -239,6 +264,7 @@ export function classify(question: NormalizedQuestion, vocabulary: Vocabulary): 
   if (about && !strongOther) return { ...result, intent: 'about' }
 
   const concept = bestConcept(concepts)
+  if (lobes.length > 0 && !strongOther && (concept === null || LOBE_FRIENDLY.has(concept))) return { ...result, intent: 'skills_area' }
   if (concept) return { ...result, intent: concept }
 
   if (OUT_OF_SCOPE_PATTERNS.some((pattern) => pattern.test(text))) return { ...result, intent: 'out_of_scope' }
