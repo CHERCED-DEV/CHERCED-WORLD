@@ -36,12 +36,34 @@
     border-radius: 999px;
   }
 
+  :global(:root[data-js]) .dock::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: var(--cw-glass-edge-width);
+    border-radius: 999px;
+    background:
+      radial-gradient(60% 140% at 50% 0%, var(--cw-glass-spot-accent), transparent 70%),
+      linear-gradient(180deg, var(--cw-glass-edge-highlight), var(--cw-glass-edge-soft) 35%, var(--cw-glass-edge-shade) 70%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+
   :global(:root[data-js]) .dock::before,
+  :global(:root[data-js]) .dock::after,
   :global(:root[data-js]) .dock > :not([data-cw-mailbox]) {
     translate: 0 var(--_cw-dock-hide);
   }
 
-  :global(:root[data-js]) .dock::before {
+  :global(:root[data-js]) .dock::before,
+  :global(:root[data-js]) .dock::after {
     transition: translate var(--cw-dock-duration) var(--cw-ease-out);
   }
 
