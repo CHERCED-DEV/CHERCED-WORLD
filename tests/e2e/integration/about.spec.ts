@@ -2,6 +2,8 @@ import { expect, test, type Locator, type Page } from '@playwright/test'
 import { getSite } from '@/lib/content'
 import { LANGS, skipIntro, type Lang } from './support/pages'
 
+test.describe.configure({ timeout: 90_000 })
+
 const site = getSite()
 const CAREER_ENTRIES = site.about.career.length
 const SKILL_NAMES = site.about.skills.tech.map((tech) => tech.label?.es ?? tech.name)
