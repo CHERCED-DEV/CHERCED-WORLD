@@ -60,6 +60,14 @@ function Grid() {
       viewBox={`0 0 ${OG_SIZE.width} ${OG_SIZE.height}`}
       style={{ position: 'absolute', top: 0, left: 0 }}
     >
+      <defs>
+        <radialGradient id="cw-og-glow" cx={1020} cy={110} r={560} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor={OG_ACCENT} stopOpacity={0.26} />
+          <stop offset="0.55" stopColor={OG_ACCENT} stopOpacity={0.07} />
+          <stop offset="1" stopColor={OG_ACCENT} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect x={0} y={0} width={OG_SIZE.width} height={OG_SIZE.height} fill="url(#cw-og-glow)" />
       {vertical.map((x) => (
         <line key={`v${x}`} x1={x} y1={0} x2={x} y2={OG_SIZE.height} stroke="#ffffff" strokeOpacity={0.07} strokeWidth={1} />
       ))}
@@ -87,17 +95,6 @@ export function OgCard({ title, line }: Pick<OgInput, 'title' | 'line'>) {
       }}
     >
       <Grid />
-      <div
-        style={{
-          position: 'absolute',
-          top: -260,
-          right: -200,
-          width: 760,
-          height: 760,
-          borderRadius: 9999,
-          backgroundImage: 'radial-gradient(circle, rgba(37, 237, 158, 0.28) 0%, rgba(37, 237, 158, 0) 68%)',
-        }}
-      />
       <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
         <div style={{ width: 56, height: 6, borderRadius: 3, background: OG_ACCENT }} />
         <div style={{ fontSize: 26, fontWeight: 700, letterSpacing: 8 }}>{BRAND}</div>
