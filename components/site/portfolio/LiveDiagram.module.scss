@@ -238,13 +238,14 @@ $step: 240ms;
 
     .role {
       position: absolute;
-      width: 1px;
+      inset-inline: 0;
+      top: 0;
       height: 1px;
-      margin: -1px;
+      margin: 0;
       padding: 0;
       overflow: hidden;
       clip-path: inset(50%);
-      white-space: nowrap;
+      pointer-events: none;
     }
 
     .line {
