@@ -12,7 +12,7 @@ import {
   technologyCounts,
   type CaseStudyLabels,
 } from '@/components/site/portfolio/projects'
-import { projectMediaName } from '@/components/site/portfolio/transition'
+import { isPlainClick, markSharedNavigation, projectMediaName, takeSharedNavigation } from '@/components/site/portfolio/transition'
 import type { Locale, Project } from '@/content/types'
 import { getProject, getProjects } from '@/lib/content'
 import { locales, t } from '@/lib/i18n'
@@ -225,5 +225,22 @@ describe('época y compatibilidad del caso', () => {
     expect(new Set(names).size).toBe(projects.length)
     for (const name of names) expect(name).toMatch(/^project-media-[A-Za-z0-9_-]+$/)
     expect(projectMediaName('a b/c')).toBe('project-media-a-b-c')
+  })
+
+  it('el aviso de navegación compartida sirve una sola vez y solo para su caso', () => {
+    markSharedNavigation(projectMediaName('12'))
+    expect(takeSharedNavigation(projectMediaName('13'))).toBe(false)
+    expect(takeSharedNavigation(projectMediaName('12'))).toBe(false)
+    markSharedNavigation(projectMediaName('12'))
+    expect(takeSharedNavigation(projectMediaName('12'))).toBe(true)
+    expect(takeSharedNavigation(projectMediaName('12'))).toBe(false)
+  })
+
+  it('solo un clic simple marca la navegación compartida', () => {
+    const plain = { button: 0, altKey: false, ctrlKey: false, metaKey: false, shiftKey: false, defaultPrevented: false }
+    expect(isPlainClick(plain)).toBe(true)
+    for (const change of [{ button: 1 }, { ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { defaultPrevented: true }]) {
+      expect(isPlainClick({ ...plain, ...change }), JSON.stringify(change)).toBe(false)
+    }
   })
 })

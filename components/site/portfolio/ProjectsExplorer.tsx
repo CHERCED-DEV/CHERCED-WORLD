@@ -20,7 +20,7 @@ import {
 } from './carousel'
 import type { EraLabels } from './labels'
 import styles from './Portfolio.module.scss'
-import { projectMediaName } from './transition'
+import { isPlainClick, markSharedNavigation, projectMediaName } from './transition'
 import { useRailOverflow } from './useRailOverflow'
 
 export type ExplorerLabels = {
@@ -338,7 +338,13 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
                       </li>
                     ) : null}
                   </ul>
-                  <Link href={project.href} className={buttonClassName({ variant: 'solid', className: styles.slideLink })}>
+                  <Link
+                    href={project.href}
+                    className={buttonClassName({ variant: 'solid', className: styles.slideLink })}
+                    onClick={(event) => {
+                      if (position === index && isPlainClick(event)) markSharedNavigation(projectMediaName(project.id))
+                    }}
+                  >
                     {labels.viewCase}
                     <span className="cw-visually-hidden">: {project.title}</span>
                   </Link>

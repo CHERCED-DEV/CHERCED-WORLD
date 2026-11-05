@@ -1,13 +1,14 @@
 'use client'
 
 import Image from 'next/image'
-import { useId, useState, ViewTransition, type CSSProperties, type KeyboardEvent } from 'react'
+import { useId, useLayoutEffect, useState, ViewTransition, type CSSProperties, type KeyboardEvent } from 'react'
 import { Dialog } from '@/components/ui/Dialog'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
 import { fillTemplate, indexForKey, wrapIndex } from './carousel'
 import styles from './CaseGallery.module.scss'
 import { PortfolioIcon } from './PortfolioIcon'
+import { takeSharedNavigation } from './transition'
 
 export type GalleryImage = { src: string; alt: string; width: number; height: number }
 
@@ -36,6 +37,10 @@ export function CaseGallery({ images, labels, title, transitionName }: CaseGalle
   const titleId = `${uid}-title`
   const [current, setCurrent] = useState(0)
   const [open, setOpen] = useState(false)
+
+  useLayoutEffect(() => {
+    if (transitionName && takeSharedNavigation(transitionName)) window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [transitionName])
   const total = images.length
   const shown = images[current] ?? images[0]
   if (!shown) return null
