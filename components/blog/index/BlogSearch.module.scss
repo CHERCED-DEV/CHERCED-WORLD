@@ -1,0 +1,146 @@
+@use 'glass' as *;
+@use 'layout';
+
+.search {
+  display: grid;
+  gap: var(--cw-space-2);
+
+  :global(:root:not([data-js])) & {
+    display: none;
+  }
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  inset-inline-start: var(--cw-space-4);
+  color: var(--cw-fg-muted);
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 calc(var(--cw-space-4) + 40px) 0 calc(var(--cw-space-4) + 28px);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  background: var(--cw-glass-solid-subtle-bg);
+  color: var(--cw-fg);
+  font: inherit;
+  font-size: var(--cw-text-md);
+  transition:
+    border-color var(--cw-duration-base) var(--cw-ease-out),
+    box-shadow var(--cw-duration-base) var(--cw-ease-out);
+  appearance: none;
+
+  &::placeholder {
+    color: var(--cw-fg-muted);
+    opacity: 1;
+  }
+
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--cw-fg) 35%, transparent);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+    border-color: color-mix(in srgb, var(--cw-intro-accent) 70%, var(--cw-fg));
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--cw-intro-accent) 18%, transparent);
+  }
+}
+
+.clear {
+  position: absolute;
+  inset-inline-end: 4px;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cw-fg);
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--cw-fg) 10%, transparent);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+    outline-offset: -2px;
+  }
+}
+
+.status {
+  padding-inline: var(--cw-space-4);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+  font-weight: 600;
+
+  &:empty {
+    display: block;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+}
+
+.empty {
+  @include glass(subtle);
+  @include glass-grain;
+  @include glass-edge;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cw-space-4);
+  max-width: 620px;
+  margin: var(--cw-space-7) auto 0;
+  padding: var(--cw-space-6) var(--cw-space-5);
+  text-align: center;
+}
+
+.emptyText {
+  font-size: var(--cw-text-lg);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.emptyClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--cw-space-5);
+  border: 0;
+  border-inline: 4px solid var(--cw-fg);
+  background: transparent;
+  color: var(--cw-fg);
+  font: inherit;
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--cw-duration-base) var(--cw-ease-out);
+
+  &:hover {
+    background: color-mix(in srgb, var(--cw-fg) 10%, transparent);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
