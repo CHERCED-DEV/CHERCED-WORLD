@@ -1,0 +1,226 @@
+@use 'breakpoints' as bp;
+@use 'layout';
+
+.page {
+  @include layout.container;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 1.25rem + 2.6vw, 3.5rem);
+  padding-block: var(--cw-space-7) var(--cw-section-gap);
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cw-space-4);
+  max-width: 100%;
+  text-align: center;
+}
+
+.updated {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-3);
+  margin-top: var(--cw-space-2);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  line-height: var(--cw-leading-snug);
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+}
+
+.live {
+  position: relative;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cw-graphic-accent);
+  box-shadow:
+    0 0 10px var(--cw-graphic-glow),
+    0 0 4px color-mix(in srgb, var(--cw-graphic-accent) 70%, transparent);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 1px solid var(--cw-graphic-accent);
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &::after {
+      animation: now-live 2.8s var(--cw-ease) infinite;
+    }
+  }
+}
+
+@keyframes now-live {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.6);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+.intro {
+  max-width: 52ch;
+  font-size: clamp(1rem, 0.9rem + 0.45vw, 1.25rem);
+  line-height: var(--cw-leading-body);
+  text-wrap: balance;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-5);
+  width: 100%;
+  max-width: 1120px;
+
+  @include bp.up(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.cell {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+}
+
+.wide {
+  @include bp.up(lg) {
+    grid-column: 1 / -1;
+  }
+}
+
+.panel {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-5);
+  min-width: 0;
+  padding: clamp(1.25rem, 0.9rem + 1.6vw, 2.5rem);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--cw-space-3);
+}
+
+.heading {
+  flex: none;
+  max-width: 100%;
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+  line-height: var(--cw-leading-snug);
+  letter-spacing: var(--cw-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.head .headLine {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 1.5rem;
+}
+
+.numbered {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(1.5rem, 4.5cqi, 3rem);
+  counter-reset: now-step;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-3);
+  min-width: 0;
+  counter-increment: now-step;
+
+  &::before {
+    content: counter(now-step, decimal-leading-zero);
+    display: flex;
+    align-items: center;
+    gap: var(--cw-space-3);
+    color: var(--cw-fg);
+    font-size: var(--cw-text-xs);
+    font-weight: 700;
+    letter-spacing: var(--cw-tracking-label);
+    background: linear-gradient(var(--cw-graphic-line-strong), var(--cw-graphic-line-strong)) right center / calc(100% - 2.75em) 1px
+      no-repeat;
+  }
+}
+
+.list {
+  display: grid;
+  gap: var(--cw-space-4);
+}
+
+.text {
+  font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+.lead {
+  font-weight: 700;
+}
+
+.mottos {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 4cqi, 2.25rem);
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(2rem, 1.25rem + 3vw, 4.5rem) clamp(1.25rem, 0.9rem + 2vw, 3rem);
+  overflow: hidden;
+  text-align: center;
+}
+
+.mottoList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 3.5cqi, 1.75rem);
+  max-width: 100%;
+}
+
+.motto {
+  max-width: 100%;
+  font-size: clamp(1.5rem, 1.1rem + 3.4cqi, 3.25rem);
+  font-weight: 700;
+  line-height: var(--cw-leading-tight);
+  letter-spacing: var(--cw-tracking-display);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+
+  & + & {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1rem, 3.5cqi, 1.75rem);
+
+    &::before {
+      content: '';
+      width: 48px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--cw-graphic-accent);
+      box-shadow: 0 0 10px var(--cw-graphic-glow);
+    }
+  }
+}
