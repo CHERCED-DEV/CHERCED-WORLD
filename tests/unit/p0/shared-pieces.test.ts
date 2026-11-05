@@ -1,4 +1,4 @@
-import { createElement, type ReactElement } from 'react'
+import { createElement, type ReactElement, type ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { shellLabels } from '@/components/shell/nav'
@@ -13,8 +13,10 @@ import { getDictionary } from '@/lib/i18n/server'
 
 const EMAIL = 'chernandezcediel@gmail.com'
 
+const Provider = ToastProvider as (props: { closeLabel: string; children?: ReactNode }) => ReactElement
+
 function withToasts(element: ReactElement): string {
-  return renderToStaticMarkup(createElement(ToastProvider, { closeLabel: 'Cerrar' }, element))
+  return renderToStaticMarkup(createElement(Provider, { closeLabel: 'Cerrar' }, element))
 }
 
 function tag(html: string, marker: string): string {
