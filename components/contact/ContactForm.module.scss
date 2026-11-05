@@ -104,6 +104,12 @@
           0 0 0 1px var(--cw-graphic-accent),
           0 12px 28px -16px var(--cw-graphic-glow);
       }
+
+      &[aria-invalid='true']:focus {
+        box-shadow:
+          var(--cw-glass-shadow),
+          0 0 0 1px var(--cw-danger);
+      }
     }
   }
 }
