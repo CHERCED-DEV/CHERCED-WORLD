@@ -459,7 +459,7 @@ $green: var(--cw-intro-accent);
 
 .termRows[data-long] {
   @media (min-width: 1100px) {
-    max-height: 432px;
+    max-height: 352px;
     padding-right: var(--cw-space-2);
     padding-bottom: 28px;
     overflow-y: auto;
@@ -726,7 +726,7 @@ $green: var(--cw-intro-accent);
   line-height: 1.55;
 
   &:empty {
-    display: none;
+    margin-bottom: calc(-1 * var(--cw-space-2));
   }
 
   &:focus-visible {
@@ -750,6 +750,12 @@ $green: var(--cw-intro-accent);
   color: var(--cw-fg);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+  }
 }
 
 .shellForm {

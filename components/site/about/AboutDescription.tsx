@@ -26,8 +26,8 @@ export function AboutDescription({ id, lang, title, description, image, children
         </SectionTitle>
         <GlassSurface variant="standard" edge light className={styles.heroText}>
           <p>{description[lang]}</p>
+          <CvLink lang={lang} className={styles.heroCv} />
         </GlassSurface>
-        <CvLink lang={lang} />
         {children}
       </div>
     </section>
