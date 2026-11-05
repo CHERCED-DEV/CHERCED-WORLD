@@ -519,7 +519,15 @@ $card-gap: 6px;
       }
 
       .filters .filterLabel {
-        @include layout.visually-hidden;
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        height: 1px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        pointer-events: none;
       }
 
       .filters .eraFilter {
