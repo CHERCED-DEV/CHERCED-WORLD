@@ -35,6 +35,7 @@ export default async function HomePage({ params }: Props) {
         projects={getProjects()}
         labels={{
           socials: t(dict, 'home.socials'),
+          previousTitle: t(dict, 'home.previousTitleLabel'),
           cue: t(home, 'hero.cue'),
           now: {
             title: t(home, 'now.title'),
