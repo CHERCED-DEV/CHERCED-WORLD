@@ -65,6 +65,30 @@
   }
 }
 
+$cascade-step-sm: 35ms;
+
+@include bp.down(md) {
+  .menu:popover-open nav li {
+    @for $i from 1 through 8 {
+      &:nth-child(#{$i}) {
+        animation-delay: calc(#{$i - 1} * #{$cascade-step-sm});
+      }
+    }
+  }
+
+  .menu:popover-open .cascade {
+    animation: menu-item-in var(--cw-duration-slow) var(--cw-ease-out) both;
+    animation-delay: calc(var(--cw-menu-items, 6) * #{$cascade-step-sm});
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu:popover-open nav li,
+  .menu:popover-open .cascade {
+    animation: none;
+  }
+}
+
 .menu .topLine {
   position: absolute;
   top: var(--cw-header-h);

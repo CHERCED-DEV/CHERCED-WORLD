@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type CSSProperties } from 'react'
 import { GridLines, Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n/config'
@@ -35,7 +35,15 @@ export function FloatMenu({ lang, items, labels }: FloatMenuProps) {
   }
 
   return (
-    <div id={FLOAT_MENU_ID} ref={ref} popover="auto" className={styles.menu} data-cw-glass="strong" data-cw-float-menu="">
+    <div
+      id={FLOAT_MENU_ID}
+      ref={ref}
+      popover="auto"
+      className={styles.menu}
+      style={{ '--cw-menu-items': items.length } as CSSProperties}
+      data-cw-glass="strong"
+      data-cw-float-menu=""
+    >
       <GridLines fade="radial" />
       <Hairline glint className={styles.topLine} />
       <div className={styles.top}>
@@ -50,7 +58,7 @@ export function FloatMenu({ lang, items, labels }: FloatMenuProps) {
         </button>
       </div>
       <NavLinks lang={lang} items={items} label={labels.nav} variant="menu" onNavigate={close} />
-      <LangSwitch lang={lang} label={labels.lang} />
+      <LangSwitch lang={lang} label={labels.lang} className={styles.cascade} />
       <Image
         src="/assets/icons/brandLogoX2.png"
         alt=""
