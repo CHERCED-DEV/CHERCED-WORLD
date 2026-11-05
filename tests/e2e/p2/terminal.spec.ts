@@ -22,6 +22,14 @@ async function openTerminal(page: Page, lang: Lang): Promise<{ input: Locator; l
     } catch {}
   })
   await page.goto(`/${lang}/aboutMe`)
+  if ((page.viewportSize()?.width ?? 1280) < 768) {
+    const first = page.locator('[data-cw-lobe="frontend"]')
+    await first.scrollIntoViewIfNeeded()
+    await expect(async () => {
+      await first.click()
+      await expect(page.locator('dialog[data-cw-sheet][open]')).toBeVisible({ timeout: 1000 })
+    }).toPass()
+  }
   const input = page.getByRole('textbox', { name: LABELS[lang].input })
   await input.scrollIntoViewIfNeeded()
   await expect(input).toBeVisible()

@@ -21,6 +21,24 @@ async function skipIntro(page: Page) {
   })
 }
 
+const SHEET_OPEN = 'dialog[data-cw-sheet][open]'
+
+async function chooseLobe(page: Page, id: string) {
+  const lobe = page.locator(`[data-cw-lobe="${id}"]`)
+  if ((page.viewportSize()?.width ?? 1280) >= 768) {
+    await lobe.click()
+    return
+  }
+  if ((await page.locator(SHEET_OPEN).count()) > 0) {
+    await page.keyboard.press('Escape')
+    await expect(page.locator(SHEET_OPEN)).toHaveCount(0)
+  }
+  await expect(async () => {
+    await lobe.click()
+    await expect(page.locator(SHEET_OPEN)).toBeVisible({ timeout: 1000 })
+  }).toPass()
+}
+
 async function navBottom(page: Page): Promise<number> {
   return page.locator('[data-cw-scene-nav] ol').evaluate((node) => node.getBoundingClientRect().bottom)
 }
@@ -146,7 +164,7 @@ test.describe('bug 4: el título del lóbulo se lee una vez y completo', () => {
     await page.locator('[data-cw-brain]').scrollIntoViewIfNeeded()
     const terminal = page.locator('[data-cw-terminal]')
     for (const lobe of data.lobes) {
-      await page.locator(`[data-cw-lobe="${lobe.id}"]`).click()
+      await chooseLobe(page, lobe.id)
       const heading = terminal.getByRole('heading', { level: 3 })
       await expect(heading).toHaveAccessibleName(lobe.name)
       await expect(terminal.locator('[data-cw-decode]')).toHaveAttribute('aria-hidden', 'true')
@@ -232,6 +250,10 @@ test.describe('bug 6: grises con 4,5:1 o más en ambos temas', () => {
       await page.goto('/es/aboutMe')
       const failures: string[] = []
       for (const scope of ['[data-cw-about="figures"]', '[data-cw-terminal]']) {
+        if (scope === '[data-cw-terminal]' && (page.viewportSize()?.width ?? 1280) < 768) {
+          await page.locator('[data-cw-brain-map]').scrollIntoViewIfNeeded()
+          await chooseLobe(page, 'frontend')
+        }
         await page.locator(scope).scrollIntoViewIfNeeded()
         await page.waitForTimeout(500)
         const samples = await page.locator(scope).evaluate((root) => {

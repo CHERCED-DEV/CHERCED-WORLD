@@ -188,7 +188,7 @@ test.describe('filtro por tecnología', () => {
 test.describe('tecnologías en móvil', () => {
   onlyIn('mobile-chromium')
 
-  test('los lóbulos son chips y cada uno muestra sus tecnologías en el panel (US6c)', async ({ page }) => {
+  test('cada lóbulo del mapa compacto muestra sus tecnologías en la hoja (US6c, 006 EM-02)', async ({ page }) => {
     const lobes = site.about.skills.lobes ?? []
     test.skip(lobes.length === 0, 'hacen falta lóbulos')
     await skipIntro(page)
@@ -196,8 +196,16 @@ test.describe('tecnologías en móvil', () => {
     const chips = page.locator('[data-cw-lobe]')
     await expect(chips).toHaveCount(lobes.length)
     const panel = page.locator('[data-cw-terminal-body]')
+    const sheet = page.locator('dialog[data-cw-sheet][open]')
     for (const lobe of lobes) {
-      await page.locator(`[data-cw-lobe="${lobe.id}"]`).click()
+      if ((await sheet.count()) > 0) {
+        await page.keyboard.press('Escape')
+        await expect(sheet).toHaveCount(0)
+      }
+      await expect(async () => {
+        await page.locator(`[data-cw-lobe="${lobe.id}"]`).click()
+        await expect(sheet).toBeVisible({ timeout: 1000 })
+      }).toPass()
       await expect(page.locator(`[data-cw-lobe="${lobe.id}"]`)).toHaveAttribute('aria-pressed', 'true')
       await expect(panel.locator('[data-cw-brain-skill]')).toHaveCount(lobe.skills.length)
     }

@@ -4,6 +4,7 @@
 
 $mono: ui-monospace, 'Cascadia Code', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 $green: var(--cw-intro-accent);
+$compact-map: 30rem;
 
 .stage {
   position: relative;
@@ -30,9 +31,11 @@ $green: var(--cw-intro-accent);
   }
 
   @include bp.down(md) {
-    inset: var(--cw-space-4) 0 auto;
+    inset: var(--cw-space-4) auto auto 50%;
+    width: min(100%, #{$compact-map});
     height: auto;
     aspect-ratio: 1;
+    translate: -50% 0;
     opacity: 0.55;
     -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
     mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
@@ -835,6 +838,8 @@ $green: var(--cw-intro-accent);
 
 @include bp.down(md) {
   .map {
+    width: min(100%, #{$compact-map});
+    margin-inline: auto;
     aspect-ratio: 1;
     padding: 0;
     overflow: hidden;
