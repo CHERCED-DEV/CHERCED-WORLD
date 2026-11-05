@@ -502,7 +502,6 @@
   text-align: center;
 }
 
-$peek: 40px;
 $card-gap: 6px;
 
 @include bp.down(md) {
@@ -540,9 +539,13 @@ $card-gap: 6px;
         line-height: 1.4;
       }
 
+      .track {
+        --cw-peek: clamp(28px, 10vw, 40px);
+      }
+
       .slide {
-        margin-right: -$peek;
-        padding-inline: calc(#{$peek} / 2 + #{$card-gap} / 2);
+        margin-right: calc(var(--cw-peek) * -1);
+        padding-inline: calc(var(--cw-peek) / 2 + #{$card-gap} / 2);
         pointer-events: none;
 
         &:last-child {
@@ -551,6 +554,7 @@ $card-gap: 6px;
       }
 
       .slideCard {
+        padding: var(--cw-space-4);
         pointer-events: auto;
       }
 
