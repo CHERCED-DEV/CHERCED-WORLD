@@ -1,7 +1,11 @@
+import { consentLabels } from '@/components/contact/labels'
 import { getApprovedComments, submitComment } from '@/lib/actions/comments'
 import type { PublicComment } from '@/lib/data/types'
 import { localizedPath, t, type Dictionary, type Locale } from '@/lib/i18n'
+import { getDictionary } from '@/lib/i18n/server'
 import { commentFormLabels } from '../labels'
+import { reactionLabels } from '../reactions/labels'
+import { Reactions } from '../reactions/Reactions'
 import { CommentDialog } from './CommentDialog'
 import { CommentList } from './CommentList'
 import styles from './Comments.module.scss'
@@ -27,7 +31,7 @@ export async function CommentsSection({
   blog: Dictionary
   common: Dictionary
 }) {
-  const comments = await loadComments(postId)
+  const [comments, site] = await Promise.all([loadComments(postId), getDictionary(lang, 'site')])
   const author = t(common, 'brand.author')
 
   return (
@@ -42,8 +46,10 @@ export async function CommentsSection({
           lang={lang}
           privacyHref={localizedPath(lang, '/privacy')}
           labels={commentFormLabels(blog, common)}
+          consent={consentLabels(common, t(site, 'a11y.newTab'))}
         />
       </div>
+      <Reactions postId={postId} lang={lang} labels={reactionLabels(blog)} />
       {comments === null ? (
         <p className={styles.notice} data-cw-comments-state="error">
           {t(blog, 'comments.loadError')}

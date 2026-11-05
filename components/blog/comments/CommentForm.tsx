@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { startTransition, useActionState, useEffect, useEffectEvent, useId, useRef, useState, type FormEvent } from 'react'
+import { ConsentField, type ConsentLabels } from '@/components/contact/ConsentField'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
 import { Icon } from '@/components/ui/Icon'
@@ -18,11 +18,16 @@ export type CommentFormProps = {
   privacyHref: string
   renderedAt: number | null
   labels: CommentFormLabels
+  consent?: ConsentLabels
   onSuccess?: () => void
   onClose?: () => void
 }
 
-export function CommentForm({ action, postId, lang, privacyHref, renderedAt, labels, onSuccess, onClose }: CommentFormProps) {
+export function consentFromCommentLabels(labels: CommentFormLabels): ConsentLabels {
+  return { text: `${labels.consentBefore}${labels.consentAfter}`.trim(), readPolicy: labels.consentLink, newTab: '' }
+}
+
+export function CommentForm({ action, postId, lang, privacyHref, renderedAt, labels, consent, onSuccess, onClose }: CommentFormProps) {
   const [result, dispatch, pending] = useActionState(action, null)
   const [clientErrors, setClientErrors] = useState<Record<string, string> | null>(null)
   const successRef = useRef<HTMLDivElement>(null)
@@ -100,21 +105,7 @@ export function CommentForm({ action, postId, lang, privacyHref, renderedAt, lab
       <FormField label={labels.comment} hint={labels.commentHint} error={error('comment')}>
         <textarea name="comment" maxLength={LIMITS.comment} rows={5} required />
       </FormField>
-      <FormField
-        inline
-        label={
-          <>
-            {labels.consentBefore}
-            <Link href={privacyHref} target="_blank" rel="noopener">
-              {labels.consentLink}
-            </Link>
-            {labels.consentAfter}
-          </>
-        }
-        error={error('consent')}
-      >
-        <input name="consent" type="checkbox" value="on" required />
-      </FormField>
+      <ConsentField labels={consent ?? consentFromCommentLabels(labels)} href={privacyHref} error={error('consent')} />
 
       <div className={styles.alertSlot}>
         {alert ? (
