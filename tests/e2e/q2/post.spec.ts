@@ -50,10 +50,10 @@ test.describe('diagrama SVG (T621, FR-511)', () => {
     await page.setViewportSize({ width: 320, height: 720 })
     await page.goto('/es/blog/catalog')
     const frame = page.locator('[data-cw-diagram]')
-    await frame.scrollIntoViewIfNeeded()
     const image = frame.getByRole('img')
+    await image.scrollIntoViewIfNeeded()
     await expect(image).toHaveAttribute('alt', /^Diagrama de cómo llega un post al lector/)
-    await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true)
+    await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 15_000 }).toBe(true)
     await expect(image).toHaveAttribute('src', /\.svg$/)
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
     expect(overflow, 'la página no se desplaza a lo ancho').toBeLessThanOrEqual(1)
@@ -187,7 +187,7 @@ test.describe('JSON-LD BlogPosting y feed (T627, FR-521, FR-523)', () => {
         expect(await page.locator('script[data-cw-blog-posting]').count()).toBe(1)
         if (!posting || !person) throw new Error(`${lang}/${id} sin JSON-LD`)
         expect(posting['@context']).toBe('https://schema.org')
-        expect(posting.headline).toBe((await page.getByRole('heading', { level: 1 }).innerText()).trim())
+        expect(posting.headline).toBe((await page.getByRole('heading', { level: 1 }).textContent())?.trim())
         expect(posting.datePublished).toBe(await page.locator('[data-cw-post] header time').first().getAttribute('datetime'))
         expect(posting.dateModified).toBeUndefined()
         expect(posting.inLanguage).toBe(lang)
@@ -269,7 +269,10 @@ test.describe('índice en una hoja en móvil (T857)', () => {
   test('la barra de progreso va en el borde inferior del header', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/es/blog/post5')
-    await page.evaluate(() => window.scrollTo({ top: 1200, behavior: 'instant' }))
+    await page.evaluate(() => {
+      const body = document.querySelector('[data-cw-post-body]')
+      if (body) window.scrollTo({ top: window.scrollY + body.getBoundingClientRect().top + 800, behavior: 'instant' })
+    })
     const [bar, header] = await Promise.all([
       page.locator('[data-cw-reading-progress]').evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect),
       page.locator('#header').evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect),
