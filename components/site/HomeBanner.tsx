@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Fragment, type CSSProperties } from 'react'
+import { Fragment, type CSSProperties, type ReactNode } from 'react'
 import type { SiteContent } from '@/content/types'
 import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
 import { CvLink } from '@/components/ui/CvLink'
@@ -46,6 +46,18 @@ function winkVars(): CSSProperties {
 
 function wordStyle(word: WinkWord): CSSProperties {
   return { '--cw-wink-delay': `${word.delay}ms`, '--cw-wink-duration': `${word.duration}ms` } as CSSProperties
+}
+
+function keepHyphenated(text: string): ReactNode[] {
+  return text.split(/(\S+-\S+)/u).map((part, index) =>
+    index % 2 === 1 ? (
+      <span key={index} className={styles.nowrap}>
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  )
 }
 
 function SocialIcon({ id }: { id: string }) {
@@ -111,7 +123,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
         </h1>
         {subtitle ? (
           <p className={cx(styles.subtitle, enter.enter)} style={step(2.25)} data-cw-home-subtitle="">
-            {keepSeparators(subtitle)}
+            {keepHyphenated(keepSeparators(subtitle))}
           </p>
         ) : null}
         <div className={cx(styles.rule, enter.enter, enter.rule)} style={step(2.75)}>
@@ -150,7 +162,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
           ) : null}
         </div>
         <div className={cx(styles.availability, enter.enter)} style={step(4.5)}>
-          <AvailabilityChip lang={lang} />
+          <AvailabilityChip lang={lang} className={styles.chip} />
         </div>
       </GlassSurface>
       {previous ? <WinkPlayer scope={BANNER_SCOPE} /> : null}
