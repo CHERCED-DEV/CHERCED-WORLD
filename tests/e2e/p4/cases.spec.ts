@@ -341,6 +341,16 @@ test.describe('transición compartida carrusel → caso (FR-465, US7 escenario 7
     const second = projects[1]!
     await page.locator('[data-cw-next]').click()
     await expect(page.locator(`[data-cw-slide="${second.id}"]`)).toHaveAttribute('data-current', 'true')
+    await expect
+      .poll(() =>
+        page.locator('[data-cw-carousel]').evaluate((track, id) => {
+          const slide = track.querySelector<HTMLElement>(`[data-cw-slide="${id}"]`)!
+          return Math.abs(track.scrollLeft - slide.offsetLeft)
+        }, second.id),
+      )
+      .toBeLessThanOrEqual(1)
+    await page.waitForTimeout(200)
+    await expect(page.locator(`[data-cw-slide="${second.id}"]`)).toHaveAttribute('data-current', 'true')
     await page.locator(`[data-cw-slide="${second.id}"]`).getByRole('link').click()
     await page.waitForURL(`**/es/portfolio/${second.id}`)
     await expect.poll(async () => (await transitions(page)).flatMap((record) => record.names)).toContain(`project-media-${second.id}`)
