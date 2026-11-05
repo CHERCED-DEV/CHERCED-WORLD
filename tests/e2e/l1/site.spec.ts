@@ -150,7 +150,7 @@ test.describe('metadatos', () => {
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`${path}$`))
       await expect(page.locator('link[rel="alternate"][hreflang="es"]')).toHaveAttribute('href', new RegExp(`/es${bare === '/' ? '' : bare}$`))
       await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', new RegExp(`/en${bare === '/' ? '' : bare}$`))
-      await expect(page.locator('meta[property="og:image"]').first()).toHaveAttribute('content', /\/assets\//)
+      await expect(page.locator('meta[property="og:image"]').first()).toHaveAttribute('content', /\/assets\/|\/opengraph-image\//)
       await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.{20,}/)
     }
   })
