@@ -246,6 +246,10 @@ test.describe('bug 6: grises con 4,5:1 o más en ambos temas', () => {
             range.selectNodeContents(node)
             const rects = [...range.getClientRects()]
               .filter((rect) => rect.top > 0 && rect.bottom < window.innerHeight && rect.width > 2)
+              .filter((rect) => {
+                const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)
+                return hit !== null && (hit === element || element.contains(hit) || hit.contains(element))
+              })
               .map((rect) => ({ x: Math.ceil(rect.left), y: Math.ceil(rect.top), w: Math.floor(rect.width), h: Math.floor(rect.height) }))
             if (rects.length > 0) found.push({ text: text.slice(0, 30), color: style.color, size: Number.parseFloat(style.fontSize), weight: Number.parseInt(style.fontWeight, 10), rects })
           }

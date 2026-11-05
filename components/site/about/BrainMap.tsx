@@ -105,6 +105,11 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
   return (
     <div className={cx(styles.stage, 'cw-js-only')} data-cw-brain="">
       <canvas ref={canvasRef} className={styles.rain} aria-hidden="true" data-cw-rain="" />
+      <div className={styles.iconWarmer} aria-hidden="true">
+        {[...new Set(data.lobes.flatMap((item) => item.skills.flatMap((skill) => (skill.icon ? [skill.icon] : []))))].map((icon) => (
+          <Image key={icon} src={icon} alt="" width={22} height={22} loading="eager" decoding="sync" unoptimized={icon.endsWith('.svg')} />
+        ))}
+      </div>
       <div className={styles.layout}>
         <div className={styles.mapColumn}>
           <div className={styles.map} data-cw-glass="subtle" data-cw-brain-map="">
@@ -175,7 +180,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
             ))}
             <a className={cx(styles.source, styles.sourceLink)} href={labels.platzi.href} target="_blank" rel="noopener noreferrer" data-cw-glass="subtle" data-cw-platzi="">
               {labels.platzi.label}
-              <span aria-hidden="true"> ↗</span>
+              <span aria-hidden="true"> â†—</span>
               <span className="cw-visually-hidden">{labels.platzi.newTab}</span>
             </a>
           </div>
@@ -211,7 +216,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                     return (
                       <li key={skill.id} className={styles.termRow} data-cw-brain-skill={skill.id}>
 {skill.icon ? (
-                          <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
+                          <Image src={skill.icon} alt="" width={22} height={22} loading="eager" decoding="sync" unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                         ) : (
                           <span className={`${styles.termIcon} ${styles.termMonogram}`} aria-hidden="true">
                             {monogram(skill.name)}
@@ -243,7 +248,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                   <p className={styles.termMeta}>
                     {lobe.sources.length > 0 ? (
                       <span className={styles.metaLine} data-cw-meta="sources">
-                        <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ')}
+                        <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' Â· ')}
                       </span>
                     ) : null}
                     {lobe.projects.length > 0 ? (
@@ -251,7 +256,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                         <strong>{labels.projectsWord}:</strong>{' '}
                         {lobe.projects.map((project, index) => (
                           <span key={project.id}>
-                            {index > 0 ? ' · ' : null}
+                            {index > 0 ? ' Â· ' : null}
                             <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
                               {project.title}
                             </Link>
@@ -276,7 +281,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                       {data.lobes
                         .filter((item) => item.sources.includes(source.id))
                         .map((item) => item.name)
-                        .join(' · ')}
+                        .join(' Â· ')}
                     </span>
                   </p>
                 ) : null}
