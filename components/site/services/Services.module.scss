@@ -286,25 +286,17 @@
   position: relative;
 }
 
+$stack-step: 16px;
+$stack-strip: 28px;
 $stack-depth-scale: 0.04;
 $stack-depth-shade: 0.16;
-
-.cards {
-  @include bp.down(md) {
-    @include site.js-motion {
-      grid-auto-rows: 1fr;
-    }
-  }
-}
 
 .cardItem {
   @include bp.down(md) {
     @include site.js-motion {
-      --cw-stack-base: calc(var(--cw-header-h) + var(--cw-space-3) + var(--cw-i, 0) * var(--cw-stack-step, 16px));
+      --cw-stack-base: calc(var(--cw-header-h) + var(--cw-space-3) + var(--cw-i, 0) * #{$stack-step});
       position: sticky;
       top: min(var(--cw-stack-base), var(--cw-stack-max, var(--cw-stack-base)));
-      grid-row: auto;
-      grid-template-rows: auto 1fr auto;
       transform-origin: 50% 0;
       transform: scale(calc(1 - #{$stack-depth-scale} * min(var(--cw-depth, 0), 3)));
       transition: transform 320ms var(--cw-ease-out);
@@ -319,6 +311,10 @@ $stack-depth-shade: 0.16;
         opacity: calc(#{$stack-depth-shade} * min(var(--cw-depth, 0), 3));
         pointer-events: none;
         transition: opacity 320ms var(--cw-ease-out);
+      }
+
+      &[data-cw-stack='behind'] {
+        clip-path: inset(0 0 calc(100% - #{$stack-strip}) 0);
       }
     }
   }

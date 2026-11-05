@@ -14,7 +14,7 @@ export function ServiceStack({ cards }: ServiceStackProps) {
   useEffect(() => {
     const host = list.current
     if (!host) return
-    return watchStack({ children: host.children as HTMLCollectionOf<HTMLElement>, style: host.style }, setActive)
+    return watchStack({ children: host.children as HTMLCollectionOf<HTMLElement> }, setActive)
   }, [])
 
   return (

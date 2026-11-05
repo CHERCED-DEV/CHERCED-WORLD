@@ -4,10 +4,6 @@ export const STACK_MOTION_QUERY = '(prefers-reduced-motion: no-preference)'
 
 export const STACK_MAX_PROPERTY = '--cw-stack-max'
 
-export const STACK_STEP_PROPERTY = '--cw-stack-step'
-
-export const STACK_STEP = 16
-
 export const STACK_GAP = 12
 
 export function stackActive(tops: readonly number[], stickTops: readonly number[]): number {
@@ -22,25 +18,17 @@ export function stackDepth(index: number, active: number): number {
   return active >= 0 && index < active ? active - index : 0
 }
 
-export type StackLayout = { max: number; step: number }
-
-export function stackLayout(
-  { viewportHeight, reserve, height, firstTop, count }: { viewportHeight: number; reserve: number; height: number; firstTop: number; count: number },
-  gap = STACK_GAP,
-  step = STACK_STEP,
-): StackLayout {
-  const max = Math.round(viewportHeight - reserve - gap - height)
-  const room = max - firstTop
-  const fitted = count > 1 ? Math.floor(room / (count - 1)) : step
-  return { max, step: Math.max(0, Math.min(step, fitted)) }
+export function stackMax(viewportHeight: number, reserve: number, height: number, gap = STACK_GAP): number {
+  return Math.round(viewportHeight - reserve - gap - height)
 }
 
-type Item = { getBoundingClientRect(): { top: number }; offsetHeight: number }
-
-type Host = {
-  children: ArrayLike<Item>
+type Item = {
+  getBoundingClientRect(): { top: number }
+  offsetHeight: number
   style: { setProperty(name: string, value: string): void; removeProperty(name: string): void }
 }
+
+type Host = { children: ArrayLike<Item> }
 
 type Query = { matches: boolean; addEventListener(type: 'change', listener: () => void): void; removeEventListener(type: 'change', listener: () => void): void }
 
@@ -87,23 +75,13 @@ export function watchStack(host: Host, onActive: (active: number) => void, env: 
   }
 
   const clear = () => {
-    host.style.removeProperty(STACK_MAX_PROPERTY)
-    host.style.removeProperty(STACK_STEP_PROPERTY)
+    for (const item of items()) item.style.removeProperty(STACK_MAX_PROPERTY)
   }
 
   const measure = () => {
+    const reserve = env.reserve()
     const list = items()
-    if (list.length === 0) return
-    clear()
-    const layout = stackLayout({
-      viewportHeight: env.innerHeight,
-      reserve: env.reserve(),
-      height: Math.max(...list.map((item) => item.offsetHeight)),
-      firstTop: env.stickTop(list[0]!),
-      count: list.length,
-    })
-    host.style.setProperty(STACK_MAX_PROPERTY, `${layout.max}px`)
-    host.style.setProperty(STACK_STEP_PROPERTY, `${layout.step}px`)
+    for (const item of list) item.style.setProperty(STACK_MAX_PROPERTY, `${stackMax(env.innerHeight, reserve, item.offsetHeight)}px`)
     stickTops = list.map((item) => env.stickTop(item))
   }
 

@@ -1,13 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  STACK_MAX_PROPERTY,
-  STACK_STEP_PROPERTY,
-  stackActive,
-  stackDepth,
-  stackLayout,
-  watchStack,
-  type StackEnv,
-} from '@/components/site/services/stack'
+import { STACK_MAX_PROPERTY, stackActive, stackDepth, stackMax, watchStack, type StackEnv } from '@/components/site/services/stack'
 
 describe('pila sticky de Servicios: cálculos (FR-634)', () => {
   it('la activa es la última que ya llegó a su tope; antes de llegar no hay activa', () => {
@@ -23,10 +15,10 @@ describe('pila sticky de Servicios: cálculos (FR-634)', () => {
     expect([0, 1].map((index) => stackDepth(index, -1))).toEqual([0, 0])
   })
 
-  it('el escalón se achica para que la última quepa sobre el dock, y nunca pasa de 16 px', () => {
-    expect(stackLayout({ viewportHeight: 844, reserve: 80, height: 500, firstTop: 76, count: 6 })).toEqual({ max: 252, step: 16 })
-    expect(stackLayout({ viewportHeight: 844, reserve: 80, height: 644, firstTop: 76, count: 6 })).toEqual({ max: 108, step: 6 })
-    expect(stackLayout({ viewportHeight: 700, reserve: 80, height: 700, firstTop: 76, count: 6 })).toEqual({ max: -92, step: 0 })
+  it('el tope máximo deja la tarjeta completa sobre el dock; una tarjeta más alta que la pantalla sube su tope', () => {
+    expect(stackMax(844, 80, 623)).toBe(129)
+    expect(stackMax(812, 80, 708)).toBe(12)
+    expect(stackMax(640, 80, 782)).toBe(-234)
   })
 })
 
@@ -37,14 +29,16 @@ function fakeEnv({ mobile = true, motion = true } = {}) {
   const windowListeners = new Map<string, Set<Listener>>()
   const observed: unknown[] = []
   let disconnected = 0
-  const items = [0, 1, 2].map((index) => ({ top: 1000 + index * 700, offsetHeight: 600, index }))
-  const props = new Map<string, string>()
+  const items = [0, 1, 2].map((index) => ({ top: 1000 + index * 700, offsetHeight: 500 + index * 50, index, props: new Map<string, string>() }))
   const host = {
-    children: items.map((item) => ({ getBoundingClientRect: () => ({ top: item.top }), offsetHeight: item.offsetHeight })),
-    style: {
-      setProperty: (name: string, value: string) => void props.set(name, value),
-      removeProperty: (name: string) => void props.delete(name),
-    },
+    children: items.map((item) => ({
+      getBoundingClientRect: () => ({ top: item.top }),
+      offsetHeight: item.offsetHeight,
+      style: {
+        setProperty: (name: string, value: string) => void item.props.set(name, value),
+        removeProperty: (name: string) => void item.props.delete(name),
+      },
+    })),
   }
   const env: StackEnv = {
     innerHeight: 844,
@@ -84,7 +78,7 @@ function fakeEnv({ mobile = true, motion = true } = {}) {
       entry.listeners.forEach((listener) => listener())
     }
   }
-  return { env, host, items, props, fire, setQuery, observed, listeners: windowListeners, disconnected: () => disconnected }
+  return { env, host, items, props: () => items.map((item) => item.props.get(STACK_MAX_PROPERTY) ?? null), fire, setQuery, observed, listeners: windowListeners, disconnected: () => disconnected }
 }
 
 describe('watchStack', () => {
@@ -92,8 +86,7 @@ describe('watchStack', () => {
     const fake = fakeEnv()
     const published: number[] = []
     const stop = watchStack(fake.host, (active) => published.push(active), fake.env)
-    expect(fake.props.get(STACK_MAX_PROPERTY)).toBe('152px')
-    expect(fake.props.get(STACK_STEP_PROPERTY)).toBe('16px')
+    expect(fake.props()).toEqual(['252px', '202px', '152px'])
     expect(fake.observed).toHaveLength(3)
     expect(published).toEqual([])
     fake.items[0]!.top = 76
@@ -104,7 +97,7 @@ describe('watchStack', () => {
     expect(published).toEqual([0, 1])
     stop()
     expect(published).toEqual([0, 1, -1])
-    expect(fake.props.size).toBe(0)
+    expect(fake.props()).toEqual([null, null, null])
     expect(fake.disconnected()).toBe(1)
     expect(fake.listeners.get('scroll')?.size).toBe(0)
   })
@@ -114,7 +107,7 @@ describe('watchStack', () => {
       const fake = fakeEnv(options)
       const published: number[] = []
       watchStack(fake.host, (active) => published.push(active), fake.env)
-      expect(fake.props.size).toBe(0)
+      expect(fake.props()).toEqual([null, null, null])
       expect(fake.listeners.get('scroll')?.size ?? 0).toBe(0)
       expect(published).toEqual([])
     }
@@ -125,7 +118,7 @@ describe('watchStack', () => {
     fake.fire('scroll')
     fake.setQuery('reduced-motion', false)
     expect(published).toEqual([0, -1])
-    expect(fake.props.size).toBe(0)
+    expect(fake.props()).toEqual([null, null, null])
     expect(fake.listeners.get('scroll')?.size).toBe(0)
   })
 })
