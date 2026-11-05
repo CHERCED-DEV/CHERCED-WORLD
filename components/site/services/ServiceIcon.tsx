@@ -2,34 +2,53 @@ import type { ReactNode } from 'react'
 import type { ServiceId } from '@/content/types'
 
 const ACCENT = '#25ED9E'
-const INK = '#0A0A0A'
 
 const pictograms: Record<ServiceId, ReactNode> = {
-  design: (
+  'ai-harness': (
     <>
-      <rect x="5" y="5" width="38" height="38" rx="5" strokeDasharray="2 3" opacity="0.55" />
-      <path d="M11 35C16 17 27 31 37 13" />
-      <path d="M37 13l-8-3.5" />
-      <circle cx="28" cy="9.2" r="1.9" />
-      <rect x="8" y="32" width="6" height="6" rx="1.4" fill={ACCENT} />
-      <rect x="34" y="10" width="6" height="6" rx="1.4" fill="currentColor" stroke="none" />
+      <circle cx="24" cy="24" r="6" fill={ACCENT} />
+      <circle cx="9" cy="12" r="3.5" />
+      <circle cx="39" cy="12" r="3.5" />
+      <circle cx="9" cy="36" r="3.5" />
+      <circle cx="39" cy="36" r="3.5" />
+      <path d="M12 14l7 6M36 14l-7 6M12 34l7-6M36 34l-7-6" />
     </>
   ),
-  development: (
+  'software-factory': (
     <>
-      <path d="M16 15l-9 9 9 9M32 15l9 9-9 9" />
-      <path d="M27.5 11l-7 26" />
-      <rect x="33" y="35.5" width="9" height="4.5" rx="1.2" fill={ACCENT} stroke="none" />
+      <path d="M8 12h32M8 24h32M8 36h32" />
+      <rect x="14" y="9" width="7" height="6" rx="1.5" fill={ACCENT} stroke="none" />
+      <rect x="26" y="21" width="7" height="6" rx="1.5" fill={ACCENT} stroke="none" />
+      <rect x="18" y="33" width="7" height="6" rx="1.5" fill={ACCENT} stroke="none" />
     </>
   ),
-  maintenance: (
+  'process-optimization': (
     <>
-      <path d="M39.5 19A16 16 0 0 0 10.6 14.6" />
-      <path d="M10 8v7h7" />
-      <path d="M8.5 29A16 16 0 0 0 37.4 33.4" />
-      <path d="M38 40v-7h-7" />
-      <circle cx="24" cy="24" r="6.5" fill={ACCENT} />
-      <path d="M21 24.2l2.1 2.1 4-4.3" stroke={INK} />
+      <path d="M8 10h32L28 25v12l-8 4V25z" />
+      <path d="M25 15l-4 6h5l-4 6" stroke={ACCENT} />
+    </>
+  ),
+  architecture: (
+    <>
+      <path d="M24 8l16 8-16 8-16-8z" />
+      <path d="M8 24l16 8 16-8" />
+      <path d="M8 32l16 8 16-8" stroke={ACCENT} />
+    </>
+  ),
+  product: (
+    <>
+      <path d="M24 6c6 5 8 12 8 20l-4 6h-8l-4-6c0-8 2-15 8-20z" />
+      <circle cx="24" cy="20" r="3" fill={ACCENT} />
+      <path d="M16 28l-5 6 6 1M32 28l5 6-6 1M21 36l3 6 3-6" />
+    </>
+  ),
+  workshops: (
+    <>
+      <rect x="7" y="8" width="34" height="20" rx="2.5" />
+      <path d="M13 15h14M13 21h9" />
+      <circle cx="16" cy="36" r="3" fill={ACCENT} stroke="none" />
+      <circle cx="32" cy="36" r="3" />
+      <path d="M10 42c1-3 3-4 6-4s5 1 6 4M26 42c1-3 3-4 6-4s5 1 6 4" />
     </>
   ),
 }

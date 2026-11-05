@@ -40,9 +40,40 @@ export type SkillLobe = {
   words?: Localized
 }
 
-export type ServiceId = 'design' | 'development' | 'maintenance'
+export const SERVICE_IDS = ['ai-harness', 'software-factory', 'process-optimization', 'architecture', 'product', 'workshops'] as const
 
-export type ServiceItem = { id: ServiceId; title: Localized; description: Localized; icon: string }
+export type ServiceId = (typeof SERVICE_IDS)[number]
+
+export function isServiceId(value: unknown): value is ServiceId {
+  return typeof value === 'string' && (SERVICE_IDS as readonly string[]).includes(value)
+}
+
+export type ServiceItem = {
+  id: ServiceId
+  title: Localized
+  description: Localized
+  forWho: Localized
+  deliverables: Localized[]
+  example?: Localized
+  priceRange?: Localized
+  icon?: string
+}
+
+export type ServiceAudienceId = 'professionals' | 'companies' | 'engineering-teams'
+
+export type ServiceAudience = { id: ServiceAudienceId; title: Localized; text: Localized }
+
+export type ServiceFaq = { q: Localized; a: Localized }
+
+export type ServicesContent = {
+  intro: Localized
+  hero: { title: Localized; intro: Localized; cta: Localized }
+  audiences: ServiceAudience[]
+  items: ServiceItem[]
+  process: { title: Localized; steps: Localized[]; principles: Localized[] }
+  faq: ServiceFaq[]
+  cta: { title: Localized; text: Localized; button: Localized }
+}
 
 export type CourseSchool = { name: Localized; description: Localized }
 
@@ -50,26 +81,52 @@ export type LanguageSkill = { id: Locale; name: Localized; progress: number; ico
 
 export type PrivacySection = { heading: Localized; body: Localized }
 
+export type Principle = { short: Localized; full: Localized }
+
+export type Profile = {
+  availability: { location: Localized; timezone: 'UTC−5'; relocation: Localized }
+  cv: { href: string }
+}
+
 export type SiteContent = {
   socials: SocialLink[]
-  home: { greeting: Localized; name: string; title: Localized }
+  home: { greeting: Localized; name: string; title: Localized; previousTitle?: Localized; subtitle?: Localized }
+  profile?: Profile
   about: {
     description: Localized
     image: ImageRef
     career: CareerEntry[]
-    skills: { description: Localized; bullets: Localized[]; tech: TechSkill[]; lobes?: SkillLobe[]; learningNow?: Localized }
+    skills: {
+      description: Localized
+      bullets: Localized[]
+      tech: TechSkill[]
+      lobes?: SkillLobe[]
+      learningNow?: Localized
+      inWords?: Partial<Record<string, Localized>>
+    }
+    principles?: Principle[]
     education: EducationEntry[]
     courses: { schools: CourseSchool[]; platzi: { href: string; label: Localized; icon?: string } }
     languages: LanguageSkill[]
   }
-  services: { intro: Localized; items: ServiceItem[] }
+  services: ServicesContent
   portfolio: { intro: Localized[]; footer: Localized }
   contact: { title: Localized; description: Localized }
   blog: { title: Localized; titleStrong: string; welcome: Localized }
   privacy: { updatedAt: string; sections: PrivacySection[] }
 }
 
-export type ProjectLinks = { live: string | null; github: string | null }
+export const PROJECT_ERAS = ['2024-2026', '2022-2023'] as const
+
+export type ProjectEra = (typeof PROJECT_ERAS)[number]
+
+export type AdrCard = { decision: Localized; why: Localized; tradeoff: Localized }
+
+export type DiagramLayer = { id: string; label: Localized; role: Localized }
+
+export type RepoLink = { label: string; href: string }
+
+export type ProjectLinks = { live: string | null; github: string | null; repos?: RepoLink[] }
 
 export type Project = {
   id: string
@@ -83,8 +140,39 @@ export type Project = {
   image: ImageRef
   links: ProjectLinks
   order: number
+  era: ProjectEra
   gallery?: ImageRef[]
   highlights?: Localized[]
+  adrCards?: AdrCard[]
+  diagram?: DiagramLayer[]
+}
+
+export type SynergosFacts = {
+  countedAt: string
+  pieces: number
+  capabilities: number
+  orchestrators: number
+  measuredAt: string
+  testsAtLeast: number
+  adrsAtLeast: number
+  designSystemAtLeast: number
+}
+
+export type TerminalGenerated = 'projects' | 'synergos' | 'help' | 'clear' | 'principles' | 'mottos'
+
+export type TerminalCommand =
+  | { name: string; output: Localized; lang?: 'la' }
+  | { name: string; generated: TerminalGenerated }
+
+export type NowEntry = Localized & { lang?: 'la' }
+
+export type NowContent = {
+  updatedAt: string
+  building: NowEntry[]
+  learning: NowEntry[]
+  preparing: NowEntry[]
+  offKeyboard: NowEntry[]
+  mottos: NowEntry[]
 }
 
 export type PostMeta = {
