@@ -26,7 +26,6 @@
   "admin.sessionEnded": "Tu sesión terminó. Inicia sesión de nuevo.",
   "admin.sessionEnded.cta": "Ir al inicio de sesión",
   "admin.logout": "Cerrar sesión",
-  "admin.done": "Listo.",
   "admin.error.unavailable": "No se pudo completar la acción. Intenta de nuevo.",
   "admin.error.notFound": "Ese elemento ya no existe o cambió de estado.",
   "admin.error.validation": "Revisa los campos marcados.",

@@ -26,7 +26,6 @@
   "admin.sessionEnded": "Your session ended. Please sign in again.",
   "admin.sessionEnded.cta": "Go to sign in",
   "admin.logout": "Sign out",
-  "admin.done": "Done.",
   "admin.error.unavailable": "The action couldn't be completed. Try again.",
   "admin.error.notFound": "That item no longer exists or changed status.",
   "admin.error.validation": "Check the highlighted fields.",
