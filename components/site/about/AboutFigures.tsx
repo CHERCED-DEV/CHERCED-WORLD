@@ -1,13 +1,14 @@
 import type { CSSProperties } from 'react'
+import type { Locale } from '@/lib/i18n'
 import styles from './About.module.scss'
 import { CountUp } from './CountUp'
-import type { Figure, FigureId } from './figures'
+import { figureDigits, figureText, type Figure, type FigureId } from './figures'
 
 export type FigureLabels = Record<FigureId, { label: string; note?: string }>
 
-export type AboutFiguresProps = { title: string; figures: Figure[]; labels: FigureLabels }
+export type AboutFiguresProps = { lang: Locale; title: string; figures: Figure[]; labels: FigureLabels }
 
-export function AboutFigures({ title, figures, labels }: AboutFiguresProps) {
+export function AboutFigures({ lang, title, figures, labels }: AboutFiguresProps) {
   if (figures.length === 0) return null
 
   return (
@@ -17,7 +18,6 @@ export function AboutFigures({ title, figures, labels }: AboutFiguresProps) {
       </h2>
       <dl className={styles.figures}>
         {figures.map((figure) => {
-          const text = `${figure.value}${figure.plus ? '+' : ''}`
           const { label, note } = labels[figure.id]
           return (
             <div
@@ -33,15 +33,15 @@ export function AboutFigures({ title, figures, labels }: AboutFiguresProps) {
                 {note ? <span className={styles.figureNote}>{note}</span> : null}
               </dt>
               <dd className={styles.figureValue}>
-                <span className={styles.figureDigits} style={{ '--cw-digits': String(figure.value).length } as CSSProperties}>
-                  <CountUp value={figure.value} />
+                <span className={styles.figureDigits} style={{ '--cw-digits': figureDigits(figure.value, lang).length } as CSSProperties}>
+                  <CountUp value={figure.value} lang={lang} />
                 </span>
                 {figure.plus ? (
                   <span className={styles.figurePlus} aria-hidden="true">
                     +
                   </span>
                 ) : null}
-                <span className="cw-visually-hidden">{text}</span>
+                <span className="cw-visually-hidden">{figureText(figure, lang)}</span>
               </dd>
             </div>
           )

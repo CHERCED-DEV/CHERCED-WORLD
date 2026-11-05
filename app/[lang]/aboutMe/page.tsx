@@ -10,6 +10,7 @@ import { SceneNav } from '@/components/site/about/SceneNav'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
 import { SectionTitle } from '@/components/site/SectionTitle'
+import { formatFact, synergosFacts } from '@/content/synergos'
 import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
@@ -21,14 +22,13 @@ const ABOUT_SCENES = { who: 'scene-who', career: 'scene-career', knowledge: 'sce
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = await resolveLang(params)
   const [site, common] = await Promise.all([getDictionary(lang, 'site'), getDictionary(lang, 'common')])
-  const { about } = getSite()
   return pageMetadata({
     lang,
     path: '/aboutMe',
     title: t(site, 'meta.about.title'),
     description: t(site, 'meta.about.description'),
     common,
-    image: { url: about.image.src, width: about.image.width, height: about.image.height, alt: about.image.alt[lang] },
+    ogImageFile: true,
   })
 }
 
@@ -38,7 +38,7 @@ export default async function AboutMePage({ params }: Props) {
   const { about } = getSite()
   const projects = getProjects()
   const present = t(dict, 'about.present')
-  const figures = aboutFigures(about, projects.length, new Date())
+  const figures = aboutFigures(about, new Date())
   const since = figures.find((figure) => figure.id === 'years')?.since
 
   return (
@@ -54,6 +54,7 @@ export default async function AboutMePage({ params }: Props) {
       />
       <AboutDescription id={ABOUT_SCENES.who} lang={lang} title={t(dict, 'about.title')} description={about.description} image={about.image}>
         <AboutFigures
+          lang={lang}
           title={t(dict, 'about.figures')}
           figures={figures}
           labels={{
@@ -61,9 +62,15 @@ export default async function AboutMePage({ params }: Props) {
               label: t(dict, 'about.figure.years'),
               note: since ? t(dict, 'about.figure.yearsNote', { year: since }) : undefined,
             },
-            projects: { label: t(dict, 'about.figure.projects') },
-            technologies: { label: t(dict, 'about.figure.technologies') },
-            airlines: { label: t(dict, 'about.figure.airlines'), note: t(dict, 'about.figure.airlinesNote') },
+            pieces: {
+              label: t(dict, 'about.figure.pieces'),
+              note: t(dict, 'about.figure.piecesNote', {
+                capabilities: formatFact(synergosFacts.capabilities, lang),
+                orchestrators: formatFact(synergosFacts.orchestrators, lang),
+              }),
+            },
+            adrs: { label: t(dict, 'about.figure.adrs'), note: t(dict, 'about.figure.adrsNote') },
+            tests: { label: t(dict, 'about.figure.tests'), note: t(dict, 'about.figure.testsNote') },
           }}
         />
       </AboutDescription>
@@ -91,16 +98,23 @@ export default async function AboutMePage({ params }: Props) {
           labels={{
             level: (value) => t(dict, 'about.level', { value }),
             present,
-            skillsSummary: t(dict, 'about.skillsWords'),
             map: {
               lobes: t(dict, 'about.brain.lobes'),
               sources: t(dict, 'about.brain.sources'),
               sourcesWord: t(dict, 'about.brain.sourcesWord'),
+              appliedWord: t(dict, 'about.brain.appliedWord'),
               projectsWord: t(dict, 'about.brain.projectsWord'),
+              principles: t(dict, 'about.principles'),
+              words: t(dict, 'about.skillsWords'),
               feeds: t(dict, 'about.brain.feeds'),
               core: getSite().home.name.toUpperCase(),
               path: t(dict, 'about.brain.path'),
               platzi: { href: about.courses.platzi.href, label: about.courses.platzi.label[lang], newTab: t(dict, 'a11y.newTab') },
+              terminal: {
+                input: t(dict, 'about.terminal.input'),
+                hint: t(dict, 'about.terminal.hint'),
+                output: t(dict, 'about.terminal.output'),
+              },
             },
           }}
         />

@@ -113,10 +113,12 @@ describe('corrección de skills (T229)', () => {
     expect(JSON.stringify(es.sources)).not.toContain('legal-workspace')
   })
 
-  it('"Mis habilidades, en palabras" trae el texto de Arquitectura y el de Idiomas y negocio, y nada para los demás', () => {
-    expect(es.lobes.filter((lobe) => lobe.words).map((lobe) => lobe.id)).toEqual(['architecture', 'business'])
+  it('"Mis habilidades, en palabras" trae el texto de T229 para Arquitectura e Idiomas y negocio, el de la 004 para tres lóbulos y nada para Prácticas (FR-434, P-424)', () => {
+    expect(es.lobes.filter((lobe) => lobe.words).map((lobe) => lobe.id)).toEqual(['frontend', 'architecture', 'backend-cloud', 'applied-ai', 'business'])
     expect(es.lobes.find((lobe) => lobe.id === 'architecture')!.words).toMatch(/^Diseño con Clean Architecture, SOLID y patrones de diseño/)
     expect(en.lobes.find((lobe) => lobe.id === 'business')!.words).toMatch(/^Before coding, I was a business administrator/)
+    expect(es.lobes.find((lobe) => lobe.id === 'frontend')!.words).toMatch(/^Angular es mi casa desde 2022\./)
+    expect(es.lobes.find((lobe) => lobe.id === 'practices')!.words).toBeUndefined()
   })
 })
 
