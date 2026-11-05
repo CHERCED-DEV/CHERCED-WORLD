@@ -6,7 +6,11 @@ import {
   embedAddress,
   embedFrameMounted,
   ENGAGE_KEYS,
+  GESTURE_WINDOW_MS,
+  isStolenFocus,
   nextEmbedStatus,
+  shouldLoadAfterScroll,
+  visibleRatio,
   type EmbedEvent,
   type EmbedStatus,
 } from '@/components/site/portfolio/embed'
@@ -73,12 +77,11 @@ describe('barra de URL', () => {
 })
 
 describe('carga al entrar en pantalla', () => {
-  const base = { wide: true, saveData: false, framed: false, engaged: true }
+  const base = { wide: true, saveData: false, framed: false }
 
-  it('solo en pantallas anchas, con el visitante desplazándose', () => {
+  it('solo en pantallas anchas', () => {
     expect(canAutoLoad(base)).toBe(true)
     expect(canAutoLoad({ ...base, wide: false })).toBe(false)
-    expect(canAutoLoad({ ...base, engaged: false })).toBe(false)
   })
 
   it('respeta el ahorro de datos y no se anida dentro de otro iframe', () => {
@@ -89,5 +92,34 @@ describe('carga al entrar en pantalla', () => {
   it('cuenta como desplazamiento las teclas de scroll, no Tab ni Enter', () => {
     for (const key of ['ArrowDown', 'PageDown', ' ', 'End']) expect(ENGAGE_KEYS.has(key), key).toBe(true)
     for (const key of ['Tab', 'Enter', 'a']) expect(ENGAGE_KEYS.has(key), key).toBe(false)
+  })
+
+  it('mide qué parte del marco se ve en la ventana', () => {
+    expect(visibleRatio(0, 400, 800)).toBe(1)
+    expect(visibleRatio(600, 1000, 800)).toBe(0.5)
+    expect(visibleRatio(900, 1300, 800)).toBe(0)
+    expect(visibleRatio(-100, 1100, 800)).toBe(1)
+    expect(visibleRatio(10, 10, 800)).toBe(0)
+  })
+
+  it('carga solo cuando termina un scroll que empezó el visitante y deja ver el marco', () => {
+    expect(shouldLoadAfterScroll({ sinceGesture: 200, ratio: 0.6 })).toBe(true)
+    expect(shouldLoadAfterScroll({ sinceGesture: 200, ratio: 0.2 })).toBe(false)
+  })
+
+  it('no carga tras un scroll programático: volver arriba, el índice o un ancla', () => {
+    expect(shouldLoadAfterScroll({ sinceGesture: Number.POSITIVE_INFINITY, ratio: 1 })).toBe(false)
+    expect(shouldLoadAfterScroll({ sinceGesture: GESTURE_WINDOW_MS + 1, ratio: 1 })).toBe(false)
+  })
+})
+
+describe('foco robado por el sitio embebido', () => {
+  it('es robado si el puntero no está sobre el marco ni se llegó con Tab', () => {
+    expect(isStolenFocus({ pointerInside: false, sinceTab: Number.POSITIVE_INFINITY })).toBe(true)
+  })
+
+  it('es del visitante si hizo clic dentro del marco o llegó con Tab', () => {
+    expect(isStolenFocus({ pointerInside: true, sinceTab: Number.POSITIVE_INFINITY })).toBe(false)
+    expect(isStolenFocus({ pointerInside: false, sinceTab: 50 })).toBe(false)
   })
 })

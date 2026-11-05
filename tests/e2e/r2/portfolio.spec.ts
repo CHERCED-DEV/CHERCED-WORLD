@@ -156,6 +156,22 @@ async function frame(page: Page): Promise<Locator> {
   return page.locator('[data-cw-embed]')
 }
 
+async function frameRatio(page: Page): Promise<number> {
+  return page.locator('[data-cw-embed] figure').evaluate((element) => {
+    const rect = element.getBoundingClientRect()
+    const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0))
+    return visible / Math.min(rect.height, window.innerHeight)
+  })
+}
+
+async function wheelUntilFrameShows(page: Page, ratio: number): Promise<void> {
+  await page.mouse.move(8, 300)
+  for (let i = 0; i < 40 && (await frameRatio(page)) < ratio; i++) {
+    await page.mouse.wheel(0, 120)
+    await page.waitForTimeout(80)
+  }
+}
+
 test.describe('ProjectEmbed en escritorio (D-03, FR-206)', () => {
   onlyIn('desktop-chromium')
 
@@ -197,17 +213,68 @@ test.describe('ProjectEmbed en escritorio (D-03, FR-206)', () => {
     await expect(page.locator('[data-cw-embed] figure')).toBeInViewport()
   })
 
-  test('carga sola cuando el visitante se desplaza hasta el marco', async ({ page, context }) => {
+  test('carga sola cuando el visitante se desplaza hasta el marco y el scroll termina', async ({ page, context }) => {
     await stubExternalSites(context)
     await skipIntro(page)
     await page.goto(`/es/portfolio/${first.id}`)
-    await page.mouse.move(640, 400)
-    for (let i = 0; i < 12; i++) {
-      await page.mouse.wheel(0, 250)
-      await page.waitForTimeout(60)
-      if ((await page.locator('[data-cw-embed-frame]').count()) > 0) break
-    }
+    await wheelUntilFrameShows(page, 0.6)
     await expect(await frame(page)).toHaveAttribute('data-state', /loading|ready/)
+  })
+
+  for (const project of withLive.filter((item) => ['1', '2'].includes(item.id))) {
+    test(`#${project.id}: "Volver arriba" llega al tope sin cargar el embebido al pasar por encima`, async ({ page, context }) => {
+      test.setTimeout(90_000)
+      const log = await stubExternalSites(context)
+      await skipIntro(page)
+      await page.goto(`/en/portfolio/${project.id}`)
+      await page.mouse.move(8, 300)
+      await page.mouse.wheel(0, 120)
+      await page.waitForTimeout(300)
+      for (let i = 0; i < 6; i++) {
+        await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }))
+        await page.waitForTimeout(150)
+      }
+      const from = await page.evaluate(() => window.scrollY)
+      expect(from).toBeGreaterThan(800)
+      await page.locator('footer [data-cw-back-to-top]').click()
+      await expect.poll(() => page.evaluate(() => window.scrollY), { message: `scrollY tras "Volver arriba" desde ${from}` }).toBeLessThanOrEqual(4)
+      await expect(page.locator('main#main')).toBeFocused()
+      await page.waitForTimeout(600)
+      await expect(page.locator('[data-cw-embed-frame]')).toHaveCount(0)
+      await expect(await frame(page)).toHaveAttribute('data-state', 'idle')
+      expect(log.urls.filter((url) => hostOf(url) === hostOf(project.links.live!))).toEqual([])
+    })
+  }
+
+  test('abrir la página con #en-vivo en la URL no carga el sitio sin un gesto', async ({ page, context }) => {
+    const log = await stubExternalSites(context)
+    await skipIntro(page)
+    await page.goto(`/es/portfolio/${first.id}#en-vivo`)
+    await page.waitForTimeout(1200)
+    await expect(page.locator('[data-cw-embed-frame]')).toHaveCount(0)
+    expect(log.urls.filter((url) => hostOf(url) === hostOf(first.links.live!))).toEqual([])
+  })
+
+  test('si el sitio embebido toma el foco por su cuenta, la página no se desplaza', async ({ page, context }) => {
+    await context.route(/^https:\/\/(?!localhost)/, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'text/html; charset=utf-8',
+        body:
+          '<!doctype html><html><body style="margin:0;height:3000px">' +
+          '<input id="trampa" aria-label="trampa" style="position:fixed;bottom:4px;left:4px">' +
+          '<script>setTimeout(function(){document.getElementById("trampa").focus()},400)</script></body></html>',
+      }),
+    )
+    await skipIntro(page)
+    await page.goto(`/es/portfolio/${first.id}`)
+    await wheelUntilFrameShows(page, 0.4)
+    await expect(await frame(page)).toHaveAttribute('data-state', /loading|ready/)
+    await page.waitForTimeout(300)
+    const settled = await page.evaluate(() => window.scrollY)
+    await page.waitForTimeout(1500)
+    expect(Math.abs((await page.evaluate(() => window.scrollY)) - settled)).toBeLessThanOrEqual(2)
+    expect(await page.evaluate(() => document.activeElement?.tagName)).not.toBe('IFRAME')
   })
 
   test('recargar vuelve a pedir el sitio, la vista móvil angosta el marco y el enlace abre afuera', async ({ page, context }) => {
