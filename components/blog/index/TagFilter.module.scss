@@ -1,0 +1,89 @@
+@use 'breakpoints' as bp;
+@use 'layout';
+
+.nav {
+  min-width: 0;
+}
+
+.list {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cw-space-2);
+
+  @include bp.down(md) {
+    flex-wrap: nowrap;
+    margin-inline: calc(var(--cw-space-4) * -1);
+    padding: var(--cw-space-1) var(--cw-space-4);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: var(--cw-space-4);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--cw-space-4), #000 calc(100% - var(--cw-space-6)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--cw-space-4), #000 calc(100% - var(--cw-space-6)), transparent);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    li {
+      flex: none;
+      scroll-snap-align: start;
+    }
+  }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  min-height: 36px;
+  padding: 0 var(--cw-space-4);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cw-bg) 55%, transparent);
+  color: var(--cw-fg);
+  font-size: var(--cw-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    border-color var(--cw-duration-base) var(--cw-ease-out),
+    background-color var(--cw-duration-base) var(--cw-ease-out),
+    color var(--cw-duration-base) var(--cw-ease-out);
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--cw-fg) 50%, transparent);
+    background: color-mix(in srgb, var(--cw-fg) 8%, transparent);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+
+  &[aria-current='page'] {
+    border-color: var(--cw-fg);
+    background: var(--cw-fg);
+    color: var(--cw-bg);
+  }
+}
+
+.all {
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cw-intro-accent);
+  box-shadow: 0 0 8px var(--cw-graphic-glow);
+}

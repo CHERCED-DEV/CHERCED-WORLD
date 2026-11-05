@@ -1,0 +1,12 @@
+.featured {
+  max-width: 1080px;
+  margin: var(--cw-space-7) auto 0;
+}
+
+.item {
+  display: flex;
+
+  &[hidden] {
+    display: none;
+  }
+}

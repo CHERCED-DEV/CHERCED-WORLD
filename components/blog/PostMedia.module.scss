@@ -17,6 +17,22 @@
   border-radius: 36px 0 48px;
 }
 
+.featured {
+  aspect-ratio: 16 / 9;
+  border-radius: 40px 0 60px;
+}
+
+.cover.generated {
+  aspect-ratio: 1200 / 630;
+}
+
+.generated .fill {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
 .cover {
   border-radius: 50px 0 70px;
 
@@ -92,5 +108,14 @@
   :global([data-cw-post-card]:hover) .compact .image,
   :global([data-cw-post-card]:focus-within) .compact .image {
     transform: translateY(-3px) scale(1.03);
+  }
+
+  .generated .fill {
+    transition: transform var(--cw-duration-slow) var(--cw-ease);
+  }
+
+  :global([data-cw-post-card]:hover) .generated .fill,
+  :global([data-cw-post-card]:focus-within) .generated .fill {
+    transform: scale(1.035);
   }
 }

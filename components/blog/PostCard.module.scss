@@ -1,3 +1,4 @@
+@use 'breakpoints' as bp;
 @use 'glass' as *;
 @use 'layout';
 @use './blog' as blog;
@@ -168,6 +169,107 @@
     .card:hover &,
     .card:has(.link:focus-visible) & {
       transform: translateX(4px) scaleX(-1);
+    }
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  padding: var(--cw-space-1) var(--cw-space-3);
+  border: 1px solid color-mix(in srgb, var(--cw-intro-accent) 55%, var(--cw-glass-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cw-intro-accent) 10%, transparent);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+}
+
+.badgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cw-intro-accent);
+  box-shadow: 0 0 10px var(--cw-graphic-glow);
+}
+
+.featured {
+  max-width: none;
+  padding: var(--cw-space-6) var(--cw-space-5) var(--cw-space-5);
+
+  @include bp.up(md) {
+    padding: var(--cw-space-7) var(--cw-space-7) var(--cw-space-6);
+  }
+
+  @include bp.up(lg) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-areas:
+      'media badge'
+      'media title'
+      'media description'
+      'media meta'
+      'media tags'
+      'media notice'
+      'media more';
+    grid-template-rows: auto auto auto auto auto auto 1fr;
+    align-items: start;
+    gap: 0 var(--cw-space-7);
+    padding: var(--cw-space-6);
+    text-align: start;
+
+    > :not(.media, .more, [data-cw-sweep]) {
+      margin-block-end: var(--cw-space-4);
+    }
+
+    .badge {
+      grid-area: badge;
+      justify-self: start;
+    }
+
+    .title {
+      grid-area: title;
+      justify-self: start;
+      max-width: 100%;
+      font-size: var(--cw-text-md);
+    }
+
+    .media {
+      grid-area: media;
+      align-self: center;
+    }
+
+    .description {
+      grid-area: description;
+      max-width: 52ch;
+      font-size: var(--cw-text-lg);
+      line-height: var(--cw-leading-snug);
+    }
+
+    .meta {
+      grid-area: meta;
+    }
+
+    .metaRow {
+      justify-content: flex-start;
+    }
+
+    .tags {
+      grid-area: tags;
+      justify-content: flex-start;
+    }
+
+    .notice {
+      grid-area: notice;
+      justify-self: start;
+    }
+
+    .more {
+      grid-area: more;
+      align-self: end;
+      justify-self: start;
     }
   }
 }

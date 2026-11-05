@@ -1,0 +1,112 @@
+@use 'breakpoints' as bp;
+@use 'layout';
+
+.toolbar {
+  display: grid;
+  gap: var(--cw-space-4);
+  max-width: 1080px;
+  margin: var(--cw-space-7) auto 0;
+  padding: var(--cw-space-4);
+
+  @include bp.up(md) {
+    padding: var(--cw-space-5) var(--cw-space-6);
+  }
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cw-space-2) var(--cw-space-4);
+  min-height: 48px;
+}
+
+.summaryText {
+  font-size: var(--cw-text-lg);
+  font-weight: 700;
+  line-height: var(--cw-leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.summaryClear {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  min-height: 44px;
+  padding: 0 var(--cw-space-4);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  color: var(--cw-fg);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    border-color var(--cw-duration-base) var(--cw-ease-out),
+    background-color var(--cw-duration-base) var(--cw-ease-out);
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--cw-fg) 50%, transparent);
+    background: color-mix(in srgb, var(--cw-fg) 8%, transparent);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cw-space-2) var(--cw-space-4);
+}
+
+.label {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+}
+
+.rss {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  min-height: 32px;
+  color: var(--cw-fg);
+  font-size: var(--cw-text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--cw-intro-accent) 70%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
+
+  &:hover {
+    text-decoration-color: var(--cw-fg);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.rssIcon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+
+  circle {
+    fill: currentColor;
+    stroke: none;
+  }
+}

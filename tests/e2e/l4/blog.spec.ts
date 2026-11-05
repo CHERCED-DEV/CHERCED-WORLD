@@ -59,7 +59,7 @@ test.describe('posts sin JavaScript', () => {
     await page.goto('/es/blog')
     await expect(page).toHaveTitle(/^Blog \| <-CHERCED-WORLD->$/)
     await expect(page.getByRole('heading', { level: 1 })).toContainText('CHERCED-WORLD')
-    await expect(page.getByText('Hice este espacio para compartir más sobre mí')).toBeVisible()
+    await expect(page.getByText('Notas de un arquitecto que trabaja con agentes: decisiones, errores y lo que los tests no vieron.', { exact: true })).toBeVisible()
     await expect(page.locator('[data-cw-atom]')).toHaveAttribute('aria-hidden', 'true')
     await expect(page.locator('head link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', /\/en\/blog$/)
 
