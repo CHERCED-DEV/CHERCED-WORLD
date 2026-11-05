@@ -444,6 +444,10 @@ $green: var(--cw-intro-accent);
   }
 }
 
+.termMonogram::before {
+  content: attr(data-cw-monogram);
+}
+
 .termMonogram {
   display: inline-grid;
   place-items: center;

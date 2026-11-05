@@ -81,7 +81,7 @@ test.describe('contenido sin JavaScript', () => {
     for (const language of site.about.languages) {
       await expect(knowledge.getByText(language.name.es.toUpperCase(), { exact: true })).toBeVisible()
     }
-    await expect(knowledge.locator('[data-cw-source-item]')).toHaveCount(6)
+    await expect(knowledge.locator('[data-cw-source-item]')).toHaveCount(12)
     await expect(page.getByRole('link', { name: new RegExp(site.about.courses.platzi.label.es) })).toHaveAttribute(
       'href',
       site.about.courses.platzi.href,

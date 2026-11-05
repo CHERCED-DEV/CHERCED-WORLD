@@ -46,9 +46,7 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
                   {skill.icon ? (
                     <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                   ) : (
-                    <span className={`${styles.termIcon} ${styles.termMonogram}`} aria-hidden="true">
-                      {monogram(skill.name)}
-                    </span>
+                    <span className={`${styles.termIcon} ${styles.termMonogram}`} data-cw-monogram={monogram(skill.name)} aria-hidden="true" />
                   )}
                   <span className={styles.termName}>{skill.name}</span>
                   {skill.used ? (
