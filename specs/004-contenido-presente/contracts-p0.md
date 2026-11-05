@@ -160,7 +160,7 @@ Para los casos (`app/[lang]/portfolio/[id]/opengraph-image.tsx`, P4) usa `ogCase
 `null`. La imagen queda en `/{lang}/…/opengraph-image/og`.
 
 Verificado en el build de P0 con el home marcado a mano (sin commit): la página publica
-`og:image` = `{base}/es/opengraph-image/og?<hash>`, con `og:image:alt` "Camilo Hernandez: DISEÑO SISTEMAS QUE ESCALAN",
+`og:image` = `{base}/es/opengraph-image/og?<hash>`, con `og:image:alt` "Camilo Hernandez: DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN" (título corregido el 2026-11-05),
 `og:image:type` `image/png` y 1200 × 630. **D-6**: Next 16.4 no le pasa a una ruta de imagen los parámetros de
 `[lang]` que da el `generateStaticParams` del layout, así que la imagen no se genera en el build: se genera en la
 primera petición de cada ruta y queda en caché (`x-nextjs-cache: MISS` y luego `HIT`). No se vuelve a generar en

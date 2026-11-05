@@ -134,8 +134,9 @@ página pública.
 
 **Acceptance Scenarios**:
 
-1. **Given** el home, **When** carga, **Then** el `h1` dice "DISEÑO SISTEMAS QUE ESCALAN" / "I DESIGN SYSTEMS THAT
-   SCALE"; arriba se ve "SOY DESARROLLADOR" / "I'M A DEVELOPER" tachado (US7) y debajo, el subtítulo.
+1. **Given** el home, **When** carga, **Then** el `h1` dice "DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN" / "I DESIGN
+   SOFTWARE SYSTEMS THAT SCALE"; arriba se ve "SOY DESARROLLADOR" / "I'M A DEVELOPER" tachado (US7) y debajo, el
+   subtítulo. Decisión del autor (2026-11-05): el título dice "de software" para que no se lea como diseño UX/UI.
 2. **Given** cualquier página pública, **When** se leen su `<meta name="description">` y su `og:description`,
    **Then** ninguna presenta al autor como "front-end" o "full-stack developer", y la del home es la de
    contenido.md §1.

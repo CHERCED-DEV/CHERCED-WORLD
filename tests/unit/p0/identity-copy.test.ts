@@ -89,7 +89,7 @@ describe('identidad de hoy (SC-401, FR-403)', () => {
   })
 
   it('el hero dice el título de hoy y conserva el de 2023 como título anterior (FR-401, FR-402)', () => {
-    expect(site.home.title).toEqual({ es: 'DISEÑO SISTEMAS QUE ESCALAN', en: 'I DESIGN SYSTEMS THAT SCALE' })
+    expect(site.home.title).toEqual({ es: 'DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN', en: 'I DESIGN SOFTWARE SYSTEMS THAT SCALE' })
     expect(site.home.previousTitle).toEqual({ es: 'SOY DESARROLLADOR', en: "I'M A DEVELOPER" })
     expect(site.home.subtitle?.es).toMatch(/^Software Solutions Engineer · AI-First\./)
     expect(site.home.subtitle?.en).toMatch(/^Software Solutions Engineer · AI-First\./)

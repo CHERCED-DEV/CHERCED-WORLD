@@ -20,7 +20,7 @@ home: {
   greeting: { es: 'Mi nombre es', en: 'My name is' },
   name: 'Camilo',
   previousTitle: { es: 'SOY DESARROLLADOR', en: "I'M A DEVELOPER" },
-  title: { es: 'DISEÑO SISTEMAS QUE ESCALAN', en: 'I DESIGN SYSTEMS THAT SCALE' },
+  title: { es: 'DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN', en: 'I DESIGN SOFTWARE SYSTEMS THAT SCALE' },
   subtitle: {
     es: 'Software Solutions Engineer · AI-First. Micro-frontends, microservicios .NET y plataformas composables.',
     en: 'Software Solutions Engineer · AI-First. Micro-frontends, .NET microservices and composable platforms.',
@@ -1150,7 +1150,7 @@ y `cherced-world.vercel.app` abajo. El texto alternativo es "{título}: {línea}
 
 | Página | Título ES | Línea ES | Título EN | Línea EN |
 |---|---|---|---|---|
-| Home | Camilo Hernandez | DISEÑO SISTEMAS QUE ESCALAN | Camilo Hernandez | I DESIGN SYSTEMS THAT SCALE |
+| Home | Camilo Hernandez | DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN | Camilo Hernandez | I DESIGN SOFTWARE SYSTEMS THAT SCALE |
 | Sobre mí | Sobre mí | Software Solutions Engineer · AI-First | About me | Software Solutions Engineer · AI-First |
 | Servicios | Servicios | Tu oficio, con un equipo de agentes a la medida | Services | Your craft, with a tailor-made team of agents |
 | Portafolio | Portafolio | {count} casos de estudio | Portfolio | {count} case studies |

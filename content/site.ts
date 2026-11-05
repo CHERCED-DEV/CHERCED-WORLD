@@ -39,7 +39,7 @@ export const site: SiteContent = {
     greeting: { es: 'Mi nombre es', en: 'My name is' },
     name: 'Camilo',
     previousTitle: { es: 'SOY DESARROLLADOR', en: "I'M A DEVELOPER" },
-    title: { es: 'DISEÑO SISTEMAS QUE ESCALAN', en: 'I DESIGN SYSTEMS THAT SCALE' },
+    title: { es: 'DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN', en: 'I DESIGN SOFTWARE SYSTEMS THAT SCALE' },
     subtitle: {
       es: 'Software Solutions Engineer · AI-First. Micro-frontends, microservicios .NET y plataformas composables.',
       en: 'Software Solutions Engineer · AI-First. Micro-frontends, .NET microservices and composable platforms.',
