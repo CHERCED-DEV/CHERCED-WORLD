@@ -1,7 +1,7 @@
 import { createElement, Fragment, isValidElement, type ReactElement, type ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { CodeBlock, GlassDemo, MdxH2, MdxH3, mdxComponents, readCodeBlock } from '@/components/blog/mdx'
+import { Callout, CodeBlock, GlassDemo, MdxH2, MdxH3, mdxComponents, readCodeBlock } from '@/components/blog/mdx'
 import { evaluateMdx, preparePost } from '@/components/blog/mdx/prepare'
 import { postLabels } from '@/components/blog/labels'
 import { getDictionary } from '@/lib/i18n/server'
@@ -44,7 +44,8 @@ describe('mdx-components', () => {
   it('expone el catálogo aprobado y los reemplazos de Markdown', () => {
     const components = useMDXComponents()
     expect(components).toBe(useMDXComponents())
-    expect(Object.keys(components).sort()).toEqual(['GlassDemo', 'a', 'blockquote', 'h2', 'h3', 'img', 'pre'])
+    expect(Object.keys(components).sort()).toEqual(['Callout', 'GlassDemo', 'a', 'blockquote', 'h2', 'h3', 'img', 'pre'])
+    expect(components.Callout).toBe(Callout)
     expect(components.GlassDemo).toBe(GlassDemo)
     expect(components.pre).toBe(CodeBlock)
     expect(mdxComponents.h2).toBe(MdxH2)

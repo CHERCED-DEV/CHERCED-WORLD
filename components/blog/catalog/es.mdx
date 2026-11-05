@@ -5,6 +5,7 @@ export const meta = {
   title: 'Catálogo de componentes del blog',
   description: 'Lo que se puede usar al escribir un post en CHERCED-WORLD y cómo se ve.',
   date: '2026-11-01',
+  updated: '2026-11-05',
   tags: ['guía', 'mdx'],
   image: {
     src: '/assets/icons/brandLogoX2.png',
@@ -50,6 +51,54 @@ npm run verify
 Las imágenes locales pasan por `next/image`. Con la sintaxis de Markdown se muestran en un marco 16:9 que no mueve el contenido mientras cargan:
 
 ![Logo de CHERCED: una S blanca dentro de un círculo negro](/assets/icons/brandLogoX2.png)
+
+## Callouts
+
+Los callouts resaltan el criterio detrás de un post. Hay tres tipos, cada uno con su etiqueta visible, que un lector de pantalla anuncia antes del texto:
+
+<Callout type="decision">
+Las etiquetas tienen una URL propia y se prerenderizan. Así el índice principal sigue siendo estático y el filtro funciona sin JavaScript.
+</Callout>
+
+<Callout type="tradeoff">
+Un diagrama SVG dibujado a mano cuesta más que una captura, pero pesa menos, se lee en cualquier tamaño y no necesita una dependencia nueva.
+</Callout>
+
+<Callout type="learned">
+Un test que nunca falló no prueba nada: antes de confiar en un gate, rómpelo a propósito y mira que se ponga rojo.
+</Callout>
+
+Se escriben así. El contenido admite Markdown, y `type` es `decision`, `tradeoff` o `learned`:
+
+```mdx
+<Callout type="decision">
+Lo que se decidió y por qué.
+</Callout>
+```
+
+## Diagramas en SVG
+
+Los diagramas se dibujan a mano en SVG y se insertan con la sintaxis de imagen de Markdown. Llegan en el HTML del servidor, sin JavaScript, y un diagrama más ancho que la columna se desplaza dentro de su propio marco, sin mover la página:
+
+![Diagrama de cómo llega un post al lector: el MDX, el build con Server Components, el HTML estático en la CDN y el lector, que lo ve sin JavaScript](/assets/imgs/catalog/diagrama-blog.svg)
+
+Para que se lea bien:
+
+- Guarda el archivo junto a las imágenes del post y declara `width`, `height` y `viewBox` en la raíz del SVG.
+- Dale su propio fondo: así se lee igual en el tema oscuro y en el claro.
+- Usa texto real (`<text>`), no trazos, y un `<title>` y un `<desc>` dentro del SVG.
+- El texto alternativo de la imagen dice qué muestra el diagrama, no "diagrama".
+- Usa el negro, el blanco y el verde `#25ED9E` del sitio, sin degradados que bajen el contraste.
+
+## La meta del post
+
+Además de los campos de siempre, la meta admite:
+
+- `updated`: la fecha de la última revisión importante. El post muestra "Actualizado el…" junto a la fecha de publicación.
+- `series`: `{ id, part }`, con el nombre de la serie en `content/posts/series.ts`. El post muestra su posición y enlaces a las otras partes publicadas.
+- `cover: 'generated'`: una portada en HTML y CSS cuando el post no trae imagen propia.
+
+Al final de cada post aparecen la caja del autor y hasta tres posts relacionados por etiqueta, sin repetir el anterior ni el siguiente. Si el post es una traducción, una nota dice en qué idioma se escribió.
 
 ## Componentes interactivos
 

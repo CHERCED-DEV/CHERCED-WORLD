@@ -1,11 +1,12 @@
 import { createElement, type ComponentType, type ReactNode } from 'react'
 import { buildOutline, readingMinutes, type TocHeading } from '@/lib/blog'
 import type { CopyLabels } from '../CopyButton'
+import { Callout, type CalloutLabels } from './Callout'
 import { CodeBlock } from './CodeBlock'
 import { GlassDemo, type GlassDemoLabels } from './GlassDemo'
 import { MdxH2, MdxH3 } from './Heading'
 
-export type PostLabels = { code: CopyLabels; glassDemo: GlassDemoLabels }
+export type PostLabels = { code: CopyLabels; glassDemo: GlassDemoLabels; callout?: CalloutLabels }
 
 export type PreparedPost = { body: ReactNode; headings: TocHeading[]; minutes: number; words: number }
 
@@ -15,6 +16,10 @@ export const PAGE_IDS = [
   'cw-post-title',
   'cw-post-body',
   'cw-toc-title',
+  'cw-toc-sheet-title',
+  'cw-series-title',
+  'cw-author-title',
+  'cw-related-title',
   'cw-share-title',
   'cw-post-nav-title',
   'cw-comments',
@@ -49,6 +54,7 @@ export function preparePost(Content: ComponentType, labels: PostLabels): Prepare
     inject: new Map<unknown, Record<string, unknown>>([
       [CodeBlock, { labels: labels.code }],
       [GlassDemo, { labels: labels.glassDemo }],
+      ...(labels.callout ? ([[Callout, { labels: labels.callout }]] as const) : []),
     ]),
     reservedIds: PAGE_IDS,
   })

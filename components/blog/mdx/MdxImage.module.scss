@@ -20,3 +20,24 @@
 .fill {
   object-fit: contain;
 }
+
+.diagram {
+  --cw-diagram-min: 36rem;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin-block: var(--cw-space-5);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  border-radius: var(--cw-radius-lg);
+  scrollbar-width: thin;
+}
+
+.diagramImage {
+  display: block;
+  width: auto;
+  max-width: max(100%, var(--cw-diagram-min));
+  height: auto;
+  margin-inline: auto;
+}
