@@ -364,7 +364,16 @@ Rutas: `tests/e2e/integration/**`, `playwright.config.ts`.
 
 - [ ] T504 Integrar en orden P0 → P5 → P6 → P2 → P1 → P3 → P4 → P7, con `npm run verify` después de cada merge.
   Revisar que `package.json` no suma dependencias y que no hay variables de entorno nuevas (FR-497).
-- [ ] T505 Correr la suite completa (unitarias, contrato y e2e) **3 veces seguidas en verde**.
+- [ ] T505 Correr la suite exhaustiva una vez en verde antes de la vista previa final (ver T510).
+- [ ] T510 (P7, va primero dentro de P7) Suite por niveles, decisión del autor del 2026-11-04: una hora de e2e no es
+  aceptable en el día a día.
+  - `npm run test:fast`: lint, tipos, unitarias y humo e2e en escritorio (cada página carga, navega y no rompe),
+    en menos de 5 minutos. Es lo que corre cada lane en cada cambio.
+  - `npm run test:full`: todas las e2e con el barrido responsive en 6 anchos clave (320, 390, 768, 1024, 1440 y
+    2560), en 10 a 15 minutos. Corre antes de integrar cada lane.
+  - `npm run test:exhaustive`: lo de hoy (cada 40 px, los controles, el contraste y el rendimiento), solo antes
+    de pasar a producción.
+  - Se compila una sola vez y se reutiliza el servidor entre proyectos y corridas.
 - [ ] T506 Limpiar las claves de i18n que quedaron sin uso (`services.explore`, `services.cta`, `services.contact`,
   `about.figure.projects`, `about.figure.technologies`, `about.figure.airlines` y `about.figure.airlinesNote`) y el
   campo `services.intro`.
