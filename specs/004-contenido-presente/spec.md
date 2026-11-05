@@ -51,8 +51,8 @@ criterio de arquitecto con evidencia. Es contenido y detalles nuevos sobre el si
 ### Lo que esta spec reemplaza (después de integrar la 002)
 
 - **002 US6, cifras destacadas.** Cambia el conjunto de cifras (FR-436).
-- **002 US6c, "no se agregan skills y no cambia ningún nivel".** La 004 reorganiza los lóbulos (US5), con los
-  niveles nuevos sujetos a confirmación (P-401).
+- **002 US6c, "no se agregan skills y no cambia ningún nivel".** Ya no lo reemplaza la 004: lo hace la propia 002 en
+  T229 (D7 y D9, seis lóbulos). La 004 solo suma lo que T229 no cubra (US5).
 - **002 FR-210, "los 12 casos de estudio".** Pasan a ser 15 (FR-446).
 
 ## Clarifications
@@ -172,12 +172,13 @@ Luego pulsar "Quiero esto" en cada tarjeta y comprobar el formulario de Contacto
    - El botón del hero dice "Cuéntame tu proceso" y lleva al formulario.
 2. **Given** "Para quién", **When** se lee, **Then** hay tres perfiles: profesionales independientes, empresas y
    equipos de ingeniería.
-3. **Given** los servicios, **When** se ven, **Then** hay cinco tarjetas numeradas del 01 al 05:
+3. **Given** los servicios, **When** se ven, **Then** hay seis tarjetas numeradas del 01 al 06 (P-414 resuelta):
    - asistentes de IA para tu profesión;
    - fábricas de software a la medida;
    - optimización de procesos con IA;
    - arquitectura y modernización;
-   - desarrollo de producto.
+   - desarrollo de producto;
+   - talleres para equipos.
 
    Cada una dice qué es, para quién y qué recibes. Ícono, número y título quedan siempre a la misma altura.
 4. **Given** una tarjeta, **When** se pasa el puntero, se toca o se pulsa Enter, **Then** muestra su reverso, "Qué
@@ -278,9 +279,8 @@ cifras, con y sin JS.
 
 **Acceptance Scenarios**:
 
-1. **Given** el mapa, **When** se activa Arquitectura, **Then** muestra las skills de contenido.md §8 que el autor
-   haya confirmado y una línea "dónde lo apliqué" con entradas de carrera y casos enlazados. La fila "dónde lo
-   aprendí" se queda como está.
+1. **Given** el mapa, **When** se activa Arquitectura, **Then** muestra las skills y las fuentes que deja T229 (002),
+   que reemplazan a contenido.md §8, y la línea "dónde lo apliqué" con entradas de carrera y casos.
 2. **Given** cualquier lóbulo, **When** se activa, **Then** su línea de proyectos nunca dice "ninguno todavía".
 3. **Given** Arquitectura, **When** se ve, **Then** debajo de las barras hay una fila de principios en chips, sin
    porcentaje.
@@ -288,8 +288,8 @@ cifras, con y sin JS.
    lóbulo. Sin JS se ven los cinco párrafos.
 5. **Given** "En cifras", **When** entra en pantalla, **Then** muestra las cuatro cifras de contenido.md §10 y
    ninguna del empleador actual.
-6. **Given** una skill nueva cuyo nivel el autor no ha confirmado, **When** se publica la 004, **Then** esa skill no
-   aparece.
+6. **Given** un lóbulo sin párrafo "en palabras" (Prácticas de ingeniería mientras siga abierta P-424), **When** se
+   selecciona, **Then** no se muestra un bloque vacío.
 
 ---
 
@@ -396,20 +396,22 @@ tienen reacciones de un clic para quien todavía no se anima a comentar.
 
 ---
 
-### User Story 10 - Página /now (Priority: P3, sujeta a P-404)
+### User Story 10 - Página /now (Priority: P3)
 
-Una página `/now` cuenta qué construye, qué aprende y qué prepara el autor este mes, y se actualiza en dos minutos.
+Una página `/now` cuenta qué construye el autor este mes, qué aprende, para qué entrena, qué hace fuera del teclado y
+cuáles son sus lemas. Se actualiza en dos minutos. P-404 está resuelta, y el contenido está en contenido.md §24.
 
-**Why this priority**: hace que el sitio se sienta vivo, pero su contenido depende del autor.
+**Why this priority**: hace que el sitio se sienta vivo, pero no es lo primero que busca quien contrata.
 
-**Independent Test**: abrir `/es/now` y `/en/now` con contenido de prueba y sin él.
+**Independent Test**: abrir `/es/now` y `/en/now` con y sin JS, y con lector de pantalla.
 
 **Acceptance Scenarios**:
 
-1. **Given** `/es/now` o `/en/now` con contenido, **When** se abre, **Then** muestra las tres listas y la fecha de
-   actualización.
-2. **Given** que el autor no ha dado el contenido, **When** se integra la 004, **Then** la ruta no se publica ni se
-   enlaza.
+1. **Given** `/es/now` o `/en/now`, **When** se abre, **Then** muestra "Construyendo", "Aprendiendo", "Entrenando
+   para", "Fuera del teclado" y "Mis lemas", con la fecha de actualización.
+2. **Given** el lema "Veni, vidi, vici", **When** lo anuncia un lector de pantalla, **Then** se lee en latín
+   (`lang="la"`).
+3. **Given** la página, **When** se audita, **Then** no publica la fecha de la carrera de HYROX.
 
 ---
 
@@ -467,7 +469,7 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
   los filtros.
 - El título nuevo del hero a 320 px: parte por palabras sin desbordar (002, SC-202).
 - El visitante activa "reducir movimiento" en mitad del guiño: salta al estado final.
-- `/now` sin publicar: responde 404, como cualquier ruta desconocida.
+- Una lista de `/now` vacía: su bloque no se muestra.
 
 ## Requirements *(mandatory)*
 
@@ -495,8 +497,8 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
 - **FR-406b**: El `h1` MUST ser el título del hero. Su intro reemplaza a `services.intro`. "Explorar" se reemplaza por
   "Cuéntame tu proceso", que lleva al formulario de Contacto. "¿Cómo te puedo ayudar?" se queda como título del bloque
   de servicios.
-- **FR-406c**: Los servicios MUST ser cinco: `ai-harness`, `software-factory`, `process-optimization`, `architecture` y
-  `product`. Cada uno tiene número, título, texto, "para quién" y entregables, y algunos traen un ejemplo.
+- **FR-406c**: Los servicios MUST ser seis: `ai-harness`, `software-factory`, `process-optimization`, `architecture`,
+  `product` y `workshops` (contenido.md §5b, P-414 resuelta). Cada uno tiene número, título, texto, "para quién" y entregables, y algunos traen un ejemplo.
   - Cada servicio tiene un ícono propio de línea fina, del lenguaje del sitio:
     - un nodo con conexiones (harness);
     - carriles en paralelo (fábrica);
@@ -509,7 +511,7 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
 - **FR-406e**: "Cómo trabajo" MUST mostrar los cinco pasos como una línea de tiempo accesible (lista ordenada) que se
   ilumina al hacer scroll, y los principios del bloque. Con movimiento reducido o sin JS, todo se ve encendido.
 - **FR-406f**: Cada tarjeta MUST tener un botón "Quiero esto" que abre Contacto con `?servicio=<id>`.
-  - El formulario MUST sumar el campo opcional "¿Qué te interesa?", con los cinco servicios y "Otra cosa".
+  - El formulario MUST sumar el campo opcional "¿Qué te interesa?", con los seis servicios y "Otra cosa".
   - El servidor valida el valor contra esa lista y lo guarda con el mensaje, en la base que ya existe.
   - El panel muestra el valor, y la política de privacidad lo menciona (contenido.md §5.8).
 - **FR-406g**: Las preguntas frecuentes MUST ser disclosures accesibles. Una pregunta cuya respuesta sigue sin
@@ -518,8 +520,9 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
   sobre clientes, hasta que el autor confirme qué ejemplos usar (P-413).
 - **FR-406i**: El botón "Probar" de la tarjeta de asistentes MUST aparecer solo cuando exista la vitrina "Despacho" del AI
   Lab (003, A4).
-- **FR-406j**: Ningún texto de Servicios MUST traer cifras o nombres internos del empleador, ni precios, mientras P-415
-  siga abierta.
+- **FR-406j**: Ningún texto de Servicios MUST traer cifras o nombres internos del empleador. Cada tarjeta MAY mostrar un
+  rango de precio orientativo (P-415 resuelta), pero solo con las cifras que dé el autor (P-421). Sin ellas, no se
+  muestra ningún precio.
 - **FR-408**: El texto de habilidades de 2023 (`skills.description` y `skills.bullets`) MUST salir de "Mis habilidades, en
   palabras". Lo reemplazan los párrafos por lóbulo (FR-434). El texto de 2023 sigue en la cápsula del tiempo.
 
@@ -558,12 +561,17 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
 - **FR-431**: Cada skill nueva MUST tener ícono, con la regla de la 002: marca con licencia libre copiada al repo, o
   pictograma propio de línea fina.
 - **FR-432**: Cada lóbulo MUST mostrar "dónde lo apliqué" con referencias a entradas de carrera y a proyectos. Una prueba
-  verifica que cada referencia exista. La fila "dónde lo aprendí" se queda.
+  verifica que cada referencia exista. La fila "dónde lo aprendí" se queda. T229 ya corrige las fuentes de los seis
+  lóbulos; la 004 solo verifica y completa lo que falte (tasks, T435).
 - **FR-433**: Los principios de contenido.md §8.6 MUST vivir como datos y mostrarse como chips bajo Arquitectura y como
   salida de `cat principles.md`.
-- **FR-434**: "Mis habilidades, en palabras" MUST mostrar un párrafo por lóbulo (contenido.md §9), sin cifras del empleador.
-- **FR-435**: La línea de proyectos de un lóbulo MUST NOT decir "ninguno todavía". Un lóbulo puede declarar proyectos
-  explícitos además del cruce por tecnología.
+- **FR-434**: "Mis habilidades, en palabras" MUST mostrar un párrafo por cada uno de los seis lóbulos de T229, sin cifras
+  del empleador:
+  - Frontend, Backend y nube e IA aplicada salen de contenido.md §9.
+  - Arquitectura e Idiomas y negocio salen de los párrafos que el autor aprobó para T229.
+  - Prácticas de ingeniería espera a P-424. Mientras tanto, ese lóbulo no muestra el bloque.
+- **FR-435**: La línea de proyectos de un lóbulo MUST NOT decir "ninguno todavía". Si T229 ya oculta la línea vacía, la
+  004 solo lo verifica.
 - **FR-436**: "En cifras" MUST mostrar las cuatro cifras de contenido.md §10: años (calculados como hoy), piezas de
   Synergos, ADRs y tests. Salen proyectos, tecnologías y aerolíneas.
 - **FR-437**: "Aprendiendo ahora" se queda como lo deja la 002 (T225). La 004 no lo cambia.
@@ -586,8 +594,11 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
   de rol por capa, iluminación en orden al entrar en pantalla, y estado estático y completo con movimiento reducido o
   sin JS.
 - **FR-446**: Los 15 casos MUST entrar a las auditorías de la 002: responsive de 320 a 2560 px, interacción y contraste.
-- **FR-447**: `links.live` y `links.github` de Synergos, Director & lines y Legal workspace MUST seguir en `null` hasta que
-  el autor confirme (P-403, P-410). Event bridge no tiene enlaces.
+- **FR-447**: Enlaces de los casos (P-403 resuelta):
+  - Synergos MUST enlazar sus tres repos públicos (`Synergos.CMS`, `Synergos.UI` y `Synergos.Fabrica`), y su `live` sigue
+    en `null` (P-410).
+  - Legal workspace MUST ir sin enlace al repo mientras P-420 siga abierta.
+  - Director & lines y Event bridge no tienen enlaces.
 
 #### Paleta y atajos
 
@@ -605,7 +616,8 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
 - **FR-460**: El guiño del hero MUST durar 2 s o menos, correr una vez por sesión, no mover el layout y no retrasar el LCP.
 - **FR-461**: El terminal de "Lo que sé" MUST aceptar texto:
   - Una entrada con etiqueta y una salida con `aria-live="polite"`.
-  - Los comandos de contenido.md §15, sin distinguir mayúsculas.
+  - Los comandos de contenido.md §15 y `cat lemas.md` (§15b, con "Veni, vidi, vici" en `lang="la"`), sin distinguir
+    mayúsculas.
   - `ls projects/` sale de `projects.ts`, en el orden del portafolio y con enlaces a cada caso.
   - `ls synergos/` sale de la fuente de FR-441.
   - `clear` limpia la salida y Esc limpia la entrada.
@@ -626,12 +638,13 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
 - **FR-471**: Cada sección y cada caso de estudio, en cada idioma, MUST tener su `og:image` generada con la convención
   `opengraph-image` de Next.js (incluida en el framework): 1200 × 630, blanco, negro y `#25ED9E`, Montserrat, textos de
   contenido.md §23 y texto alternativo. La 005 reutiliza la misma plantilla para los posts.
-- **FR-472**: El sitemap MUST incluir los casos nuevos, y `/now` cuando se publique.
+- **FR-472**: El sitemap MUST incluir los casos nuevos y `/now`.
 
 #### Contacto, privacidad y reacciones
 
-- **FR-480**: La confirmación del formulario de contacto MUST decir el texto de contenido.md §19. El enlace de agenda solo
-  se agrega si el autor lo pide (P-405).
+- **FR-480**: La confirmación del formulario de contacto MUST decir el texto de contenido.md §19. El autor pidió un enlace
+  de agenda (P-405 resuelta). Se muestra solo cuando el autor dé el enlace (P-422), y es una enmienda del formulario
+  congelado (A-402 del plan).
 - **FR-481**: El nombre accesible del checkbox de privacidad, en Contacto y en comentarios, MUST incluir la frase completa
   con "política de privacidad" / "privacy policy". El enlace a la política MUST seguir operable y avisar que abre una
   pestaña nueva.
@@ -646,8 +659,11 @@ El registro de capacidades, en cambio, también mejora la paleta y el asistente.
 
 #### /now
 
-- **FR-490**: `/[lang]/now` MUST leer de un archivo de contenido (qué construye, qué aprende, qué prepara y la fecha de
-  actualización), y MUST NOT publicarse ni enlazarse hasta que el autor dé el contenido (P-404).
+- **FR-490**: `/[lang]/now` MUST leer de `content/now.ts` (contenido.md §24, P-404 resuelta): qué construye, qué
+  aprende, para qué entrena, qué hace fuera del teclado y los lemas del autor, más la fecha de actualización.
+  - "Veni, vidi, vici" va con `lang="la"`.
+  - La fecha de HYROX no se publica.
+  - El footer y la paleta enlazan a la página.
 
 #### Sitio listo para agentes (US11)
 
@@ -699,8 +715,10 @@ Enmiendas de tipos propuestas (las numera y aplica la lane Foundation en el plan
   - `adrCards?: { decision: Localized; why: Localized; tradeoff: Localized }[]`.
   - `diagram?: { id: string; label: Localized; role: Localized }[]`, las capas del diagrama vivo.
 - **E-05 Servicios** (reemplazado el 2026-11-04, D10):
-  - `ServiceId` pasa a `'ai-harness' | 'software-factory' | 'process-optimization' | 'architecture' | 'product'`.
-  - `ServiceItem` suma `forWho: Localized`, `deliverables: Localized<string[]>` y `example?: Localized`.
+  - `ServiceId` pasa a `'ai-harness' | 'software-factory' | 'process-optimization' | 'architecture' | 'product' |
+    'workshops'`.
+  - `ServiceItem` suma `forWho: Localized`, `deliverables: Localized<string[]>`, `example?: Localized` y
+    `priceRange?: Localized` (P-421). La forma completa está en data-model.md §1.
   - `SiteContent.services` suma `hero`, `audiences`, `process` (pasos y principios), `faq` y `cta`.
   - El mensaje de contacto suma `interest?: ServiceId | 'other'`, que es un cambio del contrato de la lane de
     contacto y requiere una enmienda.
@@ -729,7 +747,7 @@ Enmiendas de tipos propuestas (las numera y aplica la lane Foundation en el plan
 - **SC-402**: El 100 % de las entradas de carrera y de educación coincide con la tabla de verificación (prueba unitaria).
 - **SC-403**: El CV se abre en LinkedIn con 1 clic desde el hero, "Quién soy" y Contacto, y con 4 teclas o menos desde la
   paleta abierta.
-- **SC-413**: En Servicios, cada una de las cinco tarjetas lleva a Contacto con su servicio preseleccionado en 1 clic, con
+- **SC-413**: En Servicios, cada una de las seis tarjetas lleva a Contacto con su servicio preseleccionado en 1 clic, con
   y sin JS. La página pasa la auditoría responsive y la de accesibilidad de la 002.
 - **SC-414**: En un navegador con WebMCP, el 100 % de las herramientas de FR-487 se listan y se ejecutan con su esquema.
   Sin WebMCP, la página tiene 0 errores en consola y el mismo LCP e INP.
@@ -782,6 +800,8 @@ fuente de verdad. Mientras sigan abiertas, se aplica el valor por defecto indica
 | P-420 | ¿Todos los casos de `legal-workspace/evals/casos/` son sintéticos y ninguno sale del material de la clienta? | Revisión del repo público, 2026-11-04 | El caso Legal workspace sale sin enlace al repo |
 | P-421 | Rangos de precio de cada servicio | Respuesta a P-415 | Sin precios |
 | P-422 | Enlace de agenda (Calendly, Cal.com u otro) | Respuesta a P-405 | Sin enlace |
+| P-423 | ¿Se registra el sitio en el origin trial de WebMCP de Chrome? Pide una cuenta externa y un token que vence, lo que roza el principio VIII | Plan, research R-401 | Sin token: las herramientas solo aparecen donde el navegador ya expone la API |
+| P-424 | Párrafo "en palabras" del lóbulo Prácticas de ingeniería (T229). Ni el handoff ni contenido.md lo traen | Análisis cruzado del plan | Ese lóbulo no muestra el bloque |
 | P-406 | El PDF oficial del CV trae cifras del empleador actual y nombres de proveedores, y enlaza a una cuenta de GitHub distinta de la pública. ¿Se publica tal cual (ya está en LinkedIn), se publica una versión para el sitio sin esas cifras ni nombres, o el botón lleva a LinkedIn? | Comparación del CV con la decisión "ninguna cifra del empleador" | **Resuelta (2026-11-04):** el botón lleva a LinkedIn y el sitio no sirve el PDF |
 | P-407 | Hoy hay skills que no están en la propuesta: HTML5, JavaScript y AI coding agents, y CSS y Sass, que la propuesta junta en una sola. ¿Se quedan, se fusionan o salen? | Comparación de `site.ts` con la propuesta | **Resuelta (2026-11-04):** ningún skill se borra (D7, en la 002, T229) |
 | P-408 | Solo Synergos trae tarjetas ADR. ¿Escribe el autor las de Director & lines, Legal workspace, Event bridge y CHERCED-WORLD 2026? | Handoff | Esos casos quedan en prosa |

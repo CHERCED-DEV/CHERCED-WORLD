@@ -355,10 +355,10 @@ cta: {
 | `contact.interest.other` | Otra cosa | Something else |
 | `admin.field.interest` (`admin.json`) | Le interesa | Interested in |
 
-Las otras cinco opciones son los títulos de §5.3, sin mayúsculas sostenidas: "Asistentes de IA para tu profesión",
-"Fábricas de software a la medida", "Optimización de procesos con IA", "Arquitectura y modernización" y "Desarrollo de
-producto" (EN: "AI assistants for your profession", "Tailor-made software factories", "AI process optimization",
-"Architecture & modernization" y "Product development").
+Las otras seis opciones son los títulos de §5.3 y §5b, sin mayúsculas sostenidas: "Asistentes de IA para tu
+profesión", "Fábricas de software a la medida", "Optimización de procesos con IA", "Arquitectura y modernización",
+"Desarrollo de producto" y "Talleres para equipos" (EN: "AI assistants for your profession", "Tailor-made software
+factories", "AI process optimization", "Architecture & modernization", "Product development" y "Team workshops").
 
 Nuevo valor del cuerpo de "Qué datos recojo" en `site.privacy.sections`:
 
@@ -522,7 +522,11 @@ name: {
 | Ubicación pública | — | no aparece | Armenia, Colombia · abierto a relocation | FR-419 / FR-463 |
 | Instagram | — | aparece | no figura como contacto público | P-409 |
 
-## §8 Lo que sé: lóbulos **[P-401, P-407]**
+## §8 Lo que sé: lóbulos
+
+> **Reemplazada por la 002 (T229, decisiones D7 y D9, 2026-11-04).** §8.1 a §8.5 quedan como historia: los seis
+> lóbulos, sus skills, niveles, fuentes y proyectos los define T229, y P-401 y P-407 están resueltas. Sigue vigente
+> §8.6 (principios), que no es parte de T229.
 
 ### §8.1 Skills nuevas o que cambian
 
@@ -670,6 +674,14 @@ principles: [
 ## §9 "Mis habilidades, en palabras" (FR-434)
 
 Al párrafo de Frontend se le quitó la cifra del empleador.
+
+> **Con los seis lóbulos de T229**:
+> - `frontend`, `backend-cloud` y `applied-ai` usan los párrafos de abajo.
+> - `architecture` y el lóbulo de Idiomas y negocio usan los párrafos que el autor aprobó para T229. Reemplazan a
+>   `architecture` y `craft` de abajo.
+> - Prácticas de ingeniería no tiene párrafo todavía (P-424).
+>
+> Las claves son los `id` que deje T229.
 
 ```ts
 inWords: {
@@ -984,7 +996,7 @@ Anonimizado: sin el nombre del empleador, sin nombres internos y sin cifras de n
 
 | Comando | Salida ES | Salida EN |
 |---|---|---|
-| `help` | Comandos: whoami · cat principles.md · ls projects/ · ls synergos/ · git log --oneline -1 · cat &lt;lóbulo&gt;.lobe · clear | Commands: whoami · cat principles.md · ls projects/ · ls synergos/ · git log --oneline -1 · cat &lt;lobe&gt;.lobe · clear |
+| `help` | Comandos: whoami · cat principles.md · cat lemas.md · ls projects/ · ls synergos/ · git log --oneline -1 · cat &lt;lóbulo&gt;.lobe · clear | Commands: whoami · cat principles.md · cat lemas.md · ls projects/ · ls synergos/ · git log --oneline -1 · cat &lt;lobe&gt;.lobe · clear |
 | `whoami` | arquitecto · padre adoptivo de 20 capacidades · sobrino de Uncle Bob | architect · foster parent of 20 capabilities · Uncle Bob's nephew |
 | `cat principles.md` | Los cinco `principles[].full` de §8.6, numerados del 1 al 5 | Same, in English |
 | `ls projects/` | Generado desde `projects.ts` en el orden de §4: un `slug/` por proyecto, enlazado a su caso | Same |
