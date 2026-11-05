@@ -3,7 +3,7 @@ import { getProjects, listPosts } from '@/lib/content'
 import { alternates, defaultLocale, locales, localizedPath } from '@/lib/i18n'
 import { absoluteUrl } from '@/lib/site-url'
 
-const PUBLIC_PATHS = ['/', '/aboutMe', '/services', '/portfolio', '/blog', '/contactMe', '/privacy'] as const
+const PUBLIC_PATHS =['/', '/aboutMe', '/services', '/portfolio', '/now', '/blog', '/contactMe', '/privacy'] as const
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await listPosts(defaultLocale)
