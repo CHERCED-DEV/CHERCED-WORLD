@@ -28,3 +28,15 @@
   outline: 2px solid var(--cw-focus);
   outline-offset: 3px;
 }
+
+@mixin dock-space {
+  @include bp.down(md) {
+    :root[data-js] {
+      scroll-padding-bottom: var(--cw-dock-space);
+    }
+
+    :root[data-js] body {
+      padding-bottom: var(--cw-dock-space);
+    }
+  }
+}

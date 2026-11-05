@@ -50,6 +50,41 @@ function createRegistry(env: RevealEnv, Ctor: NonNullable<RevealEnv['Intersectio
   return { env, observer, seen }
 }
 
+export const SWEEP_ATTRIBUTE = 'data-cw-sweep'
+
+export const SWEEP_TIMELINE_SUPPORT = 'animation-timeline: view()'
+
+export const SWEEP_THRESHOLD = 0.35
+
+export type SweepEnv = {
+  matchMedia(query: string): { matches: boolean }
+  CSS?: { supports(condition: string): boolean }
+  IntersectionObserver?: new (
+    callback: (entries: Array<{ target: RevealTarget; isIntersecting: boolean }>) => void,
+    options: { threshold: number },
+  ) => Observer
+}
+
+export function observeSweep(element: RevealTarget | null, env: SweepEnv = window): () => void {
+  if (!element) return () => {}
+  if (env.CSS?.supports(SWEEP_TIMELINE_SUPPORT)) return () => {}
+  if (env.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {}
+  const Ctor = env.IntersectionObserver
+  if (!Ctor) return () => {}
+  const observer = new Ctor(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        entry.target.setAttribute(SWEEP_ATTRIBUTE, 'in')
+        observer.unobserve(entry.target)
+      }
+    },
+    { threshold: SWEEP_THRESHOLD },
+  )
+  observer.observe(element)
+  return () => observer.unobserve(element)
+}
+
 export function observeReveal(element: RevealTarget | null, env: RevealEnv = window): () => void {
   if (!element) return () => {}
   const Ctor = env.IntersectionObserver

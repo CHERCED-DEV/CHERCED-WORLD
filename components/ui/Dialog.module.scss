@@ -1,4 +1,6 @@
 @use 'glass' as *;
+@use 'breakpoints' as bp;
+@use 'sheet' as *;
 
 .dialog {
   @include glass(strong);
@@ -40,4 +42,36 @@
   .dialog[open] {
     animation: none;
   }
+}
+
+.grip {
+  display: none;
+}
+
+@include bp.down(md) {
+  .dialog::backdrop {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .sheet {
+    @include sheet-panel;
+
+    &[open] {
+      animation: none;
+    }
+  }
+
+  .sheet .body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .grip {
+    @include sheet-grip;
+  }
+
+  @include sheet-entry('.sheet');
 }

@@ -1,9 +1,16 @@
 'use client'
 
 import { useEffect } from 'react'
-import { startPointerLight } from '@/lib/fx/pointer-light'
+import { startPointerLight, startTouchLight } from '@/lib/fx/pointer-light'
 
 export function PointerLight(): null {
-  useEffect(() => startPointerLight(), [])
+  useEffect(() => {
+    const stopPointer = startPointerLight()
+    const stopTouch = startTouchLight()
+    return () => {
+      stopPointer()
+      stopTouch()
+    }
+  }, [])
   return null
 }

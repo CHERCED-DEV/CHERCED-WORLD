@@ -1,8 +1,13 @@
 @use 'sass:list';
+@use 'breakpoints' as bp;
 
 $variants: (subtle, standard, strong);
 
+$float-levels: (1, 2, 3);
+
 $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)';
+
+$-touch-light-query: '(pointer: coarse) and (prefers-reduced-motion: no-preference)';
 
 @function -check-variant($variant) {
   @if not list.index($variants, $variant) {
@@ -31,12 +36,29 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
   color: var(--cw-fg);
 }
 
+@mixin glass-backdrop($variant: standard) {
+  $v: -check-variant($variant);
+  -webkit-backdrop-filter: blur(var(--cw-glass-#{$v}-blur)) saturate(var(--cw-glass-saturate));
+  backdrop-filter: blur(var(--cw-glass-#{$v}-blur)) saturate(var(--cw-glass-saturate));
+}
+
 @mixin -layer {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
+}
+
+@mixin -ring($width) {
+  padding: $width;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
 }
 
 @mixin glass-edge {
@@ -78,6 +100,12 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
       --cw-light-y var(--cw-duration-base) var(--cw-ease-out),
       --cw-spot-mix var(--cw-duration-slow) var(--cw-ease-out);
   }
+
+  @media #{$-touch-light-query} {
+    &::before {
+      transition-duration: var(--cw-duration-base), var(--cw-duration-base), var(--cw-touch-fade);
+    }
+  }
 }
 
 @mixin glass-grain {
@@ -114,6 +142,14 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
       --cw-spot-mix: 1;
     }
   }
+
+  @media #{$-touch-light-query} {
+    &[data-cw-touching] {
+      --cw-light-x: var(--cw-mx, 22%);
+      --cw-light-y: var(--cw-my, 0%);
+      --cw-spot-mix: 1;
+    }
+  }
 }
 
 @mixin glass-crystal($variant: standard) {
@@ -122,4 +158,95 @@ $-light-query: '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: 
   @include glass-depth;
   @include glass-edge;
   @include glass-light;
+}
+
+@mixin glass-sweep {
+  @include -layer;
+  @include -ring(var(--cw-sweep-edge));
+  z-index: 2;
+  display: none;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      var(--cw-sweep-angle),
+      transparent 36%,
+      var(--cw-glass-spot-accent) 45%,
+      var(--cw-glass-sweep) 50%,
+      var(--cw-glass-spot-accent) 55%,
+      transparent 64%
+    );
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  @include bp.down(md) {
+    @media (prefers-reduced-motion: no-preference) {
+      display: block;
+
+      @supports (animation-timeline: view()) {
+        view-timeline: --cw-sweep block;
+
+        &::before {
+          animation: cw-sweep linear both;
+          animation-timeline: --cw-sweep;
+          animation-range: entry 10% cover 55%;
+        }
+      }
+
+      @supports not (animation-timeline: view()) {
+        &[data-cw-sweep='in']::before {
+          animation: cw-sweep var(--cw-sweep-duration) var(--cw-ease-out) 1 both;
+        }
+      }
+    }
+  }
+
+  @keyframes cw-sweep {
+    from {
+      transform: translate3d(-100%, 0, 0);
+    }
+
+    to {
+      transform: translate3d(100%, 0, 0);
+    }
+  }
+}
+
+@mixin glass-float($level: 1) {
+  @if not list.index($float-levels, $level) {
+    @error 'glass-float(): nivel desconocido "#{$level}". Usa 1, 2 o 3.';
+  }
+  --cw-float-shift: var(--cw-float-#{$level});
+
+  @include bp.down(md) {
+    @media (prefers-reduced-motion: no-preference) {
+      @supports (animation-timeline: view()) {
+        animation: cw-float linear both;
+        animation-timeline: view();
+        animation-range: cover;
+      }
+    }
+  }
+
+  @keyframes cw-float {
+    from {
+      translate: 0 var(--cw-float-shift);
+    }
+
+    to {
+      translate: 0 calc(var(--cw-float-shift) * -1);
+    }
+  }
+}
+
+@mixin glass-budget {
+  @include bp.down(md) {
+    :root :not([data-cw-blur], :popover-open, dialog[open]) {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
 }
