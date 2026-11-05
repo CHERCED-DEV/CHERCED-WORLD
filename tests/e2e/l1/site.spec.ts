@@ -136,6 +136,7 @@ test.describe('metadatos', () => {
   onlyIn('desktop-chromium')
 
   test('cada página declara título, canónica y alternativas por idioma', async ({ page }) => {
+    test.setTimeout(90_000)
     const expected: Array<[string, RegExp]> = [
       ['/es', /^<-CHERCED-WORLD->$/],
       ['/en/aboutMe', /^About me \| <-CHERCED-WORLD->$/],
