@@ -1,6 +1,8 @@
 # Idea 003: Laboratorio de IA
 
 **Estado**: idea registrada el 2026-11-04. No se especifica ni se construye hasta integrar la 002.
+La spec formal, el plan y las tareas (solo camino A) están en [spec.md](spec.md), [plan.md](plan.md) y
+[tasks.md](tasks.md).
 
 ## Lo que pidió el autor
 

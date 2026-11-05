@@ -74,7 +74,9 @@ genérica. Es la cara del blog.
    año más reciente se titula "Ahora" y los demás, "Archivo".
 3. **Given** la bienvenida, **When** se lee, **Then** dice "Notas de un arquitecto que trabaja con agentes: decisiones,
    errores y lo que los tests no vieron." (o su versión en inglés).
-4. **Given** un post sin portada propia, **When** se ve su tarjeta, **Then** usa su imagen OG generada (US4) como portada.
+4. **Given** un post sin portada propia (`cover: 'generated'`), **When** se ve su tarjeta, **Then** muestra una portada
+   generada en HTML y CSS con la misma plantilla visual de la imagen OG (título sobre cristal, fecha y etiquetas), sin
+   descargar otra imagen.
 
 ---
 
@@ -191,13 +193,15 @@ de la decisión A/B, que sigue abierta.
 - **FR-502**: El resto de los posts MUST ir en una grilla, agrupados por año de publicación, del más nuevo al más viejo.
   El grupo del año más reciente se titula "Ahora" y los demás, "Archivo".
 - **FR-503**: La bienvenida y la meta description del blog MUST cambiar al copy de la sección [Copy](#copy).
-- **FR-504**: Cada tarjeta MUST tener portada. Si el post no trae una propia, se usa su imagen OG (FR-520).
+- **FR-504**: Cada tarjeta MUST tener portada. Si el post no trae una propia (`cover: 'generated'`), se muestra una
+  portada generada en HTML y CSS con la plantilla visual de la imagen OG (FR-520), sin descargar otra imagen
+  (research R-502).
 - **FR-505**: Las etiquetas MUST ser enlaces que filtran el índice. Cada etiqueta tiene una URL propia, renderizada en el
   servidor y prerenderizada en el build, que se puede compartir. El filtro MUST NOT volver dinámico el índice principal
   (no regresión de D-05 de la 002).
 - **FR-506**: El blog MUST tener una búsqueda sobre título, descripción y etiquetas de los posts del idioma, sobre el
-  índice de búsqueda que ya existe, sin dependencias nuevas. Sin JS, el formulario cae a una página de resultados
-  servida por el servidor, o a las páginas de etiquetas.
+  índice de búsqueda que ya existe, sin dependencias nuevas. Sin JS, la búsqueda no se muestra, y las etiquetas con URL
+  propia (FR-505) son la alternativa (research R-503).
 
 #### Página del post
 
@@ -249,7 +253,8 @@ de la decisión A/B, que sigue abierta.
 ### Key Entities
 
 - **`PostMeta`** (enmienda): suma `featured?: true`, `updated?: string` y `series?: { id: string; part: number }`.
-  `image` se vuelve opcional; sin portada, se usa la imagen OG.
+  `image` sigue obligatoria, para no romper a sus consumidores. Se suma `cover?: 'generated'` para los posts sin
+  portada propia (FR-504).
 - **Serie**: `{ id: string; name: Localized }`, en datos del blog.
 - **Callout**: componente MDX con `type: 'decision' | 'tradeoff' | 'learned'` y contenido.
 - **Feed**: derivado del registro de posts, uno por idioma. No se guarda.
@@ -269,8 +274,8 @@ de la decisión A/B, que sigue abierta.
 
 ## Assumptions
 
-- La 005 arranca cuando la 002 esté integrada. La plantilla OG, el `Person` y el registro de comandos llegan con la 004.
-  Si la 005 llega primero, crea la plantilla OG y la 004 la reutiliza.
+- La 005 arranca después de integrar la 004, que trae la plantilla OG, el `Person` y el registro de comandos. En
+  paralelo, solo tras el `p0-frozen` de la 004 y con las transferencias que lista el plan.
 - Las etiquetas siguen siendo por idioma, como hoy.
 - Los posts de 2023 se quedan: cuentan el camino del autor.
 - El resumen de cada post en LinkedIn lo publica el autor a mano. No es parte del sitio.
