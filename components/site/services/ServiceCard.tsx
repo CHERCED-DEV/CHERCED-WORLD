@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useId, useState, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react'
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react'
 import { buttonClassName } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -31,6 +31,8 @@ export type ServiceCardProps = {
   labels: ServiceCardLabels
 }
 
+const HOVER_INTENT_MS = 150
+
 function selectingText(): boolean {
   return (window.getSelection?.()?.toString() ?? '') !== ''
 }
@@ -48,15 +50,22 @@ export function ServiceCard({
   labels,
 }: ServiceCardProps) {
   const [flipped, setFlipped] = useState(false)
+  const hover = useRef<number | undefined>(undefined)
   const base = useId()
   const titleId = `${base}-title`
   const backId = `${base}-back`
 
+  useEffect(() => () => window.clearTimeout(hover.current), [])
+
   const onPointerEnter = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType === 'mouse') setFlipped(true)
+    if (event.pointerType !== 'mouse') return
+    window.clearTimeout(hover.current)
+    hover.current = window.setTimeout(() => setFlipped(true), HOVER_INTENT_MS)
   }
   const onPointerLeave = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType === 'mouse') setFlipped(false)
+    if (event.pointerType !== 'mouse') return
+    window.clearTimeout(hover.current)
+    setFlipped(false)
   }
   const onCardClick = (event: MouseEvent<HTMLElement>) => {
     if ((event.target as Element).closest('a, button') || selectingText()) return

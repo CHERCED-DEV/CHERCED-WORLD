@@ -517,9 +517,15 @@
   }
 
   @include bp.up(lg) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: var(--cw-space-5);
     max-width: none;
+
+    > li {
+      flex: 0 1 calc((100% - 2 * var(--cw-space-5)) / 3);
+    }
   }
 }
 
