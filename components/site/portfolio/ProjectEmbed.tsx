@@ -225,8 +225,9 @@ export function ProjectEmbed({ id, url, title, poster, labels }: ProjectEmbedPro
       if (!isStolenFocus({ pointerInside, sinceTab: performance.now() - lastTab })) return
       guardUntil = performance.now() + FOCUS_GUARD_MS
       restore()
-      if (previous?.isConnected) previous.focus({ preventScroll: true })
-      else iframe.blur()
+      const target = previous && previous !== document.body && previous.isConnected ? previous : document.getElementById('main')
+      target?.focus({ preventScroll: true })
+      if (document.activeElement === iframe) iframe.blur()
     }
     iframe.addEventListener('pointerenter', onEnter)
     iframe.addEventListener('pointerleave', onLeave)
