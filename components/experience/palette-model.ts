@@ -1,9 +1,10 @@
+import type { CapabilityName } from '@/lib/capabilities/types'
 import { t, type Dictionary } from '@/lib/i18n/translate'
 import { createSearcher, type Searcher } from '@/lib/search/searcher'
 import { fold } from '@/lib/search/text'
 import type { SearchDoc } from '@/lib/search/types'
 
-export type PaletteGroup = 'secret' | 'pages' | 'projects' | 'posts' | 'actions'
+export type PaletteGroup = 'secret' | 'pages' | 'projects' | 'skills' | 'posts' | 'actions' | 'commands'
 
 export type PaletteCommand =
   | { type: 'navigate'; href: string }
@@ -12,20 +13,30 @@ export type PaletteCommand =
   | { type: 'assistant' }
   | { type: 'copy-email' }
   | { type: 'capsule' }
+  | { type: 'open'; href: string }
+  | { type: 'shortcuts' }
+  | { type: 'extension'; id: string }
 
 export type PaletteItem = {
   id: string
   group: PaletteGroup
   title: string
   hint?: string
+  shortcut?: string
+  capability?: CapabilityName
+  commandOnly?: boolean
   command: PaletteCommand
 }
 
 export type PaletteDoc = SearchDoc & { item: PaletteItem }
 
-export const GROUP_ORDER: PaletteGroup[] = ['secret', 'pages', 'projects', 'posts', 'actions']
+export const GROUP_ORDER: PaletteGroup[] = ['secret', 'pages', 'projects', 'skills', 'posts', 'actions', 'commands']
 
 export const MAX_RESULTS = 12
+
+export const COMMAND_PREFIX = '>'
+
+const SKILL_WEIGHT = 0.6
 
 const SECRET_COMMANDS = ['2023', 'enecimo intento', 'enesimo intento', 'nth attempt']
 
@@ -34,10 +45,45 @@ export function isCapsuleCommand(query: string): boolean {
   return SECRET_COMMANDS.some((command) => normalized === command || (command.length > 4 && normalized.startsWith(command)))
 }
 
+export function commandQuery(query: string): string | null {
+  const trimmed = query.trimStart()
+  return trimmed.startsWith(COMMAND_PREFIX) ? trimmed.slice(COMMAND_PREFIX.length).trim() : null
+}
+
 export type ActionContext = {
   theme: 'dark' | 'light'
   email: string | null
   capsuleFound: boolean
+}
+
+export type CommandContext = ActionContext & {
+  cv: string | null
+  now: string | null
+  extensions?: PaletteExtension[]
+}
+
+export type PaletteExtension = {
+  id: string
+  labelKey: string
+  keywords: string
+  run: () => void
+}
+
+const extensions = new Map<string, PaletteExtension>()
+
+export function registerPaletteCommand(extension: PaletteExtension): () => void {
+  extensions.set(extension.id, extension)
+  return () => {
+    if (extensions.get(extension.id) === extension) extensions.delete(extension.id)
+  }
+}
+
+export function paletteExtensions(): PaletteExtension[] {
+  return [...extensions.values()]
+}
+
+export function findPaletteExtension(id: string): PaletteExtension | null {
+  return extensions.get(id) ?? null
 }
 
 const ACTION_KEYWORDS: Record<string, string> = {
@@ -46,6 +92,15 @@ const ACTION_KEYWORDS: Record<string, string> = {
   assistant: 'asistente assistant pregunta ask chat ia ai',
   'copy-email': 'correo email mail copiar copy contacto contact',
   capsule: 'capsula capsule 2023 tiempo time historia history',
+  'action:cv': 'cv hoja vida resume curriculum linkedin',
+  'action:shortcuts': 'atajos shortcuts teclado keyboard teclas keys',
+  'action:now': 'ahora now hoy today',
+}
+
+export const CAPABILITY_COMMANDS: Readonly<Record<string, CapabilityName>> = {
+  'action:cv': 'get_cv',
+  'action:theme': 'set_preferences',
+  'action:lang': 'set_preferences',
 }
 
 export function buildActions(labels: Dictionary, context: ActionContext): PaletteItem[] {
@@ -55,9 +110,17 @@ export function buildActions(labels: Dictionary, context: ActionContext): Palett
       id: 'action:theme',
       group: 'actions',
       title: t(labels, next === 'light' ? 'palette.action.themeLight' : 'palette.action.themeDark'),
+      shortcut: 't',
+      capability: CAPABILITY_COMMANDS['action:theme'],
       command: { type: 'theme', to: next },
     },
-    { id: 'action:lang', group: 'actions', title: t(labels, 'palette.action.lang'), command: { type: 'lang' } },
+    {
+      id: 'action:lang',
+      group: 'actions',
+      title: t(labels, 'palette.action.lang'),
+      capability: CAPABILITY_COMMANDS['action:lang'],
+      command: { type: 'lang' },
+    },
     { id: 'action:assistant', group: 'actions', title: t(labels, 'palette.action.assistant'), command: { type: 'assistant' } },
   ]
   if (context.email) {
@@ -75,18 +138,74 @@ export function buildActions(labels: Dictionary, context: ActionContext): Palett
   return actions
 }
 
+export function buildCommands(labels: Dictionary, context: CommandContext): PaletteItem[] {
+  const actions = buildActions(labels, context)
+  const byId = (id: string) => actions.find((action) => action.id === id)
+  const commands: PaletteItem[] = []
+  if (context.cv) {
+    commands.push({
+      id: 'action:cv',
+      group: 'actions',
+      title: t(labels, 'palette.action.cv'),
+      capability: CAPABILITY_COMMANDS['action:cv'],
+      command: { type: 'open', href: context.cv },
+    })
+  }
+  for (const id of ['action:copy-email', 'action:theme', 'action:lang', 'action:assistant']) {
+    const action = byId(id)
+    if (action) commands.push(action)
+  }
+  commands.push({
+    id: 'action:shortcuts',
+    group: 'actions',
+    title: t(labels, 'palette.action.shortcuts'),
+    shortcut: '?',
+    command: { type: 'shortcuts' },
+  })
+  if (context.now) {
+    commands.push({
+      id: 'action:now',
+      group: 'actions',
+      title: t(labels, 'nav.now'),
+      hint: context.now,
+      commandOnly: true,
+      command: { type: 'navigate', href: context.now },
+    })
+  }
+  const capsule = byId('action:capsule')
+  if (capsule) commands.push(capsule)
+  for (const extension of context.extensions ?? []) {
+    if (!Object.prototype.hasOwnProperty.call(labels, extension.labelKey)) continue
+    commands.push({
+      id: `extension:${extension.id}`,
+      group: 'actions',
+      title: t(labels, extension.labelKey),
+      command: { type: 'extension', id: extension.id },
+    })
+  }
+  return commands
+}
+
 function groupOf(doc: SearchDoc): PaletteGroup | null {
   if (doc.kind === 'page') return 'pages'
   if (doc.kind === 'project') return 'projects'
   if (doc.kind === 'post') return 'posts'
+  if (doc.kind === 'skill') return 'skills'
   return null
 }
 
-export function toPaletteDocs(docs: SearchDoc[], actions: PaletteItem[]): PaletteDoc[] {
+function actionKeywords(action: PaletteItem, extensionKeywords: Map<string, string>): string {
+  if (action.command.type === 'extension') return extensionKeywords.get(action.command.id) ?? ''
+  return ACTION_KEYWORDS[action.id] ?? ACTION_KEYWORDS[action.command.type] ?? ''
+}
+
+export function toPaletteDocs(docs: SearchDoc[], actions: PaletteItem[], extensionList: PaletteExtension[] = []): PaletteDoc[] {
+  const extensionKeywords = new Map(extensionList.map((extension) => [extension.id, extension.keywords]))
   const fromIndex = docs.flatMap((doc): PaletteDoc[] => {
     const group = groupOf(doc)
     if (!group) return []
-    return [{ ...doc, item: { id: doc.id, group, title: doc.title, command: { type: 'navigate', href: doc.url } } }]
+    const hint = group === 'skills' ? doc.text : undefined
+    return [{ ...doc, item: { id: doc.id, group, title: doc.title, hint, command: { type: 'navigate', href: doc.url } } }]
   })
   const fromActions = actions.map(
     (action): PaletteDoc => ({
@@ -94,7 +213,7 @@ export function toPaletteDocs(docs: SearchDoc[], actions: PaletteItem[]): Palett
       kind: 'section',
       title: action.title,
       text: action.hint ?? '',
-      keywords: ACTION_KEYWORDS[action.command.type] ?? '',
+      keywords: actionKeywords(action, extensionKeywords),
       url: '',
       item: action,
     }),
@@ -103,7 +222,11 @@ export function toPaletteDocs(docs: SearchDoc[], actions: PaletteItem[]): Palett
 }
 
 export function createPaletteSearcher(docs: PaletteDoc[]): Searcher<PaletteDoc> {
-  return createSearcher(docs)
+  return createSearcher(docs, { weight: (doc) => (doc.item.group === 'skills' ? SKILL_WEIGHT : 1) })
+}
+
+function asCommand(item: PaletteItem): PaletteItem {
+  return { ...item, group: 'commands' }
 }
 
 export function paletteResults(
@@ -112,13 +235,22 @@ export function paletteResults(
   searcher: Searcher<PaletteDoc>,
   secretLabel: string,
 ): PaletteItem[] {
+  const commands = commandQuery(query)
+  if (commands !== null) {
+    if (commands === '') return docs.filter((doc) => doc.item.group === 'actions').map((doc) => asCommand(doc.item))
+    return searcher
+      .search(commands, { limit: MAX_RESULTS, filter: (doc) => doc.item.group === 'actions' })
+      .map((hit) => asCommand(hit.doc.item))
+  }
   if (isCapsuleCommand(query)) {
     return [{ id: 'secret:capsule', group: 'secret', title: secretLabel, command: { type: 'capsule' } }]
   }
   if (query.trim() === '') {
-    return docs.filter((doc) => doc.item.group === 'pages' || doc.item.group === 'actions').map((doc) => doc.item)
+    return docs
+      .filter((doc) => (doc.item.group === 'pages' || doc.item.group === 'actions') && !doc.item.commandOnly)
+      .map((doc) => doc.item)
   }
-  return searcher.search(query, { limit: MAX_RESULTS }).map((hit) => hit.doc.item)
+  return searcher.search(query, { limit: MAX_RESULTS, filter: (doc) => !doc.item.commandOnly }).map((hit) => hit.doc.item)
 }
 
 export function groupItems(items: PaletteItem[]): Array<{ group: PaletteGroup; items: PaletteItem[] }> {

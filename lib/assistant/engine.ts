@@ -1,4 +1,5 @@
 import type { Locale } from '@/lib/i18n/config'
+import { projectDetails } from '@/lib/search/facts'
 import { createSearcher, type Searcher } from '@/lib/search/searcher'
 import { excerpt, fold, sentences, tokenize } from '@/lib/search/text'
 import type { AssistantFacts, PageId, ProjectFact, SearchDoc, SearchIndex } from '@/lib/search/types'
@@ -197,7 +198,7 @@ function answerProjectsWithTech(ctx: Context, canonicals: string[]): Draft {
   const projects = projectsUsing(ctx, canonical)
   if (projects.length === 0) {
     const mentioned = ctx.facts.projects.filter((project) => {
-      const tokens = tokenize([project.summary, ...project.details].join(' '))
+      const tokens = tokenize([project.summary, ...projectDetails(project)].join(' '))
       return aliasesOf(canonical).some((alias) => tokens.includes(alias))
     })
     projects.push(...mentioned)
@@ -216,14 +217,59 @@ function answerProjectsWithTech(ctx: Context, canonicals: string[]): Draft {
   return { ...tech, links: [...tech.links, pageLink(ctx, 'portfolio')] }
 }
 
+function cvLink(ctx: Context): AnswerLink[] {
+  const { cv } = ctx.facts
+  return cv ? [{ label: cv.label, href: cv.href, external: true }] : []
+}
+
 function answerExperience(ctx: Context): Draft {
   const { career, about, contact } = ctx.facts
   if (career.length > 0) {
     const items = career.map((entry) => `${entry.role}, ${entry.company} (${period(ctx, entry.start, entry.end)})`)
-    return { kind: 'answer', parts: [tr(ctx, 'assistant.tpl.experience', { list: joinList(ctx, items) })], links: [pageLink(ctx, 'about')] }
+    return {
+      kind: 'answer',
+      parts: [tr(ctx, 'assistant.tpl.experience', { list: joinList(ctx, items) })],
+      links: [pageLink(ctx, 'about'), ...cvLink(ctx)],
+    }
   }
   const dated = sentences(contact.description).filter((sentence) => /\b(19|20)\d{2}\b/.test(sentence))
-  return { kind: 'answer', parts: [about, ...dated], links: [pageLink(ctx, 'about'), pageLink(ctx, 'contact')] }
+  return { kind: 'answer', parts: [about, ...dated], links: [pageLink(ctx, 'about'), pageLink(ctx, 'contact'), ...cvLink(ctx)] }
+}
+
+function answerCv(ctx: Context): Draft {
+  const experience = answerExperience(ctx)
+  const { cv } = ctx.facts
+  if (!cv) return experience
+  return { kind: 'answer', parts: [`${cv.label}.`, ...experience.parts], links: [...cvLink(ctx), ...experience.links] }
+}
+
+function skillName(ctx: Context, id: string): string | null {
+  const tech = ctx.facts.skills.tech.find((skill) => skill.id === id)
+  if (tech) return displayTech(canonicalTech(tech.name), tech.name)
+  return ctx.facts.languages.find((language) => language.id === id)?.name ?? null
+}
+
+function answerLobe(ctx: Context, ids: string[]): Draft {
+  const lobes = ids
+    .map((id) => ctx.facts.skills.lobes.find((lobe) => lobe.id === id))
+    .filter((lobe): lobe is NonNullable<typeof lobe> => Boolean(lobe))
+    .slice(0, 2)
+  if (lobes.length === 0) return unknown(ctx)
+  const parts: string[] = []
+  const links: AnswerLink[] = []
+  for (const lobe of lobes) {
+    const names = lobe.skills.map((id) => skillName(ctx, id)).filter((name): name is string => name !== null)
+    const skills = names.length > 0 ? tr(ctx, 'assistant.tpl.technologies', { list: joinList(ctx, names) }) : ''
+    if (lobe.words) parts.push(`${lobe.name}: ${lobe.words}`, skills)
+    else parts.push(`${lobe.name}: ${skills}`)
+    links.push({ label: lobe.name, href: lobe.url, external: false })
+  }
+  const projects = lobes
+    .flatMap((lobe) => lobe.projects)
+    .map((id) => ctx.facts.projects.find((project) => project.id === id))
+    .filter((project): project is ProjectFact => Boolean(project))
+  links.push(...projects.slice(0, 2).map(projectLink), pageLink(ctx, 'about'))
+  return { kind: 'answer', parts, links }
 }
 
 function serviceFocus(ctx: Context, question: NormalizedQuestion) {
@@ -364,6 +410,10 @@ function respond(ctx: Context, question: NormalizedQuestion, result: Classificat
       return answerProjects(ctx, ctx.facts.projects)
     case 'experience':
       return answerExperience(ctx)
+    case 'cv':
+      return answerCv(ctx)
+    case 'skills_area':
+      return answerLobe(ctx, result.lobes)
     case 'services':
       return answerServices(ctx, question, (result.concepts.hire ?? 0) > 0)
     case 'hire':

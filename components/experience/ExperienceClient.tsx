@@ -1,15 +1,20 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect, useId, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import type { CapsuleEntry } from '@/content/types'
 import { cx } from '@/components/ui/cx'
+import { browserPreferences } from '@/lib/capabilities/preferences'
 import { emit, on } from '@/lib/events'
 import type { Locale } from '@/lib/i18n/config'
 import { t } from '@/lib/i18n/translate'
 import type { SearchDoc } from '@/lib/search/types'
 import styles from './ExperienceClient.module.scss'
 import type { ExperienceLabels } from './labels'
+import { currentTheme, readSingleKeyShortcuts, rememberSingleKeyShortcuts } from './preferences'
+import { ShortcutsDialog, useGlobalShortcuts } from './Shortcuts'
+import { paletteKeyshortcuts, SHORTCUT_KEYS, type ShortcutAction } from './shortcuts-model'
 
 const loadPalette = () => import('./CommandPalette')
 const loadAssistant = () => import('./Assistant')
@@ -29,7 +34,17 @@ function whenIdle(task: () => void): () => void {
   return () => window.clearTimeout(handle)
 }
 
-type Panel = 'palette' | 'assistant' | 'capsule'
+function announceShortcuts(enabled: boolean): void {
+  for (const trigger of document.querySelectorAll('[data-cw-palette-trigger]')) {
+    trigger.setAttribute('aria-keyshortcuts', paletteKeyshortcuts(enabled))
+  }
+  for (const toggle of document.querySelectorAll('[data-cw-theme-toggle]')) {
+    if (enabled) toggle.setAttribute('aria-keyshortcuts', SHORTCUT_KEYS.theme)
+    else toggle.removeAttribute('aria-keyshortcuts')
+  }
+}
+
+type Panel = 'palette' | 'assistant' | 'capsule' | 'shortcuts'
 
 export type AssistantStatus = 'idle' | 'ready' | 'unavailable'
 
@@ -38,16 +53,26 @@ export type ExperienceClientProps = {
   labels: ExperienceLabels
   pages: SearchDoc[]
   email: string | null
+  cv: string | null
+  areas: string[]
   capsule: CapsuleEntry[]
 }
 
-export function ExperienceClient({ lang, labels, pages, email, capsule }: ExperienceClientProps) {
+export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsule }: ExperienceClientProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const pathRef = useRef(pathname)
   const [open, setOpen] = useState<Panel | null>(null)
-  const [sessions, setSessions] = useState<Record<Panel, number>>({ palette: 0, assistant: 0, capsule: 0 })
+  const [sessions, setSessions] = useState<Record<Panel, number>>({ palette: 0, assistant: 0, capsule: 0, shortcuts: 0 })
   const [status, setStatus] = useState<AssistantStatus>('idle')
   const [discovered, setDiscovered] = useState(false)
   const [ready, setReady] = useState(false)
+  const [singleKey, setSingleKey] = useState(() => typeof window === 'undefined' || readSingleKeyShortcuts())
   const statusId = useId()
+
+  useEffect(() => {
+    pathRef.current = pathname
+  }, [pathname])
 
   const show = useCallback((panel: Panel) => {
     setSessions((current) => ({ ...current, [panel]: current[panel] + 1 }))
@@ -58,6 +83,24 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
 
   useEffect(() => on('cw:open-palette', () => show('palette')), [show])
   useEffect(() => on('cw:open-assistant', () => show('assistant')), [show])
+
+  useEffect(() => announceShortcuts(singleKey), [singleKey])
+
+  const toggleSingleKey = useCallback((enabled: boolean) => {
+    rememberSingleKeyShortcuts(enabled)
+    setSingleKey(enabled)
+  }, [])
+
+  const onShortcut = useCallback(
+    (action: ShortcutAction) => {
+      if (action === 'palette') emit('cw:open-palette')
+      else if (action === 'help') show('shortcuts')
+      else emit('cw:theme-change', currentTheme() === 'dark' ? 'light' : 'dark')
+    },
+    [show],
+  )
+
+  useGlobalShortcuts({ enabled: singleKey, onAction: onShortcut })
 
   useEffect(() => {
     let alive = true
@@ -71,6 +114,40 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
       cancel()
     }
   }, [])
+
+  const areaKey = areas.join(' ')
+
+  useEffect(() => {
+    let alive = true
+    let disconnect: (() => void) | null = null
+    const cancel = whenIdle(() => {
+      import('@/lib/agent/webmcp')
+        .then(({ connectWebMcp }) =>
+          connectWebMcp({
+            lang,
+            areas: areaKey.split(' ').filter(Boolean),
+            origin: window.location.origin,
+            preferences: browserPreferences({
+              lang,
+              pathname: () => pathRef.current ?? `/${lang}`,
+              navigate: (href) => router.push(href),
+            }),
+          }),
+        )
+        .then(
+          (dispose) => {
+            if (alive) disconnect = dispose
+            else dispose()
+          },
+          () => {},
+        )
+    })
+    return () => {
+      alive = false
+      cancel()
+      disconnect?.()
+    }
+  }, [lang, areaKey, router])
 
   const unavailable = status === 'unavailable'
 
@@ -111,6 +188,8 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
           labels={labels}
           pages={pages}
           email={email}
+          cv={cv}
+          singleKey={singleKey}
           open={open === 'palette'}
           session={sessions.palette}
           onClose={closer('palette')}
@@ -119,6 +198,7 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
             setDiscovered(true)
             show('capsule')
           }}
+          onOpenShortcuts={() => show('shortcuts')}
         />
       ) : null}
 
@@ -141,6 +221,16 @@ export function ExperienceClient({ lang, labels, pages, email, capsule }: Experi
           open={open === 'capsule'}
           discovered={discovered}
           onClose={closer('capsule')}
+        />
+      ) : null}
+
+      {sessions.shortcuts > 0 ? (
+        <ShortcutsDialog
+          labels={labels}
+          open={open === 'shortcuts'}
+          enabled={singleKey}
+          onToggle={toggleSingleKey}
+          onClose={closer('shortcuts')}
         />
       ) : null}
     </>

@@ -9,8 +9,11 @@ export type SearchOptions<T> = { limit?: number; filter?: (doc: T) => boolean; e
 
 export type Searcher<T> = { search: (query: string, options?: SearchOptions<T>) => SearchHit<T>[]; size: number }
 
-export function createSearcher<T extends Searchable>(docs: readonly T[]): Searcher<T> {
+export type SearcherConfig<T> = { weight?: (doc: T) => number }
+
+export function createSearcher<T extends Searchable>(docs: readonly T[], config: SearcherConfig<T> = {}): Searcher<T> {
   const byId = new Map(docs.map((doc) => [doc.id, doc]))
+  const { weight } = config
   const mini = new MiniSearch<T>({
     idField: 'id',
     fields: ['title', 'keywords', 'text'],
@@ -23,6 +26,14 @@ export function createSearcher<T extends Searchable>(docs: readonly T[]): Search
       fuzzy: (term) => (term.length >= 4 ? 0.2 : false),
       maxFuzzy: 2,
       combineWith: 'OR',
+      ...(weight
+        ? {
+            boostDocument: (id: unknown) => {
+              const doc = byId.get(String(id))
+              return doc ? weight(doc) : 1
+            },
+          }
+        : {}),
     },
   })
   mini.addAll([...byId.values()])

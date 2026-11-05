@@ -11,12 +11,15 @@ export type ExperienceRootProps = { lang: Locale }
 
 export async function ExperienceRoot({ lang }: ExperienceRootProps): Promise<JSX.Element> {
   const [experience, common] = await Promise.all([getDictionary(lang, 'experience'), getDictionary(lang, 'common')])
+  const site = getSite()
   return (
     <ExperienceClient
       lang={lang}
       labels={uiLabels(experience, common)}
       pages={pageDocs(lang, common)}
-      email={publicEmail(getSite())}
+      email={publicEmail(site)}
+      cv={site.profile?.cv.href ?? null}
+      areas={(site.about.skills.lobes ?? []).map((lobe) => lobe.id)}
       capsule={getCapsule()}
     />
   )

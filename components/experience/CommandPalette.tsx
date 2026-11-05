@@ -6,19 +6,20 @@ import { Dialog } from '@/components/ui/Dialog'
 import { Icon } from '@/components/ui/Icon'
 import { useToast } from '@/components/ui/Toast'
 import { cx } from '@/components/ui/cx'
-import { emit } from '@/lib/events'
+import { browserPreferences } from '@/lib/capabilities/preferences'
 import { otherLocale, type Locale } from '@/lib/i18n/config'
-import { rememberLocale } from '@/lib/i18n/cookie'
-import { switchLocalePath } from '@/lib/i18n/paths'
+import { localizedPath } from '@/lib/i18n/paths'
 import { t } from '@/lib/i18n/translate'
 import { loadSearchIndex } from '@/lib/search/client'
 import type { SearchDoc } from '@/lib/search/types'
 import styles from './CommandPalette.module.scss'
 import type { ExperienceLabels } from './labels'
 import {
-  buildActions,
+  buildCommands,
   createPaletteSearcher,
+  findPaletteExtension,
   groupItems,
+  paletteExtensions,
   paletteResults,
   toPaletteDocs,
   type PaletteGroup,
@@ -31,19 +32,24 @@ export type CommandPaletteProps = {
   labels: ExperienceLabels
   pages: SearchDoc[]
   email: string | null
+  cv: string | null
+  singleKey: boolean
   open: boolean
   session: number
   onClose: () => void
   onOpenAssistant: () => void
   onOpenCapsule: () => void
+  onOpenShortcuts: () => void
 }
 
 const GROUP_LABEL: Record<PaletteGroup, string> = {
   secret: 'palette.group.secret',
   pages: 'palette.group.pages',
   projects: 'palette.group.projects',
+  skills: 'palette.group.skills',
   posts: 'palette.group.posts',
   actions: 'palette.group.actions',
+  commands: 'palette.group.commands',
 }
 
 export function CommandPalette(props: CommandPaletteProps) {
@@ -60,7 +66,20 @@ type BodyProps = CommandPaletteProps & { titleId: string; hintId: string }
 
 type IndexState = { status: 'loading' | 'ready' | 'error'; docs: SearchDoc[] }
 
-function PaletteBody({ lang, labels, pages, email, onClose, onOpenAssistant, onOpenCapsule, titleId, hintId }: BodyProps) {
+function PaletteBody({
+  lang,
+  labels,
+  pages,
+  email,
+  cv,
+  singleKey,
+  onClose,
+  onOpenAssistant,
+  onOpenCapsule,
+  onOpenShortcuts,
+  titleId,
+  hintId,
+}: BodyProps) {
   const router = useRouter()
   const pathname = usePathname()
   const toast = useToast()
@@ -70,7 +89,14 @@ function PaletteBody({ lang, labels, pages, email, onClose, onOpenAssistant, onO
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const [index, setIndex] = useState<IndexState>({ status: 'loading', docs: pages })
-  const [context] = useState(() => ({ theme: currentTheme(), email, capsuleFound: readCapsuleFound() }))
+  const [context] = useState(() => ({
+    theme: currentTheme(),
+    email,
+    cv,
+    now: localizedPath(lang, '/now'),
+    capsuleFound: readCapsuleFound(),
+    extensions: paletteExtensions(),
+  }))
 
   useEffect(() => {
     let alive = true
@@ -88,7 +114,10 @@ function PaletteBody({ lang, labels, pages, email, onClose, onOpenAssistant, onO
     return () => cancelAnimationFrame(frame)
   }, [])
 
-  const docs = useMemo(() => toPaletteDocs(index.docs, buildActions(labels, context)), [index.docs, labels, context])
+  const docs = useMemo(
+    () => toPaletteDocs(index.docs, buildCommands(labels, context), context.extensions),
+    [index.docs, labels, context],
+  )
   const searcher = useMemo(() => createPaletteSearcher(docs), [docs])
   const items = useMemo(
     () => paletteResults(query, docs, searcher, t(labels, 'palette.secret')),
@@ -118,6 +147,9 @@ function PaletteBody({ lang, labels, pages, email, onClose, onOpenAssistant, onO
     }
   }
 
+  const preferences = () =>
+    browserPreferences({ lang, pathname: () => pathname ?? `/${lang}`, navigate: (href) => router.push(href) })
+
   const run = (item: PaletteItem | undefined) => {
     if (!item) return
     const { command } = item
@@ -127,16 +159,24 @@ function PaletteBody({ lang, labels, pages, email, onClose, onOpenAssistant, onO
         router.push(command.href)
         return
       case 'theme':
-        emit('cw:theme-change', command.to)
+        preferences().setTheme(command.to)
         onClose()
         return
-      case 'lang': {
-        const target = otherLocale(lang)
-        rememberLocale(target)
+      case 'lang':
         onClose()
-        router.push(switchLocalePath(pathname ?? `/${lang}`, target))
+        preferences().setLanguage(otherLocale(lang))
         return
-      }
+      case 'open':
+        onClose()
+        window.open(command.href, '_blank', 'noopener,noreferrer')
+        return
+      case 'shortcuts':
+        onOpenShortcuts()
+        return
+      case 'extension':
+        onClose()
+        findPaletteExtension(command.id)?.run()
+        return
       case 'assistant':
         onOpenAssistant()
         return
@@ -225,6 +265,7 @@ function PaletteBody({ lang, labels, pages, email, onClose, onOpenAssistant, onO
                     id={optionId(mine)}
                     role="option"
                     aria-selected={selected}
+                    aria-keyshortcuts={singleKey && item.shortcut ? item.shortcut : undefined}
                     className={cx(styles.option, selected && styles.active, item.group === 'secret' && styles.secret)}
                     data-cw-palette-option={item.id}
                     onMouseMove={() => {
