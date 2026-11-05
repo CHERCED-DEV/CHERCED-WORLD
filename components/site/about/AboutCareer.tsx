@@ -6,6 +6,7 @@ import { isPublishable } from '../format'
 import { SectionTitle } from '../SectionTitle'
 import styles from './About.module.scss'
 import { CareerDeck } from './CareerDeck'
+import { CareerHand } from './CareerHand'
 import { Period } from './Period'
 
 export type AboutCareerProps = {
@@ -15,11 +16,21 @@ export type AboutCareerProps = {
   presentLabel: string
   openLabel: string
   closeLabel: string
+  prevLabel: string
+  nextLabel: string
   entries: CareerEntry[]
 }
 
-export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLabel, entries }: AboutCareerProps) {
+export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLabel, prevLabel, nextLabel, entries }: AboutCareerProps) {
   if (!isPublishable(entries)) return null
+  const jobs = entries.map((entry) => ({
+    id: entry.id,
+    role: entry.role[lang],
+    company: entry.company,
+    description: entry.description[lang],
+    start: entry.start,
+    end: entry.end,
+  }))
 
   return (
     <section id={id} className={`${styles.section} ${styles.scene}`} aria-labelledby="about-career" data-cw-about="career" data-cw-scene="career">
@@ -50,18 +61,8 @@ export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLab
           )
         })}
       </ol>
-      <CareerDeck
-        lang={lang}
-        labels={{ present: presentLabel, open: openLabel, close: closeLabel }}
-        jobs={entries.map((entry) => ({
-          id: entry.id,
-          role: entry.role[lang],
-          company: entry.company,
-          description: entry.description[lang],
-          start: entry.start,
-          end: entry.end,
-        }))}
-      />
+      <CareerHand lang={lang} labels={{ present: presentLabel, open: openLabel, close: closeLabel, prev: prevLabel, next: nextLabel }} jobs={jobs} />
+      <CareerDeck lang={lang} labels={{ present: presentLabel, open: openLabel, close: closeLabel }} jobs={jobs} />
     </section>
   )
 }

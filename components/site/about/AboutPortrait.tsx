@@ -2,6 +2,7 @@ import Image from 'next/image'
 import type { ImageRef } from '@/content/types'
 import { cx } from '@/components/ui/cx'
 import { CornerMarks, GlowOrb } from '@/components/ui/graphics'
+import { Sweep } from '@/components/ui/Sweep'
 import styles from './About.module.scss'
 import { avifSrcSet, LIGHT_SCHEME_QUERY, PORTRAIT_SIZES, themedPortrait } from './portrait'
 
@@ -35,6 +36,7 @@ export function AboutPortrait({ image, alt }: AboutPortraitProps) {
     return (
       <figure className={styles.vitrine} data-cw-portrait="single">
         <Image src={dark.src} alt={alt} width={dark.width} height={dark.height} sizes={PORTRAIT_SIZES} preload className={styles.portrait} />
+        <Sweep />
       </figure>
     )
   }
@@ -61,6 +63,7 @@ export function AboutPortrait({ image, alt }: AboutPortraitProps) {
       <Portrait image={dark} alt={alt} theme="dark" className={cx(styles.picture, styles.portraitForcedDark)} />
       <Portrait image={light} alt={alt} theme="light" className={cx(styles.picture, styles.portraitForcedLight)} />
       <CornerMarks accent size={18} inset={12} />
+      <Sweep />
     </figure>
   )
 }

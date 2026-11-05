@@ -5,6 +5,10 @@ import styles from './About.module.scss'
 
 export type Scene = { id: string; label: string }
 
+function reducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
 export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) {
   const [current, setCurrent] = useState(scenes[0]?.id ?? '')
 
@@ -32,26 +36,49 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
     return () => observer.disconnect()
   }, [scenes])
 
+  const goTo = (id: string) => {
+    const target = document.getElementById(id)
+    if (!target) return
+    setCurrent(id)
+    target.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'instant' : 'smooth' })
+  }
+
   return (
-    <nav className={styles.sceneNav} aria-label={label} data-cw-scene-nav="">
-      <ol className={styles.sceneList} data-cw-glass="strong">
-        {scenes.map((scene, index) => (
-          <li key={scene.id}>
-            <a
-              href={`#${scene.id}`}
-              className={styles.sceneLink}
-              aria-current={current === scene.id ? 'true' : undefined}
-              data-cw-scene-link={scene.id}
-              onClick={() => setCurrent(scene.id)}
-            >
-              <span className={styles.sceneIndex} aria-hidden="true">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              {scene.label}
-            </a>
-          </li>
+    <>
+      <nav className={styles.sceneNav} aria-label={label} data-cw-scene-nav="">
+        <ol className={styles.sceneList} data-cw-glass="strong">
+          {scenes.map((scene, index) => (
+            <li key={scene.id}>
+              <a
+                href={`#${scene.id}`}
+                className={styles.sceneLink}
+                aria-current={current === scene.id ? 'true' : undefined}
+                data-cw-scene-link={scene.id}
+                onClick={() => setCurrent(scene.id)}
+              >
+                <span className={styles.sceneIndex} aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                {scene.label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <div className={styles.sceneDots} aria-hidden="true" data-cw-scene-dots="">
+        {scenes.map((scene) => (
+          <button
+            key={scene.id}
+            type="button"
+            tabIndex={-1}
+            className={styles.sceneDot}
+            title={scene.label}
+            data-current={current === scene.id ? '' : undefined}
+            data-cw-scene-dot={scene.id}
+            onClick={() => goTo(scene.id)}
+          />
         ))}
-      </ol>
-    </nav>
+      </div>
+    </>
   )
 }

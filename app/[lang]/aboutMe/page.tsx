@@ -81,6 +81,8 @@ export default async function AboutMePage({ params }: Props) {
         presentLabel={present}
         openLabel={t(dict, 'about.openJob')}
         closeLabel={t(dict, 'about.close')}
+        prevLabel={t(portfolio, 'case.prev')}
+        nextLabel={t(portfolio, 'case.next')}
         entries={about.career}
       />
       <section
