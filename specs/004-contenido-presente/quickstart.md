@@ -25,6 +25,8 @@ comando en PowerShell.
   - La corrida exhaustiva de la 002 (40 min con la máquina libre) da el factor de carga, de unos 2×. Con la máquina
     libre son unos 12 min.
   - Al integrar, las e2e de P1 a P6 y las pruebas que hoy esperan (abajo) suman unos minutos.
+  - Con la 006 integrada y los anchos de 375 y 412 px, la corrida del 2026-11-05 tardó 1 h 8 min, con la lane Q1
+    corriendo sus e2e al mismo tiempo y la CPU al 100 %: 1395 pasaron y 23 fallaron.
 - **Exhaustivo**: no se corrió. Son los 40 min de la 002 más lo nuevo de la 004: el contraste de los 15 casos (unos
   5 min), axe, humo y rendimiento.
 
@@ -67,6 +69,35 @@ selecciones:
 
 `npm run e2e`, o `npx playwright test` sin nivel, corre el nivel exhaustivo: es lo mismo que hasta hoy. Para correr
 solo tus pruebas, pásale la carpeta: `npx playwright test tests/e2e/p3`.
+
+### Móvil de la 006 (T851 a T854)
+
+- **Anchos**: `mobile-375` (375 × 812) y `mobile-412` (412 × 915) se suman a `mobile-chromium` (390 × 844). Los dos
+  nuevos solo corren `tests/e2e/integration/mobile-*.spec.ts`, así que las demás pruebas no se multiplican.
+- **Tag `@anchos`**: en el nivel completo, `mobile-375` y `mobile-412` corren solo lo que lo lleva. Lo demás de los
+  `mobile-*` corre en 390 px; en el exhaustivo, todo corre en los tres anchos.
+- `mobile-patterns`: cada hoja (lóbulo, carta, embebido, paleta y asistente) con toque, teclado, Esc y arrastre; el
+  mapa y el mazo solo con botones; sin JS; y, con movimiento reducido, nada que se mueva o quede en bucle (los
+  fundidos de opacidad y color se permiten).
+- `mobile-budgets`:
+  - blur de 3 o menos en todas las páginas (13 en el completo, el resto en el exhaustivo);
+  - animaciones nuevas solo con `transform` y `opacity` (FR-653), en 390 px:
+    - un `@keyframes` nuevo solo puede tocar `transform`, `translate`, `scale`, `rotate` y `opacity`;
+    - una transición nueva no puede tocar geometría (ancho, alto, márgenes, posición) ni filtros;
+    - las transiciones de color, borde, sombra y la luz táctil de FR-601 se permiten y quedan anotadas;
+    - las transiciones se leen declaradas, con las animaciones en pausa, para no depender del momento;
+  - CLS < 0,1 con la CPU 4× más lenta en home, Sobre mí, Servicios y el caso 12, en los tres anchos;
+  - INP < 200 ms con la CPU 4× más lenta, en 390 px: cuenta la espera y el procesamiento de cada interacción, y el
+    pintado se anota (en Chromium sin GPU no es representativo).
+- `mobile-targets`: 44 × 44 px o más en cada control nuevo, también con las hojas y el menú abiertos.
+- `mobile-captures`: una captura por página, idioma y tema, adjunta al reporte. En el completo, las 6 páginas clave
+  en oscuro.
+- `desktop-regression`: en todas las páginas, a 1280 y 1440 px, nada de lo móvil se ve ni cambia el cristal.
+- **Comparación con una base**: con `E2E_BASELINE_URL`, `desktop-regression` compara capturas píxel a píxel contra un
+  build anterior a la 006, y `mobile-budgets` da por nuevas solo las animaciones que la base no tenía. Sin la
+  variable, la comparación se salta y la regla de animaciones mira solo las piezas móviles de la 006.
+  - Para levantar la base: `git archive 9e69236` en una carpeta temporal, `npm ci`, `next build` y
+    `next start --port 3119`. 9e69236 es el último merge antes de M0.
 
 ## Cómo se elige el nivel
 

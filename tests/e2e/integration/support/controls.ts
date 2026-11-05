@@ -17,6 +17,7 @@ export type EffectName =
   | 'textInput'
   | 'checkbox'
   | 'radio'
+  | 'select'
   | 'submitEmpty'
   | 'pressedToggle'
   | 'expandedToggle'
@@ -68,6 +69,7 @@ export const CONTROL_RULES: readonly ControlRule[] = [
   },
   { kind: 'casilla', match: 'input[type=checkbox]', effect: 'checkbox', expect: 'se marca y se desmarca' },
   { kind: 'opción', match: 'input[type=radio]', effect: 'radio', expect: 'queda elegida' },
+  { kind: 'lista de opciones', match: 'select', effect: 'select', expect: 'cambia a otra opción y vuelve a la de antes' },
   { kind: 'enviar formulario', match: 'form :is(button[type=submit], button:not([type]))', effect: 'submitEmpty', expect: 'vacío, señala el primer campo inválido sin salir' },
   { kind: 'botón con estado', match: 'button[aria-pressed]', effect: 'pressedToggle', expect: 'aria-pressed cambia' },
   { kind: 'botón desplegable', match: 'button[aria-expanded]', effect: 'expandedToggle', expect: 'aria-expanded cambia' },
@@ -603,6 +605,18 @@ const EFFECTS: Record<EffectName, Effect> = {
     if (!chosen.ok) fail('el clic no la elige')
     if (original >= 0) await activate(group.nth(original))
     return 'queda elegida'
+  },
+
+  async select({ target }) {
+    const options = await target.evaluate((element) => [...(element as HTMLSelectElement).options].filter((option) => !option.disabled).map((option) => option.value))
+    const before = await target.inputValue()
+    const other = options.find((value) => value !== before)
+    if (other === undefined) return 'única opción, ya elegida'
+    await target.selectOption(other, { timeout: 5000 })
+    const chosen = await target.inputValue()
+    if (chosen !== other) fail(`elegí "${other}" y quedó "${chosen}"`)
+    await target.selectOption(before)
+    return `${options.length} opciones; cambia y vuelve`
   },
 
   async submitEmpty({ page, target, control }) {
