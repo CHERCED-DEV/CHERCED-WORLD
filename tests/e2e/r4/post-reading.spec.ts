@@ -125,13 +125,21 @@ test.describe('índice en móvil', () => {
 test.describe('barra de progreso de lectura', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
-  test('avanza con el cuerpo del post y llega al 100 % al terminarlo', async ({ page }) => {
+  test('avanza con el cuerpo del post y llega al 100 % al terminarlo', async ({ page }, testInfo) => {
     await skipIntro(page)
     await page.goto('/es/blog/post5')
     const bar = page.locator('[data-cw-reading-progress]')
     await expect(bar).toHaveAttribute('aria-hidden', 'true')
     await expect(bar).toHaveAttribute('data-cw-reading-progress', '0.00')
-    expect(await bar.evaluate((element) => element.getBoundingClientRect().top), 'va en el borde superior, no sobre el texto').toBe(0)
+    if (testInfo.project.name === 'mobile-chromium') {
+      const [barBox, headerBottom] = await Promise.all([
+        bar.evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect),
+        page.locator('#header').evaluate((element) => element.getBoundingClientRect().bottom),
+      ])
+      expect(Math.abs(barBox.bottom - headerBottom), 'en móvil va en el borde inferior del header (T857), no sobre el texto').toBeLessThanOrEqual(1)
+    } else {
+      expect(await bar.evaluate((element) => element.getBoundingClientRect().top), 'va en el borde superior, no sobre el texto').toBe(0)
+    }
 
     const scrollToBody = (fraction: number) =>
       page.evaluate((value) => {

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { CATALOG_ID, loadCatalog } from '@/components/blog/catalog'
 import { postLabels } from '@/components/blog/labels'
 import { preparePost } from '@/components/blog/mdx/prepare'
+import { calloutLabels } from '@/components/blog/post/labels'
 import { PostView } from '@/components/blog/PostView'
 import { BackgroundIntensity } from '@/components/motion'
 import { postAlternates, postUrl } from '@/lib/blog/paths'
@@ -28,7 +29,7 @@ export default async function CatalogPage({ params }: Props) {
   if (!isLocale(lang)) notFound()
 
   const [blog, catalog] = await Promise.all([getDictionary(lang, 'blog'), loadCatalog(lang)])
-  const prepared = preparePost(catalog.Content, postLabels(blog))
+  const prepared = preparePost(catalog.Content, { ...postLabels(blog), callout: calloutLabels(blog, lang) })
 
   return (
     <>

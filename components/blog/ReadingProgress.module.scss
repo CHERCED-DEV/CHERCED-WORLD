@@ -1,3 +1,4 @@
+@use 'breakpoints' as bp;
 @use './blog' as blog;
 
 .progress {
@@ -12,4 +13,12 @@
   transform: scaleX(var(--cw-progress, 0));
   transform-origin: 0 50%;
   will-change: transform;
+
+  @include bp.down(md) {
+    top: calc(var(--cw-header-h) - 1px);
+    height: 2px;
+    border-radius: 0 2px 2px 0;
+    background: blog.$accent-mix;
+    box-shadow: 0 0 8px color-mix(in srgb, var(--cw-intro-accent) 40%, transparent);
+  }
 }

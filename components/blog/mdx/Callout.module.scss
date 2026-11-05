@@ -1,0 +1,47 @@
+@use 'glass' as *;
+@use '../blog' as blog;
+
+.callout {
+  @include glass(subtle);
+  @include glass-grain;
+  @include glass-edge;
+  position: relative;
+  margin-block: var(--cw-space-6);
+  padding: var(--cw-space-4) var(--cw-space-5) var(--cw-space-4) calc(var(--cw-space-5) + 4px);
+  border-inline-start: 3px solid blog.$accent-mix;
+  border-radius: 4px var(--cw-radius-lg) var(--cw-radius-lg) 4px;
+  line-height: 1.7;
+}
+
+.tradeoff {
+  border-inline-start-style: double;
+  border-inline-start-width: 4px;
+}
+
+.learned {
+  border-inline-start-style: dashed;
+}
+
+.label {
+  @include blog.kicker;
+  display: flex;
+  align-items: center;
+  gap: var(--cw-space-2);
+  margin: 0 0 var(--cw-space-2);
+  color: var(--cw-fg);
+}
+
+.icon {
+  flex: none;
+  color: blog.$accent-mix;
+}
+
+.content {
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
