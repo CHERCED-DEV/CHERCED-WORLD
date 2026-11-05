@@ -203,7 +203,9 @@ describe('banner del home (FR-401, FR-402, FR-463, FR-464, T420, T421)', () => {
     expect(script).toBeLessThan(html.indexOf('<h1'))
     expect(html).toContain(`<script>${winkScript}</script>`)
     expect(html).not.toMatch(/data-cw-wink="play"/)
-    expect(html).toMatch(/style="--cw-wink-strike-at:\d+ms;--cw-wink-strike-ms:\d+ms"/)
+    expect(html).toContain(
+      `style="--cw-wink-strike-at:${WINK_TIMING.strikeAt}ms;--cw-wink-strike-ms:${WINK_TIMING.strikeMs}ms;--cw-banner-sweep-at:${winkEnd()}ms"`,
+    )
     for (const word of winkWords(site.home.title.es)) {
       expect(html).toContain(`--cw-wink-delay:${word.delay}ms;--cw-wink-duration:${word.duration}ms`)
     }
