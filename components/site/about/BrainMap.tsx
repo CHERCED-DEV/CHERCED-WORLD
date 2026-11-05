@@ -195,7 +195,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
             ))}
             <a className={cx(styles.source, styles.sourceLink)} href={labels.platzi.href} target="_blank" rel="noopener noreferrer" data-cw-glass="subtle" data-cw-platzi="">
               {labels.platzi.label}
-              <span aria-hidden="true"> â†—</span>
+              <span aria-hidden="true"> ↗</span>
               <span className="cw-visually-hidden">{labels.platzi.newTab}</span>
             </a>
           </div>
@@ -261,7 +261,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                   <p className={styles.termMeta}>
                     {lobe.sources.length > 0 ? (
                       <span className={styles.metaLine} data-cw-meta="sources">
-                        <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' Â· ')}
+                        <strong>{labels.sourcesWord}:</strong> {lobe.sources.map(sourceLabel).join(' · ')}
                       </span>
                     ) : null}
                     {lobe.projects.length > 0 ? (
@@ -269,7 +269,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                         <strong>{labels.projectsWord}:</strong>{' '}
                         {lobe.projects.map((project, index) => (
                           <span key={project.id}>
-                            {index > 0 ? ' Â· ' : null}
+                            {index > 0 ? ' · ' : null}
                             <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.termLink}>
                               {project.title}
                             </Link>
@@ -294,7 +294,7 @@ export function BrainMap({ data, labels, lang }: { data: BrainData; labels: Brai
                       {data.lobes
                         .filter((item) => item.sources.includes(source.id))
                         .map((item) => item.name)
-                        .join(' Â· ')}
+                        .join(' · ')}
                     </span>
                   </p>
                 ) : null}
