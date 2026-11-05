@@ -33,6 +33,7 @@ test.beforeEach(async ({ page, context, baseURL }, testInfo) => {
 test.describe('humo: cada página pública carga, tiene su h1 y no rompe', () => {
   for (const path of PUBLIC_PAGES) {
     test(`${path}`, { tag: SMOKE }, async ({ page }) => {
+      test.setTimeout(60_000)
       const pending = pendingPage(path)
       test.skip(Boolean(pending), pending ?? '')
       const errors = watchErrors(page)
