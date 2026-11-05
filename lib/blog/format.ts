@@ -11,13 +11,17 @@ export function parsePostDate(iso: string): Date | null {
   if (!match) return null
   const [, year, month, day] = match
   const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)))
-  return Number.isNaN(date.getTime()) || date.getUTCDate() !== Number(day) ? null : date
+  return Number.isNaN(date.getTime()) || date.getUTCMonth() !== Number(month) - 1 || date.getUTCDate() !== Number(day) ? null : date
 }
 
 export function formatPostDate(iso: string, lang: Locale): string {
   const date = parsePostDate(iso)
   if (!date) return iso
   return new Intl.DateTimeFormat(LOCALE_TAGS[lang], { dateStyle: 'long', timeZone: 'UTC' }).format(date)
+}
+
+export function languageName(of: Locale, lang: Locale): string {
+  return new Intl.DisplayNames([LOCALE_TAGS[lang]], { type: 'language' }).of(of) ?? of
 }
 
 export function formatCommentDate(date: Date, lang: Locale): string {

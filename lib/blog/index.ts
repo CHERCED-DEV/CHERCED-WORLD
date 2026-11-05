@@ -12,6 +12,21 @@ export {
 } from './outline'
 export { shareTargets, type ShareNetwork, type ShareTarget } from './share'
 export { blogPath, postAlternates, postPath, postUrl } from './paths'
-export { COMMENT_TIME_ZONE, commentDateTime, formatCommentDate, formatPostDate, parsePostDate } from './format'
+export { COMMENT_TIME_ZONE, commentDateTime, formatCommentDate, formatPostDate, languageName, parsePostDate } from './format'
 export { adjacentPosts, orderPosts, type Adjacent, type Datable } from './order'
 export { activeHeading, readingProgress, spyLine, type BodyBox, type HeadingTop } from './progress'
+export { hasTag, postsWithTag, postTags, tagPath, tagSlug, uniqueTagSlugs, type BlogTag, type Taggable } from './tags'
+export { featuredPost, groupByYear, postYear, type YearGroup, type YearLabel } from './groups'
+export { RELATED_LIMIT, relatedPosts } from './related'
+export { findSeries, partsOfSeries, seriesPosition, type SeriesPosition } from './series'
+export {
+  escapeXml,
+  FEED_CONTENT_TYPE,
+  feedAlternates,
+  feedPath,
+  feedUrl,
+  rfc822Date,
+  toFeedItems,
+  type FeedItem,
+} from './feed'
+export { allTagSlugs, blogPosts, feedItems, ownPosts, seriesParts, tagSlugsIn } from './source'
