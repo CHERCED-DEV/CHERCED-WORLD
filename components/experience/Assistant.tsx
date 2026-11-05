@@ -11,6 +11,7 @@ import type { Locale } from '@/lib/i18n/config'
 import { t } from '@/lib/i18n/translate'
 import styles from './Assistant.module.scss'
 import { getAssistant } from './assistant-runtime'
+import { useSheetKeyboard } from './sheet-keyboard'
 import type { AssistantStatus } from './ExperienceClient'
 import type { ExperienceLabels } from './labels'
 
@@ -39,10 +40,18 @@ export function Assistant({ lang, labels, open, status, onStatus, onClose }: Ass
   const introId = useId()
   const inputId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
+  useSheetKeyboard(bodyRef)
   const nextId = useRef(0)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [pending, setPending] = useState(false)
+  const logRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const log = logRef.current
+    if (log && log.scrollHeight > log.clientHeight) log.scrollTop = log.scrollHeight
+  }, [messages.length, pending])
 
   useEffect(() => {
     if (!open) return
@@ -88,8 +97,8 @@ export function Assistant({ lang, labels, open, status, onStatus, onClose }: Ass
   }
 
   return (
-    <Dialog open={open} onClose={onClose} labelledBy={titleId} describedBy={introId} className={styles.assistant}>
-      <div className={styles.body} data-cw-assistant="">
+    <Dialog open={open} onClose={onClose} labelledBy={titleId} describedBy={introId} className={styles.assistant} mobileSheet>
+      <div ref={bodyRef} className={styles.body} data-cw-assistant="">
         <div className={styles.header}>
           <h2 id={titleId} className={styles.title}>
             {t(labels, 'assistant.open')}
@@ -109,7 +118,14 @@ export function Assistant({ lang, labels, open, status, onStatus, onClose }: Ass
           </p>
         ) : null}
 
-        <div role="log" aria-live="polite" aria-relevant="additions" aria-label={t(labels, 'assistant.open')} className={styles.log}>
+        <div
+          ref={logRef}
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+          aria-label={t(labels, 'assistant.open')}
+          className={styles.log}
+        >
           {messages.map((message) => {
             if (message.role === 'user') {
               return (

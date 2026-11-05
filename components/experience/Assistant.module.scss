@@ -1,13 +1,24 @@
 @use 'breakpoints' as bp;
 
 dialog.assistant {
-  width: min(100% - 2 * var(--cw-space-4), 600px);
+  @include bp.up(md) {
+    width: min(100% - 2 * var(--cw-space-4), 600px);
+  }
+
+  @include bp.down(md) {
+    height: calc(100dvh - var(--cw-sheet-gap) - var(--cw-keyboard-inset, 0px));
+  }
 }
 
 .body {
   display: flex;
   flex-direction: column;
   gap: var(--cw-space-4);
+
+  @include bp.down(md) {
+    height: 100%;
+    min-height: 0;
+  }
 }
 
 .header {
@@ -56,6 +67,13 @@ dialog.assistant {
   display: flex;
   flex-direction: column;
   gap: var(--cw-space-3);
+
+  @include bp.down(md) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 
   &:empty {
     display: none;
@@ -118,6 +136,10 @@ dialog.assistant {
   font-weight: 600;
   text-decoration: none;
 
+  @include bp.down(md) {
+    min-height: 44px;
+  }
+
   &:hover {
     border-color: var(--cw-fg);
   }
@@ -165,6 +187,11 @@ dialog.assistant {
 
   @include bp.down(sm) {
     flex-direction: column;
+  }
+
+  @include bp.down(md) {
+    flex: none;
+    margin-top: auto;
   }
 }
 

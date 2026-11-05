@@ -2,14 +2,25 @@
 @use 'layout';
 
 dialog.palette {
-  width: min(100% - 2 * var(--cw-space-4), 640px);
-  margin-block-start: min(12vh, 120px);
+  @include bp.up(md) {
+    width: min(100% - 2 * var(--cw-space-4), 640px);
+    margin-block-start: min(12vh, 120px);
+  }
+
+  @include bp.down(md) {
+    height: calc(100dvh - var(--cw-sheet-gap) - var(--cw-keyboard-inset, 0px));
+  }
 }
 
 .body {
   display: flex;
   flex-direction: column;
   gap: var(--cw-space-3);
+
+  @include bp.down(md) {
+    height: 100%;
+    min-height: 0;
+  }
 }
 
 .search {
@@ -66,6 +77,13 @@ dialog.palette {
   display: flex;
   flex-direction: column;
   gap: var(--cw-space-3);
+
+  @include bp.down(md) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 }
 
 .group {
