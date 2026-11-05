@@ -164,21 +164,22 @@ test.describe('la carrera como cartas sobre la mesa (US6b)', () => {
 
 test.describe('Sobre mí en pantallas chicas (US6b y US6c)', () => {
   onlyIn('mobile-chromium')
-  test('la carrera es una línea de tiempo y los lóbulos son chips con desplazamiento horizontal', async ({ page }) => {
+  test('la carrera es una línea de tiempo y el mapa compacto muestra los 6 lóbulos sin desplazamiento horizontal (006, EM-02)', async ({ page }) => {
     await open(page, 'es')
     const [, career] = await scenes(page)
     await expect(career!.locator('ol > li')).toHaveCount(CAREER_ENTRIES)
     await expect(career!.locator('ol > li time').first()).toBeVisible()
     const group = await lobes(page, 'es')
-    for (const lobe of group) await expect(lobe).toBeAttached()
-    const scrolls = await group[0]!.evaluate((lobe) => {
-      for (let element = lobe.parentElement; element; element = element.parentElement) {
-        const style = getComputedStyle(element)
-        if (style.overflowX === 'auto' || style.overflowX === 'scroll') return true
-      }
-      return false
-    })
-    expect(scrolls, 'los chips viven en un contenedor con desplazamiento horizontal').toBe(true)
+    const viewport = page.viewportSize()!
+    for (const lobe of group) {
+      await lobe.scrollIntoViewIfNeeded()
+      await expect(lobe).toBeVisible()
+      const box = (await lobe.boundingBox())!
+      expect(box.width, 'cada lóbulo se toca cómodo').toBeGreaterThanOrEqual(44)
+      expect(box.height, 'cada lóbulo se toca cómodo').toBeGreaterThanOrEqual(44)
+      expect(box.x, 'el lóbulo cabe en el ancho de la pantalla').toBeGreaterThanOrEqual(0)
+      expect(box.x + box.width, 'el lóbulo cabe en el ancho de la pantalla').toBeLessThanOrEqual(viewport.width + 1)
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true)
   })
 })
