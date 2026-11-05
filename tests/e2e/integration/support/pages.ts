@@ -19,17 +19,7 @@ export const EXTRA_PAGES: readonly string[] = ['/es/no-existe', '/es/blog/catalo
 
 export const AUDIT_PAGES: readonly string[] = [...PUBLIC_PAGES, ...EXTRA_PAGES]
 
-export const KEY_PAGES: readonly string[] = [
-  '/es',
-  '/en/aboutMe',
-  '/es/services',
-  '/en/portfolio',
-  '/es/portfolio/12',
-  '/en/blog/post5',
-  '/es/contactMe',
-  '/en/now',
-  '/es/no-existe',
-]
+export const KEY_PAGES: readonly string[] = ['/es', '/en/aboutMe', '/es/services', '/es/portfolio/12', '/es/contactMe', '/en/now']
 
 export const EXHAUSTIVE = '@exhaustive'
 

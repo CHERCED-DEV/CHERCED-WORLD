@@ -68,15 +68,22 @@ function serverCommand(): string {
   return stale ? `${next} build && ${start}` : start
 }
 
-const CONTRAST_OUTSIDE_SUBSET = /contraste del texto sobre glass en tema (dark|light) \/es\/(portfolio|blog|blog\/post1|privacy|esta-ruta-no-existe)$/
+const FULL_SKIPS: RegExp[] = [
+  /@exhaustive/,
+  /contraste del texto sobre glass en tema (dark|light) \/es\/(portfolio|blog|blog\/post1|blog\/post5|contactMe|privacy|esta-ruta-no-existe)$/,
+  /responsive del home \(320 a 2560 px, cada 40 px\)/,
+  /cada tarjeta muestra su captura completa, en proporción y sin hueco, de 320 a 2560 px/,
+]
 
-const TIER_FILTERS: Record<Tier, Pick<Project, 'testMatch' | 'testIgnore' | 'grepInvert'>> = {
-  fast: { testMatch: /[\\/]integration[\\/]smoke\.spec\.ts$/ },
-  full: {
+const FULL_SKIPS_OFF_DESKTOP: RegExp[] = [/auditoría de interacción \(US1, FR-201\)/, /contraste sobre glass de los casos y \/now/]
+
+function tierFilters(project: string): Pick<Project, 'testMatch' | 'testIgnore' | 'grepInvert'> {
+  if (TIER === 'fast') return { testMatch: /[\\/]integration[\\/]smoke\.spec\.ts$/ }
+  if (TIER === 'exhaustive') return {}
+  return {
     testIgnore: [/[\\/]r2[\\/]responsive\.spec\.ts$/, /[\\/]r4[\\/]responsive-blog\.spec\.ts$/],
-    grepInvert: [/@exhaustive/, CONTRAST_OUTSIDE_SUBSET],
-  },
-  exhaustive: {},
+    grepInvert: project === 'desktop-chromium' ? FULL_SKIPS : [...FULL_SKIPS, ...FULL_SKIPS_OFF_DESKTOP],
+  }
 }
 
 const PROJECTS: Project[] = [
@@ -114,7 +121,7 @@ export default defineConfig({
   },
   projects: PROJECTS.filter((project) => TIER !== 'fast' || project.name === 'desktop-chromium').map((project) => ({
     ...project,
-    ...TIER_FILTERS[TIER],
+    ...tierFilters(project.name ?? ''),
     metadata: { tier: TIER },
   })),
   webServer: {

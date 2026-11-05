@@ -1,5 +1,5 @@
 import { expect, type APIRequestContext, type BrowserContext, type Locator, type Page } from '@playwright/test'
-import type { Lang } from './pages'
+import { pendingPage, type Lang } from './pages'
 
 export type EffectName =
   | 'delegated'
@@ -785,6 +785,11 @@ const EFFECTS: Record<EffectName, Effect> = {
   async navigate({ page, context, target, control }) {
     const start = new URL(page.url())
     const destination = new URL(control.href ?? '/', start)
+    const pending = pendingPage(destination.pathname)
+    if (pending) {
+      await target.click({ trial: true, timeout: 5000 })
+      return `activable; no se sigue (${pending})`
+    }
     if (destination.pathname === start.pathname && destination.search === start.search) {
       if ((await target.getAttribute('aria-current')) === 'page') return 'marca la página actual (aria-current="page")'
       const from = await scrollToEnd(page)

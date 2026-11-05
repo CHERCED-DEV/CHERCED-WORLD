@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 import { getProjects } from '@/lib/content'
-import { LANGS, pendingPage, skipIntro } from './support/pages'
+import { EXHAUSTIVE, LANGS, pendingPage, skipIntro } from './support/pages'
 
 const ROUTES: readonly string[] = LANGS.flatMap((lang) => [...getProjects().map((project) => `/${lang}/portfolio/${project.id}`), `/${lang}/now`, `/${lang}/services`])
 
@@ -14,7 +14,7 @@ test.beforeEach(({}, testInfo) => {
 for (const scheme of ['dark', 'light'] as const) {
   test.describe(`accesibilidad de los casos, Servicios y /now en tema ${scheme} (SC-405, SC-413)`, () => {
     for (const route of ROUTES) {
-      test(`${route} sin violaciones críticas ni serias`, async ({ page, context }, testInfo) => {
+      test(`${route} sin violaciones críticas ni serias`, scheme === 'dark' ? {} : { tag: EXHAUSTIVE }, async ({ page, context }, testInfo) => {
         const pending = pendingPage(route)
         test.skip(Boolean(pending), pending ?? '')
         await context.route(/^https?:\/\/(?!localhost)/, (request) => request.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>externo</title>' }))

@@ -65,9 +65,22 @@ export function records(value: unknown): Array<Record<string, unknown>> {
   return []
 }
 
+export function expandJson(value: unknown): unknown {
+  if (typeof value === 'string' && /^\s*[[{]/.test(value)) {
+    try {
+      return expandJson(JSON.parse(value))
+    } catch {
+      return value
+    }
+  }
+  if (Array.isArray(value)) return value.map(expandJson)
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, expandJson(item)]))
+  return value
+}
+
 export function confidentialityFindings(value: unknown, sensitiveIds: readonly string[]): string[] {
   const findings: string[] = []
-  for (const record of records(value)) {
+  for (const record of records(expandJson(value))) {
     const texts = Object.values(record).filter((field): field is string => typeof field === 'string')
     const aboutEmployer = texts.some(mentionsEmployer)
     const aboutSensitive = typeof record.id === 'string' && sensitiveIds.includes(record.id)
