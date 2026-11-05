@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { aboutFigures, airlinesFromCareer, fullYearsSince, mapSkillCount, webSince } from '@/components/site/about/figures'
+import { aboutFigures, fullYearsSince, webSince } from '@/components/site/about/figures'
+import { synergosFacts } from '@/content/synergos'
 import { getProjects, getSite } from '@/lib/content'
 
 const { about, contact } = getSite()
@@ -18,34 +19,31 @@ describe('cifras destacadas (US6), solo públicas y derivadas del contenido', ()
     expect(fullYearsSince({ year: 2030, month: 1 }, NOV_2026)).toEqual({ years: 0, more: false })
   })
 
-  it('las aerolíneas solo aparecen si el texto de la carrera las respalda', () => {
-    expect(airlinesFromCareer(about.career)).toBe(3)
+  it('la carrera conserva las aerolíneas de FLYR, pero ya no son una cifra (004, FR-436)', () => {
     const flyr = about.career.find((entry) => entry.id === 'flyr')!
     expect(flyr.description.en).toMatch(/3\+ international airlines/)
     expect(flyr.description.es).toMatch(/más de 3 aerolíneas/)
-    const sinTexto = about.career.map((entry) => ({ ...entry, description: { es: 'x', en: 'x' } }))
-    expect(airlinesFromCareer(sinTexto)).toBeNull()
+    expect(aboutFigures(about, NOV_2026).map((figure) => figure.id)).not.toContain('airlines')
   })
 
-  it('arma las cuatro cifras con proyectos y tecnologías reales', () => {
-    expect(aboutFigures(about, getProjects().length, NOV_2026)).toEqual([
+  it('arma las cuatro cifras de la 004: años calculados y Synergos desde su fuente única (FR-436)', () => {
+    expect(aboutFigures(about, NOV_2026)).toEqual([
       { id: 'years', value: 7, plus: true, since: 2019 },
-      { id: 'projects', value: getProjects().length, plus: false },
-      { id: 'technologies', value: mapSkillCount(about), plus: false },
-      { id: 'airlines', value: 3, plus: true },
+      { id: 'pieces', value: synergosFacts.pieces, plus: false },
+      { id: 'adrs', value: synergosFacts.adrsAtLeast, plus: true },
+      { id: 'tests', value: synergosFacts.testsAtLeast, plus: true },
     ])
     expect(getProjects()).toHaveLength(15)
     expect(about.skills.tech).toHaveLength(55)
-    expect(mapSkillCount(about)).toBe(57)
   })
 
   it('omite una cifra que no tenga respaldo en vez de inventarla', () => {
     const vacio = { ...about, career: [], skills: { ...about.skills, tech: [], lobes: [] } }
-    expect(aboutFigures(vacio, 0, NOV_2026)).toEqual([])
+    expect(aboutFigures(vacio, NOV_2026, { pieces: 0, adrsAtLeast: 0, testsAtLeast: 0 })).toEqual([])
   })
 
   it('no publica cifras confidenciales de Sistecrédito', () => {
-    const values = aboutFigures(about, getProjects().length, NOV_2026).map((figure) => figure.value)
+    const values = aboutFigures(about, NOV_2026).map((figure) => figure.value)
     for (const value of values) expect([700, 1000, 90]).not.toContain(value)
   })
 })

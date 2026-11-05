@@ -1,10 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
-import { aboutFigures } from '@/components/site/about/figures'
-import { getProjects, getSite } from '@/lib/content'
+import { aboutFigures, figureDigits, figureText } from '@/components/site/about/figures'
+import { getSite } from '@/lib/content'
 
 const site = getSite()
 const { about } = site
-const figures = aboutFigures(about, getProjects().length, new Date())
+const figures = aboutFigures(about, new Date())
 const LIGHT_SRC = /retrato-claro/
 const DARK_SRC = /retrato-oscuro/
 
@@ -72,8 +72,8 @@ test.describe('sobre mí sin JavaScript', () => {
     await expect(items).toHaveCount(figures.length)
     for (const figure of figures) {
       const item = page.locator(`[data-cw-figure="${figure.id}"]`)
-      await expect(item.locator('[data-cw-figure-value]')).toHaveText(String(figure.value))
-      await expect(item.locator('dd')).toContainText(`${figure.value}${figure.plus ? '+' : ''}`)
+      await expect(item.locator('[data-cw-figure-value]')).toHaveText(figureDigits(figure.value, 'es'))
+      await expect(item.locator('dd')).toContainText(figureText(figure, 'es'))
     }
     await expect(page.locator('[data-cw-figure="years"] dt')).toContainText('desde 2019')
   })
@@ -120,7 +120,7 @@ test.describe('retrato y tema con JavaScript', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('/es/aboutMe')
     for (const figure of figures) {
-      await expect(page.locator(`[data-cw-figure="${figure.id}"] [data-cw-figure-value]`)).toHaveText(String(figure.value))
+      await expect(page.locator(`[data-cw-figure="${figure.id}"] [data-cw-figure-value]`)).toHaveText(figureDigits(figure.value, 'es'))
     }
   })
 
@@ -140,14 +140,14 @@ test.describe('retrato y tema con JavaScript', () => {
       ;(window as unknown as { __cwSeen: string[] }).__cwSeen = seen
     })
     await value.scrollIntoViewIfNeeded()
-    await expect(value).toHaveText(String(target.value))
+    await expect(value).toHaveText(figureDigits(target.value, 'es'))
     const seen = await page.evaluate(() => (window as unknown as { __cwSeen: string[] }).__cwSeen)
     expect(seen.length).toBeGreaterThan(2)
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
     await page.waitForTimeout(300)
     await value.scrollIntoViewIfNeeded()
     await page.waitForTimeout(300)
-    await expect(value).toHaveText(String(target.value))
+    await expect(value).toHaveText(figureDigits(target.value, 'es'))
   })
 
   test('la línea de tiempo marca los empleos actuales con el nodo verde', async ({ page }) => {

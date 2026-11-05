@@ -10,12 +10,17 @@ export type BrainLobe = {
   name: string
   skills: BrainSkill[]
   sources: string[]
+  applied: string[]
+  learned: string[]
   projects: BrainProject[]
   learning?: string
   words?: string
+  principles?: string[]
 }
 
 export const LEARNING_LOBE = 'applied-ai'
+
+export const PRINCIPLES_LOBE = 'architecture'
 
 export type BrainSource = { id: string; label: string; title: string; detail: string | null; period: string | null }
 
@@ -60,6 +65,28 @@ export const SOURCE_ORDER = [
   'unad',
   'eam',
 ] as const
+
+export const LOBE_ANCHOR_PREFIX = 'lobe-'
+
+export function lobeAnchor(id: string): string {
+  return `${LOBE_ANCHOR_PREFIX}${id}`
+}
+
+export function lobeFromHash(hash: string, ids: readonly string[]): string | null {
+  if (!hash.startsWith(`#${LOBE_ANCHOR_PREFIX}`)) return null
+  let id: string
+  try {
+    id = decodeURIComponent(hash.slice(LOBE_ANCHOR_PREFIX.length + 1))
+  } catch {
+    return null
+  }
+  return ids.includes(id) ? id : null
+}
+
+export function isAppliedSource(id: string): boolean {
+  const kind = SOURCE_REFS[id]?.kind
+  return kind === 'company' || kind === 'case'
+}
 
 const TECH_ALIASES: Record<string, string[]> = {
   html5: ['HTML'],
@@ -138,15 +165,21 @@ export function brainData(about: SiteContent['about'], projects: readonly Projec
   const lobes = (about.skills.lobes ?? []).map((lobe) => {
     const skills = lobe.skills.map((id) => resolveSkill(id, about, lang)).filter((skill): skill is BrainSkill => skill !== null)
     const learning = lobe.id === LEARNING_LOBE ? about.skills.learningNow?.[lang]?.trim() : undefined
-    const words = lobe.words?.[lang]?.trim()
+    const words = (about.skills.inWords?.[lobe.id] ?? lobe.words)?.[lang]?.trim()
+    const principles =
+      lobe.id === PRINCIPLES_LOBE ? (about.principles ?? []).map((principle) => principle.short[lang].trim()).filter((text) => text.length > 0) : []
+    const sources = lobe.sources.filter((source) => source in SOURCE_REFS)
     return {
       id: lobe.id,
       name: lobe.name[lang],
       skills,
-      sources: lobe.sources.filter((source) => source in SOURCE_REFS),
+      sources,
+      applied: sources.filter(isAppliedSource),
+      learned: sources.filter((source) => !isAppliedSource(source)),
       projects: lobe.projects ? projectsById(lobe.projects, projects) : projectsForSkills(skills, projects),
       ...(learning ? { learning } : {}),
       ...(words ? { words } : {}),
+      ...(principles.length > 0 ? { principles } : {}),
     }
   })
   const sources = SOURCE_ORDER.map((id) => resolveSource(id, about, lang, presentLabel)).filter(

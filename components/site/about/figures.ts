@@ -1,11 +1,13 @@
-import type { CareerEntry, SiteContent } from '@/content/types'
+import { formatFact, synergosFacts } from '@/content/synergos'
+import type { CareerEntry, Locale, SiteContent, SynergosFacts } from '@/content/types'
 
-export type FigureId = 'years' | 'projects' | 'technologies' | 'airlines'
+export type FigureId = 'years' | 'pieces' | 'adrs' | 'tests'
 
 export type Figure = { id: FigureId; value: number; plus: boolean; since?: number }
 
+export type FigureFacts = Pick<SynergosFacts, 'pieces' | 'adrsAtLeast' | 'testsAtLeast'>
+
 const WEB_ROLE = /front.?end|developer|engineer|architect/i
-const AIRLINES = /\b(\d+)\+\s+(?:international\s+)?airlines\b/i
 const MONTH = /^(\d{4})(?:-(\d{2}))?$/
 
 function parseMonth(value: string): { year: number; month: number } | null {
@@ -29,30 +31,23 @@ export function fullYearsSince(since: { year: number; month: number }, now: Date
   return { years: Math.floor(safe / 12), more: safe % 12 > 0 }
 }
 
-export function airlinesFromCareer(career: readonly CareerEntry[]): number | null {
-  const counts = career.flatMap((entry) => {
-    const match = AIRLINES.exec(entry.description.en)
-    return match ? [Number(match[1])] : []
-  })
-  return counts.length > 0 ? Math.max(...counts) : null
-}
-
-export function mapSkillCount(about: SiteContent['about']): number {
-  const ids = new Set((about.skills.lobes ?? []).flatMap((lobe) => lobe.skills))
-  return ids.size > 0 ? ids.size : about.skills.tech.length
-}
-
-export function aboutFigures(about: SiteContent['about'], projectCount: number, now: Date): Figure[] {
+export function aboutFigures(about: SiteContent['about'], now: Date, facts: FigureFacts = synergosFacts): Figure[] {
   const figures: Figure[] = []
   const since = webSince(about.career)
   if (since) {
     const { years, more } = fullYearsSince(since, now)
     if (years > 0) figures.push({ id: 'years', value: years, plus: more, since: since.year })
   }
-  if (projectCount > 0) figures.push({ id: 'projects', value: projectCount, plus: false })
-  const skills = mapSkillCount(about)
-  if (skills > 0) figures.push({ id: 'technologies', value: skills, plus: false })
-  const airlines = airlinesFromCareer(about.career)
-  if (airlines !== null) figures.push({ id: 'airlines', value: airlines, plus: true })
+  if (facts.pieces > 0) figures.push({ id: 'pieces', value: facts.pieces, plus: false })
+  if (facts.adrsAtLeast > 0) figures.push({ id: 'adrs', value: facts.adrsAtLeast, plus: true })
+  if (facts.testsAtLeast > 0) figures.push({ id: 'tests', value: facts.testsAtLeast, plus: true })
   return figures
+}
+
+export function figureDigits(value: number, lang: Locale): string {
+  return formatFact(value, lang)
+}
+
+export function figureText(figure: Pick<Figure, 'value' | 'plus'>, lang: Locale): string {
+  return `${figureDigits(figure.value, lang)}${figure.plus ? '+' : ''}`
 }

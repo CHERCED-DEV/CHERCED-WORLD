@@ -100,7 +100,7 @@ test.describe('bug 2: sin animación de entrada no queda ningún hueco', () => {
         return out
       })
       expect(hidden).toEqual([])
-      for (const figure of ['years', 'projects', 'technologies', 'airlines']) {
+      for (const figure of ['years', 'pieces', 'adrs', 'tests']) {
         const value = page.locator(`[data-cw-figure="${figure}"] [data-cw-figure-value]`)
         if ((await value.count()) > 0) await expect(value).not.toHaveText('0')
       }
@@ -191,7 +191,9 @@ test.describe('bug 7: un bloque sin contenido no se muestra', () => {
       if (lobe.projects.length === 0) await expect(line).toHaveCount(0)
       else await expect(line.getByRole('link')).toHaveCount(lobe.projects.length)
       await expect(scope).not.toContainText(/ninguno/)
-      await expect(scope.locator('[data-cw-meta="sources"]')).toBeVisible()
+      await expect(scope.locator('[data-cw-meta="applied"]')).toBeVisible()
+      if (lobe.learned.length > 0) await expect(scope.locator('[data-cw-meta="sources"]')).toBeVisible()
+      else await expect(scope.locator('[data-cw-meta="sources"]')).toHaveCount(0)
     }
 
     const ai =
@@ -205,7 +207,7 @@ test.describe('bug 7: un bloque sin contenido no se muestra', () => {
   test('"Mis habilidades, en palabras" solo existe si tiene texto, y al abrirse lo muestra', async ({ page }, testInfo) => {
     await page.goto('/es/aboutMe')
     const words = page.locator('[data-cw-words]')
-    const hasText = about.skills.description.es.trim().length > 0 || about.skills.bullets.some((bullet) => bullet.es.trim().length > 0)
+    const hasText = data.lobes.some((lobe) => lobe.words)
     if (!hasText) {
       await expect(words).toHaveCount(0)
       return
