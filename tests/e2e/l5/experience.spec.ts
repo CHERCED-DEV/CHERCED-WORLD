@@ -44,6 +44,18 @@ async function openPalette(page: Page, via: 'keyboard' | 'button' = 'keyboard') 
   await expect(page.locator('[data-cw-palette-input]')).toBeFocused()
 }
 
+function assistantOpener(page: Page) {
+  const mobile = test.info().project.name === 'mobile-chromium'
+  return page.locator(mobile ? '[data-cw-dock-assistant]' : '[data-cw-assistant-button]')
+}
+
+async function openAssistant(page: Page) {
+  if (test.info().project.name === 'mobile-chromium') {
+    await expect(page.locator('[data-cw-assistant-button]')).toBeHidden()
+  }
+  await assistantOpener(page).click()
+}
+
 async function askAssistant(page: Page, question: string) {
   const answers = assistant(page).locator('[data-cw-answer-kind]')
   const before = await answers.count()
@@ -163,7 +175,7 @@ test.describe('asistente', () => {
 
   test('responde preguntas informales con enlaces y en el idioma de la pregunta', async ({ page }) => {
     await gotoReady(page)
-    await page.locator('[data-cw-assistant-button]').click()
+    await openAssistant(page)
     await expect(assistant(page)).toBeVisible()
     await expect(assistant(page).locator('[data-cw-assistant-input]')).toBeFocused()
 
@@ -195,7 +207,7 @@ test.describe('asistente', () => {
     const stored = await page.evaluate(() => JSON.stringify({ ...localStorage, ...sessionStorage }))
     expect(stored).not.toContain('servicios')
     await reloadReady(page)
-    await page.locator('[data-cw-assistant-button]').click()
+    await openAssistant(page)
     await expect(assistant(page).locator('[data-cw-answer-kind]')).toHaveCount(0)
   })
 
@@ -203,7 +215,7 @@ test.describe('asistente', () => {
     await page.route('**/api/search-index/**', (route) => route.fulfill({ status: 503, body: 'no' }))
     await gotoReady(page)
     const button = page.locator('[data-cw-assistant-button]')
-    await button.click()
+    await openAssistant(page)
     await expect(assistant(page).locator('[data-cw-assistant-unavailable]')).toBeVisible()
     await expect(button).toHaveAttribute('data-status', 'unavailable')
     await expect(button).toContainText('No disponible')
@@ -230,7 +242,7 @@ test.describe('accesibilidad de la capa de experiencia', () => {
       expect(await blockingViolations(page)).toEqual([])
       await page.keyboard.press('Escape')
 
-      await page.locator('[data-cw-assistant-button]').click()
+      await openAssistant(page)
       await askAssistant(page, '¿Qué proyectos has hecho?')
       expect(await blockingViolations(page)).toEqual([])
       await page.keyboard.press('Escape')

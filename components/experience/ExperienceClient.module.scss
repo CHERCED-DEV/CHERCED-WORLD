@@ -39,6 +39,12 @@
   }
 }
 
+@include bp.down(md) {
+  :global(:root[data-cw-dock]) .fab {
+    display: none;
+  }
+}
+
 .icon {
   flex: none;
 }
