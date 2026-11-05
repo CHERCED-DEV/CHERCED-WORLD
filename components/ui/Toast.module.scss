@@ -14,6 +14,12 @@
     inset: auto var(--cw-space-5) var(--cw-space-5) auto;
     width: 380px;
   }
+
+  @include bp.down(md) {
+    :global(:root[data-js]) & {
+      bottom: var(--cw-dock-space);
+    }
+  }
 }
 
 .toast {

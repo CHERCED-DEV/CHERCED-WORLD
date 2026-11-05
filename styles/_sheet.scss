@@ -1,0 +1,97 @@
+@mixin sheet-panel {
+  inset: auto 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(100dvh - var(--cw-sheet-gap) - var(--cw-keyboard-inset, 0px));
+  margin: 0 0 var(--cw-keyboard-inset, 0px);
+  padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  border-width: 1px 0 0;
+  border-radius: var(--cw-sheet-radius) var(--cw-sheet-radius) 0 0;
+  overflow: hidden;
+  transform: translate3d(0, var(--cw-sheet-drag, 0px), 0);
+  transition:
+    transform var(--cw-sheet-duration) var(--cw-ease-out),
+    opacity var(--cw-sheet-duration) var(--cw-ease-out);
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &[data-dragging] {
+    transition: none;
+  }
+
+  &[data-state='closing'] {
+    transform: translate3d(0, 100%, 0);
+  }
+
+  &::backdrop {
+    background: rgb(0 0 0 / 0.55);
+    background: var(--cw-sheet-scrim, rgb(0 0 0 / 0.55));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    transition: opacity var(--cw-sheet-duration) var(--cw-ease-out);
+  }
+
+  &[data-state='closing']::backdrop {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 200ms var(--cw-ease-out) !important;
+
+    &[data-state='closing'] {
+      transform: translate3d(0, var(--cw-sheet-drag, 0px), 0);
+      opacity: 0;
+    }
+
+    &::backdrop {
+      transition: opacity 200ms var(--cw-ease-out) !important;
+    }
+  }
+}
+
+@mixin sheet-entry($selector) {
+  @starting-style {
+    #{$selector}[open] {
+      transform: translate3d(0, 100%, 0);
+    }
+
+    #{$selector}[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @starting-style {
+      #{$selector}[open] {
+        transform: none;
+        opacity: 0;
+      }
+    }
+  }
+}
+
+@mixin sheet-grip {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-height: 28px;
+  padding-top: var(--cw-space-2);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+
+  &::before {
+    content: '';
+    width: 40px;
+    height: 5px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--cw-fg) 38%, transparent);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
