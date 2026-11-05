@@ -471,4 +471,4 @@ llega a un servidor. El copy de A5, A4, V2 y V3 se escribe en el plan con el mis
 | P-3h | ¿El AI Lab entra al menú principal, entre Portafolio y Blog? | Sin entrada en el menú; se llega por la paleta y el footer |
 | P-3i | ¿La vitrina A13 ejecuta las herramientas o solo las lista? | No se construye en esta spec (HC-6) |
 | P-3j | ¿J3 va, reutilizando MongoDB y con validación en el servidor? | No se construye (HC-3) |
-| P-3k | ¿Se aprueba la dependencia `@huggingface/transformers` para V1, V4 y la búsqueda por significado de A5? Justificación en el plan | Lo aprueba el orquestador con la justificación del plan, como pide la 002 para toda dependencia nueva. Si no se aprueba, V1 y V4 usan la Web Speech API con su aviso de privacidad, y A5 se queda solo con BM25 |
+| P-3k | ¿Se aprueba la dependencia `@huggingface/transformers` para V1, V4 y la búsqueda por significado de A5? Justificación en el plan | **Resuelta (2026-11-04):** el autor la aprobó. Va con versión exacta y solo dentro de los workers |

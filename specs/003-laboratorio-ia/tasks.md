@@ -68,8 +68,8 @@ A-708.
   `app/sitemap.ts`.
 - [ ] T713 [P] A-706: sección del laboratorio en la política de privacidad, en `content/site.ts`: qué se descarga, qué
   queda en el navegador, cómo borrarlo y que nada se envía (FR-322).
-- [ ] T714 **BLOQUEADA (P-3k)**, A-708: `@huggingface/transformers` en `package.json`, con la aprobación del orquestador y
-  la justificación del plan (FR-371). Si no se aprueba, X1 sigue el respaldo de P-3k: Web Speech API con aviso, y A5 solo BM25.
+- [ ] T714 A-708: `@huggingface/transformers` en `package.json`, con la justificación del plan (FR-371). P-3k quedó
+  aprobada por el autor el 2026-11-04. Se fija la versión exacta y solo se importa dentro de los workers.
 - [ ] T715 Pruebas:
   - `tests/unit/x0/consent.test.ts`, `store.test.ts` y `worker.test.ts`;
   - `tests/e2e/x0/ai-lab.spec.ts`: 0 descargas al cargar (SC-301), sin JS, cancelar el consentimiento, borrar, ES y EN.
@@ -219,7 +219,7 @@ Rutas: `tests/e2e/x5/**`.
 - [ ] T771 Correr la suite completa **3 veces seguidas en verde**.
 - [ ] T772 Desplegar la vista previa, revisarla con el autor y cortar a `main` solo con su confirmación explícita.
 - [ ] T773 Desbloquear a medida que se resuelvan sus preguntas:
-  - T714 (P-3k), T717 (P-3h), T727 (P-3e) y T735 (P-3c);
+  - T717 (P-3h), T727 (P-3e) y T735 (P-3c). T714 se desbloqueó: P-3k quedó aprobada el 2026-11-04;
   - T734, según T730;
   - avisar a la 005 para desbloquear su T628 si P-505 queda en el camino A.
 - [ ] T774 Para HC-1 a HC-6, abrir una iteración de plan y tareas cuando el autor resuelva P-3a, P-3b, P-3d, P-3f, P-3i
@@ -257,5 +257,5 @@ Rutas: `tests/e2e/x5/**`.
 **Cobertura**: los 30 requisitos funcionales y los 7 criterios de éxito de la spec tienen al menos una tarea. Hay 57
 tareas:
 
-- 5 bloqueadas: T714 (P-3k), T717 (P-3h), T727 (P-3e), T735 (P-3c) y T734, condicionada a T730;
+- 4 bloqueadas: T717 (P-3h), T727 (P-3e), T735 (P-3c) y T734, condicionada a T730. T714 se desbloqueó con P-3k;
 - 2 de medición en la vista previa: T723 y T730.

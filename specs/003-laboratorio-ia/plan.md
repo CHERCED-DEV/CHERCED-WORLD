@@ -80,7 +80,7 @@ modelos reales usan dobles de los workers, para no descargar pesos en CI.
 | V. Rendimiento y accesibilidad | Carga diferida por tarjeta, workers y consentimiento con peso. Alternativas en texto para voz y juego. Pruebas de axe y de fps | ✅ |
 | VI. Calidad verificable | `npm run verify` y e2e por lane. Pruebas unitarias de toda la lógica pura. La suite completa 3 veces en verde al cerrar | ✅ |
 | VII. Propiedad exclusiva | 6 lanes con rutas disjuntas. Lo que toca a la 004 entra como enmienda A-7xx | ✅ |
-| VIII. Simplicidad operativa | Una dependencia nueva justificada (P-3k). Dos CDN públicos sin cuenta. Sin servidor ni variables | ✅ con P-3k |
+| VIII. Simplicidad operativa | Una dependencia nueva justificada y aprobada por el autor (P-3k, 2026-11-04). Dos CDN públicos sin cuenta. Sin servidor ni variables | ✅ |
 
 ## Project Structure
 
