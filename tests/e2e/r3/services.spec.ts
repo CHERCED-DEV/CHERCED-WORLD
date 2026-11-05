@@ -27,13 +27,14 @@ test.describe('servicios', () => {
     await expect(page.locator('ol:has([data-cw-service])')).toHaveCount(1)
   })
 
-  test('Explorar lleva al portafolio y Escríbeme a contacto', async ({ page }, testInfo) => {
+  test('Cuéntame tu proceso y Escríbeme llevan a contacto', async ({ page }, testInfo) => {
     await skipIntro(page)
     await page.goto('/es/services')
-    await expect(page.getByRole('link', { name: 'Explorar' })).toHaveAttribute('href', '/es/portfolio')
-    const contact = page.getByRole('link', { name: 'Escríbeme', exact: true })
+    await expect(page.getByRole('link', { name: 'Explorar' })).toHaveCount(0)
+    await expect(page.getByRole('link', { name: 'CUÉNTAME TU PROCESO', exact: true })).toHaveAttribute('href', '/es/contactMe')
+    const contact = page.getByRole('link', { name: 'ESCRÍBEME', exact: true })
     await expect(contact).toHaveAttribute('href', '/es/contactMe')
-    await expect(page.getByRole('heading', { level: 2, name: '¿Hablamos de tu proyecto?' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 2, name: '¿Dónde se te va el tiempo?' })).toBeVisible()
     test.skip(testInfo.project.name === 'no-js', 'la navegación sin JS la cubre el href')
     await contact.click()
     await page.waitForURL('**/es/contactMe')
@@ -43,8 +44,9 @@ test.describe('servicios', () => {
   test('en inglés el llamado se traduce', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/en/services')
-    await expect(page.getByRole('heading', { level: 2, name: 'Shall we talk about your project?' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Write to me', exact: true })).toHaveAttribute('href', '/en/contactMe')
+    await expect(page.getByRole('heading', { level: 2, name: 'Where does your time go?' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'TELL ME ABOUT YOUR PROCESS', exact: true })).toHaveAttribute('href', '/en/contactMe')
+    await expect(page.getByRole('link', { name: 'WRITE TO ME', exact: true })).toHaveAttribute('href', '/en/contactMe')
   })
 })
 

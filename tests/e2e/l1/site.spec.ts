@@ -91,12 +91,14 @@ test.describe('contenido sin JavaScript', () => {
     else await expect(career).toBeVisible()
   })
 
-  test('servicios: introducción, Explorar y tres tarjetas', async ({ page }) => {
+  test('servicios: hero, Cuéntame tu proceso y seis tarjetas', async ({ page }) => {
     await page.goto('/es/services')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('¿Cómo te puedo ayudar?')
-    await expect(page.getByRole('link', { name: 'Explorar' })).toHaveAttribute('href', '/es/portfolio')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('TU OFICIO, CON UN EQUIPO DE AGENTES A LA MEDIDA')
+    await expect(page.getByRole('heading', { level: 2, name: '¿Cómo te puedo ayudar?', exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Explorar' })).toHaveCount(0)
+    await expect(page.getByRole('link', { name: 'CUÉNTAME TU PROCESO', exact: true })).toHaveAttribute('href', '/es/contactMe')
     const cards = page.locator('[data-cw-service]')
-    await expect(cards).toHaveCount(3)
+    await expect(cards).toHaveCount(6)
     await expect(cards.getByRole('heading', { level: 3 })).toHaveText(site.services.items.map((item) => item.title.es))
   })
 
@@ -324,7 +326,12 @@ test.describe('enlaces', () => {
     await page.evaluate(() => {
       ;(window as unknown as { __cwSameDocument?: boolean }).__cwSameDocument = true
     })
-    await page.getByRole('link', { name: 'Explorar' }).click()
+    await page.getByRole('link', { name: 'CUÉNTAME TU PROCESO', exact: true }).click()
+    await page.waitForURL('**/es/contactMe')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contacto')
+    expect(await page.evaluate(() => (window as unknown as { __cwSameDocument?: boolean }).__cwSameDocument)).toBe(true)
+
+    await page.locator('header nav').getByRole('link', { name: 'Portafolio', exact: true }).click()
     await page.waitForURL('**/es/portfolio')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Portafolio')
     expect(await page.evaluate(() => (window as unknown as { __cwSameDocument?: boolean }).__cwSameDocument)).toBe(true)
