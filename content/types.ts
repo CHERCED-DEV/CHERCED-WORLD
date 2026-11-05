@@ -175,6 +175,8 @@ export type NowContent = {
   mottos: NowEntry[]
 }
 
+export type PostSeriesRef = { id: string; part: number }
+
 export type PostMeta = {
   id: string
   lang: Locale
@@ -185,6 +187,10 @@ export type PostMeta = {
   tags: string[]
   image: { src: string; alt: string; width: number; height: number }
   author: 'Camilo Hernandez'
+  featured?: true
+  updated?: string
+  series?: PostSeriesRef
+  cover?: 'generated'
 }
 
 export type CapsuleEntry = { date: string; message: string; note?: Localized }
