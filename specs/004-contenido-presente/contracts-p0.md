@@ -3,6 +3,9 @@
 **Dueño**: P0 · **Estado**: congelado en el tag `p0-frozen` · **Base**: [contracts-r0.md de la
 002](../002-refinamiento-impoluto/contracts-r0.md), [data-model.md](./data-model.md) y [contenido.md](./contenido.md)
 
+**Tag**: `p0-frozen` (objeto `5150414`) apunta al commit `4dadea4e649f7d165814cb9324bfc138c5c2ab0b`, con
+`npm run verify` y las e2e de l0, r0 y p0 en verde.
+
 Todo lo de la 001 y la 002 sigue vigente. P0 agrega tipos, contenido y piezas encima; ningún componente congelado
 cambia de API salvo `ServiceIcon` (A-405), el footer y el layout (A-407). Las lanes P1 a P7 programan contra este
 documento. Si falta algo, se pide como enmienda de contenido al orquestador.
