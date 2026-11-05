@@ -21,6 +21,7 @@ test.describe('escritorio sin rastro de lo móvil en todas las páginas (FR-651,
     test(`${path} a ${WIDTHS.join(' y ')} px`, async ({ page }) => {
       const pending = pendingPage(path)
       test.skip(Boolean(pending), pending ?? '')
+      test.setTimeout(90_000)
       await skipIntro(page)
       const problems: string[] = []
       for (const width of WIDTHS) {

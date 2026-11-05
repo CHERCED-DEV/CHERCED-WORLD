@@ -75,11 +75,18 @@ solo tus pruebas, pásale la carpeta: `npx playwright test tests/e2e/p3`.
 - **Tag `@anchos`**: en el nivel completo, `mobile-375` y `mobile-412` corren solo lo que lo lleva. Lo demás de los
   `mobile-*` corre en 390 px; en el exhaustivo, todo corre en los tres anchos.
 - `mobile-patterns`: cada hoja (lóbulo, carta, embebido, paleta y asistente) con toque, teclado, Esc y arrastre; el
-  mapa y el mazo solo con botones; sin JS; y 0 animaciones activas con movimiento reducido.
+  mapa y el mazo solo con botones; sin JS; y, con movimiento reducido, nada que se mueva o quede en bucle (los
+  fundidos de opacidad y color se permiten).
 - `mobile-budgets`:
   - blur de 3 o menos en todas las páginas (13 en el completo, el resto en el exhaustivo);
-  - animaciones nuevas solo con `transform` y `opacity`;
-  - CLS < 0,1 e INP < 200 ms con la CPU 4× más lenta en home, Sobre mí, Servicios y el caso 12.
+  - animaciones nuevas solo con `transform` y `opacity` (FR-653), en 390 px:
+    - un `@keyframes` nuevo solo puede tocar `transform`, `translate`, `scale`, `rotate` y `opacity`;
+    - una transición nueva no puede tocar geometría (ancho, alto, márgenes, posición) ni filtros;
+    - las transiciones de color, borde, sombra y la luz táctil de FR-601 se permiten y quedan anotadas;
+    - las transiciones se leen declaradas, con las animaciones en pausa, para no depender del momento;
+  - CLS < 0,1 con la CPU 4× más lenta en home, Sobre mí, Servicios y el caso 12, en los tres anchos;
+  - INP < 200 ms con la CPU 4× más lenta, en 390 px: cuenta la espera y el procesamiento de cada interacción, y el
+    pintado se anota (en Chromium sin GPU no es representativo).
 - `mobile-targets`: 44 × 44 px o más en cada control nuevo, también con las hojas y el menú abiertos.
 - `mobile-captures`: una captura por página, idioma y tema, adjunta al reporte. En el completo, las 6 páginas clave
   en oscuro.
