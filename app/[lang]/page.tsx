@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t(site, 'meta.home.title'),
     description: t(site, 'meta.home.description'),
     common,
+    ogImageFile: true,
     absoluteTitle: true,
   })
 }
@@ -35,6 +36,7 @@ export default async function HomePage({ params }: Props) {
         projects={getProjects()}
         labels={{
           socials: t(dict, 'home.socials'),
+          previousTitle: t(dict, 'home.previousTitleLabel'),
           cue: t(home, 'hero.cue'),
           now: {
             title: t(home, 'now.title'),

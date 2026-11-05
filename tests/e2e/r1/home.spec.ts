@@ -182,7 +182,7 @@ test.describe('responsive del home (320 a 2560 px, cada 40 px)', () => {
   onlyIn('desktop-chromium')
 
   for (const lang of LANGS) {
-    test(`/${lang} sin desbordes, título y saludo en una línea y objetivos ≥ 24 px`, async ({ page }) => {
+    test(`/${lang} sin desbordes, título partido por palabras (≤ 2 líneas desde 768 px), saludo en una línea y objetivos ≥ 24 px`, async ({ page }) => {
       test.setTimeout(180_000)
       await skipIntro(page)
       await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -218,7 +218,9 @@ test.describe('responsive del home (320 a 2560 px, cada 40 px)', () => {
           if (!banner || !card || !title || !greeting) return ['falta el banner']
           inside(card, 'tarjeta')
           fits(title, 'h1')
-          if (lines(title) !== 1) issues.push(`h1 en ${lines(title)} líneas`)
+          const maxLines = window.innerWidth >= 768 ? 2 : 4
+          if (lines(title) > maxLines) issues.push(`h1 en ${lines(title)} líneas`)
+          for (const word of title.querySelectorAll('[data-cw-wink-word]')) if (lines(word) !== 1) issues.push(`palabra partida: ${word.textContent}`)
           if (lines(greeting) !== 1) issues.push(`saludo en ${lines(greeting)} líneas`)
           const header = document.querySelector('#header')?.getBoundingClientRect()
           if (header && card.getBoundingClientRect().top < header.bottom) issues.push('la tarjeta queda bajo el header')

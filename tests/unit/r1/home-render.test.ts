@@ -1,8 +1,9 @@
-import { createElement } from 'react'
+import { createElement, type ReactElement, type ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { HomeView, type HomeViewLabels } from '@/components/site/home/HomeView'
 import { splitAround } from '@/components/site/home/now'
+import { ToastProvider } from '@/components/ui/Toast'
 import type { SiteContent } from '@/content/types'
 import { getProjects, getSite } from '@/lib/content'
 
@@ -11,12 +12,20 @@ const projects = getProjects()
 
 const labels: HomeViewLabels = {
   socials: 'Contáctame',
+  previousTitle: 'Antes decía:',
   cue: 'Bajar a «Ahora trabajo en»',
   now: { title: 'Ahora trabajo en', since: 'Desde {date}', caseStudy: 'Ver caso de estudio', more: 'Conoce mi trayectoria' },
 }
 
+const Provider = ToastProvider as (props: { closeLabel: string; children?: ReactNode }) => ReactElement
+
 function render(content: SiteContent = site, lang: 'es' | 'en' = 'es'): string {
-  return renderToStaticMarkup(createElement(HomeView, { lang, site: content, projects, labels }))
+  return renderToStaticMarkup(createElement(Provider, { closeLabel: 'Cerrar' }, createElement(HomeView, { lang, site: content, projects, labels })))
+}
+
+function headingText(html: string): string {
+  const inner = /<h1 id="home-title"[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1] ?? ''
+  return inner.replace(/<[^>]+>/g, '').replaceAll('&#x27;', "'")
 }
 
 function section(html: string, attribute: string): string {
@@ -31,7 +40,7 @@ describe('banner del home', () => {
   it('conserva saludo, nombre, título, separador y las tres redes', () => {
     const banner = section(render(), 'data-cw-home-banner')
     expect(banner).toMatch(new RegExp(`${site.home.greeting.es} <strong>${site.home.name}</strong>`))
-    expect(banner).toMatch(new RegExp(`<h1 id="home-title"[^>]*>${site.home.title.es}</h1>`))
+    expect(headingText(banner)).toBe(site.home.title.es)
     expect(banner).toContain('<hr aria-hidden="true"')
     const nav = /<nav aria-label="Contáctame">([\s\S]*?)<\/nav>/.exec(banner)?.[1] ?? ''
     expect([...nav.matchAll(/<a /g)]).toHaveLength(3)
@@ -45,7 +54,7 @@ describe('banner del home', () => {
   })
 
   it('en inglés usa el título de 2023', () => {
-    expect(render(site, 'en')).toContain(`>${site.home.title.en.replaceAll("'", '&#x27;')}</h1>`)
+    expect(headingText(render(site, 'en'))).toBe(site.home.title.en)
   })
 })
 

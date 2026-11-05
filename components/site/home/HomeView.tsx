@@ -10,6 +10,7 @@ import { ScrollCue } from './ScrollCue'
 
 export type HomeViewLabels = {
   socials: string
+  previousTitle: string
   cue: string
   now: HomeNowLabels
 }
@@ -27,7 +28,13 @@ export function HomeView({ lang, site, projects, labels }: HomeViewProps) {
   return (
     <>
       <div className={styles.hero}>
-        <HomeBanner lang={lang} home={site.home} socials={site.socials} socialsLabel={labels.socials} />
+        <HomeBanner
+          lang={lang}
+          home={site.home}
+          socials={site.socials}
+          socialsLabel={labels.socials}
+          previousTitleLabel={labels.previousTitle}
+        />
         {roles.length > 0 ? (
           <div className={enter.enter} style={{ '--cw-home-step': 5 } as CSSProperties}>
             <ScrollCue href={`#${HOME_NOW_ID}`} label={labels.cue} />
