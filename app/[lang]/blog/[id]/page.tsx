@@ -1,6 +1,7 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { CommentsSection } from '@/components/blog/comments/CommentsSection'
+import { GeneratedCover } from '@/components/blog/index/GeneratedCover'
 import { postLabels } from '@/components/blog/labels'
 import { preparePost } from '@/components/blog/mdx/prepare'
 import { calloutLabels } from '@/components/blog/post/labels'
@@ -91,6 +92,7 @@ export default async function PostPage({ params }: Props) {
         related={related}
         series={series}
         linkTags
+        generatedCover={GeneratedCover}
       />
       <script type="application/ld+json" data-cw-blog-posting="" dangerouslySetInnerHTML={{ __html: jsonLdScript(blogPostingJsonLd(meta, lang, canonical)) }} />
       <div className="cw-container">
