@@ -17,7 +17,7 @@ comando en PowerShell.
 - **Rápido**: medido el 2026-11-05 con `E2E_REBUILD=1`, en un portátil de 4 núcleos con otras lanes trabajando.
   - Lint, 19 s; tipos, 19 s; unitarias, 14 s; build, unos 45 s.
   - El humo, 56 pruebas en unos 100 s.
-  - Sin cambios desde el último build, baja a unos 2 min 20 s.
+  - Sin cambios desde el último build, reutiliza el build y tarda 2 min 25 s (medido con el último commit de P7).
 - **Completo**: la única corrida, con P2 y P3 corriendo sus e2e al mismo tiempo, tardó 33 min 25 s.
   - Sumó 102 min de tiempo de prueba con un paralelismo efectivo de 3,2.
   - La auditoría de interacción (24 min) y el contraste de `l2` (18 min) eran casi la mitad. Con esos tiempos se
