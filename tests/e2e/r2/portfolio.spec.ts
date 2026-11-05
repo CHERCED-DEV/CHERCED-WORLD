@@ -446,7 +446,8 @@ test.describe('sin JavaScript', () => {
     const poster = page.locator('[data-cw-embed] figure')
     await expect(poster.getByRole('link', { name: /pestaña nueva/ }).first()).toHaveAttribute('href', first.links.live!)
     await expect(page.getByRole('img', { name: first.image.alt.es }).first()).toBeVisible()
-    await expect(page.locator('[data-cw-case-next]')).toHaveAttribute('href', `/es/portfolio/${projects[1]!.id}`)
+    const next = projects[(projects.findIndex((project) => project.id === first.id) + 1) % projects.length]!
+    await expect(page.locator('[data-cw-case-next]')).toHaveAttribute('href', `/es/portfolio/${next.id}`)
     for (const tech of first.technologies) await expect(page.locator(`[data-cw-stack-piece="${tech}"]`)).toBeVisible()
   })
 
