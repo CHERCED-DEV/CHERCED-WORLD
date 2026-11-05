@@ -115,6 +115,22 @@
   }
 }
 
+.egg {
+  max-width: 36ch;
+  font-size: var(--cw-text-xs);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--cw-fg-muted);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: var(--cw-space-5);
+}
+
 .privacy {
   display: inline-flex;
   align-items: center;

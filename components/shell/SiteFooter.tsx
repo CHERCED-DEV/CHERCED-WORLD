@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { SocialId, SocialLink } from '@/content/types'
 import { cx } from '@/components/ui/cx'
+import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlowOrb, GridLines, Hairline, Scanline } from '@/components/ui/graphics'
 import type { Locale } from '@/lib/i18n/config'
 import { BackToTop } from './BackToTop'
@@ -18,6 +19,10 @@ export const SOCIAL_ICONS: Record<SocialId, string> = {
 
 export type SiteFooterProps = { lang: Locale; socials: SocialLink[]; labels: ShellLabels }
 
+function SocialIcon({ id }: { id: SocialId }) {
+  return <Image src={SOCIAL_ICONS[id]} alt="" width={30} height={30} unoptimized className="cw-icon-img" />
+}
+
 export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
   const visible = socials.filter((social): social is SocialLink & { href: string } => social.href !== null)
 
@@ -32,16 +37,29 @@ export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
         <nav aria-label={labels.social}>
           <ul className={styles.socials}>
             {visible.map((social) => {
-              const external = !social.href.startsWith('mailto:')
+              if (social.href.startsWith('mailto:')) {
+                return (
+                  <li key={social.id}>
+                    <EmailMenu
+                      lang={lang}
+                      email={social.href.slice('mailto:'.length)}
+                      trigger={<SocialIcon id={social.id} />}
+                      className={styles.social}
+                      placement="top"
+                    />
+                  </li>
+                )
+              }
               return (
                 <li key={social.id}>
                   <a
                     href={social.href}
                     className={styles.social}
                     aria-label={social.label[lang]}
-                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <Image src={SOCIAL_ICONS[social.id]} alt="" width={30} height={30} unoptimized className="cw-icon-img" />
+                    <SocialIcon id={social.id} />
                   </a>
                 </li>
               )
@@ -55,9 +73,17 @@ export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
           </strong>{' '}
           {labels.rights}
         </p>
-        <SelfLink href={`/${lang}/privacy`} className={styles.privacy}>
-          {labels.privacy}
-        </SelfLink>
+        <p className={styles.egg} lang="en" data-cw-footer-egg="">
+          {labels.egg}
+        </p>
+        <div className={styles.links}>
+          <SelfLink href={`/${lang}/now`} className={styles.privacy} data-cw-footer-now="">
+            {labels.now}
+          </SelfLink>
+          <SelfLink href={`/${lang}/privacy`} className={styles.privacy}>
+            {labels.privacy}
+          </SelfLink>
+        </div>
       </div>
     </footer>
   )
