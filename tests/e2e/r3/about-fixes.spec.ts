@@ -178,19 +178,21 @@ test.describe('bug 5: íconos de skills a su tamaño real', () => {
 test.describe('bug 7: un bloque sin contenido no se muestra', () => {
   onlyIn('desktop-chromium', 'no-js')
 
-  test('Oficio no tiene proyectos: la línea "proyectos" no existe; IA aplicada muestra "Aprendiendo ahora"', async ({ page }, testInfo) => {
+  test('ninguna línea de "proyectos" sale vacía; IA aplicada muestra "Aprendiendo ahora"', async ({ page }, testInfo) => {
     await skipIntro(page)
     await page.goto('/es/aboutMe')
-    const craft = data.lobes.find((lobe) => lobe.id === 'craft')!
-    expect(craft.projects).toEqual([])
-    const scope =
-      testInfo.project.name === 'no-js'
-        ? page.locator('[data-cw-lobe-list="craft"]')
-        : (await page.locator('[data-cw-lobe="craft"]').click(), page.locator('[data-cw-terminal-body="craft"]'))
-    await expect(scope).toBeVisible()
-    await expect(scope.locator('[data-cw-meta="projects"]')).toHaveCount(0)
-    await expect(scope).not.toContainText(/proyectos:|ninguno/)
-    await expect(scope.locator('[data-cw-meta="sources"]')).toBeVisible()
+    for (const lobe of data.lobes) {
+      const scope =
+        testInfo.project.name === 'no-js'
+          ? page.locator(`[data-cw-lobe-list="${lobe.id}"]`)
+          : (await page.locator(`[data-cw-lobe="${lobe.id}"]`).click(), page.locator(`[data-cw-terminal-body="${lobe.id}"]`))
+      await expect(scope).toBeVisible()
+      const line = scope.locator('[data-cw-meta="projects"]')
+      if (lobe.projects.length === 0) await expect(line).toHaveCount(0)
+      else await expect(line.getByRole('link')).toHaveCount(lobe.projects.length)
+      await expect(scope).not.toContainText(/ninguno/)
+      await expect(scope.locator('[data-cw-meta="sources"]')).toBeVisible()
+    }
 
     const ai =
       testInfo.project.name === 'no-js'
@@ -244,6 +246,10 @@ test.describe('bug 6: grises con 4,5:1 o más en ambos temas', () => {
             range.selectNodeContents(node)
             const rects = [...range.getClientRects()]
               .filter((rect) => rect.top > 0 && rect.bottom < window.innerHeight && rect.width > 2)
+              .filter((rect) => {
+                const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)
+                return hit !== null && (hit === element || element.contains(hit) || hit.contains(element))
+              })
               .map((rect) => ({ x: Math.ceil(rect.left), y: Math.ceil(rect.top), w: Math.floor(rect.width), h: Math.floor(rect.height) }))
             if (rects.length > 0) found.push({ text: text.slice(0, 30), color: style.color, size: Number.parseFloat(style.fontSize), weight: Number.parseInt(style.fontWeight, 10), rects })
           }

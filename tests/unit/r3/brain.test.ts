@@ -19,8 +19,8 @@ const es = brainData(about, projects, 'es', 'Actualidad')
 const en = brainData(about, projects, 'en', 'Present')
 
 describe('lóbulos del mapa cerebral (E-03)', () => {
-  it('son cinco y cubren todas las tecnologías y los 2 idiomas, cada una una sola vez', () => {
-    expect(es.lobes.map((lobe) => lobe.id)).toEqual(['frontend', 'architecture', 'backend-cloud', 'applied-ai', 'craft'])
+  it('son seis y cubren todas las skills y los 2 idiomas, cada una una sola vez', () => {
+    expect(es.lobes.map((lobe) => lobe.id)).toEqual(['frontend', 'architecture', 'backend-cloud', 'applied-ai', 'practices', 'business'])
     const ids = es.lobes.flatMap((lobe) => lobe.skills.map((skill) => skill.id))
     expect(new Set(ids).size).toBe(ids.length)
     expect([...ids].sort()).toEqual([...about.skills.tech.map((tech) => tech.id), ...about.languages.map((language) => language.id)].sort())
@@ -33,23 +33,90 @@ describe('lóbulos del mapa cerebral (E-03)', () => {
         const language = about.languages.find((item) => item.id === skill.id)
         expect(tech ?? language, skill.id).toBeDefined()
         expect(skill.level).toBe((tech ?? language)!.progress)
+        if (tech?.label) expect(skill.name).toBe(tech.label.es)
+        if (tech?.used) expect(skill.used).toBe(tech.used.es)
       }
     }
   })
 
-  it('las fuentes son las seis de la fila, en orden, con título y detalle del contenido', () => {
-    expect(SOURCE_ORDER).toEqual(['platziMaster', 'architecture', 'fullStackJs', 'nextjs', 'unad', 'eam'])
-    expect(es.sources.map((source) => source.label)).toEqual(['Platzi Master', 'Fundamentos de Arquitectura', 'Full Stack JS', 'Next.js', 'UNAD', 'EAM'])
+  it('las fuentes son empleos, el caso Legal workspace, cursos y estudios, con título y detalle del contenido', () => {
+    expect(SOURCE_ORDER).toEqual(['sistecredito', 'flyr', 'newshore', 'synergos', 'squadra', 'legalWorkspace', 'platziMaster', 'architecture', 'fullStackJs', 'nextjs', 'unad', 'eam'])
+    expect(es.sources.map((source) => source.label)).toEqual([
+      'Sistecrédito',
+      'FLYR',
+      'Newshore',
+      'Synergos',
+      'Squadra Arquitectura',
+      'Legal workspace',
+      'Platzi Master',
+      'Fundamentos de Arquitectura',
+      'Full Stack JS',
+      'Next.js',
+      'UNAD',
+      'EAM',
+    ])
     for (const source of [...es.sources, ...en.sources]) {
       expect(source.title.length, source.id).toBeGreaterThan(3)
-      expect(source.detail.length, source.id).toBeGreaterThan(10)
+      if (source.id === 'legalWorkspace') expect(source.detail).toBeNull()
+      else expect(source.detail!.length, source.id).toBeGreaterThan(10)
+      expect(source.detail ?? '', source.id).not.toMatch(/\b(700|1[.,]000|90\s?%)/)
     }
     for (const lobe of es.lobes) for (const id of lobe.sources) expect(SOURCE_ORDER, `${lobe.id} → ${id}`).toContain(id)
   })
 
   it('los nombres de los lóbulos están en ambos idiomas', () => {
-    expect(es.lobes.map((lobe) => lobe.name)).toEqual(['Frontend', 'Arquitectura', 'Backend y nube', 'IA aplicada', 'Oficio'])
-    expect(en.lobes.map((lobe) => lobe.name)).toEqual(['Frontend', 'Architecture', 'Backend & cloud', 'Applied AI', 'Craft'])
+    expect(es.lobes.map((lobe) => lobe.name)).toEqual(['Frontend', 'Arquitectura', 'Backend y nube', 'IA aplicada', 'Prácticas de ingeniería', 'Idiomas y negocio'])
+    expect(en.lobes.map((lobe) => lobe.name)).toEqual(['Frontend', 'Architecture', 'Backend & cloud', 'Applied AI', 'Engineering practices', 'Languages & business'])
+  })
+})
+
+describe('corrección de skills (T229)', () => {
+  const RESTORED = ['REACT', 'NEXT.JS', 'NODE.JS', 'MONGODB', 'FIGMA']
+  const SKILLS_2023 = ['ANGULAR', 'TYPESCRIPT', 'JAVASCRIPT', 'HTML5', 'CSS', 'SASS', 'GIT', 'AZURE', 'REACT', 'NEXT.JS', 'NODE.JS', 'MONGODB', 'FIGMA']
+  const SKILLS_001 = [
+    'angular', 'typescript', 'dotnet', 'csharp', 'micro-frontends', 'native-federation', 'azure', 'umbraco',
+    'spec-driven-development', 'ai-coding-agents', 'javascript', 'html5', 'css', 'sass', 'git',
+  ]
+  const names = es.lobes.flatMap((lobe) => lobe.skills.map((skill) => skill.name))
+
+  it('ningún skill de 2023 ni de la 001 se pierde, y vuelven React, Next.js, Node.js, MongoDB y Figma', () => {
+    for (const name of [...RESTORED, ...SKILLS_2023]) expect(names.some((item) => item.toUpperCase().startsWith(name)), name).toBe(true)
+    const ids = new Set(es.lobes.flatMap((lobe) => lobe.skills.map((skill) => skill.id)))
+    for (const id of SKILLS_001) expect(ids.has(id), id).toBe(true)
+  })
+
+  it('el mapa tiene seis lóbulos: Oficio se parte en Prácticas de ingeniería e Idiomas y negocio', () => {
+    expect(es.lobes).toHaveLength(6)
+    expect(es.lobes.map((lobe) => lobe.id)).not.toContain('craft')
+    const practices = es.lobes.find((lobe) => lobe.id === 'practices')!
+    const business = es.lobes.find((lobe) => lobe.id === 'business')!
+    expect(practices.skills.map((skill) => skill.id)).toEqual(['git', 'testing', 'ci-cd', 'code-review', 'docs-as-code', 'agile'])
+    expect(business.skills.map((skill) => skill.name)).toEqual(['ESPAÑOL', 'INGLÉS', 'DEL NEGOCIO A LA ARQUITECTURA', 'COMUNICACIÓN CON STAKEHOLDERS', 'PENSAMIENTO DE PRODUCTO'])
+    expect(en.lobes.find((lobe) => lobe.id === 'business')!.skills.map((skill) => skill.name)).toEqual([
+      'SPANISH', 'ENGLISH', 'BUSINESS → ARCHITECTURE', 'STAKEHOLDER COMMUNICATION', 'PRODUCT THINKING',
+    ])
+    expect(es.lobes.find((lobe) => lobe.id === 'architecture')!.skills).toHaveLength(16)
+  })
+
+  it('los chips de años salen del contenido y se traducen', () => {
+    const used = (lang: typeof es, id: string) => lang.lobes.flatMap((lobe) => lobe.skills).find((skill) => skill.id === id)?.used
+    expect(used(es, 'react')).toBe('2022–2023 · 2026')
+    expect(used(es, 'angular')).toBe('2022–hoy')
+    expect(used(en, 'angular')).toBe('2022–now')
+    expect(used(es, 'mongodb')).toBe('2022–2023')
+    expect(used(es, 'solid')).toBeUndefined()
+  })
+
+  it('ningún lóbulo queda con la lista de proyectos vacía y la fuente Legal workspace va con su nombre publicado', () => {
+    for (const lobe of [...es.lobes, ...en.lobes]) expect(lobe.projects.length, lobe.id).toBeGreaterThan(0)
+    expect(es.lobes.find((lobe) => lobe.id === 'applied-ai')!.sources).toContain('legalWorkspace')
+    expect(JSON.stringify(es.sources)).not.toContain('legal-workspace')
+  })
+
+  it('"Mis habilidades, en palabras" trae el texto de Arquitectura y el de Idiomas y negocio, y nada para los demás', () => {
+    expect(es.lobes.filter((lobe) => lobe.words).map((lobe) => lobe.id)).toEqual(['architecture', 'business'])
+    expect(es.lobes.find((lobe) => lobe.id === 'architecture')!.words).toMatch(/^Diseño con Clean Architecture, SOLID y patrones de diseño/)
+    expect(en.lobes.find((lobe) => lobe.id === 'business')!.words).toMatch(/^Before coding, I was a business administrator/)
   })
 })
 
@@ -71,13 +138,17 @@ describe('cruce de lóbulo a proyectos', () => {
     expect(projectsForSkills([{ id: 'git', name: 'GIT' }], list)).toEqual([])
   })
 
-  it('con el contenido real: Backend y nube incluye Synergos y Arquitectura incluye CHERCED-WORLD 2026', () => {
+  it('con el contenido real: los proyectos de cada lóbulo son los de la tabla de T229', () => {
     const titles = (id: string) => es.lobes.find((lobe) => lobe.id === id)!.projects.map((item) => item.title)
     expect(titles('backend-cloud')).toContain('Synergos')
     expect(titles('architecture')).toEqual(expect.arrayContaining(['CHERCED-WORLD 2026', 'Synergos']))
-    expect(titles('applied-ai')).toEqual(['CHERCED-WORLD 2026'])
+    expect(titles('applied-ai')).toEqual(['CHERCED-WORLD 2026', 'Synergos'])
+    expect(titles('backend-cloud')).toEqual(['Synergos', 'CENTRIBAL'])
+    expect(titles('practices')).toEqual(['Synergos', 'CHERCED-WORLD 2026'])
+    expect(titles('business')).toEqual(['Synergos'])
     expect(titles('frontend').length).toBeGreaterThan(5)
-    for (const lobe of es.lobes) {
+    expect(titles('frontend')).toEqual(expect.arrayContaining(['Synergos', 'CHERCED-WORLD 2026']))
+    for (const lobe of es.lobes.filter((item) => !about.skills.lobes!.find((raw) => raw.id === item.id)!.projects)) {
       for (const item of lobe.projects) {
         const real = projects.find((candidate) => candidate.id === item.id)!
         const keys = new Set(real.technologies.map(techKey))

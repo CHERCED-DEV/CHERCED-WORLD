@@ -29,9 +29,16 @@ export type EducationEntry = {
   pending?: true
 }
 
-export type TechSkill = { id: string; name: string; icon?: string; progress: number }
+export type TechSkill = { id: string; name: string; label?: Localized; icon?: string; progress: number; used?: Localized }
 
-export type SkillLobe = { id: string; name: Localized; skills: string[]; sources: string[] }
+export type SkillLobe = {
+  id: string
+  name: Localized
+  skills: string[]
+  sources: string[]
+  projects?: string[]
+  words?: Localized
+}
 
 export type ServiceId = 'design' | 'development' | 'maintenance'
 

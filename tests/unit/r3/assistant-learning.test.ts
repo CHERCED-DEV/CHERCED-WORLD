@@ -11,7 +11,7 @@ const { buildSearchIndex } = await import('@/lib/search/build-index')
 const assistants = await loadAssistants()
 const LEARNING = [/azure ai foundry/i, /semantic kernel/i, /\bRAG\b/, /embeddings/i]
 
-describe('el chat ya no nombra lo que el autor está aprendiendo (2026-11-04)', () => {
+describe('el chat nombra las skills del contenido y no lo que el autor está aprendiendo', () => {
   it('el índice del chat toma las skills del contenido y ya no trae las tres', async () => {
     for (const lang of ['es', 'en'] as const) {
       const index = await buildSearchIndex(lang)
@@ -27,6 +27,13 @@ describe('el chat ya no nombra lo que el autor está aprendiendo (2026-11-04)', 
       for (const pattern of LEARNING) expect(answer.text, String(pattern)).not.toMatch(pattern)
     })
   }
+
+  it('vuelve a nombrar React, Next.js, Node.js, MongoDB y Figma (T229)', () => {
+    for (const question of ['¿Con qué tecnologías trabaja?', 'What technologies do you work with?']) {
+      const answer = ask(assistants, question)
+      for (const name of [/react/i, /next\.?js/i, /node\.?js/i, /mongo\s?db/i, /figma/i]) expect(answer.text, `${question}: ${name}`).toMatch(name)
+    }
+  })
 
   for (const question of ['¿Sabes Semantic Kernel?', 'Do you know Azure AI Foundry?', '¿Qué nivel tienes en RAG?']) {
     it(`"${question}" no inventa un nivel`, () => {

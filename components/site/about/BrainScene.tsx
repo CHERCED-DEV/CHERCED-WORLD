@@ -6,6 +6,7 @@ import styles from './Brain.module.scss'
 import { BrainMap, type BrainLabels } from './BrainMap'
 import { brainData } from './brain'
 import { LevelBar } from './LevelBar'
+import { monogram } from './monogram'
 
 export type BrainSceneLabels = {
   map: Omit<BrainLabels, 'levels'>
@@ -27,6 +28,7 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
   const { map, skillsSummary } = labels
   const wordsLead = about.skills.description[lang].trim()
   const words = about.skills.bullets.map((bullet) => bullet[lang].trim()).filter((bullet) => bullet.length > 0)
+  const lobeWords = data.lobes.filter((lobe) => lobe.words)
   const sourceLabel = (id: string) => data.sources.find((source) => source.id === id)?.label ?? id
 
   return (
@@ -44,9 +46,16 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
                   {skill.icon ? (
                     <Image src={skill.icon} alt="" width={22} height={22} unoptimized={skill.icon.endsWith('.svg')} className={styles.termIcon} />
                   ) : (
-                    <span className={styles.termIcon} aria-hidden="true" />
+                    <span className={`${styles.termIcon} ${styles.termMonogram}`} data-cw-monogram={monogram(skill.name)} aria-hidden="true" />
                   )}
                   <span className={styles.termName}>{skill.name}</span>
+                  {skill.used ? (
+                    <span className={styles.usedChip} data-cw-used="">
+                      {skill.used}
+                    </span>
+                  ) : (
+                    <span aria-hidden="true" />
+                  )}
                   <LevelBar value={skill.level} label={levels[skill.id] ?? `${skill.level}%`} />
                 </li>
               ))}
@@ -90,10 +99,12 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
                 <dt>
                   {source.label} · {source.title}
                 </dt>
-                <dd>
-                  {source.detail}
-                  {source.period ? ` (${source.period})` : null}
-                </dd>
+                {source.detail || source.period ? (
+                  <dd>
+                    {source.detail}
+                    {source.period ? `${source.detail ? ' ' : ''}(${source.period})` : null}
+                  </dd>
+                ) : null}
               </div>
             ))}
           </dl>
@@ -103,9 +114,17 @@ export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
           </a>
         </section>
       </div>
-      {wordsLead || words.length > 0 ? (
+      {wordsLead || words.length > 0 || lobeWords.length > 0 ? (
         <details className={styles.words} data-cw-glass="standard" data-cw-words="">
           <summary className={styles.wordsSummary}>{skillsSummary}</summary>
+          {lobeWords.map((lobe) => (
+            <section key={lobe.id} className={styles.wordsLobe} data-cw-words-lobe={lobe.id} aria-labelledby={`words-${lobe.id}`}>
+              <h3 id={`words-${lobe.id}`} className={styles.wordsTitle}>
+                {lobe.name}
+              </h3>
+              <p className={styles.wordsText}>{lobe.words}</p>
+            </section>
+          ))}
           {wordsLead ? <p className={styles.wordsText}>{wordsLead}</p> : null}
           {words.length > 0 ? (
             <ul className={styles.wordsList}>

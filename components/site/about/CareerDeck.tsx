@@ -205,7 +205,8 @@ export function CareerDeck({ lang, jobs, labels }: CareerDeckProps) {
       <Dialog
         open={job !== null}
         onClose={() => {
-          if (openIndex !== null) settle(openIndex)
+          const dialog = contentRef.current?.closest('dialog')
+          if (openIndex !== null && dialog && !dialog.open) settle(openIndex)
         }}
         labelledBy="career-dialog-title"
         describedBy="career-dialog-text"

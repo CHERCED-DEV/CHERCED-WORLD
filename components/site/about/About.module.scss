@@ -28,6 +28,28 @@
 
 .scene {
   scroll-margin-top: var(--cw-scene-clear);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1200px;
+
+  &[data-cw-scene='career'] {
+    contain-intrinsic-size: auto 3500px;
+
+    @include bp.up(md) {
+      contain-intrinsic-size: auto 2600px;
+    }
+
+    @include bp.up(lg) {
+      contain-intrinsic-size: auto 700px;
+    }
+  }
+
+  &[data-cw-scene='knowledge'] {
+    contain-intrinsic-size: auto 1950px;
+
+    @media (min-width: 1100px) {
+      contain-intrinsic-size: auto 980px;
+    }
+  }
 }
 
 .sceneNav {
@@ -218,11 +240,8 @@
   }
 }
 
-@include site.rise-keyframes(rise);
-
 .figure {
   @include site.crystal(standard);
-  @include site.rise(rise);
   @include glass-edge;
   @include glass-light;
   position: relative;
@@ -364,7 +383,6 @@
 }
 
 .milestone {
-  @include site.rise(rise);
   position: relative;
   display: grid;
   gap: var(--cw-space-3);
