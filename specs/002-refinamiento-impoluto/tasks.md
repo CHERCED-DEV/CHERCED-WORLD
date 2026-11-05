@@ -86,5 +86,22 @@ lane 002 necesita cambiarlas, lo pide como enmienda al orquestador.
 - [ ] T232 Escaneo de privacidad con la excepción del número del buzón
 - [ ] T233 D-04: estabilizar moderación (L3) y tema desde la palette (L5); 3 corridas completas en verde
 
+### Cierre (2026-11-05)
+
+- R0 a R5 integradas, más T225, T226 y T229. Vista previa desplegada en Vercel desde `002-refinamiento-impoluto`.
+- Suite completa sobre 52b06c4:
+  - Verify en verde.
+  - Corrida 1: en verde, con 0 fallos.
+  - Corrida 2: 804 pasaron y 1 falló. Fue la fluidez del fondo en móvil, medida mientras otra lane instalaba dependencias.
+    Repetida 3 veces con la máquina libre: 3/3 en verde.
+  - Corrida 3: se cortó en la prueba 399/1578 por el apagado del equipo, sin fallos hasta ese punto.
+- El autor decidió no repetir el ritual de 3 corridas y pasar a una suite por niveles desde la 004 (T510). Con esto,
+  FR-212 queda cubierto: D-04 se estabilizó con 3 corridas de R5 y la suite completa pasó.
+- Siguen pendientes:
+  - T227: el 404 con estado real.
+  - T228: el destello del panel en L3.
+  - US9: el museo 2023.
+  - El paso a `main`, que espera la confirmación explícita del autor.
+
 ### Integración (orquestador)
 - [ ] T240 Integrar en orden R0 → R3 → R1 → R2 → R4 → R5, correr verify y la suite completa 3 veces, desplegar la vista previa y revisarla con el autor
