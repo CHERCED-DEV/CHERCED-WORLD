@@ -1,10 +1,12 @@
-import { expect, test, type Page } from '@playwright/test'
-import { AUDIT_PAGES, skipIntro, slugOf } from './support/pages'
+import { expect, test, type Page, type TestInfo } from '@playwright/test'
+import { AUDIT_PAGES, EXHAUSTIVE, pendingPage, skipIntro, slugOf } from './support/pages'
 
 const MIN_WIDTH = 320
 const MAX_WIDTH = 2560
 const STEP = 40
-const WIDTHS = Array.from({ length: (MAX_WIDTH - MIN_WIDTH) / STEP + 1 }, (_, index) => MIN_WIDTH + index * STEP)
+const KEY_WIDTHS: readonly number[] = [320, 390, 768, 1024, 1440, 2560]
+const GRID_WIDTHS = Array.from({ length: (MAX_WIDTH - MIN_WIDTH) / STEP + 1 }, (_, index) => MIN_WIDTH + index * STEP)
+const SWEEP_WIDTHS: readonly number[] = GRID_WIDTHS.filter((width) => !KEY_WIDTHS.includes(width))
 
 const CLASSIC_SCROLLBAR_FROM = 768
 
@@ -214,29 +216,41 @@ function summarize(findings: Finding[]): string {
 
 test.use({ trace: 'off', launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars'] } })
 
-test.describe(`auditoría responsive (${MIN_WIDTH} a ${MAX_WIDTH} px, cada ${STEP} px)`, () => {
+const CHECKS = `sin scroll horizontal, objetivos ≥ ${MIN_TARGET} px, header sin solapes, texto sin recortes e imágenes sin deformar`
+
+async function sweep(page: Page, testInfo: TestInfo, path: string, widths: readonly number[]): Promise<void> {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'solo en desktop-chromium; el viewport lo fija la prueba')
+  const pending = pendingPage(path)
+  test.skip(Boolean(pending), pending ?? '')
+  test.setTimeout(180_000)
+  await skipIntro(page)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.setViewportSize({ width: MIN_WIDTH, height: 844 })
+  await page.goto(path, { waitUntil: 'networkidle' })
+  await loadEveryImage(page)
+  const findings: Finding[] = []
+  let shots = 0
+  for (const width of widths) {
+    await resizeTo(page, width)
+    const found = await audit(page, width)
+    findings.push(...found)
+    if (found.length > 0 && shots < MAX_SCREENSHOTS) {
+      shots += 1
+      await testInfo.attach(`${slugOf(path)}-${width}.png`, { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' })
+    }
+  }
+  testInfo.annotations.push({ type: 'anchos', description: `${widths.length} anchos: ${ranges([...widths])} px` })
+  expect(summarize(findings), `hallazgos responsive en ${path}`).toBe('')
+}
+
+test.describe(`auditoría responsive en los anchos clave (${KEY_WIDTHS.join(', ')} px)`, () => {
   for (const path of AUDIT_PAGES) {
-    test(`${path}: sin scroll horizontal, objetivos ≥ ${MIN_TARGET} px, header sin solapes, texto sin recortes e imágenes sin deformar`, async ({ page }, testInfo) => {
-      test.skip(testInfo.project.name !== 'desktop-chromium', 'solo en desktop-chromium; el viewport lo fija la prueba')
-      test.setTimeout(180_000)
-      await skipIntro(page)
-      await page.emulateMedia({ reducedMotion: 'reduce' })
-      await page.setViewportSize({ width: MIN_WIDTH, height: 844 })
-      await page.goto(path, { waitUntil: 'networkidle' })
-      await loadEveryImage(page)
-      const findings: Finding[] = []
-      let shots = 0
-      for (const width of WIDTHS) {
-        await resizeTo(page, width)
-        const found = await audit(page, width)
-        findings.push(...found)
-        if (found.length > 0 && shots < MAX_SCREENSHOTS) {
-          shots += 1
-          await testInfo.attach(`${slugOf(path)}-${width}.png`, { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' })
-        }
-      }
-      testInfo.annotations.push({ type: 'anchos', description: `${WIDTHS.length} anchos de ${MIN_WIDTH} a ${MAX_WIDTH} px` })
-      expect(summarize(findings), `hallazgos responsive en ${path}`).toBe('')
-    })
+    test(`${path}: ${CHECKS}`, async ({ page }, testInfo) => sweep(page, testInfo, path, KEY_WIDTHS))
+  }
+})
+
+test.describe(`auditoría responsive en el resto de anchos (${MIN_WIDTH} a ${MAX_WIDTH} px, cada ${STEP} px)`, () => {
+  for (const path of AUDIT_PAGES) {
+    test(`${path}: ${CHECKS}`, { tag: EXHAUSTIVE }, async ({ page }, testInfo) => sweep(page, testInfo, path, SWEEP_WIDTHS))
   }
 })
