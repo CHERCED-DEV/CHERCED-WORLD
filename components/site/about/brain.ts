@@ -260,6 +260,87 @@ export function neuronGeometry(index: number, levels: readonly number[], total =
   return { synapse, neurons }
 }
 
+export const COMPACT_QUERY = '(max-width: 767.98px)'
+
+export const COMPACT_VIEW = { width: 400, height: 400 } as const
+
+export const COMPACT_CORE: Point = { x: 200, y: 200 }
+
+export const COMPACT_CORE_RADIUS = 48
+
+export const COMPACT_LOBE_RADIUS = 44
+
+export const COMPACT_ORBIT = 132
+
+const COMPACT_RINGS = [
+  { radius: 51, capacity: 9 },
+  { radius: 60, capacity: 10 },
+]
+
+const COMPACT_SPREAD = (120 * Math.PI) / 180
+
+export function compactLobePoint(index: number, total = LOBE_ANGLES.length): Point {
+  const angle = total === LOBE_ANGLES.length ? LOBE_ANGLES[index % total]! : -90 + (360 / total) * index
+  const radians = (angle * Math.PI) / 180
+  return { x: fixed(COMPACT_CORE.x + Math.cos(radians) * COMPACT_ORBIT), y: fixed(COMPACT_CORE.y + Math.sin(radians) * COMPACT_ORBIT) }
+}
+
+export type CompactGeometry = {
+  lobe: Point
+  synapse: { x1: number; y1: number; x2: number; y2: number }
+  neurons: Array<{ x: number; y: number; r: number; line: string }>
+}
+
+export function compactNeuronSlots(count: number): Array<{ ring: number; offset: number }> {
+  const slots: Array<{ ring: number; offset: number }> = []
+  let left = count
+  for (let ring = 0; ring < COMPACT_RINGS.length && left > 0; ring++) {
+    const take = ring === COMPACT_RINGS.length - 1 ? left : Math.min(left, COMPACT_RINGS[ring]!.capacity)
+    for (let i = 0; i < take; i++) slots.push({ ring, offset: take === 1 ? 0 : -COMPACT_SPREAD / 2 + (COMPACT_SPREAD * i) / (take - 1) })
+    left -= take
+  }
+  return slots
+}
+
+export function compactGeometry(index: number, levels: readonly number[], total = LOBE_ANGLES.length): CompactGeometry {
+  const lobe = compactLobePoint(index, total)
+  const dx = lobe.x - COMPACT_CORE.x
+  const dy = lobe.y - COMPACT_CORE.y
+  const distance = Math.hypot(dx, dy) || 1
+  const ux = dx / distance
+  const uy = dy / distance
+  const synapse = {
+    x1: fixed(COMPACT_CORE.x + ux * (COMPACT_CORE_RADIUS + 4)),
+    y1: fixed(COMPACT_CORE.y + uy * (COMPACT_CORE_RADIUS + 4)),
+    x2: fixed(lobe.x - ux * (COMPACT_LOBE_RADIUS + 3)),
+    y2: fixed(lobe.y - uy * (COMPACT_LOBE_RADIUS + 3)),
+  }
+  const base = Math.atan2(dy, dx)
+  const slots = compactNeuronSlots(levels.length)
+  const neurons = levels.map((level, i) => {
+    const slot = slots[i]!
+    const angle = base + slot.offset
+    const radius = COMPACT_RINGS[slot.ring]!.radius
+    const x = lobe.x + Math.cos(angle) * radius
+    const y = lobe.y + Math.sin(angle) * radius
+    const inner = slot.ring === 0 ? COMPACT_LOBE_RADIUS + 1.5 : COMPACT_RINGS[slot.ring - 1]!.radius + 3
+    return {
+      x: fixed(x),
+      y: fixed(y),
+      r: fixed(1.4 + clampLevel(level) / 50),
+      line: `M${fixed(lobe.x + Math.cos(angle) * inner)} ${fixed(lobe.y + Math.sin(angle) * inner)} L${fixed(x - Math.cos(angle) * 3)} ${fixed(y - Math.sin(angle) * 3)}`,
+    }
+  })
+  return { lobe, synapse, neurons }
+}
+
+export function stepLobe(ids: readonly string[], current: string, direction: 'prev' | 'next'): string {
+  if (ids.length === 0) return current
+  const index = Math.max(0, ids.indexOf(current))
+  const next = (index + (direction === 'next' ? 1 : -1) + ids.length) % ids.length
+  return ids[next]!
+}
+
 export const BAR_CELLS = 20
 
 export function blockBar(level: number, cells = BAR_CELLS): { on: string; off: string } {
