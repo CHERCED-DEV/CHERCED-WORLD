@@ -230,20 +230,33 @@ test.describe('post 5: cita y código', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
   for (const lang of ['es', 'en'] as const) {
-    test(`en ${lang} la cita inicial va en cristal y cada bloque de código se copia exacto`, async ({ page, context, baseURL }) => {
+    test(`en ${lang} la cita inicial va en cristal y cada bloque de código se copia exacto`, async ({ page, context, baseURL }, testInfo) => {
       await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: baseURL })
       await page.goto(`/${lang}/blog/post5`)
       const body = page.locator('[data-cw-post-body]')
       const quote = body.locator('> blockquote').first()
       await expect(quote).toBeVisible()
       expect(await body.evaluate((element) => element.firstElementChild?.tagName)).toBe('BLOCKQUOTE')
-      expect(await quote.evaluate((element) => getComputedStyle(element).backdropFilter)).toContain('blur')
+      const mobile = testInfo.project.name === 'mobile-chromium'
+      const expectGlass = async (element: typeof quote) => {
+        const style = await element.evaluate((node) => {
+          const computed = getComputedStyle(node)
+          return { blur: computed.backdropFilter, background: computed.backgroundColor }
+        })
+        if (mobile) {
+          expect(style.blur, 'presupuesto de blur móvil (FR-602): cristal sólido').not.toContain('blur')
+          expect(style.background, 'el cristal sólido tiene fondo').not.toBe('rgba(0, 0, 0, 0)')
+        } else {
+          expect(style.blur).toContain('blur')
+        }
+      }
+      await expectGlass(quote)
 
       const blocks = body.locator('[data-cw-code]')
       await expect(blocks).toHaveCount(2)
       for (const block of await blocks.all()) {
         await expect(block).toHaveAttribute('data-cw-code', 'typescript')
-        expect(await block.evaluate((element) => getComputedStyle(element).backdropFilter)).toContain('blur')
+        await expectGlass(block)
         const expected = (await block.locator('pre').innerText()).replace(/\n$/, '')
         const button = block.locator('[data-cw-copy]')
         await button.click()
