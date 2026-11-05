@@ -476,6 +476,20 @@
   font-variant-numeric: tabular-nums;
 }
 
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-5);
+}
+
+.filterCount {
+  display: none;
+}
+
+.dots {
+  display: none;
+}
+
 .footer {
   @include glass(strong);
   display: grid;
@@ -486,4 +500,86 @@
   border-radius: 0;
   font-weight: 600;
   text-align: center;
+}
+
+$peek: 40px;
+$card-gap: 6px;
+
+@include bp.down(md) {
+  @media (prefers-reduced-motion: no-preference) {
+    :global(:root[data-js]) {
+      .filters {
+        position: sticky;
+        top: var(--cw-header-h);
+        z-index: 4;
+        gap: var(--cw-space-2);
+        padding-block: var(--cw-space-2) var(--cw-space-3);
+        border-bottom: 1px solid var(--cw-glass-border);
+        background: var(--cw-glass-strong-bg);
+        box-shadow: 0 14px 24px -20px rgb(0 0 0 / 0.65);
+      }
+
+      .filters .filterLabel {
+        @include layout.visually-hidden;
+      }
+
+      .filters .eraFilter {
+        flex-wrap: nowrap;
+      }
+
+      .filters .chipButton {
+        min-height: 44px;
+      }
+
+      .filterCount {
+        display: block;
+        padding-inline: 14px;
+        color: var(--cw-fg-muted);
+        font-size: var(--cw-text-xs);
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .slide {
+        margin-right: -$peek;
+        padding-inline: calc(#{$peek} / 2 + #{$card-gap} / 2);
+        pointer-events: none;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      .slideCard {
+        pointer-events: auto;
+      }
+
+      .dots {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--cw-space-2);
+        margin: calc(var(--cw-space-2) * -1) auto 0;
+        padding: 0 var(--cw-space-4);
+        list-style: none;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--cw-fg);
+        opacity: 0.32;
+        transition:
+          opacity var(--cw-duration-base) var(--cw-ease),
+          transform var(--cw-duration-base) var(--cw-ease-out);
+
+        &[data-current] {
+          background: var(--cw-intro-accent);
+          opacity: 1;
+          transform: scale(1.5);
+        }
+      }
+    }
+  }
 }
