@@ -70,7 +70,9 @@ describe('home en móvil (006, US10, FR-633)', () => {
   })
 
   it('las animaciones nuevas solo mueven transform y opacity', () => {
-    expect(properties(keyframes(source('components/site/home/Home.module.scss'), 'home-cue-breathe')).sort()).toEqual(['opacity', 'transform'])
+    const home = source('components/site/home/Home.module.scss')
+    expect(properties(keyframes(home, 'home-cue-breathe'))).toEqual(['opacity'])
+    expect(properties(keyframes(home, 'home-cue-drift'))).toEqual(['transform'])
     expect(properties(keyframes(source('components/site/HomeBanner.module.scss'), 'banner-sweep'))).toEqual(['transform'])
   })
 
@@ -80,6 +82,7 @@ describe('home en móvil (006, US10, FR-633)', () => {
       /@media \(max-width: #\{bp\.bp\(md\) - 0\.02px\}\), \(pointer: coarse\) \{\s*@media \(prefers-reduced-motion: no-preference\) \{\s*:global\(:root\[data-js\]\) \{\s*\.cue \{\s*animation: home-cue-breathe/,
     )
     expect(css).toContain('--cw-cue-breath: calc(var(--cw-duration-ambient) / 2);')
-    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\) \{\s*\.cue,/)
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\) \{\s*\.cue,\s*\.cueIcon,/)
+    expect(css).toMatch(/\.cueIcon \{\s*animation: home-cue-drift var\(--cw-cue-breath\)/)
   })
 })

@@ -257,11 +257,20 @@
   0%,
   100% {
     opacity: 0.6;
-    transform: translate3d(0, 0, 0);
   }
 
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes home-cue-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
     transform: translate3d(0, 4px, 0);
   }
 }
@@ -277,6 +286,10 @@
         animation: home-cue-breathe var(--cw-cue-breath) var(--cw-ease-in-out) infinite;
       }
 
+      .cueIcon {
+        animation: home-cue-drift var(--cw-cue-breath) var(--cw-ease-in-out) infinite;
+      }
+
       .cueLine::after {
         animation-duration: var(--cw-cue-breath);
         animation-delay: 0ms;
@@ -287,6 +300,10 @@
 
 @include bp.down(md) {
   :global(:root[data-js]) {
+    .hero {
+      padding-bottom: calc(var(--cw-space-4) + var(--cw-dock-space));
+    }
+
     .roles {
       gap: var(--cw-space-5);
     }
@@ -314,6 +331,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cue,
+  .cueIcon,
   .cueLine::after,
   .live::after {
     animation: none !important;
