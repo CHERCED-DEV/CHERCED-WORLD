@@ -77,13 +77,26 @@ const FULL_SKIPS: RegExp[] = [
 
 const FULL_SKIPS_OFF_DESKTOP: RegExp[] = [/auditoría de interacción \(US1, FR-201\)/, /contraste sobre glass de los casos y \/now/]
 
-function tierFilters(project: string): Pick<Project, 'testMatch' | 'testIgnore' | 'grepInvert'> {
+const MOBILE_SPECS = /[\\/]integration[\\/]mobile-[\w-]+\.spec\.ts$/
+
+const EXTRA_WIDTHS = ['mobile-375', 'mobile-412']
+
+function tierFilters(project: string): Pick<Project, 'testMatch' | 'testIgnore' | 'grep' | 'grepInvert'> {
   if (TIER === 'fast') return { testMatch: /[\\/]integration[\\/]smoke\.spec\.ts$/ }
   if (TIER === 'exhaustive') return {}
   return {
     testIgnore: [/[\\/]r2[\\/]responsive\.spec\.ts$/, /[\\/]r4[\\/]responsive-blog\.spec\.ts$/],
     grepInvert: project === 'desktop-chromium' ? FULL_SKIPS : [...FULL_SKIPS, ...FULL_SKIPS_OFF_DESKTOP],
+    ...(EXTRA_WIDTHS.includes(project) ? { grep: /@anchos/ } : {}),
   }
+}
+
+const MOBILE_DEVICE = {
+  ...devices['Desktop Chrome'],
+  deviceScaleFactor: 3,
+  isMobile: true,
+  hasTouch: true,
+  userAgent: devices['Pixel 7'].userAgent,
 }
 
 const PROJECTS: Project[] = [
@@ -93,18 +106,21 @@ const PROJECTS: Project[] = [
   },
   {
     name: 'mobile-chromium',
-    use: {
-      ...devices['Desktop Chrome'],
-      viewport: { width: 390, height: 844 },
-      deviceScaleFactor: 3,
-      isMobile: true,
-      hasTouch: true,
-      userAgent: devices['Pixel 7'].userAgent,
-    },
+    use: { ...MOBILE_DEVICE, viewport: { width: 390, height: 844 } },
   },
   {
     name: 'no-js',
     use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 }, javaScriptEnabled: false },
+  },
+  {
+    name: 'mobile-375',
+    testMatch: MOBILE_SPECS,
+    use: { ...MOBILE_DEVICE, viewport: { width: 375, height: 812 } },
+  },
+  {
+    name: 'mobile-412',
+    testMatch: MOBILE_SPECS,
+    use: { ...MOBILE_DEVICE, viewport: { width: 412, height: 915 } },
   },
 ]
 
