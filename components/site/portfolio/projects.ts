@@ -1,7 +1,15 @@
-import type { Localized, Project } from '@/content/types'
+import type { Localized, Project, SiteContent } from '@/content/types'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { paragraphs } from '../format'
 import type { SlideProject } from './carousel'
+
+export function portfolioIntro(portfolio: SiteContent['portfolio'], lang: Locale): string | null {
+  const text = portfolio.intro
+    .map((paragraph) => paragraph[lang].trim())
+    .filter((part) => part.length > 0)
+    .join(' ')
+  return text.length > 0 ? text : null
+}
 
 export function toSlide(project: Project, lang: Locale): SlideProject {
   return {
@@ -10,6 +18,7 @@ export function toSlide(project: Project, lang: Locale): SlideProject {
     title: project.title,
     summary: project.summary[lang],
     technologies: project.technologies,
+    era: project.era,
     href: localizedPath(lang, `/portfolio/${project.id}`),
     image: {
       src: project.image.src,
@@ -89,4 +98,52 @@ export function caseStudyLinks(project: Project, labels: CaseStudyLabels): Array
     { id: 'github', href: project.links.github, label: labels.github },
   ]
   return links.flatMap((link) => (link.href ? [{ id: link.id, href: link.href, label: link.label }] : []))
+}
+
+export function caseStudyRepos(project: Project): Array<{ label: string; href: string }> {
+  const seen = new Set<string>()
+  return (project.links.repos ?? []).flatMap((repo) => {
+    const label = repo.label.trim()
+    const href = repo.href.trim()
+    if (!label || !/^https:\/\//.test(href) || seen.has(href)) return []
+    seen.add(href)
+    return [{ label, href }]
+  })
+}
+
+export type AdrCardView = { decision: string; why: string; tradeoff: string }
+
+export function caseAdrCards(project: Project, lang: Locale): AdrCardView[] {
+  return (project.adrCards ?? []).flatMap((card) => {
+    const view = { decision: card.decision[lang].trim(), why: card.why[lang].trim(), tradeoff: card.tradeoff[lang].trim() }
+    return view.decision && view.why && view.tradeoff ? [view] : []
+  })
+}
+
+export type DiagramLayerView = { id: string; label: string; role: string }
+
+export const DIAGRAM_MIN_LAYERS = 2
+
+export function caseDiagram(project: Project, lang: Locale): DiagramLayerView[] {
+  const layers = (project.diagram ?? []).flatMap((layer) => {
+    const view = { id: layer.id, label: layer.label[lang].trim(), role: layer.role[lang].trim() }
+    return view.id && view.label && view.role ? [view] : []
+  })
+  return layers.length >= DIAGRAM_MIN_LAYERS ? layers : []
+}
+
+export type StorySection = CaseStudySection & { cards: boolean }
+
+export function caseStorySections(project: Project, lang: Locale, labels: CaseStudyLabels, withCards: boolean): StorySection[] {
+  const sections = caseStudySections(project, lang, labels).map((section) => ({ ...section, cards: false }))
+  if (!withCards) return sections
+  const decisions = sections.find((section) => section.id === 'decisions')
+  if (decisions) {
+    decisions.cards = true
+    decisions.paragraphs = []
+    return sections
+  }
+  const card: StorySection = { id: 'decisions', heading: labels.decisions, paragraphs: [], cards: true }
+  const after = sections.findIndex((section) => section.id === 'result')
+  return after < 0 ? [...sections, card] : [...sections.slice(0, after), card, ...sections.slice(after)]
 }

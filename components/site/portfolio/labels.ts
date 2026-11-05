@@ -1,4 +1,6 @@
+import { PROJECT_ERAS, type ProjectEra } from '@/content/types'
 import { t, type Dictionary } from '@/lib/i18n'
+import type { AdrLabels } from './AdrCards'
 import type { CaseStudyExtraLabels } from './CaseStudy'
 import { STACK_LAYERS, type StackLayer } from './stack'
 
@@ -57,6 +59,42 @@ export function caseStudyExtraLabels(dict: Dictionary): CaseStudyExtraLabels {
     gallery: pickAll(dict, GALLERY_KEYS),
     embed: pickAll(dict, EMBED_KEYS),
   }
+}
+
+export type EraLabels = Record<ProjectEra, string>
+
+export type CaseEvidenceLabels = {
+  era: string
+  eras: EraLabels
+  adr: AdrLabels
+  diagram: { title: string; hint: string }
+}
+
+export const EVIDENCE_KEYS = {
+  era: 'portfolio.era',
+  decision: 'project.adr.decision',
+  why: 'project.adr.why',
+  tradeoff: 'project.adr.tradeoff',
+  diagramTitle: 'case.diagram.title',
+  diagramHint: 'case.diagram.hint',
+} as const
+
+export function eraLabels(dict: Dictionary): EraLabels {
+  return Object.fromEntries(PROJECT_ERAS.map((era) => [era, t(dict, `portfolio.era.${era}`)])) as EraLabels
+}
+
+export function caseEvidenceLabels(dict: Dictionary): CaseEvidenceLabels {
+  const text = pickAll(dict, EVIDENCE_KEYS)
+  return {
+    era: text.era,
+    eras: eraLabels(dict),
+    adr: { decision: text.decision, why: text.why, tradeoff: text.tradeoff },
+    diagram: { title: text.diagramTitle, hint: text.diagramHint },
+  }
+}
+
+export function evidenceKeys(): string[] {
+  return [...Object.values(EVIDENCE_KEYS), ...PROJECT_ERAS.map((era) => `portfolio.era.${era}`)]
 }
 
 export function portfolioKeys(): string[] {

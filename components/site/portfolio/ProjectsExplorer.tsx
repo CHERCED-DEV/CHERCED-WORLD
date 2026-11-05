@@ -2,21 +2,25 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState, ViewTransition, type CSSProperties, type KeyboardEvent } from 'react'
+import type { ProjectEra } from '@/content/types'
 import { buttonClassName } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
 import {
   chipsFor,
+  eraUsage,
   fillTemplate,
-  filterByTechnology,
-  filterSummary,
+  filterProjects,
+  filtersSummary,
   indexForKey,
   nearestIndex,
   technologyUsage,
   wrapIndex,
   type SlideProject,
 } from './carousel'
+import type { EraLabels } from './labels'
 import styles from './Portfolio.module.scss'
+import { isPlainClick, markSharedNavigation, projectMediaName } from './transition'
 import { useRailOverflow } from './useRailOverflow'
 
 export type ExplorerLabels = {
@@ -33,6 +37,10 @@ export type ExplorerLabels = {
   filteredMany: string
   viewCase: string
   technologies: string
+  era: string
+  eras: EraLabels
+  filteredEra: string
+  clearFilters: string
 }
 
 export type ProjectsExplorerProps = {
@@ -51,6 +59,7 @@ function scrollBehavior(): ScrollBehavior {
 export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExplorerProps) {
   const currentTemplate = labels.current
   const [tech, setTech] = useState<string | null>(null)
+  const [era, setEra] = useState<ProjectEra | null>(null)
   const [index, setIndex] = useState(0)
   const [announcement, setAnnouncement] = useState('')
   const trackRef = useRef<HTMLDivElement>(null)
@@ -60,11 +69,15 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
   const uid = useId().replace(/:/g, '')
   const hintId = `${uid}-hint`
   const filterId = `${uid}-filter`
+  const eraId = `${uid}-era`
   const overflow = useRailOverflow(railRef)
 
   const usage = useMemo(() => technologyUsage(projects, technologies), [projects, technologies])
-  const visible = useMemo(() => filterByTechnology(projects, tech), [projects, tech])
+  const eras = useMemo(() => eraUsage(projects), [projects])
+  const visible = useMemo(() => filterProjects(projects, { tech, era }), [projects, tech, era])
   const total = visible.length
+  const summary = (count: number, nextTech: string | null, nextEra: ProjectEra | null) =>
+    filtersSummary(labels, count, nextTech, nextEra ? labels.eras[nextEra] : null)
 
   const announceSlide = useCallback(
     (next: number) => {
@@ -98,7 +111,7 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
   useEffect(() => {
     indexRef.current = 0
     trackRef.current?.scrollTo({ left: 0 })
-  }, [tech])
+  }, [tech, era])
 
   useEffect(() => () => window.clearTimeout(settleRef.current), [])
 
@@ -122,10 +135,26 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
 
   const chooseTech = (value: string | null) => {
     if (value === tech) return
-    const count = filterByTechnology(projects, value).length
+    const count = filterProjects(projects, { tech: value, era }).length
     setTech(value)
     setIndex(0)
-    setAnnouncement(filterSummary(labels, count, value))
+    setAnnouncement(summary(count, value, era))
+  }
+
+  const chooseEra = (value: ProjectEra) => {
+    const next = value === era ? null : value
+    const count = filterProjects(projects, { tech, era: next }).length
+    setEra(next)
+    setIndex(0)
+    setAnnouncement(summary(count, tech, next))
+  }
+
+  const clearFilters = () => {
+    setTech(null)
+    setEra(null)
+    setIndex(0)
+    setAnnouncement(summary(projects.length, null, null))
+    trackRef.current?.focus({ preventScroll: true })
   }
 
   const scrollRail = (direction: -1 | 1) => {
@@ -136,6 +165,29 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
 
   return (
     <div className={styles.explorer} data-cw-projects="">
+      <div className={cx('cw-js-only', styles.filter, styles.eraFilter)} role="group" aria-labelledby={eraId} data-cw-era-group="">
+        <p id={eraId} className={styles.filterLabel}>
+          {labels.era}
+        </p>
+        <div className={styles.eraBar}>
+          {eras.map((item) => (
+            <button
+              key={item.era}
+              type="button"
+              className={styles.chipButton}
+              aria-pressed={era === item.era}
+              onClick={() => chooseEra(item.era)}
+              data-cw-era-filter={item.era}
+            >
+              {labels.eras[item.era]}
+              <span className={styles.chipCount} aria-hidden="true">
+                {item.count}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className={cx('cw-js-only', styles.filter)} role="group" aria-labelledby={filterId}>
         <p id={filterId} className={styles.filterLabel}>
           {labels.filter}
@@ -204,6 +256,14 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
       <p id={hintId} className="cw-visually-hidden">
         {labels.carouselHint}
       </p>
+      {total === 0 ? (
+        <div className={styles.empty} data-cw-glass="standard" data-cw-projects-empty="">
+          <p className={styles.emptyText}>{summary(0, tech, era)}</p>
+          <button type="button" className={buttonClassName({ variant: 'solid' })} onClick={clearFilters} data-cw-clear-filters="">
+            {labels.clearFilters}
+          </button>
+        </div>
+      ) : null}
       <div
         ref={trackRef}
         className={styles.track}
@@ -237,19 +297,27 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
                 style={{ '--cw-media-ratio': ratio.toFixed(4) } as CSSProperties}
               >
                 <div className={styles.slideMedia}>
-                  <Image
-                    src={project.image.src}
-                    alt={project.image.alt}
-                    width={project.image.width}
-                    height={project.image.height}
-                    sizes={ratio >= 1 ? '(min-width: 768px) 560px, 92vw' : '(min-width: 768px) 220px, 180px'}
-                    className={styles.slideImage}
-                  />
+                  <ViewTransition name={position === index ? projectMediaName(project.id) : undefined} share="auto" default="none">
+                    <Image
+                      src={project.image.src}
+                      alt={project.image.alt}
+                      width={project.image.width}
+                      height={project.image.height}
+                      sizes={ratio >= 1 ? '(min-width: 768px) 560px, 92vw' : '(min-width: 768px) 220px, 180px'}
+                      className={styles.slideImage}
+                    />
+                  </ViewTransition>
                 </div>
                 <div className={styles.slideBody}>
-                  <p className={styles.slideIndex} aria-hidden="true">
-                    {String(project.order).padStart(2, '0')}
-                  </p>
+                  <div className={styles.slideMeta}>
+                    <p className={styles.slideIndex} aria-hidden="true">
+                      {String(project.order).padStart(2, '0')}
+                    </p>
+                    <p className={styles.slideEra} data-cw-era={project.era}>
+                      <span className="cw-visually-hidden">{labels.era}: </span>
+                      {labels.eras[project.era]}
+                    </p>
+                  </div>
                   <h3 className={styles.slideTitle}>{project.title}</h3>
                   <p className={styles.slideSummary}>{project.summary}</p>
                   <p className="cw-visually-hidden">{labels.technologies}</p>
@@ -270,7 +338,13 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
                       </li>
                     ) : null}
                   </ul>
-                  <Link href={project.href} className={buttonClassName({ variant: 'solid', className: styles.slideLink })}>
+                  <Link
+                    href={project.href}
+                    className={buttonClassName({ variant: 'solid', className: styles.slideLink })}
+                    onClick={(event) => {
+                      if (position === index && isPlainClick(event)) markSharedNavigation(projectMediaName(project.id))
+                    }}
+                  >
                     {labels.viewCase}
                     <span className="cw-visually-hidden">: {project.title}</span>
                   </Link>

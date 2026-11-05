@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { BackgroundIntensity } from '@/components/motion'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
+import { eraLabels } from '@/components/site/portfolio/labels'
 import { PortfolioView } from '@/components/site/portfolio/PortfolioView'
 import { getAllTechnologies, getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
@@ -25,6 +26,9 @@ const EXPLORER_KEYS = {
   filteredMany: 'portfolio.filteredMany',
   viewCase: 'portfolio.viewCase',
   technologies: 'project.technologies',
+  era: 'portfolio.era',
+  filteredEra: 'portfolio.filteredEra',
+  clearFilters: 'portfolio.clearFilters',
 } as const
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -36,13 +40,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t(site, 'meta.portfolio.title'),
     description: t(site, 'meta.portfolio.description'),
     common,
+    ogImageFile: true,
   })
 }
 
 export default async function PortfolioPage({ params }: Props) {
   const lang = await resolveLang(params)
   const dict = await getDictionary(lang, 'site')
-  const labels = Object.fromEntries(Object.entries(EXPLORER_KEYS).map(([name, key]) => [name, t(dict, key)])) as Record<
+  const text = Object.fromEntries(Object.entries(EXPLORER_KEYS).map(([name, key]) => [name, t(dict, key)])) as Record<
     keyof typeof EXPLORER_KEYS,
     string
   >
@@ -55,7 +60,7 @@ export default async function PortfolioPage({ params }: Props) {
         portfolio={getSite().portfolio}
         projects={getProjects()}
         technologies={getAllTechnologies()}
-        labels={labels}
+        labels={{ ...text, eras: eraLabels(dict) }}
       />
     </>
   )

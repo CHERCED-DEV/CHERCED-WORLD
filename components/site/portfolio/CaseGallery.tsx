@@ -1,13 +1,14 @@
 'use client'
 
 import Image from 'next/image'
-import { useId, useState, type CSSProperties, type KeyboardEvent } from 'react'
+import { useId, useLayoutEffect, useState, ViewTransition, type CSSProperties, type KeyboardEvent } from 'react'
 import { Dialog } from '@/components/ui/Dialog'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
 import { fillTemplate, indexForKey, wrapIndex } from './carousel'
 import styles from './CaseGallery.module.scss'
 import { PortfolioIcon } from './PortfolioIcon'
+import { takeSharedNavigation } from './transition'
 
 export type GalleryImage = { src: string; alt: string; width: number; height: number }
 
@@ -24,17 +25,22 @@ export type CaseGalleryProps = {
   images: GalleryImage[]
   labels: GalleryLabels
   title: string
+  transitionName?: string
 }
 
 function ratioStyle(image: GalleryImage): CSSProperties {
   return { '--cw-media-ratio': (image.width / image.height).toFixed(4) } as CSSProperties
 }
 
-export function CaseGallery({ images, labels, title }: CaseGalleryProps) {
+export function CaseGallery({ images, labels, title, transitionName }: CaseGalleryProps) {
   const uid = useId().replace(/:/g, '')
   const titleId = `${uid}-title`
   const [current, setCurrent] = useState(0)
   const [open, setOpen] = useState(false)
+
+  useLayoutEffect(() => {
+    if (transitionName && takeSharedNavigation(transitionName)) window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [transitionName])
   const total = images.length
   const shown = images[current] ?? images[0]
   if (!shown) return null
@@ -58,16 +64,18 @@ export function CaseGallery({ images, labels, title }: CaseGalleryProps) {
         style={ratioStyle(shown)}
       >
         <div className={styles.stage}>
-          <Image
-            key={shown.src}
-            src={shown.src}
-            alt={shown.alt}
-            width={shown.width}
-            height={shown.height}
-            sizes={shown.width >= shown.height ? '(min-width: 992px) 640px, 92vw' : '(min-width: 768px) 280px, 220px'}
-            preload={current === 0}
-            className={styles.image}
-          />
+          <ViewTransition name={current === 0 && transitionName ? transitionName : undefined} share="auto" default="none">
+            <Image
+              key={shown.src}
+              src={shown.src}
+              alt={shown.alt}
+              width={shown.width}
+              height={shown.height}
+              sizes={shown.width >= shown.height ? '(min-width: 992px) 640px, 92vw' : '(min-width: 768px) 280px, 220px'}
+              preload={current === 0}
+              className={styles.image}
+            />
+          </ViewTransition>
           <button
             type="button"
             className={cx('cw-js-only', styles.zoom)}

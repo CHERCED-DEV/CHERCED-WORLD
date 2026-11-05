@@ -4,7 +4,7 @@ import { BackgroundIntensity } from '@/components/motion'
 import { isLocale, localizedPath, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import { CaseStudy } from '@/components/site/portfolio/CaseStudy'
-import { caseStudyExtraLabels } from '@/components/site/portfolio/labels'
+import { caseEvidenceLabels, caseStudyExtraLabels } from '@/components/site/portfolio/labels'
 import { caseStudyNeighbors, technologyCounts, type CaseStudyLabels } from '@/components/site/portfolio/projects'
 import { pageMetadata } from '@/components/site/metadata'
 import { getProject, getProjects } from '@/lib/content'
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: project.title,
     description: project.summary[lang],
     common,
-    image: { url: project.image.src, width: project.image.width, height: project.image.height, alt: project.image.alt[lang] },
+    ogImageFile: true,
   })
 }
 
@@ -65,6 +65,7 @@ export default async function CaseStudyPage({ params }: Props) {
           neighbors: caseStudyNeighbors(projects, project.id, lang),
           usage: technologyCounts(projects),
           portfolioHref: localizedPath(lang, '/portfolio'),
+          evidence: caseEvidenceLabels(dict),
         }}
       />
     </>
