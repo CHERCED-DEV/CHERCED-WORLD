@@ -1,0 +1,16 @@
+{
+  "description": "Después de escribir o editar una receta, revisa que declare sus alérgenos.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/revisar-alergenos.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}
