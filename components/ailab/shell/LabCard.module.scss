@@ -404,7 +404,9 @@
 }
 
 .consent {
-  width: min(520px, calc(100vw - 2 * var(--cw-space-4)));
+  @include bp.up(md) {
+    width: min(520px, calc(100vw - 2 * var(--cw-space-4)));
+  }
 }
 
 .consentBody {

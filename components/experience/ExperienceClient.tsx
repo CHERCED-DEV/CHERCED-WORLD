@@ -14,7 +14,6 @@ import { t } from '@/lib/i18n/translate'
 import type { SearchDoc } from '@/lib/search/types'
 import styles from './ExperienceClient.module.scss'
 import type { ExperienceLabels } from './labels'
-import { buildCommands, executePaletteCommand, paletteExtensions, registerPaletteRunner, toPaletteDocs } from './palette-model'
 import {
   currentTheme,
   readCapsuleFound,
@@ -26,6 +25,7 @@ import { ShortcutsDialog, useGlobalShortcuts } from './Shortcuts'
 import { paletteKeyshortcuts, SHORTCUT_KEYS, type ShortcutAction } from './shortcuts-model'
 
 const loadPalette = () => import('./CommandPalette')
+const loadPaletteModel = () => import('./palette-model')
 const loadAssistant = () => import('./Assistant')
 
 const CommandPalette = dynamic(() => loadPalette().then((mod) => mod.CommandPalette), { ssr: false })
@@ -161,46 +161,63 @@ export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsul
   const toast = useToast()
 
   useEffect(() => {
+    let alive = true
+    let unregister: (() => void) | null = null
     const preferences = () =>
       browserPreferences({ lang, pathname: () => pathRef.current ?? `/${lang}`, navigate: (href) => router.push(href) })
-    return registerPaletteRunner({
-      items: () =>
-        toPaletteDocs(
-          pages,
-          buildCommands(labels, {
-            theme: currentTheme(),
-            email,
-            cv,
-            now: localizedPath(lang, '/now'),
-            aiLab: localizedPath(lang, '/ai-lab'),
-            capsuleFound: readCapsuleFound(),
-            extensions: paletteExtensions(),
-          }),
-          paletteExtensions(),
-        ).map((doc) => doc.item),
-      run: (item) =>
-        executePaletteCommand(item.command, {
-          close: () => setOpen((current) => (current === 'palette' ? null : current)),
-          navigate: (href) => router.push(href),
-          setTheme: (to) => preferences().setTheme(to),
-          switchLang: () => preferences().setLanguage(otherLocale(lang)),
-          open: (href) => window.open(href, '_blank', 'noopener,noreferrer'),
-          shortcuts: () => show('shortcuts'),
-          assistant: () => show('assistant'),
-          copyEmail: () => {
-            if (!email) return
-            navigator.clipboard.writeText(email).then(
-              () => toast.success(t(labels, 'palette.copied')),
-              () => toast.error(t(labels, 'palette.copyFailed', { email })),
-            )
-          },
-          capsule: () => {
-            rememberCapsuleFound()
-            setDiscovered(true)
-            show('capsule')
-          },
-        }),
+    const cancel = whenIdle(() => {
+      loadPaletteModel().then(
+        (model) => {
+          if (!alive) return
+          unregister = model.registerPaletteRunner({
+            items: () =>
+              model
+                .toPaletteDocs(
+                  pages,
+                  model.buildCommands(labels, {
+                    theme: currentTheme(),
+                    email,
+                    cv,
+                    now: localizedPath(lang, '/now'),
+                    aiLab: localizedPath(lang, '/ai-lab'),
+                    capsuleFound: readCapsuleFound(),
+                    extensions: model.paletteExtensions(),
+                  }),
+                  model.paletteExtensions(),
+                )
+                .map((doc) => doc.item),
+            run: (item) =>
+              model.executePaletteCommand(item.command, {
+                close: () => setOpen((current) => (current === 'palette' ? null : current)),
+                navigate: (href) => router.push(href),
+                setTheme: (to) => preferences().setTheme(to),
+                switchLang: () => preferences().setLanguage(otherLocale(lang)),
+                open: (href) => window.open(href, '_blank', 'noopener,noreferrer'),
+                shortcuts: () => show('shortcuts'),
+                assistant: () => show('assistant'),
+                copyEmail: () => {
+                  if (!email) return
+                  navigator.clipboard.writeText(email).then(
+                    () => toast.success(t(labels, 'palette.copied')),
+                    () => toast.error(t(labels, 'palette.copyFailed', { email })),
+                  )
+                },
+                capsule: () => {
+                  rememberCapsuleFound()
+                  setDiscovered(true)
+                  show('capsule')
+                },
+              }),
+          })
+        },
+        () => {},
+      )
     })
+    return () => {
+      alive = false
+      cancel()
+      unregister?.()
+    }
   }, [lang, labels, pages, email, cv, router, show, toast])
 
   const unavailable = status === 'unavailable'
