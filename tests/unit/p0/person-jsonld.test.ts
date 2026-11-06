@@ -26,6 +26,23 @@ describe('JSON-LD Person (FR-470, R-404, SC-408)', () => {
       address: { '@type': 'PostalAddress', addressLocality: 'Armenia', addressCountry: 'CO' },
       alumniOf: { '@type': 'CollegeOrUniversity', name: 'Institución Universitaria EAM' },
       knowsAbout: ['Software architecture', 'Microservices', 'Micro-frontends', '.NET Core', 'Angular'],
+      subjectOf: {
+        '@type': 'DigitalDocument',
+        name: 'CV de Camilo Hernández',
+        url: 'https://cherced-world.vercel.app/cv/camilo-hernandez-cv-es.pdf',
+        encodingFormat: 'application/pdf',
+        inLanguage: 'es',
+      },
+    })
+  })
+
+  it('en inglés enlaza el CV en inglés (T911 de la 007)', () => {
+    expect(personJsonLd('en', BASE).subjectOf).toEqual({
+      '@type': 'DigitalDocument',
+      name: "Camilo Hernández's CV",
+      url: 'https://cherced-world.vercel.app/cv/camilo-hernandez-cv-en.pdf',
+      encodingFormat: 'application/pdf',
+      inLanguage: 'en',
     })
   })
 

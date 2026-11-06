@@ -62,13 +62,24 @@ describe('A-406: índice versión 2 con habilidades (FR-450)', () => {
     }
   })
 
-  it('el CV entra como enlaces, a LinkedIn y al PDF del sitio, sin su contenido (FR-422, FR-701 de la 007)', async () => {
-    const index = await buildSearchIndex('en')
-    expect(index.facts.cv).toEqual({
+  it('el CV entra como enlaces, a LinkedIn y a los dos PDF del sitio, sin su contenido (FR-422, FR-701 y T911 de la 007)', async () => {
+    const en = await buildSearchIndex('en')
+    expect(en.facts.cv).toEqual({
       href: 'https://www.linkedin.com/in/cherced/',
       label: 'See my CV on LinkedIn',
-      pdf: { href: '/cv/Camilo_Hernandez_CV.pdf', label: 'Download CV (PDF)', bytes: 172_753 },
+      pdfs: [
+        { lang: 'en', href: '/cv/camilo-hernandez-cv-en.pdf', label: 'Download CV in English (PDF)', bytes: 172_753 },
+        { lang: 'es', href: '/cv/camilo-hernandez-cv-es.pdf', label: 'Download CV in Spanish (PDF)', bytes: 174_507 },
+      ],
     })
-    expect(JSON.stringify(index).replaceAll('/cv/Camilo_Hernandez_CV.pdf', '')).not.toMatch(/\.pdf\b/i)
+    const es = await buildSearchIndex('es')
+    expect(es.facts.cv?.pdfs.map((pdf) => [pdf.lang, pdf.label])).toEqual([
+      ['es', 'Descargar CV en español (PDF)'],
+      ['en', 'Descargar CV en inglés (PDF)'],
+    ])
+    for (const index of [en, es]) {
+      const text = JSON.stringify(index).replaceAll('/cv/camilo-hernandez-cv-en.pdf', '').replaceAll('/cv/camilo-hernandez-cv-es.pdf', '')
+      expect(text).not.toMatch(/\.pdf\b/i)
+    }
   })
 })

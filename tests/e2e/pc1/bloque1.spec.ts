@@ -16,14 +16,21 @@ async function skipIntro(page: Page) {
   })
 }
 
-test.describe('B1: el CV en PDF (FR-701, FR-702, SC-701)', () => {
+const CV_PDF = {
+  es: { href: '/cv/camilo-hernandez-cv-es.pdf', filename: 'Camilo_Hernandez_CV_ES.pdf' },
+  en: { href: '/cv/camilo-hernandez-cv-en.pdf', filename: 'Camilo_Hernandez_CV_EN.pdf' },
+} as const
+
+test.describe('B1: el CV en PDF (FR-701, FR-702, SC-701, T911)', () => {
   onlyIn('desktop-chromium', 'mobile-chromium', 'no-js')
 
-  test('el PDF se sirve como application/pdf', async ({ request }) => {
-    const response = await request.get('/cv/Camilo_Hernandez_CV.pdf')
-    expect(response.status()).toBe(200)
-    expect(response.headers()['content-type']).toContain('application/pdf')
-    expect((await response.body()).subarray(0, 5).toString('latin1')).toBe('%PDF-')
+  test('los dos PDF se sirven como application/pdf', async ({ request }) => {
+    for (const { href } of Object.values(CV_PDF)) {
+      const response = await request.get(href)
+      expect(response.status(), href).toBe(200)
+      expect(response.headers()['content-type'], href).toContain('application/pdf')
+      expect((await response.body()).subarray(0, 5).toString('latin1'), href).toBe('%PDF-')
+    }
   })
 
   for (const [path, scope] of [
@@ -32,36 +39,38 @@ test.describe('B1: el CV en PDF (FR-701, FR-702, SC-701)', () => {
     ['/es/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
     ['/en/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
   ] as const) {
-    test(`${path}: "Descargar CV (PDF)" va junto a LinkedIn`, async ({ page }) => {
+    test(`${path}: "Descargar CV" va junto a LinkedIn`, async ({ page }) => {
       await skipIntro(page)
       await page.goto(path)
+      const lang = path.startsWith('/en') ? 'en' : 'es'
       const actions = page.locator(scope).first()
       const download = actions.locator('[data-cw-cv-download]')
       await expect(download).toBeVisible()
-      await expect(download).toHaveText(path.startsWith('/en') ? 'Download CV (PDF)' : 'Descargar CV (PDF)')
-      await expect(download).toHaveAttribute('href', '/cv/Camilo_Hernandez_CV.pdf')
-      await expect(download).toHaveAttribute('download', 'Camilo_Hernandez_CV.pdf')
+      await expect(download).toContainText(lang === 'en' ? 'Download CV' : 'Descargar CV')
+      await expect(download).toHaveAttribute('href', CV_PDF[lang].href)
+      await expect(download).toHaveAttribute('download', CV_PDF[lang].filename)
+      await expect(actions.locator('[data-cw-cv-alternate]')).toBeVisible()
       await expect(actions.locator('[data-cw-cv-link]')).toBeVisible()
     })
   }
 })
 
-test.describe('B1: la paleta baja el CV (FR-702)', () => {
+test.describe('B1: la paleta baja el CV (FR-702, T911)', () => {
   onlyIn('desktop-chromium')
 
-  test('"> descargar cv" + Enter descarga el PDF', async ({ page }) => {
+  test('"> descargar cv" + Enter descarga el PDF del idioma de la página', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/es/aboutMe')
     await expect(page.locator('[data-cw-assistant-button]')).toHaveAttribute('data-cw-ready', '', { timeout: 30_000 })
     await page.keyboard.press('Control+k')
     await expect(page.locator('[data-cw-palette-input]')).toBeFocused()
     await page.keyboard.type('> descargar cv')
-    await expect(page.locator('[data-cw-palette-option="action:cv-pdf"]')).toHaveAttribute('aria-selected', 'true')
+    await expect(page.locator('[data-cw-palette-option="action:cv-pdf-es"]')).toHaveAttribute('aria-selected', 'true')
     const downloading = page.waitForEvent('download')
     await page.keyboard.press('Enter')
     const download = await downloading
-    expect(download.suggestedFilename()).toBe('Camilo_Hernandez_CV.pdf')
-    expect(new URL(download.url()).pathname).toBe('/cv/Camilo_Hernandez_CV.pdf')
+    expect(download.suggestedFilename()).toBe(CV_PDF.es.filename)
+    expect(new URL(download.url()).pathname).toBe(CV_PDF.es.href)
   })
 })
 

@@ -4,56 +4,59 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { buildCommands, executePaletteCommand, type PaletteEffects } from '@/components/experience/palette-model'
-import { CvActions, cvPdfFilename } from '@/components/ui/CvLink'
+import { CvActions } from '@/components/ui/CvLink'
 import { site } from '@/content/site'
 import { PROJECT_ERAS } from '@/content/types'
-import { getProjects, projectTitle } from '@/lib/content'
+import { cvPdfs, getProjects, projectTitle } from '@/lib/content'
 import { getDictionary } from '@/lib/i18n/server'
 
-const pdf = site.profile!.cv.pdf!
+const pdfs = site.profile!.cv.pdfs!
 
-describe('B1: el CV en PDF (FR-701, FR-702)', () => {
-  it('el archivo publicado es un PDF y pesa lo que dice el contenido', () => {
-    const file = join(process.cwd(), 'public', pdf.href)
-    expect(pdf.href).toBe('/cv/Camilo_Hernandez_CV.pdf')
-    expect(statSync(file).size).toBe(pdf.bytes)
-    expect(readFileSync(file).subarray(0, 5).toString('latin1')).toBe('%PDF-')
+describe('B1: el CV en PDF (FR-701, FR-702, T911)', () => {
+  it('los dos archivos publicados son PDF y pesan lo que dice el contenido', () => {
+    expect(pdfs.map((pdf) => pdf.lang).sort()).toEqual(['en', 'es'])
+    for (const pdf of pdfs) {
+      const file = join(process.cwd(), 'public', pdf.href)
+      expect(statSync(file).size, pdf.href).toBe(pdf.bytes)
+      expect(readFileSync(file).subarray(0, 5).toString('latin1'), pdf.href).toBe('%PDF-')
+    }
   })
 
   it.each([
-    ['es', 'Descargar CV (PDF)', /aria-label="Descargar mi CV en PDF \(173 kB\)"/],
-    ['en', 'Download CV (PDF)', /aria-label="Download my CV as a PDF \(173 kB\)"/],
-  ] as const)('%s: "Descargar CV (PDF)" va junto a LinkedIn, primero y con su peso', (lang, label, aria) => {
+    ['es', 'Descargar CV', '/cv/camilo-hernandez-cv-es.pdf', 'Camilo_Hernandez_CV_ES.pdf', /aria-label="Descargar CV en español \(PDF, 175 kB\)"/],
+    ['en', 'Download CV', '/cv/camilo-hernandez-cv-en.pdf', 'Camilo_Hernandez_CV_EN.pdf', /aria-label="Download CV in English \(PDF, 173 kB\)"/],
+  ] as const)('%s: "Descargar CV" va junto a LinkedIn, primero y con su peso', (lang, label, href, filename, aria) => {
     const html = renderToStaticMarkup(createElement(CvActions, { lang, downloadVariant: 'solid' }))
     expect(html).toMatch(/^<span class="cw-cv-actions" data-cw-cv-actions="">/)
     const download = html.indexOf('data-cw-cv-download')
     const linkedin = html.indexOf('data-cw-cv-link')
     expect(download).toBeGreaterThan(-1)
     expect(linkedin).toBeGreaterThan(download)
-    expect(html).toContain(`href="/cv/Camilo_Hernandez_CV.pdf" download="Camilo_Hernandez_CV.pdf" type="application/pdf"`)
+    expect(html).toContain(`href="${href}" download="${filename}" type="application/pdf"`)
     expect(html).toMatch(aria)
     expect(html).toContain(`<span>${label}</span>`)
   })
 
-  it.each(['es', 'en'] as const)('%s: la paleta ofrece "> descargar CV" y lo baja con su nombre', async (lang) => {
+  it.each(['es', 'en'] as const)('%s: la paleta ofrece descargar el CV en los dos idiomas, antes que LinkedIn', async (lang) => {
     const labels = await getDictionary(lang, 'experience')
     const commands = buildCommands(labels, {
       theme: 'dark',
       email: null,
       capsuleFound: false,
       cv: site.profile!.cv.href,
-      cvPdf: { href: pdf.href, filename: cvPdfFilename(pdf) },
+      cvPdfs: cvPdfs(lang).map((pdf) => ({ lang: pdf.lang, href: pdf.href, filename: pdf.filename })),
       now: null,
     })
-    const item = commands.find((command) => command.id === 'action:cv-pdf')!
-    expect(item.title).toBe(lang === 'es' ? 'Descargar CV (PDF)' : 'Download CV (PDF)')
-    expect(commands.findIndex((command) => command.id === 'action:cv-pdf')).toBeLessThan(commands.findIndex((command) => command.id === 'action:cv'))
+    const item = commands.find((command) => command.id === `action:cv-pdf-${lang}`)!
+    expect(item.title).toBe(lang === 'es' ? 'Descargar CV en español' : 'Download CV in English')
+    expect(commands.findIndex((command) => command.id === `action:cv-pdf-${lang}`)).toBeLessThan(commands.findIndex((command) => command.id === 'action:cv'))
     const calls: string[] = []
     const effects = new Proxy({} as PaletteEffects, {
       get: (_target, name) => (...args: unknown[]) => calls.push([String(name), ...args].join(' ')),
     })
     executePaletteCommand(item.command, effects)
-    expect(calls).toEqual(['close', 'download /cv/Camilo_Hernandez_CV.pdf Camilo_Hernandez_CV.pdf'])
+    const [own] = cvPdfs(lang)
+    expect(calls).toEqual(['close', `download ${own!.href} ${own!.filename}`])
   })
 })
 

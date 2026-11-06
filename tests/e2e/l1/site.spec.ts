@@ -317,7 +317,7 @@ test.describe('enlaces', () => {
     const banner = page.locator('[data-cw-home-banner]')
     for (const link of await banner.getByRole('link').all()) {
       const href = (await link.getAttribute('href')) ?? ''
-      if (href.startsWith('/cv/')) await expect(link).toHaveAttribute('download', 'Camilo_Hernandez_CV.pdf')
+      if (href.startsWith('/cv/')) await expect(link).toHaveAttribute('download', /^Camilo_Hernandez_CV_(ES|EN)\.pdf$/)
       else if (href.startsWith('mailto:')) await expect(link).not.toHaveAttribute('target', /.*/)
       else {
         await expect(link).toHaveAttribute('target', '_blank')

@@ -19,7 +19,7 @@ describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
     const common = await getDictionary('en', 'common')
     expect(lines.slice(0, 3)).toEqual(['# CHERCED-WORLD', '', `> ${common['meta.description']}`])
     const headings = lines.filter((line) => line.startsWith('## '))
-    expect(headings).toEqual(['## About', '## Services', '## Case studies', '## Blog', '## Contact'])
+    expect(headings).toEqual(['## About', '## CV', '## Services', '## Case studies', '## Blog', '## Contact'])
     expect(lines).toContain('- [About me](https://cherced-world.test/en/aboutMe) · [Sobre mí](https://cherced-world.test/es/aboutMe)')
     expect(lines).toContain('- [Services](https://cherced-world.test/en/services) · [Servicios](https://cherced-world.test/es/services)')
     expect(lines).toContain('- [Contact](https://cherced-world.test/en/contactMe) · [Contacto](https://cherced-world.test/es/contactMe)')
@@ -37,12 +37,23 @@ describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
 
   it('solo trae información pública: sin correos, teléfonos ni credenciales', () => {
     expect(personalData(text)).toEqual([])
-    expect(text.replace('https://cherced-world.test/cv/Camilo_Hernandez_CV.pdf', '')).not.toMatch(/mailto:|MONGODB|VERCEL_URL_CORS|\.pdf\b/i)
+    const withoutCv = text
+      .replace(`${BASE.origin}/cv/camilo-hernandez-cv-en.pdf`, '')
+      .replace(`${BASE.origin}/cv/camilo-hernandez-cv-es.pdf`, '')
+    expect(withoutCv).not.toMatch(/mailto:|MONGODB|VERCEL_URL_CORS|\.pdf\b/i)
   })
 
-  it('Contacto ofrece el CV en PDF del sitio y el de LinkedIn (FR-701 de la 007)', () => {
-    expect(lines).toContain('- [Download CV (PDF)](https://cherced-world.test/cv/Camilo_Hernandez_CV.pdf)')
-    expect(lines).toContain('- [See my CV on LinkedIn](https://www.linkedin.com/in/cherced/)')
+  it('la sección CV trae los dos PDF con URL absoluta y LinkedIn, y Contacto ya no los repite (T911 de la 007)', () => {
+    const start = lines.indexOf('## CV')
+    const end = lines.indexOf('', start)
+    expect(lines.slice(start, end)).toEqual([
+      '## CV',
+      '- [Download CV in English (PDF)](https://cherced-world.test/cv/camilo-hernandez-cv-en.pdf)',
+      '- [Download CV in Spanish (PDF)](https://cherced-world.test/cv/camilo-hernandez-cv-es.pdf)',
+      '- [See my CV on LinkedIn](https://www.linkedin.com/in/cherced/)',
+    ])
+    const contact = lines.indexOf('## Contact')
+    expect(lines.slice(contact).filter((line) => /\.pdf\)|linkedin/i.test(line))).toEqual([])
   })
 
   it('sin cantidades junto al empleador ni en Event bridge (FR-444, FR-498)', () => {
@@ -53,7 +64,7 @@ describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
 
   it('cada línea es una sola línea de Markdown, sin corchetes sueltos en las etiquetas', () => {
     for (const line of lines.filter((item) => item.startsWith('- ['))) {
-      expect(line).toMatch(/^- \[[^\]]+\]\((https:\/\/cherced-world\.test\/((en|es)\/[^)]*|cv\/Camilo_Hernandez_CV\.pdf)|https:\/\/www\.linkedin\.com\/in\/cherced\/)\)/)
+      expect(line).toMatch(/^- \[[^\]]+\]\((https:\/\/cherced-world\.test\/((en|es)\/[^)]*|cv\/camilo-hernandez-cv-(en|es)\.pdf)|https:\/\/www\.linkedin\.com\/in\/cherced\/)\)/)
     }
   })
 })
