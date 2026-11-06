@@ -18,6 +18,10 @@ test.use({
   },
 })
 
+test.beforeEach(() => {
+  test.slow()
+})
+
 const HEAVY = /huggingface\.co|hf\.co|cdn\.jsdelivr\.net|\.wasm(\?|$)|\.onnx(\?|$)/i
 const CONSENT_KEY = 'cw-ailab-consent'
 const SRT_CUE = /^\d+\n\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}\n.+$/
@@ -739,7 +743,6 @@ test.describe('V2 Texto → voz (US10, FR-359, FR-321)', () => {
   })
 
   test('sin síntesis de voz lo dice y no se rompe; sin voces del idioma no deja reproducir', async ({ page }) => {
-    test.slow()
     await fakeSpeech(page, { voices: null })
     await open(page)
     const v2 = await tryDemo(page, 'V2')
