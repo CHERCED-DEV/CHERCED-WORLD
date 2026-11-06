@@ -198,6 +198,18 @@ Rutas: `components/ailab/games/**`, `lib/ailab/games/**`, `tests/unit/x4/**` y `
   - `tests/e2e/x4/games.spec.ts`: teclado, pausa con la pestaña oculta, movimiento reducido y anuncio del marcador;
   - `npm run verify` y e2e de x4 en verde.
 
+### X4b Refinamiento del ping-pong (va de último, por pedido del autor el 2026-11-06)
+
+X4 (T750 a T757) quedó hecho en `lane/X4` y **no se integra** hasta este refinamiento. El autor lo quiere chistoso:
+
+- [ ] T758 Un rival al que no se le puede ganar, pero que lo hace reír:
+  - dice frases chistosas durante el partido, en ES y EN, con `aria-live` para que también se lean;
+  - hace súper tiros;
+  - cuando el visitante cree que va ganando, no lo deja ganar;
+  - todo se diseña con el autor antes de escribir código: tono de las frases, qué es un súper tiro y cómo "casi gana".
+- [ ] T759 Revisar con el autor que siga contando la historia del aprendizaje (la red que aprende, la curva) y no
+  solo el chiste. Después, integrar X4 al final de T770.
+
 ## X5 QA del laboratorio (en paralelo; corre completa al integrar)
 
 Rutas: `tests/e2e/x5/**`.
@@ -215,7 +227,8 @@ Rutas: `tests/e2e/x5/**`.
 
 ## Integración (orquestador)
 
-- [ ] T770 Integrar en orden X0 → X3 → X2 → X1 → X4 → X5, con `npm run verify` después de cada merge.
+- [ ] T770 Integrar en orden X0 → X3 → X2 → X1 → X5, y X4 de último, después de X4b, con `npm run verify` después de
+  cada merge.
 - [ ] T771 Correr la suite completa **3 veces seguidas en verde**.
 - [ ] T772 Desplegar la vista previa, revisarla con el autor y cortar a `main` solo con su confirmación explícita.
 - [ ] T773 Desbloquear a medida que se resuelvan sus preguntas:
