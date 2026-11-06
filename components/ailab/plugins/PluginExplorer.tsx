@@ -5,7 +5,7 @@ import type { LabDemoProps } from '@/components/ailab/shell/types'
 import { CodeBlock } from '@/components/blog/mdx/CodeBlock'
 import { pluginExample, pluginFileHref, type PluginExampleFile, type PluginPartKind } from '@/content/ailab/plugin-example'
 import styles from './Plugins.module.scss'
-import { buildTree, fileIds, folderIds, treeKey, type FileTree, type TreeNode } from './tree'
+import { buildTree, fileIds, folderIds, treeKey, visibleIds, type FileTree, type TreeNode } from './tree'
 
 const KIND_KEYS: Record<PluginPartKind, string> = {
   manifest: 'ailab.a2.kind.manifest',
@@ -78,23 +78,6 @@ function TreeItem({ id, tree, expanded, focused, selected, domId, register, onRo
         {folder ? <Chevron /> : <FileGlyph />}
         <span className={styles.name}>{folder ? `${node.name}/` : node.name}</span>
       </span>
-      {open ? (
-        <ul role="group" className={styles.group}>
-          {node.children.map((child) => (
-            <TreeItem
-              key={child}
-              id={child}
-              tree={tree}
-              expanded={expanded}
-              focused={focused}
-              selected={selected}
-              domId={domId}
-              register={register}
-              onRow={onRow}
-            />
-          ))}
-        </ul>
-      ) : null}
     </li>
   )
 }
@@ -196,7 +179,7 @@ export function PluginExplorer({ lang, t }: LabDemoProps) {
             onFocus={onFocus}
             data-cw-plugin-tree=""
           >
-            {tree.roots.map((id) => (
+            {visibleIds(tree, expanded).map((id) => (
               <TreeItem
                 key={id}
                 id={id}

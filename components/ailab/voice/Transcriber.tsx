@@ -10,7 +10,7 @@ import { clock, downloadText, exportFileName, plainText, toSrt, toTxt, type Expo
 import { MODEL_CDN, ONNX_RUNTIME, WHISPER_DOWNLOADS, defaultModelOf, offeredModels } from '@/lib/ailab/voice/models'
 import { WHISPER_LANGUAGES, type WhisperLanguage, type WhisperModelId, type WhisperSegment, type WhisperTranscript } from '@/lib/ailab/voice/protocol'
 import type { MicIssue } from '@/lib/ailab/voice/recorder'
-import { DEVICE_NAMES, EngineProgress, LocalNote, fill, formatSeconds, modelName, type EngineMessages } from './parts'
+import { DEVICE_NAMES, EngineProgress, LocalNote, fill, formatSeconds, modelName, rescueFocus, type EngineMessages } from './parts'
 import { useRecorder } from './use-recorder'
 import { useWhisper } from './use-whisper'
 import styles from './Voice.module.scss'
@@ -38,6 +38,7 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
   const [copied, setCopied] = useState<'ok' | 'failed' | null>(null)
   const id = useId()
   const started = useRef(false)
+  const root = useRef<HTMLDivElement>(null)
 
   const messages: EngineMessages = {
     asking: t('ailab.v1.status.asking'),
@@ -68,6 +69,8 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
     started.current = true
     void load(preferred)
   }, [consent, load, preferred])
+
+  useEffect(() => rescueFocus(root.current), [state.phase])
 
   const run = async (audio: Float32Array) => {
     setSegments([])
@@ -186,13 +189,13 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
           : ''
 
   return (
-    <div className={styles.demo} data-cw-voice="V1">
+    <div ref={root} className={styles.demo} data-cw-voice="V1">
       <LocalNote>{t('ailab.v1.local')}</LocalNote>
       <p className={styles.engineNote} data-cw-v1-engine="">
         {fill(t('ailab.v1.engine'), { size: formatBytes(ONNX_RUNTIME.bytes, lang), cdn: MODEL_CDN })}
       </p>
 
-      <fieldset className={styles.fieldset} disabled={busy || recording}>
+      <fieldset className={styles.fieldset} disabled={decoding || working || recording}>
         <legend className={styles.legend}>{t('ailab.v1.model.legend')}</legend>
         <div className={styles.options}>
           {models.map((option) => (
@@ -214,9 +217,16 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
             </label>
           ))}
         </div>
-        {needsLoad && state.phase !== 'asking' ? (
+        {needsLoad ? (
           <div className={styles.actions}>
-            <Button variant="glass" onClick={() => void load(model)} data-cw-v1-load={model}>
+            <Button
+              variant="glass"
+              onClick={() => {
+                if (state.phase !== 'asking') void load(model)
+              }}
+              aria-disabled={state.phase === 'asking' || undefined}
+              data-cw-v1-load={model}
+            >
               {fill(t('ailab.v1.model.load'), { model: modelName(model) })}
             </Button>
           </div>

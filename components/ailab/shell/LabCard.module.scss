@@ -169,6 +169,12 @@
 .stageBar {
   display: flex;
   justify-content: flex-end;
+
+  @include bp.down(md) {
+    > button {
+      min-height: 44px;
+    }
+  }
 }
 
 .note {

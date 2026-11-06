@@ -12,7 +12,7 @@ import { decodeToMono } from '@/lib/ailab/voice/decode'
 import { ONNX_RUNTIME, WHISPER_DOWNLOADS, defaultModelOf } from '@/lib/ailab/voice/models'
 import { WHISPER_LANGUAGES, type WhisperLanguage } from '@/lib/ailab/voice/protocol'
 import type { MicIssue } from '@/lib/ailab/voice/recorder'
-import { EngineProgress, LocalNote, fill, type EngineMessages } from './parts'
+import { EngineProgress, LocalNote, fill, rescueFocus, type EngineMessages } from './parts'
 import { useSessionConsent } from './use-consent'
 import { useRecorder, type Recording } from './use-recorder'
 import { useWhisper } from './use-whisper'
@@ -51,6 +51,7 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
   const started = useRef(false)
   const leaveTimer = useRef<number | null>(null)
   const lastGesture = useRef(Number.NEGATIVE_INFINITY)
+  const root = useRef<HTMLDivElement>(null)
   const id = useId()
 
   const messages: EngineMessages = {
@@ -82,6 +83,8 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
     started.current = true
     void load(model)
   }, [allowed, consent, load, model])
+
+  useEffect(() => rescueFocus(root.current), [allowed, state.phase])
 
   useEffect(
     () => () => {
@@ -246,7 +249,7 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
     state.phase === 'asking' ? messages.asking : state.phase === 'declined' ? messages.declined : ''
 
   return (
-    <div className={styles.demo} data-cw-voice="V4" data-cw-v4-voice={allowed ? 'on' : 'off'}>
+    <div ref={root} className={styles.demo} data-cw-voice="V4" data-cw-v4-voice={allowed ? 'on' : 'off'}>
       <LocalNote>{t('ailab.v4.local')}</LocalNote>
 
       {allowed ? (

@@ -41,6 +41,11 @@ export function LocalNote({ children }: { children: ReactNode }) {
   )
 }
 
+export function rescueFocus(root: HTMLElement | null): void {
+  if (!root || document.activeElement !== document.body) return
+  root.querySelector<HTMLElement>('[data-cw-voice-engine-status]')?.focus({ preventScroll: true })
+}
+
 export type EngineMessages = {
   asking: string
   declined: string
@@ -108,7 +113,7 @@ export function EngineProgress({
   const retry = failed || state.notice === 'cancelled' || state.notice === 'evicted' || state.phase === 'declined'
   return (
     <div className={styles.status} data-cw-voice-engine={state.phase}>
-      <p role="status" aria-live="polite" aria-atomic="true">
+      <p role="status" aria-live="polite" aria-atomic="true" tabIndex={-1} data-cw-voice-engine-status="">
         {text}
         {state.paused ? ` ${messages.paused}` : ''}
       </p>
