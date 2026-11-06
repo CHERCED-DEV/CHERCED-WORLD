@@ -33,7 +33,7 @@ const LOCALES: Locale[] = ['es', 'en']
 const PUBLIC_DIR = path.resolve(process.cwd(), 'public')
 const POST_IDS = ['post1', 'post2', 'post3', 'post4', 'post5']
 const PROJECT_IDS = ['12', '13', '2', '14', '15', '1', '3', '4', '5', '6', '7', '8', '9', '10', '11']
-const PROJECTS_WITHOUT_LINKS = ['10', '13', '14', '15']
+const PROJECTS_WITHOUT_LINKS = ['10', '14', '15']
 const SYNERGOS_REPOS = ['Synergos.CMS', 'Synergos.UI', 'Synergos.Fabrica']
 const REGISTRY_TEXT = readFileSync(path.join(POSTS_DIR, 'registry.ts'), 'utf8')
 
@@ -327,10 +327,10 @@ describe('proyectos (FR-083, FR-443, FR-446)', () => {
         expect(project.links, project.id).toEqual({ live: null, github: null })
         continue
       }
-      if (project.id === '12') {
+      if (project.id === '12' || project.id === '13') {
         expect(project.links.live).toBeNull()
         expect(project.links.github).toBeNull()
-        expect(project.links.repos?.map((repo) => repo.label)).toEqual(SYNERGOS_REPOS)
+        expect(project.links.repos?.map((repo) => repo.label)).toEqual(project.id === '12' ? SYNERGOS_REPOS : ['Synergos.Fabrica'])
         for (const repo of project.links.repos ?? []) expect(repo.href).toBe(`https://github.com/CHERCED-DEV/${repo.label}`)
         continue
       }

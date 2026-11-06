@@ -1,11 +1,12 @@
 import type { CSSProperties } from 'react'
 import type { Project, SiteContent } from '@/content/types'
-import type { Locale } from '@/lib/i18n'
+import { localizedPath, type Locale } from '@/lib/i18n'
 import { HomeBanner } from '../HomeBanner'
 import enter from './Enter.module.scss'
 import styles from './Home.module.scss'
 import { HOME_NOW_ID, HomeNow, type HomeNowLabels } from './HomeNow'
 import { nowRoles } from './now'
+import { RecruitersBlock } from './RecruitersBlock'
 import { ScrollCue } from './ScrollCue'
 
 export type HomeViewLabels = {
@@ -42,6 +43,7 @@ export function HomeView({ lang, site, projects, labels }: HomeViewProps) {
         ) : null}
       </div>
       <HomeNow lang={lang} roles={roles} labels={labels.now} />
+      {site.recruiters ? <RecruitersBlock lang={lang} content={site.recruiters} writeHref={localizedPath(lang, '/contactMe')} /> : null}
     </>
   )
 }

@@ -90,10 +90,25 @@ export type Profile = {
   cv: { href: string; pdf?: CvPdf }
 }
 
+export type RecruitersContent = {
+  title: Localized
+  intro: Localized
+  rolesTitle: Localized
+  roles: Localized[]
+  modalityTitle: Localized
+  modality: Localized
+  englishTitle: Localized
+  english: Localized
+  write: Localized
+}
+
+export type Certification = { name: Localized; issuer: string; date: string | null }
+
 export type SiteContent = {
   socials: SocialLink[]
   home: { greeting: Localized; name: string; title: Localized; previousTitle?: Localized; subtitle?: Localized }
   profile?: Profile
+  recruiters?: RecruitersContent
   about: {
     description: Localized
     image: ImageRef
@@ -107,6 +122,7 @@ export type SiteContent = {
       inWords?: Partial<Record<string, Localized>>
     }
     principles?: Principle[]
+    certifications?: Certification[]
     education: EducationEntry[]
     courses: { schools: CourseSchool[]; platzi: { href: string; label: Localized; icon?: string } }
     languages: LanguageSkill[]

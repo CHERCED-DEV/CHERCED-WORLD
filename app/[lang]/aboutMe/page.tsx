@@ -5,6 +5,7 @@ import { AboutCareer } from '@/components/site/about/AboutCareer'
 import { AboutDescription } from '@/components/site/about/AboutDescription'
 import { AboutFigures } from '@/components/site/about/AboutFigures'
 import { BrainScene } from '@/components/site/about/BrainScene'
+import { Certifications } from '@/components/site/about/Certifications'
 import { aboutFigures } from '@/components/site/about/figures'
 import { SceneNav } from '@/components/site/about/SceneNav'
 import { resolveLang, type LangParams } from '@/components/site/lang'
@@ -123,6 +124,16 @@ export default async function AboutMePage({ params }: Props) {
                 next: t(portfolio, 'case.next'),
               },
             },
+          }}
+        />
+        <Certifications
+          lang={lang}
+          items={about.certifications ?? []}
+          profileHref={about.courses.platzi.href}
+          labels={{
+            title: t(dict, 'about.certifications'),
+            profile: about.courses.platzi.label[lang],
+            newTab: t(dict, 'a11y.newTab'),
           }}
         />
       </section>

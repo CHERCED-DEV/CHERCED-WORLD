@@ -53,10 +53,16 @@ describe('confidencialidad (FR-444, SC-407)', () => {
     }
   })
 
-  it('los casos nuevos van sin enlaces hasta que el autor los confirme (FR-447, P-420)', () => {
-    for (const id of ['13', '14', '15']) {
+  it('los casos nuevos van sin enlaces hasta que el autor los confirme (FR-447, P-420); Director y líneas solo enlaza el arnés público', () => {
+    for (const id of ['14', '15']) {
       const project = projects.find((item) => item.id === id)!
       expect(project.links, id).toEqual({ live: null, github: null })
     }
+    const director = projects.find((item) => item.id === '13')!
+    expect(director.links).toEqual({
+      live: null,
+      github: null,
+      repos: [{ label: 'Synergos.Fabrica', href: 'https://github.com/CHERCED-DEV/Synergos.Fabrica' }],
+    })
   })
 })

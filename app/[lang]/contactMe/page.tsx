@@ -9,6 +9,7 @@ import { preselectedInterest } from '@/components/contact/preselect'
 import { BackgroundIntensity } from '@/components/motion'
 import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
 import { buttonClassName } from '@/components/ui/Button'
+import { RecruitersBlock } from '@/components/site/home/RecruitersBlock'
 import { CvActions } from '@/components/ui/CvLink'
 import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -76,8 +77,9 @@ export default async function ContactPage({ params, searchParams }: Props) {
           </div>
         </div>
         <Separator />
+        {site.recruiters ? <RecruitersBlock lang={lang} content={site.recruiters} writeHref="#contact-form" withCv={false} compact /> : null}
       </div>
-      <GlassSurface variant="standard" className={styles.card}>
+      <GlassSurface variant="standard" className={styles.card} id="contact-form">
         <ContactForm
           renderedAt={renderedAt}
           privacyHref={localizedPath(lang, '/privacy')}

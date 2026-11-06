@@ -675,7 +675,11 @@ export const projects: Project[] = [
       width: 960,
       height: 640,
     },
-    links: { live: null, github: null },
+    links: {
+      live: null,
+      github: null,
+      repos: [{ label: 'Synergos.Fabrica', href: 'https://github.com/CHERCED-DEV/Synergos.Fabrica' }],
+    },
     order: 2,
     era: '2026',
     highlights: [

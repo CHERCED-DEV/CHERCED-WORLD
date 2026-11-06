@@ -74,7 +74,8 @@ describe('portafolio: 15 casos, orden y época (FR-405, FR-443, E-04)', () => {
     for (const project of projects.filter((item) => item.id !== '12')) {
       expect(project.adrCards, project.id).toBeUndefined()
       expect(project.diagram, project.id).toBeUndefined()
-      expect(project.links.repos, project.id).toBeUndefined()
+      if (project.id === '13') expect(project.links.repos?.map((repo) => repo.label)).toEqual(['Synergos.Fabrica'])
+      else expect(project.links.repos, project.id).toBeUndefined()
     }
   })
 

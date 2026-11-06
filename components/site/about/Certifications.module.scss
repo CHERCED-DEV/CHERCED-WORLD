@@ -1,0 +1,60 @@
+.certifications {
+  width: 100%;
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+.panel {
+  display: grid;
+  gap: var(--cw-space-4);
+  padding: clamp(1.25rem, 1rem + 1.6vw, 2.5rem);
+}
+
+.title {
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.list {
+  display: grid;
+  gap: var(--cw-space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  gap: var(--cw-space-1);
+  padding-block: var(--cw-space-2);
+  border-top: 1px solid var(--cw-graphic-line);
+}
+
+.name {
+  font-weight: 700;
+  line-height: var(--cw-leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 0.5em;
+  min-height: 44px;
+  color: var(--cw-fg);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-color: var(--cw-graphic-accent);
+  text-underline-offset: 0.3em;
+}

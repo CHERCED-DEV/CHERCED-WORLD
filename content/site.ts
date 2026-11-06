@@ -53,6 +53,37 @@ export const site: SiteContent = {
     },
     cv: { href: 'https://www.linkedin.com/in/cherced/', pdf: { href: '/cv/Camilo_Hernandez_CV.pdf', bytes: 172_753 } },
   },
+  recruiters: {
+    title: { es: 'Para reclutadores', en: 'For recruiters' },
+    intro: {
+      es: 'Lo que busco, en corto. Si tu equipo encaja, el CV y LinkedIn están aquí mismo.',
+      en: 'What I am looking for, in short. If your team fits, my CV and LinkedIn are right here.',
+    },
+    rolesTitle: { es: 'Roles que busco', en: 'Roles I am looking for' },
+    roles: [
+      {
+        es: 'Frontend de alta calidad, con Angular como mi framework favorito y las manos también en el backend.',
+        en: 'High-quality frontend, with Angular as my favorite framework and my hands on the backend too.',
+      },
+      {
+        es: 'Full stack con énfasis en el front.',
+        en: 'Full stack with an emphasis on the frontend.',
+      },
+      {
+        es: 'AI Engineer: arneses, skills y automatizaciones con agentes de IA.',
+        en: 'AI Engineer: harnesses, skills and automations with AI agents.',
+      },
+      {
+        es: 'Equipos con fábricas de software por mejorar, o departamentos de ingeniería donde proponer lineamientos, experimentos y templates.',
+        en: 'Teams with software factories to improve, or engineering departments where I can propose guidelines, experiments and templates.',
+      },
+    ],
+    modalityTitle: { es: 'Modalidad', en: 'How I work' },
+    modality: { es: 'Remoto · UTC−5 · Abierto a reubicación', en: 'Remote · UTC−5 · Open to relocation' },
+    englishTitle: { es: 'Inglés', en: 'English' },
+    english: { es: 'B1, B2 en uso profesional frecuente', en: 'B1, B2 in regular professional use' },
+    write: { es: 'Escríbeme', en: 'Write to me' },
+  },
   about: {
     description: {
       es: 'Soy Camilo, Software Solutions Engineer. Diseño plataformas donde agregar el siguiente negocio no cuesta lo mismo que el primero: micro-frontends, microservicios .NET, sagas y un CMS que compone. En fintech trabajo de punta a punta y lidero migraciones de legado. En Synergos dirijo un equipo de agentes de IA que construye en paralelo bajo reglas de arquitectura que rompen el build si alguien las viola.',
@@ -454,6 +485,18 @@ export const site: SiteContent = {
       {
         short: { es: 'Código para humanos', en: 'Code for humans' },
         full: { es: 'Código para que lo lean humanos, aunque lo escriba un agente.', en: 'Code for humans to read, even when an agent writes it.' },
+      },
+    ],
+    certifications: [
+      {
+        name: { es: 'Fundamentos de Arquitectura de Software', en: 'Software Architecture Fundamentals' },
+        issuer: 'Platzi',
+        date: '2025-11',
+      },
+      {
+        name: { es: 'Más de 140 cursos certificados de desarrollo de software', en: '140+ certified software development courses' },
+        issuer: 'Platzi',
+        date: null,
       },
     ],
     education: [

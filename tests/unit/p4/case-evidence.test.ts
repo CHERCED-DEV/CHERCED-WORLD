@@ -169,12 +169,13 @@ describe('repositorios (FR-447)', () => {
     for (const repo of caseStudyRepos(synergos)) expect(repo.href).toMatch(/^https:\/\/github\.com\//)
   })
 
-  it('Legal workspace va sin repo (P-420) y Director & lines y Event bridge sin enlaces', () => {
-    for (const id of ['13', '14', '15']) {
+  it('Legal workspace va sin repo (P-420), Event bridge sin enlaces y Director y líneas con el arnés público (FR-712 de la 007)', () => {
+    for (const id of ['14', '15']) {
       const project = getProject(id)!
       expect(caseStudyRepos(project), id).toEqual([])
       expect(project.links, id).toMatchObject({ live: null, github: null })
     }
+    expect(caseStudyRepos(getProject('13')!)).toEqual([{ label: 'Synergos.Fabrica', href: 'https://github.com/CHERCED-DEV/Synergos.Fabrica' }])
     expect(synergos.links.live).toBeNull()
   })
 
