@@ -147,7 +147,6 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
     }
     expect(labCatalog.filter((item) => defaultDownload(item)).map((item) => [item.id, defaultDownload(item)?.resource])).toEqual([
       ['V1', 'Whisper base (int8)'],
-      ['V4', 'Whisper tiny (int8)'],
     ])
     expect(labExperiment('A4').downloads.every((download) => download.host === 'cdn.jsdelivr.net')).toBe(true)
   })

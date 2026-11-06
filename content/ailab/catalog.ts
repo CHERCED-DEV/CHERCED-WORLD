@@ -44,7 +44,10 @@ const V1: LabExperiment = {
   privacy: copy('ailab.v1.privacy'),
   flow: [
     { es: 'Grabas o subes un audio', en: 'You record or upload audio' },
-    { es: 'Whisper lo transcribe en un worker de tu navegador', en: 'Whisper transcribes it in a worker in your browser' },
+    {
+      es: 'Whisper lo transcribe en un worker de tu navegador, con ONNX Runtime Web',
+      en: 'Whisper transcribes it in a worker in your browser, with ONNX Runtime Web',
+    },
     { es: 'Texto con marcas de tiempo, en .txt o .srt', en: 'Text with timestamps, as .txt or .srt' },
   ],
   adrCards: [
@@ -55,8 +58,8 @@ const V1: LabExperiment = {
         en: 'The Web Speech API sends the audio to a browser service. Here the audio never leaves your device.',
       },
       tradeoff: {
-        es: 'La primera vez hay que descargar el modelo, y la velocidad depende de tu equipo.',
-        en: 'The first time you have to download the model, and the speed depends on your device.',
+        es: 'La primera vez hay que descargar el modelo desde Hugging Face y el motor ONNX Runtime Web (27 MB) desde este sitio, y la velocidad depende de tu equipo.',
+        en: 'The first time you have to download the model from Hugging Face and the ONNX Runtime Web engine (27 MB) from this site, and the speed depends on your device.',
       },
     },
     {
@@ -72,20 +75,20 @@ const V1: LabExperiment = {
     },
   ],
   code: {
-    snippet: `export function requestDownload(request: DownloadRequest): Promise<boolean> {
-  assertDownloadRequest(request)
-  if (hasConsent(request.experiment, request.resource)) return Promise.resolve(true)
-  const key = consentKey(request.experiment, request.resource)
-  const existing = pending.get(key)
-  if (existing) return existing
-  const turn = queue.then(() => ask(request))
-  queue = turn.catch(() => false)
-  const result = turn.finally(() => pending.delete(key))
-  pending.set(key, result)
-  return result
+    snippet: `for (const [index, window] of windows.entries()) {
+  await context.checkpoint()
+  const slice = audio.subarray(window.start, window.end)
+  let fresh: WhisperSegment[] = []
+  if (!isSilent(slice)) {
+    const output = await loaded.pipe(slice, { language, task: 'transcribe', return_timestamps: true })
+    const first = Array.isArray(output) ? output[0] : output
+    if (first) fresh = toSegments(first, window.start / SAMPLE_RATE, window.end / SAMPLE_RATE)
+  }
+  segments.push(...fresh)
+  context.progress({ stage: 'transcribe', done: index + 1, total: windows.length, segments: fresh })
 }`,
     lang: 'ts',
-    repoPath: 'lib/ailab/core/consent.ts',
+    repoPath: 'lib/ailab/voice/engine.ts',
   },
 }
 
@@ -130,7 +133,10 @@ const V3: LabExperiment = {
   privacy: copy('ailab.v3.privacy'),
   flow: [
     { es: 'Eliges un post', en: 'You pick a post' },
-    { es: 'Se toma solo el cuerpo, sin los bloques de código', en: 'Only the body is taken, without the code blocks' },
+    {
+      es: 'Se toma solo el cuerpo, sin los bloques de código ni las imágenes decorativas',
+      en: 'Only the body is taken, without the code blocks or the decorative images',
+    },
     { es: 'La voz del navegador lo lee en el idioma de la página', en: "The browser's voice reads it in the page's language" },
   ],
   adrCards: [
@@ -167,11 +173,14 @@ const V4: LabExperiment = {
   summary: copy('ailab.v4.summary'),
   status: 'experiment',
   runsIn: 'browser',
-  downloads: [{ ...WHISPER_TINY, default: true }],
+  downloads: [WHISPER_TINY],
   privacy: copy('ailab.v4.privacy'),
   flow: [
     { es: 'Mantienes el botón y dices un comando, o lo escribes', en: 'You hold the button and say a command, or type it' },
-    { es: 'Whisper tiny lo convierte en texto en tu navegador', en: 'Whisper tiny turns it into text in your browser' },
+    {
+      es: 'Whisper tiny, con ONNX Runtime Web, lo convierte en texto en tu navegador',
+      en: 'Whisper tiny, with ONNX Runtime Web, turns it into text in your browser',
+    },
     { es: 'Se compara con la lista de frases y corre el comando de la paleta', en: 'It is matched against the phrase list and the palette command runs' },
   ],
   adrCards: [
@@ -202,15 +211,24 @@ const V4: LabExperiment = {
     },
   ],
   code: {
-    snippet: `export function runPaletteCommand(id: PaletteCommandId | string): boolean {
-  const current = runner
-  const item = findPaletteCommand(id)
-  if (!current || !item) return false
-  current.run(item)
-  return true
+    snippet: `export function matchVoiceCommand(
+  utterance: string,
+  commands: readonly VoiceCommand[] = voiceCommands,
+  threshold = MATCH_THRESHOLD,
+): VoiceMatch | null {
+  let best: VoiceMatch | null = null
+  for (const command of commands) {
+    for (const lang of locales) {
+      for (const phrase of command.phrases[lang]) {
+        const score = phraseScore(utterance, phrase)
+        if (score >= threshold && (!best || score > best.score)) best = { command, phrase, lang, score }
+      }
+    }
+  }
+  return best
 }`,
     lang: 'ts',
-    repoPath: 'components/experience/palette-model.ts',
+    repoPath: 'lib/ailab/voice/commands.ts',
   },
 }
 

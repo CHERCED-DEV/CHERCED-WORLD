@@ -38,7 +38,9 @@ export function Dialog({ open, onClose, labelledBy, describedBy, className, mobi
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
-    const handleClose = () => notifyClose()
+    const handleClose = () => {
+      if (!dialog.open) notifyClose()
+    }
     dialog.addEventListener('close', handleClose)
     return () => dialog.removeEventListener('close', handleClose)
   }, [])

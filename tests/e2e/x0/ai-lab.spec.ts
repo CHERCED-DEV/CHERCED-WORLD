@@ -162,16 +162,23 @@ test.describe('consentimiento antes de descargar (US1 escenarios 3 y 4, FR-310, 
 
   test('Esc también cuenta como "Ahora no"', async ({ page }) => {
     await open(page, 'es')
-    await card(page, 'V4').locator('[data-cw-lab-open]').click()
+    await card(page, 'V1').locator('[data-cw-lab-open]').click()
     await expect(consent(page)).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(consent(page)).toBeHidden()
-    await expect(card(page, 'V4').locator('[data-cw-lab-declined]')).toBeVisible()
+    await expect(card(page, 'V1').locator('[data-cw-lab-declined]')).toBeVisible()
     expect(await storedConsent(page)).toEqual([])
   })
 
   test('aceptar vale para la sesión, abre la demo y el permiso se puede retirar', async ({ page }) => {
     const heavy = watchHeavy(page)
+    await page.addInitScript(() => {
+      class SilentWorker extends EventTarget {
+        postMessage() {}
+        terminate() {}
+      }
+      Object.defineProperty(window, 'Worker', { value: SilentWorker, configurable: true, writable: true })
+    })
     await open(page, 'es')
     const v1 = card(page, 'V1')
     await v1.locator('[data-cw-lab-open]').click()
@@ -215,9 +222,9 @@ test.describe('consentimiento antes de descargar (US1 escenarios 3 y 4, FR-310, 
 
   test('en inglés el diálogo dice lo mismo', async ({ page }) => {
     await open(page, 'en')
-    await card(page, 'V4').locator('[data-cw-lab-open]').click()
+    await card(page, 'V1').locator('[data-cw-lab-open]').click()
     await expect(consent(page).locator('[data-cw-lab-consent-text]')).toHaveText(
-      'This experiment downloads Whisper tiny (int8) (41 MB) from huggingface.co. It stays in your browser for next time.',
+      'This experiment downloads Whisper base (int8) (77 MB) from huggingface.co. It stays in your browser for next time.',
     )
     await expect(consent(page).locator('[data-cw-lab-consent-accept]')).toHaveText('Download and try')
     await expect(consent(page).locator('[data-cw-lab-consent-cancel]')).toHaveText('Not now')
