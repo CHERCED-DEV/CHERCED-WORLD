@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { createElement, isValidElement, type ReactNode } from 'react'
 import { describe, expect, it } from 'vitest'
 import { projects } from '@/content/projects'
+import { projectTitle } from '@/lib/content/project-title'
 import { ogCase, ogSection } from '@/lib/og/sections'
 import { OG_CONTENT_TYPE, OG_DOMAIN, OG_FONT_DIR, OG_SIZE, OgCard, ogAlt, ogFonts, ogImageMetadata, renderOgImage } from '@/lib/og/template'
 
@@ -46,7 +47,7 @@ describe('plantilla OG (R-403, FR-471)', () => {
   it('cada caso usa su título y su resumen', () => {
     for (const project of projects) {
       for (const lang of ['es', 'en'] as const) {
-        expect(ogCase(lang, project.id)).toEqual({ lang, title: project.title, line: project.summary[lang] })
+        expect(ogCase(lang, project.id)).toEqual({ lang, title: projectTitle(project, lang), line: project.summary[lang] })
       }
     }
     expect(ogCase('es', 'no-existe')).toBeNull()

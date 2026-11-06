@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { monogram } from '@/components/site/about/monogram'
 import { capsule } from '@/content/capsule'
 import { projects } from '@/content/projects'
+import { projectTitles } from '@/lib/content/project-title'
 import { authorPending, site } from '@/content/site'
 import { now } from '@/content/now'
 import { terminalCommands, terminalNotFound } from '@/content/terminal'
@@ -310,7 +311,7 @@ describe('proyectos (FR-083, FR-443, FR-446)', () => {
 
   it('presenta cada proyecto como caso de estudio sin campos vacíos', () => {
     for (const project of projects) {
-      expect(project.title.trim(), project.id).not.toBe('')
+      for (const title of projectTitles(project)) expect(title.trim(), project.id).not.toBe('')
       expect(project.context, project.id).not.toBeNull()
       for (const field of [project.role, project.decisions, project.result]) {
         if (field !== null) expect(isLocalized(field), project.id).toBe(true)

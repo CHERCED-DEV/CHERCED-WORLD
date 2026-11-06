@@ -4,13 +4,13 @@ import { paragraphs } from '@/components/site/format'
 import { filterProjects, filtersSummary } from '@/components/site/portfolio/carousel'
 import { caseStudyRepos } from '@/components/site/portfolio/projects'
 import type { Locale, ProjectEra } from '@/content/types'
-import { getProject, getProjects } from '@/lib/content'
+import { getProject, getProjects, projectTitle } from '@/lib/content'
 import { onlyIn, skipIntro } from '../r2/support'
 
 const projects = getProjects()
 const synergos = getProject('12')!
 const NEW_CASES = ['13', '14', '15'].map((id) => getProject(id)!)
-const ERA_TEXT: Record<ProjectEra, string> = { '2024-2026': '2024–2026', '2022-2023': '2022–2023' }
+const ERA_TEXT: Record<ProjectEra, string> = { '2026': '2026', '2024-2026': '2024–2026', '2022-2023': '2022–2023' }
 const SUMMARY = {
   es: { filteredAll: 'Mostrando los {count} proyectos', filteredOne: '1 proyecto con {tech}', filteredMany: '{count} proyectos con {tech}', filteredEra: '{count} proyectos de {era}' },
   en: { filteredAll: 'Showing all {count} projects', filteredOne: '1 project with {tech}', filteredMany: '{count} projects with {tech}', filteredEra: '{count} projects from {era}' },
@@ -296,7 +296,7 @@ test.describe('repos y casos nuevos (FR-443, FR-447)', () => {
       await skipIntro(page)
       for (const project of NEW_CASES) {
         await page.goto(`/${lang}/portfolio/${project.id}`)
-        await expect(page.getByRole('heading', { level: 1 })).toHaveText(project.title)
+        await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(project, lang))
         await expect(page.locator('[data-cw-case-era]')).toContainText(ERA_TEXT[project.era])
         await expect(page.getByText(project.summary[lang], { exact: true }).first()).toBeVisible()
         for (const paragraph of paragraphs(project.context[lang])) await expect(page.getByText(paragraph)).toBeVisible()
@@ -330,7 +330,7 @@ test.describe('transición compartida carrusel → caso (FR-465, US7 escenario 7
       expect(await slideIds(page)).toEqual(projects.map((project) => project.id))
       await page.goForward()
       await page.waitForURL('**/es/portfolio/12')
-      await expect(page.getByRole('heading', { level: 1 })).toHaveText(synergos.title)
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(synergos, 'es'))
     }
   })
 
@@ -368,7 +368,7 @@ test.describe('transición compartida carrusel → caso (FR-465, US7 escenario 7
     await page.waitForURL('**/es/portfolio/12')
     await page.waitForTimeout(400)
     for (const record of await transitions(page)) expect(Math.max(0, ...record.ends)).toBe(0)
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(synergos.title)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(synergos, 'es'))
   })
 
   test('sin View Transitions en el navegador la navegación es la normal', async ({ page }) => {
@@ -377,7 +377,7 @@ test.describe('transición compartida carrusel → caso (FR-465, US7 escenario 7
     await page.goto('/es/portfolio')
     await page.locator('[data-cw-slide="12"]').getByRole('link').click()
     await page.waitForURL('**/es/portfolio/12')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(synergos.title)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(synergos, 'es'))
     expect(await transitions(page)).toEqual([])
   })
 })

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { Fragment, type CSSProperties, type ReactNode } from 'react'
 import type { SiteContent } from '@/content/types'
 import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
-import { CvLink } from '@/components/ui/CvLink'
+import { CvActions } from '@/components/ui/CvLink'
 import { cx } from '@/components/ui/cx'
 import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -134,7 +134,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
         </div>
         <div className={styles.actions}>
           <div className={enter.enter} style={step(3.25)}>
-            <CvLink lang={lang} />
+            <CvActions lang={lang} downloadVariant="solid" />
           </div>
           {links.length > 0 ? (
             <nav aria-label={socialsLabel}>

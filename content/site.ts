@@ -51,7 +51,7 @@ export const site: SiteContent = {
       timezone: 'UTC−5',
       relocation: { es: 'Abierto a reubicación', en: 'Open to relocation' },
     },
-    cv: { href: 'https://www.linkedin.com/in/cherced/' },
+    cv: { href: 'https://www.linkedin.com/in/cherced/', pdf: { href: '/cv/Camilo_Hernandez_CV.pdf', bytes: 172_753 } },
   },
   about: {
     description: {

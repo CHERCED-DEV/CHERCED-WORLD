@@ -1,7 +1,7 @@
 {
   "home.title": "DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN",
   "home.socials": "Contáctame",
-  "meta.home.title": "<-CHERCED-WORLD->",
+  "meta.home.title": "Camilo Hernández · Software Solutions Engineer · AI-First",
   "meta.home.description": "Camilo Hernandez, Software Solutions Engineer. Diseño sistemas composables y distribuidos con micro-frontends, microservicios .NET y Azure. Trabajo AI-first y spec-driven.",
   "meta.about.title": "Sobre mí",
   "meta.about.description": "Software Solutions Engineer · AI-First: mi carrera, lo que sé y dónde lo apliqué.",
@@ -78,6 +78,7 @@
   "services.cases": "Casos",
   "services.faq": "Preguntas frecuentes",
   "portfolio.era": "Época",
+  "portfolio.era.2026": "2026",
   "portfolio.era.2024-2026": "2024–2026",
   "portfolio.era.2022-2023": "2022–2023",
   "portfolio.filteredEra": "{count} proyectos de {era}",

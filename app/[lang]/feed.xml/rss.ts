@@ -62,7 +62,7 @@ export async function buildFeed(lang: Locale, base: URL = getSiteUrl()): Promise
     .at(-1)
   return renderRss(
     {
-      title: `${t(blog, 'meta.blog.title')} | ${t(common, 'meta.title')}`,
+      title: t(common, 'meta.titleTemplate').replace('%s', t(blog, 'meta.blog.title')),
       link: new URL(blogPath(lang), base).toString(),
       description: t(blog, 'meta.blog.description'),
       language: lang,

@@ -62,9 +62,13 @@ describe('A-406: índice versión 2 con habilidades (FR-450)', () => {
     }
   })
 
-  it('el CV entra solo como enlace de LinkedIn (FR-422)', async () => {
+  it('el CV entra como enlaces, a LinkedIn y al PDF del sitio, sin su contenido (FR-422, FR-701 de la 007)', async () => {
     const index = await buildSearchIndex('en')
-    expect(index.facts.cv).toEqual({ href: 'https://www.linkedin.com/in/cherced/', label: 'See my CV on LinkedIn' })
-    expect(JSON.stringify(index)).not.toMatch(/\.pdf\b/i)
+    expect(index.facts.cv).toEqual({
+      href: 'https://www.linkedin.com/in/cherced/',
+      label: 'See my CV on LinkedIn',
+      pdf: { href: '/cv/Camilo_Hernandez_CV.pdf', label: 'Download CV (PDF)', bytes: 172_753 },
+    })
+    expect(JSON.stringify(index).replaceAll('/cv/Camilo_Hernandez_CV.pdf', '')).not.toMatch(/\.pdf\b/i)
   })
 })

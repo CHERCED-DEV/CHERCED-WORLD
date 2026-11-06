@@ -6,6 +6,7 @@ import siteEn from '@/content/i18n/en/site.json'
 import siteEs from '@/content/i18n/es/site.json'
 import { projects } from '@/content/projects'
 import { site } from '@/content/site'
+import { projectTitle } from '@/lib/content/project-title'
 import type { Locale } from '@/lib/i18n/config'
 import { t, type Dictionary } from '@/lib/i18n/translate'
 import type { OgInput } from './template'
@@ -48,5 +49,5 @@ export function ogSection(lang: Locale, section: OgSection): OgInput {
 
 export function ogCase(lang: Locale, id: string): OgInput | null {
   const project = projects.find((item) => item.id === id)
-  return project ? { lang, title: project.title, line: project.summary[lang] } : null
+  return project ? { lang, title: projectTitle(project, lang), line: project.summary[lang] } : null
 }

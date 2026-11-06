@@ -13,7 +13,9 @@ import { localizedPath } from '@/lib/i18n/paths'
 import { t } from '@/lib/i18n/translate'
 import type { SearchDoc } from '@/lib/search/types'
 import styles from './ExperienceClient.module.scss'
+import { downloadFile } from './download'
 import type { ExperienceLabels } from './labels'
+import type { CvPdfCommand } from './palette-model'
 import {
   currentTheme,
   readCapsuleFound,
@@ -63,11 +65,12 @@ export type ExperienceClientProps = {
   pages: SearchDoc[]
   email: string | null
   cv: string | null
+  cvPdf: CvPdfCommand | null
   areas: string[]
   capsule: CapsuleEntry[]
 }
 
-export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsule }: ExperienceClientProps) {
+export function ExperienceClient({ lang, labels, pages, email, cv, cvPdf, areas, capsule }: ExperienceClientProps) {
   const router = useRouter()
   const pathname = usePathname()
   const pathRef = useRef(pathname)
@@ -178,6 +181,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsul
                     theme: currentTheme(),
                     email,
                     cv,
+                    cvPdf,
                     now: localizedPath(lang, '/now'),
                     aiLab: localizedPath(lang, '/ai-lab'),
                     capsuleFound: readCapsuleFound(),
@@ -193,6 +197,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsul
                 setTheme: (to) => preferences().setTheme(to),
                 switchLang: () => preferences().setLanguage(otherLocale(lang)),
                 open: (href) => window.open(href, '_blank', 'noopener,noreferrer'),
+                download: downloadFile,
                 shortcuts: () => show('shortcuts'),
                 assistant: () => show('assistant'),
                 copyEmail: () => {
@@ -218,7 +223,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsul
       cancel()
       unregister?.()
     }
-  }, [lang, labels, pages, email, cv, router, show, toast])
+  }, [lang, labels, pages, email, cv, cvPdf, router, show, toast])
 
   const unavailable = status === 'unavailable'
 
@@ -260,6 +265,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsul
           pages={pages}
           email={email}
           cv={cv}
+          cvPdf={cvPdf}
           singleKey={singleKey}
           open={open === 'palette'}
           session={sessions.palette}

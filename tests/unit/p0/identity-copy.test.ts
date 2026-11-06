@@ -43,7 +43,7 @@ const CURRENT_TEXTS = [
   ...strings(site.portfolio, 'portfolio'),
   ...strings(site.contact, 'contact'),
   ...strings(now, 'now'),
-  ...projects.filter((project) => project.era === '2024-2026').flatMap((project) => strings(project, `project ${project.id}`)),
+  ...projects.filter((project) => project.era !== '2022-2023').flatMap((project) => strings(project, `project ${project.id}`)),
 ]
 
 describe('identidad de hoy (SC-401, FR-403)', () => {

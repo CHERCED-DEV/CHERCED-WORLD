@@ -61,7 +61,7 @@ describe('portafolio en el HTML del servidor (US1, US4)', () => {
     expect(visible).toHaveLength(projects.length)
     for (const [, hidden, label] of visible) {
       expect(hidden).toBe(lang === 'es' ? 'Época: ' : 'Period: ')
-      expect(['2024–2026', '2022–2023']).toContain(label)
+      expect(['2026', '2024–2026', '2022–2023']).toContain(label)
     }
   })
 
@@ -75,7 +75,7 @@ describe('portafolio en el HTML del servidor (US1, US4)', () => {
   it('ofrece el filtro de época con conteos reales y sin presionar', async () => {
     const html = await render('es')
     const buttons = [...html.matchAll(/<button[^>]*data-cw-era-filter="([^"]+)"[^>]*>([\s\S]*?)<\/button>/g)]
-    expect(buttons.map((match) => match[1])).toEqual(['2024-2026', '2022-2023'])
+    expect(buttons.map((match) => match[1])).toEqual(['2026', '2024-2026', '2022-2023'])
     for (const [tag, era] of buttons) {
       expect(tag).toContain('aria-pressed="false"')
       const count = projects.filter((project) => project.era === era).length

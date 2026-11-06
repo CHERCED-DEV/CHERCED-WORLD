@@ -13,6 +13,7 @@ const { mentionsEmployer, quantities } = await import('../../e2e/integration/sup
 const assistants = await loadAssistants()
 const site = getSite()
 const CV = 'https://www.linkedin.com/in/cherced/'
+const CV_PDF = '/cv/Camilo_Hernandez_CV.pdf'
 const LEARNING = [/azure ai foundry/i, /semantic kernel/i, /\bRAG\b/, /embeddings/i]
 
 const BATTERY = [
@@ -42,19 +43,22 @@ const BATTERY = [
   'pipelines de eventos',
 ]
 
-describe('el CV: solo su enlace (FR-422)', () => {
+describe('el CV: el PDF oficial y LinkedIn, sin su contenido (FR-422, FR-701 de la 007)', () => {
   for (const question of ['¿Me pasas tu hoja de vida?', '¿Tienes CV?', 'Can I see your resume?', 'curriculum vitae please']) {
-    it(`"${question}" responde con el enlace de LinkedIn primero`, () => {
+    it(`"${question}" responde con el PDF primero y LinkedIn después`, () => {
       const answer = ask(assistants, question)
       expect(answer.kind).toBe('answer')
-      expect(answer.links[0]).toEqual({ label: answer.lang === 'es' ? 'Ver mi CV en LinkedIn' : 'See my CV on LinkedIn', href: CV, external: true })
+      expect(answer.links.slice(0, 2)).toEqual([
+        { label: answer.lang === 'es' ? 'Descargar CV (PDF)' : 'Download CV (PDF)', href: CV_PDF, external: true },
+        { label: answer.lang === 'es' ? 'Ver mi CV en LinkedIn' : 'See my CV on LinkedIn', href: CV, external: true },
+      ])
       expect(answer.text).not.toMatch(/\.pdf\b/i)
     })
   }
 
   it('la experiencia también ofrece el CV, después de "Sobre mí"', () => {
     const answer = ask(assistants, '¿En qué empresas has trabajado?')
-    expect(answer.links.map((link) => link.href).slice(0, 2)).toEqual(['/es/aboutMe', CV])
+    expect(answer.links.map((link) => link.href).slice(0, 3)).toEqual(['/es/aboutMe', CV_PDF, CV])
   })
 })
 

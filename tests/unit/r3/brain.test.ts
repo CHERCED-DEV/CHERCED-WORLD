@@ -47,7 +47,7 @@ describe('lóbulos del mapa cerebral (E-03)', () => {
       'Newshore',
       'Synergos',
       'Squadra Arquitectura',
-      'Legal workspace',
+      'Espacio de trabajo legal',
       'Platzi Master',
       'Fundamentos de Arquitectura',
       'Full Stack JS',

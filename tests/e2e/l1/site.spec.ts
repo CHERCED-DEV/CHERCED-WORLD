@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 import { paragraphs } from '@/components/site/format'
-import { getAllTechnologies, getProjects, getSite } from '@/lib/content'
+import { getAllTechnologies, getProjects, getSite, projectTitle } from '@/lib/content'
 
 const site = getSite()
 const projects = getProjects()
@@ -110,7 +110,7 @@ test.describe('contenido sin JavaScript', () => {
     await expect(slides).toHaveCount(projects.length)
     for (const project of projects) {
       const slide = page.locator(`[data-cw-slide="${project.id}"]`)
-      await expect(slide.getByRole('heading', { level: 3 })).toHaveText(project.title)
+      await expect(slide.getByRole('heading', { level: 3 })).toHaveText(projectTitle(project, 'es'))
       await expect(slide.getByRole('link')).toHaveAttribute('href', `/es/portfolio/${project.id}`)
     }
     await expect(page.locator('[data-cw-filter]').first()).toBeHidden()
@@ -120,7 +120,7 @@ test.describe('contenido sin JavaScript', () => {
 
   test('caso de estudio: título, contexto y enlaces', async ({ page }) => {
     await page.goto(`/es/portfolio/${firstProject.id}`)
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(firstProject.title)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(firstProject, 'es'))
     await expect(page.getByRole('heading', { level: 2, name: 'Contexto' })).toBeVisible()
     for (const paragraph of paragraphs(firstProject.context.es)) await expect(page.getByText(paragraph)).toBeVisible()
     if (firstProject.links.live) await expect(page.locator('[data-cw-case-link="live"]')).toHaveAttribute('href', firstProject.links.live)
@@ -347,7 +347,7 @@ test.describe('enlaces', () => {
 
     await page.locator(`[data-cw-slide="${firstProject.id}"]`).getByRole('link').click()
     await page.waitForURL(`**/es/portfolio/${firstProject.id}`)
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(firstProject.title)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(firstProject, 'es'))
     expect(await page.evaluate(() => (window as unknown as { __cwSameDocument?: boolean }).__cwSameDocument)).toBe(true)
   })
 })

@@ -127,6 +127,13 @@ button {
   display: none !important;
 }
 
+.cw-cv-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cw-space-3);
+}
+
 @property --cw-light-x {
   syntax: '<length-percentage>';
   inherits: true;

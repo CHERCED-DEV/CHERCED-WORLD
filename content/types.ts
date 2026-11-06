@@ -83,9 +83,11 @@ export type PrivacySection = { heading: Localized; body: Localized }
 
 export type Principle = { short: Localized; full: Localized }
 
+export type CvPdf = { href: string; bytes: number }
+
 export type Profile = {
   availability: { location: Localized; timezone: 'UTC−5'; relocation: Localized }
-  cv: { href: string }
+  cv: { href: string; pdf?: CvPdf }
 }
 
 export type SiteContent = {
@@ -116,7 +118,7 @@ export type SiteContent = {
   privacy: { updatedAt: string; sections: PrivacySection[] }
 }
 
-export const PROJECT_ERAS = ['2024-2026', '2022-2023'] as const
+export const PROJECT_ERAS = ['2026', '2024-2026', '2022-2023'] as const
 
 export type ProjectEra = (typeof PROJECT_ERAS)[number]
 
@@ -130,7 +132,7 @@ export type ProjectLinks = { live: string | null; github: string | null; repos?:
 
 export type Project = {
   id: string
-  title: string
+  title: string | Localized
   summary: Localized
   context: Localized
   role: Localized | null

@@ -9,7 +9,7 @@ import { preselectedInterest } from '@/components/contact/preselect'
 import { BackgroundIntensity } from '@/components/motion'
 import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
 import { buttonClassName } from '@/components/ui/Button'
-import { CvLink } from '@/components/ui/CvLink'
+import { CvActions } from '@/components/ui/CvLink'
 import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { Separator } from '@/components/ui/Separator'
@@ -64,7 +64,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
         <div className={styles.reach} data-cw-contact-reach="">
           <AvailabilityChip lang={lang} />
           <div className={styles.reachActions}>
-            <CvLink lang={lang} />
+            <CvActions lang={lang} downloadVariant="solid" />
             {email ? (
               <EmailMenu
                 lang={lang}

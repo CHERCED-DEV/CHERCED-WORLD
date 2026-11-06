@@ -66,7 +66,7 @@ export type AssistantFacts = {
   posts: PostFact[]
   blogWelcome: string
   contact: { description: string; email: string | null }
-  cv: { href: string; label: string } | null
+  cv: { href: string; label: string; pdf?: { href: string; label: string; bytes: number } } | null
   socials: { id: SocialId; label: string; href: string }[]
 }
 

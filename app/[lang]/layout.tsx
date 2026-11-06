@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Omit<LayoutProps, 'children'>
   const siteName = t(common, 'brand.name')
   return {
     metadataBase: getSiteUrl(),
-    title: { default: t(common, 'meta.title'), template: `%s | ${t(common, 'meta.title')}` },
+    title: { default: t(common, 'meta.title'), template: t(common, 'meta.titleTemplate') },
     description: t(common, 'meta.description'),
     applicationName: siteName,
     authors: [{ name: t(common, 'brand.author') }],

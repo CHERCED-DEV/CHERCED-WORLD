@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { caseHighlights } from '@/components/site/portfolio/projects'
-import { getAllTechnologies, getProjects } from '@/lib/content'
+import { getAllTechnologies, getProjects, projectTitle } from '@/lib/content'
 import { hostOf, onlyIn, skipIntro, stubExternalSites } from './support'
 
 const projects = getProjects()
@@ -197,7 +197,7 @@ test.describe('ProjectEmbed en escritorio (D-03, FR-206)', () => {
     await expect(iframe).toHaveAttribute('src', first.links.live!)
     await expect(iframe).toHaveAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups')
     await expect(iframe).toHaveAttribute('loading', 'lazy')
-    await expect(iframe).toHaveAttribute('title', new RegExp(first.title))
+    await expect(iframe).toHaveAttribute('title', new RegExp(projectTitle(first, 'es')))
     await expect(await frame(page)).toHaveAttribute('data-state', 'ready')
     await expect(page.frameLocator('[data-cw-embed-frame]').locator('#stub')).toHaveText('Sitio de prueba')
     await expect(page).toHaveURL(new RegExp(`/es/portfolio/${first.id}$`))
@@ -370,7 +370,7 @@ test.describe('proyectos sin sitio en vivo', () => {
     test(`#${project.id} no muestra el embebido`, async ({ page }) => {
       await skipIntro(page)
       await page.goto(`/es/portfolio/${project.id}`)
-      await expect(page.getByRole('heading', { level: 1 })).toHaveText(project.title)
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(project, 'es'))
       await expect(page.locator('[data-cw-embed]')).toHaveCount(0)
       await expect(page.locator('[data-cw-case-see-live]')).toHaveCount(0)
     })
@@ -424,7 +424,7 @@ test.describe('galería, resultados, stack y navegación', () => {
     await page.evaluate(() => ((window as unknown as { __cwSame?: boolean }).__cwSame = true))
     await page.locator('[data-cw-case-next]').click()
     await page.waitForURL(`**/es/portfolio/${projects[1]!.id}`)
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(projects[1]!.title)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(projectTitle(projects[1]!, 'es'))
     await page.locator('[data-cw-case-prev]').click()
     await page.waitForURL(`**/es/portfolio/${projects[0]!.id}`)
     await page.locator('[data-cw-case-prev]').click()

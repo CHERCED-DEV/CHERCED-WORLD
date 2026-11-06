@@ -8,7 +8,7 @@ import { CaseGallery, GALLERY_SWIPE_QUERY, type GalleryImage } from '@/component
 import { eraLabels } from '@/components/site/portfolio/labels'
 import { PortfolioView, type PortfolioViewProps } from '@/components/site/portfolio/PortfolioView'
 import { ProjectEmbed, type EmbedLabels } from '@/components/site/portfolio/ProjectEmbed'
-import { getAllTechnologies, getProjects, getSite } from '@/lib/content'
+import { getAllTechnologies, getProjects, getSite, projectTitle } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -157,7 +157,7 @@ describe('embebido en una hoja (T844)', () => {
       createElement(ProjectEmbed, {
         id: 'en-vivo',
         url: project.links.live!,
-        title: project.title,
+        title: projectTitle(project, 'es'),
         poster: { src: project.image.src, alt: project.image.alt.es, width: project.image.width, height: project.image.height },
         labels,
       }),

@@ -1,4 +1,5 @@
 import type { Locale, Project, SiteContent } from '@/content/types'
+import { projectTitle } from '@/lib/content/project-title'
 import { clampLevel, formatPeriod } from '../format'
 
 export type BrainSkill = { id: string; name: string; level: number; icon?: string; used?: string }
@@ -30,7 +31,7 @@ type SourceRef =
   | { kind: 'education'; id: string; label: string }
   | { kind: 'course'; match: RegExp; label: Record<Locale, string> }
   | { kind: 'company'; match: RegExp; label: string }
-  | { kind: 'case'; label: string }
+  | { kind: 'case'; label: Record<Locale, string> }
 
 export const SOURCE_REFS: Record<string, SourceRef> = {
   sistecredito: { kind: 'company', match: /^Sistecrédito$/, label: 'Sistecrédito' },
@@ -38,7 +39,7 @@ export const SOURCE_REFS: Record<string, SourceRef> = {
   newshore: { kind: 'company', match: /^Newshore\b/, label: 'Newshore' },
   synergos: { kind: 'company', match: /^Synergos\b/, label: 'Synergos' },
   squadra: { kind: 'company', match: /^Squadra Arquitectura$/, label: 'Squadra Arquitectura' },
-  legalWorkspace: { kind: 'case', label: 'Legal workspace' },
+  legalWorkspace: { kind: 'case', label: { es: 'Espacio de trabajo legal', en: 'Legal workspace' } },
   platziMaster: { kind: 'education', id: 'platzi', label: 'Platzi Master' },
   architecture: {
     kind: 'course',
@@ -97,25 +98,29 @@ export function techKey(value: string): string {
   return value.toUpperCase().replace(/[^A-Z0-9#+]/g, '')
 }
 
-export function projectsForSkills(skills: ReadonlyArray<{ id: string; name: string }>, projects: readonly Project[]): BrainProject[] {
+export function projectsForSkills(
+  skills: ReadonlyArray<{ id: string; name: string }>,
+  projects: readonly Project[],
+  lang: Locale = 'es',
+): BrainProject[] {
   const keys = new Set(skills.flatMap((skill) => [skill.name, ...(TECH_ALIASES[skill.id] ?? [])].map(techKey)))
   return [...projects]
     .sort((a, b) => a.order - b.order)
     .filter((project) => project.technologies.some((technology) => keys.has(techKey(technology))))
-    .map((project) => ({ id: project.id, title: project.title }))
+    .map((project) => ({ id: project.id, title: projectTitle(project, lang) }))
 }
 
-export function projectsById(ids: readonly string[], projects: readonly Project[]): BrainProject[] {
+export function projectsById(ids: readonly string[], projects: readonly Project[], lang: Locale = 'es'): BrainProject[] {
   return ids.flatMap((id) => {
     const project = projects.find((item) => item.id === id)
-    return project ? [{ id: project.id, title: project.title }] : []
+    return project ? [{ id: project.id, title: projectTitle(project, lang) }] : []
   })
 }
 
 export function resolveSource(id: string, about: SiteContent['about'], lang: Locale, presentLabel: string): BrainSource | null {
   const ref = SOURCE_REFS[id]
   if (!ref) return null
-  if (ref.kind === 'case') return { id, label: ref.label, title: ref.label, detail: null, period: null }
+  if (ref.kind === 'case') return { id, label: ref.label[lang], title: ref.label[lang], detail: null, period: null }
   if (ref.kind === 'company') {
     const entries = about.career.filter((entry) => ref.match.test(entry.company))
     if (entries.length === 0) return null
@@ -176,7 +181,7 @@ export function brainData(about: SiteContent['about'], projects: readonly Projec
       sources,
       applied: sources.filter(isAppliedSource),
       learned: sources.filter((source) => !isAppliedSource(source)),
-      projects: lobe.projects ? projectsById(lobe.projects, projects) : projectsForSkills(skills, projects),
+      projects: lobe.projects ? projectsById(lobe.projects, projects, lang) : projectsForSkills(skills, projects, lang),
       ...(learning ? { learning } : {}),
       ...(words ? { words } : {}),
       ...(principles.length > 0 ? { principles } : {}),

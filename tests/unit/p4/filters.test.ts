@@ -27,10 +27,11 @@ async function summaryLabels(lang: 'es' | 'en'): Promise<CombinedFilterLabels & 
 }
 
 describe('época en el portafolio (FR-405)', () => {
-  it('los 15 casos traen una época conocida y las dos épocas se cuentan', () => {
+  it('los 15 casos traen una época conocida y las tres épocas se cuentan', () => {
     expect(projects).toHaveLength(15)
     for (const project of projects) expect(PROJECT_ERAS, project.id).toContain(project.era)
     expect(eraUsage(projects)).toEqual([
+      { era: '2026', count: 3 },
       { era: '2024-2026', count: projects.filter((project) => project.era === '2024-2026').length },
       { era: '2022-2023', count: projects.filter((project) => project.era === '2022-2023').length },
     ])

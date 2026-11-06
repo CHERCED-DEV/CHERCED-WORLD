@@ -145,10 +145,12 @@ export function listPosts(index: SearchIndex, input: { tag?: string }, env: Hand
   return { tag, count: posts.length, posts }
 }
 
-export function getCv(index: SearchIndex) {
+export function getCv(index: SearchIndex, env: HandlerEnv = { origin: null }) {
   const { cv } = index.facts
   if (!cv) throw new CapabilityError('unavailable', 'The CV link is not published')
-  return { url: cv.href, label: cv.label }
+  const output: { url: string; label: string; pdf?: { url: string; label: string; bytes: number } } = { url: cv.href, label: cv.label }
+  if (cv.pdf) output.pdf = { url: link(env, cv.pdf.href), label: cv.pdf.label, bytes: cv.pdf.bytes }
+  return output
 }
 
 export function setPreferences(

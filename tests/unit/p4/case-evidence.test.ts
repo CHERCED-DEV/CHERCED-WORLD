@@ -71,7 +71,7 @@ describe('textos nuevos del caso', () => {
     expect(labels.adr).toEqual(
       lang === 'es' ? { decision: 'Decisión', why: 'Por qué', tradeoff: 'Trade-off' } : { decision: 'Decision', why: 'Why', tradeoff: 'Trade-off' },
     )
-    expect(labels.eras).toEqual({ '2024-2026': '2024–2026', '2022-2023': '2022–2023' })
+    expect(labels.eras).toEqual({ '2026': '2026', '2024-2026': '2024–2026', '2022-2023': '2022–2023' })
   })
 })
 

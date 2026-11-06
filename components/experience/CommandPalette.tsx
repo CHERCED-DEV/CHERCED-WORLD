@@ -13,6 +13,7 @@ import { t } from '@/lib/i18n/translate'
 import { loadSearchIndex } from '@/lib/search/client'
 import type { SearchDoc } from '@/lib/search/types'
 import styles from './CommandPalette.module.scss'
+import { downloadFile } from './download'
 import { useSheetKeyboard } from './sheet-keyboard'
 import type { ExperienceLabels } from './labels'
 import {
@@ -23,6 +24,7 @@ import {
   paletteExtensions,
   paletteResults,
   toPaletteDocs,
+  type CvPdfCommand,
   type PaletteGroup,
   type PaletteItem,
 } from './palette-model'
@@ -34,6 +36,7 @@ export type CommandPaletteProps = {
   pages: SearchDoc[]
   email: string | null
   cv: string | null
+  cvPdf: CvPdfCommand | null
   singleKey: boolean
   open: boolean
   session: number
@@ -80,6 +83,7 @@ function PaletteBody({
   pages,
   email,
   cv,
+  cvPdf,
   singleKey,
   onClose,
   onOpenAssistant,
@@ -103,6 +107,7 @@ function PaletteBody({
     theme: currentTheme(),
     email,
     cv,
+    cvPdf,
     now: localizedPath(lang, '/now'),
     aiLab: localizedPath(lang, '/ai-lab'),
     capsuleFound: readCapsuleFound(),
@@ -169,6 +174,7 @@ function PaletteBody({
       setTheme: (to) => preferences().setTheme(to),
       switchLang: () => preferences().setLanguage(otherLocale(lang)),
       open: (href) => window.open(href, '_blank', 'noopener,noreferrer'),
+      download: downloadFile,
       shortcuts: onOpenShortcuts,
       assistant: onOpenAssistant,
       copyEmail: () => void copyEmail(),

@@ -84,7 +84,10 @@ const SPEC_DESCRIPTIONS: Record<string, { es: string; en: string }> = {
     en: 'Returns skills by area, with their level and years of use.',
   },
   list_posts: { es: 'Lista los posts del blog, opcionalmente por etiqueta.', en: 'Lists blog posts, optionally by tag.' },
-  get_cv: { es: 'Devuelve el enlace al CV oficial, publicado en LinkedIn.', en: 'Returns the link to the official CV, published on LinkedIn.' },
+  get_cv: {
+    es: 'Devuelve el CV oficial: el enlace a LinkedIn y el PDF descargable de este sitio.',
+    en: 'Returns the official CV: the LinkedIn link and the downloadable PDF on this site.',
+  },
   set_preferences: {
     es: 'Cambia el idioma o el tema del sitio para esta visita. Se puede deshacer.',
     en: 'Changes the site language or theme for this visit. It can be undone.',
@@ -220,7 +223,7 @@ describe.each(['es', 'en'] as const)('salidas de las herramientas de lectura (%s
     for (const pattern of LEARNING) expect(skills).not.toMatch(pattern)
     for (const run of await allOutputs()) {
       const text = JSON.stringify({ ...(run.output as object), query: undefined })
-      expect(text, run.name).not.toMatch(/\.pdf\b/i)
+      expect(text.replaceAll('/cv/Camilo_Hernandez_CV.pdf', ''), run.name).not.toMatch(/\.pdf\b/i)
       if (run.name !== 'get_project' && run.name !== 'list_projects') {
         for (const pattern of LEARNING) expect(text, `${run.name} ${JSON.stringify(run.input)}`).not.toMatch(pattern)
       }
@@ -293,6 +296,11 @@ describe.each(['es', 'en'] as const)('salidas de las herramientas de lectura (%s
     expect(await tool('get_cv').execute({}, context)).toEqual({
       url: 'https://www.linkedin.com/in/cherced/',
       label: lang === 'es' ? 'Ver mi CV en LinkedIn' : 'See my CV on LinkedIn',
+      pdf: {
+        url: `${ORIGIN}/cv/Camilo_Hernandez_CV.pdf`,
+        label: lang === 'es' ? 'Descargar CV (PDF)' : 'Download CV (PDF)',
+        bytes: 172_753,
+      },
     })
   })
 })

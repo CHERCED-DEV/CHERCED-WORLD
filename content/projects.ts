@@ -644,7 +644,7 @@ export const projects: Project[] = [
   },
   {
     id: '13',
-    title: 'Director & lines: parallel AI agents',
+    title: { es: 'Director y líneas: agentes de IA en paralelo', en: 'Director & lines: parallel AI agents' },
     summary: {
       es: 'El modelo con el que varios agentes de IA construyen Synergos a la vez sin pisarse y sin perder la traza.',
       en: 'The model that lets several AI agents build Synergos at the same time without colliding or losing the trail.',
@@ -677,7 +677,7 @@ export const projects: Project[] = [
     },
     links: { live: null, github: null },
     order: 2,
-    era: '2024-2026',
+    era: '2026',
     highlights: [
       {
         es: 'Una sola sesión toca lo compartido; cada línea, solo su worktree',
@@ -692,7 +692,7 @@ export const projects: Project[] = [
   },
   {
     id: '14',
-    title: 'Legal workspace',
+    title: { es: 'Espacio de trabajo legal', en: 'Legal workspace' },
     summary: {
       es: 'Un arnés de agentes que asiste a una abogada sin darle a la IA autoridad sobre el expediente.',
       en: 'An agent harness that assists a lawyer without giving the AI authority over the case file.',
@@ -725,7 +725,7 @@ export const projects: Project[] = [
     },
     links: { live: null, github: null },
     order: 4,
-    era: '2024-2026',
+    era: '2026',
     highlights: [
       { es: 'Nada se consolida sin revisión humana', en: 'Nothing is consolidated without human review' },
       {
@@ -737,7 +737,7 @@ export const projects: Project[] = [
   },
   {
     id: '15',
-    title: 'Event bridge: AWS → Azure',
+    title: { es: 'Puente de eventos: AWS → Azure', en: 'Event bridge: AWS → Azure' },
     summary: {
       es: 'Un pipeline de eventos que conecta una plataforma de contact center en AWS con microservicios .NET en Azure.',
       en: 'An event pipeline that connects a contact center platform on AWS with .NET microservices on Azure.',
@@ -770,7 +770,7 @@ export const projects: Project[] = [
     },
     links: { live: null, github: null },
     order: 5,
-    era: '2024-2026',
+    era: '2026',
     highlights: [
       { es: 'Azure Service Bus como frontera entre nubes', en: 'Azure Service Bus as the boundary between clouds' },
       { es: 'Productores y consumidores desacoplados', en: 'Producers and consumers decoupled' },

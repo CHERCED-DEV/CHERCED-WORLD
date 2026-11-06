@@ -6,7 +6,7 @@ import { brainData, isAppliedSource, lobeAnchor, lobeFromHash, PRINCIPLES_LOBE, 
 import { aboutFigures, figureDigits, figureText } from '@/components/site/about/figures'
 import { lobeWords, site } from '@/content/site'
 import { synergosFacts } from '@/content/synergos'
-import { getProjects } from '@/lib/content'
+import { getProjects, projectTitle } from '@/lib/content'
 
 const { about } = site
 const projects = getProjects()
@@ -118,7 +118,9 @@ describe('"dónde lo apliqué" y proyectos de cada lóbulo (T435, FR-432, FR-435
         const ref = SOURCE_REFS[id]!
         expect(sources.has(id), `${lobe.id} → ${id}`).toBe(true)
         if (ref.kind === 'company') expect(about.career.some((entry) => ref.match.test(entry.company)), id).toBe(true)
-        if (ref.kind === 'case') expect(projects.some((project) => project.title === ref.label), id).toBe(true)
+        if (ref.kind === 'case') {
+          expect(projects.some((project) => projectTitle(project, 'es') === ref.label.es && projectTitle(project, 'en') === ref.label.en), id).toBe(true)
+        }
       }
     }
   })

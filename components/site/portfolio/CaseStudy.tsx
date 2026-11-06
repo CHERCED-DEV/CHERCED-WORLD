@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import type { Project } from '@/content/types'
+import { projectTitle } from '@/lib/content/project-title'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { GlowOrb, Hairline } from '@/components/ui/graphics'
@@ -70,6 +71,7 @@ const LAYER_ICONS: Record<StackLayer, PortfolioIconName> = {
 }
 
 export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
+  const title = projectTitle(project, lang)
   const evidence = extras?.evidence
   const cards = evidence ? caseAdrCards(project, lang) : []
   const sections = caseStorySections(project, lang, labels, cards.length > 0)
@@ -163,7 +165,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           />
         </div>
         <SectionTitle as="h1" id="case-title" size="lg">
-          {project.title}
+          {title}
         </SectionTitle>
         {story}
       </article>
@@ -203,7 +205,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
             </p>
           ) : null}
           <SectionTitle as="h1" id="case-title" size="lg" className={styles.title}>
-            {project.title}
+            {title}
           </SectionTitle>
           <p className={styles.lede}>{project.summary[lang]}</p>
           {project.links.live ? (
@@ -214,7 +216,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           ) : null}
         </div>
         <div className={styles.heroMedia}>
-          <CaseGallery images={images} labels={extra.gallery} title={project.title} transitionName={projectMediaName(project.id)} />
+          <CaseGallery images={images} labels={extra.gallery} title={title} transitionName={projectMediaName(project.id)} />
         </div>
       </header>
 
@@ -248,7 +250,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
         <ProjectEmbed
           id={EMBED_ANCHOR}
           url={project.links.live}
-          title={project.title}
+          title={title}
           poster={{ src: project.image.src, alt: project.image.alt[lang], width: project.image.width, height: project.image.height }}
           labels={extra.embed}
         />

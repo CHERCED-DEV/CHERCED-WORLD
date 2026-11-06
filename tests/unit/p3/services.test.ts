@@ -5,7 +5,7 @@ import { SERVICE_CASES, serviceCases, serviceNumber, stepParts, wantHref } from 
 import { ServiceIcon } from '@/components/site/services/ServiceIcon'
 import { ServicesView, type ServicesLabels, type ServicesViewProps } from '@/components/site/services/ServicesView'
 import { isServiceId, SERVICE_IDS, type Locale, type ServiceId } from '@/content/types'
-import { getProjects, getSite } from '@/lib/content'
+import { getProjects, getSite, projectTitle } from '@/lib/content'
 import { locales, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -191,7 +191,7 @@ describe('ServicesView (US1b)', () => {
     const html = await render(lang)
     for (const { project } of serviceCases(getProjects(), ORDER)) {
       const link = new RegExp(`<a [^>]*href="/${lang}/portfolio/${project.id}"[^>]*>([^<]*)</a>`).exec(html)
-      expect(text(link?.[1] ?? '')).toBe(project.title)
+      expect(text(link?.[1] ?? '')).toBe(projectTitle(project, lang))
       expect(text(html)).toContain(project.summary[lang])
     }
   })

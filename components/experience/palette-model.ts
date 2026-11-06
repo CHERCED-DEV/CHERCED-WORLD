@@ -14,6 +14,7 @@ export type PaletteCommand =
   | { type: 'copy-email' }
   | { type: 'capsule' }
   | { type: 'open'; href: string }
+  | { type: 'download'; href: string; filename: string }
   | { type: 'shortcuts' }
   | { type: 'extension'; id: string }
 
@@ -56,8 +57,11 @@ export type ActionContext = {
   capsuleFound: boolean
 }
 
+export type CvPdfCommand = { href: string; filename: string }
+
 export type CommandContext = ActionContext & {
   cv: string | null
+  cvPdf?: CvPdfCommand | null
   now: string | null
   aiLab?: string | null
   extensions?: PaletteExtension[]
@@ -94,6 +98,7 @@ const ACTION_KEYWORDS: Record<string, string> = {
   'copy-email': 'correo email mail copiar copy contacto contact',
   capsule: 'capsula capsule 2023 tiempo time historia history',
   'action:cv': 'cv hoja vida resume curriculum linkedin',
+  'action:cv-pdf': 'cv pdf descargar download bajar hoja vida resume curriculum',
   'action:shortcuts': 'atajos shortcuts teclado keyboard teclas keys',
   'action:now': 'ahora now hoy today',
   'action:ai-lab': 'ai lab laboratorio laboratory ia experimentos experiments demos',
@@ -144,6 +149,14 @@ export function buildCommands(labels: Dictionary, context: CommandContext): Pale
   const actions = buildActions(labels, context)
   const byId = (id: string) => actions.find((action) => action.id === id)
   const commands: PaletteItem[] = []
+  if (context.cvPdf) {
+    commands.push({
+      id: 'action:cv-pdf',
+      group: 'actions',
+      title: t(labels, 'palette.action.cvPdf'),
+      command: { type: 'download', href: context.cvPdf.href, filename: context.cvPdf.filename },
+    })
+  }
   if (context.cv) {
     commands.push({
       id: 'action:cv',
@@ -287,6 +300,7 @@ export type PaletteCommandId =
   | 'action:assistant'
   | 'action:copy-email'
   | 'action:cv'
+  | 'action:cv-pdf'
   | 'action:shortcuts'
   | 'action:now'
   | 'action:ai-lab'
@@ -299,6 +313,7 @@ export type PaletteEffects = {
   setTheme: (to: 'dark' | 'light') => void
   switchLang: () => void
   open: (href: string) => void
+  download: (href: string, filename: string) => void
   shortcuts: () => void
   assistant: () => void
   copyEmail: () => void
@@ -322,6 +337,10 @@ export function executePaletteCommand(command: PaletteCommand, effects: PaletteE
     case 'open':
       effects.close()
       effects.open(command.href)
+      return
+    case 'download':
+      effects.close()
+      effects.download(command.href, command.filename)
       return
     case 'shortcuts':
       effects.shortcuts()

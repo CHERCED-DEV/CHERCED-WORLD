@@ -219,7 +219,11 @@ function answerProjectsWithTech(ctx: Context, canonicals: string[]): Draft {
 
 function cvLink(ctx: Context): AnswerLink[] {
   const { cv } = ctx.facts
-  return cv ? [{ label: cv.label, href: cv.href, external: true }] : []
+  if (!cv) return []
+  const links: AnswerLink[] = []
+  if (cv.pdf) links.push({ label: cv.pdf.label, href: cv.pdf.href, external: true })
+  links.push({ label: cv.label, href: cv.href, external: true })
+  return links
 }
 
 function answerExperience(ctx: Context): Draft {

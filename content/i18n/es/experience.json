@@ -89,6 +89,7 @@
   "palette.group.commands": "Comandos",
   "palette.skillHint": "{lobe} · {level} %",
   "palette.action.cv": "Ver mi CV en LinkedIn",
+  "palette.action.cvPdf": "Descargar CV (PDF)",
   "palette.action.shortcuts": "Ver los atajos de teclado",
   "palette.action.aiLab": "Abrir el AI Lab",
   "palette.action.listen": "Escuchar este post",
@@ -106,6 +107,6 @@
   "capability.get_experience": "Devuelve la experiencia profesional con cargos, empresas y fechas oficiales.",
   "capability.get_skills": "Devuelve las skills por área, con su nivel y sus años de uso.",
   "capability.list_posts": "Lista los posts del blog, opcionalmente por etiqueta.",
-  "capability.get_cv": "Devuelve el enlace al CV oficial, publicado en LinkedIn.",
+  "capability.get_cv": "Devuelve el CV oficial: el enlace a LinkedIn y el PDF descargable de este sitio.",
   "capability.set_preferences": "Cambia el idioma o el tema del sitio para esta visita. Se puede deshacer."
 }

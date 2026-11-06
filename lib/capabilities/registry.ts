@@ -65,7 +65,7 @@ function runners(env: HandlerEnv, preferences: PreferencesPort | null): Record<C
     get_experience: async (_input: object, index) => getExperience(await index()),
     get_skills: async (input: { area?: string }, index) => getSkills(await index(), input, env),
     list_posts: async (input: { tag?: string }, index) => listPosts(await index(), input, env),
-    get_cv: async (_input: object, index) => getCv(await index()),
+    get_cv: async (_input: object, index) => getCv(await index(), env),
     set_preferences: async (input: { language?: Locale; theme?: 'light' | 'dark' }) => setPreferences(preferences, input),
   }
 }

@@ -16,11 +16,11 @@ const BASE = new URL('https://cherced-world.test')
 
 const COPY = {
   es: {
-    title: 'Blog | <-CHERCED-WORLD->',
+    title: 'Blog · Camilo Hernández',
     description: 'Notas de un arquitecto que trabaja con agentes: decisiones, errores y lo que los tests no vieron.',
   },
   en: {
-    title: 'Blog | <-CHERCED-WORLD->',
+    title: 'Blog · Camilo Hernández',
     description: "Notes from an architect who works with agents: decisions, mistakes and what the tests didn't catch.",
   },
 } as const

@@ -6,7 +6,7 @@ vi.mock('@/content/posts/registry', async () => {
 })
 
 const { buildLlmsTxt } = await import('@/lib/agent/llms')
-const { getProjects, listPosts } = await import('@/lib/content')
+const { getProjects, listPosts, projectTitle } = await import('@/lib/content')
 const { getDictionary } = await import('@/lib/i18n/server')
 const { mentionsEmployer, personalData, quantities } = await import('../../e2e/integration/support/scan')
 
@@ -27,7 +27,9 @@ describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
 
   it('lista los 15 casos en el orden del portafolio y cada post, con URL absoluta y resumen en inglés', async () => {
     const cases = lines.filter((line) => line.includes('/en/portfolio/'))
-    expect(cases).toEqual(getProjects().map((project) => `- [${project.title}](https://cherced-world.test/en/portfolio/${project.id}): ${project.summary.en}`))
+    expect(cases).toEqual(
+      getProjects().map((project) => `- [${projectTitle(project, 'en')}](https://cherced-world.test/en/portfolio/${project.id}): ${project.summary.en}`),
+    )
     const posts = await listPosts('en')
     for (const post of posts) expect(text).toContain(`(https://cherced-world.test/en/blog/${post.id}): `)
     expect(lines.filter((line) => line.includes('/en/blog/'))).toHaveLength(posts.length)
@@ -35,7 +37,12 @@ describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
 
   it('solo trae información pública: sin correos, teléfonos ni credenciales', () => {
     expect(personalData(text)).toEqual([])
-    expect(text).not.toMatch(/mailto:|MONGODB|VERCEL_URL_CORS|\.pdf\b/i)
+    expect(text.replace('https://cherced-world.test/cv/Camilo_Hernandez_CV.pdf', '')).not.toMatch(/mailto:|MONGODB|VERCEL_URL_CORS|\.pdf\b/i)
+  })
+
+  it('Contacto ofrece el CV en PDF del sitio y el de LinkedIn (FR-701 de la 007)', () => {
+    expect(lines).toContain('- [Download CV (PDF)](https://cherced-world.test/cv/Camilo_Hernandez_CV.pdf)')
+    expect(lines).toContain('- [See my CV on LinkedIn](https://www.linkedin.com/in/cherced/)')
   })
 
   it('sin cantidades junto al empleador ni en Event bridge (FR-444, FR-498)', () => {
@@ -46,7 +53,7 @@ describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
 
   it('cada línea es una sola línea de Markdown, sin corchetes sueltos en las etiquetas', () => {
     for (const line of lines.filter((item) => item.startsWith('- ['))) {
-      expect(line).toMatch(/^- \[[^\]]+\]\(https:\/\/cherced-world\.test\/(en|es)\/[^)]*\)/)
+      expect(line).toMatch(/^- \[[^\]]+\]\((https:\/\/cherced-world\.test\/((en|es)\/[^)]*|cv\/Camilo_Hernandez_CV\.pdf)|https:\/\/www\.linkedin\.com\/in\/cherced\/)\)/)
     }
   })
 })

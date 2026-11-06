@@ -7,7 +7,7 @@ import { CaseStudy } from '@/components/site/portfolio/CaseStudy'
 import { caseEvidenceLabels, caseStudyExtraLabels } from '@/components/site/portfolio/labels'
 import { caseStudyNeighbors, technologyCounts, type CaseStudyLabels } from '@/components/site/portfolio/projects'
 import { pageMetadata } from '@/components/site/metadata'
-import { getProject, getProjects } from '@/lib/content'
+import { getProject, getProjects, projectTitle } from '@/lib/content'
 
 type Props = { params: Promise<{ lang: string; id: string }> }
 
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({
     lang,
     path: `/portfolio/${project.id}`,
-    title: project.title,
+    title: projectTitle(project, lang),
     description: project.summary[lang],
     common,
     ogImageFile: true,

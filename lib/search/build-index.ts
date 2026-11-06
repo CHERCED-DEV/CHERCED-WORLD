@@ -1,6 +1,6 @@
 import { lobeWords } from '@/content/site'
 import type { SiteContent } from '@/content/types'
-import { getProjects, getSite, listPosts, pick } from '@/lib/content'
+import { getProjects, getSite, listPosts, pick, projectTitle } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
 import { localizedPath } from '@/lib/i18n/paths'
 import { getDictionary } from '@/lib/i18n/server'
@@ -71,7 +71,7 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
   const careerPublished = site.about.career.every((entry) => !entry.pending)
   const projects: ProjectFact[] = getProjects().map((project) => ({
     id: project.id,
-    title: project.title,
+    title: projectTitle(project, lang),
     era: project.era,
     summary: pick(project.summary, lang),
     context: pick(project.context, lang),
@@ -135,7 +135,15 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
     posts,
     blogWelcome: pick(site.blog.welcome, lang),
     contact: { description: pick(site.contact.description, lang), email: publicEmail(site) },
-    cv: site.profile ? { href: site.profile.cv.href, label: t(common, 'cv.link') } : null,
+    cv: site.profile
+      ? {
+          href: site.profile.cv.href,
+          label: t(common, 'cv.link'),
+          ...(site.profile.cv.pdf
+            ? { pdf: { href: site.profile.cv.pdf.href, label: t(common, 'cv.download'), bytes: site.profile.cv.pdf.bytes } }
+            : {}),
+        }
+      : null,
     socials: site.socials
       .filter((social): social is typeof social & { href: string } => social.href !== null)
       .map((social) => ({ id: social.id, label: pick(social.label, lang), href: social.href })),

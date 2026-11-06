@@ -63,6 +63,8 @@ export async function buildLlmsTxt(base: URL = getSiteUrl()): Promise<string> {
     '',
     '## Contact',
     pair(base, '/contactMe', pick(site.contact.title, 'en'), pick(site.contact.title, 'es')),
+    ...(site.profile?.cv.pdf ? [`- [${label(t(commonEn, 'cv.download'))}](${new URL(site.profile.cv.pdf.href, base).toString()})`] : []),
+    ...(site.profile ? [`- [${label(t(commonEn, 'cv.link'))}](${site.profile.cv.href})`] : []),
     '',
   ]
   return lines.join('\n')

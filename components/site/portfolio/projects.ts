@@ -1,4 +1,5 @@
 import type { Localized, Project, SiteContent } from '@/content/types'
+import { projectTitle } from '@/lib/content/project-title'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { paragraphs } from '../format'
 import type { SlideProject } from './carousel'
@@ -16,7 +17,7 @@ export function toSlide(project: Project, lang: Locale): SlideProject {
   return {
     id: project.id,
     order: project.order,
-    title: project.title,
+    title: projectTitle(project, lang),
     summary: project.summary[lang],
     technologies: project.technologies,
     era: project.era,
@@ -67,7 +68,7 @@ export function caseStudyNeighbors(list: readonly Project[], id: string, lang: L
   if (index < 0 || ordered.length < 2) return null
   const at = (offset: number): CaseNeighbor => {
     const project = ordered[(index + offset + ordered.length) % ordered.length]!
-    return { id: project.id, title: project.title, href: localizedPath(lang, `/portfolio/${project.id}`) }
+    return { id: project.id, title: projectTitle(project, lang), href: localizedPath(lang, `/portfolio/${project.id}`) }
   }
   return { prev: at(-1), next: at(1), position: index + 1, total: ordered.length }
 }

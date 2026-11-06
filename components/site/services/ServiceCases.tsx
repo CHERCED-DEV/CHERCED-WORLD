@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { ServiceItem } from '@/content/types'
+import { projectTitle } from '@/lib/content/project-title'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
@@ -29,7 +30,7 @@ export function ServiceCases({ lang, title, cases, items }: ServiceCasesProps) {
           >
             <h3 className={styles.caseTitle}>
               <Link href={localizedPath(lang, `/portfolio/${project.id}`)} className={styles.caseLink}>
-                {project.title}
+                {projectTitle(project, lang)}
               </Link>
             </h3>
             <p className={styles.caseSummary}>{project.summary[lang]}</p>

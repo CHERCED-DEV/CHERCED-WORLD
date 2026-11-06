@@ -1,5 +1,6 @@
 import type { CareerEntry, Locale, Project } from '@/content/types'
 import { formatMonth } from '@/components/site/format'
+import { projectTitle, projectTitles } from '@/lib/content/project-title'
 
 export type NowRole = {
   id: string
@@ -27,10 +28,12 @@ export function currentRoles(career: readonly CareerEntry[]): CareerEntry[] {
 export function relatedProject(entry: Pick<CareerEntry, 'company'>, projects: readonly Project[]): Project | null {
   const company = normalize(entry.company)
   return (
-    projects.find((project) => {
-      const title = normalize(project.title)
-      return title.length > 0 && (company === title || company.startsWith(`${title} `))
-    }) ?? null
+    projects.find((project) =>
+      projectTitles(project).some((value) => {
+        const title = normalize(value)
+        return title.length > 0 && (company === title || company.startsWith(`${title} `))
+      }),
+    ) ?? null
   )
 }
 
@@ -43,7 +46,7 @@ export function nowRoles(career: readonly CareerEntry[], projects: readonly Proj
       role: keepSeparators(entry.role[lang]),
       start: entry.start,
       since: formatMonth(entry.start, lang),
-      project: project ? { id: project.id, title: project.title } : null,
+      project: project ? { id: project.id, title: projectTitle(project, lang) } : null,
     }
   })
 }
