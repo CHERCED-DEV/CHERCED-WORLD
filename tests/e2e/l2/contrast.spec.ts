@@ -19,6 +19,9 @@ const NOT_FOUND_ROUTE = '/es/esta-ruta-no-existe'
 const FRAMES = 4
 const MAX_SCROLL_STEPS = 20
 const HIDE_TEXT_ID = 'cw-contrast-hide-text'
+const OWNER = 'data-cw-contrast-owner'
+const SETTLE_ATTEMPTS = 3
+const SETTLE_MS = 150
 const FREEZE_STYLE = '*,*::before,*::after{transition:none!important}'
 
 type TextSample = {
@@ -28,7 +31,10 @@ type TextSample = {
   fontSize: number
   fontWeight: number
   rects: Array<{ x: number; y: number; width: number; height: number }>
+  owner: number
 }
+
+type Measure = { worst: number; failed: boolean }
 
 type Failure = { route: string; text: string; ratio: number; required: number; frame: number }
 
@@ -37,9 +43,11 @@ test.beforeEach(({}, testInfo) => {
 })
 
 async function collectTexts(page: Page): Promise<TextSample[]> {
-  const samples = await page.evaluate(() => {
+  const samples = await page.evaluate((ownerAttribute) => {
     type Box = { left: number; top: number; right: number; bottom: number }
     const found: TextSample[] = []
+    const owners = new Map<Element, number>()
+    for (const tagged of document.querySelectorAll(`[${ownerAttribute}]`)) tagged.removeAttribute(ownerAttribute)
     const viewport: Box = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight }
 
     const isGlass = (element: Element) =>
@@ -104,6 +112,10 @@ async function collectTexts(page: Page): Promise<TextSample[]> {
         })
       if (rects.length === 0) continue
       const style = getComputedStyle(element)
+      if (!owners.has(element)) {
+        owners.set(element, owners.size)
+        element.setAttribute(ownerAttribute, String(owners.get(element)))
+      }
       found.push({
         text: text.slice(0, 40),
         color: style.color,
@@ -111,18 +123,22 @@ async function collectTexts(page: Page): Promise<TextSample[]> {
         fontSize: Number.parseFloat(style.fontSize),
         fontWeight: Number.parseInt(style.fontWeight, 10),
         rects,
+        owner: owners.get(element)!,
       })
     }
     return found
-  })
+  }, OWNER)
   return samples.filter((sample) => (parseColor(sample.color)?.a ?? 1) * sample.opacity >= 0.05)
 }
 
-function worstRatio(sample: TextSample, pixels: ReturnType<typeof decodePng>): number {
+type Scan = { worstShown: number; low: Array<[number, number, number]> }
+
+function scan(sample: TextSample, pixels: ReturnType<typeof decodePng>, required: number): Scan {
   const base = parseColor(sample.color)
-  if (!base) return Number.POSITIVE_INFINITY
+  if (!base) return { worstShown: Number.POSITIVE_INFINITY, low: [] }
   const text = withAlpha(base, sample.opacity)
-  let worst = Number.POSITIVE_INFINITY
+  let worstShown = Number.POSITIVE_INFINITY
+  const low: Array<[number, number, number]> = []
   for (const rect of sample.rects) {
     for (let y = rect.y + 1; y < rect.y + rect.height - 1; y++) {
       for (let x = rect.x + 1; x < rect.x + rect.width - 1; x++) {
@@ -130,38 +146,90 @@ function worstRatio(sample: TextSample, pixels: ReturnType<typeof decodePng>): n
         const i = (y * pixels.width + x) * 4
         const background: Rgba = { r: pixels.data[i], g: pixels.data[i + 1], b: pixels.data[i + 2], a: 1 }
         const ratio = contrastRatio(over(text, background), background)
-        if (ratio < worst) worst = ratio
+        if (ratio < required) low.push([x, y, ratio])
+        else if (ratio < worstShown) worstShown = ratio
       }
     }
   }
-  return worst
+  return { worstShown, low }
 }
 
-async function auditViewport(page: Page, route: string, failures: Failure[]): Promise<number> {
-  const samples = await collectTexts(page)
+function sampleKey(sample: TextSample): string {
+  return JSON.stringify([sample.text, sample.color, sample.opacity, sample.fontSize, sample.fontWeight, sample.rects])
+}
+
+async function setTextHidden(page: Page, hidden: boolean): Promise<void> {
+  await page.evaluate(
+    ({ id, hidden }) => {
+      document.getElementById(id)?.remove()
+      if (!hidden) return
+      const style = document.createElement('style')
+      style.id = id
+      style.textContent =
+        '*,*::before,*::after{color:transparent!important;-webkit-text-fill-color:transparent!important;text-shadow:none!important;text-decoration-color:transparent!important;caret-color:transparent!important}'
+      document.head.append(style)
+    },
+    { id: HIDE_TEXT_ID, hidden },
+  )
+}
+
+async function measure(page: Page, samples: TextSample[]): Promise<Measure[]> {
+  await setTextHidden(page, true)
+  const pixels = decodePng(await page.screenshot({ scale: 'css' }))
+  const scans = samples.map((sample) => scan(sample, pixels, requiredRatio(sample.fontSize, sample.fontWeight)))
+  const shown = await page.evaluate(
+    ({ ownerAttribute, checks }) =>
+      checks.map(({ owner, points }) => {
+        const element = document.querySelector(`[${ownerAttribute}="${owner}"]`)
+        return points.map(([x, y]) => {
+          if (!element) return true
+          const hit = document.elementFromPoint(x + 0.5, y + 0.5)
+          return hit === null || hit === element || element.contains(hit) || hit.contains(element)
+        })
+      }),
+    { ownerAttribute: OWNER, checks: samples.map((sample, index) => ({ owner: sample.owner, points: scans[index]!.low.map(([x, y]) => [x, y] as [number, number]) })) },
+  )
+  await setTextHidden(page, false)
+  return scans.map((result, index) => {
+    const visible = result.low.filter((_, point) => shown[index]![point])
+    const worst = visible.reduce((min, [, , ratio]) => Math.min(min, ratio), result.worstShown)
+    return { worst, failed: visible.length > 0 }
+  })
+}
+
+async function auditFrame(page: Page, route: string, frame: number, failures: Failure[]): Promise<number> {
   let minimum = Number.POSITIVE_INFINITY
-  await page.evaluate((id) => {
-    const style = document.createElement('style')
-    style.id = id
-    style.textContent =
-      '*,*::before,*::after{color:transparent!important;-webkit-text-fill-color:transparent!important;text-shadow:none!important;text-decoration-color:transparent!important;caret-color:transparent!important}'
-    document.head.append(style)
-  }, HIDE_TEXT_ID)
-
-  const viewport = page.viewportSize() ?? { width: 1280, height: 800 }
-  for (let frame = 0; frame < FRAMES; frame++) {
-    await page.mouse.move(viewport.width * (0.3 + 0.13 * frame), viewport.height * (0.35 + 0.1 * frame), { steps: 4 })
-    await page.waitForTimeout(180)
-    const pixels = decodePng(await page.screenshot({ scale: 'css' }))
-    for (const sample of samples) {
-      const ratio = worstRatio(sample, pixels)
+  const done = new Set<string>()
+  let pending = await collectTexts(page)
+  for (let attempt = 0; attempt < SETTLE_ATTEMPTS && pending.length > 0; attempt++) {
+    const results = await measure(page, pending)
+    const after = await collectTexts(page)
+    const unchanged = new Set(after.map(sampleKey))
+    const last = attempt === SETTLE_ATTEMPTS - 1
+    pending.forEach((sample, index) => {
+      const key = sampleKey(sample)
+      if (done.has(key) || (!unchanged.has(key) && !last)) return
+      done.add(key)
+      const { worst, failed } = results[index]!
+      minimum = Math.min(minimum, worst)
       const required = requiredRatio(sample.fontSize, sample.fontWeight)
-      minimum = Math.min(minimum, ratio)
-      if (ratio < required) failures.push({ route, text: sample.text, ratio: Number(ratio.toFixed(2)), required, frame })
-    }
+      if (failed) failures.push({ route, text: sample.text, ratio: Number(worst.toFixed(2)), required, frame })
+    })
+    pending = after.filter((sample) => !done.has(sampleKey(sample)))
+    if (pending.length > 0 && !last) await page.waitForTimeout(SETTLE_MS)
   }
+  return minimum
+}
 
-  await page.evaluate((id) => document.getElementById(id)?.remove(), HIDE_TEXT_ID)
+async function auditViewport(page: Page, route: string, failures: Failure[], touch: boolean): Promise<number> {
+  let minimum = Number.POSITIVE_INFINITY
+  const viewport = page.viewportSize() ?? { width: 1280, height: 800 }
+  if (touch) await page.mouse.move(-1, -1)
+  for (let frame = 0; frame < FRAMES; frame++) {
+    if (!touch) await page.mouse.move(viewport.width * (0.3 + 0.13 * frame), viewport.height * (0.35 + 0.1 * frame), { steps: 4 })
+    await page.waitForTimeout(180)
+    minimum = Math.min(minimum, await auditFrame(page, route, frame, failures))
+  }
   return minimum
 }
 
@@ -189,7 +257,7 @@ for (const theme of ['dark', 'light'] as const) {
         const step = await page.evaluate(() => window.innerHeight - 80)
         for (let top = 0, i = 0; i < MAX_SCROLL_STEPS; top += step, i++) {
           await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top)
-          minimum = Math.min(minimum, await auditViewport(page, route, failures))
+          minimum = Math.min(minimum, await auditViewport(page, route, failures, testInfo.project.use.hasTouch === true))
           audited += 1
           if (top + step >= total) break
         }

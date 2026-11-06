@@ -79,7 +79,8 @@
   left: 0;
   height: max(2px, 0.11em);
   border-radius: 999px;
-  background: var(--cw-graphic-accent);
+  color: var(--cw-graphic-accent);
+  background: currentColor;
   box-shadow: 0 0 12px var(--cw-graphic-glow);
   transform: translateY(-50%);
   transform-origin: left center;
