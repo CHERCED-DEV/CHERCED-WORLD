@@ -72,20 +72,20 @@ const V1: LabExperiment = {
     },
   ],
   code: {
-    snippet: `export function requestDownload(request: DownloadRequest): Promise<boolean> {
-  assertDownloadRequest(request)
-  if (hasConsent(request.experiment, request.resource)) return Promise.resolve(true)
-  const key = consentKey(request.experiment, request.resource)
-  const existing = pending.get(key)
-  if (existing) return existing
-  const turn = queue.then(() => ask(request))
-  queue = turn.catch(() => false)
-  const result = turn.finally(() => pending.delete(key))
-  pending.set(key, result)
-  return result
+    snippet: `for (const [index, window] of windows.entries()) {
+  await context.checkpoint()
+  const slice = audio.subarray(window.start, window.end)
+  let fresh: WhisperSegment[] = []
+  if (!isSilent(slice)) {
+    const output = await loaded.pipe(slice, { language, task: 'transcribe', return_timestamps: true })
+    const first = Array.isArray(output) ? output[0] : output
+    if (first) fresh = toSegments(first, window.start / SAMPLE_RATE, window.end / SAMPLE_RATE)
+  }
+  segments.push(...fresh)
+  context.progress({ stage: 'transcribe', done: index + 1, total: windows.length, segments: fresh })
 }`,
     lang: 'ts',
-    repoPath: 'lib/ailab/core/consent.ts',
+    repoPath: 'lib/ailab/voice/engine.ts',
   },
 }
 
@@ -202,15 +202,24 @@ const V4: LabExperiment = {
     },
   ],
   code: {
-    snippet: `export function runPaletteCommand(id: PaletteCommandId | string): boolean {
-  const current = runner
-  const item = findPaletteCommand(id)
-  if (!current || !item) return false
-  current.run(item)
-  return true
+    snippet: `export function matchVoiceCommand(
+  utterance: string,
+  commands: readonly VoiceCommand[] = voiceCommands,
+  threshold = MATCH_THRESHOLD,
+): VoiceMatch | null {
+  let best: VoiceMatch | null = null
+  for (const command of commands) {
+    for (const lang of locales) {
+      for (const phrase of command.phrases[lang]) {
+        const score = phraseScore(utterance, phrase)
+        if (score >= threshold && (!best || score > best.score)) best = { command, phrase, lang, score }
+      }
+    }
+  }
+  return best
 }`,
     lang: 'ts',
-    repoPath: 'components/experience/palette-model.ts',
+    repoPath: 'lib/ailab/voice/commands.ts',
   },
 }
 
