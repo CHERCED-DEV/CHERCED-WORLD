@@ -2,8 +2,10 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import AxeBuilder from '@axe-core/playwright'
 import { expect as baseExpect, test, type Locator, type Page, type Request } from '@playwright/test'
+import { defaultDownload, labExperiment } from '@/content/ailab/catalog'
 import en from '@/content/i18n/en/ailab.json'
 import es from '@/content/i18n/es/ailab.json'
+import { ONNX_RUNTIME } from '@/lib/ailab/voice/models'
 
 const expect = baseExpect.configure({ timeout: 15_000 })
 
@@ -129,7 +131,9 @@ async function open(page: Page, lang: 'es' | 'en' = 'es'): Promise<void> {
   await expect(page.locator('[data-cw-assistant-button]')).toHaveAttribute('data-cw-ready', '', { timeout: 30_000 })
 }
 
-function card(page: Page, id: 'V1' | 'V4'): Locator {
+type VoiceId = 'V1' | 'V2' | 'V3' | 'V4'
+
+function card(page: Page, id: VoiceId): Locator {
   return page.locator(`[data-cw-lab-card="${id}"]`)
 }
 
@@ -137,13 +141,124 @@ function consent(page: Page): Locator {
   return page.locator('dialog[open]').filter({ has: page.locator('[data-cw-lab-consent-text]') })
 }
 
-async function tryDemo(page: Page, id: 'V1' | 'V4'): Promise<Locator> {
-  const item = card(page, id)
-  await item.locator('[data-cw-lab-open]').click()
+async function accept(page: Page): Promise<void> {
   await consent(page).locator('[data-cw-lab-consent-accept]').click()
   await expect(consent(page)).toBeHidden()
-  await expect(item.locator('[data-cw-lab-stage]')).toBeVisible()
+}
+
+async function tryDemo(page: Page, id: VoiceId): Promise<Locator> {
+  const item = card(page, id)
+  const stage = item.locator('[data-cw-lab-stage]')
+  await item.locator('[data-cw-lab-open]').click()
+  await expect(consent(page).or(stage).first()).toBeVisible()
+  if (await consent(page).isVisible()) await accept(page)
+  await expect(stage).toBeVisible()
+  await expect(item.locator(`[data-cw-voice="${id}"]`)).toBeVisible()
+  if (id === 'V4' && (await item.locator('[data-cw-v4-voice="off"]').count()) > 0) {
+    await item.locator('[data-cw-v4-activate]').click()
+    await accept(page)
+  }
   return item
+}
+
+const V4_ASKS_ON_TRY = defaultDownload(labExperiment('V4')) !== null
+
+type FakeVoice = { name: string; lang: string; voiceURI: string; localService: boolean; default: boolean }
+
+const FAKE_VOICES: FakeVoice[] = [
+  { name: 'Google español', lang: 'es-ES', voiceURI: 'google-es', localService: false, default: false },
+  { name: 'Paulina', lang: 'es-CO', voiceURI: 'paulina', localService: true, default: false },
+  { name: 'Samantha', lang: 'en-US', voiceURI: 'samantha', localService: true, default: true },
+  { name: 'Aria Online', lang: 'en-US', voiceURI: 'aria-online', localService: false, default: false },
+]
+
+type SpeechState = { spoken: Array<{ text: string; lang: string; voice: string | null; rate: number }>; cancels: number; auto: number; speaking: boolean }
+
+async function fakeSpeech(page: Page, options: { voices?: FakeVoice[] | null; auto?: number } = {}): Promise<void> {
+  await page.addInitScript(
+    ({ voices, auto }) => {
+      if (voices === null) {
+        Object.defineProperty(window, 'speechSynthesis', { value: undefined, configurable: true })
+        Object.defineProperty(window, 'SpeechSynthesisUtterance', { value: undefined, configurable: true, writable: true })
+        return
+      }
+      type Utterance = { text: string; lang: string; voice: { name: string } | null; rate: number; onstart: ((event: object) => void) | null; onend: ((event: object) => void) | null; onerror: ((event: { error: string }) => void) | null }
+      const state = { spoken: [] as Array<{ text: string; lang: string; voice: string | null; rate: number }>, cancels: 0, auto, speaking: false, voices: [] as unknown[] }
+      let current: Utterance | null = null
+      const listeners = new Set<() => void>()
+      const finish = (utterance: Utterance) => {
+        if (current !== utterance) return
+        current = null
+        state.speaking = false
+        utterance.onend?.({})
+      }
+      class FakeUtterance {
+        lang = ''
+        voice = null
+        rate = 1
+        pitch = 1
+        volume = 1
+        onstart = null
+        onend = null
+        onerror = null
+        constructor(public text: string) {}
+      }
+      const synth = {
+        getVoices: () => state.voices,
+        speak(utterance: Utterance) {
+          state.spoken.push({ text: utterance.text, lang: utterance.lang, voice: utterance.voice?.name ?? null, rate: utterance.rate })
+          current = utterance
+          state.speaking = true
+          utterance.onstart?.({})
+          if (state.auto > 0) setTimeout(() => finish(utterance), state.auto)
+        },
+        cancel() {
+          state.cancels += 1
+          const utterance = current
+          current = null
+          state.speaking = false
+          utterance?.onerror?.({ error: 'interrupted' })
+        },
+        pause() {},
+        resume() {},
+        addEventListener(type: string, listener: () => void) {
+          if (type === 'voiceschanged') listeners.add(listener)
+        },
+        removeEventListener(type: string, listener: () => void) {
+          listeners.delete(listener)
+        },
+      }
+      Object.assign(window, {
+        __x1speech: {
+          state,
+          end: () => {
+            if (current) finish(current)
+          },
+        },
+      })
+      Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true })
+      Object.defineProperty(window, 'SpeechSynthesisUtterance', { value: FakeUtterance, configurable: true, writable: true })
+      setTimeout(() => {
+        state.voices = voices
+        for (const listener of listeners) listener()
+      }, 150)
+    },
+    { voices: options.voices === undefined ? FAKE_VOICES : options.voices, auto: options.auto ?? 0 },
+  )
+}
+
+async function speech(page: Page): Promise<SpeechState> {
+  return page.evaluate(() => (window as unknown as { __x1speech: { state: SpeechState } }).__x1speech.state)
+}
+
+async function endUtterance(page: Page): Promise<void> {
+  await page.evaluate(() => (window as unknown as { __x1speech: { end: () => void } }).__x1speech.end())
+}
+
+async function autoSpeech(page: Page, ms: number): Promise<void> {
+  await page.evaluate((value) => {
+    ;(window as unknown as { __x1speech: { state: SpeechState } }).__x1speech.state.auto = value
+  }, ms)
 }
 
 function wav(seconds: number, rate = 16_000, bits: 8 | 16 = 16): Buffer {
@@ -500,11 +615,276 @@ test.describe('V4 Navega hablando (US5, FR-351)', () => {
   })
 })
 
+test.describe('V4 sin aceptar ni descargar nada (FR-340, FR-351)', () => {
+  onlyIn('desktop-chromium', 'mobile-chromium')
+
+  test('la alternativa escrita corre sin consentimiento, y la voz se activa aparte con su peso a la vista', async ({ page }) => {
+    test.skip(V4_ASKS_ON_TRY, 'espera la enmienda de X0: V4 todavía pide Whisper tiny al pulsar "Probar"')
+    const network = guardNetwork(page)
+    await fakeWhisper(page)
+    await open(page)
+    const v4 = card(page, 'V4')
+    await v4.locator('[data-cw-lab-open]').click()
+    await expect(v4.locator('[data-cw-voice="V4"]')).toBeVisible()
+    await expect(consent(page)).toHaveCount(0)
+    await expect(v4.locator('[data-cw-v4-voice="off"]')).toBeVisible()
+    await expect(v4.locator('[data-cw-v4-activation] p').first()).toHaveText(
+      'Escribir el comando no descarga nada. Para hablar, descargo Whisper tiny (int8) (41 MB) desde huggingface.co y el motor ONNX Runtime Web (27 MB) desde este mismo sitio.',
+    )
+    await expect(v4.locator('[data-cw-v4-hold]')).toHaveCount(0)
+    await v4.locator('[data-cw-v4-text]').fill('cambia a inglés')
+    await v4.locator('[data-cw-v4-text]').press('Enter')
+    await expect(v4.locator('[data-cw-v4-outcome="run"] [role="status"]')).toHaveText('Escribiste: «cambia a inglés». Ejecuto: Ver el sitio en inglés.')
+    await page.waitForURL(/\/en\/ai-lab$/)
+    expect(await page.evaluate((key) => JSON.parse(sessionStorage.getItem(key) ?? '[]'), CONSENT_KEY)).toEqual([])
+    expect(await fake(page, (state) => state.created)).toBe(0)
+    expect(network.heavy).toEqual([])
+  })
+
+  test('"Activar la voz" pide el permiso; "Ahora no" deja escribir y no descarga nada', async ({ page }) => {
+    test.skip(V4_ASKS_ON_TRY, 'espera la enmienda de X0: V4 todavía pide Whisper tiny al pulsar "Probar"')
+    await fakeWhisper(page)
+    await open(page)
+    const v4 = card(page, 'V4')
+    await v4.locator('[data-cw-lab-open]').click()
+    await v4.locator('[data-cw-v4-activate]').click()
+    await expect(consent(page).locator('[data-cw-lab-consent-text]')).toContainText('Whisper tiny (int8) (41 MB) desde huggingface.co')
+    await consent(page).locator('[data-cw-lab-consent-cancel]').click()
+    await expect(v4.locator('[data-cw-v4-activation-status="declined"]')).toHaveText(es['ailab.v4.status.declined'])
+    await expect(v4.locator('[data-cw-v4-text]')).toBeEditable()
+    expect(await fake(page, (state) => state.created)).toBe(0)
+    await v4.locator('[data-cw-v4-activate]').click()
+    await accept(page)
+    await expect(v4.locator('[data-cw-v4-voice="on"]')).toBeVisible()
+    await expect(v4.locator('[data-cw-voice-engine="ready"]')).toBeVisible()
+    await expect(v4.locator('[data-cw-v4-hold]')).toBeVisible()
+    expect(await fake(page, (state) => state.calls)).toEqual([{ type: 'load', model: 'tiny', seconds: 0 }])
+  })
+})
+
+test.describe('V2 Texto → voz (US10, FR-359, FR-321)', () => {
+  onlyIn('desktop-chromium', 'mobile-chromium')
+
+  test('reproducir, pausar, seguir y detener desde el teclado, con la voz local del idioma', async ({ page }) => {
+    const network = guardNetwork(page)
+    await fakeSpeech(page)
+    await open(page)
+    const v2 = await tryDemo(page, 'V2')
+    await expect(v2.locator('[data-cw-voice-local]')).toHaveText(es['ailab.v2.local'])
+    const select = v2.locator('[data-cw-speech-voice]')
+    await expect(select).toBeVisible()
+    await expect(select.locator('option')).toHaveText(['Paulina (es-CO)', 'Google español (es-ES) · en línea'])
+    await expect(select).toHaveValue('paulina')
+    await expect(v2.locator('[data-cw-speech-online]')).toHaveCount(0)
+
+    const text = v2.locator('[data-cw-v2-text]')
+    await text.fill('Hola desde el teclado. Esta es la segunda frase.')
+    await text.press('Control+Enter')
+    await expect(v2.locator('[data-cw-speech-status="playing"] [role="status"]')).toHaveText('Leyendo con Paulina.')
+    expect((await speech(page)).spoken).toEqual([{ text: 'Hola desde el teclado. Esta es la segunda frase.', lang: 'es-CO', voice: 'Paulina', rate: 1 }])
+
+    const pause = v2.locator('[data-cw-speech-pause]')
+    await pause.focus()
+    await page.keyboard.press('Enter')
+    await expect(v2.locator('[data-cw-speech-status="paused"] [role="status"]')).toHaveText(es['ailab.v2.status.paused'])
+    await expect(pause).toHaveText(es['ailab.v2.resume'])
+    await expect(pause).toBeFocused()
+    expect((await speech(page)).speaking).toBe(false)
+    await page.keyboard.press('Space')
+    await expect(v2.locator('[data-cw-speech-status="playing"]')).toBeVisible()
+    await expect(pause).toHaveText(es['ailab.v2.pause'])
+    expect((await speech(page)).spoken).toHaveLength(2)
+
+    await page.keyboard.press('Escape')
+    await expect(v2.locator('[data-cw-speech-status="cancelled"] [role="status"]')).toHaveText(es['ailab.v2.status.stopped'])
+    await expect(v2.locator('[data-cw-speech-stop]')).toHaveAttribute('aria-disabled', 'true')
+
+    await autoSpeech(page, 40)
+    await text.press('Control+Enter')
+    await expect(v2.locator('[data-cw-speech-status="finished"] [role="status"]')).toHaveText(es['ailab.v2.status.finished'])
+
+    await v2.locator('[data-cw-v2-language="en"]').check()
+    await expect(select).toHaveValue('samantha')
+    await text.fill('Hello there.')
+    const before = (await speech(page)).spoken.length
+    await v2.locator('[data-cw-speech-play]').click()
+    await expect.poll(async () => (await speech(page)).spoken.length).toBe(before + 1)
+    expect((await speech(page)).spoken.at(-1)).toEqual({ text: 'Hello there.', lang: 'en-US', voice: 'Samantha', rate: 1 })
+    await expect(v2.locator('[data-cw-speech-status="finished"]')).toBeVisible()
+    expect(network.sent).toEqual([])
+    expect(network.heavy).toEqual([])
+  })
+
+  test('una voz en línea se advierte antes de reproducir (voz falsa con localService en false)', async ({ page }) => {
+    await fakeSpeech(page, { auto: 40 })
+    await open(page)
+    const v2 = await tryDemo(page, 'V2')
+    const select = v2.locator('[data-cw-speech-voice]')
+    await expect(select).toHaveValue('paulina')
+    await select.selectOption('google-es')
+    const warning = v2.locator('[data-cw-speech-online]')
+    await expect(warning).toHaveText(
+      '«Google español» es una voz en línea: para leer, tu navegador envía el texto a su servicio de voz, fuera de tu equipo. Si no quieres que salga, elige una voz sin la marca «en línea».',
+    )
+    expect((await speech(page)).spoken).toEqual([])
+    const play = v2.locator('[data-cw-speech-play]')
+    await expect(play).toHaveAttribute('aria-describedby', (await warning.getAttribute('id'))!)
+    await play.click()
+    await expect(v2.locator('[data-cw-speech-status="finished"]')).toBeVisible()
+    expect((await speech(page)).spoken.at(-1)?.voice).toBe('Google español')
+    await select.selectOption('paulina')
+    await expect(warning).toHaveCount(0)
+    await expect(play).not.toHaveAttribute('aria-describedby')
+    expect(await blockingViolations(page, '[data-cw-lab-card="V2"]')).toEqual([])
+  })
+
+  test('sin síntesis de voz lo dice y no se rompe; sin voces del idioma no deja reproducir', async ({ page }) => {
+    test.slow()
+    await fakeSpeech(page, { voices: null })
+    await open(page)
+    const v2 = await tryDemo(page, 'V2')
+    await expect(v2.locator('[data-cw-speech-unsupported]')).toHaveText(es['ailab.v2.unsupported'])
+    await expect(v2.locator('[data-cw-speech-play]')).toHaveCount(0)
+    await expect(v2.locator('[data-cw-lab-failed]')).toHaveCount(0)
+    const v3 = await tryDemo(page, 'V3')
+    await expect(v3.locator('[data-cw-speech-unsupported]')).toHaveText(es['ailab.v3.unsupported'])
+    await expect(v3.locator('[data-cw-v3-post]')).toBeVisible()
+
+    const other = await page.context().newPage()
+    await fakeSpeech(other, { voices: [{ name: 'Thomas', lang: 'fr-FR', voiceURI: 'thomas', localService: true, default: true }] })
+    await open(other)
+    const v2fr = await tryDemo(other, 'V2')
+    await expect(v2fr.locator('[data-cw-speech-voices="none"]')).toHaveText(es['ailab.v2.voices.none'])
+    await expect(v2fr.locator('[data-cw-speech-play]')).toHaveAttribute('aria-disabled', 'true')
+    await v2fr.locator('[data-cw-speech-play]').click({ force: true })
+    expect((await speech(other)).spoken).toEqual([])
+    await other.close()
+  })
+})
+
+test.describe('V3 Escuchar los posts (US10, FR-359, T726)', () => {
+  onlyIn('desktop-chromium', 'mobile-chromium')
+
+  test('lee solo el cuerpo del post de ejemplo, sin el código ni la imagen decorativa, y anuncia la sección', async ({ page }) => {
+    const network = guardNetwork(page)
+    await fakeSpeech(page)
+    await open(page)
+    const v3 = await tryDemo(page, 'V3')
+    await expect(v3.locator('[data-cw-speech-voice]')).toHaveValue('paulina')
+    await v3.locator('[data-cw-speech-play]').click()
+    const status = v3.locator('[data-cw-speech-status] [role="status"]')
+    await expect(status).toHaveText('Leyendo: Cómo te leo este post')
+    await expect(v3.locator('[data-cw-v3-post] h5')).toHaveAttribute('data-cw-v3-reading', '')
+    for (let step = 0; step < 4; step += 1) await endUtterance(page)
+    await expect(status).toHaveText('Leyendo: Qué leo y qué no')
+    await expect(v3.locator('[data-cw-v3-reading]')).toHaveCount(1)
+
+    await v3.locator('[data-cw-speech-pause]').click()
+    await expect(status).toHaveText('En pausa en: Qué leo y qué no')
+    await expect(v3.locator('[data-cw-v3-reading]')).toHaveCount(1)
+    expect((await speech(page)).speaking).toBe(false)
+    await v3.locator('[data-cw-speech-pause]').click()
+    await expect(status).toHaveText('Leyendo: Qué leo y qué no')
+
+    await autoSpeech(page, 30)
+    await endUtterance(page)
+    await expect(status).toHaveText(es['ailab.v3.status.finished'])
+    const spoken = (await speech(page)).spoken.map((item) => item.text)
+    expect(spoken[0]).toBe(es['ailab.v3.sample.title'])
+    expect(spoken).toContain(es['ailab.v3.sample.h2'])
+    expect(spoken).toContain(es['ailab.v3.sample.figureAlt'])
+    expect(spoken).toContain(es['ailab.v3.sample.li2'])
+    const corpus = spoken.join('\n')
+    for (const code of ['readPost(', 'reader.pause()', 'console.log']) expect(corpus).not.toContain(code)
+    expect(new Set((await speech(page)).spoken.map((item) => item.voice))).toEqual(new Set(['Paulina']))
+
+    await v3.locator('[data-cw-v3-plan] summary').click()
+    await expect(v3.locator('[data-cw-v3-skipped]')).toHaveText(`Fragmentos que leo: ${new Set(spoken).size}. Bloques de código que salto: 1. Imágenes decorativas que salto: 1.`)
+    await expect(v3.locator('[data-cw-v3-chunk="heading"]')).toHaveCount(3)
+    await expect(v3.locator('[data-cw-v3-chunk="image"]')).toHaveText([`${es['ailab.v3.kind.image']} ${es['ailab.v3.sample.figureAlt']}`])
+    expect(network.sent).toEqual([])
+    expect(network.heavy).toEqual([])
+  })
+
+  test('en inglés lee con una voz en inglés; Esc detiene, y sin violaciones serias de accesibilidad', async ({ page }) => {
+    await fakeSpeech(page)
+    await open(page, 'en')
+    const v3 = await tryDemo(page, 'V3')
+    const select = v3.locator('[data-cw-speech-voice]')
+    await expect(select.locator('option')).toHaveText(['Samantha (en-US)', 'Aria Online (en-US) · online'])
+    await select.selectOption('aria-online')
+    await expect(v3.locator('[data-cw-speech-online]')).toContainText('“Aria Online” is an online voice')
+    await select.selectOption('samantha')
+    await v3.locator('[data-cw-speech-play]').focus()
+    await page.keyboard.press('Enter')
+    await expect(v3.locator('[data-cw-speech-status] [role="status"]')).toHaveText('Reading: How this post is read to you')
+    expect((await speech(page)).spoken[0]).toEqual({ text: en['ailab.v3.sample.title'], lang: 'en-US', voice: 'Samantha', rate: 1 })
+    await page.keyboard.press('Escape')
+    await expect(v3.locator('[data-cw-speech-status] [role="status"]')).toHaveText(en['ailab.v3.status.stopped'])
+    expect(await blockingViolations(page, '[data-cw-lab-card="V3"]')).toEqual([])
+  })
+})
+
+test.describe('el motor ONNX Runtime Web sale de este sitio (FR-310)', () => {
+  onlyIn('desktop-chromium')
+
+  test('al aceptar V1, el .wasm se pide al propio sitio, pesa lo que dice el copy y nada va a jsDelivr', async ({ page, context, baseURL }) => {
+    const wasm: string[] = []
+    const cdn: string[] = []
+    await context.route(/cdn\.jsdelivr\.net|unpkg\.com/, (route) => {
+      cdn.push(route.request().url())
+      return route.abort()
+    })
+    const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'GET, HEAD, OPTIONS' }
+    await context.route(/huggingface\.co|hf\.co/, (route) => {
+      const request = route.request()
+      const url = request.url()
+      if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors })
+      if (/\/config\.json(\?|$)/.test(url)) {
+        return route.fulfill({
+          headers: cors,
+          contentType: 'application/json',
+          body: JSON.stringify({ model_type: 'whisper', architectures: ['WhisperForConditionalGeneration'], is_encoder_decoder: true, d_model: 384, encoder_layers: 4, decoder_layers: 4, num_mel_bins: 80, vocab_size: 51865 }),
+        })
+      }
+      if (/\.onnx(\?|$)/.test(url)) return route.fulfill({ headers: cors, contentType: 'application/octet-stream', body: Buffer.alloc(64) })
+      return route.fulfill({ status: 404, headers: cors, body: '' })
+    })
+    await context.route(/\.wasm(\?|$)/, (route) => {
+      wasm.push(route.request().url())
+      return route.abort()
+    })
+    await page.addInitScript(() => {
+      try {
+        sessionStorage.setItem('cw-intro-seen', '1')
+      } catch {}
+    })
+    await page.goto('/es/ai-lab')
+    await expect(page.locator('[data-cw-assistant-button]')).toHaveAttribute('data-cw-ready', '', { timeout: 30_000 })
+    expect(wasm).toEqual([])
+    const v1 = card(page, 'V1')
+    await v1.locator('[data-cw-lab-open]').click()
+    await accept(page)
+    await expect(v1.locator('[data-cw-v1-engine]')).toContainText('ONNX Runtime Web (27 MB), lo sirve este mismo sitio')
+    await expect.poll(() => wasm.length, { timeout: 60_000 }).toBeGreaterThan(0)
+    const origin = new URL(baseURL!).origin
+    for (const url of wasm) {
+      expect(new URL(url).origin).toBe(origin)
+      expect(new URL(url).pathname).toMatch(/^\/_next\/static\/media\/ort-wasm-simd-threaded\.asyncify\.[\w-]+\.wasm$/)
+    }
+    expect(cdn).toEqual([])
+    const file = await page.request.get(wasm[0]!, { headers: { 'accept-encoding': 'identity' } })
+    expect(file.status()).toBe(200)
+    expect((await file.body()).length).toBe(ONNX_RUNTIME.bytes)
+  })
+})
+
 test.describe('móvil: patrones de la 006 (44 px y sin desbordes)', () => {
   onlyIn('mobile-chromium')
 
-  test('cada control de V1 y V4 mide al menos 44 px de alto y nada desborda a 390 px', async ({ page }) => {
+  test('cada control de V1 a V4 mide al menos 44 px de alto y nada desborda a 390 px', async ({ page }) => {
     await fakeWhisper(page)
+    await fakeSpeech(page)
     await open(page)
     const v1 = await tryDemo(page, 'V1')
     await script(page, { text: 'Hola.' })
@@ -512,9 +892,16 @@ test.describe('móvil: patrones de la 006 (44 px y sin desbordes)', () => {
     await expect(v1.locator('[data-cw-v1-timing]')).toBeVisible()
     const v4 = await tryDemo(page, 'V4')
     await v4.locator('[data-cw-v4-commands] summary').click()
-    for (const stage of [v1, v4]) {
+    const v2 = await tryDemo(page, 'V2')
+    await expect(v2.locator('[data-cw-speech-voice]')).toBeVisible()
+    const v3 = await tryDemo(page, 'V3')
+    await expect(v3.locator('[data-cw-speech-voice]')).toBeVisible()
+    await v3.locator('[data-cw-v3-plan] summary').click()
+    for (const stage of [v1, v4, v2, v3]) {
       const small = await stage
-        .locator('[data-cw-voice] button, [data-cw-voice] label:has(input), [data-cw-voice] input[type="text"], [data-cw-voice] summary, [data-cw-voice] label[for]')
+        .locator(
+          '[data-cw-voice] button, [data-cw-voice] label:has(input), [data-cw-voice] input[type="text"], [data-cw-voice] select, [data-cw-voice] textarea, [data-cw-voice] summary, [data-cw-voice] label[for]',
+        )
         .evaluateAll((nodes) =>
           nodes
             .filter((node) => (node as HTMLElement).offsetParent !== null)

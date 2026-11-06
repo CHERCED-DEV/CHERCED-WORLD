@@ -44,7 +44,8 @@ describe('modelos de Whisper y su consentimiento (T720, R-701, FR-310)', () => {
     const v1 = labExperiment('V1').downloads
     expect(offeredModels(v1)).toEqual(['tiny', 'base', 'small'])
     expect(defaultModelOf(v1)).toBe('base')
-    expect(defaultModelOf(labExperiment('V4').downloads, 'base')).toBe('tiny')
+    expect(offeredModels(labExperiment('V4').downloads)).toEqual(['tiny'])
+    expect(defaultModelOf(labExperiment('V4').downloads, 'tiny')).toBe('tiny')
     expect(defaultModelOf([])).toBe('base')
     expect(modelOf({ resource: 'otro' })).toBeNull()
   })
