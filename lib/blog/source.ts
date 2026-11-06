@@ -4,7 +4,7 @@ import { locales, type Locale } from '@/lib/i18n'
 import { toFeedItems, type FeedItem } from './feed'
 import { orderPosts } from './order'
 import { partsOfSeries } from './series'
-import { uniqueTagSlugs } from './tags'
+import { tagSlugIn, uniqueTagSlugs } from './tags'
 
 export async function blogPosts(lang: Locale): Promise<ListedPost[]> {
   return orderPosts(await listPosts(lang), postIds())
@@ -20,7 +20,8 @@ export async function tagSlugsIn(lang: Locale): Promise<string[]> {
 
 export async function allTagSlugs(): Promise<string[]> {
   const perLang = await Promise.all(locales.map((lang) => ownPosts(lang)))
-  return uniqueTagSlugs(perLang.flat())
+  const tags = perLang.flat().flatMap((post) => post.tags)
+  return uniqueTagSlugs(locales.map((lang) => ({ tags: tags.map((tag) => tagSlugIn(tag, lang)) })))
 }
 
 export async function seriesParts(seriesId: string, lang: Locale): Promise<ListedPost[]> {

@@ -174,20 +174,20 @@ test.describe('etiquetas sin JavaScript (FR-505, SC-502)', () => {
     }
   })
 
-  test('una etiqueta del otro idioma da la lista vacía con enlace al índice, y una que no existe da el 404 con identidad', async ({ page }) => {
-    await page.goto('/en/blog/tag/carrera')
-    await expect(page.getByRole('heading', { name: '0 posts tagged “carrera”' })).toBeVisible()
-    await expect(page.locator('[data-cw-post-card]')).toHaveCount(0)
-    await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', /noindex/)
-    await expect(page.locator('head link[rel="alternate"][hreflang="en"]')).toHaveCount(0)
-    await page.locator('[data-cw-tag-empty]').getByRole('link', { name: 'See all posts' }).click()
-    await expect(page).toHaveURL(/\/en\/blog$/)
+  test('una etiqueta del otro idioma lleva a la suya en el idioma de la página, y una que no existe da el 404 con identidad', async ({ page }) => {
+    const redirected = await page.goto('/en/blog/tag/carrera')
+    expect(redirected?.status()).toBe(200)
+    await expect(page).toHaveURL(/\/en\/blog\/tag\/career$/)
+    await expect(page.getByRole('heading', { name: '1 post tagged “career”' })).toBeVisible()
+    await expect(page.locator('head link[rel="alternate"][hreflang="es"]')).toHaveAttribute('href', /\/es\/blog\/tag\/carrera$/)
 
     await page.goto('/es/blog/tag/carrera')
     await expect(page.locator('head meta[name="robots"]')).toHaveCount(0)
     await expect(page.locator('head link[rel="alternate"][hreflang="es"]')).toHaveAttribute('href', /\/es\/blog\/tag\/carrera$/)
+    await expect(page.locator('head link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', /\/en\/blog\/tag\/career$/)
 
-    await page.goto('/es/blog/tag/no-existe-esta-etiqueta')
+    const missing = await page.goto('/es/blog/tag/no-existe-esta-etiqueta')
+    expect(missing?.status()).toBe(404)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Esta página se fue mar adentro')
     await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', /noindex/)
     await expect(page.locator('[data-cw-blog-index]')).toHaveCount(0)
@@ -246,7 +246,7 @@ test.describe('móvil (006 T857)', () => {
 
   test('las tarjetas flotan, no suman desenfoque y la fila de etiquetas se desplaza sin mover la página', async ({ page }) => {
     await skipIntro(page)
-    await page.goto('/es/blog/tag/spec-driven-development')
+    await page.goto('/es/blog/tag/desarrollo-guiado-por-especificaciones')
     for (const card of await page.locator('[data-cw-post-card]').all()) {
       await expect(card).toHaveAttribute('data-cw-float', '1')
       await expect(card).not.toHaveAttribute('data-cw-blur')

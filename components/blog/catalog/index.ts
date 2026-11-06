@@ -1,4 +1,4 @@
-import type { LoadedPost } from '@/lib/content'
+import { withTagsIn, type LoadedPost } from '@/lib/content'
 import type { PostLoader, PostModule } from '@/content/posts/registry'
 import { otherLocale, type Locale } from '@/lib/i18n'
 
@@ -13,5 +13,5 @@ export async function loadCatalog(lang: Locale): Promise<LoadedPost> {
   const loader = own ?? catalog[otherLocale(lang)]
   if (!loader) throw new Error('[blog] El catálogo no tiene ningún idioma')
   const mod = await loader()
-  return { Content: mod.default, meta: mod.meta, fallback: !own }
+  return { Content: mod.default, meta: withTagsIn(mod.meta, lang), fallback: !own }
 }

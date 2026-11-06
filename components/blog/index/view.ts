@@ -4,9 +4,9 @@ import { feedPath } from '@/lib/blog/feed'
 import { featuredPost, groupByYear, type YearLabel } from '@/lib/blog/groups'
 import { blogPath } from '@/lib/blog/paths'
 import { ownPosts } from '@/lib/blog/source'
-import { postsWithTag, postTags, tagPath, tagSlug, type BlogTag } from '@/lib/blog/tags'
+import { findTag, postsWithTag, postTags, tagPath, tagSlugIn, type BlogTag } from '@/lib/blog/tags'
 import { getSite, pick } from '@/lib/content'
-import { alternates, locales, otherLocale, t, type Alternates, type Dictionary, type Locale } from '@/lib/i18n'
+import { locales, otherLocale, t, type Dictionary, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import type { PostCardLabels, PostCardPost } from '../PostCard'
 import type { BlogSearchLabels } from './BlogSearch'
@@ -84,15 +84,7 @@ function groupViews(blog: Dictionary, posts: readonly PostCardPost[], exclude: r
   return groupByYear(posts, exclude).map((group) => ({ ...group, title: groupTitle(blog, group.label) }))
 }
 
-export type TagAlternates = { canonical: string; languages: Partial<Alternates['languages']> }
-
-export function tagAlternates(lang: Locale, slug: string, langs: readonly Locale[]): TagAlternates {
-  const page = alternates(tagPath(lang, slug))
-  const listed = Object.entries(page.languages).filter(
-    ([key]) => langs.length === locales.length || langs.includes(key as Locale),
-  )
-  return { canonical: page.canonical, languages: Object.fromEntries(listed) }
-}
+export { tagAlternates, type TagAlternates } from '@/lib/blog/tags'
 
 export async function tagLangs(slug: string): Promise<Locale[]> {
   const perLang = await Promise.all(locales.map(async (lang) => [lang, postsWithTag(await ownPosts(lang), slug).length] as const))
@@ -100,6 +92,8 @@ export async function tagLangs(slug: string): Promise<Locale[]> {
 }
 
 export async function tagLabel(lang: Locale, slug: string): Promise<string> {
+  const named = findTag(slug)
+  if (named) return named[lang]
   for (const source of [lang, otherLocale(lang)]) {
     const found = postTags(await ownPosts(source)).find((tag) => tag.slug === slug)
     if (found) return found.label
@@ -140,7 +134,7 @@ export async function blogIndexView(lang: Locale): Promise<BlogIndexView> {
 }
 
 export async function tagIndexView(lang: Locale, tag: string): Promise<BlogIndexView> {
-  const slug = tagSlug(tag)
+  const slug = tagSlugIn(tag, lang)
   const [{ blog, cards, tags, own }, label] = await Promise.all([baseView(lang), tagLabel(lang, slug)])
   const matching = new Set(postsWithTag(own, slug).map((post) => post.id))
   const exclude = cards.filter((card) => !matching.has(card.id)).map((card) => card.id)

@@ -29,7 +29,7 @@ const POST_PAGE = 'app/[lang]/blog/[id]/page.tsx'
 
 const ANNOUNCED: ReadonlyArray<{ page: (lang: Lang) => string; file: string; owner: string }> = [
   { page: (lang) => `/${lang}/blog`, file: 'app/[lang]/blog/page.tsx', owner: 'Q1 (T616)' },
-  { page: (lang) => `/${lang}/blog/tag/architecture`, file: 'app/[lang]/blog/tag/[tag]/page.tsx', owner: 'Q1 (T616)' },
+  { page: (lang) => `/${lang}/blog/tag/${lang === 'es' ? 'arquitectura' : 'architecture'}`, file: 'app/[lang]/blog/tag/[tag]/page.tsx', owner: 'Q1 (T616)' },
   { page: (lang) => `/${lang}/blog/post4`, file: POST_PAGE, owner: 'Q2 (T627)' },
 ]
 

@@ -21,9 +21,10 @@ describe('sitemap con páginas de etiqueta (A-507)', () => {
     expect(byPath.has('/en/blog/tag/career')).toBe(true)
   })
 
-  it('enlaza como alternativa solo los idiomas donde la etiqueta tiene posts', () => {
-    const only = byPath.get('/es/blog/tag/carrera')!
-    expect(Object.keys(only.alternates?.languages ?? {})).toEqual(['es'])
+  it('enlaza como alternativa los idiomas donde la etiqueta tiene posts, cada uno con su slug (B9 de la 007)', () => {
+    const paired = byPath.get('/es/blog/tag/carrera')!
+    expect(Object.keys(paired.alternates?.languages ?? {}).sort()).toEqual(['en', 'es', 'x-default'])
+    expect(new URL(String(paired.alternates?.languages?.en)).pathname).toBe('/en/blog/tag/career')
     const shared = byPath.get('/en/blog/tag/humor')!
     expect(Object.keys(shared.alternates?.languages ?? {}).sort()).toEqual(['en', 'es', 'x-default'])
   })

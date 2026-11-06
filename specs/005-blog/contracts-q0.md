@@ -67,6 +67,16 @@ hacen `Toc` y `ReadingProgress`.
 | `postsWithTag(posts, tag)`, `hasTag(post, tag)` | | Comparan por slug |
 | `uniqueTagSlugs(posts)` | `string[]` | Sin duplicados, ordenados |
 
+**Enmienda de la 007 (B9, T941): etiquetas bilingües.** Cada etiqueta vive en `content/posts/tags.ts` como `{ es, en }`,
+y cada MDX escribe las suyas con el nombre de su idioma. El slug sigue siendo `tagSlug` del nombre, así que es propio de
+cada idioma (`/es/blog/tag/arquitectura`, `/en/blog/tag/architecture`). `loadPost` entrega las etiquetas en el idioma
+de la página, también en un fallback. Se suman `findTag`, `tagIn`, `tagsIn`, `tagSlugIn`, `tagKey` (identidad entre
+idiomas, la usan `hasTag` y los relacionados) y `tagAlternates`. `tagPath(lang, tag)` acepta el nombre o el slug de
+cualquier idioma y da el slug de `lang`. `allTagSlugs()` suma los slugs de los dos idiomas de cada etiqueta en uso: el
+de otro idioma, o el viejo (`/es/blog/tag/architecture`), responde 308 al de la página. Los alternates y el sitemap
+enlazan cada etiqueta con su slug en el otro idioma. El edge case de R-503 sigue: una etiqueta sin posts en un idioma
+da ahí la lista vacía, con su nombre en ese idioma.
+
 ### 3.2 Grupos y destacado (`groups.ts`, puro)
 
 | Export | Forma | Regla |

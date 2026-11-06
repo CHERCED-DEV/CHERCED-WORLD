@@ -1,4 +1,4 @@
-import { tagSlug } from './tags'
+import { tagKey } from './tags'
 
 export const RELATED_LIMIT = 3
 
@@ -10,11 +10,11 @@ export function relatedPosts<T extends Relatable>(
   exclude: readonly string[] = [],
   limit: number = RELATED_LIMIT,
 ): T[] {
-  const own = new Set(post.tags.map(tagSlug))
+  const own = new Set(post.tags.map(tagKey))
   const skip = new Set([post.id, ...exclude])
   return posts
     .filter((candidate) => !skip.has(candidate.id))
-    .map((candidate) => ({ candidate, shared: [...new Set(candidate.tags.map(tagSlug))].filter((slug) => own.has(slug)).length }))
+    .map((candidate) => ({ candidate, shared: [...new Set(candidate.tags.map(tagKey))].filter((key) => own.has(key)).length }))
     .filter(({ shared }) => shared > 0)
     .sort((a, b) => b.shared - a.shared || b.candidate.date.localeCompare(a.candidate.date))
     .slice(0, Math.max(0, limit))

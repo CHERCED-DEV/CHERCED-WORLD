@@ -15,7 +15,23 @@ export { blogPath, postAlternates, postPath, postUrl } from './paths'
 export { COMMENT_TIME_ZONE, commentDateTime, formatCommentDate, formatPostDate, languageName, parsePostDate } from './format'
 export { adjacentPosts, orderPosts, type Adjacent, type Datable } from './order'
 export { activeHeading, readingProgress, spyLine, type BodyBox, type HeadingTop } from './progress'
-export { hasTag, postsWithTag, postTags, tagPath, tagSlug, uniqueTagSlugs, type BlogTag, type Taggable } from './tags'
+export {
+  findTag,
+  hasTag,
+  postsWithTag,
+  postTags,
+  tagAlternates,
+  tagIn,
+  tagKey,
+  tagPath,
+  tagsIn,
+  tagSlug,
+  tagSlugIn,
+  uniqueTagSlugs,
+  type BlogTag,
+  type TagAlternates,
+  type Taggable,
+} from './tags'
 export { featuredPost, groupByYear, postYear, type YearGroup, type YearLabel } from './groups'
 export { RELATED_LIMIT, relatedPosts } from './related'
 export { findSeries, partsOfSeries, seriesPosition, type SeriesPosition } from './series'

@@ -123,11 +123,11 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors,
         <div className={styles.byline}>
           <p className={styles.author}>{t(blog, 'post.by', { author: meta.author })}</p>
           {meta.tags.length > 0 ? (
-            <ul className={styles.tags} aria-label={t(blog, 'post.tags')} lang={contentLang}>
+            <ul className={styles.tags} aria-label={t(blog, 'post.tags')}>
               {meta.tags.map((tag) => (
                 <li key={tag}>
                   {linkTags ? (
-                    <Link href={tagPath(meta.lang, tag)} className={styles.tagLink} data-cw-post-tag={tag}>
+                    <Link href={tagPath(lang, tag)} className={styles.tagLink} data-cw-post-tag={tag}>
                       {tag}
                     </Link>
                   ) : (

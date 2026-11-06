@@ -1,11 +1,11 @@
 import type { Metadata, ResolvingMetadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { BlogIndex } from '@/components/blog/BlogIndex'
 import { tagAlternates, tagIndexView, tagLangs, tagSummary } from '@/components/blog/index/view'
 import { BackgroundIntensity } from '@/components/motion'
 import { feedAlternates } from '@/lib/blog/feed'
 import { allTagSlugs } from '@/lib/blog/source'
-import { tagPath, tagSlug } from '@/lib/blog/tags'
+import { tagPath, tagSlug, tagSlugIn } from '@/lib/blog/tags'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -25,16 +25,17 @@ function decode(value: string): string {
   }
 }
 
-async function resolve(params: Props['params']): Promise<{ lang: Locale; slug: string } | null> {
+async function resolve(params: Props['params']): Promise<{ lang: Locale; slug: string; own: boolean } | null> {
   const { lang, tag } = await params
   if (!isLocale(lang)) return null
   const slug = tagSlug(decode(tag))
-  return (await allTagSlugs()).includes(slug) ? { lang, slug } : null
+  if (!(await allTagSlugs()).includes(slug)) return null
+  return { lang, slug, own: tagSlugIn(slug, lang) === slug }
 }
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const resolved = await resolve(params)
-  if (!resolved) return {}
+  if (!resolved?.own) return {}
   const { lang, slug } = resolved
   const [{ summary: title }, blog, langs, previous] = await Promise.all([tagSummary(lang, slug), getDictionary(lang, 'blog'), tagLangs(slug), parent])
   const description = t(blog, 'meta.blog.description')
@@ -58,6 +59,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 export default async function BlogTagPage({ params }: Props) {
   const resolved = await resolve(params)
   if (!resolved) notFound()
+  if (!resolved.own) permanentRedirect(tagPath(resolved.lang, resolved.slug))
 
   return (
     <>

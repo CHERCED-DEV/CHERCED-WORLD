@@ -68,12 +68,11 @@ describe('páginas de etiqueta (T614, R-503)', () => {
     expect(tagResultsText(blogEn, 3, 'tests')).toBe('3 posts tagged “tests”')
   })
 
-  it('una etiqueta del otro idioma da la lista vacía, con su nombre y el enlace al índice', async () => {
+  it('una etiqueta del otro idioma se lee con el nombre y el slug del idioma de la página (B9 de la 007)', async () => {
     const view = await tagIndexView('en', 'carrera')
-    expect(view.groups).toEqual([])
-    expect(view.tag).toMatchObject({ count: 0, label: 'carrera', summary: '0 posts tagged “carrera”' })
+    expect(view.tag).toMatchObject({ slug: 'career', count: 1, label: 'career', summary: '1 post tagged “career”' })
     expect(view.tag?.index).toEqual({ href: '/en/blog', label: 'See all posts' })
-    expect(await tagSummary('en', 'carrera')).toEqual({ count: 0, summary: view.tag?.summary })
+    expect(await tagSummary('en', 'carrera')).toEqual({ count: 1, summary: view.tag?.summary })
   })
 
   it('normaliza la etiqueta visible al slug', async () => {
@@ -84,11 +83,11 @@ describe('páginas de etiqueta (T614, R-503)', () => {
 
   it('los alternates solo enlazan los idiomas donde la etiqueta tiene posts, como el sitemap', async () => {
     expect(await tagLangs('humor')).toEqual(['es', 'en'])
-    expect(await tagLangs('carrera')).toEqual(['es'])
+    expect(await tagLangs('carrera')).toEqual(['es', 'en'])
     expect(tagAlternates('es', 'humor', ['es', 'en'])).toEqual({
       canonical: '/es/blog/tag/humor',
       languages: { es: '/es/blog/tag/humor', en: '/en/blog/tag/humor', 'x-default': '/blog/tag/humor' },
     })
-    expect(tagAlternates('en', 'carrera', ['es'])).toEqual({ canonical: '/en/blog/tag/carrera', languages: { es: '/es/blog/tag/carrera' } })
+    expect(tagAlternates('en', 'carrera', ['es'])).toEqual({ canonical: '/en/blog/tag/career', languages: { es: '/es/blog/tag/carrera' } })
   })
 })

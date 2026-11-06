@@ -85,7 +85,7 @@ export function PostCard({
         </p>
       </div>
       {post.tags.length > 0 ? (
-        <ul className={styles.tags} aria-label={labels.tags} lang={contentLang}>
+        <ul className={styles.tags} aria-label={labels.tags}>
           {post.tags.map((tag) => (
             <li key={tag}>{tag}</li>
           ))}
