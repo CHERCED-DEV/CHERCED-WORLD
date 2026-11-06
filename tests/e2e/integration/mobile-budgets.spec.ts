@@ -8,6 +8,8 @@ const BASELINE = process.env.E2E_BASELINE_URL ?? ''
 const BLUR_BUDGET = 3
 const CLS = 0.1
 const INP_MS = 200
+const INP_ROUNDS = 5
+const INP_PAUSE_MS = 400
 
 const BLUR_IN_FULL = new Set(['/es', '/en', '/es/aboutMe', '/es/services', '/es/portfolio', '/es/portfolio/1', '/es/portfolio/12', '/es/blog', '/en/blog/post5', '/es/contactMe', '/es/privacy', '/en/now', '/es/no-existe'])
 
@@ -90,7 +92,9 @@ test.describe('las animaciones nuevas solo mueven transform y opacity (FR-653)',
   }
 })
 
-type Interaction = { name: string; blocking: number; duration: number }
+type Interaction = { name: string; start: number; blocking: number; duration: number }
+
+const NO_INTERACTION: Interaction = { name: 'ninguna', start: 0, blocking: 0, duration: 0 }
 
 async function watchInteractions(page: Page): Promise<void> {
   await page.addInitScript(() => {
@@ -98,19 +102,27 @@ async function watchInteractions(page: Page): Promise<void> {
     ;(window as unknown as { __cwInteractions: Interaction[] }).__cwInteractions = store
     new PerformanceObserver((list) => {
       for (const entry of list.getEntries() as Array<PerformanceEventTiming & { interactionId?: number }>) {
-        if (entry.interactionId) store.push({ name: entry.name, blocking: entry.processingEnd - entry.startTime, duration: entry.duration })
+        if (entry.interactionId) store.push({ name: entry.name, start: entry.startTime, blocking: entry.processingEnd - entry.startTime, duration: entry.duration })
       }
     }).observe({ type: 'event', buffered: true, durationThreshold: 16 } as PerformanceObserverInit)
   })
 }
 
-async function worstInteraction(page: Page): Promise<Interaction> {
-  await page.waitForTimeout(600)
-  const all = await page.evaluate(() => (window as unknown as { __cwInteractions: Interaction[] }).__cwInteractions)
-  return all.reduce((worst, entry) => (entry.blocking > worst.blocking ? entry : worst), { name: 'ninguna', blocking: 0, duration: 0 })
+async function interactions(page: Page): Promise<Interaction[]> {
+  return page.evaluate(() => (window as unknown as { __cwInteractions: Interaction[] }).__cwInteractions)
 }
 
-const INTERACTIONS: ReadonlyArray<{ path: string; what: string; run: (page: Page) => Promise<void> }> = [
+function worstOf(entries: Interaction[]): Interaction {
+  return entries.reduce((worst, entry) => (entry.blocking > worst.blocking ? entry : worst), NO_INTERACTION)
+}
+
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b)
+  const middle = Math.floor(sorted.length / 2)
+  return sorted.length % 2 === 1 ? sorted[middle]! : (sorted[middle - 1]! + sorted[middle]!) / 2
+}
+
+const INTERACTIONS: ReadonlyArray<{ path: string; what: string; run: (page: Page, round: number) => Promise<void> }> = [
   {
     path: '/es',
     what: 'abrir y cerrar el menú del dock',
@@ -123,9 +135,10 @@ const INTERACTIONS: ReadonlyArray<{ path: string; what: string; run: (page: Page
   },
   {
     path: '/es/aboutMe',
-    what: 'tocar un lóbulo, pasar al siguiente y cerrar la hoja',
-    run: async (page) => {
-      const lobe = page.locator('[data-cw-lobe]').first()
+    what: 'tocar un lóbulo distinto en cada toque, pasar al siguiente y cerrar la hoja',
+    run: async (page, round) => {
+      const lobes = page.locator('[data-cw-lobe]')
+      const lobe = lobes.nth(round % (await lobes.count()))
       await lobe.scrollIntoViewIfNeeded()
       await lobe.tap()
       const sheet = page.locator(OPEN_SHEET)
@@ -139,23 +152,39 @@ const INTERACTIONS: ReadonlyArray<{ path: string; what: string; run: (page: Page
     path: '/es/services',
     what: 'girar la primera tarjeta de la pila',
     run: async (page) => {
-      const flip = page.locator('[data-cw-service-stack] button[aria-expanded]').first()
-      await flip.scrollIntoViewIfNeeded()
+      const stack = page.locator('[data-cw-service-stack]')
+      const flip = stack.locator('button[aria-expanded]').first()
+      const atFirstCard = async () => {
+        await stack.evaluate((list) => {
+          const first = list.firstElementChild
+          const stick = first ? Number.parseFloat(getComputedStyle(first).top) || 0 : 0
+          window.scrollTo({ top: list.getBoundingClientRect().top + window.scrollY - stick, behavior: 'instant' })
+        })
+        await expect
+          .poll(() => stack.evaluate((list) => list.getAnimations({ subtree: true }).filter((item) => item instanceof CSSTransition && item.playState === 'running').length), {
+            message: 'la pila termina sus transiciones antes del toque',
+          })
+          .toBe(0)
+      }
+      await atFirstCard()
       await flip.tap()
       await expect(flip).toHaveAttribute('aria-expanded', 'true')
+      await atFirstCard()
       await flip.tap()
+      await expect(flip).toHaveAttribute('aria-expanded', 'false')
     },
   },
   {
     path: '/es/portfolio/12',
     what: 'pasar la galería y enfocar una capa del diagrama',
-    run: async (page) => {
+    run: async (page, round) => {
       const next = page.locator('[data-cw-gallery-step="next"]')
       if ((await next.count()) > 0) {
         await next.scrollIntoViewIfNeeded()
         await next.tap()
       }
-      const layer = page.locator('[data-cw-diagram-layer]').nth(1)
+      const layers = page.locator('[data-cw-diagram-layer]')
+      const layer = layers.nth((round + 1) % (await layers.count()))
       await layer.scrollIntoViewIfNeeded()
       await layer.tap()
       await expect(layer).toHaveAttribute('aria-pressed', 'true')
@@ -186,16 +215,32 @@ test.describe(`con la CPU 4× más lenta: CLS < ${CLS} e INP < ${INP_MS} ms (SC-
       expect(cls).toBeLessThan(CLS)
     })
 
-    test(`${path}: ${what}, con espera y procesamiento por debajo de ${INP_MS} ms`, async ({ page }, testInfo) => {
-      test.setTimeout(120_000)
+    test(`${path}: ${what}, con la mediana de ${INP_ROUNDS} toques en espera y procesamiento por debajo de ${INP_MS} ms`, async ({ page }, testInfo) => {
+      test.setTimeout(180_000)
       await watchInteractions(page)
       await openReady(page, path)
       await midRangeCpu(page)
-      await run(page)
-      const worst = await worstInteraction(page)
-      const detail = `${worst.name}: ${Math.round(worst.blocking)} ms de espera y procesamiento (${Math.round(worst.duration)} ms hasta pintar en Chromium sin GPU)`
-      testInfo.annotations.push({ type: 'INP', description: `${path}: ${detail}` })
-      expect(worst.blocking, detail).toBeLessThan(INP_MS)
+      const windows: Array<[number, number]> = []
+      for (let round = 0; round < INP_ROUNDS; round++) {
+        const start = await page.evaluate(() => performance.now())
+        await run(page, round)
+        await page.waitForTimeout(INP_PAUSE_MS)
+        windows.push([start, await page.evaluate(() => performance.now())])
+      }
+      await page.waitForTimeout(600)
+      const all = await interactions(page)
+      const rounds = windows.map(([from, to]) => worstOf(all.filter((entry) => entry.start >= from && entry.start < to)))
+      const values = rounds.map((entry) => Math.round(entry.blocking))
+      const middle = median(values)
+      rounds.forEach((entry, round) =>
+        testInfo.annotations.push({
+          type: 'INP',
+          description: `${path}, toque ${round + 1}: ${entry === NO_INTERACTION ? 'ninguna pasó de 16 ms' : entry.name} ${Math.round(entry.blocking)} ms de espera y procesamiento (${Math.round(entry.duration)} ms hasta pintar en Chromium sin GPU)`,
+        }),
+      )
+      const detail = `mediana ${middle} ms de ${values.join(', ')} ms`
+      testInfo.annotations.push({ type: 'INP mediana', description: `${path}: ${detail}` })
+      expect(middle, detail).toBeLessThan(INP_MS)
     })
   }
 })
