@@ -128,8 +128,9 @@ test.describe('sin JavaScript (US1 escenario 5)', () => {
     await expect(v1.locator('[data-cw-adr]').first()).toBeVisible()
     await expect(v1.locator('[data-cw-lab-flow] li')).toHaveCount(3)
     await v1.locator('[data-cw-lab-part="code"] summary').click()
-    await expect(v1.locator('[data-cw-lab-code] code')).toContainText('requestDownload')
-    await expect(v1.locator('[data-cw-lab-repo]')).toHaveAttribute('href', 'https://github.com/CHERCED-DEV/CHERCED-WORLD/blob/main/lib/ailab/core/consent.ts')
+    const code = labCatalog.find((experiment) => experiment.id === 'V1')!.code!
+    await expect(v1.locator('[data-cw-lab-code] code')).toContainText(code.snippet.split('\n')[0]!.trim())
+    await expect(v1.locator('[data-cw-lab-repo]')).toHaveAttribute('href', `https://github.com/CHERCED-DEV/CHERCED-WORLD/blob/main/${code.repoPath}`)
     await expect(v1.locator('[data-cw-lab-downloads] li').first()).toHaveText('Whisper base (int8) · 77 MB · desde huggingface.co')
   })
 })
@@ -178,7 +179,7 @@ test.describe('consentimiento antes de descargar (US1 escenarios 3 y 4, FR-310, 
     await expect(consent(page)).toBeHidden()
     await expect(v1.locator('[data-cw-lab-stage]')).toBeVisible()
     await expect(v1.locator('[data-cw-lab-stage]')).toBeFocused()
-    await expect(v1.locator('[data-cw-lab-soon]')).toHaveText(es['ailab.try.soon'])
+    await expect(v1.locator('[data-cw-lab-failed]')).toHaveCount(0)
     expect(await storedConsent(page)).toEqual(['V1:Whisper base (int8)'])
     await expect(v1.locator('[data-cw-lab-granted]')).toContainText('Diste permiso para descargar Whisper base (int8) en esta sesión.')
 
