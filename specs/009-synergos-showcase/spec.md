@@ -58,3 +58,17 @@ no es una galería genérica (la lámina de referencia tiene autor y derechos), 
 solo los que el autor usó de verdad (saga, BFF, composición de APIs, consumidor idempotente, outbox, anti-corruption
 layer, strangler fig, mensajería por eventos…), cada uno con su evidencia: el caso, la ADR o el código. Vive dentro del
 showcase de Synergos y de los casos, no como otra sección suelta. Se especifica con el autor cuando cierre la 009.
+
+## Fase 2: la arquitectura por dentro (pedido del autor, 2026-11-06)
+
+El autor quiere detallar, con la misma calidad del showcase:
+
+- cómo maneja los frameworks: Angular (y Preact) aislados en la CDN, que alimentan las vistas Razor de Umbraco;
+- las composiciones en Umbraco y la "sinergia tecnológica" (C# y TypeScript con el mismo linaje de diseño);
+- el diseño atómico y los componentes;
+- la accesibilidad;
+- el embebido y BroadcastChannel / `postMessage` entre ventanas.
+
+Fuentes publicables: los repos públicos Synergos.CMS y Synergos.UI (README, ADR, código). Si el embebido viene del
+trabajo en el empleador, se cuenta solo la arquitectura, anonimizada, sin nombres ni cifras (regla de la 004). Se arma
+con una entrevista corta y un boceto, después de integrar la fase 1, y puede alimentar el atlas de patrones aplicados.
