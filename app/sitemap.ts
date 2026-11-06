@@ -4,7 +4,7 @@ import { getProjects, listPosts } from '@/lib/content'
 import { alternates, defaultLocale, locales, localizedPath, type Locale } from '@/lib/i18n'
 import { absoluteUrl } from '@/lib/site-url'
 
-const PUBLIC_PATHS =['/', '/aboutMe', '/services', '/portfolio', '/now', '/ai-lab', '/blog', '/contactMe', '/privacy'] as const
+const PUBLIC_PATHS =['/', '/aboutMe', '/services', '/portfolio', '/synergos', '/now', '/ai-lab', '/blog', '/contactMe', '/privacy'] as const
 
 type Entry = { path: string; lastModified?: string; langs?: readonly Locale[] }
 

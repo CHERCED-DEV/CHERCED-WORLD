@@ -34,17 +34,17 @@ describe('"En cifras" (T431, FR-436)', () => {
     expect(aboutFigures(about, new Date(Date.UTC(2027, 10, 5)))[0]).toEqual({ id: 'years', value: 8, plus: true, since: 2019 })
   })
 
-  it('formatea según el idioma: 2.300+ en ES y 2,300+ en EN', () => {
+  it('formatea según el idioma: 6.600+ en ES y 6,600+ en EN', () => {
     const tests = aboutFigures(about, NOV_2026).find((figure) => figure.id === 'tests')!
-    expect(figureText(tests, 'es')).toBe('2.300+')
-    expect(figureText(tests, 'en')).toBe('2,300+')
+    expect(figureText(tests, 'es')).toBe('6.600+')
+    expect(figureText(tests, 'en')).toBe('6,600+')
     expect(figureText({ value: synergosFacts.pieces, plus: false }, 'es')).toBe(String(synergosFacts.pieces))
     expect(figureDigits(synergosFacts.adrsAtLeast, 'en')).toBe(String(synergosFacts.adrsAtLeast))
   })
 
   it.each([
-    ['es', '2.300', '2.300+'],
-    ['en', '2,300', '2,300+'],
+    ['es', '6.600', '6.600+'],
+    ['en', '6,600', '6,600+'],
   ] as const)('%s: el servidor pinta el valor final formateado y el texto completo para lectores', (lang, digits, text) => {
     const html = renderToStaticMarkup(createElement(AboutFigures, { lang, title: 'En cifras', figures: aboutFigures(about, NOV_2026), labels: LABELS }))
     expect(html).toContain(`data-cw-figure-value="${synergosFacts.testsAtLeast}">${digits}</span>`)

@@ -109,6 +109,7 @@ function PaletteBody({
     cv,
     cvPdf,
     now: localizedPath(lang, '/now'),
+    synergos: localizedPath(lang, '/synergos'),
     aiLab: localizedPath(lang, '/ai-lab'),
     capsuleFound: readCapsuleFound(),
     extensions: paletteExtensions(),

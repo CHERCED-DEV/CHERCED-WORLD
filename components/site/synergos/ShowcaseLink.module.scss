@@ -1,0 +1,33 @@
+.cta.cta {
+  max-width: 100%;
+  border-color: color-mix(in srgb, var(--cw-intro-accent) 55%, var(--cw-glass-border));
+  box-shadow:
+    var(--cw-glass-shadow),
+    0 0 24px -12px var(--cw-intro-accent);
+  text-align: center;
+  white-space: normal;
+
+  &:hover .arrow,
+  &:focus-visible .arrow {
+    transform: translateX(4px);
+  }
+}
+
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cw-intro-accent);
+  box-shadow: 0 0 10px var(--cw-graphic-glow);
+}
+
+.arrow {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--cw-duration-base) var(--cw-ease-spring);
+}

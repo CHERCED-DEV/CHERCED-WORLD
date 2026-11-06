@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { SYNERGOS_CASE_ID } from '@/content/synergos-showcase'
+import { ShowcaseLink } from '@/components/site/synergos/ShowcaseLink'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface, glassMotionAttributes, type GlassFloatLevel } from '@/components/ui/GlassSurface'
 import { CornerMarks, GlowOrb, Hairline } from '@/components/ui/graphics'
@@ -13,6 +15,7 @@ export type HomeNowLabels = {
   since: string
   caseStudy: string
   more: string
+  showcase?: string
 }
 
 export const HOME_NOW_ID = 'home-now'
@@ -78,6 +81,9 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   <span className={styles.linkText}>{labels.caseStudy}</span>
                   <Arrow />
                 </Link>
+              ) : null}
+              {labels.showcase && role.project?.id === SYNERGOS_CASE_ID ? (
+                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
               ) : null}
               <Sweep />
             </Reveal>

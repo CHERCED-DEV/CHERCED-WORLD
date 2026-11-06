@@ -87,6 +87,7 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
       'action:assistant',
       'action:shortcuts',
       'action:now',
+      'action:synergos',
     ])
     await expect(group.getByRole('option', { name: 'Descargar CV (PDF)' })).toBeVisible()
     await expect(group.getByRole('option', { name: 'Ver mi CV en LinkedIn' })).toBeVisible()

@@ -111,6 +111,13 @@
   line-height: 1.6;
 }
 
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cw-space-3);
+  max-width: 100%;
+}
+
 .heroMedia {
   display: flex;
   justify-content: center;

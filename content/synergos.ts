@@ -5,9 +5,9 @@ export const synergosFacts = {
   pieces: 31,
   capabilities: 20,
   orchestrators: 9,
-  measuredAt: '2026-08-06',
-  testsAtLeast: 2300,
-  adrsAtLeast: 130,
+  measuredAt: '2026-11-05',
+  testsAtLeast: 6600,
+  adrsAtLeast: 140,
   designSystemAtLeast: 130,
 } as const satisfies SynergosFacts
 

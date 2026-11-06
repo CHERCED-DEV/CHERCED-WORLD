@@ -7,6 +7,7 @@ import { CaseStudy } from '@/components/site/portfolio/CaseStudy'
 import { caseEvidenceLabels, caseStudyExtraLabels } from '@/components/site/portfolio/labels'
 import { caseStudyNeighbors, technologyCounts, type CaseStudyLabels } from '@/components/site/portfolio/projects'
 import { pageMetadata } from '@/components/site/metadata'
+import { synergosShowcase, SYNERGOS_CASE_ID } from '@/content/synergos-showcase'
 import { getProject, getProjects, projectTitle } from '@/lib/content'
 
 type Props = { params: Promise<{ lang: string; id: string }> }
@@ -66,6 +67,7 @@ export default async function CaseStudyPage({ params }: Props) {
           usage: technologyCounts(projects),
           portfolioHref: localizedPath(lang, '/portfolio'),
           evidence: caseEvidenceLabels(dict),
+          showcase: project.id === SYNERGOS_CASE_ID ? synergosShowcase.copy.cta[lang] : undefined,
         }}
       />
     </>

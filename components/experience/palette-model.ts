@@ -63,6 +63,7 @@ export type CommandContext = ActionContext & {
   cv: string | null
   cvPdf?: CvPdfCommand | null
   now: string | null
+  synergos?: string | null
   aiLab?: string | null
   extensions?: PaletteExtension[]
 }
@@ -101,6 +102,7 @@ const ACTION_KEYWORDS: Record<string, string> = {
   'action:cv-pdf': 'cv pdf descargar download bajar hoja vida resume curriculum',
   'action:shortcuts': 'atajos shortcuts teclado keyboard teclas keys',
   'action:now': 'ahora now hoy today',
+  'action:synergos': 'synergos master product showcase vitrina producto product',
   'action:ai-lab': 'ai lab laboratorio laboratory ia experimentos experiments demos',
 }
 
@@ -185,6 +187,16 @@ export function buildCommands(labels: Dictionary, context: CommandContext): Pale
       hint: context.now,
       commandOnly: true,
       command: { type: 'navigate', href: context.now },
+    })
+  }
+  if (context.synergos) {
+    commands.push({
+      id: 'action:synergos',
+      group: 'actions',
+      title: t(labels, 'palette.action.synergos'),
+      hint: context.synergos,
+      commandOnly: true,
+      command: { type: 'navigate', href: context.synergos },
     })
   }
   if (context.aiLab) {
@@ -303,6 +315,7 @@ export type PaletteCommandId =
   | 'action:cv-pdf'
   | 'action:shortcuts'
   | 'action:now'
+  | 'action:synergos'
   | 'action:ai-lab'
   | 'action:capsule'
   | `extension:${string}`

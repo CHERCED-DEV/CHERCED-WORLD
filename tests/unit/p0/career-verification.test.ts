@@ -32,8 +32,8 @@ const CAREER: CareerRow[] = [
     role: 'Founder & Software Architect',
     start: '2024-02',
     end: null,
-    es: ['31 piezas desplegables', 'más de 2.300 tests', 'más de 130 decisiones'],
-    en: ['31 deployable pieces', '2,300+ automated tests', '130+ documented architecture decisions'],
+    es: ['31 piezas desplegables', 'más de 6.600 tests', 'más de 140 decisiones'],
+    en: ['31 deployable pieces', '6,600+ automated tests', '140+ documented architecture decisions'],
   },
   {
     id: 'flyr',

@@ -62,7 +62,7 @@ test.describe('"Quién soy": CV y cifras (T430, T431)', () => {
         await expect(item.locator('[data-cw-figure-value]')).toHaveText(figureDigits(figure.value, lang))
         await expect(item.locator('dd .cw-visually-hidden')).toHaveText(figureText(figure, lang))
       }
-      await expect(page.locator('[data-cw-figure="tests"] dd .cw-visually-hidden')).toHaveText(lang === 'es' ? '2.300+' : '2,300+')
+      await expect(page.locator('[data-cw-figure="tests"] dd .cw-visually-hidden')).toHaveText(lang === 'es' ? '6.600+' : '6,600+')
       for (const gone of ['projects', 'technologies', 'airlines']) await expect(page.locator(`[data-cw-figure="${gone}"]`)).toHaveCount(0)
       await expect(page.locator('[data-cw-figure="pieces"] dt')).toContainText(lang === 'es' ? 'CMS · 20 capacidades · 9 orquestadores' : 'CMS · 20 capabilities · 9 orchestrators')
     })
