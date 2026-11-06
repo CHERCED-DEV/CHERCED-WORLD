@@ -7,7 +7,7 @@ export const LANGS = ['es', 'en'] as const
 
 export type Lang = (typeof LANGS)[number]
 
-const SECTIONS = ['', '/aboutMe', '/services', '/portfolio', '/blog', '/contactMe', '/privacy', '/now'] as const
+const SECTIONS = ['', '/aboutMe', '/services', '/portfolio', '/blog', '/contactMe', '/privacy', '/now', '/ai-lab'] as const
 
 export const PUBLIC_PAGES: readonly string[] = LANGS.flatMap((lang) => [
   ...SECTIONS.map((section) => `/${lang}${section}`),

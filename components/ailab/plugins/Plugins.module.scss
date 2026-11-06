@@ -270,6 +270,12 @@
   margin: calc(var(--cw-space-3) * -1) 0 var(--cw-space-5);
   font-size: var(--cw-text-sm);
   overflow-wrap: anywhere;
+
+  @include bp.down(md) {
+    button {
+      min-height: 44px;
+    }
+  }
 }
 
 .actions {
@@ -282,6 +288,8 @@
   @include bp.down(sm) {
     > * {
       flex: 1 1 100%;
+      white-space: normal;
+      text-align: center;
     }
   }
 }

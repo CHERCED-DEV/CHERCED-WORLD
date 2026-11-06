@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { CodeBlock } from '@/components/blog/mdx/CodeBlock'
 import type { LabDemoProps } from '@/components/ailab/shell/types'
 import { Button } from '@/components/ui/Button'
@@ -44,6 +44,7 @@ export function ObraShowcase({ lang, t, experiment, downloads }: LabDemoProps) {
   const [computed, setComputed] = useState<Computed | null>(null)
   const [runs, setRuns] = useState(0)
   const [calcFailed, setCalcFailed] = useState(false)
+  const statusRef = useRef<HTMLParagraphElement>(null)
   const python = useObraPython({ experiment, downloads, source: ESTIMATE_PY })
   const { phase, stage, runtime, paused, notice } = python.state
   const reading = useMemo(() => readDraft(draft), [draft])
@@ -100,8 +101,14 @@ export function ObraShowcase({ lang, t, experiment, downloads }: LabDemoProps) {
   const result = computed?.estimated.estimate ?? null
   const broken = calcFailed && phase === 'ready'
   const canRun = phase === 'idle' || phase === 'declined' || phase === 'failed' || broken
+  const starting = phase === 'asking' || phase === 'loading'
+
+  useEffect(() => {
+    if (phase === 'ready' && document.activeElement === document.body) statusRef.current?.focus()
+  }, [phase])
 
   const run = () => {
+    if (starting) return
     setCalcFailed(false)
     void python.activate()
   }
@@ -240,7 +247,7 @@ export function ObraShowcase({ lang, t, experiment, downloads }: LabDemoProps) {
             <h6 id={ids.python} className={styles.blockTitle}>
               {t('ailab.a4.obra.python')}
             </h6>
-            <p className={styles.status} role="status" data-cw-obra-status={phase}>
+            <p ref={statusRef} tabIndex={-1} className={styles.status} role="status" data-cw-obra-status={phase}>
               {status}
             </p>
             {phase === 'loading' ? (
@@ -259,9 +266,9 @@ export function ObraShowcase({ lang, t, experiment, downloads }: LabDemoProps) {
                 {t('ailab.a4.obra.calcFailed')}
               </p>
             ) : null}
-            {canRun ? (
+            {canRun || starting ? (
               <div className={styles.inlineActions}>
-                <Button variant="solid" onClick={run} data-cw-obra-run="">
+                <Button variant="solid" onClick={run} aria-disabled={starting || undefined} data-cw-obra-run="">
                   {phase === 'failed' || broken ? t('ailab.a4.obra.retry') : t('ailab.a4.obra.run')}
                 </Button>
               </div>

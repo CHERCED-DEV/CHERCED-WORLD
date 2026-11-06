@@ -107,6 +107,12 @@
   text-align: center;
 }
 
+.clear .clearButton {
+  @include bp.down(md) {
+    min-height: 44px;
+  }
+}
+
 .clearHint {
   max-width: 52ch;
   color: var(--cw-fg-muted);
@@ -130,7 +136,8 @@
 }
 
 .themeTitle {
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
   max-width: 100%;
   font-size: var(--cw-text-sm);
   font-weight: 700;
