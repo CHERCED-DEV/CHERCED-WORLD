@@ -62,16 +62,19 @@ export default async function AboutMePage({ params }: Props) {
         description={about.description}
         image={about.image}
         aside={
-          <Certifications
-            lang={lang}
-            items={about.certifications ?? []}
-            profileHref={about.courses.platzi.href}
-            labels={{
-              title: t(dict, 'about.certifications'),
-              profile: t(dict, 'about.certifications.profile'),
-              newTab: t(dict, 'a11y.newTab'),
-            }}
-          />
+          <>
+            <ShowcaseLink lang={lang} label={synergosShowcase.copy.cta[lang]} from="about" />
+            <Certifications
+              lang={lang}
+              items={about.certifications ?? []}
+              profileHref={about.courses.platzi.href}
+              labels={{
+                title: t(dict, 'about.certifications'),
+                profile: t(dict, 'about.certifications.profile'),
+                newTab: t(dict, 'a11y.newTab'),
+              }}
+            />
+          </>
         }
       >
         <AboutFigures
@@ -94,7 +97,6 @@ export default async function AboutMePage({ params }: Props) {
             tests: { label: t(dict, 'about.figure.tests'), note: t(dict, 'about.figure.testsNote') },
           }}
         />
-        <ShowcaseLink lang={lang} label={synergosShowcase.copy.cta[lang]} from="about" />
       </AboutDescription>
       <AboutCareer
         id={ABOUT_SCENES.career}

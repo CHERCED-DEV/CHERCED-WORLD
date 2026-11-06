@@ -39,6 +39,8 @@
 
 .heroAside {
   order: 2;
+  display: grid;
+  gap: var(--cw-space-4);
   width: min(100%, 520px);
 
   @include bp.up(lg) {

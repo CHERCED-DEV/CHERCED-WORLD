@@ -36,7 +36,9 @@
 }
 
 .heading {
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: var(--cw-text-sm);
   font-weight: 700;
   line-height: var(--cw-leading-snug);
