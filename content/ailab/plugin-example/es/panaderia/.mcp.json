@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "recetas": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/servers/recetas.mjs"]
+    }
+  }
+}

@@ -224,20 +224,40 @@ const A2: LabExperiment = {
   downloads: [],
   privacy: copy('ailab.a2.privacy'),
   flow: [
-    { es: 'plugin.json declara el plugin', en: 'plugin.json declares the plugin' },
-    { es: 'Skills, comandos, hooks y servidores MCP viven en sus carpetas', en: 'Skills, commands, hooks and MCP servers live in their folders' },
-    { es: 'Al tocar un archivo ves para qué sirve', en: 'Tapping a file shows you what it is for' },
+    {
+      es: '.claude-plugin/plugin.json declara el plugin: nombre, versión, descripción y autor',
+      en: '.claude-plugin/plugin.json declares the plugin: name, version, description and author',
+    },
+    {
+      es: 'Claude Code descubre cada pieza por su carpeta: skills/, commands/, hooks/ y .mcp.json con su servidor',
+      en: 'Claude Code finds each piece by its folder: skills/, commands/, hooks/ and .mcp.json with its server',
+    },
+    {
+      es: 'Recorres el árbol con mouse, dedo o teclado, y cada archivo dice para qué sirve y dónde entra el oficio',
+      en: 'You walk the tree with mouse, finger or keyboard, and each file says what it is for and where the trade comes in',
+    },
   ],
   adrCards: [
     {
-      decision: { es: 'Un plugin de ejemplo neutral', en: 'A neutral sample plugin' },
+      decision: { es: 'Un plugin de ejemplo neutral: una panadería inventada', en: 'A neutral sample plugin: a made-up bakery' },
       why: {
-        es: 'Muestra la estructura completa sin exponer el trabajo de ningún cliente.',
-        en: "It shows the full structure without exposing any client's work.",
+        es: 'Muestra la estructura completa, y cómo entra un oficio en cada pieza, sin exponer el trabajo de ningún cliente.',
+        en: "It shows the full structure, and how a trade comes into each piece, without exposing any client's work.",
       },
       tradeoff: {
         es: 'No es el plugin que uso con una profesión real.',
         en: 'It is not the plugin I use with a real profession.',
+      },
+    },
+    {
+      decision: { es: 'Los archivos del explorador son los del repo', en: 'The files in the explorer are the ones in the repo' },
+      why: {
+        es: 'Lo que ves es copia exacta de content/ailab/plugin-example, una prueba lo verifica y otra corre con Node el servidor MCP y el hook.',
+        en: 'What you see is an exact copy of content/ailab/plugin-example, one test checks it and another runs the MCP server and the hook with Node.',
+      },
+      tradeoff: {
+        es: 'Si cambio un archivo del plugin, la copia que lee el explorador tiene que cambiar con él.',
+        en: 'If I change a file of the plugin, the copy the explorer reads has to change with it.',
       },
     },
     {
@@ -252,7 +272,28 @@ const A2: LabExperiment = {
       },
     },
   ],
-  code: null,
+  code: {
+    snippet: `export function treeKey(tree: FileTree, expanded: ReadonlySet<string>, current: string, key: string): TreeMove | null {
+  const node = tree.nodes.get(current)
+  if (!node) return null
+  const visible = visibleIds(tree, expanded)
+  const index = visible.indexOf(current)
+  const open = node.kind === 'folder' && expanded.has(current)
+  switch (key) {
+    case 'ArrowDown':
+      return index < visible.length - 1 ? { focus: visible[index + 1]! } : {}
+    case 'ArrowUp':
+      return index > 0 ? { focus: visible[index - 1]! } : {}
+    case 'ArrowRight':
+      if (node.kind === 'file') return {}
+      if (!open) return { expand: current }
+      return node.children.length > 0 ? { focus: node.children[0]! } : {}
+    case 'ArrowLeft':
+      if (open) return { collapse: current }
+      return node.parent ? { focus: node.parent } : {}`,
+    lang: 'ts',
+    repoPath: 'components/ailab/plugins/tree.ts',
+  },
 }
 
 const A3: LabExperiment = {
@@ -265,9 +306,15 @@ const A3: LabExperiment = {
   downloads: [],
   privacy: copy('ailab.a3.privacy'),
   flow: [
-    { es: 'Escribes el nombre, cuándo usarla y sus pasos', en: 'You write the name, when to use it and its steps' },
-    { es: 'Se valida el frontmatter', en: 'The frontmatter is validated' },
-    { es: 'Descargas tu SKILL.md, armado en tu navegador', en: 'You download your SKILL.md, built in your browser' },
+    { es: 'Escribes el nombre, qué hace y cuándo usarla, y sus pasos', en: 'You write the name, what it does and when to use it, and its steps' },
+    {
+      es: 'Se valida el frontmatter: name en minúsculas y guiones, de hasta 64 caracteres, y description de hasta 1024',
+      en: 'The frontmatter is validated: name in lowercase and hyphens, up to 64 characters, and description up to 1024',
+    },
+    {
+      es: 'Descargas tu SKILL.md, armado en tu navegador como un Blob, sin pasar por un servidor',
+      en: 'You download your SKILL.md, built in your browser as a Blob, without going through a server',
+    },
   ],
   adrCards: [
     {
@@ -281,8 +328,49 @@ const A3: LabExperiment = {
         en: 'The frontmatter (name and description) is validated, not what the skill will do.',
       },
     },
+    {
+      decision: { es: 'La descripción va siempre entre comillas', en: 'The description always goes in quotes' },
+      why: {
+        es: 'Así un «:», un «#» o unas comillas en tu texto no rompen el YAML del frontmatter.',
+        en: 'That way a ":", a "#" or quotes in your text do not break the YAML of the frontmatter.',
+      },
+      tradeoff: {
+        es: 'El archivo se ve un poco más rígido que uno escrito a mano.',
+        en: 'The file looks a little stiffer than one written by hand.',
+      },
+    },
+    {
+      decision: { es: 'Errores por campo, con un nombre sugerido', en: 'Errors per field, with a suggested name' },
+      why: {
+        es: 'Si el nombre trae mayúsculas, espacios o tildes, te propongo uno válido en vez de solo decir que está mal.',
+        en: 'If the name has capitals, spaces or accents, I suggest a valid one instead of only saying it is wrong.',
+      },
+      tradeoff: {
+        es: 'La sugerencia es mecánica: no entiende lo que quisiste decir.',
+        en: 'The suggestion is mechanical: it does not understand what you meant.',
+      },
+    },
   ],
-  code: null,
+  code: {
+    snippet: `export function generateSkillMd(skill: SkillDraft, options: SkillMarkdownOptions): string {
+  const steps = skill.steps.map(cleanLine).filter(Boolean).map((step, index) => \`\${index + 1}. \${step}\`)
+  return [
+    '---',
+    \`name: \${yamlName(skill.name)}\`,
+    \`description: \${yamlString(cleanLine(skill.description))}\`,
+    '---',
+    '',
+    \`# \${skillTitle(skill.name)}\`,
+    '',
+    \`## \${options.stepsHeading}\`,
+    '',
+    ...steps,
+    '',
+  ].join('\\n')
+}`,
+    lang: 'ts',
+    repoPath: 'lib/ailab/skill/generate.ts',
+  },
 }
 
 const A5: LabExperiment = {
@@ -295,9 +383,18 @@ const A5: LabExperiment = {
   downloads: [E5_SMALL],
   privacy: copy('ailab.a5.privacy'),
   flow: [
-    { es: 'Escribes una pregunta', en: 'You type a question' },
-    { es: 'BM25 busca en el índice del sitio, en tu navegador', en: "BM25 searches the site's index, in your browser" },
-    { es: 'Ves cada fragmento con su puntaje, su fuente y el enlace', en: 'You see each passage with its score, its source and the link' },
+    {
+      es: 'Escribes una pregunta: se pasa a minúsculas, sin tildes, y se parte en palabras',
+      en: 'You type a question: it is lowercased, stripped of accents and split into words',
+    },
+    {
+      es: 'BM25 busca en el índice del sitio, el mismo del asistente, y cada palabra se vuelve a buscar sola',
+      en: "BM25 searches the site's index, the same one the assistant uses, and each word is searched again on its own",
+    },
+    {
+      es: 'Ves cada fragmento con su puntaje, su fuente, su enlace y lo que aportó cada palabra',
+      en: 'You see each passage with its score, its source, its link and what each word added',
+    },
   ],
   adrCards: [
     {
@@ -312,26 +409,37 @@ const A5: LabExperiment = {
       },
     },
     {
-      decision: { es: 'La búsqueda por significado es opcional y pide permiso', en: 'Search by meaning is optional and asks for permission' },
+      decision: { es: 'El puntaje se explica con el mismo buscador', en: 'The score is explained with the same search engine' },
       why: {
-        es: 'Con embeddings, tu pregunta se compara por significado, y se calcula en tu navegador.',
-        en: 'With embeddings, your question is compared by meaning, and it is computed in your browser.',
+        es: 'Cada palabra se busca sola con el buscador del sitio: lo que aporta cada una, sumado y multiplicado por las que coincidieron, da el total, y una prueba lo verifica.',
+        en: "Each word is searched on its own with the site's search engine: what each one adds, summed and multiplied by the ones that matched, gives the total, and a test checks it.",
       },
       tradeoff: {
-        es: 'El modelo pesa unos 118 MB: por eso no se descarga si no lo pides.',
-        en: 'The model weighs about 118 MB: that is why it is not downloaded unless you ask.',
+        es: 'Para decir en qué campo coincidió, repito las reglas de coincidencia del buscador; si cambian, una prueba avisa.',
+        en: 'To say which field it matched, I repeat the matching rules of the search engine; if they change, a test warns me.',
+      },
+    },
+    {
+      decision: { es: 'La búsqueda por significado espera una medición', en: 'Search by meaning waits for a measurement' },
+      why: {
+        es: 'Precalcular los vectores de multilingual-e5-small en el build tiene un costo que todavía no medí. Si cabe, llega con su permiso de descarga.',
+        en: 'Precomputing the multilingual-e5-small vectors in the build has a cost I have not measured yet. If it fits, it arrives with its download permission.',
+      },
+      tradeoff: {
+        es: 'Mientras tanto, una pregunta escrita con otras palabras no encuentra lo que dice lo mismo.',
+        en: 'In the meantime, a question written with other words does not find what says the same thing.',
       },
     },
   ],
   code: {
-    snippet: `for (const result of results) {
-  const doc = byId.get(String(result.id))
-  if (!doc || (options.filter && !options.filter(doc))) continue
-  hits.push({ doc, score: result.score, matched: result.queryTerms })
-  if (options.limit && hits.length >= options.limit) break
-}`,
+    snippet: `const explained = terms.flatMap(({ term, occurrences }) => {
+  const scores = termScores(term)
+  const single = scores.get(hit.doc.id)
+  if (single === undefined) return []
+  return [{ term, occurrences, score: single * occurrences, documents: scores.size, matches: explain(hit.doc, term) }]
+})`,
     lang: 'ts',
-    repoPath: 'lib/search/searcher.ts',
+    repoPath: 'lib/ailab/search/glassbox.ts',
   },
 }
 

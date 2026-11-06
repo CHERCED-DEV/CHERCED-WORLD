@@ -1,0 +1,9 @@
+{
+  "name": "panaderia",
+  "version": "0.1.0",
+  "description": "Plugin de ejemplo, inventado: ayuda en una panadería a escalar recetas, revisar la hidratación y no olvidar los alérgenos.",
+  "author": {
+    "name": "Camilo Hernandez"
+  },
+  "keywords": ["ejemplo", "panaderia", "recetas"]
+}
