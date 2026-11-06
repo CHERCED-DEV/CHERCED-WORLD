@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
+import { memo, startTransition, useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
 import { BottomSheet } from '@/components/ui/BottomSheet'
 import { cx } from '@/components/ui/cx'
 import { tap } from '@/lib/fx/haptics'
@@ -118,7 +118,7 @@ type LobePanelProps = {
   titleId?: string
 }
 
-function LobePanel({ data, lobe, source, labels, lang, status, terminal, lobeIds, onLobe, titleId }: LobePanelProps) {
+const LobePanel = memo(function LobePanel({ data, lobe, source, labels, lang, status, terminal, lobeIds, onLobe, titleId }: LobePanelProps) {
   const sourceLabel = (id: string) => data.sources.find((item) => item.id === id)?.label ?? id
   return (
     <>
@@ -205,40 +205,100 @@ function LobePanel({ data, lobe, source, labels, lang, status, terminal, lobeIds
       <BrainTerminal table={terminal} lobeIds={lobeIds} labels={labels.terminal} onLobe={onLobe} />
     </>
   )
+})
+
+function litSet(lit: string): ReadonlySet<string> {
+  return new Set(lit.split(' ').filter(Boolean))
 }
 
-function CompactMap({ data, litLobes, active }: { data: BrainData; litLobes: ReadonlySet<string>; active: string | null }) {
+type LobeShapeProps = { item: BrainLobe; index: number; total: number; on: boolean }
+
+const FullLobe = memo(function FullLobe({ item, index, total, on }: LobeShapeProps) {
+  const geometry = neuronGeometry(
+    index,
+    item.skills.map((skill) => skill.level),
+    total,
+  )
+  return (
+    <g data-cw-synapses={item.id} data-on={on ? '' : undefined}>
+      <path className={cx(styles.syn, on && styles.synOn)} d={geometry.synapse} />
+      {geometry.neurons.map((neuron, n) => (
+        <g key={item.skills[n]?.id ?? n}>
+          <path className={cx(styles.syn, on && styles.synOn)} d={neuron.line} />
+          <circle className={cx(styles.neuron, on && styles.neuronOn)} cx={neuron.x} cy={neuron.y} r={neuron.r} />
+        </g>
+      ))}
+    </g>
+  )
+})
+
+const FullMap = memo(function FullMap({ data, lit }: { data: BrainData; lit: string }) {
+  const litLobes = litSet(lit)
+  return (
+    <svg className={styles.svg} viewBox={`0 0 ${BRAIN_VIEW.width} ${BRAIN_VIEW.height}`} aria-hidden="true" focusable="false">
+      <circle className={styles.ring} cx={BRAIN_CORE.x} cy={BRAIN_CORE.y} r="92" />
+      {data.lobes.map((item, index) => (
+        <FullLobe key={item.id} item={item} index={index} total={data.lobes.length} on={litLobes.has(item.id)} />
+      ))}
+    </svg>
+  )
+})
+
+const IconWarmer = memo(function IconWarmer({ icons }: { icons: readonly string[] }) {
+  const [warm, setWarm] = useState(false)
+
+  useEffect(() => {
+    const start = () => startTransition(() => setWarm(true))
+    if (document.readyState === 'complete') {
+      const timer = window.setTimeout(start, 1200)
+      return () => window.clearTimeout(timer)
+    }
+    const onLoad = () => window.setTimeout(start, 600)
+    window.addEventListener('load', onLoad, { once: true })
+    return () => window.removeEventListener('load', onLoad)
+  }, [])
+
+  return (
+    <div className={styles.iconWarmer} aria-hidden="true">
+      {warm ? icons.map((icon) => <Image key={icon} src={icon} alt="" width={22} height={22} loading="eager" unoptimized={icon.endsWith('.svg')} />) : null}
+    </div>
+  )
+})
+
+const CompactLobe = memo(function CompactLobe({ item, index, total, on, active }: LobeShapeProps & { active: boolean }) {
+  const geometry = compactGeometry(
+    index,
+    item.skills.map((skill) => skill.level),
+    total,
+  )
+  const { x1, y1, x2, y2 } = geometry.synapse
+  const travel = { '--cw-dx': `${(x2 - x1).toFixed(1)}px`, '--cw-dy': `${(y2 - y1).toFixed(1)}px`, '--cw-delay': `${(index * -0.41).toFixed(2)}s` } as CSSProperties
+  return (
+    <g data-cw-compact-synapses={item.id} data-on={on ? '' : undefined}>
+      <line className={cx(styles.syn, on && styles.synOn)} x1={x1} y1={y1} x2={x2} y2={y2} />
+      <circle className={cx(styles.packet, on && styles.packetOn)} cx={x1} cy={y1} r={on ? 3 : 2.2} style={travel} data-cw-packet="" />
+      {geometry.neurons.map((neuron, n) => (
+        <g key={item.skills[n]?.id ?? n}>
+          <path className={cx(styles.syn, on && styles.synOn)} d={neuron.line} />
+          <circle className={cx(styles.neuron, on && styles.neuronOn)} cx={neuron.x} cy={neuron.y} r={neuron.r} />
+        </g>
+      ))}
+      {active ? <circle className={styles.pulse} cx={geometry.lobe.x} cy={geometry.lobe.y} r={COMPACT_LOBE_RADIUS} data-cw-pulse="" /> : null}
+    </g>
+  )
+})
+
+const CompactMap = memo(function CompactMap({ data, lit, active }: { data: BrainData; lit: string; active: string | null }) {
+  const litLobes = litSet(lit)
   return (
     <svg className={styles.svgCompact} viewBox={`0 0 ${COMPACT_VIEW.width} ${COMPACT_VIEW.height}`} aria-hidden="true" focusable="false" data-cw-brain-compact="">
       <circle className={styles.ring} cx={COMPACT_CORE.x} cy={COMPACT_CORE.y} r="60" />
-      {data.lobes.map((item, index) => {
-        const geometry = compactGeometry(
-          index,
-          item.skills.map((skill) => skill.level),
-          data.lobes.length,
-        )
-        const on = litLobes.has(item.id)
-        const { x1, y1, x2, y2 } = geometry.synapse
-        const travel = { '--cw-dx': `${(x2 - x1).toFixed(1)}px`, '--cw-dy': `${(y2 - y1).toFixed(1)}px`, '--cw-delay': `${(index * -0.41).toFixed(2)}s` } as CSSProperties
-        return (
-          <g key={item.id} data-cw-compact-synapses={item.id} data-on={on ? '' : undefined}>
-            <line className={cx(styles.syn, on && styles.synOn)} x1={x1} y1={y1} x2={x2} y2={y2} />
-            <circle className={cx(styles.packet, on && styles.packetOn)} cx={x1} cy={y1} r={on ? 3 : 2.2} style={travel} data-cw-packet="" />
-            {geometry.neurons.map((neuron, n) => (
-              <g key={item.skills[n]?.id ?? n}>
-                <path className={cx(styles.syn, on && styles.synOn)} d={neuron.line} />
-                <circle className={cx(styles.neuron, on && styles.neuronOn)} cx={neuron.x} cy={neuron.y} r={neuron.r} />
-              </g>
-            ))}
-            {active === item.id ? (
-              <circle className={styles.pulse} cx={geometry.lobe.x} cy={geometry.lobe.y} r={COMPACT_LOBE_RADIUS} data-cw-pulse="" />
-            ) : null}
-          </g>
-        )
-      })}
+      {data.lobes.map((item, index) => (
+        <CompactLobe key={item.id} item={item} index={index} total={data.lobes.length} on={litLobes.has(item.id)} active={active === item.id} />
+      ))}
     </svg>
   )
-}
+})
 
 export function BrainMap({ data, labels, lang, terminal, children }: BrainMapProps) {
   const first = data.lobes[0]
@@ -251,10 +311,19 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
   const sheetTitleId = useId()
   const words = data.lobes.flatMap((lobe) => lobe.skills.map((skill) => skill.name))
   const rainWords = useRef(words)
-  const lobeIds = data.lobes.map((item) => item.id)
+  const lobeIds = useMemo(() => data.lobes.map((item) => item.id), [data.lobes])
   const lobeKey = lobeIds.join(' ')
+  const icons = useMemo(() => [...new Set(data.lobes.flatMap((item) => item.skills.flatMap((skill) => (skill.icon ? [skill.icon] : []))))], [data.lobes])
+  const selectLobe = useCallback((id: string) => setSelection({ kind: 'lobe', id }), [])
+  const pendingOpen = useRef({ frame: 0, timer: 0 })
 
-  const [warm, setWarm] = useState(false)
+  useEffect(() => {
+    const pending = pendingOpen.current
+    return () => {
+      cancelAnimationFrame(pending.frame)
+      window.clearTimeout(pending.timer)
+    }
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -270,17 +339,6 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
     })
     observer.observe(map)
     return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const start = () => setWarm(true)
-    if (document.readyState === 'complete') {
-      const timer = window.setTimeout(start, 1200)
-      return () => window.clearTimeout(timer)
-    }
-    const onLoad = () => window.setTimeout(start, 600)
-    window.addEventListener('load', onLoad, { once: true })
-    return () => window.removeEventListener('load', onLoad)
   }, [])
 
   useEffect(() => {
@@ -312,6 +370,7 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
   const source = selection.kind === 'source' ? (data.sources.find((item) => item.id === selection.id) ?? null) : null
   const litSources = new Set(lobe ? lobe.sources : source ? [source.id] : [])
   const litLobes = new Set(lobe ? [lobe.id] : data.lobes.filter((item) => source && item.sources.includes(source.id)).map((item) => item.id))
+  const lit = [...litLobes].join(' ')
   const wordLobes = data.lobes.filter((item) => item.words)
   const lobeIndex = lobe ? data.lobes.indexOf(lobe) : -1
   const status = lobe
@@ -320,11 +379,20 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
       ? `${source.label}: ${source.title}`
       : ''
 
+  const openSheetAfterPaint = () => {
+    const pending = pendingOpen.current
+    cancelAnimationFrame(pending.frame)
+    window.clearTimeout(pending.timer)
+    pending.frame = requestAnimationFrame(() => {
+      pending.timer = window.setTimeout(() => setSheetOpen(true), 0)
+    })
+  }
+
   const choose = (next: Selection) => {
     setSelection(next)
     if (!compactNow()) return
     if (next.kind === 'lobe') tap()
-    setSheetOpen(true)
+    openSheetAfterPaint()
   }
 
   const onLobeKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -349,7 +417,7 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
       status={status}
       terminal={terminal}
       lobeIds={lobeIds}
-      onLobe={(id) => setSelection({ kind: 'lobe', id })}
+      onLobe={selectLobe}
       titleId={titleId}
     />
   )
@@ -357,40 +425,13 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
   return (
     <>
       <div className={cx(styles.stage, 'cw-js-only')} data-cw-brain="">
-        <canvas ref={canvasRef} className={styles.rain} aria-hidden="true" data-cw-rain="" />
-        <div className={styles.iconWarmer} aria-hidden="true">
-          {warm
-            ? [...new Set(data.lobes.flatMap((item) => item.skills.flatMap((skill) => (skill.icon ? [skill.icon] : []))))].map((icon) => (
-                <Image key={icon} src={icon} alt="" width={22} height={22} loading="eager" unoptimized={icon.endsWith('.svg')} />
-              ))
-            : null}
-        </div>
+        <canvas ref={canvasRef} className={styles.rain} aria-hidden="true" data-cw-rain="" data-cw-held={sheetOpen ? '' : undefined} />
+        <IconWarmer icons={icons} />
         <div className={styles.layout}>
           <div className={styles.mapColumn}>
-            <div ref={mapRef} className={styles.map} data-cw-glass="subtle" data-cw-brain-map="">
-              <svg className={styles.svg} viewBox={`0 0 ${BRAIN_VIEW.width} ${BRAIN_VIEW.height}`} aria-hidden="true" focusable="false">
-                <circle className={styles.ring} cx={BRAIN_CORE.x} cy={BRAIN_CORE.y} r="92" />
-                {data.lobes.map((item, index) => {
-                  const geometry = neuronGeometry(
-                    index,
-                    item.skills.map((skill) => skill.level),
-                    data.lobes.length,
-                  )
-                  const on = litLobes.has(item.id)
-                  return (
-                    <g key={item.id} data-cw-synapses={item.id} data-on={on ? '' : undefined}>
-                      <path className={cx(styles.syn, on && styles.synOn)} d={geometry.synapse} />
-                      {geometry.neurons.map((neuron, n) => (
-                        <g key={item.skills[n]?.id ?? n}>
-                          <path className={cx(styles.syn, on && styles.synOn)} d={neuron.line} />
-                          <circle className={cx(styles.neuron, on && styles.neuronOn)} cx={neuron.x} cy={neuron.y} r={neuron.r} />
-                        </g>
-                      ))}
-                    </g>
-                  )
-                })}
-              </svg>
-              <CompactMap data={data} litLobes={litLobes} active={lobe?.id ?? null} />
+            <div ref={mapRef} className={styles.map} data-cw-glass="subtle" data-cw-brain-map="" data-cw-held={sheetOpen ? '' : undefined}>
+              {compact ? null : <FullMap data={data} lit={lit} />}
+              <CompactMap data={data} lit={lit} active={lobe?.id ?? null} />
               <div className={styles.core} aria-hidden="true">
                 {labels.core}
               </div>

@@ -856,6 +856,10 @@ $compact-map: 30rem;
     display: block;
     width: 100%;
     height: 100%;
+
+    .synOn {
+      animation: none;
+    }
   }
 
   .packet {
@@ -959,6 +963,12 @@ $compact-map: 30rem;
     .map[data-cw-live] .pulse {
       animation: pulse 2.4s var(--cw-ease-out, ease-out) infinite;
     }
+  }
+
+  .map[data-cw-held] *,
+  .map[data-cw-held] *::before,
+  .map[data-cw-held] *::after {
+    animation-play-state: paused;
   }
 }
 

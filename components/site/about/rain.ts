@@ -8,6 +8,8 @@ export const RAIN_GLYPH = 16
 
 export const RAIN_COMPACT_QUERY = '(max-width: 767.98px)'
 
+export const RAIN_HOLD_ATTRIBUTE = 'data-cw-held'
+
 export type RainParams = { fps: number; frameMs: number; step: number }
 
 export const RAIN_DESKTOP: RainParams = { fps: RAIN_FPS, frameMs: RAIN_FRAME_MS, step: RAIN_GLYPH }
@@ -35,10 +37,10 @@ export function shouldDraw(now: number, last: number, frameMs: number = RAIN_FRA
   return now - last >= frameMs - 1
 }
 
-export type RainState = { running: boolean; visible: boolean; inView: boolean; reduced: boolean }
+export type RainState = { running: boolean; visible: boolean; inView: boolean; reduced: boolean; held?: boolean }
 
 export function rainActive(state: RainState): boolean {
-  return state.running && state.visible && state.inView && !state.reduced
+  return state.running && state.visible && state.inView && !state.reduced && !state.held
 }
 
 export function startRain(canvas: HTMLCanvasElement, words: readonly string[]): () => void {
@@ -48,7 +50,13 @@ export function startRain(canvas: HTMLCanvasElement, words: readonly string[]): 
   const compact = window.matchMedia(RAIN_COMPACT_QUERY)
   const alphabet = rainAlphabet(words)
   const size = RAIN_GLYPH
-  const state: RainState = { running: true, visible: document.visibilityState === 'visible', inView: false, reduced: motion.matches }
+  const state: RainState = {
+    running: true,
+    visible: document.visibilityState === 'visible',
+    inView: false,
+    reduced: motion.matches,
+    held: canvas.hasAttribute(RAIN_HOLD_ATTRIBUTE),
+  }
   let params = rainParams(compact.matches)
   let columns: number[] = []
   let frame = 0
@@ -107,10 +115,15 @@ export function startRain(canvas: HTMLCanvasElement, words: readonly string[]): 
     sync()
   }
   const resizer = new ResizeObserver(() => resize())
+  const holder = new MutationObserver(() => {
+    state.held = canvas.hasAttribute(RAIN_HOLD_ATTRIBUTE)
+    sync()
+  })
 
   resize()
   observer.observe(canvas)
   resizer.observe(canvas)
+  holder.observe(canvas, { attributes: true, attributeFilter: [RAIN_HOLD_ATTRIBUTE] })
   document.addEventListener('visibilitychange', onVisibility)
   motion.addEventListener('change', sync)
 
@@ -120,6 +133,7 @@ export function startRain(canvas: HTMLCanvasElement, words: readonly string[]): 
     frame = 0
     observer.disconnect()
     resizer.disconnect()
+    holder.disconnect()
     document.removeEventListener('visibilitychange', onVisibility)
     motion.removeEventListener('change', sync)
   }
