@@ -1,4 +1,4 @@
-import { createElement, type ReactElement } from 'react'
+import { createElement, type ReactElement, type ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { consentBody } from '@/components/ailab/shell/ConsentDialog'
@@ -25,8 +25,10 @@ async function dictionaries(lang: 'es' | 'en') {
   return { ailab, site, blog }
 }
 
+const Toasts = ToastProvider as unknown as (props: { closeLabel: string; children?: ReactNode }) => ReactNode
+
 function render(element: ReactElement): string {
-  return renderToStaticMarkup(createElement(ToastProvider, { closeLabel: 'Cerrar', children: element }))
+  return renderToStaticMarkup(createElement(Toasts, { closeLabel: 'Cerrar' }, element))
 }
 
 async function card(lang: 'es' | 'en', id: LabExperimentId): Promise<string> {
