@@ -87,8 +87,9 @@ describe('formato de la tarjeta (FR-303)', () => {
     expect(html).toContain('Decisión')
     expect(html).toMatch(/data-cw-lab-part="code"><summary[^>]*><h4[^>]*>El código<\/h4>/)
     expect(html).toContain('data-cw-code="typescript"')
-    expect(html).toContain('href="https://github.com/CHERCED-DEV/CHERCED-WORLD/blob/main/lib/ailab/core/consent.ts"')
-    expect(html).toContain('Archivo: lib/ailab/core/consent.ts')
+    const repoPath = labExperiment('V1').code!.repoPath
+    expect(html).toContain(`href="https://github.com/CHERCED-DEV/CHERCED-WORLD/blob/main/${repoPath}"`)
+    expect(html).toContain(`Archivo: ${repoPath}`)
   })
 
   it('un experimento sin descargas lo dice, y sin código no pinta "El código"', async () => {
@@ -132,8 +133,10 @@ describe('formato de la tarjeta (FR-303)', () => {
     expect(copy).not.toHaveProperty('ailab.v4.title')
   })
 
-  it('en x0-frozen ninguna lane registró su demo todavía', () => {
-    expect(labDemos).toEqual({})
+  it('cada demo registrada es de un experimento del catálogo', () => {
+    const ids = new Set(labCatalog.map((experiment) => experiment.id))
+    expect(Object.keys(labDemos).filter((id) => !ids.has(id as LabExperimentId))).toEqual([])
+    for (const demo of Object.values(labDemos)) expect(demo).toBeTypeOf('function')
   })
 })
 
