@@ -171,7 +171,7 @@ test.describe('T760 · nada de lo que escribes, grabas o subes sale del navegado
   for (const lang of LANGS) {
     test(`/${lang}/ai-lab: un centinela único en cada campo no aparece en ninguna URL, cabecera ni cuerpo de petición`, async ({ page, context }) => {
       const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`
-      const digits = String(1000 + Math.floor(Math.random() * 8999))
+      const digits = `${100 + Math.floor(Math.random() * 900)}${1 + Math.floor(Math.random() * 9)}`
       const sentinel = {
         v1File: `centinela-v1-archivo-${token}`,
         v1Audio: `centinela-v1-audio-${token}`,
