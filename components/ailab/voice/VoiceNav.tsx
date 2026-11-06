@@ -272,7 +272,7 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
             className={styles.hold}
             aria-pressed={listening}
             aria-describedby={`${id}-hold-hint`}
-            disabled={busy}
+            aria-disabled={busy || undefined}
             onPointerDown={onPointerDown}
             onPointerUp={end}
             onPointerCancel={end}
@@ -283,10 +283,10 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
               if (listening) end()
             }}
             onContextMenu={(event) => event.preventDefault()}
-            data-cw-v4-hold={listening ? 'listening' : 'idle'}
+            data-cw-v4-hold={recorder.status}
           >
-            {listening ? <span className={styles.recDot} aria-hidden="true" /> : null}
-            {listening ? t('ailab.v4.release') : t('ailab.v4.hold')}
+            {recorder.status === 'recording' ? <span className={styles.recDot} aria-hidden="true" /> : null}
+            {recorder.status === 'recording' ? t('ailab.v4.release') : recorder.status === 'requesting' ? t('ailab.v4.opening') : t('ailab.v4.hold')}
           </button>
         </div>
       ) : null}

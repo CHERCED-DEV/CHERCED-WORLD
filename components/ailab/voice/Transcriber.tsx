@@ -140,6 +140,7 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
   }
 
   const toggleRecording = () => {
+    if (busy || recorder.status === 'requesting') return
     if (recording) {
       recorder.stop()
       return
@@ -254,11 +255,15 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
           <Button
             variant={recording ? 'solid' : 'glass'}
             onClick={toggleRecording}
-            disabled={busy || recorder.status === 'requesting'}
-            data-cw-v1-record={recording ? 'recording' : 'idle'}
+            aria-disabled={busy || recorder.status === 'requesting' || undefined}
+            data-cw-v1-record={recorder.status}
           >
-            {recording ? <span className={styles.recDot} aria-hidden="true" /> : null}
-            {recording ? fill(t('ailab.v1.recordStop'), { elapsed: clock(recorder.seconds) }) : t('ailab.v1.record')}
+            {recorder.status === 'recording' ? <span className={styles.recDot} aria-hidden="true" /> : null}
+            {recorder.status === 'recording'
+              ? fill(t('ailab.v1.recordStop'), { elapsed: clock(recorder.seconds) })
+              : recorder.status === 'requesting'
+                ? t('ailab.v1.opening')
+                : t('ailab.v1.record')}
           </Button>
         ) : null}
         <input
@@ -267,7 +272,10 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
           type="file"
           accept={ACCEPT}
           onChange={onFile}
-          disabled={busy || recording}
+          onClick={(event) => {
+            if (busy || recording) event.preventDefault()
+          }}
+          aria-disabled={busy || recording || undefined}
           aria-describedby={`${id}-file-hint`}
           data-cw-v1-upload=""
         />

@@ -146,7 +146,7 @@
     @include layout.focus-ring;
   }
 
-  .fileInput:disabled + & {
+  .fileInput[aria-disabled='true'] + & {
     opacity: 0.55;
     cursor: not-allowed;
   }
@@ -317,9 +317,9 @@
     background: color-mix(in srgb, var(--cw-danger) 16%, transparent);
   }
 
-  &:disabled {
+  &[aria-disabled='true'] {
     opacity: 0.55;
-    cursor: not-allowed;
+    cursor: progress;
   }
 
   &:focus-visible {

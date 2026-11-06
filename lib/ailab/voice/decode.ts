@@ -18,10 +18,6 @@ function audioContextConstructor(): ContextConstructor | null {
   return scope.AudioContext ?? scope.webkitAudioContext ?? null
 }
 
-export function canDecodeAudio(): boolean {
-  return audioContextConstructor() !== null && typeof OfflineAudioContext !== 'undefined'
-}
-
 async function resample(samples: Float32Array, from: number): Promise<Float32Array> {
   const length = Math.max(1, Math.ceil((samples.length * SAMPLE_RATE) / from))
   const offline = new OfflineAudioContext(1, length, SAMPLE_RATE)
@@ -35,29 +31,32 @@ async function resample(samples: Float32Array, from: number): Promise<Float32Arr
   return new Float32Array(rendered.getChannelData(0))
 }
 
-export async function decodeToMono(blob: Blob): Promise<Float32Array> {
+async function decodeBuffer(data: ArrayBuffer): Promise<AudioBuffer> {
+  if (typeof OfflineAudioContext !== 'undefined') return new OfflineAudioContext(1, 1, SAMPLE_RATE).decodeAudioData(data)
   const Context = audioContextConstructor()
   if (!Context) throw new AudioReadError('Este navegador no decodifica audio')
-  const data = await blob.arrayBuffer()
-  let context: AudioContext
+  const context = new Context()
   try {
-    context = new Context({ sampleRate: SAMPLE_RATE })
-  } catch {
-    context = new Context()
-  }
-  try {
-    const decoded = await context.decodeAudioData(data)
-    const channels = Array.from({ length: decoded.numberOfChannels }, (_, index) => new Float32Array(decoded.getChannelData(index)))
-    const mono = mixToMono(channels)
-    return decoded.sampleRate === SAMPLE_RATE ? mono : await resample(mono, decoded.sampleRate)
-  } catch (error) {
-    throw new AudioReadError(error instanceof Error ? error.message : String(error))
+    return await context.decodeAudioData(data)
   } finally {
     void context.close().catch(() => {})
   }
 }
 
-export function probeDuration(blob: Blob, timeoutMs = 4000): Promise<number | null> {
+export async function decodeToMono(blob: Blob): Promise<Float32Array> {
+  const data = await blob.arrayBuffer()
+  if (data.byteLength === 0) throw new AudioReadError('El audio está vacío')
+  try {
+    const decoded = await decodeBuffer(data)
+    const channels = Array.from({ length: decoded.numberOfChannels }, (_, index) => new Float32Array(decoded.getChannelData(index)))
+    const mono = mixToMono(channels)
+    return decoded.sampleRate === SAMPLE_RATE ? mono : await resample(mono, decoded.sampleRate)
+  } catch (error) {
+    throw new AudioReadError(error instanceof Error ? error.message : String(error))
+  }
+}
+
+export function probeDuration(blob: Blob, timeoutMs = 2500): Promise<number | null> {
   if (typeof document === 'undefined' || typeof URL.createObjectURL !== 'function') return Promise.resolve(null)
   return new Promise((resolve) => {
     const url = URL.createObjectURL(blob)
