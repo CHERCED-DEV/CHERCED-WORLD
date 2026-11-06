@@ -134,7 +134,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
         </div>
         <div className={styles.actions}>
           <div className={enter.enter} style={step(3.25)}>
-            <CvActions lang={lang} downloadVariant="solid" />
+            <CvActions lang={lang} downloadVariant="solid" className={styles.cvActions} />
           </div>
           {links.length > 0 ? (
             <nav aria-label={socialsLabel}>

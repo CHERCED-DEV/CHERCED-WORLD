@@ -106,6 +106,10 @@
   max-width: 100%;
 }
 
+.reachActions > .cvActions {
+  display: contents;
+}
+
 .mailButton {
   min-width: 44px;
   min-height: 44px;

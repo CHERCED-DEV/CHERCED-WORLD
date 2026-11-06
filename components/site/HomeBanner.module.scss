@@ -139,6 +139,10 @@
   gap: clamp(0.75rem, 3.2cqi, 1.5rem);
 }
 
+.actions .cvActions {
+  justify-content: center;
+}
+
 .social {
   display: grid;
   place-items: center;

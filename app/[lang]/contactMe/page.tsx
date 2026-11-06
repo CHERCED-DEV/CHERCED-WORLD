@@ -64,7 +64,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
         <div className={styles.reach} data-cw-contact-reach="">
           <AvailabilityChip lang={lang} />
           <div className={styles.reachActions}>
-            <CvActions lang={lang} downloadVariant="solid" />
+            <CvActions lang={lang} downloadVariant="solid" className={styles.cvActions} />
             {email ? (
               <EmailMenu
                 lang={lang}
