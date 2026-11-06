@@ -345,9 +345,18 @@ const R1: LabExperiment = {
   downloads: [],
   privacy: copy('ailab.r1.privacy'),
   flow: [
-    { es: 'Reservas vuelo, hotel y auto, y empieza el cobro', en: 'You book a flight, a hotel and a car, and the payment starts' },
-    { es: 'Tumbas un servicio a mitad del camino', en: 'You take down a service halfway through' },
-    { es: 'La compensación deshace los pasos en orden inverso', en: 'The compensation undoes the steps in reverse order' },
+    {
+      es: 'Eliges qué servicio se cae: la aerolínea, el hotel, la agencia de autos o la pasarela de pago',
+      en: 'You pick which service goes down: the airline, the hotel, the car rental or the payment gateway',
+    },
+    {
+      es: 'La saga reserva el vuelo, aparta hotel y auto, y deja el cobro para el final',
+      en: 'The saga books the flight, holds the hotel and the car, and leaves the payment for last',
+    },
+    {
+      es: 'Si algo falla, compensa en orden inverso: suelta los apartados y cancela la reserva',
+      en: 'If something fails, it compensates in reverse order: it releases the holds and cancels the booking',
+    },
   ],
   adrCards: [
     {
@@ -357,15 +366,26 @@ const R1: LabExperiment = {
         en: 'Without a global transaction, every completed step needs its own way to be undone.',
       },
       tradeoff: {
-        es: 'Deshacer una reserva no es lo mismo que soltar un apartado: cada compensación es distinta.',
-        en: "Undoing a booking isn't the same as releasing a hold: each compensation is different.",
+        es: 'Deshacer una reserva no es lo mismo que soltar un apartado: cancelar el vuelo es una operación nueva que queda registrada; soltar el hotel o el auto no deja rastro.',
+        en: "Undoing a booking isn't the same as releasing a hold: cancelling the flight is a new operation that gets recorded; releasing the hotel or the car leaves no trace.",
       },
     },
     {
-      decision: { es: 'Una simulación determinista, sin IA', en: 'A deterministic simulation, with no AI' },
+      decision: { es: 'El cobro va de último', en: 'The payment goes last' },
       why: {
-        es: 'El mismo fallo da siempre el mismo resultado, y eso se puede probar.',
-        en: 'The same failure always gives the same result, and that can be tested.',
+        es: 'Es el punto de no retorno: si el cobro pasa, ya nada falla después, y por eso no necesita compensación.',
+        en: 'It is the point of no return: if the payment goes through, nothing fails after it, so it needs no compensation.',
+      },
+      tradeoff: {
+        es: 'Hotel y auto quedan apartados mientras llega el cobro, y solo se confirman al final.',
+        en: 'The hotel and the car stay on hold while the payment arrives, and are only confirmed at the end.',
+      },
+    },
+    {
+      decision: { es: 'Una simulación determinista, contada en una bitácora', en: 'A deterministic simulation, told in a log' },
+      why: {
+        es: 'El motor es una función pura: el mismo fallo da siempre la misma traza, cada punto de fallo tiene su prueba y la bitácora se anuncia con aria-live.',
+        en: 'The engine is a pure function: the same failure always gives the same trace, every failure point has its test and the log is announced with aria-live.',
       },
       tradeoff: {
         es: 'No hay red ni latencia reales: es un modelo del sistema.',
@@ -373,7 +393,22 @@ const R1: LabExperiment = {
       },
     },
   ],
-  code: null,
+  code: {
+    snippet: `export function compensationFor(kind: Completed['kind']): SagaCompensation {
+  return kind === 'booking' ? 'cancel' : 'release'
+}
+
+function compensate(done: readonly Completed[]): SagaEvent[] {
+  return [...done].reverse().map(({ step, kind, ref }) => ({
+    type: 'compensate',
+    step,
+    action: compensationFor(kind),
+    ref,
+  }))
+}`,
+    lang: 'ts',
+    repoPath: 'lib/ailab/saga/engine.ts',
+  },
 }
 
 const A4: LabExperiment = {
@@ -386,22 +421,22 @@ const A4: LabExperiment = {
   downloads: [PYODIDE_CORE, PYODIDE_NUMPY],
   privacy: copy('ailab.a4.privacy'),
   flow: [
-    { es: 'Un caso o una bitácora de ejemplo, con datos inventados', en: 'A sample case or log, with made-up data' },
     {
-      es: 'Despacho muestra resultados pregenerados; Obra calcula con Python en un worker',
-      en: 'Despacho shows pregenerated results; Obra calculates with Python in a worker',
+      es: 'Despacho: un caso ficticio con su material, sus hechos con prueba y su cronología',
+      en: 'Despacho: a fictional case with its material, its facts with evidence and its timeline',
     },
+    { es: 'Obra: cambias una cantidad o una medida de la bitácora de ejemplo', en: 'Obra: you change a count or a measurement in the sample log' },
     {
-      es: 'Hechos con su prueba y una cronología, o cantidades y un estimado en COP',
-      en: 'Facts with their evidence and a timeline, or quantities and an estimate in COP',
+      es: 'Python con numpy recalcula el estimado en COP en un worker, y ves el código que corrió',
+      en: 'Python with numpy recalculates the estimate in COP in a worker, and you see the code that ran',
     },
   ],
   adrCards: [
     {
       decision: { es: 'Datos inventados y resultados pregenerados en Despacho', en: 'Made-up data and pregenerated results in Despacho' },
       why: {
-        es: 'Muestra el método sin material de clientes ni un modelo en vivo.',
-        en: 'It shows the method without client material or a live model.',
+        es: 'Muestra el método, cada hecho con su prueba y cada fecha con su certeza, sin material de clientes ni un modelo en vivo.',
+        en: 'It shows the method, every fact with its evidence and every date with its certainty, without client material or a live model.',
       },
       tradeoff: {
         es: 'No responde a un caso tuyo: eso exigiría un servidor con un modelo.',
@@ -411,16 +446,44 @@ const A4: LabExperiment = {
     {
       decision: { es: 'Python con Pyodide en un worker para Obra', en: 'Python with Pyodide in a worker for Obra' },
       why: {
-        es: 'Es Python en pequeño, sin servidor.',
-        en: 'It is Python on a small scale, with no server.',
+        es: 'Es Python en pequeño, sin servidor: numpy saca las cantidades y el estimado en tu navegador.',
+        en: 'It is Python on a small scale, with no server: numpy works out the quantities and the estimate in your browser.',
       },
       tradeoff: {
-        es: 'La primera vez descarga unos 15 MB, entre Pyodide y numpy.',
-        en: 'The first time it downloads about 15 MB, between Pyodide and numpy.',
+        es: 'La primera vez descarga unos 15 MB entre Pyodide y numpy, y pide permiso para cada uno.',
+        en: 'The first time it downloads about 15 MB between Pyodide and numpy, and asks permission for each one.',
+      },
+    },
+    {
+      decision: { es: 'El código que corre es el que ves', en: 'The code that runs is the code you see' },
+      why: {
+        es: 'El worker ejecuta estimate.py tal cual se muestra, y una prueba verifica que es el mismo archivo del repo.',
+        en: 'The worker runs estimate.py exactly as shown, and a test checks that it is the same file as in the repo.',
+      },
+      tradeoff: {
+        es: 'El estimado es tan simple como ese código: cuantías y precios de ejemplo, sin el criterio de un ingeniero.',
+        en: "The estimate is as simple as that code: sample ratios and prices, without an engineer's judgment.",
       },
     },
   ],
-  code: null,
+  code: {
+    snippet: `def quantities(items, ratios):
+    kinds = np.array([item["kind"] for item in items])
+    count = np.array([item["count"] for item in items], dtype=float)
+    a = np.array([item["a"] for item in items], dtype=float)
+    b = np.array([item["b"] for item in items], dtype=float)
+    c = np.array([item["c"] for item in items], dtype=float)
+    volume = count * a * b * c
+    formwork = np.select(
+        [kinds == "beam", kinds == "slab"],
+        [count * (a + 2 * b) * c, count * a * b],
+        default=count * 2 * (a + b) * c,
+    )
+    steel = volume * np.array([ratios[kind] for kind in kinds], dtype=float)
+    return rounded(volume, 2), rounded(formwork, 2), rounded(steel)`,
+    lang: 'python',
+    repoPath: 'lib/ailab/pyodide/estimate.py',
+  },
 }
 
 const J1: LabExperiment = {
