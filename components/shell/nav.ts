@@ -36,6 +36,7 @@ export type ShellLabels = {
   mailboxOne: string
   mailboxMany: string
   now: string
+  aiLab: string
   egg: string
 }
 
@@ -59,6 +60,7 @@ export function shellLabels(common: Dictionary): ShellLabels {
     mailboxOne: t(common, 'mailbox.unreadOne'),
     mailboxMany: t(common, 'mailbox.unreadMany'),
     now: t(common, 'nav.now'),
+    aiLab: t(common, 'nav.aiLab'),
     egg: t(common, 'footer.egg'),
   }
 }

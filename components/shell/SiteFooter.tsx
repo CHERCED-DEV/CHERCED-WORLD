@@ -80,6 +80,9 @@ export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
           <SelfLink href={`/${lang}/now`} className={styles.privacy} data-cw-footer-now="">
             {labels.now}
           </SelfLink>
+          <SelfLink href={`/${lang}/ai-lab`} className={styles.privacy} data-cw-footer-ai-lab="">
+            {labels.aiLab}
+          </SelfLink>
           <SelfLink href={`/${lang}/privacy`} className={styles.privacy}>
             {labels.privacy}
           </SelfLink>

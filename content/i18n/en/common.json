@@ -47,6 +47,7 @@
   "mailbox.unreadOne": "1 unread message",
   "mailbox.unreadMany": "{count} unread messages",
   "nav.now": "Now",
+  "nav.aiLab": "AI Lab",
   "footer.egg": "Officially Uncle Bob's nephew · SOLID runs in the family.",
   "profile.availability.label": "Availability: {location} · {timezone} · {relocation}",
   "cv.link": "See my CV on LinkedIn",
