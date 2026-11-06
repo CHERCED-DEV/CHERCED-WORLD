@@ -19,6 +19,8 @@ export const ASSISTANT_TEMPLATE_KEYS = [
   'assistant.tpl.projects',
   'assistant.tpl.projectsWithTech',
   'assistant.tpl.projectTech',
+  'assistant.tpl.caseDetail',
+  'assistant.tpl.adr',
   'assistant.tpl.experience',
   'assistant.tpl.present',
   'assistant.tpl.services',

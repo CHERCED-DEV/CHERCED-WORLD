@@ -157,7 +157,7 @@ const LobePanel = memo(function LobePanel({ data, lobe, source, labels, lang, st
                       <span className={`${styles.termIcon} ${styles.termMonogram}`} data-cw-monogram={monogram(skill.name)} aria-hidden="true" />
                     )}
                     <span className={styles.termName}>{skill.name}</span>
-                    <span className={styles.termLevel}>
+                    <span className={styles.termLevel} data-cw-level-text={skill.levelLabel ? '' : undefined}>
                       {skill.used ? (
                         <span className={styles.usedChip} data-cw-used="">
                           {skill.used}

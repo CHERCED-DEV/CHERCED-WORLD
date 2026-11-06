@@ -35,10 +35,10 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 
 ## Bloque 3: asistente y datos
 
-- [ ] T930 [B4] El asistente busca en contexto, decisiones y resultados de cada caso, con la prueba de las sagas.
-- [ ] T931 [B5] Mayúsculas originales en las respuestas.
-- [ ] T932 [B11] Inglés como nivel.
-- [ ] T933 [B8] Catálogo único de tecnologías con alias y conteos calculados.
+- [x] T930 [B4] El asistente busca en contexto, decisiones y resultados de cada caso, con la prueba de las sagas.
+- [x] T931 [B5] Mayúsculas originales en las respuestas.
+- [x] T932 [B11] Inglés como nivel.
+- [x] T933 [B8] Catálogo único de tecnologías con alias y conteos calculados.
 
 ## Bloque 4: correcciones menores
 

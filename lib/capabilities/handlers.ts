@@ -1,4 +1,4 @@
-import { canonicalTech } from '@/lib/assistant/intent'
+import { techFamily } from '@/lib/assistant/intent'
 import type { Locale } from '@/lib/i18n/config'
 import { createSearcher, type Searcher } from '@/lib/search/searcher'
 import { excerpt, fold, sentences } from '@/lib/search/text'
@@ -73,8 +73,8 @@ export function getProject(index: SearchIndex, input: { id: string }, env: Handl
 }
 
 function usesTechnology(project: ProjectFact, technology: string): boolean {
-  const wanted = canonicalTech(technology)
-  return project.technologies.some((name) => canonicalTech(name) === wanted || fold(name) === fold(technology))
+  const wanted = techFamily(technology)
+  return project.technologies.some((name) => techFamily(name) === wanted || fold(name) === fold(technology))
 }
 
 export function listProjects(index: SearchIndex, input: { technology?: string }, env: HandlerEnv) {
@@ -123,7 +123,8 @@ export function getSkills(index: SearchIndex, input: { area?: string }, env: Han
         const skill = tech.find((item) => item.id === id)
         if (skill) return [{ id, name: skill.label, level: skill.progress, years: skill.used }]
         const language = index.facts.languages.find((item) => item.id === id)
-        return language ? [{ id, name: language.name, level: language.progress, years: null }] : []
+        if (!language) return []
+        return [{ id, name: language.name, level: language.progress, years: null, ...(language.level ? { levelText: language.level } : {}) }]
       }),
     }))
   if (input.area && areas.length === 0) throw new CapabilityError('not_found', `No skill area "${input.area}"`)

@@ -1039,3 +1039,12 @@ $compact-map: 30rem;
   margin-top: var(--cw-space-2);
   line-height: 1.7;
 }
+
+.termRow:has(> [data-cw-level-text]) {
+  grid-template-columns: 22px minmax(0, 1fr);
+}
+
+.termLevel[data-cw-level-text] {
+  grid-column: 2 / -1;
+  white-space: normal;
+}

@@ -1,3 +1,4 @@
+import { exactTechnology, familyOf, findTechnology, TECHNOLOGIES, technologyById, technologyKey } from '@/content/technologies'
 import { fold, tokenize } from '@/lib/search/text'
 import type { AssistantFacts } from '@/lib/search/types'
 import {
@@ -10,12 +11,12 @@ import {
   MANIPULATION_PATTERNS,
   OUT_OF_SCOPE_PATTERNS,
   PROGRAMMING_HINTS,
+  QUESTION_TECH,
   SECOND_PERSON,
   SITE_PHRASES,
   SPOKEN_HINTS,
   STOPWORDS,
   STUDY_HINTS,
-  TECH_ALIASES,
   type Concept,
 } from './lexicon'
 import { closeTo, type NormalizedQuestion } from './normalize'
@@ -91,20 +92,37 @@ export function techKey(name: string): string {
 }
 
 export function canonicalTech(name: string): string {
+  const technology = findTechnology(name)
+  if (technology) return technology.id
   const key = techKey(name)
-  for (const [canonical, aliases] of Object.entries(TECH_ALIASES)) {
-    if (aliases.includes(key)) return canonical
-  }
-  return key
+  return QUESTION_TECH[key] ?? key
+}
+
+export function techFamily(name: string): string {
+  return familyOf(canonicalTech(name))
+}
+
+function aliasKey(value: string): string {
+  return technologyKey(value).toLowerCase()
 }
 
 export function buildVocabulary(facts: AssistantFacts): Vocabulary {
   const aliases = new Map<string, string>()
-  for (const [canonical, list] of [...Object.entries(TECH_ALIASES), ...Object.entries(EXTERNAL_TECH)]) {
+  for (const [canonical, list] of Object.entries(EXTERNAL_TECH)) {
     for (const alias of list) aliases.set(alias, canonical)
   }
+  for (const [alias, canonical] of Object.entries(QUESTION_TECH)) aliases.set(alias, canonical)
+  for (const technology of TECHNOLOGIES) {
+    for (const alias of technology.aliases ?? []) aliases.set(aliasKey(alias), technology.id)
+  }
   for (const name of [...facts.technologies, ...facts.skills.tech.map((tech) => tech.name)]) {
-    aliases.set(techKey(name), canonicalTech(name))
+    const canonical = canonicalTech(name)
+    aliases.set(techKey(name), canonical)
+    const exact = exactTechnology(name)
+    if (!exact) continue
+    aliases.set(aliasKey(exact.name), exact.id)
+    const family = technologyById(familyOf(exact.id))
+    if (family && !aliases.has(aliasKey(family.name))) aliases.set(aliasKey(family.name), family.id)
   }
   const fuzzyAliases = [...aliases.keys()].filter((alias) => alias.length >= 6)
 

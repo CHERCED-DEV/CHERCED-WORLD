@@ -583,7 +583,13 @@ export const site: SiteContent = {
     },
     languages: [
       { id: 'es', name: { es: 'Español', en: 'Spanish' }, progress: 100, icon: '/assets/icons/flags/spain.png' },
-      { id: 'en', name: { es: 'Inglés', en: 'English' }, progress: 65, icon: '/assets/icons/flags/uniteStates.png' },
+      {
+        id: 'en',
+        name: { es: 'Inglés', en: 'English' },
+        progress: 65,
+        level: { es: 'B1, B2 en uso profesional frecuente', en: 'B1, B2 in regular professional use' },
+        icon: '/assets/icons/flags/uniteStates.png',
+      },
     ],
   },
   services: {

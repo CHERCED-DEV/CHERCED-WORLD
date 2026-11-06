@@ -10,5 +10,11 @@ export function lobeUrl(lang: Locale, lobeId: string): string {
 }
 
 export function projectDetails(project: ProjectFact): string[] {
-  return [project.context, project.role, project.decisions, project.result].filter((value): value is string => value !== null)
+  return [
+    project.context,
+    project.role,
+    project.decisions,
+    ...project.adrs.map((adr) => `${adr.decision}. ${adr.why} ${adr.tradeoff}`),
+    project.result,
+  ].filter((value): value is string => value !== null)
 }

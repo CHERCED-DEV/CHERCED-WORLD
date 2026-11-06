@@ -1,3 +1,4 @@
+import { technologyFamily } from '@/content/technologies'
 import type { Localized, Project, SiteContent } from '@/content/types'
 import { projectTitle } from '@/lib/content/project-title'
 import { localizedPath, type Locale } from '@/lib/i18n'
@@ -73,9 +74,18 @@ export function caseStudyNeighbors(list: readonly Project[], id: string, lang: L
   return { prev: at(-1), next: at(1), position: index + 1, total: ordered.length }
 }
 
-export function technologyCounts(list: readonly Project[]): Record<string, number> {
+export function technologyCounts(list: readonly Pick<Project, 'id' | 'technologies'>[]): Record<string, number> {
+  const families = new Map<string, Set<string>>()
+  for (const project of list) {
+    for (const tech of project.technologies) {
+      const family = technologyFamily(tech)
+      const ids = families.get(family) ?? new Set<string>()
+      ids.add(project.id)
+      families.set(family, ids)
+    }
+  }
   const counts: Record<string, number> = {}
-  for (const project of list) for (const tech of new Set(project.technologies)) counts[tech] = (counts[tech] ?? 0) + 1
+  for (const project of list) for (const tech of project.technologies) counts[tech] = families.get(technologyFamily(tech))?.size ?? 0
   return counts
 }
 

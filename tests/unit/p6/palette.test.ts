@@ -41,7 +41,8 @@ describe.each(['es', 'en'] as const)('habilidades en la paleta (FR-450, SC-404) 
         const doc = skills.find((item) => item.id === `skill:${id}`)
         expect(doc, id).toBeDefined()
         expect(doc?.item.command).toEqual({ type: 'navigate', href: `/${lang}/aboutMe#lobe-${lobe.id}` })
-        expect(doc?.item.hint).toMatch(lang === 'es' ? /^.+ · \d+ %$/ : /^.+ · \d+%$/)
+        const level = getSite().about.languages.find((language) => language.id === id)?.level?.[lang]
+        expect(doc?.item.hint).toMatch(level ? new RegExp(`^.+ · ${level}$`) : lang === 'es' ? /^.+ · \d+ %$/ : /^.+ · \d+%$/)
       }
     }
   })

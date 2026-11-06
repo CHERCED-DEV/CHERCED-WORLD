@@ -121,6 +121,7 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
       id: language.id,
       name: pick(language.name, lang),
       progress: language.progress,
+      level: language.level ? pick(language.level, lang) : null,
     })),
     services: {
       intro: pick(site.services.hero.intro, lang),
@@ -192,7 +193,7 @@ function skillDocs(facts: AssistantFacts, experience: Dictionary): SearchDoc[] {
         id: `skill:${id}`,
         kind: 'skill',
         title,
-        text: t(experience, 'palette.skillHint', { lobe: lobe.name, level }),
+        text: language?.level ? `${lobe.name} · ${language.level}` : t(experience, 'palette.skillHint', { lobe: lobe.name, level }),
         keywords: `${lobe.name} ${id.replace(/-/g, ' ')}`,
         url: lobe.url,
       })
@@ -263,7 +264,7 @@ function buildDocs(lang: Locale, facts: AssistantFacts, site: SiteContent, exper
     ),
     section(
       'languages',
-      facts.languages.map((language) => `${language.name} ${language.progress}%`).join(', '),
+      facts.languages.map((language) => (language.level ? `${language.name} ${language.level}` : language.name)).join('. '),
       'idiomas languages',
     ),
   )

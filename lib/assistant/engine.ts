@@ -1,11 +1,13 @@
+import { familyOf, technologyAliases, technologyById, technologyName, technologyParts } from '@/content/technologies'
 import type { Locale } from '@/lib/i18n/config'
 import { projectDetails } from '@/lib/search/facts'
 import { createSearcher, type Searcher } from '@/lib/search/searcher'
 import { excerpt, fold, sentences, tokenize } from '@/lib/search/text'
-import type { AssistantFacts, PageId, ProjectFact, SearchDoc, SearchIndex } from '@/lib/search/types'
+import type { AdrFact, AssistantFacts, PageId, ProjectFact, SearchDoc, SearchIndex, SkillFact } from '@/lib/search/types'
 import { buildVocabulary, canonicalTech, classify, type Classification, type Intent, type Vocabulary } from './intent'
-import { DIRECTED, SECOND_PERSON, SERVICE_FOCUS, SOCIAL_DISPLAY, TECH_ALIASES, TECH_DISPLAY } from './lexicon'
-import { normalizeQuestion, type NormalizedQuestion } from './normalize'
+import { CASE_FILLER, CONCEPTS, DIRECTED, EXTERNAL_DISPLAY, EXTERNAL_TECH, SECOND_PERSON, SERVICE_FOCUS, SOCIAL_DISPLAY } from './lexicon'
+import { closeTo, normalizeQuestion, type NormalizedQuestion } from './normalize'
+import { pickPassages, projectPassages, rankPassages, type Passage } from './passages'
 import { render, type AssistantTemplateKey, type AssistantTemplates } from './templates'
 
 export type AnswerKind = 'answer' | 'unknown' | 'out_of_scope' | 'refusal' | 'greeting'
@@ -29,6 +31,7 @@ type Context = {
   vocabulary: Vocabulary
   searcher: Searcher<SearchDoc>
   docs: SearchDoc[]
+  passages: Passage[]
 }
 
 type Draft = { kind: AnswerKind; parts: string[]; links: AnswerLink[] }
@@ -39,9 +42,15 @@ function tr(ctx: Context, key: AssistantTemplateKey, vars?: Record<string, strin
   return render(ctx.templates, key, vars)
 }
 
+function conjunction(ctx: Context, next: string): string {
+  const and = tr(ctx, 'assistant.tpl.and')
+  return ctx.lang === 'es' && and === 'y' && /^h?i(?![aeiou])/.test(fold(next)) ? 'e' : and
+}
+
 function joinList(ctx: Context, items: string[]): string {
   if (items.length <= 1) return items.join('')
-  return `${items.slice(0, -1).join(', ')} ${tr(ctx, 'assistant.tpl.and')} ${items[items.length - 1]}`
+  const last = items[items.length - 1]!
+  return `${items.slice(0, -1).join(', ')} ${conjunction(ctx, last)} ${last}`
 }
 
 function percent(ctx: Context, value: number): string {
@@ -64,13 +73,32 @@ function period(ctx: Context, start: string, end: string | null): string {
 }
 
 function displayTech(canonical: string, fallback?: string): string {
-  if (TECH_DISPLAY[canonical]) return TECH_DISPLAY[canonical]
-  if (!fallback) return canonical
-  return fallback
-    .toLowerCase()
-    .split(/\s+/)
-    .map((word) => (word.length <= 3 ? word.toUpperCase() : `${word[0]?.toUpperCase() ?? ''}${word.slice(1)}`))
-    .join(' ')
+  const known = technologyById(canonical)
+  if (known) return known.name
+  if (EXTERNAL_DISPLAY[canonical]) return EXTERNAL_DISPLAY[canonical]
+  return fallback ? technologyName(fallback) : canonical
+}
+
+function sentenceCase(ctx: Context, value: string): string {
+  const lower = value.trim().toLocaleLowerCase(ctx.lang)
+  return `${lower.charAt(0).toLocaleUpperCase(ctx.lang)}${lower.slice(1)}`
+}
+
+function skillDisplay(ctx: Context, skill: SkillFact): string {
+  return skill.label !== skill.name ? sentenceCase(ctx, skill.label) : technologyName(skill.name)
+}
+
+function skillCanonicals(skill: SkillFact): string[] {
+  return [canonicalTech(skill.name), ...technologyParts(skill.name).map(canonicalTech)]
+}
+
+function skillFor(ctx: Context, canonical: string): SkillFact | undefined {
+  const { tech } = ctx.facts.skills
+  const family = familyOf(canonical)
+  return (
+    tech.find((skill) => skillCanonicals(skill).includes(canonical)) ??
+    tech.find((skill) => skillCanonicals(skill).some((id) => familyOf(id) === family))
+  )
 }
 
 function pageLink(ctx: Context, id: PageId): AnswerLink {
@@ -86,11 +114,21 @@ function lowerFor(ctx: Context, value: string): string {
 }
 
 function projectsUsing(ctx: Context, canonical: string): ProjectFact[] {
-  return ctx.facts.projects.filter((project) => project.technologies.some((name) => canonicalTech(name) === canonical))
+  const family = familyOf(canonical)
+  return ctx.facts.projects.filter((project) => project.technologies.some((name) => familyOf(canonicalTech(name)) === family))
 }
 
 function aliasesOf(canonical: string): string[] {
-  return TECH_ALIASES[canonical] ?? [canonical]
+  if (technologyById(canonical)) return technologyAliases(canonical).map((alias) => alias.toLowerCase())
+  return EXTERNAL_TECH[canonical] ?? [canonical]
+}
+
+function projectsMentioning(ctx: Context, canonical: string): ProjectFact[] {
+  const aliases = aliasesOf(canonical)
+  return ctx.facts.projects.filter((project) => {
+    const tokens = tokenize([project.summary, ...projectDetails(project)].join(' '))
+    return aliases.some((alias) => tokens.includes(alias))
+  })
 }
 
 function findMention(ctx: Context, canonical: string): { doc: SearchDoc; sentence: string } | null {
@@ -118,10 +156,11 @@ function answerTech(ctx: Context, canonicals: string[]): Draft {
   const links: AnswerLink[] = []
   let known = false
   for (const canonical of canonicals.slice(0, 3)) {
-    const skill = ctx.facts.skills.tech.find((tech) => canonicalTech(tech.name) === canonical)
-    const listed = ctx.facts.technologies.find((name) => canonicalTech(name) === canonical)
+    const skill = skillFor(ctx, canonical)
+    const listed = ctx.facts.technologies.find((name) => familyOf(canonicalTech(name)) === familyOf(canonical))
     const name = displayTech(canonical, skill?.name ?? listed)
-    const projects = projectsUsing(ctx, canonical)
+    const used = projectsUsing(ctx, canonical)
+    const projects = used.length === 0 && (skill || listed) ? projectsMentioning(ctx, canonical) : used
     if (skill || listed || projects.length > 0) {
       known = true
       parts.push(tr(ctx, 'assistant.tpl.techKnown', { tech: name }))
@@ -150,11 +189,12 @@ function answerTech(ctx: Context, canonicals: string[]): Draft {
 
 function answerTechnologies(ctx: Context): Draft {
   const { skills, technologies } = ctx.facts
-  const names = skills.tech.length > 0 ? skills.tech.map((tech) => displayTech(canonicalTech(tech.name), tech.name)) : []
+  const names = skills.tech.map((tech) => skillDisplay(ctx, tech))
+  const covered = new Set(skills.tech.flatMap((tech) => skillCanonicals(tech).map(familyOf)))
   const extra = technologies
-    .filter((name) => !skills.tech.some((tech) => canonicalTech(tech.name) === canonicalTech(name)))
+    .filter((name) => !covered.has(familyOf(canonicalTech(name))))
     .slice(0, Math.max(0, 14 - names.length))
-    .map((name) => displayTech(canonicalTech(name), name))
+    .map((name) => technologyName(name))
   const all = [...names, ...extra]
   if (all.length === 0) return unknown(ctx)
   const parts = [tr(ctx, 'assistant.tpl.technologies', { list: joinList(ctx, all) })]
@@ -164,12 +204,65 @@ function answerTechnologies(ctx: Context): Draft {
       tr(ctx, 'assistant.tpl.strongest', {
         list: joinList(
           ctx,
-          strongest.map((tech) => `${displayTech(canonicalTech(tech.name), tech.name)} (${percent(ctx, tech.progress)})`),
+          strongest.map((tech) => `${skillDisplay(ctx, tech)} (${percent(ctx, tech.progress)})`),
         ),
       }),
     )
   }
   return { kind: 'answer', parts, links: [pageLink(ctx, 'about'), pageLink(ctx, 'portfolio')] }
+}
+
+const CASE_CONCEPT_WORDS = new Set(Object.values(CONCEPTS).flatMap(({ words, weak = [] }) => [...words, ...weak]))
+
+function focusTerms(question: NormalizedQuestion, project?: ProjectFact): string[] {
+  const title = project ? tokenize(project.title) : []
+  return [
+    ...new Set(
+      question.content.filter(
+        (token) =>
+          token.length >= 4 &&
+          !SECOND_PERSON.has(token) &&
+          !DIRECTED.has(token) &&
+          !CASE_FILLER.has(token) &&
+          !CASE_CONCEPT_WORDS.has(token) &&
+          !title.some((word) => closeTo(token, word)),
+      ),
+    ),
+  ]
+}
+
+function formatAdr(ctx: Context, adr: AdrFact): string {
+  return tr(ctx, 'assistant.tpl.adr', { decision: adr.decision.replace(/[.\s]+$/, ''), why: adr.why, tradeoff: adr.tradeoff })
+}
+
+function caseDraft(ctx: Context, chosen: Passage[]): Draft {
+  const project = chosen[0]!.project
+  return {
+    kind: 'answer',
+    parts: [tr(ctx, 'assistant.tpl.caseDetail', { title: project.title, text: chosen.map((item) => item.text).join(' ') })],
+    links: [projectLink(project)],
+  }
+}
+
+function answerCaseDetail(ctx: Context, project: ProjectFact, question: NormalizedQuestion): Draft | null {
+  const terms = focusTerms(question, project)
+  if (terms.length === 0) return null
+  const passages = ctx.passages.filter((item) => item.project.id === project.id)
+  const hits = rankPassages(terms, passages)
+  const [best] = hits
+  if (!best || best.matched.length < Math.ceil(terms.length / 2)) return null
+  return caseDraft(ctx, pickPassages(best, hits, passages))
+}
+
+function answerFromCases(ctx: Context, question: NormalizedQuestion): Draft | null {
+  const terms = focusTerms(question)
+  if (terms.length === 0) return null
+  const hits = rankPassages(terms, ctx.passages)
+  const [best] = hits
+  if (!best || best.matched.length < Math.ceil((terms.length * 2) / 3)) return null
+  const tied = hits.filter((hit) => hit.matched.length === best.matched.length)
+  if (new Set(tied.map((hit) => hit.passage.project.id)).size > 1) return null
+  return caseDraft(ctx, pickPassages(best, hits, ctx.passages))
 }
 
 function answerProjects(ctx: Context, projects: ProjectFact[]): Draft {
@@ -182,7 +275,7 @@ function answerProjects(ctx: Context, projects: ProjectFact[]): Draft {
 }
 
 function answerProject(ctx: Context, project: ProjectFact): Draft {
-  const techs = project.technologies.slice(0, 8).map((name) => displayTech(canonicalTech(name), name))
+  const techs = project.technologies.slice(0, 8).map((name) => technologyName(name))
   const parts = [`${project.title}: ${project.summary}`]
   if (techs.length > 0) parts.push(tr(ctx, 'assistant.tpl.projectTech', { list: joinList(ctx, techs) }))
   const links: AnswerLink[] = [projectLink(project)]
@@ -196,14 +289,8 @@ function answerProject(ctx: Context, project: ProjectFact): Draft {
 function answerProjectsWithTech(ctx: Context, canonicals: string[]): Draft {
   const canonical = canonicals[0]
   const projects = projectsUsing(ctx, canonical)
-  if (projects.length === 0) {
-    const mentioned = ctx.facts.projects.filter((project) => {
-      const tokens = tokenize([project.summary, ...projectDetails(project)].join(' '))
-      return aliasesOf(canonical).some((alias) => tokens.includes(alias))
-    })
-    projects.push(...mentioned)
-  }
-  const skill = ctx.facts.skills.tech.find((tech) => canonicalTech(tech.name) === canonical)
+  if (projects.length === 0) projects.push(...projectsMentioning(ctx, canonical))
+  const skill = skillFor(ctx, canonical)
   const name = displayTech(canonical, skill?.name)
   if (projects.length > 0) {
     return {
@@ -249,7 +336,7 @@ function answerCv(ctx: Context): Draft {
 
 function skillName(ctx: Context, id: string): string | null {
   const tech = ctx.facts.skills.tech.find((skill) => skill.id === id)
-  if (tech) return displayTech(canonicalTech(tech.name), tech.name)
+  if (tech) return skillDisplay(ctx, tech)
   return ctx.facts.languages.find((language) => language.id === id)?.name ?? null
 }
 
@@ -325,7 +412,10 @@ function answerCourses(ctx: Context): Draft {
 function answerLanguages(ctx: Context): Draft {
   const { languages } = ctx.facts
   if (languages.length === 0) return unknown(ctx)
-  const items = languages.map((language) => `${lowerFor(ctx, language.name)} (${percent(ctx, language.progress)})`)
+  const items = languages.map((language) => {
+    const name = lowerFor(ctx, language.name)
+    return language.level ? `${name} ${language.level}` : name
+  })
   return { kind: 'answer', parts: [tr(ctx, 'assistant.tpl.languages', { list: joinList(ctx, items) })], links: [pageLink(ctx, 'about')] }
 }
 
@@ -403,7 +493,7 @@ function respond(ctx: Context, question: NormalizedQuestion, result: Classificat
       const byId = (id: string) => ctx.facts.projects.find((project) => project.id === id)
       if (first && (!second || first.score - second.score >= 0.25)) {
         const project = byId(first.id)
-        if (project) return answerProject(ctx, project)
+        if (project) return answerCaseDetail(ctx, project, question) ?? answerProject(ctx, project)
       }
       return answerProjects(
         ctx,
@@ -438,7 +528,7 @@ function respond(ctx: Context, question: NormalizedQuestion, result: Classificat
       return answerSite(ctx)
     case 'search':
     case 'unknown': {
-      const found = answerSearch(ctx, question)
+      const found = answerFromCases(ctx, question) ?? answerSearch(ctx, question)
       if (found) return found
       if (result.mentionsAuthor) return unknown(ctx)
       return { kind: 'out_of_scope', parts: [tr(ctx, 'assistant.outOfScope'), topics(ctx)], links: [] }
@@ -463,7 +553,9 @@ export function createAssistant(index: SearchIndex, templates: AssistantTemplate
     vocabulary: buildVocabulary(index.facts),
     searcher: createSearcher(index.docs),
     docs: index.docs,
+    passages: [],
   }
+  ctx.passages = index.facts.projects.flatMap((project) => projectPassages(project, (adr) => formatAdr(ctx, adr)))
   return {
     lang: index.lang,
     answer(input) {
