@@ -225,7 +225,7 @@ test.describe('sin JavaScript', () => {
 
     const footer = page.locator('footer#footer')
     await expect(footer).toBeVisible()
-    await expect(footer).toContainText('Camilo Hernandez.')
+    await expect(footer).toContainText('Camilo Hernández.')
     await expect(footer.getByRole('link', { name: 'VOLVER ARRIBA' })).toHaveAttribute('href', '#header')
   })
 

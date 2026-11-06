@@ -10,7 +10,7 @@ test('/llms.txt es texto estático, sin redirigir a un idioma, con la estructura
   expect(response.headers()['content-type']).toBe('text/plain; charset=utf-8')
   expect(response.headers()['set-cookie']).toBeUndefined()
   const text = await response.text()
-  expect(text.startsWith('# CHERCED-WORLD\n\n> Camilo Hernandez, Software Solutions Engineer.')).toBe(true)
+  expect(text.startsWith('# CHERCED-WORLD\n\n> Camilo Hernández, Software Solutions Engineer.')).toBe(true)
   expect(text.match(/^## .+$/gm)).toEqual(['## About', '## Services', '## Case studies', '## Blog', '## Contact'])
   for (const project of getProjects()) expect(text).toContain(`/en/portfolio/${project.id}): `)
   for (const id of postIds()) expect(text).toContain(`/en/blog/${id}): `)

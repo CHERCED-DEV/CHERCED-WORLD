@@ -188,7 +188,7 @@ export type PostMeta = {
   date: string
   tags: string[]
   image: { src: string; alt: string; width: number; height: number }
-  author: 'Camilo Hernandez'
+  author: 'Camilo Hernández'
   featured?: true
   updated?: string
   series?: PostSeriesRef

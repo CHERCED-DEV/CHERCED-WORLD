@@ -299,7 +299,7 @@ test.describe('imagen OG del home (FR-471)', () => {
       await expect(image).toHaveCount(1)
       const url = new URL((await image.getAttribute('content'))!)
       expect(url.pathname).toBe(`/${lang}/opengraph-image/og`)
-      await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', `Camilo Hernandez: ${site.home.title[lang]}`)
+      await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', `Camilo Hernández: ${site.home.title[lang]}`)
       const response = await request.get(`${url.pathname}${url.search}`)
       expect(response.status()).toBe(200)
       const png = await response.body()

@@ -12,7 +12,7 @@ export function post(id: string, overrides: Partial<TestPost> = {}): TestPost {
     date: '2026-01-01',
     tags: [],
     image: { src: '/assets/imgs/posts/test.webp', alt: 'Portada', width: 1200, height: 630 },
-    author: 'Camilo Hernandez',
+    author: 'Camilo Hernández',
     fallback: false,
     ...overrides,
   }

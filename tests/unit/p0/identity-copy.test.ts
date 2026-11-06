@@ -67,8 +67,8 @@ describe('identidad de hoy (SC-401, FR-403)', () => {
       JSON.parse(readFileSync(join(I18N, lang, `${ns}.json`), 'utf8')) as Record<string, string>
     const expected: Record<string, Localized> = {
       'common:meta.description': {
-        es: 'Camilo Hernandez, Software Solutions Engineer. Diseño sistemas composables y distribuidos con micro-frontends, microservicios .NET y Azure. Trabajo AI-first y spec-driven.',
-        en: 'Camilo Hernandez, Software Solutions Engineer. I design composable, distributed systems with micro-frontends, .NET microservices and Azure. I work AI-first and spec-driven.',
+        es: 'Camilo Hernández, Software Solutions Engineer. Diseño sistemas composables y distribuidos con micro-frontends, microservicios .NET y Azure. Trabajo AI-first y spec-driven.',
+        en: 'Camilo Hernández, Software Solutions Engineer. I design composable, distributed systems with micro-frontends, .NET microservices and Azure. I work AI-first and spec-driven.',
       },
       'site:meta.about.description': {
         es: 'Software Solutions Engineer · AI-First: mi carrera, lo que sé y dónde lo apliqué.',

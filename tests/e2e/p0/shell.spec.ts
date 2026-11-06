@@ -154,7 +154,7 @@ test.describe('sin JavaScript', () => {
     await page.goto('/en/portfolio')
     const person = await personJsonLd(page)
     expect(person['@type']).toBe('Person')
-    expect(person.name).toBe('Camilo Hernandez')
+    expect(person.name).toBe('Camilo Hernández')
   })
 })
 
@@ -170,7 +170,7 @@ test.describe('JSON-LD Person (FR-470, SC-408)', () => {
       expect(person['@context']).toBe('https://schema.org')
       expect(person['@type']).toBe('Person')
       expect(person['@id']).toBe(`${origin}/#person`)
-      expect(person.name).toBe('Camilo Hernandez')
+      expect(person.name).toBe('Camilo Hernández')
       expect(person.jobTitle).toBe('Software Solutions Engineer')
       expect(person.description).toBe(description)
       expect(person.sameAs).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV'])

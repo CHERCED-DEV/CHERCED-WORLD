@@ -64,8 +64,8 @@ function equivalent(input: CapabilityInput): boolean {
 
 const SPEC_DESCRIPTIONS: Record<string, { es: string; en: string }> = {
   search_portfolio: {
-    es: 'Busca en los proyectos, posts, experiencia y skills de Camilo Hernandez. Devuelve títulos, resúmenes cortos y enlaces.',
-    en: "Searches Camilo Hernandez's projects, blog posts, experience and skills. Returns titles, short summaries and links.",
+    es: 'Busca en los proyectos, posts, experiencia y skills de Camilo Hernández. Devuelve títulos, resúmenes cortos y enlaces.',
+    en: "Searches Camilo Hernández's projects, blog posts, experience and skills. Returns titles, short summaries and links.",
   },
   get_project: {
     es: 'Devuelve un caso de estudio: contexto, rol, decisiones, resultado y tecnologías.',

@@ -399,7 +399,7 @@ describe('posts (FR-064, FR-075)', () => {
     expect(meta.id).toBe(post.id)
     expect(meta.lang).toBe(post.lang)
     expect(meta.originalLang).toBe(POST_ORIGIN[post.id]?.originalLang)
-    expect(meta.author).toBe('Camilo Hernandez')
+    expect(meta.author).toBe('Camilo Hernández')
     expect(meta.date).toMatch(POST_ORIGIN[post.id]!.date)
     expect(Number.isNaN(Date.parse(meta.date))).toBe(false)
     expect(meta.title.trim()).not.toBe('')
@@ -561,10 +561,10 @@ describe('sitio (FR-004)', () => {
     expect(site.privacy.sections.length).toBeGreaterThanOrEqual(4)
     const es = site.privacy.sections.map((section) => section.body.es).join(' ')
     const en = site.privacy.sections.map((section) => section.body.en).join(' ')
-    for (const fragment of ['Camilo Hernandez', email!, 'responder', 'moderar', 'administrador', 'eliminar']) {
+    for (const fragment of ['Camilo Hernández', email!, 'responder', 'moderar', 'administrador', 'eliminar']) {
       expect(es).toContain(fragment)
     }
-    for (const fragment of ['Camilo Hernandez', email!, 'reply', 'moderate', 'administrator', 'delete']) {
+    for (const fragment of ['Camilo Hernández', email!, 'reply', 'moderate', 'administrator', 'delete']) {
       expect(en).toContain(fragment)
     }
   })

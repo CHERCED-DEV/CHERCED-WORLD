@@ -105,7 +105,7 @@ describe('NowView (US10)', () => {
 
     it(`${lang}: no publica la fecha de HYROX ni otra fecha que la de actualización`, async () => {
       const visible = text(await render(lang)).replace(formatNowDate(now.updatedAt, lang), '')
-      expect(visible).toContain('HYROX São Paulo')
+      expect(visible).toContain(lang === 'es' ? 'HYROX Río de Janeiro' : 'HYROX Rio de Janeiro')
       expect(visible).not.toMatch(/\b(19|20)\d{2}\b/)
       expect(visible).not.toMatch(/\b\d{1,2}\s*(de\s+)?(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic|jan|apr|aug|dec)/i)
       expect(visible).not.toMatch(/\b(january|february|march|april|may|june|july|august|september|october|november|december|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/i)

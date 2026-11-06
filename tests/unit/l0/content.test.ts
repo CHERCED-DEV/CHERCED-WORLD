@@ -11,7 +11,7 @@ vi.mock('@/content/posts/registry', () => {
     date,
     tags: [],
     image: { src: '/assets/imgs/mePost.jpg', alt: 'alt', width: 256, height: 256 },
-    author: 'Camilo Hernandez' as const,
+    author: 'Camilo Hernández' as const,
   })
   const component = () => null
   return {

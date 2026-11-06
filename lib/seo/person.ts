@@ -6,6 +6,8 @@ import { getSiteUrl } from '@/lib/site-url'
 
 export const PERSON_NAME: string = commonEs['brand.author']
 
+export const PERSON_ALTERNATE_NAMES = ['Camilo Hernandez', 'Camilo Alonso Hernández Cediel', 'CHERCED'] as const
+
 export const PERSON_JOB_TITLE = 'Software Solutions Engineer'
 
 export const PERSON_ADDRESS = { addressLocality: 'Armenia', addressCountry: 'CO' } as const
@@ -19,6 +21,7 @@ export type PersonJsonLd = {
   '@type': 'Person'
   '@id': string
   name: string
+  alternateName: string[]
   jobTitle: string
   description: string
   url: string
@@ -49,6 +52,7 @@ export function personJsonLd(lang: Locale, base: URL = getSiteUrl()): PersonJson
     '@type': 'Person',
     '@id': personId(base),
     name: PERSON_NAME,
+    alternateName: [...PERSON_ALTERNATE_NAMES],
     jobTitle: PERSON_JOB_TITLE,
     description: DESCRIPTIONS[lang],
     url: `${root}/`,

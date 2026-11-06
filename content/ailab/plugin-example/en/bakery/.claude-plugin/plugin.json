@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Made-up sample plugin: helps a bakery scale recipes, check the hydration and never forget the allergens.",
   "author": {
-    "name": "Camilo Hernandez"
+    "name": "Camilo Hernández"
   },
   "keywords": ["sample", "bakery", "recipes"]
 }

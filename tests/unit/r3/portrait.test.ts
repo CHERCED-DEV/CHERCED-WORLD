@@ -20,8 +20,8 @@ describe('retrato de "Sobre mí" por tema', () => {
 
   it('usa el retrato 2026 del tema oscuro como entrada de contenido', () => {
     expect(image.src).toBe('/assets/imgs/about/retrato-oscuro.webp')
-    expect(image.alt.es).toMatch(/Camilo Hernandez/)
-    expect(image.alt.en).toMatch(/Camilo Hernandez/)
+    expect(image.alt.es).toMatch(/Camilo Hernández/)
+    expect(image.alt.en).toMatch(/Camilo Hernández/)
     expect(image.alt.es).not.toBe(image.alt.en)
   })
 

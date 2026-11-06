@@ -31,8 +31,8 @@ describe('plantilla OG (R-403, FR-471)', () => {
   })
 
   it('trae los textos de contenido.md §23 para cada sección', () => {
-    expect(ogSection('es', 'home')).toEqual({ lang: 'es', title: 'Camilo Hernandez', line: 'DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN' })
-    expect(ogSection('en', 'home')).toEqual({ lang: 'en', title: 'Camilo Hernandez', line: 'I DESIGN SOFTWARE SYSTEMS THAT SCALE' })
+    expect(ogSection('es', 'home')).toEqual({ lang: 'es', title: 'Camilo Hernández', line: 'DISEÑO SISTEMAS DE SOFTWARE QUE ESCALAN' })
+    expect(ogSection('en', 'home')).toEqual({ lang: 'en', title: 'Camilo Hernández', line: 'I DESIGN SOFTWARE SYSTEMS THAT SCALE' })
     expect(ogSection('es', 'about')).toMatchObject({ title: 'Sobre mí', line: 'Software Solutions Engineer · AI-First' })
     expect(ogSection('en', 'about')).toMatchObject({ title: 'About me', line: 'Software Solutions Engineer · AI-First' })
     expect(ogSection('es', 'services')).toMatchObject({ title: 'Servicios', line: 'Tu oficio, con un equipo de agentes a la medida' })

@@ -12,17 +12,17 @@ export const site: SiteContent = {
     {
       id: 'linkedin',
       href: 'https://www.linkedin.com/in/cherced/',
-      label: { es: 'LinkedIn de Camilo Hernandez', en: "Camilo Hernandez's LinkedIn" },
+      label: { es: 'LinkedIn de Camilo Hernández', en: "Camilo Hernández's LinkedIn" },
     },
     {
       id: 'instagram',
       href: 'https://www.instagram.com/cherced/',
-      label: { es: 'Instagram de Camilo Hernandez', en: "Camilo Hernandez's Instagram" },
+      label: { es: 'Instagram de Camilo Hernández', en: "Camilo Hernández's Instagram" },
     },
     {
       id: 'github',
       href: 'https://github.com/CHERCED-DEV',
-      label: { es: 'GitHub de Camilo Hernandez', en: "Camilo Hernandez's GitHub" },
+      label: { es: 'GitHub de Camilo Hernández', en: "Camilo Hernández's GitHub" },
     },
     {
       id: 'email',
@@ -32,7 +32,7 @@ export const site: SiteContent = {
     {
       id: 'facebook',
       href: null,
-      label: { es: 'Facebook de Camilo Hernandez', en: "Camilo Hernandez's Facebook" },
+      label: { es: 'Facebook de Camilo Hernández', en: "Camilo Hernández's Facebook" },
     },
   ],
   home: {
@@ -61,8 +61,8 @@ export const site: SiteContent = {
     image: {
       src: '/assets/imgs/about/retrato-oscuro.webp',
       alt: {
-        es: 'Retrato de Camilo Hernandez con los brazos cruzados y gafas de visor, frente a formas de cristal luminosas',
-        en: 'Portrait of Camilo Hernandez with his arms crossed and visor sunglasses, in front of glowing glass shapes',
+        es: 'Retrato de Camilo Hernández con los brazos cruzados y gafas de visor, frente a formas de cristal luminosas',
+        en: 'Portrait of Camilo Hernández with his arms crossed and visor sunglasses, in front of glowing glass shapes',
       },
       width: 1199,
       height: 1312,
@@ -788,8 +788,8 @@ export const site: SiteContent = {
       {
         heading: { es: 'Quién es el responsable', en: 'Who is responsible' },
         body: {
-          es: 'El responsable del tratamiento de los datos personales que recoge este sitio soy yo, Camilo Hernandez.',
-          en: 'I, Camilo Hernandez, am responsible for the processing of the personal data collected on this site.',
+          es: 'El responsable del tratamiento de los datos personales que recoge este sitio soy yo, Camilo Hernández.',
+          en: 'I, Camilo Hernández, am responsible for the processing of the personal data collected on this site.',
         },
       },
       {

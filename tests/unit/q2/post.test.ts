@@ -137,7 +137,7 @@ describe('posts relacionados (T623, FR-513)', () => {
 describe('caja de autor (T624, FR-514)', () => {
   it('lleva el nombre, la línea del autor y el botón a Contacto', () => {
     const html = render(h(AuthorBox, { lang: 'en', blog: en }))
-    expect(html).toContain('Camilo Hernandez')
+    expect(html).toContain('Camilo Hernández')
     expect(html).toContain('Software Solutions Engineer · AI-First')
     expect(html).toMatch(/href="\/en\/contactMe"[^>]*>Write to me</)
   })

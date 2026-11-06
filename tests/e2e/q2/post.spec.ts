@@ -116,7 +116,7 @@ test.describe('caja de autor (T624, FR-514)', () => {
     ] as const) {
       await page.goto(`/${lang}/blog/post4`)
       const box = page.locator('[data-cw-author-box]')
-      await expect(box.getByRole('heading', { name: 'Camilo Hernandez' })).toBeVisible()
+      await expect(box.getByRole('heading', { name: 'Camilo Hernández' })).toBeVisible()
       await expect(box).toContainText('Software Solutions Engineer · AI-First')
       await expect(box.getByRole('link', { name: cta })).toHaveAttribute('href', `/${lang}/contactMe`)
     }

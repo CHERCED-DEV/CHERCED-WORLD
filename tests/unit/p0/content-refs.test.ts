@@ -242,7 +242,8 @@ describe('/now (E-12, FR-490)', () => {
       for (const entry of now[block]) for (const lang of ['es', 'en'] as const) expect(entry[lang].trim()).not.toBe('')
     }
     const hyrox = now.preparing.map((entry) => `${entry.es} ${entry.en}`).join(' ')
-    expect(hyrox).toContain('HYROX São Paulo')
+    expect(hyrox).toContain('HYROX Río de Janeiro')
+    expect(hyrox).toContain('HYROX Rio de Janeiro')
     expect(hyrox).not.toMatch(/\b20\d\d\b|\b\d{1,2}\s+de\s+[a-z]+|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d/i)
     expect(now.mottos.filter((motto) => motto.lang === 'la').map((motto) => motto.es)).toEqual(['Veni, vidi, vici.'])
   })

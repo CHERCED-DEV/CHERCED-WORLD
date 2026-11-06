@@ -1,11 +1,11 @@
 {
   "brand.name": "CHERCED-WORLD",
-  "brand.author": "Camilo Hernandez",
+  "brand.author": "Camilo Hernández",
   "brand.logoAlt": "Logo de CHERCED",
   "brand.home": "Inicio de CHERCED-WORLD",
   "meta.title": "Camilo Hernández · Software Solutions Engineer · AI-First",
   "meta.titleTemplate": "%s · Camilo Hernández",
-  "meta.description": "Camilo Hernandez, Software Solutions Engineer. Diseño sistemas composables y distribuidos con micro-frontends, microservicios .NET y Azure. Trabajo AI-first y spec-driven.",
+  "meta.description": "Camilo Hernández, Software Solutions Engineer. Diseño sistemas composables y distribuidos con micro-frontends, microservicios .NET y Azure. Trabajo AI-first y spec-driven.",
   "a11y.skipToContent": "Saltar al contenido",
   "nav.main": "Navegación principal",
   "nav.home": "Inicio",

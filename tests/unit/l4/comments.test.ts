@@ -95,9 +95,9 @@ describe('lista de comentarios (server-side, repos en memoria)', () => {
     expect(html).toMatch(/<time[^>]*dateTime="[^"]+Z"[^>]*>\d{1,2} de \w+ de \d{4}<\/time>/)
     expect(html).toContain('data-cw-author-reply')
     expect(html).toContain('>Autor<')
-    expect(html).toContain('Camilo Hernandez')
+    expect(html).toContain('Camilo Hernández')
     expect(html).toContain('¡Gracias, Laura!')
-    expect(html).toContain('aria-label="Respuesta de Camilo Hernandez"')
+    expect(html).toContain('aria-label="Respuesta de Camilo Hernández"')
 
     expect(html).not.toContain('Esto todavía no se publica')
     expect(html).not.toContain('Spam')

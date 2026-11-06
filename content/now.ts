@@ -24,8 +24,8 @@ export const now: NowContent = {
   ],
   preparing: [
     {
-      es: 'HYROX São Paulo. Entreno CrossFit, trail y running, y subo nevados cuando puedo. Ya tengo medalla de 21K y de 10K.',
-      en: 'HYROX São Paulo. I train CrossFit, trail and running, and climb snow-capped peaks when I can. I already have a 21K and a 10K medal.',
+      es: 'HYROX Río de Janeiro. Entreno CrossFit, trail y running, y subo nevados cuando puedo. Ya tengo medalla de 21K y de 10K.',
+      en: 'HYROX Rio de Janeiro. I train CrossFit, trail and running, and climb snow-capped peaks when I can. I already have a 21K and a 10K medal.',
     },
   ],
   mottos: [

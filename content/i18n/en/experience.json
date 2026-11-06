@@ -101,7 +101,7 @@
   "shortcuts.singleKey": "Single-key shortcuts (/, ? and t)",
   "shortcuts.on": "On",
   "shortcuts.off": "Off",
-  "capability.search_portfolio": "Searches Camilo Hernandez's projects, blog posts, experience and skills. Returns titles, short summaries and links.",
+  "capability.search_portfolio": "Searches Camilo Hernández's projects, blog posts, experience and skills. Returns titles, short summaries and links.",
   "capability.get_project": "Returns a case study: context, role, decisions, result and technologies.",
   "capability.list_projects": "Lists portfolio projects, optionally filtered by technology.",
   "capability.get_experience": "Returns professional experience with official titles, companies and dates.",
