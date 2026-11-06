@@ -7,7 +7,7 @@ import { formatBytes } from '@/lib/ailab/core/format'
 import { MAX_AUDIO_SECONDS, durationOf } from '@/lib/ailab/voice/audio'
 import { MAX_FILE_BYTES, decodeToMono, probeDuration } from '@/lib/ailab/voice/decode'
 import { clock, downloadText, exportFileName, plainText, toSrt, toTxt, type ExportFormat } from '@/lib/ailab/voice/export'
-import { WHISPER_DOWNLOADS, defaultModelOf, offeredModels } from '@/lib/ailab/voice/models'
+import { MODEL_CDN, ONNX_RUNTIME, WHISPER_DOWNLOADS, defaultModelOf, offeredModels } from '@/lib/ailab/voice/models'
 import { WHISPER_LANGUAGES, type WhisperLanguage, type WhisperModelId, type WhisperSegment, type WhisperTranscript } from '@/lib/ailab/voice/protocol'
 import type { MicIssue } from '@/lib/ailab/voice/recorder'
 import { DEVICE_NAMES, EngineProgress, LocalNote, fill, formatSeconds, modelName, type EngineMessages } from './parts'
@@ -188,7 +188,9 @@ export function Transcriber({ lang, experiment, consent, downloads, t }: LabDemo
   return (
     <div className={styles.demo} data-cw-voice="V1">
       <LocalNote>{t('ailab.v1.local')}</LocalNote>
-      <p className={styles.engineNote}>{t('ailab.v1.engine')}</p>
+      <p className={styles.engineNote} data-cw-v1-engine="">
+        {fill(t('ailab.v1.engine'), { size: formatBytes(ONNX_RUNTIME.bytes, lang), cdn: MODEL_CDN })}
+      </p>
 
       <fieldset className={styles.fieldset} disabled={busy || recording}>
         <legend className={styles.legend}>{t('ailab.v1.model.legend')}</legend>

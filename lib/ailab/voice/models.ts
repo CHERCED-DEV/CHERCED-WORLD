@@ -2,6 +2,16 @@ import { WHISPER_BASE, WHISPER_SMALL, WHISPER_TINY } from '@/content/ailab/catal
 import type { LabDownload } from '@/content/types'
 import { WHISPER_MODEL_IDS, type WhisperModelId } from './protocol'
 
+export const ONNX_RUNTIME = {
+  resource: 'ONNX Runtime Web (WASM)',
+  file: 'ort-wasm-simd-threaded.asyncify.wasm',
+  package: 'onnxruntime-web',
+  version: '1.31.0-dev.20260914-8d85527a0',
+  bytes: 26_861_777,
+} as const
+
+export const MODEL_CDN = 'cdn.hf.co'
+
 export const WHISPER_DOWNLOADS: Readonly<Record<WhisperModelId, LabDownload>> = {
   tiny: WHISPER_TINY,
   base: WHISPER_BASE,

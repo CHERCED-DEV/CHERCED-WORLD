@@ -44,7 +44,10 @@ const V1: LabExperiment = {
   privacy: copy('ailab.v1.privacy'),
   flow: [
     { es: 'Grabas o subes un audio', en: 'You record or upload audio' },
-    { es: 'Whisper lo transcribe en un worker de tu navegador', en: 'Whisper transcribes it in a worker in your browser' },
+    {
+      es: 'Whisper lo transcribe en un worker de tu navegador, con ONNX Runtime Web',
+      en: 'Whisper transcribes it in a worker in your browser, with ONNX Runtime Web',
+    },
     { es: 'Texto con marcas de tiempo, en .txt o .srt', en: 'Text with timestamps, as .txt or .srt' },
   ],
   adrCards: [
@@ -55,8 +58,8 @@ const V1: LabExperiment = {
         en: 'The Web Speech API sends the audio to a browser service. Here the audio never leaves your device.',
       },
       tradeoff: {
-        es: 'La primera vez hay que descargar el modelo, y la velocidad depende de tu equipo.',
-        en: 'The first time you have to download the model, and the speed depends on your device.',
+        es: 'La primera vez hay que descargar el modelo desde Hugging Face y el motor ONNX Runtime Web (27 MB) desde este sitio, y la velocidad depende de tu equipo.',
+        en: 'The first time you have to download the model from Hugging Face and the ONNX Runtime Web engine (27 MB) from this site, and the speed depends on your device.',
       },
     },
     {
@@ -174,7 +177,10 @@ const V4: LabExperiment = {
   privacy: copy('ailab.v4.privacy'),
   flow: [
     { es: 'Mantienes el botón y dices un comando, o lo escribes', en: 'You hold the button and say a command, or type it' },
-    { es: 'Whisper tiny lo convierte en texto en tu navegador', en: 'Whisper tiny turns it into text in your browser' },
+    {
+      es: 'Whisper tiny, con ONNX Runtime Web, lo convierte en texto en tu navegador',
+      en: 'Whisper tiny, with ONNX Runtime Web, turns it into text in your browser',
+    },
     { es: 'Se compara con la lista de frases y corre el comando de la paleta', en: 'It is matched against the phrase list and the palette command runs' },
   ],
   adrCards: [
