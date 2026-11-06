@@ -130,7 +130,10 @@ const V3: LabExperiment = {
   privacy: copy('ailab.v3.privacy'),
   flow: [
     { es: 'Eliges un post', en: 'You pick a post' },
-    { es: 'Se toma solo el cuerpo, sin los bloques de código', en: 'Only the body is taken, without the code blocks' },
+    {
+      es: 'Se toma solo el cuerpo, sin los bloques de código ni las imágenes decorativas',
+      en: 'Only the body is taken, without the code blocks or the decorative images',
+    },
     { es: 'La voz del navegador lo lee en el idioma de la página', en: "The browser's voice reads it in the page's language" },
   ],
   adrCards: [
