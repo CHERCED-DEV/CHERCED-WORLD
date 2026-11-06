@@ -364,6 +364,15 @@
   }
 }
 
+.textField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cw-space-2);
+  min-width: 0;
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+}
+
 .textarea {
   width: 100%;
   min-height: 7rem;
@@ -432,6 +441,11 @@
   gap: var(--cw-space-1);
   margin: 0;
   padding-left: 1.25rem;
+  list-style: disc;
+
+  li {
+    display: list-item;
+  }
 }
 
 .postDivider {

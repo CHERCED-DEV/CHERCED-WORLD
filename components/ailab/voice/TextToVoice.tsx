@@ -67,7 +67,7 @@ export function TextToVoice({ lang, t }: LabDemoProps) {
     <div className={styles.demo} data-cw-voice="V2" onKeyDown={stopOnEscape(snapshot, stop)}>
       <LocalNote>{t('ailab.v2.local')}</LocalNote>
 
-      <label className={styles.field}>
+      <label className={styles.textField}>
         {t('ailab.v2.text.label')}
         <textarea
           className={styles.textarea}
