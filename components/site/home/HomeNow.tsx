@@ -83,7 +83,7 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                 </Link>
               ) : null}
               {labels.showcase && role.project?.id === SYNERGOS_CASE_ID ? (
-                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="sm" className={styles.roleShowcase} />
+                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
               ) : null}
               <Sweep />
             </Reveal>
