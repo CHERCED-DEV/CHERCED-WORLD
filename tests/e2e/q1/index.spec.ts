@@ -111,7 +111,7 @@ test.describe('etiquetas con JavaScript (US2, FR-505)', () => {
     await humor.click()
 
     await expect(page).toHaveURL(/\/es\/blog\/tag\/humor$/, { timeout: 30_000 })
-    await expect(page).toHaveTitle(/^2 posts con «humor» \|/)
+    await expect(page).toHaveTitle('2 posts con «humor» · Camilo Hernández')
     await expect(page.locator('[data-cw-tag-results]')).toHaveText('2 posts con «humor»')
     await expect(page.locator('[data-cw-tag-results]')).toHaveAttribute('aria-live', 'polite')
     await expect(nav.getByRole('link', { name: 'humor', exact: true })).toHaveAttribute('aria-current', 'page')

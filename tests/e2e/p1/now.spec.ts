@@ -74,7 +74,7 @@ test.describe('/now: metadatos, enlace del footer y OG (FR-471, FR-472)', () => 
   for (const lang of LANGS) {
     test(`/${lang}/now: título, descripción, canónica y alternativas`, async ({ page }) => {
       await open(page, lang)
-      await expect(page).toHaveTitle(new RegExp(`^${DICT[lang]['nowPage.title']} \\| `))
+      await expect(page).toHaveTitle(`${DICT[lang]['nowPage.title']} · Camilo Hernández`)
       await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', DICT[lang]['meta.now.description'])
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`/${lang}/now$`))
       await expect(page.locator('link[rel="alternate"][hreflang="es"]')).toHaveAttribute('href', /\/es\/now$/)

@@ -52,7 +52,7 @@ test('con WebMCP, la página registra las ocho herramientas en su idioma y set_p
   await page.goto('/es/portfolio')
   await expect.poll(async () => (await live(page)).length, { timeout: 30_000 }).toBe(8)
   const tools = await live(page)
-  expect(tools.find((tool) => tool.name === 'get_cv')?.description).toBe('Devuelve el enlace al CV oficial, publicado en LinkedIn.')
+  expect(tools.find((tool) => tool.name === 'get_cv')?.description).toBe('Devuelve el CV oficial: el enlace a LinkedIn y el PDF descargable de este sitio.')
 
   const search = await run(page, 'search_portfolio', { query: 'sagas', limit: 3 })
   const results = JSON.parse(search?.content[0]?.text ?? '{}') as { results: Array<{ title: string; url: string }> }
@@ -68,7 +68,7 @@ test('con WebMCP, la página registra las ocho herramientas en su idioma y set_p
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await expect
     .poll(async () => (await live(page)).find((tool) => tool.name === 'get_cv')?.description, { timeout: 30_000 })
-    .toBe('Returns the link to the official CV, published on LinkedIn.')
+    .toBe('Returns the official CV: the LinkedIn link and the downloadable PDF on this site.')
   expect(await live(page)).toHaveLength(8)
   expect(await page.evaluate(() => localStorage.getItem('cw-theme'))).toBe('light')
 })

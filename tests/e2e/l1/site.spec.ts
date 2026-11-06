@@ -138,11 +138,11 @@ test.describe('metadatos', () => {
   test('cada página declara título, canónica y alternativas por idioma', async ({ page }) => {
     test.setTimeout(90_000)
     const expected: Array<[string, RegExp]> = [
-      ['/es', /^<-CHERCED-WORLD->$/],
-      ['/en/aboutMe', /^About me \| <-CHERCED-WORLD->$/],
-      ['/es/services', /^Servicios \| /],
-      ['/en/portfolio', /^Portfolio \| /],
-      [`/es/portfolio/${firstProject.id}`, new RegExp(`^${firstProject.title} \\| `)],
+      ['/es', /^Camilo Hernández · Software Solutions Engineer · AI-First$/],
+      ['/en/aboutMe', /^About me · Camilo Hernández$/],
+      ['/es/services', /^Servicios · Camilo Hernández$/],
+      ['/en/portfolio', /^Portfolio · Camilo Hernández$/],
+      [`/es/portfolio/${firstProject.id}`, new RegExp(`^${projectTitle(firstProject, 'es')} · Camilo Hernández$`)],
     ]
     for (const [path, title] of expected) {
       await page.goto(path)
@@ -232,18 +232,18 @@ test.describe('carrusel', () => {
 
     const total = projects.length
     await page.keyboard.press('ArrowRight')
-    await expect(status).toHaveText(`Proyecto 2 de ${total}: ${projects[1]!.title}`)
+    await expect(status).toHaveText(`Proyecto 2 de ${total}: ${projectTitle(projects[1]!, 'es')}`)
     await expectCurrentSlide(page, projects[1]!.id)
 
     await page.keyboard.press('ArrowLeft')
-    await expect(status).toHaveText(`Proyecto 1 de ${total}: ${projects[0]!.title}`)
+    await expect(status).toHaveText(`Proyecto 1 de ${total}: ${projectTitle(projects[0]!, 'es')}`)
 
     await page.keyboard.press('ArrowLeft')
-    await expect(status).toHaveText(`Proyecto ${total} de ${total}: ${projects[total - 1]!.title}`)
+    await expect(status).toHaveText(`Proyecto ${total} de ${total}: ${projectTitle(projects[total - 1]!, 'es')}`)
     await expectCurrentSlide(page, projects[total - 1]!.id)
 
     await page.keyboard.press('Home')
-    await expect(status).toHaveText(`Proyecto 1 de ${total}: ${projects[0]!.title}`)
+    await expect(status).toHaveText(`Proyecto 1 de ${total}: ${projectTitle(projects[0]!, 'es')}`)
     await expectCurrentSlide(page, projects[0]!.id)
   })
 
@@ -317,7 +317,8 @@ test.describe('enlaces', () => {
     const banner = page.locator('[data-cw-home-banner]')
     for (const link of await banner.getByRole('link').all()) {
       const href = (await link.getAttribute('href')) ?? ''
-      if (href.startsWith('mailto:')) await expect(link).not.toHaveAttribute('target', /.*/)
+      if (href.startsWith('/cv/')) await expect(link).toHaveAttribute('download', 'Camilo_Hernandez_CV.pdf')
+      else if (href.startsWith('mailto:')) await expect(link).not.toHaveAttribute('target', /.*/)
       else {
         await expect(link).toHaveAttribute('target', '_blank')
         await expect(link).toHaveAttribute('rel', 'noopener noreferrer')

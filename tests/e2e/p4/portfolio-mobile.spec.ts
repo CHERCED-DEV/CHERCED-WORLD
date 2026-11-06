@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
-import { getProject, getProjects } from '@/lib/content'
+import { getProject, getProjects, projectTitle } from '@/lib/content'
 import { blurredSurfaces, MOBILE_WIDTHS } from '../m0/support'
 import { hostOf, onlyIn, skipIntro, stubExternalSites } from '../r2/support'
 
@@ -82,7 +82,7 @@ test.describe('carrusel móvil con asomo, puntos y snap (T841, US12 escenario 1)
       await expect(page.locator(`[data-cw-slide="${second}"]`)).toHaveAttribute('data-current', 'true')
       await centered(page, second, width)
       await expect(dots.nth(1)).toHaveAttribute('data-current', '')
-      await expect(page.locator('[data-cw-carousel-status]')).toHaveText(`Proyecto 2 de ${projects.length}: ${projects[1]!.title}`)
+      await expect(page.locator('[data-cw-carousel-status]')).toHaveText(`Proyecto 2 de ${projects.length}: ${projectTitle(projects[1]!, 'es')}`)
 
       await page.locator('[data-cw-prev]').tap()
       await expect(page.locator(`[data-cw-slide="${first}"]`)).toHaveAttribute('data-current', 'true')

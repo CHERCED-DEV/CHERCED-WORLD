@@ -27,6 +27,7 @@ export type EffectName =
   | 'hash'
   | 'mailto'
   | 'newTabInternal'
+  | 'download'
   | 'navigate'
   | 'external'
 
@@ -79,6 +80,7 @@ export const CONTROL_RULES: readonly ControlRule[] = [
   { kind: 'ancla', match: 'a[href^="#"]', effect: 'hash', expect: 'el destino queda a la vista, no tapado por el header' },
   { kind: 'correo', match: 'a[href^="mailto:"]', effect: 'mailto', expect: 'el clic llega al enlace mailto sin bloquearse' },
   { kind: 'enlace interno en pestaña nueva', match: 'a[href^="/"][target="_blank"]', effect: 'newTabInternal', expect: 'abre la ruta en otra pestaña, sin 404' },
+  { kind: 'descarga', match: 'a[href^="/"][download]', effect: 'download', expect: 'baja el archivo con su nombre, sin 404 y sin salir de la página' },
   { kind: 'enlace interno', match: 'a[href^="/"]', effect: 'navigate', expect: 'cambia la URL a su destino, sin 404' },
   { kind: 'enlace externo', match: 'a[href^="http"]', effect: 'external', expect: 'abre su URL en otra pestaña con rel="noopener noreferrer"' },
 ]
@@ -794,6 +796,22 @@ const EFFECTS: Record<EffectName, Effect> = {
     } finally {
       await popup.close()
     }
+  },
+
+  async download({ page, context, target, control }) {
+    const start = page.url()
+    const expected = new URL(control.href ?? '/', start)
+    const downloading = page.waitForEvent('download', { timeout: NAVIGATION_MS })
+    await activate(target)
+    const file = await downloading
+    if (new URL(file.url()).pathname !== expected.pathname) fail(`baja ${new URL(file.url()).pathname} y no ${expected.pathname}`)
+    const name = await target.getAttribute('download')
+    if (name && file.suggestedFilename() !== name) fail(`baja "${file.suggestedFilename()}" y no "${name}"`)
+    await file.cancel()
+    if (page.url() !== start) fail(`descargar no debería salir de la página (${start} → ${page.url()})`)
+    const response = await context.request.get(expected.href)
+    if (!response.ok()) fail(`${expected.pathname} responde ${response.status()}`)
+    return `baja ${file.suggestedFilename()}`
   },
 
   async navigate({ page, context, target, control }) {

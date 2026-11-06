@@ -81,7 +81,7 @@ test.describe('la página del laboratorio en ES y EN (US1, FR-301)', () => {
         await expect(item.locator('[data-cw-lab-runs="browser"]')).toHaveText(COPY[lang]['ailab.runsIn.browser'])
         await expect(item.locator('[data-cw-lab-privacy]')).toContainText(experiment.privacy[lang])
       }
-      await expect(page).toHaveTitle(/^AI Lab \| /)
+      await expect(page).toHaveTitle('AI Lab · Camilo Hernández')
       await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', COPY[lang]['ailab.meta.description'])
       await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', /\/en\/ai-lab$/)
     })

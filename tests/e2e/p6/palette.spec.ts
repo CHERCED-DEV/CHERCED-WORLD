@@ -79,6 +79,7 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
     await expect(group).toBeVisible()
     await expect(palette(page).getByRole('group')).toHaveCount(1)
     expect(await optionIds(page, 20)).toEqual([
+      'action:cv-pdf',
       'action:cv',
       'action:copy-email',
       'action:theme',
@@ -87,16 +88,29 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
       'action:shortcuts',
       'action:now',
     ])
+    await expect(group.getByRole('option', { name: 'Descargar CV (PDF)' })).toBeVisible()
     await expect(group.getByRole('option', { name: 'Ver mi CV en LinkedIn' })).toBeVisible()
     await expect(group.getByRole('option', { name: /Ver los atajos de teclado/ })).toHaveAttribute('aria-keyshortcuts', '?')
   })
 
-  test('">cv" y Enter abren el CV en LinkedIn en una pestaña nueva: 4 teclas', async ({ page }) => {
+  test('">cv" y Enter bajan el CV en PDF: 4 teclas (FR-702 de la 007)', async ({ page }) => {
+    await gotoReady(page, '/es')
+    await openPalette(page)
+    for (const key of ['>', 'c', 'v']) await page.keyboard.press(key)
+    await expect(palette(page).locator('[data-cw-palette-option="action:cv-pdf"]')).toHaveAttribute('aria-selected', 'true')
+    const downloading = page.waitForEvent('download')
+    await page.keyboard.press('Enter')
+    expect((await downloading).suggestedFilename()).toBe('Camilo_Hernandez_CV.pdf')
+    await expect(palette(page)).toBeHidden()
+    await expect(page).toHaveURL(/\/es$/)
+  })
+
+  test('">linkedin" y Enter abren el CV en LinkedIn en una pestaña nueva', async ({ page }) => {
     await stubLinkedIn(page)
     await gotoReady(page, '/es')
     await openPalette(page)
     const popup = page.waitForEvent('popup')
-    for (const key of ['>', 'c', 'v']) await page.keyboard.press(key)
+    await page.keyboard.type('>linkedin')
     await expect(palette(page).locator('[data-cw-palette-option="action:cv"]')).toHaveAttribute('aria-selected', 'true')
     await page.keyboard.press('Enter')
     const tab = await popup

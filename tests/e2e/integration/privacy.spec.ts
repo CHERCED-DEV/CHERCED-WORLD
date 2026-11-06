@@ -143,8 +143,9 @@ test.describe('herramientas WebMCP: se listan, corren con su esquema y solo dan 
         expect(confidentialityFindings(run.output, SENSITIVE_CASES), `${run.name}: sin cifras del empleador ni de Event bridge`).toEqual([])
       }
       const cv = JSON.stringify(runs.find((run) => run.name === 'get_cv')?.output ?? '')
-      expect(cv, 'get_cv da el enlace de LinkedIn, no un PDF (FR-420, FR-487)').toMatch(/linkedin\.com/)
-      expect(cv).not.toMatch(/\.pdf\b/i)
+      expect(cv, 'get_cv da el enlace de LinkedIn (FR-420, FR-487)').toMatch(/linkedin\.com/)
+      expect(cv, 'y el único PDF es el CV oficial del sitio (FR-701 de la 007)').toMatch(/\/cv\/Camilo_Hernandez_CV\.pdf/)
+      expect(cv.replaceAll('/cv/Camilo_Hernandez_CV.pdf', '')).not.toMatch(/\.pdf\b/i)
 
       const tooLong = await page.evaluate(async () => {
         const tools = (window as unknown as { __cwTools: Array<{ name: string; execute: (input: unknown) => unknown }> }).__cwTools

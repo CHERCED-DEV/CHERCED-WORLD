@@ -398,7 +398,7 @@ test.describe('imágenes OG del portafolio y de los casos (FR-471)', () => {
       for (const project of projects) {
         const html = await (await request.get(`/${lang}/portfolio/${project.id}`)).text()
         expect(meta(html, 'og:image'), `${lang} ${project.id}`).toMatch(new RegExp(`/${lang}/portfolio/${project.id}/opengraph-image/og`))
-        expect(meta(html, 'og:image:alt'), `${lang} ${project.id}`).toBe(`${project.title}: ${project.summary[lang]}`)
+        expect(meta(html, 'og:image:alt'), `${lang} ${project.id}`).toBe(`${projectTitle(project, lang)}: ${project.summary[lang]}`)
       }
     }
   })
