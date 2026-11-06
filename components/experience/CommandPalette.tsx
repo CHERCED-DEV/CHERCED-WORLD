@@ -18,7 +18,7 @@ import type { ExperienceLabels } from './labels'
 import {
   buildCommands,
   createPaletteSearcher,
-  findPaletteExtension,
+  executePaletteCommand,
   groupItems,
   paletteExtensions,
   paletteResults,
@@ -104,6 +104,7 @@ function PaletteBody({
     email,
     cv,
     now: localizedPath(lang, '/now'),
+    aiLab: localizedPath(lang, '/ai-lab'),
     capsuleFound: readCapsuleFound(),
     extensions: paletteExtensions(),
   }))
@@ -162,43 +163,20 @@ function PaletteBody({
 
   const run = (item: PaletteItem | undefined) => {
     if (!item) return
-    const { command } = item
-    switch (command.type) {
-      case 'navigate':
-        onClose()
-        router.push(command.href)
-        return
-      case 'theme':
-        preferences().setTheme(command.to)
-        onClose()
-        return
-      case 'lang':
-        onClose()
-        preferences().setLanguage(otherLocale(lang))
-        return
-      case 'open':
-        onClose()
-        window.open(command.href, '_blank', 'noopener,noreferrer')
-        return
-      case 'shortcuts':
-        onOpenShortcuts()
-        return
-      case 'extension':
-        onClose()
-        findPaletteExtension(command.id)?.run()
-        return
-      case 'assistant':
-        onOpenAssistant()
-        return
-      case 'copy-email':
-        onClose()
-        void copyEmail()
-        return
-      case 'capsule':
+    executePaletteCommand(item.command, {
+      close: onClose,
+      navigate: (href) => router.push(href),
+      setTheme: (to) => preferences().setTheme(to),
+      switchLang: () => preferences().setLanguage(otherLocale(lang)),
+      open: (href) => window.open(href, '_blank', 'noopener,noreferrer'),
+      shortcuts: onOpenShortcuts,
+      assistant: onOpenAssistant,
+      copyEmail: () => void copyEmail(),
+      capsule: () => {
         rememberCapsuleFound()
         onOpenCapsule()
-        return
-    }
+      },
+    })
   }
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {

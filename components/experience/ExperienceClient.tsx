@@ -5,14 +5,23 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import type { CapsuleEntry } from '@/content/types'
 import { cx } from '@/components/ui/cx'
+import { useToast } from '@/components/ui/Toast'
 import { browserPreferences } from '@/lib/capabilities/preferences'
 import { emit, on } from '@/lib/events'
-import type { Locale } from '@/lib/i18n/config'
+import { otherLocale, type Locale } from '@/lib/i18n/config'
+import { localizedPath } from '@/lib/i18n/paths'
 import { t } from '@/lib/i18n/translate'
 import type { SearchDoc } from '@/lib/search/types'
 import styles from './ExperienceClient.module.scss'
 import type { ExperienceLabels } from './labels'
-import { currentTheme, readSingleKeyShortcuts, rememberSingleKeyShortcuts } from './preferences'
+import { buildCommands, executePaletteCommand, paletteExtensions, registerPaletteRunner, toPaletteDocs } from './palette-model'
+import {
+  currentTheme,
+  readCapsuleFound,
+  readSingleKeyShortcuts,
+  rememberCapsuleFound,
+  rememberSingleKeyShortcuts,
+} from './preferences'
 import { ShortcutsDialog, useGlobalShortcuts } from './Shortcuts'
 import { paletteKeyshortcuts, SHORTCUT_KEYS, type ShortcutAction } from './shortcuts-model'
 
@@ -148,6 +157,51 @@ export function ExperienceClient({ lang, labels, pages, email, cv, areas, capsul
       disconnect?.()
     }
   }, [lang, areaKey, router])
+
+  const toast = useToast()
+
+  useEffect(() => {
+    const preferences = () =>
+      browserPreferences({ lang, pathname: () => pathRef.current ?? `/${lang}`, navigate: (href) => router.push(href) })
+    return registerPaletteRunner({
+      items: () =>
+        toPaletteDocs(
+          pages,
+          buildCommands(labels, {
+            theme: currentTheme(),
+            email,
+            cv,
+            now: localizedPath(lang, '/now'),
+            aiLab: localizedPath(lang, '/ai-lab'),
+            capsuleFound: readCapsuleFound(),
+            extensions: paletteExtensions(),
+          }),
+          paletteExtensions(),
+        ).map((doc) => doc.item),
+      run: (item) =>
+        executePaletteCommand(item.command, {
+          close: () => setOpen((current) => (current === 'palette' ? null : current)),
+          navigate: (href) => router.push(href),
+          setTheme: (to) => preferences().setTheme(to),
+          switchLang: () => preferences().setLanguage(otherLocale(lang)),
+          open: (href) => window.open(href, '_blank', 'noopener,noreferrer'),
+          shortcuts: () => show('shortcuts'),
+          assistant: () => show('assistant'),
+          copyEmail: () => {
+            if (!email) return
+            navigator.clipboard.writeText(email).then(
+              () => toast.success(t(labels, 'palette.copied')),
+              () => toast.error(t(labels, 'palette.copyFailed', { email })),
+            )
+          },
+          capsule: () => {
+            rememberCapsuleFound()
+            setDiscovered(true)
+            show('capsule')
+          },
+        }),
+    })
+  }, [lang, labels, pages, email, cv, router, show, toast])
 
   const unavailable = status === 'unavailable'
 

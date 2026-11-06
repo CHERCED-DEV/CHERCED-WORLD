@@ -2,7 +2,7 @@ import type { CapabilityName } from '@/lib/capabilities/types'
 import { t, type Dictionary } from '@/lib/i18n/translate'
 import { createSearcher, type Searcher } from '@/lib/search/searcher'
 import { fold } from '@/lib/search/text'
-import type { SearchDoc } from '@/lib/search/types'
+import type { PageId, SearchDoc } from '@/lib/search/types'
 
 export type PaletteGroup = 'secret' | 'pages' | 'projects' | 'skills' | 'posts' | 'actions' | 'commands'
 
@@ -59,6 +59,7 @@ export type ActionContext = {
 export type CommandContext = ActionContext & {
   cv: string | null
   now: string | null
+  aiLab?: string | null
   extensions?: PaletteExtension[]
 }
 
@@ -95,6 +96,7 @@ const ACTION_KEYWORDS: Record<string, string> = {
   'action:cv': 'cv hoja vida resume curriculum linkedin',
   'action:shortcuts': 'atajos shortcuts teclado keyboard teclas keys',
   'action:now': 'ahora now hoy today',
+  'action:ai-lab': 'ai lab laboratorio laboratory ia experimentos experiments demos',
 }
 
 export const CAPABILITY_COMMANDS: Readonly<Record<string, CapabilityName>> = {
@@ -170,6 +172,14 @@ export function buildCommands(labels: Dictionary, context: CommandContext): Pale
       hint: context.now,
       commandOnly: true,
       command: { type: 'navigate', href: context.now },
+    })
+  }
+  if (context.aiLab) {
+    commands.push({
+      id: 'action:ai-lab',
+      group: 'pages',
+      title: t(labels, 'palette.action.aiLab'),
+      command: { type: 'navigate', href: context.aiLab },
     })
   }
   const capsule = byId('action:capsule')
@@ -268,4 +278,93 @@ export function groupItems(items: PaletteItem[]): Array<{ group: PaletteGroup; i
   return GROUP_ORDER.map((group) => ({ group, items: items.filter((item) => item.group === group) })).filter(
     (entry) => entry.items.length > 0,
   )
+}
+
+export type PaletteCommandId =
+  | `page:${PageId}`
+  | 'action:theme'
+  | 'action:lang'
+  | 'action:assistant'
+  | 'action:copy-email'
+  | 'action:cv'
+  | 'action:shortcuts'
+  | 'action:now'
+  | 'action:ai-lab'
+  | 'action:capsule'
+  | `extension:${string}`
+
+export type PaletteEffects = {
+  close: () => void
+  navigate: (href: string) => void
+  setTheme: (to: 'dark' | 'light') => void
+  switchLang: () => void
+  open: (href: string) => void
+  shortcuts: () => void
+  assistant: () => void
+  copyEmail: () => void
+  capsule: () => void
+}
+
+export function executePaletteCommand(command: PaletteCommand, effects: PaletteEffects): void {
+  switch (command.type) {
+    case 'navigate':
+      effects.close()
+      effects.navigate(command.href)
+      return
+    case 'theme':
+      effects.setTheme(command.to)
+      effects.close()
+      return
+    case 'lang':
+      effects.close()
+      effects.switchLang()
+      return
+    case 'open':
+      effects.close()
+      effects.open(command.href)
+      return
+    case 'shortcuts':
+      effects.shortcuts()
+      return
+    case 'extension':
+      effects.close()
+      findPaletteExtension(command.id)?.run()
+      return
+    case 'assistant':
+      effects.assistant()
+      return
+    case 'copy-email':
+      effects.close()
+      effects.copyEmail()
+      return
+    case 'capsule':
+      effects.capsule()
+      return
+  }
+}
+
+export type PaletteRunner = {
+  items: () => PaletteItem[]
+  run: (item: PaletteItem) => void
+}
+
+let runner: PaletteRunner | null = null
+
+export function registerPaletteRunner(next: PaletteRunner): () => void {
+  runner = next
+  return () => {
+    if (runner === next) runner = null
+  }
+}
+
+export function findPaletteCommand(id: PaletteCommandId | string): PaletteItem | null {
+  return runner?.items().find((item) => item.id === id) ?? null
+}
+
+export function runPaletteCommand(id: PaletteCommandId | string): boolean {
+  const current = runner
+  const item = findPaletteCommand(id)
+  if (!current || !item) return false
+  current.run(item)
+  return true
 }
