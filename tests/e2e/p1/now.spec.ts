@@ -62,7 +62,7 @@ test.describe('/now con y sin JavaScript (FR-490, US10)', () => {
     test(`/${lang}/now: no publica la fecha de HYROX`, async ({ page }) => {
       await open(page, lang)
       const text = ((await page.locator('#main').textContent()) ?? '').replace(formatNowDate(now.updatedAt, lang), '')
-      expect(text).toContain('HYROX São Paulo')
+      expect(text).toContain(lang === 'es' ? 'HYROX Río de Janeiro' : 'HYROX Rio de Janeiro')
       expect(text).not.toMatch(/\b(19|20)\d{2}\b/)
     })
   }

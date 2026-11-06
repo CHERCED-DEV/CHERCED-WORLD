@@ -9,7 +9,7 @@ import { preselectedInterest } from '@/components/contact/preselect'
 import { BackgroundIntensity } from '@/components/motion'
 import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
 import { buttonClassName } from '@/components/ui/Button'
-import { RecruitersBlock } from '@/components/site/home/RecruitersBlock'
+import { RecruitersEntry, RecruitersFallback } from '@/components/site/home/RecruitersEntry'
 import { CvActions } from '@/components/ui/CvLink'
 import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -64,6 +64,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
         <p className={styles.lead}>{pick(site.contact.description, lang)}</p>
         <div className={styles.reach} data-cw-contact-reach="">
           <AvailabilityChip lang={lang} />
+          {site.recruiters ? <RecruitersEntry lang={lang} content={site.recruiters} writeHref="#contact-form" withCv={false} /> : null}
           <div className={styles.reachActions}>
             <CvActions lang={lang} downloadVariant="solid" className={styles.cvActions} />
             {email ? (
@@ -77,7 +78,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
           </div>
         </div>
         <Separator />
-        {site.recruiters ? <RecruitersBlock lang={lang} content={site.recruiters} writeHref="#contact-form" withCv={false} compact /> : null}
+        {site.recruiters ? <RecruitersFallback lang={lang} content={site.recruiters} writeHref="#contact-form" withCv={false} compact /> : null}
       </div>
       <GlassSurface variant="standard" className={styles.card} id="contact-form">
         <ContactForm

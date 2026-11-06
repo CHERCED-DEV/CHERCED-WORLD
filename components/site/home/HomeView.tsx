@@ -6,7 +6,7 @@ import enter from './Enter.module.scss'
 import styles from './Home.module.scss'
 import { HOME_NOW_ID, HomeNow, type HomeNowLabels } from './HomeNow'
 import { nowRoles } from './now'
-import { RecruitersBlock } from './RecruitersBlock'
+import { RecruitersEntry, RecruitersFallback } from './RecruitersEntry'
 import { ScrollCue } from './ScrollCue'
 
 export type HomeViewLabels = {
@@ -25,6 +25,7 @@ export type HomeViewProps = {
 
 export function HomeView({ lang, site, projects, labels }: HomeViewProps) {
   const roles = nowRoles(site.about.career, projects, lang)
+  const contact = localizedPath(lang, '/contactMe')
 
   return (
     <>
@@ -35,6 +36,7 @@ export function HomeView({ lang, site, projects, labels }: HomeViewProps) {
           socials={site.socials}
           socialsLabel={labels.socials}
           previousTitleLabel={labels.previousTitle}
+          extra={site.recruiters ? <RecruitersEntry lang={lang} content={site.recruiters} writeHref={contact} /> : null}
         />
         {roles.length > 0 ? (
           <div className={enter.enter} style={{ '--cw-home-step': 5 } as CSSProperties}>
@@ -43,7 +45,7 @@ export function HomeView({ lang, site, projects, labels }: HomeViewProps) {
         ) : null}
       </div>
       <HomeNow lang={lang} roles={roles} labels={labels.now} />
-      {site.recruiters ? <RecruitersBlock lang={lang} content={site.recruiters} writeHref={localizedPath(lang, '/contactMe')} /> : null}
+      {site.recruiters ? <RecruitersFallback lang={lang} content={site.recruiters} writeHref={contact} /> : null}
     </>
   )
 }

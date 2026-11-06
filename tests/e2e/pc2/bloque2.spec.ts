@@ -14,14 +14,26 @@ async function skipIntro(page: Page) {
   })
 }
 
-test.describe('FR-710: "Para reclutadores" en Home y Contacto', () => {
+async function recruiters(page: Page, js: boolean) {
+  if (!js) return page.locator('#recruiters-static')
+  await expect(page.locator('[data-cw-assistant-button]')).toHaveAttribute('data-cw-ready', '', { timeout: 60_000 })
+  const open = page.locator('[data-cw-recruiters-open]')
+  await open.click()
+  const dialog = page.getByRole('dialog', { name: /Para reclutadores|For recruiters/ })
+  await expect(dialog).toBeVisible()
+  return dialog.locator('[data-cw-recruiters]')
+}
+
+test.describe('FR-710: "Para reclutadores" se abre como pop-up en Home y Contacto', () => {
   onlyIn('desktop-chromium', 'mobile-chromium', 'no-js')
 
   for (const lang of ['es', 'en'] as const) {
-    test(`/${lang}: roles, modalidad, inglés y Descargar CV, LinkedIn y Escríbeme`, async ({ page }) => {
+    test(`/${lang}: roles, modalidad, inglés y Descargar CV, LinkedIn y Escríbeme`, async ({ page }, testInfo) => {
       await skipIntro(page)
       await page.goto(`/${lang}`)
-      const block = page.locator('[data-cw-recruiters]')
+      const js = testInfo.project.name !== 'no-js'
+      if (js) await expect(page.locator('[data-cw-recruiters]:visible')).toHaveCount(0)
+      const block = await recruiters(page, js)
       await expect(block.getByRole('heading', { level: 2 })).toHaveText(lang === 'es' ? 'Para reclutadores' : 'For recruiters')
       await expect(block.locator('[data-cw-recruiters-roles] li')).toHaveCount(4)
       await expect(block.locator('[data-cw-recruiters-english]')).toHaveText(lang === 'es' ? 'B1, B2 en uso profesional frecuente' : 'B1, B2 in regular professional use')
@@ -31,16 +43,29 @@ test.describe('FR-710: "Para reclutadores" en Home y Contacto', () => {
     })
   }
 
-  test('/es/contactMe: "Escríbeme" lleva al formulario', async ({ page }, testInfo) => {
+  test('/es/contactMe: "Escríbeme" cierra el pop-up y lleva al formulario', async ({ page }, testInfo) => {
     await skipIntro(page)
     await page.goto('/es/contactMe')
-    const write = page.locator('[data-cw-recruiters] [data-cw-recruiters-write]')
+    const js = testInfo.project.name !== 'no-js'
+    const block = await recruiters(page, js)
+    const write = block.locator('[data-cw-recruiters-write]')
     await expect(write).toHaveAttribute('href', '#contact-form')
-    await expect(page.locator('[data-cw-recruiters] [data-cw-cv-download]')).toHaveCount(0)
-    test.skip(testInfo.project.name === 'no-js', 'el foco del ancla se prueba con JS')
+    await expect(block.locator('[data-cw-cv-download]')).toHaveCount(0)
+    test.skip(!js, 'sin JS el bloque ya está en la página')
     await write.click()
+    await expect(page.getByRole('dialog', { name: 'Para reclutadores' })).toBeHidden()
     await expect(page).toHaveURL(/#contact-form$/)
     await expect(page.locator('#contact-form')).toBeInViewport()
+  })
+
+  test('Esc cierra el pop-up y devuelve el foco al botón', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name === 'no-js', 'el pop-up necesita JS')
+    await skipIntro(page)
+    await page.goto('/es')
+    await recruiters(page, true)
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('dialog', { name: 'Para reclutadores' })).toBeHidden()
+    await expect(page.locator('[data-cw-recruiters-open]')).toBeFocused()
   })
 })
 

@@ -291,7 +291,7 @@ test.describe('repos y casos nuevos (FR-443, FR-447)', () => {
   })
 
   for (const lang of ['es', 'en'] as const) {
-    test(`${lang}: Director & lines, Legal workspace y Event bridge, completos y sin enlaces`, async ({ page }) => {
+    test(`${lang}: Director & lines, Legal workspace y Event bridge, completos; solo Director & lines enlaza su arnés`, async ({ page }) => {
       test.setTimeout(60_000)
       await skipIntro(page)
       for (const project of NEW_CASES) {
@@ -301,7 +301,8 @@ test.describe('repos y casos nuevos (FR-443, FR-447)', () => {
         await expect(page.getByText(project.summary[lang], { exact: true }).first()).toBeVisible()
         for (const paragraph of paragraphs(project.context[lang])) await expect(page.getByText(paragraph)).toBeVisible()
         await expect(page.getByRole('img', { name: project.image.alt[lang] }).first()).toBeVisible()
-        await expect(page.locator('[data-cw-case-link], [data-cw-case-repo], [data-cw-embed]')).toHaveCount(0)
+        await expect(page.locator('[data-cw-case-link], [data-cw-embed]')).toHaveCount(0)
+        await expect(page.locator('[data-cw-case-repo]')).toHaveCount(project.id === '13' ? 1 : 0)
       }
     })
   }

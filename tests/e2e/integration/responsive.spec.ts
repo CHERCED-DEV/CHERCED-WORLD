@@ -98,7 +98,7 @@ async function audit(page: Page, width: number): Promise<Finding[]> {
       }
 
       type Clipper = { el: Element; x: boolean; y: boolean; box: DOMRect }
-      type ClipInfo = { clippers: Clipper[]; scrolled: boolean; srOnly: boolean }
+      type ClipInfo = { clippers: Clipper[]; scrolled: boolean; srOnly: boolean; ellipsis: DOMRect | null }
       const clipping = new Map<Element, ClipInfo>()
       const decorative = '[aria-hidden="true"], .cw-visually-hidden, .cw-skip-link, script, style, noscript, template, svg'
       const clipInfo = (el: Element): ClipInfo => {
@@ -108,10 +108,10 @@ async function audit(page: Page, width: number): Promise<Finding[]> {
         const scrolls = (value: string) => value === 'auto' || value === 'scroll'
         let info: ClipInfo
         if (el !== document.documentElement && el !== document.body && (scrolls(cs.overflowX) || scrolls(cs.overflowY))) {
-          info = { clippers: [], scrolled: true, srOnly: false }
+          info = { clippers: [], scrolled: true, srOnly: false, ellipsis: null }
         } else {
           const parent = el.parentElement
-          const inherited = parent && el !== document.body ? clipInfo(parent) : { clippers: [], scrolled: false, srOnly: false }
+          const inherited = parent && el !== document.body ? clipInfo(parent) : { clippers: [], scrolled: false, srOnly: false, ellipsis: null }
           const clips = (value: string) => value === 'hidden' || value === 'clip'
           const x = clips(cs.overflowX) && cs.textOverflow !== 'ellipsis'
           const y = clips(cs.overflowY) && (cs.getPropertyValue('-webkit-line-clamp') || 'none') === 'none'
@@ -125,7 +125,8 @@ async function audit(page: Page, width: number): Promise<Finding[]> {
             (x || y) && el !== document.documentElement && el !== document.body && r.width > 1 && r.height > 1
               ? [{ el, x, y, box: new DOMRect(r.left + el.clientLeft, r.top + el.clientTop, el.clientWidth, el.clientHeight) }]
               : []
-          info = { clippers: [...own, ...inherited.clippers], scrolled: inherited.scrolled, srOnly }
+          const ellipsis = clips(cs.overflowX) && cs.textOverflow === 'ellipsis' && r.width > 1 ? new DOMRect(r.left, r.top, r.width, r.height) : null
+          info = { clippers: [...own, ...inherited.clippers], scrolled: inherited.scrolled, srOnly, ellipsis: ellipsis ?? inherited.ellipsis }
         }
         clipping.set(el, info)
         return info
@@ -138,10 +139,13 @@ async function audit(page: Page, width: number): Promise<Finding[]> {
         const parent = node.parentElement
         if (!text || !parent || parent.closest(decorative) || !visible(parent)) continue
         range.selectNodeContents(node)
-        const r = range.getBoundingClientRect()
-        if (r.width < 1 || r.height < 1) continue
+        const full = range.getBoundingClientRect()
+        if (full.width < 1 || full.height < 1) continue
         const info = clipInfo(parent)
         if (info.scrolled || info.srOnly) continue
+        const left = info.ellipsis ? Math.max(full.left, info.ellipsis.left) : full.left
+        const right = info.ellipsis ? Math.min(full.right, info.ellipsis.right) : full.right
+        const r = new DOMRect(left, full.top, Math.max(0, right - left), full.height)
         for (const clipper of info.clippers) {
           if (reported.has(clipper.el)) continue
           const b = clipper.box

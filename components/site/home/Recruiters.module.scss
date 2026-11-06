@@ -130,3 +130,34 @@
 .actions > .cv {
   display: contents;
 }
+
+.bare {
+  container-type: inline-size;
+  --_line: var(--cw-graphic-line-strong);
+  text-align: start;
+}
+
+.trigger {
+  gap: var(--cw-space-2);
+}
+
+.triggerDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cw-graphic-accent);
+  box-shadow: 0 0 10px var(--cw-graphic-glow);
+}
+
+.dialog {
+  @include bp.up(md) {
+    width: min(100% - 2 * var(--cw-space-4), 760px);
+  }
+}
+
+.dialogClose {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--cw-space-4);
+}

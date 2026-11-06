@@ -26,6 +26,30 @@
   }
 }
 
+.heroSide {
+  display: contents;
+
+  @include bp.up(lg) {
+    display: grid;
+    justify-items: end;
+    gap: var(--cw-space-5);
+    width: 100%;
+  }
+}
+
+.heroAside {
+  order: 2;
+  width: min(100%, 520px);
+
+  @include bp.up(lg) {
+    width: 100%;
+  }
+}
+
+.heroCopy {
+  order: 1;
+}
+
 .scene {
   scroll-margin-top: var(--cw-scene-clear);
   content-visibility: auto;

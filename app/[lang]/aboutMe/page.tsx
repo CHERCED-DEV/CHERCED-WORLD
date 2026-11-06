@@ -53,7 +53,25 @@ export default async function AboutMePage({ params }: Props) {
           { id: ABOUT_SCENES.knowledge, label: t(dict, 'about.scene.knowledge') },
         ]}
       />
-      <AboutDescription id={ABOUT_SCENES.who} lang={lang} title={t(dict, 'about.title')} description={about.description} image={about.image}>
+      <AboutDescription
+        id={ABOUT_SCENES.who}
+        lang={lang}
+        title={t(dict, 'about.title')}
+        description={about.description}
+        image={about.image}
+        aside={
+          <Certifications
+            lang={lang}
+            items={about.certifications ?? []}
+            profileHref={about.courses.platzi.href}
+            labels={{
+              title: t(dict, 'about.certifications'),
+              profile: t(dict, 'about.certifications.profile'),
+              newTab: t(dict, 'a11y.newTab'),
+            }}
+          />
+        }
+      >
         <AboutFigures
           lang={lang}
           title={t(dict, 'about.figures')}
@@ -124,16 +142,6 @@ export default async function AboutMePage({ params }: Props) {
                 next: t(portfolio, 'case.next'),
               },
             },
-          }}
-        />
-        <Certifications
-          lang={lang}
-          items={about.certifications ?? []}
-          profileHref={about.courses.platzi.href}
-          labels={{
-            title: t(dict, 'about.certifications'),
-            profile: about.courses.platzi.label[lang],
-            newTab: t(dict, 'a11y.newTab'),
           }}
         />
       </section>

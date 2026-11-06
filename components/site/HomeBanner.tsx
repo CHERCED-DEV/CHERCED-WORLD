@@ -31,6 +31,7 @@ export type HomeBannerProps = {
   socials: SiteContent['socials']
   socialsLabel: string
   previousTitleLabel: string
+  extra?: ReactNode
 }
 
 function step(index: number): CSSProperties {
@@ -76,7 +77,7 @@ function SocialIcon({ id }: { id: string }) {
   )
 }
 
-export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLabel }: HomeBannerProps) {
+export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLabel, extra }: HomeBannerProps) {
   const links = homeSocials(socials)
   const previous = home.previousTitle?.[lang]
   const subtitle = home.subtitle?.[lang]
@@ -166,6 +167,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
         </div>
         <div className={cx(styles.availability, enter.enter)} style={step(4.5)}>
           <AvailabilityChip lang={lang} className={styles.chip} />
+          {extra}
         </div>
         <span className={styles.sweep} aria-hidden="true" data-cw-sweep="" data-cw-home-sweep="" />
       </GlassSurface>

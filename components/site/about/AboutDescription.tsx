@@ -13,13 +13,17 @@ export type AboutDescriptionProps = {
   title: string
   description: Localized
   image: ImageRef
+  aside?: ReactNode
   children?: ReactNode
 }
 
-export function AboutDescription({ id, lang, title, description, image, children }: AboutDescriptionProps) {
+export function AboutDescription({ id, lang, title, description, image, aside, children }: AboutDescriptionProps) {
   return (
     <section id={id} className={styles.hero} aria-labelledby="about-title" data-cw-scene="who">
-      <AboutPortrait image={image} alt={image.alt[lang]} />
+      <div className={styles.heroSide}>
+        <AboutPortrait image={image} alt={image.alt[lang]} />
+        {aside ? <div className={styles.heroAside}>{aside}</div> : null}
+      </div>
       <div className={styles.heroCopy}>
         <SectionTitle as="h1" id="about-title" size="lg">
           {title}
