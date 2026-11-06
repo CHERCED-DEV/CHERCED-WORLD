@@ -48,6 +48,14 @@ function Downloads({ lang, experiment, labels, id }: { lang: Locale; experiment:
               size: formatBytes(download.bytes, lang),
               host: download.host,
             })}
+            {download.engine ? (
+              <span data-cw-lab-engine="">
+                {` + ${t({ engine: labels.downloads.engine }, 'engine', {
+                  resource: download.engine.resource,
+                  size: formatBytes(download.engine.bytes, lang),
+                })}`}
+              </span>
+            ) : null}
             {download.default ? null : <span className={styles.optional}> · {labels.downloads.optional}</span>}
           </li>
         ))}

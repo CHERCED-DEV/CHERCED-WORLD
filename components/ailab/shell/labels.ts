@@ -25,6 +25,7 @@ export function labConsentLabels(dict: Dictionary): LabConsentLabels {
   return {
     title: t(dict, 'ailab.consent.title'),
     body: t(dict, 'ailab.consent.body'),
+    engine: t(dict, 'ailab.consent.engine'),
     clearHint: t(dict, 'ailab.consent.clearHint'),
     accept: t(dict, 'ailab.consent.accept'),
     cancel: t(dict, 'ailab.consent.cancel'),
@@ -59,7 +60,7 @@ export type LabCardLabels = {
   parts: { try: string; how: string; code: string }
   how: { flow: string; decisions: string }
   adr: AdrLabels
-  downloads: { title: string; none: string; item: string; optional: string }
+  downloads: { title: string; none: string; item: string; engine: string; optional: string }
   noscript: string
   code: { file: string; repo: string }
   copy: CopyLabels
@@ -78,6 +79,7 @@ export function labCardLabels(ailab: Dictionary, site: Dictionary, blog: Diction
       title: t(ailab, 'ailab.downloads.title'),
       none: t(ailab, 'ailab.downloads.none'),
       item: t(ailab, 'ailab.downloads.item'),
+      engine: t(ailab, 'ailab.downloads.engine'),
       optional: t(ailab, 'ailab.downloads.optional'),
     },
     noscript: t(ailab, 'ailab.noscript'),

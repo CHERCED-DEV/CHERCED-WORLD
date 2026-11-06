@@ -12,8 +12,10 @@ import type { LabConsentLabels } from './types'
 
 export type ConsentDialogProps = { lang: Locale; labels: LabConsentLabels }
 
-export function consentBody(labels: Pick<LabConsentLabels, 'body'>, request: DownloadRequest, lang: Locale): string {
-  return t({ body: labels.body }, 'body', { resource: request.resource, size: formatBytes(request.bytes, lang), host: request.host })
+export function consentBody(labels: Pick<LabConsentLabels, 'body' | 'engine'>, request: DownloadRequest, lang: Locale): string {
+  const body = t({ body: labels.body }, 'body', { resource: request.resource, size: formatBytes(request.bytes, lang), host: request.host })
+  if (!request.engine) return body
+  return `${body} ${t({ engine: labels.engine }, 'engine', { resource: request.engine.resource, size: formatBytes(request.engine.bytes, lang) })}`
 }
 
 export function ConsentDialog({ lang, labels }: ConsentDialogProps) {

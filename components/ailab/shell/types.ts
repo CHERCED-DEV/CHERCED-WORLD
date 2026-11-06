@@ -34,6 +34,7 @@ export type LabTryLabels = {
 export type LabConsentLabels = {
   title: string
   body: string
+  engine: string
   clearHint: string
   accept: string
   cancel: string

@@ -215,7 +215,9 @@ export const LAB_HOSTS = ['huggingface.co', 'cdn.jsdelivr.net'] as const
 
 export type LabHost = (typeof LAB_HOSTS)[number]
 
-export type LabDownload = { resource: string; bytes: number; host: LabHost; default?: true }
+export type LabEngine = { resource: string; bytes: number }
+
+export type LabDownload = { resource: string; bytes: number; host: LabHost; default?: true; engine?: LabEngine }
 
 export type LabCode = { snippet: string; lang: string; repoPath: string | null }
 

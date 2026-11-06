@@ -39,6 +39,9 @@ lanes X1 a X4 programan contra este documento. Si falta algo, se pide como enmie
   `flow` y `adrCards` son `Localized` en el catálogo, como los casos del portafolio.
 - **Pesos** (research §2 a §4, decimales): Whisper tiny 41 MB, base 77 MB y small 249 MB (int8, `huggingface.co`);
   multilingual-e5-small 118 MB; Pyodide 0.29.0 12 MB y numpy 3,1 MB (`cdn.jsdelivr.net`).
+- **Motor** (enmienda A-X1-2, 2026-11-06): los modelos de transformers.js llevan `engine: ONNX_RUNTIME_WEB`
+  (26 861 777 bytes, lo sirve este sitio desde `_next/static`). `toDownloadRequest` lo pasa en `DownloadRequest.engine`,
+  la tarjeta lo suma a la línea de la descarga y el diálogo agrega `ailab.consent.engine` al texto.
 - **Por defecto**: V1 pide base al probar (R-701). V4 abre sin pedir nada, porque su alternativa escrita no descarga
   nada (FR-340), y pide tiny cuando el visitante activa la voz (R-702). A5 (e5) y A4 (Pyodide) no tienen `default`: su
   descarga es opcional y la pide la demo cuando el visitante la elige.

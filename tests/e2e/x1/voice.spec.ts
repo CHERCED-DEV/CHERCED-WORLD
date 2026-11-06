@@ -378,7 +378,7 @@ test.describe('V1 Transcriptor (US2, FR-350)', () => {
     await v1.locator('[data-cw-v1-model="small"]').check()
     await v1.locator('[data-cw-v1-load="small"]').click()
     await expect(consent(page).locator('[data-cw-lab-consent-text]')).toHaveText(
-      'Este experimento descarga Whisper small (int8) (249 MB) desde huggingface.co. Queda guardado en tu navegador para la próxima vez.',
+      'Este experimento descarga Whisper small (int8) (249 MB) desde huggingface.co. Queda guardado en tu navegador para la próxima vez. Para correrlo, tu navegador también baja el motor ONNX Runtime Web (27 MB) desde este sitio, si no lo tiene ya.',
     )
     await consent(page).locator('[data-cw-lab-consent-cancel]').click()
     await expect(v1.locator('[data-cw-voice-engine="ready"]')).toBeVisible()

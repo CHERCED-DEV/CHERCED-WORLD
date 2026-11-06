@@ -1,8 +1,8 @@
-import { LAB_HOSTS, isLabExperimentId, type LabDownload, type LabExperimentId, type LabHost } from '@/content/types'
+import { LAB_HOSTS, isLabExperimentId, type LabDownload, type LabEngine, type LabExperimentId, type LabHost } from '@/content/types'
 
 export const CONSENT_STORAGE_KEY = 'cw-ailab-consent'
 
-export type DownloadRequest = { experiment: LabExperimentId; resource: string; bytes: number; host: LabHost }
+export type DownloadRequest = { experiment: LabExperimentId; resource: string; bytes: number; host: LabHost; engine?: LabEngine }
 
 export type ConsentPresenter = (request: DownloadRequest) => Promise<boolean>
 
@@ -27,7 +27,9 @@ export function consentKey(experiment: LabExperimentId, resource: string): strin
 }
 
 export function toDownloadRequest(experiment: LabExperimentId, download: LabDownload): DownloadRequest {
-  return { experiment, resource: download.resource, bytes: download.bytes, host: download.host }
+  const request: DownloadRequest = { experiment, resource: download.resource, bytes: download.bytes, host: download.host }
+  if (download.engine) request.engine = { ...download.engine }
+  return request
 }
 
 export function assertDownloadRequest(request: DownloadRequest): void {
@@ -35,6 +37,10 @@ export function assertDownloadRequest(request: DownloadRequest): void {
   if (typeof request.resource !== 'string' || request.resource.trim() === '') throw new TypeError('requestDownload: falta el recurso')
   if (!Number.isInteger(request.bytes) || request.bytes <= 0) throw new TypeError(`requestDownload: el peso de ${request.resource} debe ser un entero positivo`)
   if (!(LAB_HOSTS as readonly string[]).includes(request.host)) throw new TypeError(`requestDownload: servidor no permitido "${String(request.host)}"`)
+  const engine = request.engine
+  if (engine === undefined) return
+  if (typeof engine.resource !== 'string' || engine.resource.trim() === '') throw new TypeError('requestDownload: falta el nombre del motor')
+  if (!Number.isInteger(engine.bytes) || engine.bytes <= 0) throw new TypeError(`requestDownload: el peso de ${engine.resource} debe ser un entero positivo`)
 }
 
 export function setConsentStorage(storage: ConsentStorage | null | undefined): void {

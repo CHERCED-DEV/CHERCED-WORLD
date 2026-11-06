@@ -131,7 +131,9 @@ test.describe('sin JavaScript (US1 escenario 5)', () => {
     const code = labCatalog.find((experiment) => experiment.id === 'V1')!.code!
     await expect(v1.locator('[data-cw-lab-code] code')).toContainText(code.snippet.split('\n')[0]!.trim())
     await expect(v1.locator('[data-cw-lab-repo]')).toHaveAttribute('href', `https://github.com/CHERCED-DEV/CHERCED-WORLD/blob/main/${code.repoPath}`)
-    await expect(v1.locator('[data-cw-lab-downloads] li').first()).toHaveText('Whisper base (int8) · 77 MB · desde huggingface.co')
+    await expect(v1.locator('[data-cw-lab-downloads] li').first()).toHaveText(
+      'Whisper base (int8) · 77 MB · desde huggingface.co + motor ONNX Runtime Web · 27 MB · desde este sitio',
+    )
   })
 })
 
@@ -147,7 +149,7 @@ test.describe('consentimiento antes de descargar (US1 escenarios 3 y 4, FR-310, 
     await expect(dialog).toBeVisible()
     await expect(dialog.getByRole('heading', { name: 'Antes de descargar' })).toBeVisible()
     await expect(dialog.locator('[data-cw-lab-consent-text]')).toHaveText(
-      'Este experimento descarga Whisper base (int8) (77 MB) desde huggingface.co. Queda guardado en tu navegador para la próxima vez.',
+      'Este experimento descarga Whisper base (int8) (77 MB) desde huggingface.co. Queda guardado en tu navegador para la próxima vez. Para correrlo, tu navegador también baja el motor ONNX Runtime Web (27 MB) desde este sitio, si no lo tiene ya.',
     )
     expect(await blockingViolations(page)).toEqual([])
     await dialog.locator('[data-cw-lab-consent-cancel]').click()
@@ -224,7 +226,7 @@ test.describe('consentimiento antes de descargar (US1 escenarios 3 y 4, FR-310, 
     await open(page, 'en')
     await card(page, 'V1').locator('[data-cw-lab-open]').click()
     await expect(consent(page).locator('[data-cw-lab-consent-text]')).toHaveText(
-      'This experiment downloads Whisper base (int8) (77 MB) from huggingface.co. It stays in your browser for next time.',
+      'This experiment downloads Whisper base (int8) (77 MB) from huggingface.co. It stays in your browser for next time. To run it, your browser also fetches the ONNX Runtime Web engine (27 MB) from this site, if it does not have it yet.',
     )
     await expect(consent(page).locator('[data-cw-lab-consent-accept]')).toHaveText('Download and try')
     await expect(consent(page).locator('[data-cw-lab-consent-cancel]')).toHaveText('Not now')

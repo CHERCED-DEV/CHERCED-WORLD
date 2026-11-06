@@ -3,6 +3,7 @@ import es from '@/content/i18n/es/ailab.json'
 import {
   LAB_THEMES,
   type LabDownload,
+  type LabEngine,
   type LabExperiment,
   type LabExperimentId,
   type LabTheme,
@@ -21,13 +22,15 @@ function copy(key: CopyKey): Localized {
   return { es: es[key], en: en[key] }
 }
 
-export const WHISPER_TINY: LabDownload = { resource: 'Whisper tiny (int8)', bytes: 41 * MB, host: 'huggingface.co' }
+export const ONNX_RUNTIME_WEB: LabEngine = { resource: 'ONNX Runtime Web', bytes: 26_861_777 }
 
-export const WHISPER_BASE: LabDownload = { resource: 'Whisper base (int8)', bytes: 77 * MB, host: 'huggingface.co' }
+export const WHISPER_TINY: LabDownload = { resource: 'Whisper tiny (int8)', bytes: 41 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
 
-export const WHISPER_SMALL: LabDownload = { resource: 'Whisper small (int8)', bytes: 249 * MB, host: 'huggingface.co' }
+export const WHISPER_BASE: LabDownload = { resource: 'Whisper base (int8)', bytes: 77 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
 
-export const E5_SMALL: LabDownload = { resource: 'multilingual-e5-small (int8)', bytes: 118 * MB, host: 'huggingface.co' }
+export const WHISPER_SMALL: LabDownload = { resource: 'Whisper small (int8)', bytes: 249 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
+
+export const E5_SMALL: LabDownload = { resource: 'multilingual-e5-small (int8)', bytes: 118 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
 
 export const PYODIDE_CORE: LabDownload = { resource: 'Pyodide 0.29.0', bytes: 12 * MB, host: 'cdn.jsdelivr.net' }
 

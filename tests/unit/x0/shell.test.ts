@@ -17,6 +17,7 @@ import { aiLabOg } from '@/components/ailab/shell/og'
 import { ToastProvider } from '@/components/ui/Toast'
 import { labCatalog, labExperiment } from '@/content/ailab/catalog'
 import type { LabExperiment, LabExperimentId } from '@/content/types'
+import { toDownloadRequest } from '@/lib/ailab/core/consent'
 import { formatBytes } from '@/lib/ailab/core/format'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -77,7 +78,9 @@ describe('formato de la tarjeta (FR-303)', () => {
     expect(html).toMatch(/data-cw-lab-runs="browser"[^>]*>.*Corre en tu navegador/)
     expect(html).toMatch(/data-cw-lab-privacy="">.*Privacidad: <\/span>Tu audio se transcribe en tu navegador/)
     expect(html).toContain('Whisper base (int8) · 77 MB · desde huggingface.co')
-    expect(html).toMatch(/Whisper small \(int8\) · 249 MB · desde huggingface\.co<span[^>]*> · solo si lo pides<\/span>/)
+    expect(html).toMatch(
+      /Whisper small \(int8\) · 249 MB · desde huggingface\.co<span data-cw-lab-engine=""> \+ motor ONNX Runtime Web · 27 MB · desde este sitio<\/span><span[^>]*> · solo si lo pides<\/span>/,
+    )
     expect(html).toMatch(/data-cw-lab-open=""[^>]*>Probar<\/button>/)
     expect(html).toMatch(/aria-label="Probar Transcriptor"[^>]*aria-describedby="lab-v1-downloads"|aria-describedby="lab-v1-downloads"[^>]*aria-label="Probar Transcriptor"/)
     expect(html).toContain('Esta demo necesita JavaScript. Aquí tienes cómo funciona y su código.')
@@ -171,6 +174,18 @@ describe('diálogo de consentimiento y pesos (FR-310)', () => {
     expect(consentBody(labConsentLabels((await dictionaries('en')).ailab), request, 'en')).toBe(
       'This experiment downloads Whisper base (int8) (77 MB) from huggingface.co. It stays in your browser for next time.',
     )
+  })
+
+  it('si el modelo necesita un motor que sirve este sitio, también lo dice con su peso', async () => {
+    const request = toDownloadRequest('V1', labExperiment('V1').downloads[0]!)
+    expect(request.engine).toEqual({ resource: 'ONNX Runtime Web', bytes: 26_861_777 })
+    expect(consentBody(labConsentLabels((await dictionaries('es')).ailab), request, 'es')).toBe(
+      'Este experimento descarga Whisper base (int8) (77 MB) desde huggingface.co. Queda guardado en tu navegador para la próxima vez. Para correrlo, tu navegador también baja el motor ONNX Runtime Web (27 MB) desde este sitio, si no lo tiene ya.',
+    )
+    expect(consentBody(labConsentLabels((await dictionaries('en')).ailab), request, 'en')).toBe(
+      'This experiment downloads Whisper base (int8) (77 MB) from huggingface.co. It stays in your browser for next time. To run it, your browser also fetches the ONNX Runtime Web engine (27 MB) from this site, if it does not have it yet.',
+    )
+    expect(labCatalog.filter((item) => item.downloads.some((download) => download.host === 'cdn.jsdelivr.net' && download.engine))).toEqual([])
   })
 
   it('formatea el peso en cada idioma', () => {
