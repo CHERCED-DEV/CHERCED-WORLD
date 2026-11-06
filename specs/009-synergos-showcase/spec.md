@@ -50,3 +50,11 @@ asistente y `llms.txt`. El menú principal no cambia sin aprobación del autor.
 | P-901 | ¿Actualizar las cifras del sitio a 140+ ADR y 6.600+ tests (hoy dicen 130+ y 2.300+)? | Sí, con la fecha |
 | P-902 | "31 piezas" no se pudo verificar en el repo. ¿Sigue valiendo? | Se deja como está |
 | P-903 | ¿"Synergos" entra al menú principal? | No, por ahora |
+
+## Idea en espera: patrones aplicados (2026-11-06)
+
+El autor quiere mostrar conocimiento de patrones como en las láminas de "20 microservices patterns", sin saturar. Propuesta:
+no es una galería genérica (la lámina de referencia tiene autor y derechos), sino un "atlas de patrones aplicados":
+solo los que el autor usó de verdad (saga, BFF, composición de APIs, consumidor idempotente, outbox, anti-corruption
+layer, strangler fig, mensajería por eventos…), cada uno con su evidencia: el caso, la ADR o el código. Vive dentro del
+showcase de Synergos y de los casos, no como otra sección suelta. Se especifica con el autor cuando cierre la 009.
