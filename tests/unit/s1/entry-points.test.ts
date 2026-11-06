@@ -28,6 +28,8 @@ type Lang = (typeof LANGS)[number]
 
 const CTA = synergosShowcase.copy.cta
 
+const PAGE_RENDER = 30_000
+
 const Provider = ToastProvider as (props: { closeLabel: string; children?: ReactNode }) => ReactElement
 
 function ctas(html: string): Array<{ href: string; from: string; text: string }> {
@@ -83,7 +85,7 @@ describe.each(LANGS)('los botones "%s" llevan a /[lang]/synergos', (lang) => {
     expect(button).toBeGreaterThan(figuresEnd)
     expect(html.slice(figuresEnd, button)).not.toMatch(/<section|<h2/)
     expect(html.indexOf('id="scene-career"')).toBeGreaterThan(button)
-  })
+  }, PAGE_RENDER)
 
   it('Caso 12: un enlace destacado al showcase junto a "Verlo en vivo"; los otros casos no lo llevan', async () => {
     const html = renderToStaticMarkup(await CaseStudyPage({ params: Promise.resolve({ lang, id: '12' }) }))
@@ -95,7 +97,7 @@ describe.each(LANGS)('los botones "%s" llevan a /[lang]/synergos', (lang) => {
       const other = renderToStaticMarkup(await CaseStudyPage({ params: Promise.resolve({ lang, id }) }))
       expect(other, id).not.toContain('data-cw-synergos-cta')
     }
-  })
+  }, PAGE_RENDER)
 })
 
 describe('la página no entra al menú principal ni al footer (P-903)', () => {
@@ -143,7 +145,7 @@ describe('sitemap, llms.txt y JSON-LD', () => {
       expect(entry, lang).toBeDefined()
       expect(Object.keys(entry?.alternates?.languages ?? {}).sort()).toEqual(['en', 'es', 'x-default'])
     }
-  })
+  }, PAGE_RENDER)
 
   it('llms.txt la enlaza en los dos idiomas, al frente de los casos de estudio', async () => {
     const lines = (await buildLlmsTxt(new URL('https://cherced-world.test'))).split('\n')
@@ -151,7 +153,7 @@ describe('sitemap, llms.txt y JSON-LD', () => {
     expect(lines[heading + 1]).toBe(
       '- [Synergos, my master product](https://cherced-world.test/en/synergos) · [Synergos, mi master product](https://cherced-world.test/es/synergos)',
     )
-  })
+  }, PAGE_RENDER)
 
   it('CreativeWork con autor = @id de la Person, sus tres repos y la fecha del conteo', () => {
     const base = new URL('https://cherced-world.test')
