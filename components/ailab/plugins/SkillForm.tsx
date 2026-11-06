@@ -165,7 +165,7 @@ export function SkillForm({ t }: LabDemoProps) {
           <pre className={styles.previewCode} tabIndex={0} aria-label={t('ailab.a3.preview')} data-cw-skill-markdown="">
             <code>{preview}</code>
           </pre>
-          <p className={styles.hint}>{t('ailab.a3.where', { name: check.skill.name || t('ailab.a3.where.placeholder') })}</p>
+          <p className={styles.hint}>{t('ailab.a3.where', { name: check.errors.name ? t('ailab.a3.where.placeholder') : check.skill.name })}</p>
         </section>
       </div>
     </div>

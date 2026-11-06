@@ -145,6 +145,7 @@
   flex-direction: column;
   gap: var(--cw-space-4);
   min-width: 0;
+  scroll-margin-top: calc(var(--cw-header-h) + var(--cw-space-4));
 }
 
 .panelHead {
@@ -222,6 +223,11 @@
     max-height: 24rem;
     overflow: auto;
   }
+
+  &[data-wrap] pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
 }
 
 .next {
@@ -247,6 +253,10 @@
 
   textarea {
     min-height: 96px;
+  }
+
+  p[id$='-error'] > svg {
+    flex: none;
   }
 }
 

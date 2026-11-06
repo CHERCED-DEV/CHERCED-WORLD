@@ -109,6 +109,8 @@ export function PluginExplorer({ lang, t }: LabDemoProps) {
   const [announce, setAnnounce] = useState(false)
   const items = useRef(new Map<string, HTMLLIElement>())
   const moveFocus = useRef(false)
+  const revealPanel = useRef(false)
+  const panelRef = useRef<HTMLElement>(null)
   const base = useId().replace(/:/g, '')
   const domId = (id: string) => `${base}-${id.replace(/[^\w-]/g, '_')}`
   const file = example.files.find((item) => `${example.root}/${item.path}` === selected) ?? example.files[0]!
@@ -119,6 +121,15 @@ export function PluginExplorer({ lang, t }: LabDemoProps) {
     moveFocus.current = false
     items.current.get(focused)?.focus()
   }, [focused, expanded])
+
+  useEffect(() => {
+    if (!revealPanel.current) return
+    revealPanel.current = false
+    const panel = panelRef.current
+    if (!panel || panel.getBoundingClientRect().top < window.innerHeight * 0.75) return
+    const smooth = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+    panel.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' })
+  }, [selected])
 
   const register = (id: string, element: HTMLLIElement | null) => {
     if (element) items.current.set(id, element)
@@ -147,7 +158,10 @@ export function PluginExplorer({ lang, t }: LabDemoProps) {
   const onRow = (node: TreeNode) => {
     focusNode(node.id)
     if (node.kind === 'folder') toggle(node.id)
-    else select(node.id)
+    else {
+      revealPanel.current = true
+      select(node.id)
+    }
   }
 
   const onKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
@@ -197,7 +211,7 @@ export function PluginExplorer({ lang, t }: LabDemoProps) {
             ))}
           </ul>
         </div>
-        <section id={panelId} className={styles.panel} aria-labelledby={`${panelId}-title`} data-cw-plugin-file={file.path}>
+        <section ref={panelRef} id={panelId} className={styles.panel} aria-labelledby={`${panelId}-title`} data-cw-plugin-file={file.path}>
           <header className={styles.panelHead}>
             <span className={styles.kind}>{t(KIND_KEYS[file.kind])}</span>
             <h5 id={`${panelId}-title`} className={styles.fileName}>
@@ -222,7 +236,7 @@ export function PluginExplorer({ lang, t }: LabDemoProps) {
               <p>{file.trade}</p>
             </div>
           </div>
-          <div className={styles.code}>
+          <div className={styles.code} data-wrap={file.language === 'markdown' ? '' : undefined}>
             <CodeBlock labels={{ copy: t('ailab.a2.copy'), copied: t('ailab.a2.copied'), copyError: t('ailab.a2.copyError') }}>
               <code className={`language-${FENCES[file.language]}`}>{file.content}</code>
             </CodeBlock>
