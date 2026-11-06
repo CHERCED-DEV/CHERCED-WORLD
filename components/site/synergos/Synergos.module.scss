@@ -585,9 +585,32 @@ $pulse: #eafff6;
   @include site.label-caps(0.14em);
   display: inline-flex;
   align-items: center;
+  gap: var(--cw-space-3);
   min-height: 44px;
   font-size: var(--cw-text-xs);
+  list-style: none;
   cursor: pointer;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::before {
+    content: '+';
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid color-mix(in srgb, var(--cw-intro-accent) 55%, var(--cw-glass-border));
+    border-radius: 50%;
+    font-size: var(--cw-text-sm);
+    letter-spacing: 0;
+  }
+
+  .alt[open] > &::before {
+    content: '−';
+  }
 
   &:focus-visible {
     @include layout.focus-ring;
