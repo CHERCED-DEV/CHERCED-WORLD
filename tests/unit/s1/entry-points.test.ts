@@ -75,16 +75,18 @@ describe.each(LANGS)('los botones "%s" llevan a /[lang]/synergos', (lang) => {
     expect(html).not.toContain('data-cw-synergos-cta')
   })
 
-  it('Sobre mí: el botón va justo debajo de las cifras de "Quién soy"', async () => {
+  it('Sobre mí: el botón va en "Quién soy", en la columna del retrato junto a las cifras y antes de las certificaciones', async () => {
     const html = renderToStaticMarkup(await AboutMePage({ params: Promise.resolve({ lang }) }))
     expect(ctas(html)).toEqual([{ href: `/${lang}/synergos`, from: 'about', text: CTA[lang] }])
-    const figures = html.indexOf('data-cw-about="figures"')
+    const who = html.indexOf('data-cw-scene="who"')
     const button = html.indexOf('data-cw-synergos-cta="about"')
-    const figuresEnd = html.indexOf('</section>', figures)
-    expect(figures).toBeGreaterThan(-1)
-    expect(button).toBeGreaterThan(figuresEnd)
-    expect(html.slice(figuresEnd, button)).not.toMatch(/<section|<h2/)
-    expect(html.indexOf('id="scene-career"')).toBeGreaterThan(button)
+    const certifications = html.indexOf('data-cw-certifications=""')
+    const figures = html.indexOf('data-cw-about="figures"')
+    expect(who).toBeGreaterThan(-1)
+    expect(button).toBeGreaterThan(who)
+    expect(certifications).toBeGreaterThan(button)
+    expect(figures).toBeGreaterThan(certifications)
+    expect(html.indexOf('id="scene-career"')).toBeGreaterThan(figures)
   }, PAGE_RENDER)
 
   it('Caso 12: un enlace destacado al showcase junto a "Verlo en vivo"; los otros casos no lo llevan', async () => {
