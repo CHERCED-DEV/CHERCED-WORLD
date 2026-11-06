@@ -12,7 +12,7 @@ import { render, type AssistantTemplateKey, type AssistantTemplates } from './te
 
 export type AnswerKind = 'answer' | 'unknown' | 'out_of_scope' | 'refusal' | 'greeting'
 
-export type AnswerLink = { label: string; href: string; external: boolean }
+export type AnswerLink = { label: string; href: string; external: boolean; lang?: Locale }
 
 export type AssistantAnswer = {
   kind: AnswerKind
@@ -307,10 +307,10 @@ function answerProjectsWithTech(ctx: Context, canonicals: string[]): Draft {
 function cvLink(ctx: Context): AnswerLink[] {
   const { cv } = ctx.facts
   if (!cv) return []
-  const links: AnswerLink[] = []
-  if (cv.pdf) links.push({ label: cv.pdf.label, href: cv.pdf.href, external: true })
-  links.push({ label: cv.label, href: cv.href, external: true })
-  return links
+  return [
+    ...cv.pdfs.map((pdf): AnswerLink => ({ label: pdf.label, href: pdf.href, external: true, lang: pdf.lang })),
+    { label: cv.label, href: cv.href, external: true },
+  ]
 }
 
 function answerExperience(ctx: Context): Draft {
@@ -331,7 +331,8 @@ function answerCv(ctx: Context): Draft {
   const experience = answerExperience(ctx)
   const { cv } = ctx.facts
   if (!cv) return experience
-  return { kind: 'answer', parts: [`${cv.label}.`, ...experience.parts], links: [...cvLink(ctx), ...experience.links] }
+  const intro = cv.pdfs.length > 0 ? tr(ctx, 'assistant.tpl.cv') : `${cv.label}.`
+  return { kind: 'answer', parts: [intro, ...experience.parts], links: [...cvLink(ctx), ...experience.links] }
 }
 
 function skillName(ctx: Context, id: string): string | null {

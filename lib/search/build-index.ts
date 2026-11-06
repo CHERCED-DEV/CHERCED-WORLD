@@ -1,6 +1,6 @@
 import { lobeWords } from '@/content/site'
 import type { SiteContent } from '@/content/types'
-import { getProjects, getSite, listPosts, pick, projectTitle } from '@/lib/content'
+import { cvPdfs, getProjects, getSite, listPosts, pick, projectTitle } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
 import { localizedPath } from '@/lib/i18n/paths'
 import { getDictionary } from '@/lib/i18n/server'
@@ -140,9 +140,7 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
       ? {
           href: site.profile.cv.href,
           label: t(common, 'cv.link'),
-          ...(site.profile.cv.pdf
-            ? { pdf: { href: site.profile.cv.pdf.href, label: t(common, 'cv.download'), bytes: site.profile.cv.pdf.bytes } }
-            : {}),
+          pdfs: cvPdfs(lang, site).map((pdf) => ({ lang: pdf.lang, href: pdf.href, label: t(common, `cv.pdf.${pdf.lang}`), bytes: pdf.bytes })),
         }
       : null,
     socials: site.socials

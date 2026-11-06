@@ -83,11 +83,11 @@ export type PrivacySection = { heading: Localized; body: Localized }
 
 export type Principle = { short: Localized; full: Localized }
 
-export type CvPdf = { href: string; bytes: number }
+export type CvPdf = { lang: Locale; href: string; filename: string; bytes: number }
 
 export type Profile = {
   availability: { location: Localized; timezone: 'UTC−5'; relocation: Localized }
-  cv: { href: string; pdf?: CvPdf }
+  cv: { href: string; pdfs?: CvPdf[] }
 }
 
 export type RecruitersContent = {

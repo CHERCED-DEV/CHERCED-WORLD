@@ -149,9 +149,11 @@ export function listPosts(index: SearchIndex, input: { tag?: string }, env: Hand
 export function getCv(index: SearchIndex, env: HandlerEnv = { origin: null }) {
   const { cv } = index.facts
   if (!cv) throw new CapabilityError('unavailable', 'The CV link is not published')
-  const output: { url: string; label: string; pdf?: { url: string; label: string; bytes: number } } = { url: cv.href, label: cv.label }
-  if (cv.pdf) output.pdf = { url: link(env, cv.pdf.href), label: cv.pdf.label, bytes: cv.pdf.bytes }
-  return output
+  return {
+    url: cv.href,
+    label: cv.label,
+    pdfs: cv.pdfs.map((pdf) => ({ lang: pdf.lang, url: link(env, pdf.href), label: pdf.label, bytes: pdf.bytes })),
+  }
 }
 
 export function setPreferences(

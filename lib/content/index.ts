@@ -40,6 +40,8 @@ export function pick<T>(value: Localized<T>, lang: Locale): T {
 
 export { projectTitle, projectTitles } from './project-title'
 
+export { cvPdfs } from './cv'
+
 export async function loadPost(id: string, lang: Locale): Promise<LoadedPost | null> {
   const entry = Object.prototype.hasOwnProperty.call(postRegistry, id) ? postRegistry[id] : undefined
   if (!entry) return null

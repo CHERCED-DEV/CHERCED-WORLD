@@ -1,4 +1,5 @@
 import type { CapabilityName } from '@/lib/capabilities/types'
+import type { Locale } from '@/lib/i18n/config'
 import { t, type Dictionary } from '@/lib/i18n/translate'
 import { createSearcher, type Searcher } from '@/lib/search/searcher'
 import { fold } from '@/lib/search/text'
@@ -57,11 +58,11 @@ export type ActionContext = {
   capsuleFound: boolean
 }
 
-export type CvPdfCommand = { href: string; filename: string }
+export type CvPdfCommand = { lang: Locale; href: string; filename: string; hint?: string }
 
 export type CommandContext = ActionContext & {
   cv: string | null
-  cvPdf?: CvPdfCommand | null
+  cvPdfs?: CvPdfCommand[]
   now: string | null
   synergos?: string | null
   aiLab?: string | null
@@ -99,7 +100,8 @@ const ACTION_KEYWORDS: Record<string, string> = {
   'copy-email': 'correo email mail copiar copy contacto contact',
   capsule: 'capsula capsule 2023 tiempo time historia history',
   'action:cv': 'cv hoja vida resume curriculum linkedin',
-  'action:cv-pdf': 'cv pdf descargar download bajar hoja vida resume curriculum',
+  'action:cv-pdf-es': 'cv pdf descargar download hoja vida resume espanol spanish',
+  'action:cv-pdf-en': 'cv pdf descargar download hoja vida resume ingles english',
   'action:shortcuts': 'atajos shortcuts teclado keyboard teclas keys',
   'action:now': 'ahora now hoy today',
   'action:synergos': 'synergos master product showcase vitrina producto product',
@@ -151,12 +153,13 @@ export function buildCommands(labels: Dictionary, context: CommandContext): Pale
   const actions = buildActions(labels, context)
   const byId = (id: string) => actions.find((action) => action.id === id)
   const commands: PaletteItem[] = []
-  if (context.cvPdf) {
+  for (const pdf of context.cvPdfs ?? []) {
     commands.push({
-      id: 'action:cv-pdf',
+      id: `action:cv-pdf-${pdf.lang}`,
       group: 'actions',
-      title: t(labels, 'palette.action.cvPdf'),
-      command: { type: 'download', href: context.cvPdf.href, filename: context.cvPdf.filename },
+      title: t(labels, `palette.action.cvPdf.${pdf.lang}`),
+      ...(pdf.hint ? { hint: pdf.hint } : {}),
+      command: { type: 'download', href: pdf.href, filename: pdf.filename },
     })
   }
   if (context.cv) {
@@ -312,7 +315,7 @@ export type PaletteCommandId =
   | 'action:assistant'
   | 'action:copy-email'
   | 'action:cv'
-  | 'action:cv-pdf'
+  | `action:cv-pdf-${Locale}`
   | 'action:shortcuts'
   | 'action:now'
   | 'action:synergos'

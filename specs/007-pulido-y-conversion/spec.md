@@ -35,6 +35,15 @@ ningún dato personal sensible.
 
 - **FR-701**: `public/cv/Camilo_Hernandez_CV.pdf` es el CV oficial (D5), sin cambios. Home, Sobre mí y Contacto muestran
   "Descargar CV (PDF)" / "Download CV (PDF)" junto al botón de LinkedIn, con el peso del archivo y `download`.
+  **Cambia con FR-701b.**
+- **FR-701b** (T911, 2026-11-06): el CV se descarga en español o en inglés. `public/cv/camilo-hernandez-cv-es.pdf` y
+  `public/cv/camilo-hernandez-cv-en.pdf` son copias exactas de los PDF del autor y se guardan como
+  `Camilo_Hernandez_CV_ES.pdf` y `Camilo_Hernandez_CV_EN.pdf`; el PDF de FR-701 se retira. El botón "Descargar CV" /
+  "Download CV" ofrece el PDF del idioma de la página y, al lado, un enlace al otro idioma ("English version" /
+  "Versión en español", con `hreflang` y `lang`); cada uno dice "PDF · peso". Lo mismo en el pop-up de reclutadores.
+  La paleta tiene "Descargar CV en español" y "Download CV in English" (con sus equivalentes en cada idioma) y `>cv`
+  baja el del idioma de la página; el asistente, `get_cv` y la sección `## CV` de `llms.txt` dan los dos PDF y
+  LinkedIn; el JSON-LD `Person` enlaza el PDF del idioma en `subjectOf` (`DigitalDocument`, `application/pdf`).
 - **FR-702**: la paleta tiene la acción "> descargar CV" / "> download CV", en ES y EN.
 - **FR-703**: en producción, `og:image`, el canonical y el sitemap usan el mismo origen (`cherced-world.vercel.app`).
 - **FR-704**: los casos 13, 14 y 15 tienen título en ES: "Director y líneas: agentes de IA en paralelo", "Espacio de
@@ -89,7 +98,7 @@ ningún dato personal sensible.
 | P-701 | ¿Qué roles busca? | FR-710 |
 | P-702 | ¿Qué repos son públicos? ¿Los casos de evaluación de legal-workspace son sintéticos? (P-420) | FR-712 |
 | P-703 | ¿URL del perfil de Platzi? | FR-711 |
-| P-704 | El CV enlaza `github.com/Cherced` y el sitio, `github.com/CHERCED-DEV`. ¿Cuál es el bueno? | — |
+| P-704 | El CV enlaza `github.com/Cherced` y el sitio, `github.com/CHERCED-DEV`. ¿Cuál es el bueno? Los PDF en ES y EN del 2026-11-06 siguen con `github.com/Cherced` | — |
 | P-705 | ¿HYROX en São Paulo o en Río de Janeiro, y con qué fecha? | FR-732 |
 | P-706 | ¿"Camilo Hernández" con tilde en todo el sitio? | FR-733 |
 | P-707 | ¿Prueba social (aerolíneas del CV, recomendaciones de LinkedIn)? | FR-713 |
@@ -97,7 +106,8 @@ ningún dato personal sensible.
 ## Criterios de éxito
 
 - **SC-701**: `GET /cv/Camilo_Hernandez_CV.pdf` responde 200 con `application/pdf`, y el archivo es idéntico byte a byte
-  al CV oficial.
+  al CV oficial. **Con FR-701b**: `GET /cv/camilo-hernandez-cv-{es,en}.pdf` responde 200 con `application/pdf`, cada
+  archivo es idéntico byte a byte al PDF del autor (su SHA-256 está fijado en `tests/unit/cv2`) y el viejo da 404.
 - **SC-702**: ningún texto visible en `/es` dice "Director & lines", "Legal workspace" ni "Event bridge".
 - **SC-703**: los `<title>` siguen FR-706 en ES y EN.
 - **SC-704**: `verify` y las e2e en verde al cerrar cada bloque, y una vista previa por bloque.

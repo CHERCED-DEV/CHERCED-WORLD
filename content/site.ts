@@ -51,7 +51,13 @@ export const site: SiteContent = {
       timezone: 'UTC−5',
       relocation: { es: 'Abierto a reubicación', en: 'Open to relocation' },
     },
-    cv: { href: 'https://www.linkedin.com/in/cherced/', pdf: { href: '/cv/Camilo_Hernandez_CV.pdf', bytes: 172_753 } },
+    cv: {
+      href: 'https://www.linkedin.com/in/cherced/',
+      pdfs: [
+        { lang: 'es', href: '/cv/camilo-hernandez-cv-es.pdf', filename: 'Camilo_Hernandez_CV_ES.pdf', bytes: 174_507 },
+        { lang: 'en', href: '/cv/camilo-hernandez-cv-en.pdf', filename: 'Camilo_Hernandez_CV_EN.pdf', bytes: 172_753 },
+      ],
+    },
   },
   recruiters: {
     title: { es: 'Para reclutadores', en: 'For recruiters' },

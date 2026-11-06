@@ -65,12 +65,12 @@ export type ExperienceClientProps = {
   pages: SearchDoc[]
   email: string | null
   cv: string | null
-  cvPdf: CvPdfCommand | null
+  cvPdfs: CvPdfCommand[]
   areas: string[]
   capsule: CapsuleEntry[]
 }
 
-export function ExperienceClient({ lang, labels, pages, email, cv, cvPdf, areas, capsule }: ExperienceClientProps) {
+export function ExperienceClient({ lang, labels, pages, email, cv, cvPdfs, areas, capsule }: ExperienceClientProps) {
   const router = useRouter()
   const pathname = usePathname()
   const pathRef = useRef(pathname)
@@ -181,7 +181,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, cvPdf, areas,
                     theme: currentTheme(),
                     email,
                     cv,
-                    cvPdf,
+                    cvPdfs,
                     now: localizedPath(lang, '/now'),
                     synergos: localizedPath(lang, '/synergos'),
                     aiLab: localizedPath(lang, '/ai-lab'),
@@ -224,7 +224,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, cvPdf, areas,
       cancel()
       unregister?.()
     }
-  }, [lang, labels, pages, email, cv, cvPdf, router, show, toast])
+  }, [lang, labels, pages, email, cv, cvPdfs, router, show, toast])
 
   const unavailable = status === 'unavailable'
 
@@ -266,7 +266,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, cvPdf, areas,
           pages={pages}
           email={email}
           cv={cv}
-          cvPdf={cvPdf}
+          cvPdfs={cvPdfs}
           singleKey={singleKey}
           open={open === 'palette'}
           session={sessions.palette}
