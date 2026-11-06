@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
+import { hasAuthorHint, mailboxHref } from '@/lib/auth/author-hint'
 import type { Locale } from '@/lib/i18n/config'
 import controls from './controls.module.scss'
 import { badgeText, MAILBOX_ENDPOINT, MAILBOX_INTERVAL_MS, mailboxLabel, parseUnread, startVisiblePolling } from './mailbox'
@@ -10,8 +11,17 @@ import { SelfLink } from './SelfLink'
 
 export type MailboxLabels = { name: string; one: string; many: string }
 
+function subscribeToNothing(): () => void {
+  return () => {}
+}
+
+function readAuthorHint(): boolean {
+  return hasAuthorHint(document.cookie)
+}
+
 export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLabels }) {
   const [unread, setUnread] = useState<number | null>(null)
+  const author = useSyncExternalStore(subscribeToNothing, readAuthorHint, () => false)
 
   useEffect(() => {
     let controller: AbortController | null = null
@@ -45,12 +55,13 @@ export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLab
 
   return (
     <SelfLink
-      href={`/${lang}/contactMe`}
+      href={mailboxHref(lang, author)}
       prefetch={false}
       className={cx(controls.iconButton, controls.mailbox)}
       aria-label={mailboxLabel(unread, labels)}
       title={labels.name}
       data-cw-mailbox=""
+      data-cw-mailbox-author={author ? '' : undefined}
     >
       <Icon name="inbox" />
       {unread ? (

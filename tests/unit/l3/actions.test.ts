@@ -5,6 +5,7 @@ import { changePassword, completeSetup, login, logout } from '@/lib/actions/auth
 import { getApprovedComments, submitComment } from '@/lib/actions/comments'
 import { submitContact } from '@/lib/actions/contact'
 import { hashPassword, verifyPassword } from '@/lib/auth/password'
+import { AUTHOR_HINT_COOKIE, AUTHOR_HINT_MAX_AGE_S } from '@/lib/auth/author-hint'
 import { hashSessionToken, SESSION_COOKIE } from '@/lib/auth/session'
 import { ensureSetupCode } from '@/lib/auth/setup'
 import { getRepos, registerRepoFactory } from '@/lib/data'
@@ -166,6 +167,9 @@ describe('configuración inicial', () => {
     const cookie = request.cookies.get(SESSION_COOKIE)
     expect(cookie?.options).toMatchObject({ httpOnly: true, secure: true, sameSite: 'lax', path: '/' })
     expect(await repos.admin.getSession(hashSessionToken(cookie?.value ?? ''))).not.toBeNull()
+    const hint = request.cookies.get(AUTHOR_HINT_COOKIE)
+    expect(hint?.value).toBe('1')
+    expect(hint?.options).toMatchObject({ httpOnly: false, secure: true, sameSite: 'lax', path: '/', maxAge: AUTHOR_HINT_MAX_AGE_S })
   })
 
   it('rechaza un código incorrecto, contraseñas cortas o distintas', async () => {

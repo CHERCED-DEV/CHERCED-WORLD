@@ -71,6 +71,21 @@ test.describe('FR-711 y FR-712: certificaciones y "Ver código"', () => {
   })
 })
 
+test.describe('T944: el buzón lleva al autor a sus mensajes', () => {
+  onlyIn('desktop-chromium')
+
+  test('sin la marca va a Contacto; con la marca del autor, al panel, que pide iniciar sesión', async ({ page, context, baseURL }) => {
+    await skipIntro(page)
+    await page.goto('/es')
+    const mailbox = page.locator('header [data-cw-mailbox]')
+    await expect(mailbox).toHaveAttribute('href', '/es/contactMe')
+    await context.addCookies([{ name: 'cw-author', value: '1', url: baseURL! }])
+    await page.reload()
+    await expect(mailbox).toHaveAttribute('href', '/es/inbox')
+    await expect(mailbox).toHaveAttribute('data-cw-mailbox-author', '')
+  })
+})
+
 test.describe('B12: HYROX en /now', () => {
   onlyIn('desktop-chromium', 'no-js')
 

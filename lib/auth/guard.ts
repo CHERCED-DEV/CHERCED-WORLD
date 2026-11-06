@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { cache } from 'react'
 import { getRepos } from '@/lib/data'
 import type { AdminSession } from '@/lib/data/types'
+import { AUTHOR_HINT_COOKIE, AUTHOR_HINT_OPTIONS } from './author-hint'
 import { endSession, resolveSession, SESSION_COOKIE, SESSION_COOKIE_OPTIONS, startSession } from './session'
 
 export class UnauthorizedError extends Error {
@@ -32,7 +33,9 @@ export async function requireAdmin(options: { touch?: boolean } = {}): Promise<A
 
 export async function signIn(now: Date): Promise<void> {
   const { token } = await startSession(getRepos().admin, now)
-  ;(await cookies()).set(SESSION_COOKIE, token, SESSION_COOKIE_OPTIONS)
+  const store = await cookies()
+  store.set(SESSION_COOKIE, token, SESSION_COOKIE_OPTIONS)
+  store.set(AUTHOR_HINT_COOKIE, '1', AUTHOR_HINT_OPTIONS)
 }
 
 export async function signOut(): Promise<void> {
