@@ -47,10 +47,26 @@ test.describe('T762 · axe en la página y con cada experimento abierto, en tema
 
   for (const lang of LANGS) {
     for (const scheme of SCHEMES) {
-      test(`/${lang}/ai-lab en tema ${scheme === 'dark' ? 'oscuro' : 'claro'}: 0 violaciones serias o críticas en la página, el consentimiento y las demos abiertas`, async ({ page, context }) => {
+      const theme = scheme === 'dark' ? 'oscuro' : 'claro'
+
+      test(`/${lang}/ai-lab en tema ${theme}: 0 violaciones serias o críticas con V1 a V4, A2, A3, A5, R1, A4 (Despacho), J1 y J2 abiertos a la vez`, async ({ page, context }) => {
         await blockHeavy(context)
         await fakeWorkers(page)
         await fakeSpeech(page)
+        await page.emulateMedia({ colorScheme: scheme })
+        await open(page, lang)
+        await expect(page.locator('html')).toHaveAttribute('data-theme', scheme)
+        for (const id of INTEGRATED) await prepareDemo(page, id, lang)
+        for (const id of SOON) await expect((await openDemo(page, id)).locator('[data-cw-lab-soon]')).toBeVisible()
+        const found: Record<string, string[]> = {}
+        found['demos abiertas'] = await serious(page, { include: ['#main'], exclude: [H1_TREE] })
+        found['árbol de A2, sin la regla de H1'] = await serious(page, { include: [H1_TREE], disable: [H1_RULE] })
+        expect(found).toEqual(Object.fromEntries(Object.keys(found).map((key) => [key, []])))
+      })
+
+      test(`/${lang}/ai-lab en tema ${theme}: 0 violaciones serias o críticas en la página recién cargada, el consentimiento y Obra con y sin permiso`, async ({ page, context }) => {
+        await blockHeavy(context)
+        await fakeWorkers(page)
         await page.emulateMedia({ colorScheme: scheme })
         await open(page, lang)
         await expect(page.locator('html')).toHaveAttribute('data-theme', scheme)
@@ -61,20 +77,17 @@ test.describe('T762 · axe en la página y con cada experimento abierto, en tema
         await expect(consent(page)).toBeVisible()
         await consent(page).evaluate((node) => Promise.all(node.getAnimations({ subtree: true }).map((animation) => animation.finished)))
         found['diálogo de consentimiento'] = await serious(page, { include: ['dialog[open]'] })
-        await answerConsent(page, 'accept')
+        await answerConsent(page, 'cancel')
+        await expect(card(page, 'V1').locator('[data-cw-lab-declined]')).toBeVisible()
+        found['V1 sin permiso'] = await serious(page, { include: ['[data-cw-lab-card="V1"]'] })
 
-        for (const id of INTEGRATED) await prepareDemo(page, id, lang)
-        for (const id of SOON) await expect((await openDemo(page, id)).locator('[data-cw-lab-soon]')).toBeVisible()
-        found['página con V1 a V4, A2, A3, A5, R1, A4 (Despacho), J1 y J2 abiertos'] = await serious(page, { exclude: [H1_TREE] })
-        found['árbol de A2, sin la regla de H1'] = await serious(page, { include: [H1_TREE], disable: [H1_RULE] })
-
-        const a4 = card(page, 'A4')
+        const a4 = await openDemo(page, 'A4')
         await obraWithPython(page, a4)
         await a4.locator('[data-cw-obra-field="P-1:a"]').fill('x')
         await expect(a4.locator('[data-cw-obra-field="P-1:a"]')).toHaveAttribute('aria-invalid', 'true')
         found['A4 Obra con Python y un valor inválido'] = await serious(page, { include: ['[data-cw-lab-card="A4"]'] })
 
-        await a4.locator('[data-cw-lab-revoke]').click()
+        await card(page, 'A4').locator('[data-cw-lab-revoke]').click()
         await expect(a4.locator('[data-cw-obra-status="idle"]')).toBeVisible()
         await a4.locator('[data-cw-obra-run]').click()
         await answerConsent(page, 'cancel', 'Pyodide 0.29.0')
