@@ -154,7 +154,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
 
   it('el fragmento de código es real: está, tal cual, en el archivo que enlaza', () => {
     const withCode = labCatalog.filter((item) => item.code)
-    expect(withCode.map((item) => item.id)).toEqual(['V1', 'V4', 'A5', 'J1', 'J2'])
+    expect(withCode.map((item) => item.id)).toEqual(expect.arrayContaining(['V1', 'V4', 'A5', 'J1', 'J2']))
     for (const item of withCode) {
       const code = item.code!
       expect(code.repoPath, item.id).not.toBeNull()

@@ -126,3 +126,6 @@ playwright/.cache/
 
 # worktrees de las lanes
 .worktrees/
+
+__pycache__/
+*.pyc

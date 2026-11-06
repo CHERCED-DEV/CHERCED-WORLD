@@ -16,7 +16,7 @@ import {
 import { aiLabOg } from '@/components/ailab/shell/og'
 import { ToastProvider } from '@/components/ui/Toast'
 import { labCatalog, labExperiment } from '@/content/ailab/catalog'
-import type { LabExperimentId } from '@/content/types'
+import type { LabExperiment, LabExperimentId } from '@/content/types'
 import { formatBytes } from '@/lib/ailab/core/format'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -31,16 +31,16 @@ function render(element: ReactElement): string {
   return renderToStaticMarkup(createElement(Toasts, { closeLabel: 'Cerrar' }, element))
 }
 
-async function card(lang: 'es' | 'en', id: LabExperimentId): Promise<string> {
+async function card(lang: 'es' | 'en', id: LabExperimentId | LabExperiment): Promise<string> {
   const { ailab, site, blog } = await dictionaries(lang)
-  const experiment = labExperiment(id)
+  const experiment = typeof id === 'string' ? labExperiment(id) : id
   return render(
     createElement(LabCardView, {
       lang,
       experiment,
       labels: labCardLabels(ailab, site, blog),
       tryLabels: labTryLabels(ailab, experiment.title[lang]),
-      copy: labDemoCopy(ailab, id),
+      copy: labDemoCopy(ailab, experiment.id),
     }),
   )
 }
@@ -93,7 +93,7 @@ describe('formato de la tarjeta (FR-303)', () => {
   })
 
   it('un experimento sin descargas lo dice, y sin código no pinta "El código"', async () => {
-    const html = await card('en', 'R1')
+    const html = await card('en', { ...labExperiment('R1'), code: null })
     expect(html).toContain('Saga simulator</h3>')
     expect(html).toMatch(/data-cw-lab-downloads="none"[^>]*>It doesn&#x27;t download anything\./)
     expect(html).toMatch(/data-cw-lab-status="stable"[^>]*>.*Status: <\/span>Stable/)
