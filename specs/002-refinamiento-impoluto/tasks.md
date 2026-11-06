@@ -70,9 +70,10 @@ lane 002 necesita cambiarlas, lo pide como enmienda al orquestador.
   - Índice fijo que tapa títulos, huecos en Carrera cuando la animación no corre, texto justificado, títulos de lóbulos duplicados para lectores de pantalla, íconos servidos a 3840 px, contraste de etiquetas grises y bloques vacíos que se muestran
   - "Aprendiendo ahora": Azure AI Foundry, Semantic Kernel y RAG salen de las barras y del chat (decisión del autor, 2026-11-04). E-03 se amplía con `skills.learningNow?`
 - [x] T226 Orquestador: enlaces a la página actual (logo, Privacidad, buzón) suben al inicio, y "Regresar" en la configuración del panel lleva al inicio del sitio (hallazgos de R5)
-- [ ] T227 Pendiente: que las rutas desconocidas respondan 404 sin perder el contenido sin JS
+- [x] T227 Pendiente: que las rutas desconocidas respondan 404 sin perder el contenido sin JS
   - Con el layout raíz en `[lang]`, `notFound()` deja el cuerpo vacío sin JS. Next 16 documenta `global-not-found.tsx`, que es experimental, para este caso. El intento 8e1e074 se revirtió en 86d7634; hoy responde 200 con `noindex`
   - Revisar también el 404 de `/es/portfolio/no-existe`, que tiene el mismo cuerpo vacío sin JS desde la 001
+  - Resuelta en la 007 (T940, lane PC4): `app/global-not-found.tsx` (con `experimental.globalNotFound`, todavía experimental en 16.4.3) envuelve `NotFoundView` en el mismo layout de `[lang]`. Sale la ruta comodín y `dynamicParams = false` en el layout, los casos y los posts, así que toda ruta inexistente queda sin coincidencia y Next la sirve con 404 y el HTML completo. El proxy le pasa el idioma de la URL en `x-cw-lang`
 - [ ] T229 R3: corrección de skills (decisiones del autor D7 y D9, 2026-11-04)
   - Ningún skill se borra: vuelven React, Next.js, Node.js, MongoDB y Figma, y Arquitectura se completa con Clean Architecture, SOLID, patrones de diseño y sistemas distribuidos
   - "Oficio" se reemplaza por "Prácticas de ingeniería" e "Idiomas y negocio" (6 lóbulos)
@@ -98,7 +99,7 @@ lane 002 necesita cambiarlas, lo pide como enmienda al orquestador.
 - El autor decidió no repetir el ritual de 3 corridas y pasar a una suite por niveles desde la 004 (T510). Con esto,
   FR-212 queda cubierto: D-04 se estabilizó con 3 corridas de R5 y la suite completa pasó.
 - Siguen pendientes:
-  - T227: el 404 con estado real.
+  - T227: el 404 con estado real (resuelta en la 007, T940).
   - T228: el destello del panel en L3.
   - US9: el museo 2023.
   - El paso a `main`, que espera la confirmación explícita del autor.

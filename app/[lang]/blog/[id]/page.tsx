@@ -23,6 +23,8 @@ type Props = { params: Promise<{ lang: string; id: string }> }
 
 export const revalidate = 3600
 
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return postIds().map((id) => ({ id }))
 }

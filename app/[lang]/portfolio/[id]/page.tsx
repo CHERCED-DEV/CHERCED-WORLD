@@ -12,6 +12,8 @@ import { getProject, getProjects, projectTitle } from '@/lib/content'
 
 type Props = { params: Promise<{ lang: string; id: string }> }
 
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return getProjects().map((project) => ({ id: project.id }))
 }

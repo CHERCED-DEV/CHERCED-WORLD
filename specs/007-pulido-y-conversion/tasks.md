@@ -42,7 +42,9 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 
 ## Bloque 4: correcciones menores
 
-- [ ] T940 [B6] 404 real (T227 de la 002), también para `/es/portfolio/99`.
+- [x] T940 [B6] 404 real (T227 de la 002), también para `/es/portfolio/99`. `app/global-not-found.tsx` con el layout
+  de `[lang]` y `NotFoundView`; sin ruta comodín y con `dynamicParams = false` en el layout, los casos y los posts. 404
+  con el HTML completo, con y sin JS, en el idioma de la URL (`x-cw-lang` desde el proxy).
 - [ ] T941 [B9] Etiquetas del blog bilingües.
 - [x] T942 [B12] Ciudad de HYROX (P-705).
 - [x] T943 [B13] Nombre unificado (P-706).
