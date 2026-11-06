@@ -5,13 +5,15 @@ import type { LabDemoProps } from '@/components/ailab/shell/types'
 import { findPaletteCommand, runPaletteCommand } from '@/components/experience/palette-model'
 import { Button } from '@/components/ui/Button'
 import { voiceCommands, type VoiceCommand } from '@/content/ailab/voice-commands'
+import { formatBytes } from '@/lib/ailab/core/format'
 import { isSilent } from '@/lib/ailab/voice/audio'
 import { matchVoiceCommand } from '@/lib/ailab/voice/commands'
 import { decodeToMono } from '@/lib/ailab/voice/decode'
-import { defaultModelOf } from '@/lib/ailab/voice/models'
+import { ONNX_RUNTIME, WHISPER_DOWNLOADS, defaultModelOf } from '@/lib/ailab/voice/models'
 import { WHISPER_LANGUAGES, type WhisperLanguage } from '@/lib/ailab/voice/protocol'
 import type { MicIssue } from '@/lib/ailab/voice/recorder'
 import { EngineProgress, LocalNote, fill, type EngineMessages } from './parts'
+import { useSessionConsent } from './use-consent'
 import { useRecorder, type Recording } from './use-recorder'
 import { useWhisper } from './use-whisper'
 import styles from './Voice.module.scss'
@@ -38,6 +40,8 @@ type Outcome =
 
 export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoProps) {
   const model = useMemo(() => defaultModelOf(downloads, 'tiny'), [downloads])
+  const download = WHISPER_DOWNLOADS[model]
+  const allowed = useSessionConsent(experiment, download.resource)
   const { state, load, transcribe, cancel } = useWhisper(experiment)
   const [language, setLanguage] = useState<WhisperLanguage>(lang)
   const [outcome, setOutcome] = useState<Outcome | null>(null)
@@ -74,10 +78,10 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
   }
 
   useEffect(() => {
-    if (started.current || !consent) return
+    if (started.current || !(consent || allowed)) return
     started.current = true
     void load(model)
-  }, [consent, load, model])
+  }, [allowed, consent, load, model])
 
   useEffect(
     () => () => {
@@ -238,34 +242,68 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
     }
   }
 
+  const activation =
+    state.phase === 'asking' ? messages.asking : state.phase === 'declined' ? messages.declined : ''
+
   return (
-    <div className={styles.demo} data-cw-voice="V4">
+    <div className={styles.demo} data-cw-voice="V4" data-cw-v4-voice={allowed ? 'on' : 'off'}>
       <LocalNote>{t('ailab.v4.local')}</LocalNote>
 
-      <EngineProgress state={state} messages={messages} lang={lang} onCancel={cancel} onRetry={() => void load(model)} />
-
-      <fieldset className={styles.fieldset} disabled={busy || listening}>
-        <legend className={styles.legend}>{t('ailab.v4.language.legend')}</legend>
-        <div className={styles.inline}>
-          {WHISPER_LANGUAGES.map((option) => (
-            <label key={option} className={styles.option}>
-              <input
-                type="radio"
-                name={`${id}-language`}
-                value={option}
-                checked={language === option}
-                onChange={() => setLanguage(option)}
-                data-cw-v4-language={option}
-              />
-              <span className={styles.optionText}>
-                <span className={styles.optionName}>{t(`ailab.v4.language.${option}`)}</span>
-              </span>
-            </label>
-          ))}
+      {allowed ? (
+        <EngineProgress state={state} messages={messages} lang={lang} onCancel={cancel} onRetry={() => void load(model)} />
+      ) : !recorder.supported ? null : (
+        <div className={styles.notice} data-cw-v4-activation="">
+          <p id={`${id}-activate`}>
+            {fill(t('ailab.v4.activate.body'), {
+              model: download.resource,
+              size: formatBytes(download.bytes, lang),
+              host: download.host,
+              runtime: formatBytes(ONNX_RUNTIME.bytes, lang),
+            })}
+          </p>
+          <div className={styles.actions}>
+            <Button
+              variant="glass"
+              onClick={() => {
+                if (state.phase !== 'asking') void load(model)
+              }}
+              aria-describedby={`${id}-activate`}
+              aria-disabled={state.phase === 'asking' || undefined}
+              data-cw-v4-activate=""
+            >
+              {t('ailab.v4.activate.button')}
+            </Button>
+          </div>
+          <p role="status" aria-live="polite" data-cw-v4-activation-status={state.phase}>
+            {activation}
+          </p>
         </div>
-      </fieldset>
+      )}
 
-      {recorder.supported ? (
+      {allowed ? (
+        <fieldset className={styles.fieldset} disabled={busy || listening}>
+          <legend className={styles.legend}>{t('ailab.v4.language.legend')}</legend>
+          <div className={styles.inline}>
+            {WHISPER_LANGUAGES.map((option) => (
+              <label key={option} className={styles.option}>
+                <input
+                  type="radio"
+                  name={`${id}-language`}
+                  value={option}
+                  checked={language === option}
+                  onChange={() => setLanguage(option)}
+                  data-cw-v4-language={option}
+                />
+                <span className={styles.optionText}>
+                  <span className={styles.optionName}>{t(`ailab.v4.language.${option}`)}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ) : null}
+
+      {allowed && recorder.supported ? (
         <div className={styles.actions}>
           <button
             type="button"
@@ -290,7 +328,7 @@ export function VoiceNav({ lang, experiment, consent, downloads, t }: LabDemoPro
           </button>
         </div>
       ) : null}
-      {recorder.supported ? (
+      {allowed && recorder.supported ? (
         <p id={`${id}-hold-hint`} className={styles.hint}>
           {fill(t('ailab.v4.holdHint'), { max: MAX_COMMAND_SECONDS })}
         </p>

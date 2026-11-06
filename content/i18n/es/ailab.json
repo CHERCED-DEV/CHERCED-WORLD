@@ -224,6 +224,8 @@
   "ailab.v4.mic.error": "No pude abrir el micrófono. Puedes escribir el comando.",
   "ailab.v4.cancel": "Cancelar",
   "ailab.v4.retry": "Reintentar",
+  "ailab.v4.activate.body": "Escribir el comando no descarga nada. Para hablar, descargo {model} ({size}) desde {host} y el motor ONNX Runtime Web ({runtime}) desde este mismo sitio.",
+  "ailab.v4.activate.button": "Activar la voz",
   "ailab.a2.title": "Anatomía de un plugin",
   "ailab.a2.summary": "Así se arma un plugin de Claude Code: skills, comandos, hooks y servidores MCP. Toca cada archivo para ver para qué sirve, y crea el tuyo al final.",
   "ailab.a2.privacy": "No descarga ni envía nada: es un recorrido por los archivos de un plugin de ejemplo.",

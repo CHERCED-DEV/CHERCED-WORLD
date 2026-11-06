@@ -224,6 +224,8 @@
   "ailab.v4.mic.error": "I couldn't open the microphone. You can type the command.",
   "ailab.v4.cancel": "Cancel",
   "ailab.v4.retry": "Try again",
+  "ailab.v4.activate.body": "Typing the command downloads nothing. To speak, I download {model} ({size}) from {host} and the ONNX Runtime Web engine ({runtime}) from this same site.",
+  "ailab.v4.activate.button": "Turn on voice",
   "ailab.a2.title": "Anatomy of a plugin",
   "ailab.a2.summary": "This is how a Claude Code plugin is built: skills, commands, hooks and MCP servers. Tap each file to see what it's for, and build your own at the end.",
   "ailab.a2.privacy": "It doesn't download or send anything: it's a tour of the files of a sample plugin.",
