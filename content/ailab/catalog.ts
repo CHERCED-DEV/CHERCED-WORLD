@@ -1,0 +1,572 @@
+import en from '@/content/i18n/en/ailab.json'
+import es from '@/content/i18n/es/ailab.json'
+import {
+  LAB_THEMES,
+  type LabDownload,
+  type LabExperiment,
+  type LabExperimentId,
+  type LabTheme,
+  type Localized,
+} from '@/content/types'
+
+export const LAB_REPO_URL = 'https://github.com/CHERCED-DEV/CHERCED-WORLD'
+
+export const LAB_REPO_BRANCH = 'main'
+
+const MB = 1_000_000
+
+type CopyKey = keyof typeof es & keyof typeof en
+
+function copy(key: CopyKey): Localized {
+  return { es: es[key], en: en[key] }
+}
+
+export const WHISPER_TINY: LabDownload = { resource: 'Whisper tiny (int8)', bytes: 41 * MB, host: 'huggingface.co' }
+
+export const WHISPER_BASE: LabDownload = { resource: 'Whisper base (int8)', bytes: 77 * MB, host: 'huggingface.co' }
+
+export const WHISPER_SMALL: LabDownload = { resource: 'Whisper small (int8)', bytes: 249 * MB, host: 'huggingface.co' }
+
+export const E5_SMALL: LabDownload = { resource: 'multilingual-e5-small (int8)', bytes: 118 * MB, host: 'huggingface.co' }
+
+export const PYODIDE_CORE: LabDownload = { resource: 'Pyodide 0.29.0', bytes: 12 * MB, host: 'cdn.jsdelivr.net' }
+
+export const PYODIDE_NUMPY: LabDownload = { resource: 'numpy (Pyodide 0.29.0)', bytes: 3_100_000, host: 'cdn.jsdelivr.net' }
+
+const V1: LabExperiment = {
+  id: 'V1',
+  theme: 'voice',
+  title: copy('ailab.v1.title'),
+  summary: copy('ailab.v1.summary'),
+  status: 'beta',
+  runsIn: 'browser',
+  downloads: [{ ...WHISPER_BASE, default: true }, WHISPER_TINY, WHISPER_SMALL],
+  privacy: copy('ailab.v1.privacy'),
+  flow: [
+    { es: 'Grabas o subes un audio', en: 'You record or upload audio' },
+    { es: 'Whisper lo transcribe en un worker de tu navegador', en: 'Whisper transcribes it in a worker in your browser' },
+    { es: 'Texto con marcas de tiempo, en .txt o .srt', en: 'Text with timestamps, as .txt or .srt' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Whisper en el navegador, con Transformers.js', en: 'Whisper in the browser, with Transformers.js' },
+      why: {
+        es: 'La Web Speech API manda el audio a un servicio del navegador. Aquí el audio no sale de tu equipo.',
+        en: 'The Web Speech API sends the audio to a browser service. Here the audio never leaves your device.',
+      },
+      tradeoff: {
+        es: 'La primera vez hay que descargar el modelo, y la velocidad depende de tu equipo.',
+        en: 'The first time you have to download the model, and the speed depends on your device.',
+      },
+    },
+    {
+      decision: { es: 'Base por defecto, con tiny de respaldo', en: 'Base by default, with tiny as a fallback' },
+      why: {
+        es: 'Small es más preciso, pero 249 MB es mucho para una primera prueba en el móvil.',
+        en: 'Small is more accurate, but 249 MB is a lot for a first try on a phone.',
+      },
+      tradeoff: {
+        es: 'En español, small promete más precisión: por eso queda como opción, con su peso a la vista.',
+        en: 'In Spanish, small promises more accuracy: that is why it stays as an option, with its size in sight.',
+      },
+    },
+  ],
+  code: {
+    snippet: `export function requestDownload(request: DownloadRequest): Promise<boolean> {
+  assertDownloadRequest(request)
+  if (hasConsent(request.experiment, request.resource)) return Promise.resolve(true)
+  const key = consentKey(request.experiment, request.resource)
+  const existing = pending.get(key)
+  if (existing) return existing
+  const turn = queue.then(() => ask(request))
+  queue = turn.catch(() => false)
+  const result = turn.finally(() => pending.delete(key))
+  pending.set(key, result)
+  return result
+}`,
+    lang: 'ts',
+    repoPath: 'lib/ailab/core/consent.ts',
+  },
+}
+
+const V2: LabExperiment = {
+  id: 'V2',
+  theme: 'voice',
+  title: copy('ailab.v2.title'),
+  summary: copy('ailab.v2.summary'),
+  status: 'beta',
+  runsIn: 'browser',
+  downloads: [],
+  privacy: copy('ailab.v2.privacy'),
+  flow: [
+    { es: 'Escribes un texto y eliges una voz', en: 'You type some text and pick a voice' },
+    { es: 'La Web Speech API lo lee con una voz de tu sistema', en: 'The Web Speech API reads it with a voice from your system' },
+    { es: 'Lo escuchas, con reproducir, pausar y detener desde el teclado', en: 'You hear it, with play, pause and stop from the keyboard' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'La voz del navegador, sin descargas', en: "The browser's voice, with no downloads" },
+      why: {
+        es: 'La Web Speech API ya trae voces en español y en inglés.',
+        en: 'The Web Speech API already comes with Spanish and English voices.',
+      },
+      tradeoff: {
+        es: 'Las voces cambian de un sistema a otro, y en algunos navegadores se generan en línea: la tarjeta te avisa antes.',
+        en: 'Voices change from one system to another, and in some browsers they are generated online: the card warns you first.',
+      },
+    },
+  ],
+  code: null,
+}
+
+const V3: LabExperiment = {
+  id: 'V3',
+  theme: 'voice',
+  title: copy('ailab.v3.title'),
+  summary: copy('ailab.v3.summary'),
+  status: 'beta',
+  runsIn: 'browser',
+  downloads: [],
+  privacy: copy('ailab.v3.privacy'),
+  flow: [
+    { es: 'Eliges un post', en: 'You pick a post' },
+    { es: 'Se toma solo el cuerpo, sin los bloques de código', en: 'Only the body is taken, without the code blocks' },
+    { es: 'La voz del navegador lo lee en el idioma de la página', en: "The browser's voice reads it in the page's language" },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Leer en vivo con la voz del navegador', en: "Read live with the browser's voice" },
+      why: {
+        es: 'Pregenerar el audio exige un motor en el build, y eso necesita un servidor o una llave.',
+        en: 'Pregenerating the audio needs an engine in the build, and that needs a server or a key.',
+      },
+      tradeoff: {
+        es: 'La voz depende del sistema de quien escucha.',
+        en: 'The voice depends on the listener’s system.',
+      },
+    },
+    {
+      decision: { es: 'Un motor que se reutiliza', en: 'An engine that gets reused' },
+      why: {
+        es: 'Es la base de «Escuchar este post» en el blog.',
+        en: 'It is the base for “Listen to this post” on the blog.',
+      },
+      tradeoff: {
+        es: 'El blog depende de que este motor no cambie su contrato.',
+        en: 'The blog depends on this engine not changing its contract.',
+      },
+    },
+  ],
+  code: null,
+}
+
+const V4: LabExperiment = {
+  id: 'V4',
+  theme: 'voice',
+  title: copy('ailab.v4.title'),
+  summary: copy('ailab.v4.summary'),
+  status: 'experiment',
+  runsIn: 'browser',
+  downloads: [{ ...WHISPER_TINY, default: true }],
+  privacy: copy('ailab.v4.privacy'),
+  flow: [
+    { es: 'Mantienes el botón y dices un comando, o lo escribes', en: 'You hold the button and say a command, or type it' },
+    { es: 'Whisper tiny lo convierte en texto en tu navegador', en: 'Whisper tiny turns it into text in your browser' },
+    { es: 'Se compara con la lista de frases y corre el comando de la paleta', en: 'It is matched against the phrase list and the palette command runs' },
+  ],
+  adrCards: [
+    {
+      decision: {
+        es: 'Whisper local y un emparejador de frases, sin modelo de lenguaje',
+        en: 'Local Whisper and a phrase matcher, with no language model',
+      },
+      why: {
+        es: 'La Web Speech API manda el audio a un servicio, y una lista cerrada de comandos no necesita un LLM.',
+        en: 'The Web Speech API sends the audio to a service, and a closed list of commands does not need an LLM.',
+      },
+      tradeoff: {
+        es: 'Solo entiende las frases de la lista; si no, te muestra lo que entendió y las opciones.',
+        en: 'It only understands the phrases on the list; otherwise it shows you what it heard and the options.',
+      },
+    },
+    {
+      decision: { es: 'Solo ejecuta comandos de la paleta', en: 'It only runs palette commands' },
+      why: {
+        es: 'Nunca convierte texto libre en acciones: es la misma lista que usas con Ctrl+K.',
+        en: 'It never turns free text into actions: it is the same list you use with Ctrl+K.',
+      },
+      tradeoff: {
+        es: 'No puede hacer nada que la paleta no sepa hacer.',
+        en: 'It cannot do anything the palette does not know how to do.',
+      },
+    },
+  ],
+  code: {
+    snippet: `export function runPaletteCommand(id: PaletteCommandId | string): boolean {
+  const current = runner
+  const item = findPaletteCommand(id)
+  if (!current || !item) return false
+  current.run(item)
+  return true
+}`,
+    lang: 'ts',
+    repoPath: 'components/experience/palette-model.ts',
+  },
+}
+
+const A2: LabExperiment = {
+  id: 'A2',
+  theme: 'agents',
+  title: copy('ailab.a2.title'),
+  summary: copy('ailab.a2.summary'),
+  status: 'stable',
+  runsIn: 'browser',
+  downloads: [],
+  privacy: copy('ailab.a2.privacy'),
+  flow: [
+    { es: 'plugin.json declara el plugin', en: 'plugin.json declares the plugin' },
+    { es: 'Skills, comandos, hooks y servidores MCP viven en sus carpetas', en: 'Skills, commands, hooks and MCP servers live in their folders' },
+    { es: 'Al tocar un archivo ves para qué sirve', en: 'Tapping a file shows you what it is for' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Un plugin de ejemplo neutral', en: 'A neutral sample plugin' },
+      why: {
+        es: 'Muestra la estructura completa sin exponer el trabajo de ningún cliente.',
+        en: "It shows the full structure without exposing any client's work.",
+      },
+      tradeoff: {
+        es: 'No es el plugin que uso con una profesión real.',
+        en: 'It is not the plugin I use with a real profession.',
+      },
+    },
+    {
+      decision: { es: 'Todo estático, sin descargas', en: 'All static, with no downloads' },
+      why: {
+        es: 'Leer la estructura de un plugin no necesita un modelo.',
+        en: "Reading a plugin's structure does not need a model.",
+      },
+      tradeoff: {
+        es: 'No ejecuta el plugin: lo explica.',
+        en: 'It does not run the plugin: it explains it.',
+      },
+    },
+  ],
+  code: null,
+}
+
+const A3: LabExperiment = {
+  id: 'A3',
+  theme: 'agents',
+  title: copy('ailab.a3.title'),
+  summary: copy('ailab.a3.summary'),
+  status: 'stable',
+  runsIn: 'browser',
+  downloads: [],
+  privacy: copy('ailab.a3.privacy'),
+  flow: [
+    { es: 'Escribes el nombre, cuándo usarla y sus pasos', en: 'You write the name, when to use it and its steps' },
+    { es: 'Se valida el frontmatter', en: 'The frontmatter is validated' },
+    { es: 'Descargas tu SKILL.md, armado en tu navegador', en: 'You download your SKILL.md, built in your browser' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'El SKILL.md se genera en el navegador', en: 'The SKILL.md is generated in the browser' },
+      why: {
+        es: 'Sin servidor no hay una entrada pública que proteger, y lo que escribes no sale de tu equipo.',
+        en: 'With no server there is no public endpoint to protect, and what you write never leaves your device.',
+      },
+      tradeoff: {
+        es: 'Se valida el frontmatter (name y description), no lo que hará la skill.',
+        en: 'The frontmatter (name and description) is validated, not what the skill will do.',
+      },
+    },
+  ],
+  code: null,
+}
+
+const A5: LabExperiment = {
+  id: 'A5',
+  theme: 'agents',
+  title: copy('ailab.a5.title'),
+  summary: copy('ailab.a5.summary'),
+  status: 'beta',
+  runsIn: 'browser',
+  downloads: [E5_SMALL],
+  privacy: copy('ailab.a5.privacy'),
+  flow: [
+    { es: 'Escribes una pregunta', en: 'You type a question' },
+    { es: 'BM25 busca en el índice del sitio, en tu navegador', en: "BM25 searches the site's index, in your browser" },
+    { es: 'Ves cada fragmento con su puntaje, su fuente y el enlace', en: 'You see each passage with its score, its source and the link' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'BM25 sobre el índice que ya existe', en: 'BM25 over the index that already exists' },
+      why: {
+        es: 'No descarga nada, y su puntaje se puede mostrar tal cual.',
+        en: 'It downloads nothing, and its score can be shown as is.',
+      },
+      tradeoff: {
+        es: 'Busca palabras, no significados.',
+        en: 'It searches for words, not meanings.',
+      },
+    },
+    {
+      decision: { es: 'La búsqueda por significado es opcional y pide permiso', en: 'Search by meaning is optional and asks for permission' },
+      why: {
+        es: 'Con embeddings, tu pregunta se compara por significado, y se calcula en tu navegador.',
+        en: 'With embeddings, your question is compared by meaning, and it is computed in your browser.',
+      },
+      tradeoff: {
+        es: 'El modelo pesa unos 118 MB: por eso no se descarga si no lo pides.',
+        en: 'The model weighs about 118 MB: that is why it is not downloaded unless you ask.',
+      },
+    },
+  ],
+  code: {
+    snippet: `for (const result of results) {
+  const doc = byId.get(String(result.id))
+  if (!doc || (options.filter && !options.filter(doc))) continue
+  hits.push({ doc, score: result.score, matched: result.queryTerms })
+  if (options.limit && hits.length >= options.limit) break
+}`,
+    lang: 'ts',
+    repoPath: 'lib/search/searcher.ts',
+  },
+}
+
+const R1: LabExperiment = {
+  id: 'R1',
+  theme: 'architecture',
+  title: copy('ailab.r1.title'),
+  summary: copy('ailab.r1.summary'),
+  status: 'stable',
+  runsIn: 'browser',
+  downloads: [],
+  privacy: copy('ailab.r1.privacy'),
+  flow: [
+    { es: 'Reservas vuelo, hotel y auto, y empieza el cobro', en: 'You book a flight, a hotel and a car, and the payment starts' },
+    { es: 'Tumbas un servicio a mitad del camino', en: 'You take down a service halfway through' },
+    { es: 'La compensación deshace los pasos en orden inverso', en: 'The compensation undoes the steps in reverse order' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Una saga con compensación en orden inverso', en: 'A saga with compensation in reverse order' },
+      why: {
+        es: 'Sin una transacción global, cada paso hecho necesita su forma de deshacerse.',
+        en: 'Without a global transaction, every completed step needs its own way to be undone.',
+      },
+      tradeoff: {
+        es: 'Deshacer una reserva no es lo mismo que soltar un apartado: cada compensación es distinta.',
+        en: "Undoing a booking isn't the same as releasing a hold: each compensation is different.",
+      },
+    },
+    {
+      decision: { es: 'Una simulación determinista, sin IA', en: 'A deterministic simulation, with no AI' },
+      why: {
+        es: 'El mismo fallo da siempre el mismo resultado, y eso se puede probar.',
+        en: 'The same failure always gives the same result, and that can be tested.',
+      },
+      tradeoff: {
+        es: 'No hay red ni latencia reales: es un modelo del sistema.',
+        en: 'There is no real network or latency: it is a model of the system.',
+      },
+    },
+  ],
+  code: null,
+}
+
+const A4: LabExperiment = {
+  id: 'A4',
+  theme: 'agents',
+  title: copy('ailab.a4.title'),
+  summary: copy('ailab.a4.summary'),
+  status: 'beta',
+  runsIn: 'browser',
+  downloads: [PYODIDE_CORE, PYODIDE_NUMPY],
+  privacy: copy('ailab.a4.privacy'),
+  flow: [
+    { es: 'Un caso o una bitácora de ejemplo, con datos inventados', en: 'A sample case or log, with made-up data' },
+    {
+      es: 'Despacho muestra resultados pregenerados; Obra calcula con Python en un worker',
+      en: 'Despacho shows pregenerated results; Obra calculates with Python in a worker',
+    },
+    {
+      es: 'Hechos con su prueba y una cronología, o cantidades y un estimado en COP',
+      en: 'Facts with their evidence and a timeline, or quantities and an estimate in COP',
+    },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Datos inventados y resultados pregenerados en Despacho', en: 'Made-up data and pregenerated results in Despacho' },
+      why: {
+        es: 'Muestra el método sin material de clientes ni un modelo en vivo.',
+        en: 'It shows the method without client material or a live model.',
+      },
+      tradeoff: {
+        es: 'No responde a un caso tuyo: eso exigiría un servidor con un modelo.',
+        en: 'It does not answer a case of yours: that would need a server with a model.',
+      },
+    },
+    {
+      decision: { es: 'Python con Pyodide en un worker para Obra', en: 'Python with Pyodide in a worker for Obra' },
+      why: {
+        es: 'Es Python en pequeño, sin servidor.',
+        en: 'It is Python on a small scale, with no server.',
+      },
+      tradeoff: {
+        es: 'La primera vez descarga unos 15 MB, entre Pyodide y numpy.',
+        en: 'The first time it downloads about 15 MB, between Pyodide and numpy.',
+      },
+    },
+  ],
+  code: null,
+}
+
+const J1: LabExperiment = {
+  id: 'J1',
+  theme: 'games',
+  title: copy('ailab.j1.title'),
+  summary: copy('ailab.j1.summary'),
+  status: 'experiment',
+  runsIn: 'browser',
+  downloads: [],
+  privacy: copy('ailab.j1.privacy'),
+  flow: [
+    { es: 'Juegas un rally con teclado, mouse o toque', en: 'You play a rally with keyboard, mouse or touch' },
+    { es: 'La red del rival aprende por refuerzo en un worker', en: "The rival's network learns by reinforcement in a worker" },
+    { es: 'Sus neuronas se encienden y la curva muestra cuánto mejora', en: 'Its neurons light up and the curve shows how much it improves' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Una red propia de dos capas de 16 neuronas', en: 'An in-house network with two layers of 16 neurons' },
+      why: {
+        es: 'TensorFlow.js pesa más de 1 MB para una red de este tamaño.',
+        en: 'TensorFlow.js weighs more than 1 MB for a network this size.',
+      },
+      tradeoff: {
+        es: 'El forward y los gradientes se escriben y se prueban a mano.',
+        en: 'The forward pass and the gradients are written and tested by hand.',
+      },
+    },
+    {
+      decision: { es: 'REINFORCE con línea base, en un worker', en: 'REINFORCE with a baseline, in a worker' },
+      why: {
+        es: 'El entrenamiento no le quita fluidez al juego ni al fondo animado.',
+        en: 'Training does not take smoothness away from the game or the animated background.',
+      },
+      tradeoff: {
+        es: 'Los pesos viajan al juego cada pocos rallies, no en cada golpe.',
+        en: 'The weights travel to the game every few rallies, not on every hit.',
+      },
+    },
+    {
+      decision: { es: 'Lo que aprende queda en tu navegador', en: 'What it learns stays in your browser' },
+      why: {
+        es: 'Es tu progreso, como un easter egg descubierto, y lo borras con un botón.',
+        en: 'It is your progress, like a discovered easter egg, and you delete it with a button.',
+      },
+      tradeoff: {
+        es: 'Si cambias de navegador, el rival empieza de cero.',
+        en: 'If you switch browsers, the rival starts from scratch.',
+      },
+    },
+  ],
+  code: {
+    snippet: `async checkpoint() {
+  if (signal.aborted) throw abortError()
+  while (paused) {
+    await new Promise<void>((resolve) => {
+      const done = () => {
+        signal.removeEventListener('abort', done)
+        resolve()
+      }
+      waiters.push(done)
+      signal.addEventListener('abort', done, { once: true })
+    })
+    if (signal.aborted) throw abortError()
+  }
+},`,
+    lang: 'ts',
+    repoPath: 'lib/ailab/core/worker-runtime.ts',
+  },
+}
+
+const J2: LabExperiment = {
+  id: 'J2',
+  theme: 'games',
+  title: copy('ailab.j2.title'),
+  summary: copy('ailab.j2.summary'),
+  status: 'experiment',
+  runsIn: 'browser',
+  downloads: [],
+  privacy: copy('ailab.j2.privacy'),
+  flow: [
+    { es: 'Juegas unos rallies de grabación', en: 'You play a few recording rallies' },
+    { es: 'La misma red aprende por imitación de tus movimientos', en: 'The same network learns by imitating your moves' },
+    {
+      es: 'Juegas contra un rival que se mueve como tú, con su parecido en pantalla',
+      en: 'You play against a rival that moves like you, with its likeness on screen',
+    },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'La misma red de J1, entrenada por imitación', en: 'The same network as J1, trained by imitation' },
+      why: {
+        es: 'Reutiliza el motor: solo cambia lo que aprende, pares de estado y movimiento.',
+        en: 'It reuses the engine: only what it learns changes, pairs of state and move.',
+      },
+      tradeoff: {
+        es: 'Imita tus tendencias, no cada gesto.',
+        en: 'It imitates your tendencies, not every gesture.',
+      },
+    },
+    {
+      decision: { es: 'El estado guardado lleva versión', en: 'The saved state carries a version' },
+      why: {
+        es: 'Si el juego cambia, los datos de una versión anterior se descartan y el rival empieza de nuevo.',
+        en: 'If the game changes, data from an older version is discarded and the rival starts over.',
+      },
+      tradeoff: {
+        es: 'Una actualización del juego borra lo que había aprendido.',
+        en: 'A game update deletes what it had learned.',
+      },
+    },
+  ],
+  code: {
+    snippet: `async get<T = unknown>(key: string, options: LabStoreGetOptions = {}): Promise<T | null> {
+  const found = await run('readonly', (store) => store.get(key))
+  const value = found.ok ? found.value : memory.get(key)
+  if (value === undefined || value === null) return null
+  if (options.version !== undefined && versionOf(value) !== options.version) {
+    await labStore.delete(key)
+    return null
+  }
+  return value as T
+},`,
+    lang: 'ts',
+    repoPath: 'lib/ailab/core/store.ts',
+  },
+}
+
+export const labCatalog: readonly LabExperiment[] = [V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
+
+export function labExperiment(id: LabExperimentId): LabExperiment {
+  const experiment = labCatalog.find((item) => item.id === id)
+  if (!experiment) throw new Error(`El catálogo del laboratorio no tiene ${id}`)
+  return experiment
+}
+
+export function labThemes(catalog: readonly LabExperiment[] = labCatalog): Array<{ theme: LabTheme; experiments: LabExperiment[] }> {
+  return LAB_THEMES.map((theme) => ({ theme, experiments: catalog.filter((item) => item.theme === theme) })).filter(
+    (group) => group.experiments.length > 0,
+  )
+}
+
+export function defaultDownload(experiment: Pick<LabExperiment, 'downloads'>): LabDownload | null {
+  return experiment.downloads.find((download) => download.default) ?? null
+}
+
+export function labRepoHref(repoPath: string): string {
+  return `${LAB_REPO_URL}/blob/${LAB_REPO_BRANCH}/${repoPath}`
+}
