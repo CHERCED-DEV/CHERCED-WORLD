@@ -1,6 +1,6 @@
 import { PROJECT_ERAS, type ProjectEra } from '@/content/types'
 import { t, type Dictionary } from '@/lib/i18n'
-import type { AdrLabels } from './AdrCards'
+import type { AdrLabels } from '@/components/ui/AdrCards'
 import type { CaseStudyExtraLabels } from './CaseStudy'
 import { STACK_LAYERS, type StackLayer } from './stack'
 

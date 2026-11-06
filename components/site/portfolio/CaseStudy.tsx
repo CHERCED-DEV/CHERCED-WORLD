@@ -9,7 +9,8 @@ import { Icon } from '@/components/ui/Icon'
 import { Reveal } from '@/components/ui/Reveal'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
-import { AdrCards } from './AdrCards'
+import { AdrCards } from '@/components/ui/AdrCards'
+import adrStyles from './AdrCards.module.scss'
 import { fillTemplate } from './carousel'
 import { CaseGallery, type GalleryLabels } from './CaseGallery'
 import styles from './CaseStudy.module.scss'
@@ -86,7 +87,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
               {paragraph}
             </p>
           ))}
-          {section.cards && evidence ? <AdrCards cards={cards} labels={evidence.adr} /> : null}
+          {section.cards && evidence ? <AdrCards cards={cards} labels={evidence.adr} className={adrStyles.list} cardClassName={adrStyles.card} /> : null}
         </section>
       ))}
       {!extras && project.technologies.length > 0 ? (

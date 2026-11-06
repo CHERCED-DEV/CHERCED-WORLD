@@ -2,6 +2,7 @@ import type { Localized, Project, SiteContent } from '@/content/types'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { paragraphs } from '../format'
 import type { SlideProject } from './carousel'
+import type { AdrCardView } from '@/components/ui/AdrCards'
 
 export function portfolioIntro(portfolio: SiteContent['portfolio'], lang: Locale): string | null {
   const text = portfolio.intro
@@ -111,7 +112,7 @@ export function caseStudyRepos(project: Project): Array<{ label: string; href: s
   })
 }
 
-export type AdrCardView = { decision: string; why: string; tradeoff: string }
+export type { AdrCardView }
 
 export function caseAdrCards(project: Project, lang: Locale): AdrCardView[] {
   return (project.adrCards ?? []).flatMap((card) => {
