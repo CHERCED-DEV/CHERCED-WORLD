@@ -10,6 +10,7 @@ import { Icon } from '@/components/ui/Icon'
 import { Reveal } from '@/components/ui/Reveal'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
+import { ShowcaseLink } from '../synergos/ShowcaseLink'
 import { AdrCards } from '@/components/ui/AdrCards'
 import adrStyles from './AdrCards.module.scss'
 import { fillTemplate } from './carousel'
@@ -57,6 +58,7 @@ export type CaseStudyExtras = {
   usage: Record<string, number>
   portfolioHref: string
   evidence?: CaseEvidenceLabels
+  showcase?: string
 }
 
 export type CaseStudyProps = { project: Project; lang: Locale; labels: CaseStudyLabels; extras?: CaseStudyExtras }
@@ -208,11 +210,16 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
             {title}
           </SectionTitle>
           <p className={styles.lede}>{project.summary[lang]}</p>
-          {project.links.live ? (
-            <a href={`#${EMBED_ANCHOR}`} className={buttonClassName({ variant: 'solid', size: 'lg', className: styles.seeLive })} data-cw-case-see-live="">
-              <PortfolioIcon name="live" />
-              {extra.seeLive}
-            </a>
+          {project.links.live || extras.showcase ? (
+            <div className={styles.heroActions}>
+              {project.links.live ? (
+                <a href={`#${EMBED_ANCHOR}`} className={buttonClassName({ variant: 'solid', size: 'lg', className: styles.seeLive })} data-cw-case-see-live="">
+                  <PortfolioIcon name="live" />
+                  {extra.seeLive}
+                </a>
+              ) : null}
+              {extras.showcase ? <ShowcaseLink lang={lang} label={extras.showcase} from="case" /> : null}
+            </div>
           ) : null}
         </div>
         <div className={styles.heroMedia}>

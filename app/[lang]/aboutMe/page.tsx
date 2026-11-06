@@ -11,7 +11,9 @@ import { SceneNav } from '@/components/site/about/SceneNav'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
 import { SectionTitle } from '@/components/site/SectionTitle'
+import { ShowcaseLink } from '@/components/site/synergos/ShowcaseLink'
 import { formatFact, synergosFacts } from '@/content/synergos'
+import { synergosShowcase } from '@/content/synergos-showcase'
 import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
@@ -74,6 +76,7 @@ export default async function AboutMePage({ params }: Props) {
             tests: { label: t(dict, 'about.figure.tests'), note: t(dict, 'about.figure.testsNote') },
           }}
         />
+        <ShowcaseLink lang={lang} label={synergosShowcase.copy.cta[lang]} from="about" />
       </AboutDescription>
       <AboutCareer
         id={ABOUT_SCENES.career}

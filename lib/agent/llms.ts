@@ -1,3 +1,4 @@
+import { synergosShowcase, SYNERGOS_PATH } from '@/content/synergos-showcase'
 import { capabilityDescriptions, createCapabilities, findCapability } from '@/lib/capabilities/registry'
 import { getSite, pick } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
@@ -56,6 +57,7 @@ export async function buildLlmsTxt(base: URL = getSiteUrl()): Promise<string> {
     pair(base, '/services', t(commonEn, 'nav.services'), t(commonEs, 'nav.services')),
     '',
     '## Case studies',
+    pair(base, SYNERGOS_PATH, synergosShowcase.copy.title.en, synergosShowcase.copy.title.es),
     ...projects.map((project) => `- [${label(project.title)}](${project.url}): ${inline(project.summary)}`),
     '',
     '## Blog',
