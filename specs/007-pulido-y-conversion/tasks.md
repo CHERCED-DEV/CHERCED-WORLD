@@ -63,3 +63,6 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 - [ ] T960 Cuarta escena de Sobre mí, "Hacia dónde voy": entrevista al autor ([entrevista-hacia-donde-voy.md](./entrevista-hacia-donde-voy.md)),
   copy en ES y EN con su visto bueno, la escena con el cristal que ya existe y su entrada en el SceneNav.
 - [ ] T961 Las mejoras que el autor vio en la vista previa (pendiente que las cuente).
+- [ ] T962 "Hacia el MVP: la línea de ensamblaje" en el caso de Synergos: diagrama vivo de las líneas de agentes que
+  convergen en el release, con hitos reales sacados de la carpeta de Synergos (solo lectura), y un acceso desde Home.
+  Boceto primero; se construye con el visto bueno del autor. La raíz de Synergos no se publica hasta el MVP.
