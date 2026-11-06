@@ -16,6 +16,7 @@ const loaders: Record<Locale, Record<Namespace, Loader>> = {
     experience: () => import('@/content/i18n/es/experience.json'),
     home: () => import('@/content/i18n/es/home.json'),
     portfolio: () => import('@/content/i18n/es/portfolio.json'),
+    ailab: () => import('@/content/i18n/es/ailab.json'),
   },
   en: {
     common: () => import('@/content/i18n/en/common.json'),
@@ -28,6 +29,7 @@ const loaders: Record<Locale, Record<Namespace, Loader>> = {
     experience: () => import('@/content/i18n/en/experience.json'),
     home: () => import('@/content/i18n/en/home.json'),
     portfolio: () => import('@/content/i18n/en/portfolio.json'),
+    ailab: () => import('@/content/i18n/en/ailab.json'),
   },
 }
 

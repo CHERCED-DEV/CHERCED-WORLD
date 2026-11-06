@@ -194,3 +194,41 @@ export type PostMeta = {
 }
 
 export type CapsuleEntry = { date: string; message: string; note?: Localized }
+
+export const LAB_THEMES = ['voice', 'architecture', 'agents', 'games'] as const
+
+export type LabTheme = (typeof LAB_THEMES)[number]
+
+export const LAB_STATUSES = ['stable', 'beta', 'experiment'] as const
+
+export type LabStatus = (typeof LAB_STATUSES)[number]
+
+export const LAB_EXPERIMENT_IDS = ['V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'] as const
+
+export type LabExperimentId = (typeof LAB_EXPERIMENT_IDS)[number]
+
+export function isLabExperimentId(value: unknown): value is LabExperimentId {
+  return typeof value === 'string' && (LAB_EXPERIMENT_IDS as readonly string[]).includes(value)
+}
+
+export const LAB_HOSTS = ['huggingface.co', 'cdn.jsdelivr.net'] as const
+
+export type LabHost = (typeof LAB_HOSTS)[number]
+
+export type LabDownload = { resource: string; bytes: number; host: LabHost; default?: true }
+
+export type LabCode = { snippet: string; lang: string; repoPath: string | null }
+
+export type LabExperiment = {
+  id: LabExperimentId
+  theme: LabTheme
+  title: Localized
+  summary: Localized
+  status: LabStatus
+  runsIn: 'browser'
+  downloads: LabDownload[]
+  privacy: Localized
+  flow: Localized[]
+  adrCards: AdrCard[]
+  code: LabCode | null
+}

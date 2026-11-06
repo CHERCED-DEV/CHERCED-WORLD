@@ -102,7 +102,7 @@ export type _ReactionsContract = Expect<
 export type _I18nContract = [
   Expect<Is<I18n.Locale, 'es' | 'en'>>,
   Expect<Is<Locale, I18n.Locale>>,
-  Expect<Is<I18n.Namespace, 'common' | 'site' | 'motion' | 'contact' | 'admin' | 'privacy' | 'blog' | 'experience' | 'home' | 'portfolio'>>,
+  Expect<Is<I18n.Namespace, 'common' | 'site' | 'motion' | 'contact' | 'admin' | 'privacy' | 'blog' | 'experience' | 'home' | 'portfolio' | 'ailab'>>,
   Expect<Fits<typeof I18nServer.getDictionary, (lang: Locale, ns: I18n.Namespace) => Promise<Record<string, string>>>>,
   Expect<Fits<typeof I18n.t, (dict: Record<string, string>, key: string, vars?: Record<string, string | number>) => string>>,
   Expect<Fits<typeof I18n.localizedPath, (lang: Locale, path: string) => string>>,
