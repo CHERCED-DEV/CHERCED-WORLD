@@ -1,8 +1,9 @@
+import { technologyFamily, technologyKey } from '@/content/technologies'
 import type { Locale, Project, SiteContent } from '@/content/types'
 import { projectTitle } from '@/lib/content/project-title'
 import { clampLevel, formatPeriod } from '../format'
 
-export type BrainSkill = { id: string; name: string; level: number; icon?: string; used?: string }
+export type BrainSkill = { id: string; name: string; level: number; levelLabel?: string; icon?: string; used?: string }
 
 export type BrainProject = { id: string; title: string }
 
@@ -89,13 +90,8 @@ export function isAppliedSource(id: string): boolean {
   return kind === 'company' || kind === 'case'
 }
 
-const TECH_ALIASES: Record<string, string[]> = {
-  html5: ['HTML'],
-  'spec-driven-development': ['SPEC KIT'],
-}
-
 export function techKey(value: string): string {
-  return value.toUpperCase().replace(/[^A-Z0-9#+]/g, '')
+  return technologyKey(value)
 }
 
 export function projectsForSkills(
@@ -103,10 +99,10 @@ export function projectsForSkills(
   projects: readonly Project[],
   lang: Locale = 'es',
 ): BrainProject[] {
-  const keys = new Set(skills.flatMap((skill) => [skill.name, ...(TECH_ALIASES[skill.id] ?? [])].map(techKey)))
+  const families = new Set(skills.map((skill) => technologyFamily(skill.name)))
   return [...projects]
     .sort((a, b) => a.order - b.order)
-    .filter((project) => project.technologies.some((technology) => keys.has(techKey(technology))))
+    .filter((project) => project.technologies.some((technology) => families.has(technologyFamily(technology))))
     .map((project) => ({ id: project.id, title: projectTitle(project, lang) }))
 }
 
@@ -162,8 +158,15 @@ function resolveSkill(id: string, about: SiteContent['about'], lang: Locale): Br
     }
   }
   const language = about.languages.find((item) => item.id === id)
-  if (language) return { id, name: language.name[lang].toUpperCase(), level: clampLevel(language.progress), ...(language.icon ? { icon: language.icon } : {}) }
-  return null
+  if (!language) return null
+  const levelLabel = language.level?.[lang]?.trim()
+  return {
+    id,
+    name: language.name[lang].toUpperCase(),
+    level: clampLevel(language.progress),
+    ...(levelLabel ? { levelLabel } : {}),
+    ...(language.icon ? { icon: language.icon } : {}),
+  }
 }
 
 export function brainData(about: SiteContent['about'], projects: readonly Project[], lang: Locale, presentLabel: string): BrainData {

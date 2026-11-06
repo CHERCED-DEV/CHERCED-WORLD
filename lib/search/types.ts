@@ -47,7 +47,7 @@ export type SkillFact = { id: string; name: string; label: string; progress: num
 
 export type LobeFact = { id: string; name: string; words: string | null; skills: string[]; projects: string[]; url: string }
 
-export type LanguageFact = { id: Locale; name: string; progress: number }
+export type LanguageFact = { id: Locale; name: string; progress: number; level: string | null }
 
 export type AssistantFacts = {
   author: string

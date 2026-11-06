@@ -24,7 +24,7 @@ export type BrainSceneProps = {
 
 export function BrainScene({ lang, about, projects, labels }: BrainSceneProps) {
   const data = brainData(about, projects, lang, labels.present)
-  const levels = Object.fromEntries(data.lobes.flatMap((lobe) => lobe.skills.map((skill) => [skill.id, labels.level(skill.level)])))
+  const levels = Object.fromEntries(data.lobes.flatMap((lobe) => lobe.skills.map((skill) => [skill.id, skill.levelLabel ?? labels.level(skill.level)])))
   const { map } = labels
   const sourceLabel = (id: string) => data.sources.find((source) => source.id === id)?.label ?? id
 

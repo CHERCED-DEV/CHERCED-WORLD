@@ -77,7 +77,7 @@ export type ServicesContent = {
 
 export type CourseSchool = { name: Localized; description: Localized }
 
-export type LanguageSkill = { id: Locale; name: Localized; progress: number; icon?: string }
+export type LanguageSkill = { id: Locale; name: Localized; progress: number; level?: Localized; icon?: string }
 
 export type PrivacySection = { heading: Localized; body: Localized }
 
