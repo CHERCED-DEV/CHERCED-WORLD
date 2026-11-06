@@ -328,7 +328,7 @@ describe('proyectos (FR-083, FR-443, FR-446)', () => {
         continue
       }
       if (project.id === '12' || project.id === '13') {
-        expect(project.links.live).toBeNull()
+        expect(project.links.live).toBe(project.id === '12' ? 'https://synergos-ui.synergos-labs.workers.dev/' : null)
         expect(project.links.github).toBeNull()
         expect(project.links.repos?.map((repo) => repo.label)).toEqual(project.id === '12' ? SYNERGOS_REPOS : ['Synergos.Fabrica'])
         for (const repo of project.links.repos ?? []) expect(repo.href).toBe(`https://github.com/CHERCED-DEV/${repo.label}`)

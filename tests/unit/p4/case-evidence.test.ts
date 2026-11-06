@@ -176,7 +176,7 @@ describe('repositorios (FR-447)', () => {
       expect(project.links, id).toMatchObject({ live: null, github: null })
     }
     expect(caseStudyRepos(getProject('13')!)).toEqual([{ label: 'Synergos.Fabrica', href: 'https://github.com/CHERCED-DEV/Synergos.Fabrica' }])
-    expect(synergos.links.live).toBeNull()
+    expect(synergos.links.live).toBe('https://synergos-ui.synergos-labs.workers.dev/')
   })
 
   it('descarta repos sin https, sin nombre o repetidos', () => {

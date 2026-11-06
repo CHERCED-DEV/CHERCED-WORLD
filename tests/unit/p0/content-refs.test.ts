@@ -63,7 +63,7 @@ describe('portafolio: 15 casos, orden y época (FR-405, FR-443, E-04)', () => {
       filled(layer.role, `${layer.id}.role`)
     }
     expect(synergos.links).toEqual({
-      live: null,
+      live: 'https://synergos-ui.synergos-labs.workers.dev/',
       github: null,
       repos: [
         { label: 'Synergos.CMS', href: 'https://github.com/CHERCED-DEV/Synergos.CMS' },

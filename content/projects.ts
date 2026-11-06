@@ -543,7 +543,7 @@ export const projects: Project[] = [
       height: 640,
     },
     links: {
-      live: null,
+      live: 'https://synergos-ui.synergos-labs.workers.dev/',
       github: null,
       repos: [
         { label: 'Synergos.CMS', href: 'https://github.com/CHERCED-DEV/Synergos.CMS' },
