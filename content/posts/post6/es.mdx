@@ -1,0 +1,98 @@
+export const meta = {
+  id: 'post6',
+  lang: 'es',
+  originalLang: 'es',
+  title: 'Lo que 2.353 tests no vieron',
+  description: 'Los dos defectos más caros de Synergos no los vieron las pruebas: creían lo mismo que el código. Salieron de matar un proceso a mitad del cobro.',
+  date: '2026-11-07',
+  tags: ['pruebas', 'sistemas distribuidos', 'agentes de IA', 'arquitectura'],
+  image: {
+    src: '/assets/imgs/projects/synergos-es.svg',
+    alt: 'Diagrama de las capas de Synergos: recursos en CDN, Umbraco como capa de composición y componentes web encima',
+    width: 960,
+    height: 640,
+  },
+  author: 'Camilo Hernández',
+  cover: 'generated',
+}
+
+El 6 de agosto de 2026, la integración continua de Synergos midió 2.353 pruebas automatizadas en verde. En noviembre ya son más de 6.600. Ninguna de las dos cifras es el tema de este post. El tema es lo que esas pruebas no vieron: los dos defectos más caros del proyecto.
+
+Con agentes de IA, escribir pruebas cuesta cada vez menos. Tener muchas ya no dice gran cosa. Lo que me interesa contar es lo que una batería de pruebas no puede ver, y por qué.
+
+## Las pruebas creían lo mismo que el código
+
+No faltaban pruebas. Las que había daban por cierta la misma idea equivocada que el código. Y una prueba así pasa siempre.
+
+<Callout type="learned">
+Una prueba en verde no dice que el código esté bien. Dice que el código coincide con lo que uno creía.
+</Callout>
+
+Los dos defectos salieron de otro lado: de levantar los procesos de verdad y matar uno a mitad del cobro.
+
+## Primero, el contexto
+
+En Synergos, cada capacidad de negocio es dueña de su propio almacén: pagos, agenda, inventario, pedidos. Una cita o una compra cruza varias, y no hay una transacción que las abarque a todas. Si un paso falla a la mitad, hay que deshacer los anteriores. A eso se le llama compensar, y lo coordina un orquestador de sagas.
+
+Dos decisiones importan para lo que sigue. La compensación se anota en el instante en que existe algo que deshacer, no después, para que sobreviva a una caída. Y un barrido de fondo pasa cada minuto y reintenta las compensaciones que faltan.
+
+## Defecto 1: toda cita sana se cancelaba sola
+
+El primer orquestador fue el de salud: agendar una cita con copago. Al agendar se aparta el cupo y se autoriza el cobro. Desde ese instante, la cita lleva anotadas sus dos compensaciones: soltar el cupo y liberar el cobro.
+
+El barrido elegía "toda saga con alguna compensación pendiente". Y eso describe a todas las citas sanas que esperan confirmación.
+
+Lo destapó la repetición del ejercicio de matar la agenda a mitad del cobro, esta vez con seis procesos. Una cita se agendó a las 16:39:33. A las 16:39:39, sin que nadie hiciera nada, el barrido soltó el cupo y liberó el cobro. Seis segundos para cancelar una cita que no tenía ningún problema.
+
+Ninguna prueba lo vio porque todas llamaban directo a la función que compensa, y ninguna pasaba por la selección: qué sagas elige el barrido. El código y las pruebas compartían la misma suposición: que una compensación anotada es trabajo pendiente.
+
+No lo es. Está **armada**, como un seguro. Solo es trabajo cuando algo ya falló. El arreglo es una guarda de una línea:
+
+```csharp
+public static bool IsUnwinding(this ISaga saga)
+    => saga.Status is SagaStatus.Compensating or SagaStatus.CompensationFailed;
+```
+
+Con ella llegaron dos pruebas que sí miran la selección, una en cada sentido. La primera comprueba que una cita recién agendada no es trabajo para el barrido. La segunda, que una cita que sí falló vuelve a entrar, porque filtrar de más dejaría sin reintento justo lo que el barrido existe para reintentar.
+
+Y la corrida se repitió con el arreglo. La cita sana pasó dos vueltas del barrido sin que la tocara. Al matar otra vez la agenda entre el cobro y la confirmación, la plata volvió sola y el cupo se soltó cuando la agenda regresó.
+
+## Defecto 2: el pedido se cerraba antes de despachar
+
+El segundo orquestador fue el de la tienda, y no fue al azar: la tienda no usa agenda. Si la máquina de sagas había quedado moldeada alrededor de un cupo con vencimiento, ahí se iba a notar.
+
+Sus pruebas pasaron 16 de 16 a la primera. La corrida con ocho procesos, no. Se mató el servicio de despachos entre el cobro y el envío, y dos de las cinco compensaciones quedaron colgadas. Las capacidades dijeron por qué:
+
+- `inventory.hold_already_consumed`: devolver existencias es un ajuste, no una liberación.
+- `orders.order_closed`: el pedido ya estaba cumplido, y una devolución no es una cancelación.
+
+Eran dos errores con la misma raíz. Ya sabía que la compensación de un pago cambia: autorizado, deshacerlo es liberar; capturado, es devolver. Se me pasó en dos pasos más. Cuando el inventario apartado se consume, deshacerlo ya no es soltar el apartado: es reponer existencias. Y cerrar el pedido le quita la posibilidad de anularlo, así que cerrar tiene que ir después de despachar.
+
+Lo que más me enseñó vino después. Al arreglarlo, cinco pruebas se pusieron en rojo. No era una regresión: estaban escritas contra el comportamiento defectuoso, y esperaban que se soltara el apartado donde ahora va un ajuste. Esas pruebas no solo no vieron el defecto. Lo defendían.
+
+Con el arreglo, la misma corrida resolvió cinco compensaciones de tres tipos distintos en una sola vuelta, con una capacidad caída. Las existencias volvieron, la plata volvió sola y el pedido se pudo anular porque todavía no estaba cerrado.
+
+## Por qué esto pesa más con agentes de IA
+
+Trabajo con desarrollo guiado por especificaciones (Spec-Driven Development): yo escribo qué tiene que pasar, y agentes de IA construyen el código y sus pruebas bajo mis reglas. Eso acelera muchísimo, pero concentra justo el riesgo de este post.
+
+Cuando el mismo autor escribe el código y sus pruebas, las dos cosas salen de la misma lectura del problema. Si la lectura tiene un hueco, el hueco queda en los dos lados. Pasa con personas y pasa con agentes, solo que un agente escribe código y pruebas más rápido de lo que una persona alcanza a revisar. Más pruebas del mismo autor no cierran el hueco. Le ponen más verde encima.
+
+Lo que sí lo cierra es algo que no comparte esas suposiciones: el sistema corriendo de verdad. Un proceso caído no sabe lo que el agente creía. Y matarlo entre el cobro y la confirmación es elegir el instante exacto que una prueba no puede elegir.
+
+## Lo que cambió
+
+No dejé de escribir pruebas. Aprendí qué pregunta contesta cada cosa. Un doble de prueba contesta "¿qué pasa cuando falla el tercer paso?", algo que un servicio de verdad no sabe hacer a pedido. Un proceso de verdad contesta "¿la llamada cumple el contrato?". Son dos preguntas, y ninguna reemplaza a la otra.
+
+Lo que sí cambió fueron las reglas:
+
+- **El contrato del agente lo exige.** Si una tarea cruza servicios, al terminarla se levantan los procesos y se mata uno a mitad del flujo. La regla dice por qué: los dos defectos más caros los encontró un proceso vivo, no una prueba.
+- **La plantilla de la solicitud de integración (pull request) lo pregunta.** Y se marca solo si de verdad se corrió: una casilla marcada en falso es peor que una vacía.
+- **Cada defecto se reporta con dos respuestas obligatorias:** por qué las pruebas no lo vieron, y qué cambio de una línea lo vuelve a poner en rojo. Si esa línea no se puede escribir, el arreglo no está entendido.
+- **Las lecciones viven en el núcleo compartido.** La guarda de "armada no es pendiente" la heredan todos los orquestadores, y la regla de cerrar lo más tarde posible vale para todos los dominios.
+
+## El verde no es la meta
+
+2.353 pruebas en verde era una buena cifra. Pero el verde solo confirma lo que ya creíamos. Lo que no creíamos aparece cuando algo se cae de verdad, y eso hay que provocarlo a propósito.
+
+Si quieres los registros de cada corrida, están en el repositorio público de Synergos.CMS: [cómo se deshace lo que ya se hizo](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/09-compensacion-cruzada.md) y [la promoción de la máquina de sagas](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/10-promocion-bff-core.md).
