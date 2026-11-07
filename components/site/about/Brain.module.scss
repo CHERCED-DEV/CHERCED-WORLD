@@ -213,7 +213,7 @@ $compact-map: 30rem;
     aspect-ratio: 1;
     padding: var(--cw-space-2);
     border-radius: 50%;
-    font-size: clamp(9px, 0.82vw, 11.5px);
+    font-size: clamp(11px, 0.85vw, 12px);
     letter-spacing: 0.04em;
     line-height: 1.2;
     text-align: center;
@@ -257,6 +257,10 @@ $compact-map: 30rem;
   display: inline-flex;
   align-items: center;
   min-height: 36px;
+
+  @include bp.down(md) {
+    min-height: 44px;
+  }
   padding: var(--cw-space-1) var(--cw-space-3);
   border-radius: 999px;
   color: var(--cw-fg-muted);
@@ -299,6 +303,51 @@ $compact-map: 30rem;
 
   &::before {
     content: none;
+  }
+}
+
+.sourcesHeading,
+.sourcesToggle {
+  display: none;
+}
+
+@include bp.down(md) {
+  .sourcesHeading {
+    @include site.label-caps(0.12em);
+    display: block;
+    flex-basis: 100%;
+    margin-top: var(--cw-space-2);
+    color: var(--cw-fg-muted);
+    font-size: var(--cw-text-xs);
+    text-align: center;
+  }
+
+  .sourcesToggle {
+    @include site.label-caps(0.12em);
+    display: inline-flex;
+    flex-basis: 100%;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: var(--cw-fg);
+    font: inherit;
+    font-size: var(--cw-text-xs);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--cw-graphic-accent);
+    text-underline-offset: 0.35em;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--cw-focus);
+      outline-offset: 3px;
+    }
+  }
+
+  .sources:not([data-cw-sources-open]) > [data-cw-source-more] {
+    display: none;
   }
 }
 
@@ -441,7 +490,7 @@ $compact-map: 30rem;
   border: 1px solid color-mix(in srgb, var(--cw-fg) 28%, transparent);
   border-radius: 999px;
   color: var(--cw-fg);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -687,7 +736,7 @@ $compact-map: 30rem;
 
 .principlesLabel {
   @include site.label-caps(0.1em);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
 }
 
 .principleChips {
@@ -915,13 +964,17 @@ $compact-map: 30rem;
     left: var(--cw-cx);
     display: grid;
     place-items: center;
-    width: max(64px, 22%);
+    width: max(64px, 24%);
     min-height: 0;
     aspect-ratio: 1;
-    padding: 4px;
+    padding: 2px;
     border-radius: 50%;
-    font-size: clamp(8px, 2.3vw, 10.5px);
-    letter-spacing: 0.01em;
+    font-size: 12px;
+    letter-spacing: 0;
+
+    @media (max-width: 359.98px) {
+      font-size: 11px;
+    }
     line-height: 1.15;
     text-align: center;
     white-space: normal;

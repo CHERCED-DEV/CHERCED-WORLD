@@ -174,6 +174,7 @@ describe('el lóbulo "Idiomas y negocio" dice el nivel del inglés (FR-722)', ()
             platzi: { href: 'https://platzi.com/p/Cherced/', label: 'Platzi', newTab: '(pestaña nueva)' },
             terminal: { input: 'Comando', hint: 'help', output: 'Salida' },
             sheet: { close: 'Cerrar', prev: 'Anterior', next: 'Siguiente' },
+            sourceGroups: { applied: 'Aplicado en', learned: 'Aprendido en', all: 'Ver todas', fewer: 'Ver menos' },
           },
         },
       }),

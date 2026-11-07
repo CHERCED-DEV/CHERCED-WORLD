@@ -482,8 +482,8 @@ $pulse: #eafff6;
 
 .laneState {
   fill: var(--cw-fg-muted);
-  font: 700 11px/1 var(--cw-font-sans);
-  letter-spacing: 0.08em;
+  font: 700 12px/1 var(--cw-font-sans);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 
   .lane[data-state='active'] & {
@@ -516,8 +516,8 @@ $pulse: #eafff6;
 
 .directorText {
   fill: #000000;
-  font: 800 10px/1 var(--cw-font-sans);
-  letter-spacing: 0.12em;
+  font: 800 11px/1 var(--cw-font-sans);
+  letter-spacing: 0.08em;
 }
 
 .release {
@@ -528,14 +528,14 @@ $pulse: #eafff6;
 
 .releaseText {
   fill: var(--cw-fg);
-  font: 800 11px/1 var(--cw-font-sans);
+  font: 800 12px/1 var(--cw-font-sans);
   letter-spacing: 0.12em;
 }
 
 .releaseScope {
   fill: var(--cw-fg-muted);
-  font: 700 9px/1 var(--cw-font-sans);
-  letter-spacing: 0.06em;
+  font: 700 11px/1 var(--cw-font-sans);
+  letter-spacing: 0.04em;
 }
 
 .legend {

@@ -131,6 +131,12 @@ export default async function AboutMePage({ params }: Props) {
                 prev: t(portfolio, 'case.prev'),
                 next: t(portfolio, 'case.next'),
               },
+              sourceGroups: {
+                applied: t(dict, 'about.brain.appliedIn'),
+                learned: t(dict, 'about.brain.learnedIn'),
+                all: t(dict, 'about.brain.allSources'),
+                fewer: t(dict, 'about.brain.fewerSources'),
+              },
             },
           }}
         />

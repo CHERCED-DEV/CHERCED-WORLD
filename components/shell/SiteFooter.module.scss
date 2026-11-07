@@ -145,6 +145,8 @@
 .privacy {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
   font-size: var(--cw-text-sm);
   color: var(--cw-fg-muted);

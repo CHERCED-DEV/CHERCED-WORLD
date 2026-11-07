@@ -689,6 +689,9 @@ $stack-depth-shade: 0.16;
 }
 
 .caseLink {
+  display: inline-block;
+  margin-block: -11px;
+  padding-block: 11px;
   text-decoration: none;
 
   &::after {
@@ -718,7 +721,7 @@ $stack-depth-shade: 0.16;
   li {
     @include site.chip;
     min-height: 28px;
-    font-size: 0.6875rem;
+    font-size: var(--cw-text-xs);
     letter-spacing: 0.1em;
   }
 }

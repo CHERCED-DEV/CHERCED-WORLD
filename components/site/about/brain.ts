@@ -280,13 +280,13 @@ export const COMPACT_CORE: Point = { x: 200, y: 200 }
 
 export const COMPACT_CORE_RADIUS = 48
 
-export const COMPACT_LOBE_RADIUS = 44
+export const COMPACT_LOBE_RADIUS = 48
 
 export const COMPACT_ORBIT = 132
 
 const COMPACT_RINGS = [
-  { radius: 51, capacity: 9 },
-  { radius: 60, capacity: 10 },
+  { radius: 55, capacity: 9 },
+  { radius: 64, capacity: 10 },
 ]
 
 const COMPACT_SPREAD = (120 * Math.PI) / 180

@@ -86,7 +86,7 @@
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
 
-  @media (pointer: coarse) {
+  @media (pointer: coarse), (max-width: 767.98px) {
     min-height: 44px;
   }
 

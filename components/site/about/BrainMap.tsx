@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { memo, startTransition, useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
+import { Fragment, memo, startTransition, useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
 import { BottomSheet } from '@/components/ui/BottomSheet'
 import { cx } from '@/components/ui/cx'
 import { tap } from '@/lib/fx/haptics'
@@ -19,6 +19,7 @@ import {
   compactGeometry,
   compactLobePoint,
   decodeFrame,
+  isAppliedSource,
   lobeFromHash,
   lobePoint,
   neuronGeometry,
@@ -51,6 +52,7 @@ export type BrainLabels = {
   platzi: { href: string; label: string; newTab: string }
   terminal: BrainTerminalLabels
   sheet: BrainSheetLabels
+  sourceGroups: { applied: string; learned: string; all: string; fewer: string }
 }
 
 export type BrainMapProps = {
@@ -305,6 +307,7 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
   const first = data.lobes[0]
   const [selection, setSelection] = useState<Selection>({ kind: 'lobe', id: first?.id ?? '' })
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [allSources, setAllSources] = useState(false)
   const compact = useMediaQuery(COMPACT_QUERY)
   const lobeRefs = useRef<Array<HTMLButtonElement | null>>([])
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -472,27 +475,54 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
                 })}
               </div>
             </div>
-            <div className={styles.sources} role="group" aria-label={labels.sources}>
-              {data.sources.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={styles.source}
-                  aria-pressed={source?.id === item.id}
-                  aria-haspopup={compact ? 'dialog' : undefined}
-                  data-lit={litSources.has(item.id) ? '' : undefined}
-                  data-cw-source={item.id}
-                  data-cw-glass="subtle"
-                  onClick={() => choose({ kind: 'source', id: item.id })}
-                >
-                  {item.label}
-                </button>
+            <div className={styles.sources} role="group" aria-label={labels.sources} data-cw-sources-open={allSources ? '' : undefined}>
+              {(['applied', 'learned'] as const).map((group) => (
+                <Fragment key={group}>
+                  <p className={styles.sourcesHeading} data-cw-sources-heading={group} data-cw-source-more={group === 'learned' ? '' : undefined}>
+                    {group === 'applied' ? labels.sourceGroups.applied : labels.sourceGroups.learned}
+                  </p>
+                  {data.sources
+                    .filter((item) => isAppliedSource(item.id) === (group === 'applied'))
+                    .map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={styles.source}
+                        aria-pressed={source?.id === item.id}
+                        aria-haspopup={compact ? 'dialog' : undefined}
+                        data-lit={litSources.has(item.id) ? '' : undefined}
+                        data-cw-source={item.id}
+                        data-cw-source-more={group === 'learned' ? '' : undefined}
+                        data-cw-glass="subtle"
+                        onClick={() => choose({ kind: 'source', id: item.id })}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                </Fragment>
               ))}
-              <a className={cx(styles.source, styles.sourceLink)} href={labels.platzi.href} target="_blank" rel="noopener noreferrer" data-cw-glass="subtle" data-cw-platzi="">
+              <a
+                className={cx(styles.source, styles.sourceLink)}
+                href={labels.platzi.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cw-glass="subtle"
+                data-cw-platzi=""
+                data-cw-source-more=""
+              >
                 {labels.platzi.label}
                 <span aria-hidden="true"> ↗</span>
                 <span className="cw-visually-hidden">{labels.platzi.newTab}</span>
               </a>
+              <button
+                type="button"
+                className={styles.sourcesToggle}
+                aria-expanded={allSources}
+                onClick={() => setAllSources((open) => !open)}
+                data-cw-sources-toggle=""
+              >
+                {allSources ? labels.sourceGroups.fewer : labels.sourceGroups.all}
+              </button>
             </div>
           </div>
           {compact ? null : (

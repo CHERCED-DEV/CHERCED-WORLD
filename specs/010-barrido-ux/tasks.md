@@ -71,12 +71,12 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 
 ## Bloque 5: móvil
 
-- [ ] T1050 [M1] Lóbulos a 12 px o más.
-- [ ] T1051 [M2] Fuentes a 44 px, agrupadas y con "Ver todas" en el celular.
-- [ ] T1052 [M3] Enlaces de "Casos" a 44 px.
-- [ ] T1053 [M4] Etiquetas, RSS e índice del blog a 44 px.
-- [ ] T1054 [M5] Enlace de privacidad del AI Lab a 44 px.
-- [ ] T1055 [M6] Texto visible de 12 px o más a 375 px.
+- [x] T1050 [M1] Lóbulos a 12 px o más.
+- [x] T1051 [M2] Fuentes a 44 px, agrupadas y con "Ver todas" en el celular.
+- [x] T1052 [M3] Enlaces de "Casos" a 44 px.
+- [x] T1053 [M4] Etiquetas, RSS e índice del blog a 44 px.
+- [x] T1054 [M5] Enlace de privacidad del AI Lab a 44 px.
+- [x] T1055 [M6] Texto visible de 12 px o más a 375 px.
 
 ## Pruebas y cierre
 

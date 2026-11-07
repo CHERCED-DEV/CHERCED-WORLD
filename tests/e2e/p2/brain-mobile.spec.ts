@@ -91,8 +91,14 @@ test.describe('mapa compacto a 375, 390 y 412 px (T820, FR-620, SC-604, SC-605)'
         expect(rect.y + rect.height).toBeLessThanOrEqual(box.y + box.height + 0.5)
         expect(await item.evaluate((node) => node.scrollWidth <= node.clientWidth + 1), 'el nombre cabe en el círculo').toBe(true)
       }
-      for (const control of await page.locator('[data-cw-source], [data-cw-brain] [data-cw-platzi]').all()) {
-        expect((await control.boundingBox())!.height, 'objetivo táctil de 36 px de la 002 o más').toBeGreaterThanOrEqual(36)
+      const sources = page.locator('[data-cw-source], [data-cw-brain] [data-cw-platzi]')
+      await expect(page.locator('[data-cw-sources-heading]:visible')).toHaveText(['Aplicado en'])
+      await expect(sources.filter({ visible: true }), 'M2: se ven las 6 primeras').toHaveCount(6)
+      await page.locator('[data-cw-sources-toggle]').tap()
+      await expect(page.locator('[data-cw-sources-toggle]')).toHaveAttribute('aria-expanded', 'true')
+      await expect(page.locator('[data-cw-sources-heading]:visible')).toHaveCount(2)
+      for (const control of await sources.all()) {
+        expect((await control.boundingBox())!.height, 'M2: objetivo táctil de 44 px').toBeGreaterThanOrEqual(44)
       }
       const rain = (await page.locator('[data-cw-rain]').boundingBox())!
       expect(Math.abs(rain.y - box.y)).toBeLessThanOrEqual(1)
@@ -220,6 +226,7 @@ test.describe('mapa compacto a 375, 390 y 412 px (T820, FR-620, SC-604, SC-605)'
   test('una fuente también abre la hoja, sin flechas de lóbulo', async ({ page }) => {
     await openMap(page)
     await expect(async () => {
+      if ((await page.locator('[data-cw-sources-toggle]').getAttribute('aria-expanded')) !== 'true') await page.locator('[data-cw-sources-toggle]').tap()
       await page.locator('[data-cw-source="unad"]').tap()
       await expect(sheet(page)).toBeVisible({ timeout: 1000 })
     }).toPass()
