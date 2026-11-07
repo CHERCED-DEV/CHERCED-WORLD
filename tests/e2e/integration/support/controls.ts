@@ -886,12 +886,34 @@ export async function prepareContext(context: BrowserContext, baseURL: string): 
   )
 }
 
+async function reachInStack(target: Locator): Promise<void> {
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const reached = await target
+      .evaluate((element) => {
+        if (!element.closest('[data-cw-service-stack] > li')) return true
+        const dock = document.querySelector('[data-cw-dock-bar]')?.getBoundingClientRect().top ?? window.innerHeight
+        const header = document.querySelector('header')?.getBoundingClientRect().bottom ?? 0
+        const box = element.getBoundingClientRect()
+        const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+        const free = box.top >= header && box.bottom <= dock && hit !== null && (hit === element || element.contains(hit))
+        if (free) return true
+        const step = box.bottom > dock ? box.bottom - (dock - 16) : box.top < header ? box.top - header - 16 : -80
+        window.scrollBy({ top: step, behavior: 'instant' })
+        return false
+      })
+      .catch(() => true)
+    if (reached) return
+    await target.page().waitForTimeout(150)
+  }
+}
+
 async function runEffect(args: EffectArgs): Promise<{ ok: boolean; detail: string; ms: number }> {
   const { control } = args
   const started = Date.now()
   if (!control.effect) {
     return { ok: false, detail: `control sin regla: agrega su efecto a CONTROL_RULES (<${control.tag}> "${control.label}")`, ms: 0 }
   }
+  await reachInStack(args.target)
   try {
     return { ok: true, detail: await EFFECTS[control.effect](args), ms: Date.now() - started }
   } catch (error) {
