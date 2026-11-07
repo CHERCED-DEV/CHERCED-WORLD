@@ -49,6 +49,8 @@ export type LobeFact = { id: string; name: string; words: string | null; skills:
 
 export type LanguageFact = { id: Locale; name: string; progress: number; level: string | null }
 
+export type CvPdfFact = { lang: Locale; href: string; label: string; bytes: number }
+
 export type AssistantFacts = {
   author: string
   pages: Record<PageId, PageFact>
@@ -66,7 +68,7 @@ export type AssistantFacts = {
   posts: PostFact[]
   blogWelcome: string
   contact: { description: string; email: string | null }
-  cv: { href: string; label: string; pdf?: { href: string; label: string; bytes: number } } | null
+  cv: { href: string; label: string; pdfs: CvPdfFact[] } | null
   socials: { id: SocialId; label: string; href: string }[]
 }
 

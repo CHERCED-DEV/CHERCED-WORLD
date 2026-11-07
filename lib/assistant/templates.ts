@@ -22,6 +22,7 @@ export const ASSISTANT_TEMPLATE_KEYS = [
   'assistant.tpl.caseDetail',
   'assistant.tpl.adr',
   'assistant.tpl.experience',
+  'assistant.tpl.cv',
   'assistant.tpl.present',
   'assistant.tpl.services',
   'assistant.tpl.hire',

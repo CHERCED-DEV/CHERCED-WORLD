@@ -54,10 +54,10 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 
 ## Pedidos del autor del 2026-11-06 (después del bloque 2)
 
-- [ ] T911 [B1b] CV en español y en inglés: `public/cv/camilo-hernandez-cv-{es,en}.pdf` desde los PDF del handoff, sin
+- [x] T911 [B1b] CV en español y en inglés: `public/cv/camilo-hernandez-cv-{es,en}.pdf` desde los PDF del handoff, sin
   cambiarlos. Botón principal con el PDF del idioma de la página y enlace secundario al otro idioma (con `hreflang`),
   formato y peso; dos acciones en la paleta; el asistente responde con los dos; `llms.txt` y JSON-LD. e2e de las dos
-  descargas. Va `para más adelante`.
+  descargas (FR-701b, `tests/unit/cv2` y `tests/e2e/cv2`).
 - [x] T944 El buzón del header debe llevar al autor a leer sus mensajes, no solo a Contacto (la 004 lo había mandado a
   Contacto para todos).
 - [ ] T960 Cuarta escena de Sobre mí, "Hacia dónde voy": entrevista al autor ([entrevista-hacia-donde-voy.md](./entrevista-hacia-donde-voy.md)),

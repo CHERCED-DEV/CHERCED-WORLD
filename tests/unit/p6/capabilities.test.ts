@@ -85,8 +85,8 @@ const SPEC_DESCRIPTIONS: Record<string, { es: string; en: string }> = {
   },
   list_posts: { es: 'Lista los posts del blog, opcionalmente por etiqueta.', en: 'Lists blog posts, optionally by tag.' },
   get_cv: {
-    es: 'Devuelve el CV oficial: el enlace a LinkedIn y el PDF descargable de este sitio.',
-    en: 'Returns the official CV: the LinkedIn link and the downloadable PDF on this site.',
+    es: 'Devuelve el CV oficial: el enlace a LinkedIn y los PDF descargables de este sitio, en español y en inglés.',
+    en: 'Returns the official CV: the LinkedIn link and the downloadable PDFs on this site, in English and in Spanish.',
   },
   set_preferences: {
     es: 'Cambia el idioma o el tema del sitio para esta visita. Se puede deshacer.',
@@ -223,7 +223,7 @@ describe.each(['es', 'en'] as const)('salidas de las herramientas de lectura (%s
     for (const pattern of LEARNING) expect(skills).not.toMatch(pattern)
     for (const run of await allOutputs()) {
       const text = JSON.stringify({ ...(run.output as object), query: undefined })
-      expect(text.replaceAll('/cv/Camilo_Hernandez_CV.pdf', ''), run.name).not.toMatch(/\.pdf\b/i)
+      expect(text.replaceAll('/cv/camilo-hernandez-cv-es.pdf', '').replaceAll('/cv/camilo-hernandez-cv-en.pdf', ''), run.name).not.toMatch(/\.pdf\b/i)
       if (run.name !== 'get_project' && run.name !== 'list_projects') {
         for (const pattern of LEARNING) expect(text, `${run.name} ${JSON.stringify(run.input)}`).not.toMatch(pattern)
       }
@@ -286,21 +286,28 @@ describe.each(['es', 'en'] as const)('salidas de las herramientas de lectura (%s
     expect(everything.areas.map((area) => area.id)).toEqual(AREAS)
   })
 
-  it('list_posts filtra por etiqueta y get_cv da LinkedIn, no un PDF', async () => {
+  it('list_posts filtra por etiqueta y get_cv da LinkedIn y los dos PDF, primero el del idioma', async () => {
     const posts = (await tool('list_posts').execute({}, context)) as { posts: Array<{ id: string; tags: string[] }> }
     expect(posts.posts.map((post) => post.id).sort()).toEqual([...postIds()].sort())
     const tag = posts.posts[0]?.tags[0] ?? ''
     const tagged = (await tool('list_posts').execute({ tag: tag.toUpperCase() }, context)) as { posts: Array<{ tags: string[] }> }
     expect(tagged.posts.length).toBeGreaterThan(0)
     for (const post of tagged.posts) expect(post.tags.map((item) => item.toLowerCase())).toContain(tag.toLowerCase())
+    const es = { lang: 'es', url: `${ORIGIN}/cv/camilo-hernandez-cv-es.pdf`, bytes: 174_507 }
+    const en = { lang: 'en', url: `${ORIGIN}/cv/camilo-hernandez-cv-en.pdf`, bytes: 172_753 }
     expect(await tool('get_cv').execute({}, context)).toEqual({
       url: 'https://www.linkedin.com/in/cherced/',
       label: lang === 'es' ? 'Ver mi CV en LinkedIn' : 'See my CV on LinkedIn',
-      pdf: {
-        url: `${ORIGIN}/cv/Camilo_Hernandez_CV.pdf`,
-        label: lang === 'es' ? 'Descargar CV (PDF)' : 'Download CV (PDF)',
-        bytes: 172_753,
-      },
+      pdfs:
+        lang === 'es'
+          ? [
+              { ...es, label: 'Descargar CV en español (PDF)' },
+              { ...en, label: 'Descargar CV en inglés (PDF)' },
+            ]
+          : [
+              { ...en, label: 'Download CV in English (PDF)' },
+              { ...es, label: 'Download CV in Spanish (PDF)' },
+            ],
     })
   })
 })

@@ -164,6 +164,7 @@ export function Assistant({ lang, labels, open, status, onStatus, onClose }: Ass
                           {link.external ? (
                             <a
                               href={link.href}
+                              hrefLang={link.lang}
                               className={styles.link}
                               {...(link.href.startsWith('mailto:') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
                             >

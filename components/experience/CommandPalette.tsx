@@ -36,7 +36,7 @@ export type CommandPaletteProps = {
   pages: SearchDoc[]
   email: string | null
   cv: string | null
-  cvPdf: CvPdfCommand | null
+  cvPdfs: CvPdfCommand[]
   singleKey: boolean
   open: boolean
   session: number
@@ -83,7 +83,7 @@ function PaletteBody({
   pages,
   email,
   cv,
-  cvPdf,
+  cvPdfs,
   singleKey,
   onClose,
   onOpenAssistant,
@@ -107,7 +107,7 @@ function PaletteBody({
     theme: currentTheme(),
     email,
     cv,
-    cvPdf,
+    cvPdfs,
     now: localizedPath(lang, '/now'),
     synergos: localizedPath(lang, '/synergos'),
     aiLab: localizedPath(lang, '/ai-lab'),

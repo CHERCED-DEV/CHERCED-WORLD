@@ -1,6 +1,6 @@
 import { synergosShowcase, SYNERGOS_PATH } from '@/content/synergos-showcase'
 import { capabilityDescriptions, createCapabilities, findCapability } from '@/lib/capabilities/registry'
-import { getSite, pick } from '@/lib/content'
+import { cvPdfs, getSite, pick } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
 import { localizedPath } from '@/lib/i18n/paths'
 import { getDictionary } from '@/lib/i18n/server'
@@ -45,6 +45,15 @@ export async function buildLlmsTxt(base: URL = getSiteUrl()): Promise<string> {
     findCapability(capabilities, 'list_posts').execute({}, context),
   ])) as [{ projects: ListedProject[] }, { posts: ListedPost[] }]
 
+  const cv = site.profile
+    ? [
+        '## CV',
+        ...cvPdfs('en', site).map((pdf) => `- [${label(t(commonEn, `cv.pdf.${pdf.lang}`))}](${new URL(pdf.href, base).toString()})`),
+        `- [${label(t(commonEn, 'cv.link'))}](${site.profile.cv.href})`,
+        '',
+      ]
+    : []
+
   const lines = [
     '# CHERCED-WORLD',
     '',
@@ -53,6 +62,7 @@ export async function buildLlmsTxt(base: URL = getSiteUrl()): Promise<string> {
     '## About',
     pair(base, '/aboutMe', t(commonEn, 'nav.about'), t(commonEs, 'nav.about')),
     '',
+    ...cv,
     '## Services',
     pair(base, '/services', t(commonEn, 'nav.services'), t(commonEs, 'nav.services')),
     '',
@@ -65,8 +75,6 @@ export async function buildLlmsTxt(base: URL = getSiteUrl()): Promise<string> {
     '',
     '## Contact',
     pair(base, '/contactMe', pick(site.contact.title, 'en'), pick(site.contact.title, 'es')),
-    ...(site.profile?.cv.pdf ? [`- [${label(t(commonEn, 'cv.download'))}](${new URL(site.profile.cv.pdf.href, base).toString()})`] : []),
-    ...(site.profile ? [`- [${label(t(commonEn, 'cv.link'))}](${site.profile.cv.href})`] : []),
     '',
   ]
   return lines.join('\n')

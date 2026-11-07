@@ -1,6 +1,7 @@
 import commonEn from '@/content/i18n/en/common.json'
 import commonEs from '@/content/i18n/es/common.json'
 import { site } from '@/content/site'
+import { cvPdfs } from '@/lib/content/cv'
 import type { Locale } from '@/lib/i18n/config'
 import { getSiteUrl } from '@/lib/site-url'
 
@@ -30,6 +31,29 @@ export type PersonJsonLd = {
   address: { '@type': 'PostalAddress'; addressLocality: string; addressCountry: string }
   alumniOf: { '@type': 'CollegeOrUniversity'; name: string }
   knowsAbout: string[]
+  subjectOf?: CvDocumentJsonLd
+}
+
+export type CvDocumentJsonLd = {
+  '@type': 'DigitalDocument'
+  name: string
+  url: string
+  encodingFormat: 'application/pdf'
+  inLanguage: Locale
+}
+
+const CV_NAMES: Record<Locale, string> = { es: commonEs['cv.documentName'], en: commonEn['cv.documentName'] }
+
+function cvDocument(lang: Locale, root: string): CvDocumentJsonLd | null {
+  const [pdf] = cvPdfs(lang, site)
+  if (!pdf) return null
+  return {
+    '@type': 'DigitalDocument',
+    name: CV_NAMES[lang].replace('{name}', PERSON_NAME),
+    url: `${root}${pdf.href}`,
+    encodingFormat: 'application/pdf',
+    inLanguage: pdf.lang,
+  }
 }
 
 function origin(base: URL): string {
@@ -47,6 +71,7 @@ export function personJsonLd(lang: Locale, base: URL = getSiteUrl()): PersonJson
     return href ? [href] : []
   })
   const alumni = site.about.education.find((entry) => entry.id === 'eam')?.institution ?? ''
+  const cv = cvDocument(lang, root)
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -61,6 +86,7 @@ export function personJsonLd(lang: Locale, base: URL = getSiteUrl()): PersonJson
     address: { '@type': 'PostalAddress', ...PERSON_ADDRESS },
     alumniOf: { '@type': 'CollegeOrUniversity', name: alumni },
     knowsAbout: [...PERSON_KNOWS_ABOUT],
+    ...(cv ? { subjectOf: cv } : {}),
   }
 }
 

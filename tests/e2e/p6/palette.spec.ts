@@ -79,7 +79,8 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
     await expect(group).toBeVisible()
     await expect(palette(page).getByRole('group')).toHaveCount(1)
     expect(await optionIds(page, 20)).toEqual([
-      'action:cv-pdf',
+      'action:cv-pdf-es',
+      'action:cv-pdf-en',
       'action:cv',
       'action:copy-email',
       'action:theme',
@@ -89,22 +90,32 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
       'action:now',
       'action:synergos',
     ])
-    await expect(group.getByRole('option', { name: 'Descargar CV (PDF)' })).toBeVisible()
+    await expect(group.getByRole('option', { name: 'Descargar CV en español' })).toBeVisible()
+    await expect(group.getByRole('option', { name: 'Descargar CV en inglés' })).toBeVisible()
+    await expect(group.locator('[data-cw-palette-option="action:cv-pdf-es"]')).toContainText('PDF · 175 kB')
+    await expect(group.locator('[data-cw-palette-option="action:cv-pdf-en"]')).toContainText('PDF · 173 kB')
     await expect(group.getByRole('option', { name: 'Ver mi CV en LinkedIn' })).toBeVisible()
     await expect(group.getByRole('option', { name: /Ver los atajos de teclado/ })).toHaveAttribute('aria-keyshortcuts', '?')
   })
 
-  test('">cv" y Enter bajan el CV en PDF: 4 teclas (FR-702 de la 007)', async ({ page }) => {
-    await gotoReady(page, '/es')
-    await openPalette(page)
-    for (const key of ['>', 'c', 'v']) await page.keyboard.press(key)
-    await expect(palette(page).locator('[data-cw-palette-option="action:cv-pdf"]')).toHaveAttribute('aria-selected', 'true')
-    const downloading = page.waitForEvent('download')
-    await page.keyboard.press('Enter')
-    expect((await downloading).suggestedFilename()).toBe('Camilo_Hernandez_CV.pdf')
-    await expect(palette(page)).toBeHidden()
-    await expect(page).toHaveURL(/\/es$/)
-  })
+  for (const [lang, filename] of [
+    ['es', 'Camilo_Hernandez_CV_ES.pdf'],
+    ['en', 'Camilo_Hernandez_CV_EN.pdf'],
+  ] as const) {
+    test(`/${lang}: ">cv" y Enter bajan el CV en PDF del idioma de la página: 4 teclas (FR-702 y T911 de la 007)`, async ({ page }) => {
+      await gotoReady(page, `/${lang}`)
+      await page.keyboard.press('Control+k')
+      await expect(palette(page, lang)).toBeVisible()
+      await expect(page.locator('[data-cw-palette-input]')).toBeFocused()
+      for (const key of ['>', 'c', 'v']) await page.keyboard.press(key)
+      await expect(palette(page, lang).locator(`[data-cw-palette-option="action:cv-pdf-${lang}"]`)).toHaveAttribute('aria-selected', 'true')
+      const downloading = page.waitForEvent('download')
+      await page.keyboard.press('Enter')
+      expect((await downloading).suggestedFilename()).toBe(filename)
+      await expect(palette(page, lang)).toBeHidden()
+      await expect(page).toHaveURL(new RegExp(`/${lang}$`))
+    })
+  }
 
   test('">linkedin" y Enter abren el CV en LinkedIn en una pestaña nueva', async ({ page }) => {
     await stubLinkedIn(page)

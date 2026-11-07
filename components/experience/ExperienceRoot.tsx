@@ -1,6 +1,6 @@
 import type { JSX } from 'react'
-import { cvPdfFilename } from '@/components/ui/CvLink'
-import { getCapsule, getSite } from '@/lib/content'
+import { cvPdfFormat } from '@/components/ui/CvLink'
+import { cvPdfs, getCapsule, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/server'
 import { publicEmail } from '@/lib/search/build-index'
@@ -20,7 +20,7 @@ export async function ExperienceRoot({ lang }: ExperienceRootProps): Promise<JSX
       pages={pageDocs(lang, common)}
       email={publicEmail(site)}
       cv={site.profile?.cv.href ?? null}
-      cvPdf={site.profile?.cv.pdf ? { href: site.profile.cv.pdf.href, filename: cvPdfFilename(site.profile.cv.pdf) } : null}
+      cvPdfs={cvPdfs(lang, site).map((pdf) => ({ lang: pdf.lang, href: pdf.href, filename: pdf.filename, hint: cvPdfFormat(pdf, lang) }))}
       areas={(site.about.skills.lobes ?? []).map((lobe) => lobe.id)}
       capsule={getCapsule()}
     />
