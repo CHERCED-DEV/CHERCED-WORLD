@@ -4,6 +4,7 @@ import { GlassSurface } from '@/components/ui/GlassSurface'
 import type { Locale } from '@/lib/i18n'
 import { isPublishable } from '../format'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import styles from './About.module.scss'
 import { CareerDeck } from './CareerDeck'
 import { CareerHand } from './CareerHand'
@@ -55,9 +56,9 @@ export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLab
                 </span>
               </p>
               <GlassSurface variant="standard" grain depth edge light className={styles.milestoneCard}>
-                <h3 className={styles.jobRole}>{entry.role[lang]}</h3>
+                <h3 className={styles.jobRole}>{typeset(entry.role[lang], lang)}</h3>
                 <p className={styles.jobCompany}>{entry.company}</p>
-                <JobSummary description={entry.description[lang]} highlights={(entry.highlights ?? []).map((highlight) => highlight[lang])} />
+                <JobSummary lang={lang} description={entry.description[lang]} highlights={(entry.highlights ?? []).map((highlight) => highlight[lang])} />
               </GlassSurface>
             </li>
           )

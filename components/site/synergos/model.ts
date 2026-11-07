@@ -11,7 +11,9 @@ import { localizedPath, type Locale } from '@/lib/i18n'
 import { formatNowDate } from '../now/model'
 import { fillTemplate } from '../portfolio/carousel'
 
-export const LINE_STATES: readonly ShowcaseLineState[] = ['active', 'closed', 'paused']
+export type LabeledLineState = Exclude<ShowcaseLineState, 'closed'>
+
+export const LINE_STATES: readonly LabeledLineState[] = ['active', 'paused']
 
 export const MILESTONE_STATES: readonly ShowcaseMilestoneState[] = ['done', 'doing', 'todo']
 
@@ -25,8 +27,14 @@ export function lineLabel(line: Pick<ShowcaseLine, 'id' | 'name'>, lang: Locale)
   return `${line.id} ${line.name[lang]}`
 }
 
+export function stateLabel(state: ShowcaseLineState, lang: Locale): string | null {
+  return state === 'closed' ? null : copy.states[state][lang]
+}
+
 export function stateText(line: Pick<ShowcaseLine, 'state' | 'done' | 'total'>, lang: Locale): string {
-  return `${copy.states[line.state][lang]} · ${line.done}/${line.total}`
+  const label = stateLabel(line.state, lang)
+  const progress = `${line.done}/${line.total}`
+  return label ? `${label} · ${progress}` : progress
 }
 
 export function tasksText(line: Pick<ShowcaseLine, 'done' | 'total'>, lang: Locale): string {
@@ -38,7 +46,7 @@ export function lineSummary(lines: readonly ShowcaseLine[], lang: Locale): strin
     new Intl.ListFormat(lang === 'es' ? 'es' : 'en', { type: 'conjunction' }).format(
       lines.filter((line) => line.state === state).map((line) => line.name[lang]),
     )
-  return fillTemplate(copy.line.summary[lang], { active: names('active'), closed: names('closed'), paused: names('paused') })
+  return fillTemplate(copy.line.summary[lang], { active: names('active'), paused: names('paused') })
 }
 
 export function countedText(lang: Locale): { before: string; date: string; after: string } {

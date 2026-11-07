@@ -27,7 +27,7 @@ describe('A-406: índice versión 2 con habilidades (FR-450)', () => {
     expect(doc).toEqual({
       id: 'skill:saga',
       kind: 'skill',
-      title: 'SAGA · COMPENSATING TRANSACTIONS',
+      title: lang === 'es' ? 'SAGAS · TRANSACCIONES COMPENSATORIAS' : 'SAGA · COMPENSATING TRANSACTIONS',
       text: lang === 'es' ? `${lobe.name.es} · 85 %` : `${lobe.name.en} · 85%`,
       keywords: `${lobe.name[lang]} saga`,
       url: `/${lang}/aboutMe#lobe-${lobe.id}`,
@@ -66,7 +66,7 @@ describe('A-406: índice versión 2 con habilidades (FR-450)', () => {
     const en = await buildSearchIndex('en')
     expect(en.facts.cv).toEqual({
       href: 'https://www.linkedin.com/in/cherced/',
-      label: 'See my CV on LinkedIn',
+      label: 'LinkedIn profile',
       pdfs: [
         { lang: 'en', href: '/cv/camilo-hernandez-cv-en.pdf', label: 'Download CV in English (PDF)', bytes: 172_753 },
         { lang: 'es', href: '/cv/camilo-hernandez-cv-es.pdf', label: 'Download CV in Spanish (PDF)', bytes: 174_507 },

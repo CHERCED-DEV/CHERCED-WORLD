@@ -42,7 +42,7 @@ describe.each(['es', 'en'] as const)('habilidades en la paleta (FR-450, SC-404) 
         expect(doc, id).toBeDefined()
         expect(doc?.item.command).toEqual({ type: 'navigate', href: `/${lang}/aboutMe#lobe-${lobe.id}` })
         const level = getSite().about.languages.find((language) => language.id === id)?.level?.[lang]
-        expect(doc?.item.hint).toMatch(level ? new RegExp(`^.+ · ${level}$`) : lang === 'es' ? /^.+ · \d+ %$/ : /^.+ · \d+%$/)
+        expect(doc?.item.hint).toMatch(level ? new RegExp(`^.+ · ${level.replace(/[()]/g, '\\$&')}$`) : lang === 'es' ? /^.+ · \d+ %$/ : /^.+ · \d+%$/)
       }
     }
   })
@@ -89,24 +89,24 @@ describe('modo de comandos > (FR-451, SC-403)', () => {
     expect(ids('  >  ', ctx).map((item) => item.id)).toEqual(items.map((item) => item.id))
   })
 
-  it('">cv" deja el CV de LinkedIn primero: 4 teclas con Enter', async () => {
+  it('">linkedin" deja el perfil de LinkedIn primero; LinkedIn ya no responde a "cv" (FR-1005)', async () => {
     for (const lang of ['es', 'en'] as const) {
       const ctx = await setup(lang)
-      for (const query of ['>cv', '> cv', '>CV']) {
+      for (const query of ['>linkedin', '> linkedin', '>LinkedIn']) {
         const [first] = ids(query, ctx)
         expect(first?.id, `${lang} ${query}`).toBe('action:cv')
         expect(first?.command).toEqual({ type: 'open', href: CV })
-        expect(first?.title).toBe(lang === 'es' ? 'Ver mi CV en LinkedIn' : 'See my CV on LinkedIn')
+        expect(first?.title).toBe(lang === 'es' ? 'Ver mi perfil de LinkedIn' : 'See my LinkedIn profile')
       }
-      expect(ids('cv', ctx)[0]?.id).toBe('action:cv')
+      expect(ids('>cv', ctx).map((item) => item.id)).not.toContain('action:cv')
     }
   })
 
   it('encuentra cada comando por sus palabras clave en ambos idiomas', async () => {
     const ctx = await setup('es')
     const first = (query: string) => ids(query, ctx)[0]?.id
-    expect(first('>hoja de vida')).toBe('action:cv')
-    expect(first('>resume')).toBe('action:cv')
+    expect(first('>perfil')).toBe('action:cv')
+    expect(first('>profile')).toBe('action:cv')
     expect(first('>atajos')).toBe('action:shortcuts')
     expect(first('>keyboard')).toBe('action:shortcuts')
     expect(first('>tema')).toBe('action:theme')

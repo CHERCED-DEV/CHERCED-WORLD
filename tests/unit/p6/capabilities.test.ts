@@ -297,7 +297,7 @@ describe.each(['es', 'en'] as const)('salidas de las herramientas de lectura (%s
     const en = { lang: 'en', url: `${ORIGIN}/cv/camilo-hernandez-cv-en.pdf`, bytes: 172_753 }
     expect(await tool('get_cv').execute({}, context)).toEqual({
       url: 'https://www.linkedin.com/in/cherced/',
-      label: lang === 'es' ? 'Ver mi CV en LinkedIn' : 'See my CV on LinkedIn',
+      label: lang === 'es' ? 'Perfil de LinkedIn' : 'LinkedIn profile',
       pdfs:
         lang === 'es'
           ? [

@@ -6,6 +6,7 @@ import { GlassSurface } from '@/components/ui/GlassSurface'
 import { GridLines } from '@/components/ui/graphics'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import { serviceNumber, wantHref, type ServiceCase } from './model'
 import { ServiceAudiences } from './ServiceAudiences'
 import { type ServiceCardLabels } from './ServiceCard'
@@ -50,7 +51,7 @@ export function ServicesView({ lang, services, cases, labels, tryHrefs = {} }: S
         </SectionTitle>
         <GlassSurface variant="standard" edge light className={styles.heroCard}>
           <GridLines fade="radial" />
-          <p className={styles.prose}>{services.hero.intro[lang]}</p>
+          <p className={styles.prose}>{typeset(services.hero.intro[lang], lang)}</p>
           <Link
             href={contact}
             className={buttonClassName({ variant: 'solid', size: 'lg', className: styles.wrapButton })}
@@ -68,6 +69,7 @@ export function ServicesView({ lang, services, cases, labels, tryHrefs = {} }: S
         <ServiceStack
           cards={services.items.map((item, index) => ({
             id: item.id,
+            lang,
             number: serviceNumber(index),
             title: item.title[lang],
             forWho: item.forWho[lang],

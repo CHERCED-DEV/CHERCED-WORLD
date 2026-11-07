@@ -42,11 +42,8 @@
   height: 200px;
   overflow: hidden;
   isolation: isolate;
-}
-
-.bandImage {
-  z-index: -1;
-  object-fit: cover;
+  border-inline: 0;
+  border-radius: 0;
 }
 
 .explorer {
@@ -220,7 +217,7 @@
   padding-inline: 7px;
   border-radius: 999px;
   background: var(--cw-glass-border);
-  font-size: 0.6875rem;
+  font-size: var(--cw-text-xs);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
 

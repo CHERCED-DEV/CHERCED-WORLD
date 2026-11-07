@@ -25,13 +25,14 @@ describe('B1: el CV en PDF (FR-701, FR-702, T911)', () => {
   it.each([
     ['es', 'Descargar CV', '/cv/camilo-hernandez-cv-es.pdf', 'Camilo_Hernandez_CV_ES.pdf', /aria-label="Descargar CV en español \(PDF, 175 kB\)"/],
     ['en', 'Download CV', '/cv/camilo-hernandez-cv-en.pdf', 'Camilo_Hernandez_CV_EN.pdf', /aria-label="Download CV in English \(PDF, 173 kB\)"/],
-  ] as const)('%s: "Descargar CV" va junto a LinkedIn, primero y con su peso', (lang, label, href, filename, aria) => {
+  ] as const)('%s: "Descargar CV" va primero, con su peso y el enlace al otro idioma, sin LinkedIn (FR-1001)', (lang, label, href, filename, aria) => {
     const html = renderToStaticMarkup(createElement(CvActions, { lang, downloadVariant: 'solid' }))
     expect(html).toMatch(/^<span class="cw-cv-actions" data-cw-cv-actions="">/)
     const download = html.indexOf('data-cw-cv-download')
-    const linkedin = html.indexOf('data-cw-cv-link')
+    const alternate = html.indexOf('data-cw-cv-alternate')
     expect(download).toBeGreaterThan(-1)
-    expect(linkedin).toBeGreaterThan(download)
+    expect(alternate).toBeGreaterThan(download)
+    expect(html).not.toContain('data-cw-cv-link')
     expect(html).toContain(`href="${href}" download="${filename}" type="application/pdf"`)
     expect(html).toMatch(aria)
     expect(html).toContain(`<span>${label}</span>`)

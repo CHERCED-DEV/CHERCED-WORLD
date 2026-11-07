@@ -54,7 +54,7 @@
     background-color var(--cw-duration-base) var(--cw-ease-out),
     color var(--cw-duration-base) var(--cw-ease-out);
 
-  @media (pointer: coarse) {
+  @media (pointer: coarse), (max-width: 767.98px) {
     min-height: 44px;
   }
 

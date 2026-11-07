@@ -6,6 +6,7 @@ import { AboutDescription } from '@/components/site/about/AboutDescription'
 import { AboutFigures } from '@/components/site/about/AboutFigures'
 import { BrainScene } from '@/components/site/about/BrainScene'
 import { aboutFigures } from '@/components/site/about/figures'
+import { formatMonth } from '@/components/site/format'
 import { SceneNav } from '@/components/site/about/SceneNav'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
@@ -42,8 +43,8 @@ export default async function AboutMePage({ params }: Props) {
   const { about } = getSite()
   const projects = getProjects()
   const present = t(dict, 'about.present')
-  const figures = aboutFigures(about, new Date())
-  const since = figures.find((figure) => figure.id === 'years')?.since
+  const figures = aboutFigures(about)
+  const countedAt = formatMonth(synergosShowcase.countedAt.slice(0, 7), lang)
 
   return (
     <div className={styles.page}>
@@ -68,10 +69,7 @@ export default async function AboutMePage({ params }: Props) {
           title={t(dict, 'about.figures')}
           figures={figures}
           labels={{
-            years: {
-              label: t(dict, 'about.figure.years'),
-              note: since ? t(dict, 'about.figure.yearsNote', { year: since }) : undefined,
-            },
+            years: { label: t(dict, 'about.figure.years') },
             pieces: {
               label: t(dict, 'about.figure.pieces'),
               note: t(dict, 'about.figure.piecesNote', {
@@ -79,8 +77,8 @@ export default async function AboutMePage({ params }: Props) {
                 orchestrators: formatFact(synergosFacts.orchestrators, lang),
               }),
             },
-            adrs: { label: t(dict, 'about.figure.adrs'), note: t(dict, 'about.figure.adrsNote') },
-            tests: { label: t(dict, 'about.figure.tests'), note: t(dict, 'about.figure.testsNote') },
+            adrs: { label: t(dict, 'about.figure.adrs'), note: t(dict, 'about.figure.adrsNote', { date: countedAt }) },
+            tests: { label: t(dict, 'about.figure.tests'), note: t(dict, 'about.figure.testsNote', { date: countedAt }) },
           }}
         />
         <ShowcaseLink lang={lang} label={synergosShowcase.copy.cta[lang]} from="about" size="md" className={styles.heroShowcase} />
@@ -132,6 +130,12 @@ export default async function AboutMePage({ params }: Props) {
                 close: t(common, 'dialog.close'),
                 prev: t(portfolio, 'case.prev'),
                 next: t(portfolio, 'case.next'),
+              },
+              sourceGroups: {
+                applied: t(dict, 'about.brain.appliedIn'),
+                learned: t(dict, 'about.brain.learnedIn'),
+                all: t(dict, 'about.brain.allSources'),
+                fewer: t(dict, 'about.brain.fewerSources'),
               },
             },
           }}

@@ -1,8 +1,9 @@
-import Image from 'next/image'
 import type { Project, SiteContent } from '@/content/types'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { CornerMarks, GridLines, Scanline } from '@/components/ui/graphics'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import styles from './Portfolio.module.scss'
 import { ProjectsExplorer, type ExplorerLabels } from './ProjectsExplorer'
 import { portfolioIntro, toSlide } from './projects'
@@ -26,17 +27,19 @@ export function PortfolioView({ lang, portfolio, projects, technologies, labels 
         {intro ? (
           <GlassSurface variant="standard" className={styles.introCard}>
             <p className={styles.prose} data-cw-portfolio-intro="">
-              {intro}
+              {typeset(intro, lang)}
             </p>
           </GlassSurface>
         ) : null}
       </section>
 
       <section className={styles.projects} aria-labelledby="portfolio-projects">
-        <div className={styles.band}>
-          <Image src="/assets/imgs/mobilePortfolio.png" alt="" fill sizes="100vw" className={styles.bandImage} />
+        <GlassSurface variant="subtle" edge grain className={styles.band} data-cw-portfolio-band="">
+          <GridLines fade="radial" />
+          <CornerMarks inset={-1} />
+          <Scanline axis="x" edge="bottom" delay={600} />
           <SectionTitle id="portfolio-projects">{labels.projects}</SectionTitle>
-        </div>
+        </GlassSurface>
         <ProjectsExplorer projects={projects.map((project) => toSlide(project, lang))} technologies={technologies} labels={labels} />
         <footer className={styles.footer} data-cw-glass="strong">
           <p>{portfolio.footer[lang]}</p>

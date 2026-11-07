@@ -13,7 +13,7 @@ export const LAYER_BY_TECHNOLOGY: Readonly<Record<string, StackLayer>> = {
   'C#': 'language',
   PYTHON: 'language',
   REACT: 'framework',
-  NEXTJS: 'framework',
+  'NEXT.JS': 'framework',
   'NEXT-ROUTER': 'framework',
   ANGULAR: 'framework',
   '.NET': 'framework',

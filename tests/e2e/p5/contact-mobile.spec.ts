@@ -267,7 +267,9 @@ test.describe('Contacto en el celular (US13, FR-636)', () => {
       form.locator('[data-cw-contact-submit]'),
       form.locator('[data-cw-consent-policy]'),
       form.locator('[data-cw-consent-field] label'),
-      page.locator('[data-cw-contact-reach] [data-cw-cv-link]'),
+      page.locator('[data-cw-contact-reach] [data-cw-cv-download]'),
+      page.locator('[data-cw-contact-reach] [data-cw-cv-alternate]'),
+      page.locator('[data-cw-contact-reach] [data-cw-contact-linkedin]'),
       page.locator('[data-cw-contact-reach] [data-cw-email-trigger]'),
     ]
     for (const target of targets) {

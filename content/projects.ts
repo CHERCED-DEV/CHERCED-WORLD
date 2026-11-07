@@ -29,7 +29,7 @@ export const projects: Project[] = [
       'SASS',
       'JAVASCRIPT',
       'REACT',
-      'NEXTJS',
+      'NEXT.JS',
       'FIGMA',
       'NEXT AUTH',
       'NEXT REDUX',
@@ -60,7 +60,7 @@ export const projects: Project[] = [
     title: 'CHERCED-WORLD 2026',
     summary: {
       en: 'My 2023 portfolio rebuilt with Spec-Driven Development and AI agents working in parallel.',
-      es: 'Mi portafolio de 2023 reconstruido con Spec-Driven Development y agentes de IA trabajando en paralelo.',
+      es: 'Mi portafolio de 2023 reconstruido con desarrollo guiado por especificaciones (Spec-Driven Development) y agentes de IA trabajando en paralelo.',
     },
     context: {
       en: 'The 2023 portfolio described who I was three years ago: 2022 projects, skills from that time and nothing about my current architecture work. I wanted to update it without rewriting it by hand or adding infrastructure, and to use it as real proof of how I work today: spec first, agents second.',
@@ -78,7 +78,7 @@ export const projects: Project[] = [
       en: "The site is now updated and bilingual, with an admin panel and no new infrastructure costs. Along the way I found and fixed, with a hotfix in production, a privacy issue: contact details that shouldn't have been public.",
       es: 'El sitio quedó actualizado y bilingüe, con panel de administración y sin costos de infraestructura nuevos. Durante el proceso detecté y corregí con un hotfix en producción un problema de privacidad: datos de contacto que no debían ser públicos.',
     },
-    technologies: ['NEXTJS', 'REACT', 'TYPESCRIPT', 'SPEC KIT', 'AI CODING AGENTS', 'CANVAS'],
+    technologies: ['NEXT.JS', 'REACT', 'TYPESCRIPT', 'SPEC KIT', 'AI CODING AGENTS', 'CANVAS'],
     image: {
       src: '/assets/imgs/projects/chercedWorld2026.webp',
       alt: {
@@ -121,7 +121,7 @@ export const projects: Project[] = [
       en: "Overall, AIRLINE serves as a testament to my proficiency in web development and my commitment to adhering to best practices. The website's clean design and seamless navigation demonstrate my attention to detail and ability to create high-quality websites that meet clients' needs. The website's implementation using popular web development tools ensures that it is easy to maintain and scale, allowing for future updates and enhancements as needed.",
       es: 'En resumen, AIRLINE demuestra mi dominio del desarrollo web y mi compromiso con las buenas prácticas. Su diseño limpio y su navegación fluida muestran mi atención al detalle y mi capacidad para crear sitios de alta calidad que respondan a las necesidades de los clientes. Al estar construido con herramientas populares de desarrollo web, es fácil de mantener y escalar, y admite futuras actualizaciones y mejoras cuando hagan falta.',
     },
-    technologies: ['HTML', 'CSS', 'SASS', 'JAVASCRIPT', 'REACT', 'NEXTJS', 'FIGMA'],
+    technologies: ['HTML', 'CSS', 'SASS', 'JAVASCRIPT', 'REACT', 'NEXT.JS', 'FIGMA'],
     image: {
       src: '/assets/imgs/projects/page.webp',
       alt: { en: 'AIRLINE landing page on mobile', es: 'Landing page de AIRLINE en móvil' },
@@ -160,7 +160,7 @@ export const projects: Project[] = [
       en: 'Newman Club takes pride in its pixel-perfect design and dedication to best practices in user experience. Every detail has been carefully considered to create a cohesive and visually pleasing interface that reflects the identity and values of the religious corporation. Leveraging tools like Figma, this religious website effectively conveys its message in a visually compelling manner.',
       es: 'Newman Club se enorgullece de su diseño pixel perfect y de su compromiso con las buenas prácticas de experiencia de usuario. Cada detalle se pensó con cuidado para crear una interfaz coherente y agradable a la vista, que refleja la identidad y los valores de la corporación religiosa. Con herramientas como Figma, el sitio transmite su mensaje de una forma visualmente atractiva.',
     },
-    technologies: ['HTML', 'CSS', 'SASS', 'TYPESCRIPT', 'REACT', 'NEXTJS', 'FIGMA'],
+    technologies: ['HTML', 'CSS', 'SASS', 'TYPESCRIPT', 'REACT', 'NEXT.JS', 'FIGMA'],
     image: {
       src: '/assets/imgs/projects/newMan.webp',
       alt: { en: 'Newman Club website on mobile', es: 'Sitio web de Newman Club en móvil' },
@@ -199,7 +199,7 @@ export const projects: Project[] = [
       en: 'One of the key features of the Centribal project is its implementation of mixed rendering, combining server-side and client-side rendering. This approach optimizes the performance by generating a faster initial load time and improving the overall user experience. Additionally, the project utilizes memory caching techniques to further enhance performance, resulting in a smooth and efficient dashboard.',
       es: 'Una de las características clave de Centribal es su renderizado mixto, que combina renderizado en servidor y en cliente. Este enfoque optimiza el rendimiento con una carga inicial más rápida y mejora la experiencia de usuario en general. Además, el proyecto usa técnicas de caché en memoria para mejorar aún más el rendimiento, lo que da como resultado un dashboard fluido y eficiente.',
     },
-    technologies: ['HTML', 'CSS', 'SASS', 'TYPESCRIPT', 'REACT', 'NEXTJS', 'FIGMA'],
+    technologies: ['HTML', 'CSS', 'SASS', 'TYPESCRIPT', 'REACT', 'NEXT.JS', 'FIGMA'],
     image: {
       src: '/assets/imgs/projects/Centribal.png',
       alt: { en: 'CENTRIBAL dashboard on mobile', es: 'Dashboard de CENTRIBAL en móvil' },
@@ -236,7 +236,7 @@ export const projects: Project[] = [
       en: 'Despite its imperfections, I feel a great affection for "My Website". I love seeing how it has changed over time and how it has transformed into something better. This project represents my love for programming and my passion for learning. I hope that visitors to the page enjoy its design and content, and that it inspires them to continue experimenting and evolving as developers.',
       es: 'A pesar de sus imperfecciones, le tengo mucho cariño a "My Website". Me encanta ver cómo ha cambiado con el tiempo y cómo se ha transformado en algo mejor. Este proyecto representa mi amor por la programación y mi pasión por aprender. Espero que quienes visiten la página disfruten su diseño y su contenido, y que los inspire a seguir experimentando y evolucionando como desarrolladores.',
     },
-    technologies: ['HTML', 'CSS', 'SASS', 'JAVASCRIPT', 'REACT', 'NEXTJS', 'FIGMA', 'SWEETALERT2'],
+    technologies: ['HTML', 'CSS', 'SASS', 'JAVASCRIPT', 'REACT', 'NEXT.JS', 'FIGMA', 'SWEETALERT2'],
     image: {
       src: '/assets/imgs/projects/webSite.webp',
       alt: {
@@ -322,7 +322,7 @@ export const projects: Project[] = [
       'SASS',
       'JAVASCRIPT',
       'REACT',
-      'NEXTJS',
+      'NEXT.JS',
       'FIGMA',
       'NEXT AUTH',
       'NEXT REDUX',
@@ -373,7 +373,7 @@ export const projects: Project[] = [
       'SASS',
       'JAVASCRIPT',
       'REACT',
-      'NEXTJS',
+      'NEXT.JS',
       'FIGMA',
       'NEXT AUTH',
       'NEXT REDUX',
@@ -431,7 +431,7 @@ export const projects: Project[] = [
       'SASS',
       'JAVASCRIPT',
       'REACT',
-      'NEXTJS',
+      'NEXT.JS',
       'FIGMA',
       'NEXT AUTH',
       'NEXT REDUX',
@@ -483,7 +483,7 @@ export const projects: Project[] = [
       'SASS',
       'JAVASCRIPT',
       'REACT',
-      'NEXTJS',
+      'NEXT.JS',
       'FIGMA',
       'NEXT AUTH',
       'NEXT REDUX',
@@ -535,7 +535,8 @@ export const projects: Project[] = [
     },
     technologies: ['.NET 8', 'C#', 'ASP.NET CORE', 'UMBRACO 13', 'ANGULAR', 'WEB COMPONENTS', 'NX', 'CLOUDFLARE WORKERS', 'DOCKER', 'GITHUB ACTIONS', 'SPEC KIT', 'AI CODING AGENTS'],
     image: {
-      src: '/assets/imgs/projects/synergos.svg',
+      src: '/assets/imgs/projects/synergos-en.svg',
+      localizedSrc: { es: '/assets/imgs/projects/synergos-es.svg', en: '/assets/imgs/projects/synergos-en.svg' },
       alt: {
         en: 'Synergos layered architecture diagram: CDN resources feed Umbraco (.NET) as the composition layer, which serves micro-frontends and Web Components on any web framework',
         es: 'Diagrama de la arquitectura por capas de Synergos: los recursos en CDN alimentan a Umbraco (.NET) como capa de composición, que sirve micro-frontends y Web Components en cualquier framework web',

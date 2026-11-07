@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import type { Project } from '@/content/types'
+import { imageSrc } from '@/lib/content/image'
 import { projectTitle } from '@/lib/content/project-title'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -10,6 +11,7 @@ import { Icon } from '@/components/ui/Icon'
 import { Reveal } from '@/components/ui/Reveal'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import { ShowcaseLink } from '../synergos/ShowcaseLink'
 import { AdrCards } from '@/components/ui/AdrCards'
 import adrStyles from './AdrCards.module.scss'
@@ -93,7 +95,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           </h2>
           {section.paragraphs.map((paragraph, index) => (
             <p key={index} className={styles.text}>
-              {paragraph}
+              {typeset(paragraph, lang)}
             </p>
           ))}
           {section.cards && evidence ? <AdrCards cards={cards} labels={evidence.adr} className={adrStyles.list} cardClassName={adrStyles.card} /> : null}
@@ -183,7 +185,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
       <article className={styles.page} aria-labelledby="case-title" data-cw-case={project.id}>
         <div className={styles.media}>
           <Image
-            src={project.image.src}
+            src={imageSrc(project.image, lang)}
             alt={project.image.alt[lang]}
             width={project.image.width}
             height={project.image.height}
@@ -235,7 +237,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           <SectionTitle as="h1" id="case-title" size="lg" className={styles.title}>
             {title}
           </SectionTitle>
-          <p className={styles.lede}>{project.summary[lang]}</p>
+          <p className={styles.lede}>{typeset(project.summary[lang], lang)}</p>
           {project.links.live || extras.showcase ? (
             <div className={styles.heroActions}>
               {project.links.live ? (
@@ -284,7 +286,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           id={EMBED_ANCHOR}
           url={project.links.live}
           title={title}
-          poster={{ src: project.image.src, alt: project.image.alt[lang], width: project.image.width, height: project.image.height }}
+          poster={{ src: imageSrc(project.image, lang), alt: project.image.alt[lang], width: project.image.width, height: project.image.height }}
           labels={extra.embed}
         />
       ) : null}

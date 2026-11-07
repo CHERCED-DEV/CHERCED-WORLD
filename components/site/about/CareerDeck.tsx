@@ -8,6 +8,7 @@ import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n'
 import styles from './About.module.scss'
 import { deckSlot, flightFrom, flightTransform } from './deck'
+import { typeset } from '../typeset'
 import { JobSummary } from './JobSummary'
 import { Period } from './Period'
 
@@ -193,7 +194,7 @@ export function CareerDeck({ lang, jobs, labels }: CareerDeckProps) {
                 <span className={styles.deckPeriod}>
                   <Period start={item.start} end={item.end} lang={lang} presentLabel={labels.present} />
                 </span>
-                <span className={styles.deckRole}>{item.role}</span>
+                <span className={styles.deckRole}>{typeset(item.role, lang)}</span>
                 <span className={styles.deckCompany}>{item.company}</span>
                 <span className={styles.deckHint} aria-hidden="true">
                   {labels.open}
@@ -224,10 +225,10 @@ export function CareerDeck({ lang, jobs, labels }: CareerDeckProps) {
                   </span>
                 </p>
                 <h3 id="career-dialog-title" className={styles.deckOpenRole}>
-                  {job.role}
+                  {typeset(job.role, lang)}
                 </h3>
                 <p className={styles.jobCompany}>{job.company}</p>
-                <JobSummary id="career-dialog-text" description={job.description} highlights={job.highlights} />
+                <JobSummary id="career-dialog-text" lang={lang} description={job.description} highlights={job.highlights} />
               </div>
               <button
                 type="button"

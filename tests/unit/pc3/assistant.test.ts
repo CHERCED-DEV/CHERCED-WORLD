@@ -124,17 +124,17 @@ describe('B5: el asistente respeta las mayúsculas del catálogo (FR-721)', () =
 describe('B11: el inglés se expresa como nivel (FR-722)', () => {
   it('el asistente dice el nivel, no un porcentaje', () => {
     const es = ask(assistants, '¿Qué idiomas hablas?')
-    expect(es.text).toContain('inglés B1, B2 en uso profesional frecuente')
+    expect(es.text).toContain('inglés B1 (B2 en uso profesional frecuente)')
     expect(es.text).toContain('español e inglés')
     expect(es.text).not.toMatch(/%/)
     const en = ask(assistants, 'what languages do you speak')
-    expect(en.text).toContain('English B1, B2 in regular professional use')
+    expect(en.text).toContain('English B1 (B2 in regular professional use)')
     expect(en.text).not.toMatch(/%/)
   })
 
   it('el nivel sale del contenido', () => {
     const english = getSite().about.languages.find((language) => language.id === 'en')!
-    expect(english.level).toEqual({ es: 'B1, B2 en uso profesional frecuente', en: 'B1, B2 in regular professional use' })
+    expect(english.level).toEqual({ es: 'B1 (B2 en uso profesional frecuente)', en: 'B1 (B2 in regular professional use)' })
   })
 })
 

@@ -9,7 +9,12 @@ export type FigureLabels = Record<FigureId, { label: string; note?: string }>
 
 export const FIGURE_FLOATS = [1, 3, 2, 1] as const
 
-export type AboutFiguresProps = { lang: Locale; title: string; figures: Figure[]; labels: FigureLabels }
+export function digitsStyle(digits: string): CSSProperties {
+  const count = digits.replace(/\D/g, '').length
+  return { '--cw-digits': count, '--cw-separators': digits.length - count } as CSSProperties
+}
+
+export type AboutFiguresProps ={ lang: Locale; title: string; figures: Figure[]; labels: FigureLabels }
 
 export function AboutFigures({ lang, title, figures, labels }: AboutFiguresProps) {
   if (figures.length === 0) return null
@@ -37,7 +42,7 @@ export function AboutFigures({ lang, title, figures, labels }: AboutFiguresProps
                 {note ? <span className={styles.figureNote}>{note}</span> : null}
               </dt>
               <dd className={styles.figureValue}>
-                <span className={styles.figureDigits} style={{ '--cw-digits': figureDigits(figure.value, lang).length } as CSSProperties}>
+                <span className={styles.figureDigits} style={digitsStyle(figureDigits(figure.value, lang))}>
                   <CountUp value={figure.value} lang={lang} />
                 </span>
                 {figure.plus ? (

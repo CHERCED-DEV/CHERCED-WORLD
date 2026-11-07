@@ -48,7 +48,7 @@ for (const width of [1280, 375]) {
     await expect(row).toBeVisible({ timeout: READY_TIMEOUT })
     await expect(row).toContainText('INGLÉS')
     const level = row.locator('[data-cw-level-text]')
-    await expect(level).toHaveText('B1, B2 en uso profesional frecuente')
+    await expect(level).toHaveText('B1 (B2 en uso profesional frecuente)')
     await expect(row).not.toContainText('65')
     const layout = await row.evaluate((element) => {
       const name = [...element.children].find((child) => child.textContent?.trim() === 'INGLÉS')!
@@ -64,7 +64,7 @@ for (const width of [1280, 375]) {
 
 test('el inglés sale como nivel y las tecnologías con sus mayúsculas', async ({ page }) => {
   const languages = await ask(page, 'es', '¿Qué idiomas hablas?')
-  await expect(languages).toContainText('inglés B1, B2 en uso profesional frecuente')
+  await expect(languages).toContainText('inglés B1 (B2 en uso profesional frecuente)')
   await expect(languages).not.toContainText('%')
   const dialog = page.getByRole('dialog', { name: COPY.es.dialog })
   await dialog.locator('[data-cw-assistant-input]').fill('¿Qué tecnologías usa Synergos?')

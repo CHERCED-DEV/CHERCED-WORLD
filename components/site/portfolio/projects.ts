@@ -1,5 +1,6 @@
 import { technologyFamily } from '@/content/technologies'
 import type { Localized, Project, SiteContent } from '@/content/types'
+import { imageSrc } from '@/lib/content/image'
 import { projectTitle } from '@/lib/content/project-title'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import { paragraphs } from '../format'
@@ -24,7 +25,7 @@ export function toSlide(project: Project, lang: Locale): SlideProject {
     era: project.era,
     href: localizedPath(lang, `/portfolio/${project.id}`),
     image: {
-      src: project.image.src,
+      src: imageSrc(project.image, lang),
       alt: project.image.alt[lang],
       width: project.image.width,
       height: project.image.height,
@@ -92,7 +93,7 @@ export function technologyCounts(list: readonly Pick<Project, 'id' | 'technologi
 export function galleryImages(project: Project, lang: Locale): Array<{ src: string; alt: string; width: number; height: number }> {
   const extra = project.gallery ?? []
   return [project.image, ...extra.filter((image) => image.src !== project.image.src)].map((image) => ({
-    src: image.src,
+    src: imageSrc(image, lang),
     alt: image.alt[lang],
     width: image.width,
     height: image.height,

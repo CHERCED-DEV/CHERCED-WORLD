@@ -230,7 +230,7 @@ describe('terminal (E-10)', () => {
     expect(runTerminal('clear', 'es')).toEqual({ kind: 'clear' })
     expect(runTerminal('whoami', 'es')).toEqual({
       kind: 'output',
-      lines: [{ text: 'arquitecto · padre adoptivo de 20 capacidades · sobrino de Uncle Bob' }],
+      lines: [{ text: 'arquitecto · padre adoptivo de 20 capacidades · sobrino del tío Bob' }],
     })
   })
 })

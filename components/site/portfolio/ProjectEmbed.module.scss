@@ -191,6 +191,11 @@
     width: 32px;
     height: 32px;
   }
+
+  @include bp.down(md) {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 .openIcon {

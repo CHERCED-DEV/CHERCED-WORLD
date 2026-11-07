@@ -50,7 +50,7 @@ describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
       '## CV',
       '- [Download CV in English (PDF)](https://cherced-world.test/cv/camilo-hernandez-cv-en.pdf)',
       '- [Download CV in Spanish (PDF)](https://cherced-world.test/cv/camilo-hernandez-cv-es.pdf)',
-      '- [See my CV on LinkedIn](https://www.linkedin.com/in/cherced/)',
+      '- [LinkedIn profile](https://www.linkedin.com/in/cherced/)',
     ])
     const contact = lines.indexOf('## Contact')
     expect(lines.slice(contact).filter((line) => /\.pdf\)|linkedin/i.test(line))).toEqual([])
