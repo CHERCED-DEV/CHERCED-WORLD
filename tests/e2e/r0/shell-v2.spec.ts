@@ -229,6 +229,7 @@ test.describe('cristal v2', () => {
     test.skip(testInfo.project.name !== 'desktop-chromium', 'puntero fino')
     await skipIntro(page)
     await page.goto('/es/aboutMe')
+    await expect(page.locator('[data-cw-assistant-button]')).toHaveAttribute('data-cw-ready', '', { timeout: 30_000 })
     await page.evaluate(() => {
       const probe = document.createElement('div')
       probe.setAttribute('data-cw-light', '')
