@@ -71,7 +71,9 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   {sinceAfter}
                 </span>
               </p>
-              {role.project ? (
+              {labels.showcase && role.project?.id === SYNERGOS_CASE_ID ? (
+                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
+              ) : role.project ? (
                 <Link
                   href={localizedPath(lang, `/portfolio/${role.project.id}`)}
                   className={cx(styles.link, styles.roleLink)}
@@ -81,9 +83,6 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   <span className={styles.linkText}>{labels.caseStudy}</span>
                   <Arrow />
                 </Link>
-              ) : null}
-              {labels.showcase && role.project?.id === SYNERGOS_CASE_ID ? (
-                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
               ) : null}
               <Sweep />
             </Reveal>

@@ -8,16 +8,22 @@ const CV = {
 } as const
 
 const COPY = {
-  es: { download: 'Descargar CV', name: 'Descargar CV en español (PDF, 175 kB)' },
-  en: { download: 'Download CV', name: 'Download CV in English (PDF, 173 kB)' },
+  es: { download: 'Descargar CV', name: 'Descargar CV en español (PDF, 175 kB)', alternate: 'English version', linkedin: 'Perfil de LinkedIn' },
+  en: { download: 'Download CV', name: 'Download CV in English (PDF, 173 kB)', alternate: 'Versión en español', linkedin: 'LinkedIn profile' },
 } as const
 
 const PAGES: ReadonlyArray<readonly [Lang, string, string]> = [
   ['es', '/es', '[data-cw-home-banner] [data-cw-cv-actions]'],
   ['en', '/en', '[data-cw-home-banner] [data-cw-cv-actions]'],
+  ['es', '/es/aboutMe', '[data-cw-scene="who"] [data-cw-cv-actions]'],
+  ['en', '/en/aboutMe', '[data-cw-scene="who"] [data-cw-cv-actions]'],
   ['es', '/es/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
   ['en', '/en/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
 ]
+
+function other(lang: Lang): Lang {
+  return lang === 'es' ? 'en' : 'es'
+}
 
 function onlyIn(...projects: string[]) {
   test.beforeEach(({}, testInfo) => {
@@ -48,8 +54,9 @@ function heroCv(page: Page): Locator {
   return page.locator('[data-cw-home-banner] [data-cw-cv-actions]').first()
 }
 
-async function expectDownloadButton(scope: Locator, lang: Lang): Promise<Locator> {
+async function expectSelector(scope: Locator, lang: Lang): Promise<{ primary: Locator; secondary: Locator }> {
   const primary = scope.locator('[data-cw-cv-download]')
+  const secondary = scope.locator('[data-cw-cv-alternate]')
   await expect(primary).toHaveCount(1)
   await expect(primary).toBeVisible()
   await expect(primary).toHaveAttribute('href', CV[lang].href)
@@ -58,9 +65,13 @@ async function expectDownloadButton(scope: Locator, lang: Lang): Promise<Locator
   await expect(primary).toHaveAccessibleName(COPY[lang].name)
   await expect(primary).toContainText(COPY[lang].download)
   await expect(primary).toContainText(CV[lang].format)
-  await expect(scope.locator('[data-cw-cv-alternate]'), 'sin botón del otro idioma').toHaveCount(0)
-  await expect(scope.locator('[data-cw-cv-link]')).toBeVisible()
-  return primary
+  await expect(secondary).toBeVisible()
+  await expect(secondary).toHaveAttribute('href', CV[other(lang)].href)
+  await expect(secondary).toHaveAttribute('download', CV[other(lang)].filename)
+  await expect(secondary).toHaveAttribute('hreflang', other(lang))
+  await expect(secondary.locator(`[lang="${other(lang)}"]`)).toHaveText(COPY[lang].alternate)
+  await expect(secondary).toContainText(CV[other(lang)].format)
+  return { primary, secondary }
 }
 
 async function expectDownload(page: Page, link: Locator, pdf: (typeof CV)[Lang]) {
@@ -88,16 +99,18 @@ test.describe('T911: los dos PDF del CV se sirven tal cual', () => {
   })
 })
 
-test.describe('T911: "Descargar CV" baja el PDF del idioma de la página en Home y Contacto', () => {
+test.describe('T1001 a T1003: "Descargar CV" con el enlace al otro idioma en Home, Sobre mí y Contacto, sin LinkedIn', () => {
   onlyIn('desktop-chromium', 'mobile-chromium', 'no-js')
 
   for (const [lang, path, scope] of PAGES) {
-    test(`${path}: un solo botón, con el PDF en ${lang}, su formato y su peso`, async ({ page }) => {
+    test(`${path}: el botón baja el PDF en ${lang} y al lado está el del otro idioma, con formato y peso`, async ({ page }) => {
       await skipIntro(page)
       await page.goto(path)
       const actions = page.locator(scope).first()
-      const primary = await expectDownloadButton(actions, lang)
-      for (const link of [primary, actions.locator('[data-cw-cv-link]')]) {
+      const { primary, secondary } = await expectSelector(actions, lang)
+      await expect(actions.locator('[data-cw-cv-link]'), 'LinkedIn no es un CV: sin botón aquí').toHaveCount(0)
+      await expect(page.getByText(lang === 'es' ? 'Ver mi CV en LinkedIn' : 'See my CV on LinkedIn')).toHaveCount(0)
+      for (const link of [primary, secondary]) {
         const box = await link.evaluate((element: HTMLElement) => ({
           html: element.outerHTML.slice(0, 60),
           width: element.offsetWidth,
@@ -149,48 +162,58 @@ test.describe('T911: "Descargar CV" baja el PDF del idioma de la página en Home
   }
 })
 
-test.describe('T911: la descarga se guarda con el nombre de su idioma', () => {
+test.describe('T1001 y T1004: cada descarga se guarda con su nombre', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
   for (const lang of ['es', 'en'] as const) {
-    test(`/${lang}: el botón del hero se guarda como ${CV[lang].filename}`, async ({ page }) => {
+    test(`/${lang}: el botón del hero y el enlace del otro idioma se guardan como ${CV[lang].filename} y ${CV[other(lang)].filename}`, async ({ page }) => {
       await skipIntro(page)
       await page.goto(`/${lang}`)
-      const primary = await expectDownloadButton(heroCv(page), lang)
+      const { primary, secondary } = await expectSelector(heroCv(page), lang)
       await expectDownload(page, primary, CV[lang])
+      await expectDownload(page, secondary, CV[other(lang)])
     })
 
-    test(`/${lang}: el pop-up "Para reclutadores" baja el mismo PDF`, async ({ page }) => {
+    test(`/${lang}: el pop-up "Para reclutadores" ofrece los dos PDF, el perfil de LinkedIn y "Escríbeme"`, async ({ page }) => {
       await skipIntro(page)
       await page.goto(`/${lang}`)
-      const block = await openRecruiters(page, lang)
-      const primary = await expectDownloadButton(block, lang)
-      await expectDownload(page, primary, CV[lang])
-      await expect(recruitersDialog(page, lang), 'como cualquier enlace del pop-up, la descarga lo cierra').toBeHidden()
+      for (const [selector, pdf] of [
+        ['[data-cw-cv-download]', CV[lang]],
+        ['[data-cw-cv-alternate]', CV[other(lang)]],
+      ] as const) {
+        const block = await openRecruiters(page, lang)
+        await expectSelector(block, lang)
+        await expect(block.locator('[data-cw-cv-link]')).toHaveText(COPY[lang].linkedin)
+        await expect(block.locator('[data-cw-recruiters-write]')).toBeVisible()
+        await expectDownload(page, block.locator(selector), pdf)
+        await expect(recruitersDialog(page, lang), 'como cualquier enlace del pop-up, la descarga lo cierra').toBeHidden()
+      }
     })
   }
 })
 
-test.describe('T911: "Descargar CV" se usa con teclado', () => {
+test.describe('T1002: el selector del CV se usa con teclado', () => {
   onlyIn('desktop-chromium')
 
-  test('/es: Tab llega al botón y después a LinkedIn con el foco visible', async ({ page }) => {
+  test('/es/aboutMe: Tab llega al botón y al otro idioma con el foco visible', async ({ page }) => {
     await skipIntro(page)
-    await page.goto('/es')
-    const actions = heroCv(page)
+    await page.goto('/es/aboutMe')
+    const actions = page.locator('[data-cw-scene="who"] [data-cw-cv-actions]')
     const primary = actions.locator('[data-cw-cv-download]')
+    const secondary = actions.locator('[data-cw-cv-alternate]')
     await primary.focus()
     await page.keyboard.press('Shift+Tab')
     await page.keyboard.press('Tab')
-    await expect(primary).toBeFocused()
-    const ring = await primary.evaluate((element) => {
-      const style = getComputedStyle(element)
-      return { visible: element.matches(':focus-visible'), outline: style.outlineStyle, width: parseFloat(style.outlineWidth) }
-    })
-    expect(ring.visible).toBe(true)
-    expect(ring.outline).not.toBe('none')
-    expect(ring.width).toBeGreaterThanOrEqual(2)
-    await page.keyboard.press('Tab')
-    await expect(actions.locator('[data-cw-cv-link]')).toBeFocused()
+    for (const link of [primary, secondary]) {
+      await expect(link).toBeFocused()
+      const ring = await link.evaluate((element) => {
+        const style = getComputedStyle(element)
+        return { visible: element.matches(':focus-visible'), outline: style.outlineStyle, width: parseFloat(style.outlineWidth) }
+      })
+      expect(ring.visible).toBe(true)
+      expect(ring.outline).not.toBe('none')
+      expect(ring.width).toBeGreaterThanOrEqual(2)
+      await page.keyboard.press('Tab')
+    }
   })
 })

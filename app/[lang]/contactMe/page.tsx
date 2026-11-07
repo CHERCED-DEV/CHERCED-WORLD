@@ -53,6 +53,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
   ])
   const site = getSite()
   const email = publicEmail(site)
+  const linkedin = site.socials.find((social) => social.id === 'linkedin')
 
   return (
     <section className={cx('cw-container', styles.section)} aria-labelledby="contact-title">
@@ -67,14 +68,28 @@ export default async function ContactPage({ params, searchParams }: Props) {
           {site.recruiters ? <RecruitersEntry lang={lang} content={site.recruiters} writeHref="#contact-form" withCv={false} /> : null}
           <div className={styles.reachActions}>
             <CvActions lang={lang} downloadVariant="solid" className={styles.cvActions} />
-            {email ? (
-              <EmailMenu
-                lang={lang}
-                email={email}
-                className={buttonClassName({ variant: 'glass', className: styles.mailButton })}
-                trigger={<Image src="/assets/icons/gmailIcon.png" alt="" width={24} height={24} unoptimized className="cw-icon-img" />}
-              />
-            ) : null}
+            <span className={styles.reachIcons}>
+              {email ? (
+                <EmailMenu
+                  lang={lang}
+                  email={email}
+                  className={buttonClassName({ variant: 'glass', className: styles.mailButton })}
+                  trigger={<Image src="/assets/icons/gmailIcon.png" alt="" width={24} height={24} unoptimized className="cw-icon-img" />}
+                />
+              ) : null}
+              {linkedin?.href ? (
+                <a
+                  href={linkedin.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={linkedin.label[lang]}
+                  className={buttonClassName({ variant: 'glass', className: styles.mailButton })}
+                  data-cw-contact-linkedin=""
+                >
+                  <Image src="/assets/icons/linkedInIcon.png" alt="" width={24} height={24} unoptimized className="cw-icon-img" />
+                </a>
+              ) : null}
+            </span>
           </div>
         </div>
         <Separator />

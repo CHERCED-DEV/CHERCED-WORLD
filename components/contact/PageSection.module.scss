@@ -110,6 +110,11 @@
   display: contents;
 }
 
+.reachIcons {
+  display: inline-flex;
+  gap: var(--cw-space-3);
+}
+
 .mailButton {
   min-width: 44px;
   min-height: 44px;

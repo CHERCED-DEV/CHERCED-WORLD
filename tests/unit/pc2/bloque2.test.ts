@@ -27,6 +27,7 @@ describe('FR-710: bloque "Para reclutadores"', () => {
     expect(visible).toContain(lang === 'es' ? 'B1, B2 en uso profesional frecuente' : 'B1, B2 in regular professional use')
     expect(visible).not.toMatch(/\d+\s*%/)
     expect(html).toContain('data-cw-cv-download')
+    expect(html).toContain('data-cw-cv-alternate')
     expect(html).toContain('data-cw-cv-link')
     const write = /<a [^>]*data-cw-recruiters-write=""[^>]*>([^<]+)<\/a>/.exec(html)!
     expect(write[0]).toContain(`href="/${lang}/contactMe"`)

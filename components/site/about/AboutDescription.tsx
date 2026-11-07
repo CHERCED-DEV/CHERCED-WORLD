@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { ImageRef, Localized } from '@/content/types'
-import { CvLink } from '@/components/ui/CvLink'
+import { CvActions } from '@/components/ui/CvLink'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
@@ -26,7 +26,7 @@ export function AboutDescription({ id, lang, title, description, image, children
         </SectionTitle>
         <GlassSurface variant="standard" edge light className={styles.heroText}>
           <p>{description[lang]}</p>
-          <CvLink lang={lang} className={styles.heroCv} />
+          <CvActions lang={lang} downloadVariant="solid" className={styles.heroCv} />
         </GlassSurface>
         {children}
       </div>

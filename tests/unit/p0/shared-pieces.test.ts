@@ -23,10 +23,10 @@ function tag(html: string, marker: string): string {
   return new RegExp(`<[a-z]+ [^>]*${marker}[^>]*>`).exec(html)?.[0] ?? ''
 }
 
-describe('CvLink (FR-420)', () => {
+describe('CvLink (FR-420, FR-1005): el enlace a LinkedIn se llama perfil, no CV', () => {
   it.each([
-    ['es', 'Ver mi CV en LinkedIn', 'Ver mi CV en LinkedIn (se abre en una pestaña nueva)'],
-    ['en', 'See my CV on LinkedIn', 'See my CV on LinkedIn (opens in a new tab)'],
+    ['es', 'Perfil de LinkedIn', 'Perfil de LinkedIn (se abre en una pestaña nueva)'],
+    ['en', 'LinkedIn profile', 'LinkedIn profile (opens in a new tab)'],
   ] as const)('%s: abre LinkedIn en pestaña nueva y lo anuncia', (lang, text, label) => {
     const html = renderToStaticMarkup(createElement(CvLink, { lang }))
     const anchor = tag(html, 'data-cw-cv-link')

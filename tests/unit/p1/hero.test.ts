@@ -190,7 +190,10 @@ describe('banner del home (FR-401, FR-402, FR-463, FR-464, T420, T421)', () => {
       expect(nav).toMatch(/<button [^>]*aria-haspopup="menu"[^>]*data-cw-email-trigger=""/)
       expect(nav).not.toContain('data-cw-cv-link')
 
-      expect(html).toMatch(/<a [^>]*href="https:\/\/www\.linkedin\.com\/in\/cherced\/"[^>]*data-cw-cv-link=""/)
+      expect(html, 'A1: sin botón de LinkedIn en el hero; LinkedIn queda en la fila social').not.toContain('data-cw-cv-link')
+      expect(nav).toMatch(/<a [^>]*href="https:\/\/www\.linkedin\.com\/in\/cherced\/"/)
+      expect(html).toContain('data-cw-cv-download=""')
+      expect(html).toContain('data-cw-cv-alternate=""')
       expect(html).toContain('data-cw-availability=""')
       expect(html.indexOf('data-cw-availability')).toBeGreaterThan(html.indexOf('</nav>'))
     })

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import type { RecruitersContent } from '@/content/types'
 import { buttonClassName } from '@/components/ui/Button'
-import { CvActions } from '@/components/ui/CvLink'
+import { CvActions, CvLink } from '@/components/ui/CvLink'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { CornerMarks, Hairline } from '@/components/ui/graphics'
@@ -69,6 +69,7 @@ function RecruitersBody({
       {certifications ? <div className={styles.certifications}>{certifications}</div> : null}
       <div className={styles.actions}>
         {withCv ? <CvActions lang={lang} downloadVariant="solid" className={styles.cv} /> : null}
+        <CvLink lang={lang} />
         <Link href={writeHref} className={buttonClassName({ variant: withCv ? 'glass' : 'solid' })} data-cw-recruiters-write="">
           {content.write[lang]}
         </Link>

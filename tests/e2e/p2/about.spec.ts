@@ -11,8 +11,8 @@ const data = { es: brainData(about, getProjects(), 'es', 'Actualidad'), en: brai
 const figures = aboutFigures(about, new Date())
 const HEIGHT_BUDGET_1440 = Math.floor(5882 * 0.6)
 const CV = {
-  es: { text: 'Ver mi CV en LinkedIn', name: 'Ver mi CV en LinkedIn (se abre en una pestaña nueva)', words: 'Mis habilidades, en palabras', principles: 'Principios' },
-  en: { text: 'See my CV on LinkedIn', name: 'See my CV on LinkedIn (opens in a new tab)', words: 'My skills, in words', principles: 'Principles' },
+  es: { text: 'Descargar CV', name: 'Descargar CV en español (PDF, 175 kB)', words: 'Mis habilidades, en palabras', principles: 'Principios' },
+  en: { text: 'Download CV', name: 'Download CV in English (PDF, 173 kB)', words: 'My skills, in words', principles: 'Principles' },
 } as const
 const FIGURE_LABELS = {
   es: ['años construyendo para la web', 'piezas desplegables en Synergos', 'decisiones de arquitectura escritas', 'tests automatizados'],
@@ -40,15 +40,16 @@ test.describe('"Quién soy": CV y cifras (T430, T431)', () => {
   onlyIn('desktop-chromium', 'no-js')
 
   for (const lang of LANGS) {
-    test(`${lang}: el CV abre LinkedIn en pestaña nueva y lo anuncia`, async ({ page }) => {
+    test(`${lang}: "Descargar CV" baja el PDF de la página, con el otro idioma al lado y sin LinkedIn (A2)`, async ({ page }) => {
       await open(page, lang)
-      const cv = page.locator('#scene-who').getByRole('link', { name: CV[lang].name, exact: true })
+      const who = page.locator('#scene-who')
+      const cv = who.getByRole('link', { name: CV[lang].name, exact: true })
       await expect(cv).toHaveCount(1)
-      await expect(cv).toHaveAttribute('href', getSite().profile!.cv.href)
-      await expect(cv).toHaveAttribute('target', '_blank')
-      await expect(cv).toHaveAttribute('rel', 'noopener noreferrer')
+      await expect(cv).toHaveAttribute('href', `/cv/camilo-hernandez-cv-${lang}.pdf`)
       await expect(cv).toContainText(CV[lang].text)
       await expect(cv).toBeVisible()
+      await expect(who.locator('[data-cw-cv-alternate]')).toBeVisible()
+      await expect(who.locator('[data-cw-cv-link]')).toHaveCount(0)
     })
 
     test(`${lang}: cuatro cifras con su valor final formateado según el idioma`, async ({ page }) => {

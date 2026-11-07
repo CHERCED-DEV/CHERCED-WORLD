@@ -48,8 +48,8 @@ test.describe('B1: el CV en PDF (FR-701, FR-702, SC-701, T911)', () => {
       await expect(download).toContainText(lang === 'en' ? 'Download CV' : 'Descargar CV')
       await expect(download).toHaveAttribute('href', CV_PDF[lang].href)
       await expect(download).toHaveAttribute('download', CV_PDF[lang].filename)
-      await expect(actions.locator('[data-cw-cv-alternate]'), 'un solo PDF: el del idioma de la página').toHaveCount(0)
-      await expect(actions.locator('[data-cw-cv-link]')).toBeVisible()
+      await expect(actions.locator('[data-cw-cv-alternate]'), 'A1 y A3: el PDF del otro idioma al lado').toBeVisible()
+      await expect(actions.locator('[data-cw-cv-link]'), 'A1 y A3: sin botón de LinkedIn').toHaveCount(0)
     })
   }
 })

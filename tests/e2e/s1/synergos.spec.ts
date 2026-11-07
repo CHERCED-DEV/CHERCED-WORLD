@@ -201,13 +201,13 @@ test.describe('/synergos: metadatos, OG y JSON-LD (FR-903)', () => {
     const sitemap = await (await request.get('/sitemap.xml')).text()
     for (const lang of LANGS) expect(sitemap).toMatch(new RegExp(`<loc>[^<]*/${lang}/synergos</loc>`))
     const llms = await (await request.get('/llms.txt')).text()
-    expect(llms).toMatch(/\[Synergos, my master product\]\([^)]*\/en\/synergos\)/)
+    expect(llms).toMatch(/\[Synergos, my flagship project\]\([^)]*\/en\/synergos\)/)
     await open(page, 'es', '')
     await expect(page.locator('header a[href$="/synergos"], footer a[href$="/synergos"]')).toHaveCount(0)
   })
 })
 
-test.describe('los botones "Ver mi master product" llevan a la página', () => {
+test.describe('los botones "Conoce Synergos" llevan a la página', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
   test('desde Sobre mí, justo debajo de las cifras', async ({ page }) => {
@@ -228,7 +228,7 @@ test.describe('los botones "Ver mi master product" llevan a la página', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await open(page, 'en', '')
     const card = page.locator('[data-cw-home-role="synergos-labs"]')
-    await expect(card.locator('[data-cw-home-link="case"]')).toHaveAttribute('href', '/en/portfolio/12')
+    await expect(card.locator('[data-cw-home-link="case"]'), 'A6: un solo llamado').toHaveCount(0)
     const button = card.locator('[data-cw-synergos-cta="home"]')
     await expect(button).toHaveText(copy.cta.en)
     await button.scrollIntoViewIfNeeded()

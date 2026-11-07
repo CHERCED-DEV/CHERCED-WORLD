@@ -245,14 +245,14 @@ export const synergosShowcase = {
   testsCounted: 6675,
   backend: { api: 20, bff: 10 },
   copy: {
-    title: { es: 'Synergos, mi master product', en: 'Synergos, my master product' },
+    title: { es: 'Synergos, mi proyecto insignia', en: 'Synergos, my flagship project' },
     description: {
-      es: 'Mi master product: una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero, construida con agentes de IA en paralelo.',
-      en: 'My master product: a composition platform where the eighth business vertical costs less than the first, built by AI agents working in parallel.',
+      es: 'Mi proyecto insignia: una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero, construida con agentes de IA en paralelo.',
+      en: 'My flagship project: a composition platform where the eighth business vertical costs less than the first, built by AI agents working in parallel.',
     },
-    cta: { es: 'Ver mi master product', en: 'See my master product' },
+    cta: { es: 'Conoce Synergos', en: 'Explore Synergos' },
     hero: {
-      eyebrow: { es: 'Mi master product', en: 'My master product' },
+      eyebrow: { es: 'Mi proyecto insignia', en: 'My flagship project' },
       catalog: { es: 'Ver el catálogo en vivo', en: 'See the live catalog' },
       caseStudy: { es: 'Leer el caso de estudio', en: 'Read the case study' },
       links: { es: 'Enlaces de Synergos', en: 'Synergos links' },

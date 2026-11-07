@@ -10,8 +10,8 @@ const LANGS = ['es', 'en'] as const
 type Lang = (typeof LANGS)[number]
 const LABEL = { es: siteEs['home.previousTitleLabel'], en: siteEn['home.previousTitleLabel'] } as const
 const CV = {
-  es: 'Ver mi CV en LinkedIn (se abre en una pestaña nueva)',
-  en: 'See my CV on LinkedIn (opens in a new tab)',
+  es: 'Descargar CV en español (PDF, 175 kB)',
+  en: 'Download CV in English (PDF, 173 kB)',
 } as const
 const CHIP = {
   es: 'Armenia, Colombia · UTC−5 · Abierto a reubicación',
@@ -78,9 +78,9 @@ async function expectBanner(page: Page, lang: Lang) {
   await expect(banner.locator('[data-cw-home-subtitle]')).toHaveText(site.home.subtitle![lang].replaceAll(' · ', ' · '))
   const cv = banner.getByRole('link', { name: CV[lang], exact: true })
   await expect(cv).toBeVisible()
-  await expect(cv).toHaveAttribute('href', site.profile!.cv.href)
-  await expect(cv).toHaveAttribute('target', '_blank')
-  await expect(cv).toHaveAttribute('rel', 'noopener noreferrer')
+  await expect(cv).toHaveAttribute('href', `/cv/camilo-hernandez-cv-${lang}.pdf`)
+  await expect(banner.locator('[data-cw-cv-alternate]')).toBeVisible()
+  await expect(banner.locator('[data-cw-cv-link]'), 'A1: LinkedIn queda como ícono, no como botón').toHaveCount(0)
   await expect(banner.locator('[data-cw-availability]')).toContainText(CHIP[lang])
 }
 
@@ -188,7 +188,7 @@ test.describe('guiño del hero (FR-460, US7)', () => {
     expect(await wink(page)).toBe('play')
     const boxes = () =>
       page.evaluate(() =>
-        ['h1', '[data-cw-home-subtitle]', '[data-cw-cv-link]', '[data-cw-availability]'].map((selector) => {
+        ['h1', '[data-cw-home-subtitle]', '[data-cw-cv-download]', '[data-cw-availability]'].map((selector) => {
           const element = document.querySelector(`[data-cw-home-banner] ${selector}`) as HTMLElement
           return { top: element.offsetTop, height: element.offsetHeight, width: element.offsetWidth }
         }),

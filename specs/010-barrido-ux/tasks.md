@@ -8,21 +8,21 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 
 ## Fase 0: especificar
 
-- [ ] T1000 `specs/010-barrido-ux/`: spec, plan y esta lista, con las respuestas del autor a C1, C3, C6, C7 y E10.
+- [x] T1000 `specs/010-barrido-ux/`: spec, plan y esta lista, con las respuestas del autor a C1, C3, C6, C7 y E10.
 
 ## Bloque 1: llamados a la acción
 
-- [ ] T1001 [A1] Home: `CvActions` con "Descargar CV" y el enlace al otro idioma (`components/ui/CvLink.tsx`, como en
+- [x] T1001 [A1] Home: `CvActions` con "Descargar CV" y el enlace al otro idioma (`components/ui/CvLink.tsx`, como en
   52fcd77), sin el botón de LinkedIn (`components/site/HomeBanner.tsx`).
-- [ ] T1002 [A2] Sobre mí: "Descargar CV" con su enlace al otro idioma en "Quién soy"
+- [x] T1002 [A2] Sobre mí: "Descargar CV" con su enlace al otro idioma en "Quién soy"
   (`components/site/about/AboutDescription.tsx`), bajo el tope de alto de la R3.
-- [ ] T1003 [A3] Contacto: "Descargar CV" con su enlace y los íconos de correo y LinkedIn (`app/[lang]/contactMe/page.tsx`).
-- [ ] T1004 [A4] "Para reclutadores": los dos PDF visibles, "Perfil de LinkedIn" y "Escríbeme"
+- [x] T1003 [A3] Contacto: "Descargar CV" con su enlace y los íconos de correo y LinkedIn (`app/[lang]/contactMe/page.tsx`).
+- [x] T1004 [A4] "Para reclutadores": los dos PDF visibles, "Perfil de LinkedIn" y "Escríbeme"
   (`components/site/home/RecruitersBlock.tsx`).
-- [ ] T1005 [A5] "Ver mi CV en LinkedIn" pasa a "Perfil de LinkedIn" en `common.json`, la paleta (`experience.json`), el
+- [x] T1005 [A5] "Ver mi CV en LinkedIn" pasa a "Perfil de LinkedIn" en `common.json`, la paleta (`experience.json`), el
   asistente, el índice y `llms.txt`.
-- [ ] T1006 [A6] Un solo llamado en la tarjeta de Synergos de Home (`components/site/home/HomeNow.tsx`).
-- [ ] T1007 Pruebas: `tests/unit/cv2`, `tests/e2e/cv2` y las que esperaban LinkedIn en los botones o un solo PDF.
+- [x] T1006 [A6] Un solo llamado en la tarjeta de Synergos de Home (`components/site/home/HomeNow.tsx`).
+- [x] T1007 Pruebas: `tests/unit/cv2`, `tests/e2e/cv2` y las que esperaban LinkedIn en los botones o un solo PDF.
 
 ## Bloque 2: coherencia y lenguaje
 
@@ -30,7 +30,7 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 - [ ] T1011 [C2] La línea de las fábricas de software fuera de la lista (`RecruitersContent.motivation`).
 - [ ] T1012 [C3] Años fijos en 6, sin "desde 2019" (`about.experienceYears`, `figures.ts`, Contacto).
 - [ ] T1013 [C4] "a nov 2026" en las cifras de ADR y tests de Sobre mí.
-- [ ] T1014 [C5] "Proyecto insignia" / "flagship project" y "Conoce Synergos" / "Explore Synergos"
+- [x] T1014 [C5] "Proyecto insignia" / "flagship project" y "Conoce Synergos" / "Explore Synergos"
   (`content/synergos-showcase.ts`, paleta).
 - [ ] T1015 [C6] Sin la etiqueta "cerrada" en las líneas de Synergos (`components/site/synergos/*`).
 - [ ] T1016 [C7] Footer en español y "sobrino del tío Bob" en la terminal (`common.json`, `SiteFooter.tsx`,

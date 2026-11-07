@@ -45,8 +45,8 @@ const BATTERY = [
 
 describe('el CV: los dos PDF oficiales y LinkedIn, sin su contenido (FR-422, FR-701 y T911 de la 007)', () => {
   const LABELS = {
-    es: { es: 'Descargar CV en español (PDF)', en: 'Descargar CV en inglés (PDF)', linkedin: 'Ver mi CV en LinkedIn' },
-    en: { en: 'Download CV in English (PDF)', es: 'Download CV in Spanish (PDF)', linkedin: 'See my CV on LinkedIn' },
+    es: { es: 'Descargar CV en español (PDF)', en: 'Descargar CV en inglés (PDF)', linkedin: 'Perfil de LinkedIn' },
+    en: { en: 'Download CV in English (PDF)', es: 'Download CV in Spanish (PDF)', linkedin: 'LinkedIn profile' },
   } as const
 
   for (const question of ['¿Me pasas tu hoja de vida?', '¿Tienes CV?', 'Can I see your resume?', 'curriculum vitae please']) {

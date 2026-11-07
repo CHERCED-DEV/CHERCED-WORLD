@@ -50,14 +50,15 @@ function homeLabels(lang: Lang): HomeViewLabels {
 }
 
 describe.each(LANGS)('los botones "%s" llevan a /[lang]/synergos', (lang) => {
-  it('Home: la tarjeta de Synergos de "Ahora trabajo en" suma el botón, además del enlace al caso', () => {
+  it('Home: la tarjeta de Synergos de "Ahora trabajo en" tiene un solo llamado, "Conoce Synergos" (A6)', () => {
     const html = renderToStaticMarkup(
       createElement(Provider, { closeLabel: 'x' }, createElement(HomeView, { lang, site: getSite(), projects: getProjects(), labels: homeLabels(lang) })),
     )
     expect(ctas(html)).toEqual([{ href: `/${lang}/synergos`, from: 'home', text: CTA[lang] }])
     const role = html.slice(html.indexOf('data-cw-home-role="synergos-labs"'))
     const card = role.slice(0, role.indexOf('</li>'))
-    expect(card).toContain(`href="/${lang}/portfolio/12"`)
+    expect(card).not.toContain(`href="/${lang}/portfolio/12"`)
+    expect(card).not.toContain('data-cw-home-link="case"')
     expect(card).toContain('data-cw-synergos-cta="home"')
     const other = html.slice(html.indexOf('data-cw-home-role="sistecredito-ai-first"'))
     expect(other.slice(0, other.indexOf('</li>'))).not.toContain('data-cw-synergos-cta')
@@ -119,13 +120,13 @@ describe('paleta: comando > synergos', () => {
 
   it.each(LANGS)('%s: ">synergos" deja el showcase primero y navega a la página', async (lang) => {
     const ctx = await setup(lang)
-    for (const query of ['>synergos', '> synergos', '>master product']) {
+    for (const query of ['>synergos', '> synergos', '>insignia', '>flagship']) {
       const [first] = model.paletteResults(query, ctx.docs, ctx.searcher, 's')
       expect(first?.id, query).toBe('action:synergos')
       expect(first?.command).toEqual({ type: 'navigate', href: `/${lang}/synergos` })
     }
     const [first] = model.paletteResults('>synergos', ctx.docs, ctx.searcher, 's')
-    expect(first?.title).toBe(lang === 'es' ? 'Ver Synergos, mi master product' : 'See Synergos, my master product')
+    expect(first?.title).toBe(lang === 'es' ? 'Conoce Synergos, mi proyecto insignia' : 'Explore Synergos, my flagship project')
   })
 
   it('solo aparece en modo de comandos, detrás de /now', async () => {
@@ -151,7 +152,7 @@ describe('sitemap, llms.txt y JSON-LD', () => {
     const lines = (await buildLlmsTxt(new URL('https://cherced-world.test'))).split('\n')
     const heading = lines.indexOf('## Case studies')
     expect(lines[heading + 1]).toBe(
-      '- [Synergos, my master product](https://cherced-world.test/en/synergos) · [Synergos, mi master product](https://cherced-world.test/es/synergos)',
+      '- [Synergos, my flagship project](https://cherced-world.test/en/synergos) · [Synergos, mi proyecto insignia](https://cherced-world.test/es/synergos)',
     )
   }, PAGE_RENDER)
 
@@ -170,6 +171,6 @@ describe('sitemap, llms.txt y JSON-LD', () => {
       author: { '@id': personId(base) },
     })
     expect(data.hasPart.map((part) => part.name)).toEqual(['Synergos.CMS', 'Synergos.UI', 'Synergos.Fabrica'])
-    expect(synergosJsonLd('en', base).headline).toBe('Synergos, my master product')
+    expect(synergosJsonLd('en', base).headline).toBe('Synergos, my flagship project')
   })
 })

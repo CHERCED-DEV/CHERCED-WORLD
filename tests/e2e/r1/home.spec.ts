@@ -58,7 +58,8 @@ test.describe('home sin JavaScript', () => {
         await expect(item.locator('time')).toHaveAttribute('datetime', role.start)
       }
       await expect(now.locator('[data-cw-home-link="about"]')).toHaveAttribute('href', `/${lang}/aboutMe`)
-      await expect(now.locator('[data-cw-home-link="case"]')).toHaveAttribute('href', `/${lang}/portfolio/12`)
+      await expect(now.locator('[data-cw-home-link="case"]'), 'A6: la tarjeta de Synergos tiene un solo llamado').toHaveCount(0)
+      await expect(now.locator('[data-cw-synergos-cta="home"]')).toHaveAttribute('href', `/${lang}/synergos`)
       await expect(page.locator('[data-cw-home-cue]')).toHaveAttribute('href', '#home-now')
 
       const state = await enterState(page)
@@ -165,14 +166,16 @@ test.describe('controles del home', () => {
     })
   }
 
-  test('el caso de estudio de Synergos abre su página', async ({ page }) => {
+  test('"Conoce Synergos" abre /synergos, que enlaza al caso de estudio (A6)', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/es')
-    const link = page.locator('[data-cw-home-link="case"]')
-    await expect(link).toHaveAccessibleName(`${homeEs['now.caseStudy']}: Synergos`)
+    await expect(page.locator('[data-cw-home-link="case"]')).toHaveCount(0)
+    const link = page.locator('[data-cw-synergos-cta="home"]')
+    await expect(link).toHaveAccessibleName('Conoce Synergos')
     await link.click()
-    await page.waitForURL('**/es/portfolio/12')
+    await page.waitForURL('**/es/synergos')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Synergos')
+    await expect(page.locator('a[href="/es/portfolio/12"]').first()).toBeAttached()
   })
 })
 

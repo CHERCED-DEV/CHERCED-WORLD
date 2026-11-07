@@ -85,17 +85,21 @@ describe('T911: los dos PDF del CV, sin cambios', () => {
 describe.each([
   {
     lang: 'es',
+    other: 'en',
     label: 'Descargar CV',
     aria: 'Descargar CV en español (PDF, 175 kB)',
-    formats: ['PDF · 175 kB'],
+    alternate: 'English version',
+    formats: ['PDF · 175 kB', 'PDF · 173 kB'],
   },
   {
     lang: 'en',
+    other: 'es',
     label: 'Download CV',
     aria: 'Download CV in English (PDF, 173 kB)',
-    formats: ['PDF · 173 kB'],
+    alternate: 'Versión en español',
+    formats: ['PDF · 173 kB', 'PDF · 175 kB'],
   },
-] as const)('T911: "Descargar CV" baja el PDF del idioma de la página en /$lang', ({ lang, label, aria, formats }) => {
+] as const)('T1001: "Descargar CV" con el enlace al otro idioma en /$lang', ({ lang, other, label, aria, alternate, formats }) => {
   const html = renderToStaticMarkup(createElement(CvActions, { lang, downloadVariant: 'solid' }))
 
   it('el botón principal baja el PDF del idioma de la página, con su nombre, formato y peso', () => {
@@ -110,22 +114,30 @@ describe.each([
     expect(aria.startsWith(label)).toBe(true)
   })
 
-  it('no hay un segundo botón con el otro idioma: un solo PDF, el de la página', () => {
-    expect(html).not.toContain('data-cw-cv-alternate')
+  it('al lado va un enlace pequeño al PDF del otro idioma, con hreflang, lang, formato y peso', () => {
+    const secondary = anchor(html, 'data-cw-cv-alternate')
+    expect(attr(secondary, 'href')).toBe(FILES[other].href)
+    expect(attr(secondary, 'download')).toBe(FILES[other].filename)
+    expect(attr(secondary, 'hrefLang')).toBe(other)
+    expect(secondary).toMatch(new RegExp(`<span lang="${other}"[^>]*>${alternate}</span>`))
+    expect(text(secondary)).toBe(`${alternate} ${formats[1]}`)
     expect(html.match(/data-cw-cv-download=""/g)).toHaveLength(1)
   })
 
-  it('el orden es Descargar CV y luego LinkedIn', () => {
-    const order = ['data-cw-cv-download', 'data-cw-cv-link'].map((marker) => html.indexOf(marker))
-    expect(order.every((position) => position > -1)).toBe(true)
-    expect([...order].sort((a, b) => a - b)).toEqual(order)
+  it('sin botón de LinkedIn: LinkedIn no es un CV (A1 a A3)', () => {
+    expect(html).not.toContain('data-cw-cv-link')
+    expect(text(html)).not.toMatch(/LinkedIn/)
   })
 
-  it('el pop-up de reclutadores lleva el mismo PDF, sin el del otro idioma', () => {
+  it('el pop-up de reclutadores lleva los dos PDF, "Perfil de LinkedIn" y "Escríbeme" (A4)', () => {
     const site = getSite()
     const block = renderToStaticMarkup(createElement(RecruitersBlock, { lang, content: site.recruiters!, writeHref: `/${lang}/contactMe` }))
     expect(attr(anchor(block, 'data-cw-cv-download'), 'href')).toBe(FILES[lang].href)
-    expect(block).not.toContain('data-cw-cv-alternate')
+    expect(attr(anchor(block, 'data-cw-cv-alternate'), 'href')).toBe(FILES[other].href)
+    expect(text(anchor(block, 'data-cw-cv-link'))).toBe(lang === 'es' ? 'Perfil de LinkedIn' : 'LinkedIn profile')
+    const order = ['data-cw-cv-download', 'data-cw-cv-alternate', 'data-cw-cv-link', 'data-cw-recruiters-write'].map((marker) => block.indexOf(marker))
+    expect(order.every((position) => position > -1)).toBe(true)
+    expect([...order].sort((a, b) => a - b)).toEqual(order)
   })
 })
 
