@@ -32,6 +32,11 @@ Reglas, que cuida `tests/unit/q0/meta.test.ts` sobre los MDX reales:
 `content/posts/series.ts` exporta `series: PostSeries[] = []`. Ninguna serie está decidida; la primera la crea el autor
 al publicar su primera parte (Q4).
 
+**Aclaración de integración con la 010 (2026-11-07, orquestador)**: las traducciones de un post pueden usar variantes
+de una misma ilustración con texto en su idioma, como `synergos-es.svg` y `synergos-en.svg` (FR-1024 de la 010).
+No cambia `PostMeta`: cada versión conserva `image` obligatoria, medidas reales y equivalentes y `alt` traducido.
+La prueba de paridad comprueba las medidas; la prueba de assets valida que cada fichero exista y tenga esas medidas.
+
 ## 2. Copy (A-504)
 
 `site.blog.welcome` (en `content/site.ts`) y `meta.blog.description` (en `blog.json`) pasan al texto de la spec en ES y

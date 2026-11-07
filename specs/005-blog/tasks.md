@@ -139,10 +139,12 @@ Rutas: `content/posts/post6/**` a `content/posts/post12/**`, `content/posts/regi
   integra sin el visto bueno del autor.
   - Orden resuelto por el autor (2026-11-07): post 1, post 2, post 3 y post 4. Sigue abierta hasta su visto bueno de
     cada post, porque el registro no tiene borradores: integrar la rama es publicar.
+  - El autor autoriza incorporar el post 1 (`post6`) el 2026-11-07 cuando pase las validaciones. La revisión de los
+    demás posts sigue pendiente; esta tarea permanece abierta para el resto del calendario.
 - [x] T642 Post 1, "Lo que 2.353 tests no vieron" / "What 2,353 tests didn't see", en `content/posts/post6/`.
   **BLOQUEADA (P-502)** en el título: por defecto, cifra exacta con la fecha de medición en el primer párrafo.
   - Escrito en `lane/BLOG` con la cifra exacta y su fecha (6-ago-2026, CI) en el primer párrafo, registrado y con
-    portada generada. Espera el visto bueno del autor antes de integrarse (T641).
+    portada generada. El visto bueno de integración llegó el 2026-11-07, condicionado a las validaciones (T641).
 - [ ] T643 [P] Post 2, "Un gate que nunca falló no vigila nada" / "A gate that never failed isn't watching anything", en
   `content/posts/post7/`.
 - [ ] T644 Post 3, "Director y líneas: cómo dirijo agentes en paralelo", en `content/posts/post8/`. **Depende de la 004**:
@@ -158,6 +160,9 @@ Rutas: `content/posts/post6/**` a `content/posts/post12/**`, `content/posts/regi
   **Depende de la 004** (caso "Legal workspace"), con revisión de anonimización del autor antes de integrar.
 - [ ] T649 Registrar cada post aprobado en `content/posts/registry.ts`, con portada o `cover: 'generated'`. Luego
   `npm run verify` y la auditoría de contraste de posts (l2) en verde.
+  - `post6` aprobado y validado el 2026-11-07: `verify` en verde (1.976 unitarias, 27 omitidas, build de 130 páginas),
+    152 e2e del blog aprobadas y 172 omitidas por proyecto; cuatro pruebas de contraste del nuevo post aprobadas.
+    Se adapta su imagen al idioma con los assets existentes de la 010. Esta tarea sigue abierta para futuros posts.
 
 ## Q5 QA del blog (en paralelo; corre completa al integrar)
 

@@ -419,7 +419,7 @@ describe('posts (FR-064, FR-075)', () => {
       expect(es.meta.description, id).not.toBe(en.meta.description)
       expect(es.meta.image.alt, id).not.toBe(en.meta.image.alt)
       expect(es.meta.date, id).toBe(en.meta.date)
-      expect(es.meta.image.src, id).toBe(en.meta.image.src)
+      expect([es.meta.image.width, es.meta.image.height], id).toEqual([en.meta.image.width, en.meta.image.height])
     }
   })
 
