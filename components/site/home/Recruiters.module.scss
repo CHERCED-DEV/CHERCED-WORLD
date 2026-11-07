@@ -69,6 +69,10 @@
   }
 }
 
+.certifications {
+  margin-top: clamp(1.25rem, 4cqi, 2.5rem);
+}
+
 .label {
   margin-bottom: var(--cw-space-2);
   color: var(--cw-fg-muted);

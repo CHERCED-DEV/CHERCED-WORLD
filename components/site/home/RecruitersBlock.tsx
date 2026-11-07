@@ -66,7 +66,7 @@ function RecruitersBody({
           </div>
         </dl>
       </div>
-      {certifications}
+      {certifications ? <div className={styles.certifications}>{certifications}</div> : null}
       <div className={styles.actions}>
         {withCv ? <CvActions lang={lang} downloadVariant="solid" className={styles.cv} /> : null}
         <Link href={writeHref} className={buttonClassName({ variant: withCv ? 'glass' : 'solid' })} data-cw-recruiters-write="">
