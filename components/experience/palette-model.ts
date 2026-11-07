@@ -299,7 +299,9 @@ export function paletteResults(
       .filter((doc) => (doc.item.group === 'pages' || doc.item.group === 'actions') && !doc.item.commandOnly)
       .map((doc) => doc.item)
   }
-  return searcher.search(query, { limit: MAX_RESULTS, filter: (doc) => !doc.item.commandOnly }).map((hit) => hit.doc.item)
+  return searcher.search(query, { limit: MAX_RESULTS, filter: (doc) => !doc.item.commandOnly })
+    .sort((a, b) => Number(b.doc.kind === 'project' && fold(b.doc.title) === fold(query)) - Number(a.doc.kind === 'project' && fold(a.doc.title) === fold(query)))
+    .map((hit) => hit.doc.item)
 }
 
 export function groupItems(items: PaletteItem[]): Array<{ group: PaletteGroup; items: PaletteItem[] }> {

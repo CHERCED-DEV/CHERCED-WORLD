@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
-import { skipIntro } from '../p6/support'
+import { gotoReady, openPalette, palette, skipIntro } from '../p6/support'
 
 test.describe.configure({ timeout: 90_000 })
 
@@ -48,9 +48,34 @@ test('los casos y Synergos enlazan al atlas', async ({ page }) => {
     const links = page.locator('a[href^="/es/synergos/arquitectura#patron-"]')
     expect(await links.count()).toBeGreaterThan(0)
     await links.first().click()
+    await expect(page).toHaveURL(/\/es\/synergos\/arquitectura#patron-/)
     const anchor = new URL(page.url()).hash.slice(1)
     await expect(page.locator(`[id="${anchor}"]`)).toBeVisible()
   }
   await page.goto('/es/synergos')
   await expect(page.locator('a[href="/es/synergos/arquitectura"]')).toBeVisible()
+})
+
+test('metadatos, imagen social, sitemap y comando de arquitectura', async ({ page, request }, info) => {
+  test.skip(info.project.name !== 'desktop-chromium')
+  await skipIntro(page)
+  for (const lang of ['es', 'en']) {
+    await page.goto(`/${lang}/synergos/arquitectura`)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`/${lang}/synergos/arquitectura$`))
+    await expect(page.locator('link[hreflang="es"]')).toHaveAttribute('href', /\/es\/synergos\/arquitectura$/)
+    await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href', /\/en\/synergos\/arquitectura$/)
+    const image = await request.get(`/${lang}/synergos/arquitectura/opengraph-image/og`)
+    expect(image.status()).toBe(200)
+    expect(image.headers()['content-type']).toContain('image/png')
+  }
+  const sitemap = await request.get('/sitemap.xml')
+  expect(await sitemap.text()).toContain('/es/synergos/arquitectura')
+  await gotoReady(page, '/es')
+  await openPalette(page)
+  await page.locator('[data-cw-palette-input]').fill('> synergos arquitectura')
+  const option = palette(page).locator('[data-cw-palette-option="action:synergos-architecture"]')
+  await expect(option).toBeVisible()
+  await option.click()
+  await expect(page).toHaveURL(/\/es\/synergos\/arquitectura$/)
+  await expect(page.locator('[data-cw-pattern]')).toHaveCount(18)
 })

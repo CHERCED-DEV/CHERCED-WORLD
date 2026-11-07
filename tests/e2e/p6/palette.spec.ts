@@ -29,8 +29,10 @@ test.describe('habilidades en la paleta (US6, FR-450, SC-404)', () => {
       await page.keyboard.type(query)
       await expect(options(page).first()).toBeVisible()
       await expect(palette(page).getByText('Cargando proyectos y posts…')).toBeHidden()
-      const top = await optionIds(page)
-      expect(top.some((id) => id.startsWith('skill:') || id.startsWith('project:')), top.join(', ')).toBe(true)
+      await expect.poll(async () => {
+        const top = await optionIds(page)
+        return top.some((id) => id.startsWith('skill:') || id.startsWith('project:'))
+      }).toBe(true)
     })
   }
 
