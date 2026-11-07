@@ -47,9 +47,9 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 
 ## Bloque 3: tipografía
 
-- [ ] T1030 [T1] `hyphens: manual` en `site.prose` y `<span lang="en">` en los términos en inglés (`typeset`).
-- [ ] T1031 [T2] NBSP antes de ".NET" (`typeset`).
-- [ ] T1032 [T3] "AI-First" sin corte en la carta de carrera y el hero.
+- [x] T1030 [T1] `hyphens: manual` en `site.prose` y `<span lang="en">` en los términos en inglés (`typeset`).
+- [x] T1031 [T2] NBSP antes de ".NET" (`typeset`).
+- [x] T1032 [T3] "AI-First" sin corte en la carta de carrera y el hero.
 
 ## Bloque 4: espacios y superposiciones
 

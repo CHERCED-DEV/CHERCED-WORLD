@@ -14,6 +14,7 @@ import { LiveDiagram, type LiveDiagramLabels } from '../portfolio/LiveDiagram'
 import { PortfolioIcon } from '../portfolio/PortfolioIcon'
 import { caseDiagram, caseStudyRepos } from '../portfolio/projects'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import { AssemblyLine } from './AssemblyLine'
 import {
   countedText,
@@ -135,7 +136,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
         </div>
         {diagram.length > 0 ? <LiveDiagram layers={diagram} labels={labels.diagram} /> : null}
         <p className={styles.note} data-cw-synergos-backend="">
-          {fillTemplate(copy.what.backend[lang], synergosShowcase.backend)}
+          {typeset(fillTemplate(copy.what.backend[lang], synergosShowcase.backend), lang)}
         </p>
       </section>
 

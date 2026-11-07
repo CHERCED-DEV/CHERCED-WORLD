@@ -66,7 +66,7 @@ describe('"Ahora trabajo en"', () => {
     const roles = [...now.matchAll(/data-cw-home-role="([^"]+)"/g)].map((match) => match[1])
     expect(roles).toEqual(['sistecredito-ai-first', 'synergos-labs'])
     expect(now).toContain('>Sistecrédito</h3>')
-    expect(now).toContain('>Software Solutions Engineer · AI-First</p>')
+    expect(now).toContain('><span lang="en">Software Solutions Engineer</span> · <span lang="en" style="white-space:nowrap">AI-First</span></p>')
     expect(now).toContain('>Synergos Labs</h3>')
     expect(now).toContain('<time dateTime="2026-02">feb 2026</time>')
     expect(now).toContain('<time dateTime="2024-02">feb 2024</time>')

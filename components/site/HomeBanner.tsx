@@ -16,6 +16,7 @@ import { keepSeparators } from './home/now'
 import { WINK_TIMING, winkEnd, winkScript, winkWords, type WinkWord } from './home/wink'
 import { WinkPlayer } from './home/WinkPlayer'
 import styles from './HomeBanner.module.scss'
+import { typeset } from './typeset'
 
 const HOME_ICONS: Record<string, string> = {
   email: '/assets/icons/mailito.png',
@@ -50,18 +51,6 @@ function bannerVars(wink: boolean): CSSProperties {
 
 function wordStyle(word: WinkWord): CSSProperties {
   return { '--cw-wink-delay': `${word.delay}ms`, '--cw-wink-duration': `${word.duration}ms` } as CSSProperties
-}
-
-function keepHyphenated(text: string): ReactNode[] {
-  return text.split(/(\S+-\S+)/u).map((part, index) =>
-    index % 2 === 1 ? (
-      <span key={index} className={styles.nowrap}>
-        {part}
-      </span>
-    ) : (
-      part
-    ),
-  )
 }
 
 function SocialIcon({ id }: { id: string }) {
@@ -127,7 +116,7 @@ export function HomeBanner({ lang, home, socials, socialsLabel, previousTitleLab
         </h1>
         {subtitle ? (
           <p className={cx(styles.subtitle, enter.enter)} style={step(2.25)} data-cw-home-subtitle="">
-            {keepHyphenated(keepSeparators(subtitle))}
+            {typeset(keepSeparators(subtitle), lang, { keepHyphens: true })}
           </p>
         ) : null}
         <div className={cx(styles.rule, enter.enter, enter.rule)} style={step(2.75)}>

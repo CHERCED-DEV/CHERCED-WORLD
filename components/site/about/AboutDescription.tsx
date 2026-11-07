@@ -4,6 +4,7 @@ import { CvActions } from '@/components/ui/CvLink'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import styles from './About.module.scss'
 import { AboutPortrait } from './AboutPortrait'
 
@@ -25,7 +26,7 @@ export function AboutDescription({ id, lang, title, description, image, children
           {title}
         </SectionTitle>
         <GlassSurface variant="standard" edge light className={styles.heroText}>
-          <p>{description[lang]}</p>
+          <p>{typeset(description[lang], lang)}</p>
           <CvActions lang={lang} downloadVariant="solid" className={styles.heroCv} />
         </GlassSurface>
         {children}

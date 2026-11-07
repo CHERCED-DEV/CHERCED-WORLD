@@ -30,7 +30,7 @@
   font-size: var(--cw-text-md);
   line-height: 1.7;
   text-align: justify;
-  hyphens: auto;
+  hyphens: manual;
 }
 
 @mixin label-caps($spacing: 0.18538em) {

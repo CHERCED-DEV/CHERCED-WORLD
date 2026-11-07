@@ -28,6 +28,7 @@ import {
   type BrainSource,
 } from './brain'
 import { BrainTerminal, type BrainTerminalLabels } from './BrainTerminal'
+import { typeset } from '../typeset'
 import { LobeMeta, LobePrinciples } from './LobeParts'
 import { monogram } from './monogram'
 import { startRain } from './rain'
@@ -520,7 +521,7 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
               <h4 id={`${sheetTitleId}-words`} className={styles.sheetWordsTitle}>
                 {labels.words}
               </h4>
-              <p className={styles.sheetWordsText}>{lobe.words}</p>
+              <p className={styles.sheetWordsText}>{typeset(lobe.words, lang)}</p>
             </section>
           ) : null}
         </BottomSheet>
@@ -540,7 +541,7 @@ export function BrainMap({ data, labels, lang, terminal, children }: BrainMapPro
               <h3 id={`words-${item.id}`} className={styles.wordsTitle}>
                 {item.name}
               </h3>
-              <p className={styles.wordsText}>{item.words}</p>
+              <p className={styles.wordsText}>{typeset(item.words ?? '', lang)}</p>
             </section>
           ))}
         </details>

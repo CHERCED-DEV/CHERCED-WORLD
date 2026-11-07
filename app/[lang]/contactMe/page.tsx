@@ -10,6 +10,7 @@ import { BackgroundIntensity } from '@/components/motion'
 import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
 import { buttonClassName } from '@/components/ui/Button'
 import { RecruitersEntry, RecruitersFallback } from '@/components/site/home/RecruitersEntry'
+import { typeset } from '@/components/site/typeset'
 import { CvActions } from '@/components/ui/CvLink'
 import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -62,7 +63,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
         <h1 id="contact-title" className={styles.title}>
           {pick(site.contact.title, lang)}
         </h1>
-        <p className={styles.lead}>{pick(site.contact.description, lang)}</p>
+        <p className={styles.lead}>{typeset(pick(site.contact.description, lang), lang)}</p>
         <div className={styles.reach} data-cw-contact-reach="">
           <AvailabilityChip lang={lang} />
           {site.recruiters ? <RecruitersEntry lang={lang} content={site.recruiters} writeHref="#contact-form" withCv={false} /> : null}

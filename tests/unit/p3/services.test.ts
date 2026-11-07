@@ -59,6 +59,7 @@ function text(html: string): string {
     .replace(/&#x27;/g, "'")
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&')
+    .replace(/ /g, ' ')
 }
 
 describe('Servicios: datos (FR-406c, FR-406f, FR-406j)', () => {

@@ -3,6 +3,7 @@ import type { Project, SiteContent } from '@/content/types'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import styles from './Portfolio.module.scss'
 import { ProjectsExplorer, type ExplorerLabels } from './ProjectsExplorer'
 import { portfolioIntro, toSlide } from './projects'
@@ -26,7 +27,7 @@ export function PortfolioView({ lang, portfolio, projects, technologies, labels 
         {intro ? (
           <GlassSurface variant="standard" className={styles.introCard}>
             <p className={styles.prose} data-cw-portfolio-intro="">
-              {intro}
+              {typeset(intro, lang)}
             </p>
           </GlassSurface>
         ) : null}
