@@ -26,7 +26,7 @@ describe('imagen OG de cada post (FR-520, R-502)', () => {
     expect(await generateImageMetadata({ params: Promise.resolve({ lang: 'es', id: 'post4' }) })).toEqual([
       {
         id: 'og',
-        alt: 'De un portafolio de 2023 a uno hecho con Spec-Driven Development y agentes: 2 de noviembre de 2026 · spec-driven-development · ai-agents · nextjs · architecture',
+        alt: 'De un portafolio de 2023 a uno hecho con Spec-Driven Development y agentes: 2 de noviembre de 2026 · desarrollo guiado por especificaciones · agentes de IA · nextjs · arquitectura',
         size: { width: 1200, height: 630 },
         contentType: 'image/png',
       },

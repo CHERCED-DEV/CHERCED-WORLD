@@ -4,6 +4,7 @@ import {
   isLocale,
   LOCALE_COOKIE,
   LOCALE_COOKIE_MAX_AGE,
+  LOCALE_HEADER,
   type Locale,
 } from '@/lib/i18n/config'
 
@@ -50,7 +51,9 @@ export function proxy(request: NextRequest): NextResponse {
 
   const first = pathname.split('/')[1] ?? ''
   if (isLocale(first)) {
-    const response = NextResponse.next()
+    const headers = new Headers(request.headers)
+    headers.set(LOCALE_HEADER, first)
+    const response = NextResponse.next({ request: { headers } })
     if (isDocumentNavigation(request) && request.cookies.get(LOCALE_COOKIE)?.value !== first) {
       response.cookies.set(LOCALE_COOKIE, first, {
         path: '/',

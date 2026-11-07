@@ -16,6 +16,8 @@ import { montserrat } from '@/styles/fonts'
 
 type LayoutProps = { children: ReactNode; params: Promise<{ lang: string }> }
 
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
 }

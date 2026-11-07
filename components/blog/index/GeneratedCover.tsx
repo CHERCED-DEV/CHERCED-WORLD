@@ -42,7 +42,7 @@ export function GeneratedCover({ title, date, tags, lang, variant, contentLang, 
         <span className={styles.foot}>
           <span className={styles.date}>{formatPostDate(date, lang)}</span>
           {shown.length > 0 ? (
-            <span className={styles.tags} lang={contentLang}>
+            <span className={styles.tags}>
               {shown.map((tag) => (
                 <span key={tag} className={styles.tag}>
                   #{tag}

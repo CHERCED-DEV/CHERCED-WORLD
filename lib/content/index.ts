@@ -4,6 +4,7 @@ import { postRegistry } from '@/content/posts/registry'
 import { projects } from '@/content/projects'
 import { site } from '@/content/site'
 import type { CapsuleEntry, Locale, Localized, PostMeta, Project, SiteContent } from '@/content/types'
+import { tagsIn } from '@/lib/blog/tags'
 import { otherLocale } from '@/lib/i18n/config'
 
 export type ListedPost = PostMeta & { fallback: boolean }
@@ -42,18 +43,22 @@ export { projectTitle, projectTitles } from './project-title'
 
 export { cvPdfs } from './cv'
 
+export function withTagsIn(meta: PostMeta, lang: Locale): PostMeta {
+  return { ...meta, tags: tagsIn(meta.tags, lang) }
+}
+
 export async function loadPost(id: string, lang: Locale): Promise<LoadedPost | null> {
   const entry = Object.prototype.hasOwnProperty.call(postRegistry, id) ? postRegistry[id] : undefined
   if (!entry) return null
   const own = entry[lang]
   if (own) {
     const mod = await own()
-    return { Content: mod.default, meta: mod.meta, fallback: false }
+    return { Content: mod.default, meta: withTagsIn(mod.meta, lang), fallback: false }
   }
   const other = entry[otherLocale(lang)]
   if (!other) return null
   const mod = await other()
-  return { Content: mod.default, meta: mod.meta, fallback: true }
+  return { Content: mod.default, meta: withTagsIn(mod.meta, lang), fallback: true }
 }
 
 export async function listPosts(lang: Locale): Promise<ListedPost[]> {

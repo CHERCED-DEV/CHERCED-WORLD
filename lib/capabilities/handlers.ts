@@ -1,4 +1,5 @@
 import { techFamily } from '@/lib/assistant/intent'
+import { hasTag } from '@/lib/blog/tags'
 import type { Locale } from '@/lib/i18n/config'
 import { createSearcher, type Searcher } from '@/lib/search/searcher'
 import { excerpt, fold, sentences } from '@/lib/search/text'
@@ -134,7 +135,7 @@ export function getSkills(index: SearchIndex, input: { area?: string }, env: Han
 export function listPosts(index: SearchIndex, input: { tag?: string }, env: HandlerEnv) {
   const tag = input.tag ?? null
   const posts = index.facts.posts
-    .filter((post) => (tag ? post.tags.some((item) => fold(item) === fold(tag)) : true))
+    .filter((post) => (tag ? hasTag(post, tag) : true))
     .map((post) => ({
       id: post.id,
       title: post.title,

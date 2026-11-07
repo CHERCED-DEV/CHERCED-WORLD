@@ -6,6 +6,7 @@ export {
   otherLocale,
   LOCALE_COOKIE,
   LOCALE_COOKIE_MAX_AGE,
+  LOCALE_HEADER,
   type Locale,
   type Namespace,
 } from './config'

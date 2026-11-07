@@ -8,6 +8,8 @@ export const LOCALE_COOKIE = 'cw-lang'
 
 export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
 
+export const LOCALE_HEADER = 'x-cw-lang'
+
 export const namespaces = ['common', 'site', 'motion', 'contact', 'admin', 'privacy', 'blog', 'experience', 'home', 'portfolio', 'ailab'] as const
 
 export type Namespace = (typeof namespaces)[number]
