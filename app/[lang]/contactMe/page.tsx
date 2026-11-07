@@ -93,7 +93,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
             </span>
           </div>
         </div>
-        <Separator />
+        <Separator className={styles.reachSeparator} />
         {site.recruiters ? <RecruitersFallback lang={lang} content={site.recruiters} writeHref="#contact-form" withCv={false} compact /> : null}
       </div>
       <GlassSurface variant="standard" className={styles.card} id="contact-form">

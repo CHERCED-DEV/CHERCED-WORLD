@@ -115,6 +115,16 @@
   gap: var(--cw-space-3);
 }
 
+@include bp.down(lg) {
+  .section:has(.reachSeparator) {
+    gap: var(--cw-space-6);
+  }
+
+  .reachSeparator {
+    margin-block: 0;
+  }
+}
+
 .mailButton {
   min-width: 44px;
   min-height: 44px;

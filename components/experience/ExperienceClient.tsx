@@ -26,6 +26,8 @@ import {
 import { ShortcutsDialog, useGlobalShortcuts } from './Shortcuts'
 import { paletteKeyshortcuts, SHORTCUT_KEYS, type ShortcutAction } from './shortcuts-model'
 
+const FAB_COMPACT_AFTER = 160
+
 const loadPalette = () => import('./CommandPalette')
 const loadPaletteModel = () => import('./palette-model')
 const loadAssistant = () => import('./Assistant')
@@ -80,7 +82,25 @@ export function ExperienceClient({ lang, labels, pages, email, cv, cvPdfs, areas
   const [discovered, setDiscovered] = useState(false)
   const [ready, setReady] = useState(false)
   const [singleKey, setSingleKey] = useState(() => typeof window === 'undefined' || readSingleKeyShortcuts())
+  const [compact, setCompact] = useState(false)
   const statusId = useId()
+
+  useEffect(() => {
+    let frame = 0
+    const update = () => {
+      frame = 0
+      setCompact(window.scrollY > FAB_COMPACT_AFTER)
+    }
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.cancelAnimationFrame(frame)
+    }
+  }, [])
 
   useEffect(() => {
     pathRef.current = pathname
@@ -238,6 +258,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, cvPdfs, areas
         data-cw-glass="standard"
         data-cw-assistant-button=""
         data-cw-ready={ready ? '' : undefined}
+        data-cw-compact={compact ? '' : undefined}
         data-status={status}
         onClick={() => emit('cw:open-assistant')}
       >

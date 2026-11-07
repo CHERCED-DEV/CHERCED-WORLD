@@ -53,16 +53,21 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 
 ## Bloque 4: espacios y superposiciones
 
-- [ ] T1040 [E1] `text-align: left` en `site.prose`.
+- [x] T1040 [E1] `text-align: left` en `site.prose`.
 - [ ] T1041 [E2] Verificación del dock con la e2e de botones tapados.
-- [ ] T1042 [E3] Botón del asistente reducido a ícono al bajar y `scroll-padding-bottom` en escritorio.
-- [ ] T1043 [E4] `scroll-padding-top` con la barra de escenas en Sobre mí.
-- [ ] T1044 [E5] Puntos de escena ocultos con el footer en pantalla (`SceneNav.tsx`).
-- [ ] T1045 [E6] Cifras alineadas (`AboutFigures.tsx`).
-- [ ] T1046 [E7] Alto de la carta de carrera del celular ajustado al contenido.
-- [ ] T1047 [E8] Footer del celular sin el bloque vacío.
-- [ ] T1048 [E9] Filtro del portafolio por época y "NEXT.JS".
-- [ ] T1049 [E10] Banda de "Proyectos" sin la foto, con el sistema de diseño; se borra `mobilePortfolio.png`.
+- [x] T1042 [E3] Botón del asistente reducido a ícono al bajar y `scroll-padding-bottom` en escritorio.
+- [x] T1043 [E4] `scroll-padding-top` con la barra de escenas en Sobre mí.
+- [x] T1044 [E5] Puntos de escena ocultos con el footer en pantalla (`SceneNav.tsx`).
+- [x] T1045 [E6] Cifras alineadas (`AboutFigures.tsx`).
+- [x] T1046 [E7] Alto de la carta de carrera del celular ajustado al contenido (236 px → 12,5 rem, medido: la carta
+  más alta pide 193 px a 320 px).
+- [x] T1047 [E8] Footer del celular sin el bloque vacío.
+- [x] T1048 [E9] Filtro del portafolio por época y "NEXT.JS".
+- [x] T1049 [E10] Banda de "Proyectos" sin la foto, con el sistema de diseño; se borra `mobilePortfolio.png`.
+- [x] T1058 [E11] El panel del rol del diagrama de capas no ocupa espacio en el celular hasta que se toca una capa
+  (`LiveDiagram.module.scss`); "servicios de API" y "servicios BFF" en `content/synergos-showcase.ts`.
+- [x] T1059 [E12] Contacto en el celular: el separador sin margen y menos espacio entre la información y el formulario
+  (`PageSection.module.scss`).
 
 ## Bloque 5: móvil
 

@@ -11,6 +11,7 @@ function reducedMotion(): boolean {
 
 export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) {
   const [current, setCurrent] = useState(scenes[0]?.id ?? '')
+  const [footer, setFooter] = useState(false)
 
   useEffect(() => {
     const targets = scenes.map((scene) => document.getElementById(scene.id)).filter((node): node is HTMLElement => node !== null)
@@ -35,6 +36,14 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
     for (const target of targets) observer.observe(target)
     return () => observer.disconnect()
   }, [scenes])
+
+  useEffect(() => {
+    const footer = document.getElementById('footer')
+    if (!footer || typeof IntersectionObserver === 'undefined') return
+    const observer = new IntersectionObserver((entries) => setFooter(entries.some((entry) => entry.isIntersecting)))
+    observer.observe(footer)
+    return () => observer.disconnect()
+  }, [])
 
   const goTo = (id: string) => {
     const target = document.getElementById(id)
@@ -65,7 +74,7 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
           ))}
         </ol>
       </nav>
-      <div className={styles.sceneDots} aria-hidden="true" data-cw-scene-dots="">
+      <div className={styles.sceneDots} aria-hidden="true" data-cw-scene-dots="" data-cw-over-footer={footer ? '' : undefined}>
         {scenes.map((scene) => (
           <button
             key={scene.id}

@@ -265,8 +265,8 @@ export const synergosShowcase = {
         en: 'One core for every business. The interface is composed in three layers, and what crosses the boundary is DOM, not a framework.',
       },
       backend: {
-        es: 'Detrás de la composición, un backend .NET con {api} servicios Api y {bff} servicios Bff.',
-        en: 'Behind the composition, a .NET backend with {api} Api services and {bff} Bff services.',
+        es: 'Detrás de la composición, un backend .NET con {api} servicios de API y {bff} servicios BFF.',
+        en: 'Behind the composition, a .NET backend with {api} API services and {bff} BFF services.',
       },
     },
     verticals: {

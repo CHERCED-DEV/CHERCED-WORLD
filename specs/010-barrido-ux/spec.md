@@ -111,6 +111,11 @@ productos y de cargos.
   "NEXT.JS", como los skills.
 - **FR-1049** (E10): la banda de "Proyectos" del portafolio deja la foto de la montaña y conserva el concepto de banner
   con el sistema de diseño actual (cristal, rejilla, esquinas y línea de barrido), sin imágenes nuevas.
+- **FR-1049a** (E11, reporte del autor en Android a ~412 px): en `/synergos` y en el caso 12, el diagrama de capas no
+  deja un panel vacío en el celular: el panel del rol no ocupa espacio hasta que se toca una capa. "Api" y "Bff" pasan a
+  "servicios de API" y "servicios BFF" / "API services" y "BFF services".
+- **FR-1049b** (E12, mismo reporte): en Contacto, el separador entre los llamados y el formulario deja de tener un hueco
+  de aire arriba y abajo en el celular.
 
 ### Bloque 5: móvil (§6)
 

@@ -35,13 +35,24 @@ export function eraUsage(items: readonly { era: ProjectEra }[]): EraUsage[] {
 
 export type TechnologyUsage = { name: string; count: number }
 
-export function technologyUsage(items: readonly { technologies: readonly string[] }[], technologies: readonly string[]): TechnologyUsage[] {
+export function technologyUsage(
+  items: readonly { technologies: readonly string[]; order?: number }[],
+  technologies: readonly string[],
+): TechnologyUsage[] {
   const counts = new Map<string, number>()
-  for (const item of items) for (const tech of new Set(item.technologies)) counts.set(tech, (counts.get(tech) ?? 0) + 1)
+  const ranks = new Map<string, number>()
+  items.forEach((item, position) => {
+    const order = item.order ?? position
+    item.technologies.forEach((tech, index) => {
+      const rank = order * 1000 + index
+      if (rank < (ranks.get(tech) ?? Infinity)) ranks.set(tech, rank)
+    })
+    for (const tech of new Set(item.technologies)) counts.set(tech, (counts.get(tech) ?? 0) + 1)
+  })
   return technologies
     .map((name) => ({ name, count: counts.get(name) ?? 0 }))
     .filter((usage) => usage.count > 0)
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'en'))
+    .sort((a, b) => (ranks.get(a.name) ?? Infinity) - (ranks.get(b.name) ?? Infinity) || b.count - a.count || a.name.localeCompare(b.name, 'en'))
 }
 
 export function chipsFor(technologies: readonly string[], active: string | null, visible: number): { shown: string[]; rest: string[] } {
