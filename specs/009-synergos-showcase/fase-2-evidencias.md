@@ -139,6 +139,12 @@ marcado como **experiencia del autor en su empleo**, aparte de las evidencias de
 
 ### 3.3 La "sinergia tecnológica": C# y TypeScript del mismo linaje
 
+Comprobación adicional al implementar (2026-11-07): el ejemplo público `TagProps` se leyó en
+`CMS:Synergos.CMS.Interfaces/SynHost/TagProps.cs` (`7c43a179`) y en
+`UI:vitals/contracts/src/elementos-synhost.contract.ts` (`062e0fd`). El record declara `Label` y `Color`, con el origen
+de cada campo; el tipo generado conserva `readonly label?: string` y `readonly color?: string`. Se usan fragmentos
+textuales breves y enlazados, sin copiar las comparaciones ni los comentarios de las fuentes.
+
 Esto es lo más demostrable de la fase 2. El tipo nace una vez y los dos compiladores lo comprueban:
 
 1. **Lo que viaja a cada elemento** (ADR 0135). Un `record` C# marcado con `[ElementoSynHost]` declara lo que viaja

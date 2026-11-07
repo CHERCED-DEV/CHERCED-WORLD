@@ -1,4 +1,5 @@
 import { lobeWords } from '@/content/site'
+import { architecture, SYNERGOS_ARCHITECTURE_PATH, sourceHref } from '@/content/synergos-architecture'
 import type { SiteContent } from '@/content/types'
 import { cvPdfs, getProjects, getSite, listPosts, pick, projectTitle } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
@@ -93,6 +94,11 @@ function buildFacts(lang: Locale, common: Dictionary, site: SiteContent, posts: 
 
   return {
     author: t(common, 'brand.author'),
+    architecture: {
+      title: architecture.copy.title[lang],
+      url: localizedPath(lang, SYNERGOS_ARCHITECTURE_PATH),
+      patterns: architecture.patterns.map(pattern => ({ id: pattern.id, name: pattern.name, description: pattern.body[lang], limitation: pattern.limitation?.[lang] ?? null, url: `${localizedPath(lang, SYNERGOS_ARCHITECTURE_PATH)}#patron-${pattern.id}`, sources: pattern.sources.map(source => ({ label: source.label, href: sourceHref(source) })) })),
+    },
     pages,
     about: pick(site.about.description, lang),
     skills,
@@ -209,6 +215,8 @@ function buildDocs(lang: Locale, facts: AssistantFacts, site: SiteContent, exper
     keywords: PAGE_KEYWORDS[id],
     url: facts.pages[id].url,
   }))
+
+  if (facts.architecture) docs.push({ id: 'architecture:synergos', kind: 'section', title: facts.architecture.title, text: `${architecture.copy.lead[lang]} ${facts.architecture.patterns.map(pattern => pattern.name).join('. ')}`, keywords: 'synergos arquitectura architecture patrones patterns contratos contracts umbraco cdn', url: facts.architecture.url })
 
   for (const project of facts.projects) {
     docs.push({

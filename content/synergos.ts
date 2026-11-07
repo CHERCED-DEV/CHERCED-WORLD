@@ -1,7 +1,7 @@
 import type { Locale, SynergosFacts } from './types'
 
 export const synergosFacts = {
-  countedAt: '2026-11-01',
+  countedAt: '2026-11-05',
   pieces: 31,
   capabilities: 20,
   orchestrators: 9,
@@ -9,6 +9,7 @@ export const synergosFacts = {
   testsAtLeast: 6600,
   adrsAtLeast: 140,
   designSystemAtLeast: 130,
+  designSystem: { primitives: 31, compositions: 47, modules: 56 },
 } as const satisfies SynergosFacts
 
 export function formatFact(value: number, lang: Locale): string {

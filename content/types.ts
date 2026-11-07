@@ -166,6 +166,39 @@ export type Project = {
   highlights?: Localized[]
   adrCards?: AdrCard[]
   diagram?: DiagramLayer[]
+  patterns?: string[]
+}
+
+export type SynergosSource = {
+  repo: 'Synergos.CMS' | 'Synergos.UI' | 'Synergos.Fabrica'
+  path: string
+  label: string
+}
+
+export type ArchitectureTopic = {
+  id: string
+  title: Localized
+  body: Localized[]
+  sources: SynergosSource[]
+  private?: true
+}
+
+export type SynergosPattern = {
+  id: string
+  name: string
+  status: 'aplicado' | 'parcial' | 'descartado'
+  body: Localized
+  limitation?: Localized
+  sources: SynergosSource[]
+  cases: string[]
+}
+
+export type FactoryMilestone = {
+  id: string
+  status: 'hecho' | 'vision'
+  title: Localized
+  body: Localized
+  sources: SynergosSource[]
 }
 
 export type SynergosFacts = {
@@ -177,6 +210,7 @@ export type SynergosFacts = {
   testsAtLeast: number
   adrsAtLeast: number
   designSystemAtLeast: number
+  designSystem?: { primitives: number; compositions: number; modules: number }
 }
 
 export type TerminalGenerated = 'projects' | 'synergos' | 'help' | 'clear' | 'principles' | 'mottos'

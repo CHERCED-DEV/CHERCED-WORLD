@@ -29,8 +29,10 @@ test.describe('habilidades en la paleta (US6, FR-450, SC-404)', () => {
       await page.keyboard.type(query)
       await expect(options(page).first()).toBeVisible()
       await expect(palette(page).getByText('Cargando proyectos y posts…')).toBeHidden()
-      const top = await optionIds(page)
-      expect(top.some((id) => id.startsWith('skill:') || id.startsWith('project:')), top.join(', ')).toBe(true)
+      await expect.poll(async () => {
+        const top = await optionIds(page)
+        return top.some((id) => id.startsWith('skill:') || id.startsWith('project:'))
+      }).toBe(true)
     })
   }
 
@@ -88,6 +90,7 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
       'action:shortcuts',
       'action:now',
       'action:synergos',
+      'action:synergos-architecture',
     ])
     await expect(group.getByRole('option', { name: 'Descargar CV en español' })).toBeVisible()
     await expect(group.getByRole('option', { name: 'Descargar CV en inglés' }), 'T970: la paleta baja solo el PDF del idioma de la página').toHaveCount(0)

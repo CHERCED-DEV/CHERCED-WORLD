@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { now } from '@/content/now'
 import { projects } from '@/content/projects'
 import { site } from '@/content/site'
+import { architecture } from '@/content/synergos-architecture'
 
 const EMPLOYER = /sistecr[eé]dito/i
 
@@ -48,7 +49,7 @@ describe('confidencialidad (FR-444, SC-407)', () => {
   })
 
   it('ningún caso, servicio ni texto de /now nombra al empleador', () => {
-    for (const text of [...strings(projects), ...strings(site.services), ...strings(now), ...strings(site.profile)]) {
+    for (const text of [...strings(projects), ...strings(site.services), ...strings(now), ...strings(site.profile), ...strings(architecture)]) {
       expect(text).not.toMatch(EMPLOYER)
     }
   })

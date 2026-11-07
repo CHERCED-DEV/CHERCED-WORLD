@@ -98,14 +98,15 @@ describe.each(['es', 'en'] as const)('caja de cristal sobre el índice real (%s,
     const box = createGlassBox(await index(lang))
     const found = box.search(QUERIES[lang][0])
     expect(found.results.length).toBeGreaterThan(2)
-    expect(found.results[0]!.doc.id).toBe('project:12')
-    expect(found.results[0]!.doc.title).toBe('Synergos')
+    const project = found.results.find(result => result.doc.id === 'project:12')
+    expect(project?.doc.title).toBe('Synergos')
+    expect(found.results.some(result => result.doc.id === 'architecture:synergos')).toBe(true)
     for (const result of found.results) {
       expect(result.doc.url.startsWith(`/${lang}`), result.doc.id).toBe(true)
       expect(result.share).toBeGreaterThan(0)
       expect(result.share).toBeLessThanOrEqual(1)
     }
-    const fragment = found.results[0]!.fragment!
+    const fragment = project!.fragment!
     expect(fragment.field).toBe('text')
     const highlighted = fragment.segments.filter((segment) => segment.hit).map((segment) => segment.text.toLowerCase())
     expect(highlighted).toContain('saga')

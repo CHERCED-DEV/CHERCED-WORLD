@@ -51,7 +51,14 @@ export type LanguageFact = { id: Locale; name: string; progress: number; level: 
 
 export type CvPdfFact = { lang: Locale; href: string; label: string; bytes: number }
 
+export type ArchitectureFact = {
+  title: string
+  url: string
+  patterns: Array<{ id: string; name: string; description: string; limitation: string | null; url: string; sources: Array<{ label: string; href: string }> }>
+}
+
 export type AssistantFacts = {
+  architecture?: ArchitectureFact
   author: string
   pages: Record<PageId, PageFact>
   about: string

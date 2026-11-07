@@ -36,7 +36,7 @@ const career = site.about.career.find((entry) => entry.id === 'synergos-labs')!
 describe('cifras de Synergos con una sola fuente (FR-441, E-09)', () => {
   it('trae los conteos exactos y los pisos con sus fechas', () => {
     expect(synergosFacts).toEqual({
-      countedAt: '2026-11-01',
+      countedAt: '2026-11-05',
       pieces: 31,
       capabilities: 20,
       orchestrators: 9,
@@ -44,6 +44,7 @@ describe('cifras de Synergos con una sola fuente (FR-441, E-09)', () => {
       testsAtLeast: 6600,
       adrsAtLeast: 140,
       designSystemAtLeast: 130,
+      designSystem: { primitives: 31, compositions: 47, modules: 56 },
     })
     expect(synergosFacts.pieces).toBe(1 + synergosFacts.capabilities + synergosFacts.orchestrators + 1)
   })

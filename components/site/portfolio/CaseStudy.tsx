@@ -13,6 +13,7 @@ import type { Locale } from '@/lib/i18n'
 import { SectionTitle } from '../SectionTitle'
 import { typeset } from '../typeset'
 import { ShowcaseLink } from '../synergos/ShowcaseLink'
+import { PatternLinks } from '../synergos/arquitectura/PatternLinks'
 import { AdrCards } from '@/components/ui/AdrCards'
 import adrStyles from './AdrCards.module.scss'
 import { fillTemplate } from './carousel'
@@ -254,6 +255,8 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           <CaseGallery images={images} labels={extra.gallery} title={title} transitionName={projectMediaName(project.id)} />
         </div>
       </header>
+
+      <PatternLinks ids={project.patterns} lang={lang} />
 
       {highlights.length > 0 ? (
         <section className={styles.highlights} aria-labelledby="case-highlights" data-cw-case-highlights="">

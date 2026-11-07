@@ -86,7 +86,10 @@ documento. Lo que allí está marcado como privado hasta el MVP no se enlaza ni 
 
 - Q: P-904, ¿subpágina o secciones dentro de Synergos? → A: el autor confirma «Sí, subpágina enlazada desde Synergos».
   Se mantiene `/[lang]/synergos/arquitectura`, con acceso desde «Cómo se construye» en `/[lang]/synergos`.
-  Esta respuesta no resuelve P-905 a P-909 ni aprueba el atlas o el boceto.
+  El autor confirma después P-905 a P-909: decisiones descartadas en un bloque breve, las cuatro entradas adicionales
+  propuestas, ninguna experiencia del empleo, cifras públicas de Alquiler con fuente y solo las cifras actuales.
+- El autor aprueba el boceto de `bocetos/arquitectura.html` para implementar y las 18 entradas del atlas: las 14
+  aplicadas o parciales de las evidencias más micro-frontends, correlation ID, contratos generados y reserva en dos tiempos.
 
 #### Session 2026-11-07 (investigación SYN2, sin entrevista todavía)
 
@@ -293,8 +296,8 @@ rótulo visible de visión.
 | # | Pregunta | Por defecto |
 |---|---|---|
 | P-904 | ¿La fase 2 va en una subpágina `/synergos/arquitectura` o como secciones nuevas dentro de `/synergos`? | Confirmado por el autor (2026-11-07): subpágina enlazada desde Synergos, en "Cómo se construye" |
-| P-905 | ¿El atlas muestra también lo que se decidió no usar (outbox, cortacircuitos hacia el árbol, navegador directo al orquestador)? | Sí, como un grupo corto aparte |
-| P-906 | ¿Cuáles de los patrones "fuera de la lista" entran al atlas (micro-frontends, correlation ID, API composition, contratos generados, reserva en dos tiempos, un solo escritor, firma de webhooks, degradación honesta, interruptores)? | Micro-frontends, correlation ID, contratos generados y reserva en dos tiempos |
-| P-907 | ¿Quieres contar en genérico el embebido entre ventanas que hiciste en tu empleo? Si sí, lo escribes tú. | No en esta fase |
-| P-908 | ¿Se publican las cifras del piloto de Alquiler (11 de 13 predicciones, 3,5 h)? Ya están en el repo público. | Sí, con su enlace |
-| P-909 | ¿Se cuenta la evolución de agosto a noviembre (de 4 a 9 orquestadores, de 2.353 a 6.675 tests)? | No; solo la cifra de hoy con su fecha |
+| P-905 | ¿El atlas muestra también lo que se decidió no usar (outbox, cortacircuitos hacia el árbol, navegador directo al orquestador)? | Sí, bloque breve; confirmado por el autor (2026-11-07) |
+| P-906 | ¿Cuáles de los patrones "fuera de la lista" entran al atlas (micro-frontends, correlation ID, API composition, contratos generados, reserva en dos tiempos, un solo escritor, firma de webhooks, degradación honesta, interruptores)? | Confirmados por el autor (2026-11-07): micro-frontends, correlation ID, contratos generados y reserva en dos tiempos; 18 entradas en total |
+| P-907 | ¿Quieres contar en genérico el embebido entre ventanas que hiciste en tu empleo? Si sí, lo escribes tú. | No; confirmado por el autor (2026-11-07) |
+| P-908 | ¿Se publican las cifras del piloto de Alquiler (11 de 13 predicciones, 3,5 h)? Ya están en el repo público. | Sí, con fuente; confirmado por el autor (2026-11-07) |
+| P-909 | ¿Se cuenta la evolución de agosto a noviembre (de 4 a 9 orquestadores, de 2.353 a 6.675 tests)? | No, solo cifras actuales; confirmado por el autor (2026-11-07) |

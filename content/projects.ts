@@ -512,6 +512,7 @@ export const projects: Project[] = [
   },
   {
     id: '12',
+    patterns: ['saga', 'bff', 'micro-frontends', 'contratos-generados'],
     title: 'Synergos',
     summary: {
       es: 'Una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero.',
@@ -646,6 +647,7 @@ export const projects: Project[] = [
   },
   {
     id: '13',
+    patterns: ['contratos-generados'],
     title: { es: 'Director y líneas: agentes de IA en paralelo', en: 'Director & lines: parallel AI agents' },
     summary: {
       es: 'El modelo con el que varios agentes de IA construyen Synergos a la vez sin pisarse y sin perder la traza.',

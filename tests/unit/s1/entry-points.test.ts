@@ -114,7 +114,9 @@ describe('paleta: comando > synergos', () => {
     const [experience, common] = await Promise.all([getDictionary(lang, 'experience'), getDictionary(lang, 'common')])
     const labels = uiLabels(experience, common)
     const context = { theme: 'dark' as const, email: null, cv: null, now: `/${lang}/now`, synergos: `/${lang}/synergos`, capsuleFound: false }
-    const docs = model.toPaletteDocs([], model.buildCommands(labels, context))
+    const { buildSearchIndex } = await import('@/lib/search/build-index')
+    const index = await buildSearchIndex(lang)
+    const docs = model.toPaletteDocs(index.docs, model.buildCommands(labels, context))
     return { docs, searcher: model.createPaletteSearcher(docs) }
   }
 
@@ -127,6 +129,12 @@ describe('paleta: comando > synergos', () => {
     }
     const [first] = model.paletteResults('>synergos', ctx.docs, ctx.searcher, 's')
     expect(first?.title).toBe(lang === 'es' ? 'Conoce Synergos, mi proyecto insignia' : 'Explore Synergos, my flagship project')
+    expect(model.paletteResults('Synergos', ctx.docs, ctx.searcher, 's')[0]?.id).toBe('project:12')
+    for (const query of ['> synergos arquitectura', '> synergos architecture']) {
+      const [architecture] = model.paletteResults(query, ctx.docs, ctx.searcher, 's')
+      expect(architecture?.id).toBe('action:synergos-architecture')
+      expect(architecture?.command).toEqual({ type: 'navigate', href: `/${lang}/synergos/arquitectura` })
+    }
   })
 
   it('solo aparece en modo de comandos, detrás de /now', async () => {

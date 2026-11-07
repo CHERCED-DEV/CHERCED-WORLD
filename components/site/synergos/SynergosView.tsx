@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { architecture, SYNERGOS_ARCHITECTURE_PATH } from '@/content/synergos-architecture'
 import type { CSSProperties } from 'react'
 import type { Project } from '@/content/types'
 import { showcaseVerticals, synergosShowcase, SYNERGOS_HARNESS_REPO } from '@/content/synergos-showcase'
@@ -295,6 +296,9 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
                 {projectTitle(build, lang)}
               </h3>
               <p className={styles.buildText}>{build.summary[lang]}</p>
+                <Link href={localizedPath(lang, SYNERGOS_ARCHITECTURE_PATH)} className={buttonClassName({ variant: 'glass', size: 'md', className: styles.button })} data-cw-synergos-architecture-link="">
+                  {architecture.copy.title[lang]} ↗
+                </Link>
               <Link
                 href={localizedPath(lang, `/portfolio/${build.id}`)}
                 className={buttonClassName({ variant: 'glass', size: 'md', className: styles.button })}

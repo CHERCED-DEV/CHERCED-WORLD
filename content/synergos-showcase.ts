@@ -1,4 +1,5 @@
 import type { Localized } from './types'
+import { synergosFacts } from './synergos'
 
 export type ShowcaseLineState = 'active' | 'closed' | 'paused'
 
@@ -243,7 +244,7 @@ export const synergosShowcase = {
   milestones,
   gates: 92,
   testsCounted: 6675,
-  backend: { api: 20, bff: 10 },
+  backend: { api: synergosFacts.capabilities, bff: synergosFacts.orchestrators },
   copy: {
     title: { es: 'Synergos, mi proyecto insignia', en: 'Synergos, my flagship project' },
     description: {
