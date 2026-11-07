@@ -20,6 +20,7 @@ import type { CaseEvidenceLabels } from './labels'
 import { LiveDiagram } from './LiveDiagram'
 import { PortfolioIcon, type PortfolioIconName } from './PortfolioIcon'
 import { ProjectEmbed, type EmbedLabels } from './ProjectEmbed'
+import type { CaseRelatedLink } from './related'
 import {
   caseAdrCards,
   caseDiagram,
@@ -59,7 +60,10 @@ export type CaseStudyExtras = {
   portfolioHref: string
   evidence?: CaseEvidenceLabels
   showcase?: string
+  related?: CaseRelatedLink[]
 }
+
+const RELATED_ICONS: Record<CaseRelatedLink['kind'], PortfolioIconName> = { post: 'pen', services: 'spark' }
 
 export type CaseStudyProps = { project: Project; lang: Locale; labels: CaseStudyLabels; extras?: CaseStudyExtras }
 
@@ -79,6 +83,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
   const sections = caseStorySections(project, lang, labels, cards.length > 0)
   const links = caseStudyLinks(project, labels)
   const repos = caseStudyRepos(project)
+  const related = extras?.related ?? []
   const story = (
     <GlassSurface variant="standard" className={styles.body}>
       {sections.map((section) => (
@@ -108,7 +113,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           </ul>
         </section>
       ) : null}
-      {links.length > 0 || repos.length > 0 ? (
+      {links.length > 0 || repos.length > 0 || related.length > 0 ? (
         <nav className={styles.links} aria-label={labels.links}>
           {links.map((link) => (
             <a
@@ -143,6 +148,27 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
                     <Icon name="external" size={18} />
                     <span className="cw-visually-hidden">{labels.newTab}</span>
                   </a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {related.length > 0 ? (
+            <ul className={styles.repos} data-cw-case-related="">
+              {related.map((item) => (
+                <li key={`${item.kind}-${item.id}`}>
+                  <Link
+                    href={item.href}
+                    className={buttonClassName({ variant: 'glass', size: 'lg', className: styles.repo })}
+                    data-cw-case-related-link={item.kind}
+                  >
+                    <PortfolioIcon name={RELATED_ICONS[item.kind]} className={styles.repoIcon} />
+                    <span className={styles.repoText}>
+                      <span className={styles.repoHost}>{item.host}</span>
+                      <span className={styles.repoName} lang={item.lang}>
+                        {item.name}
+                      </span>
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>

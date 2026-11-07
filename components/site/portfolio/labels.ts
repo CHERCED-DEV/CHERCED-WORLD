@@ -46,13 +46,17 @@ export const CASE_KEYS = {
   prev: 'case.prev',
   next: 'case.next',
   all: 'case.all',
+  relatedPost: 'case.related.post',
+  relatedServices: 'case.related.services',
 } as const
 
 function pickAll<K extends string>(dict: Dictionary, keys: Record<K, string>): Record<K, string> {
   return Object.fromEntries(Object.entries<string>(keys).map(([name, key]) => [name, t(dict, key)])) as Record<K, string>
 }
 
-export function caseStudyExtraLabels(dict: Dictionary): CaseStudyExtraLabels {
+export type CasePageLabels = CaseStudyExtraLabels & Record<'relatedPost' | 'relatedServices', string>
+
+export function caseStudyExtraLabels(dict: Dictionary): CasePageLabels {
   return {
     ...pickAll(dict, CASE_KEYS),
     layers: Object.fromEntries(STACK_LAYERS.map((layer) => [layer, t(dict, `case.layer.${layer}`)])) as Record<StackLayer, string>,

@@ -17,7 +17,7 @@ import { shareCopyLabels } from './labels'
 import type { PreparedPost } from './mdx/prepare'
 import { AuthorBox } from './post/AuthorBox'
 import { usesGeneratedCover, type GeneratedCoverComponent } from './post/cover'
-import { RelatedPosts, type RelatedPost } from './post/RelatedPosts'
+import { RelatedPosts, type RelatedCaseCard, type RelatedPost } from './post/RelatedPosts'
 import type { SeriesNavData } from './post/series'
 import { SeriesNav } from './post/SeriesNav'
 import { withNode } from './post/template'
@@ -40,6 +40,7 @@ export type PostViewProps = {
   blog: Dictionary
   neighbors?: Adjacent<ListedPost>
   related?: readonly RelatedPost[]
+  relatedCases?: readonly RelatedCaseCard[]
   series?: SeriesNavData | null
   linkTags?: boolean
   generatedCover?: GeneratedCoverComponent
@@ -93,7 +94,7 @@ export function UpdatedDate({ updated, lang, blog }: { updated: string; lang: Lo
   )
 }
 
-export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors, related = [], series, linkTags = false, generatedCover }: PostViewProps) {
+export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors, related = [], relatedCases = [], series, linkTags = false, generatedCover }: PostViewProps) {
   const contentLang = fallback ? meta.lang : undefined
   const withToc = shouldShowToc(prepared.headings)
   const original = translatedFrom(meta, fallback)
@@ -168,7 +169,7 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors,
       <Hairline glint className={styles.rule} />
       <AuthorBox lang={lang} blog={blog} />
       <Share url={url} title={meta.title} blog={blog} />
-      <RelatedPosts posts={related} lang={lang} blog={blog} />
+      <RelatedPosts posts={related} cases={relatedCases} lang={lang} blog={blog} />
       {neighbors ? <PostNav neighbors={neighbors} lang={lang} blog={blog} /> : null}
     </article>
   )

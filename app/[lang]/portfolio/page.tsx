@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({
     lang,
     path: '/portfolio',
-    title: t(site, 'meta.portfolio.title'),
+    title: t(site, 'meta.portfolio.searchTitle'),
     description: t(site, 'meta.portfolio.description'),
     common,
     ogImageFile: true,

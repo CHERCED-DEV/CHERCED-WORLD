@@ -8,8 +8,20 @@ export const RELATED_TITLE_ID = 'cw-related-title'
 
 export type RelatedPost = { id: string; lang: Locale; title: string; description: string; date: string }
 
-export function RelatedPosts({ posts, lang, blog }: { posts: readonly RelatedPost[]; lang: Locale; blog: Dictionary }) {
-  if (posts.length === 0) return null
+export type RelatedCaseCard = { id: string; title: string; summary: string; href: string }
+
+export function RelatedPosts({
+  posts,
+  cases = [],
+  lang,
+  blog,
+}: {
+  posts: readonly RelatedPost[]
+  cases?: readonly RelatedCaseCard[]
+  lang: Locale
+  blog: Dictionary
+}) {
+  if (posts.length === 0 && cases.length === 0) return null
 
   return (
     <section className={styles.related} aria-labelledby={RELATED_TITLE_ID} data-cw-related="">
@@ -35,6 +47,15 @@ export function RelatedPosts({ posts, lang, blog }: { posts: readonly RelatedPos
             </li>
           )
         })}
+        {cases.map((item) => (
+          <li key={`case-${item.id}`}>
+            <Link href={item.href} className={styles.card} data-cw-related-case={item.id} data-cw-glass="subtle" data-cw-light="">
+              <span className={styles.date}>{t(blog, 'related.case')}</span>
+              <span className={styles.postTitle}>{item.title}</span>
+              <span className={styles.description}>{item.summary}</span>
+            </Link>
+          </li>
+        ))}
       </ul>
     </section>
   )

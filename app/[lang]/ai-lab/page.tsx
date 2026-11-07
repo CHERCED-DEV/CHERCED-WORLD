@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({
     lang,
     path: '/ai-lab',
-    title: t(common, 'nav.aiLab'),
+    title: t(ailab, 'ailab.meta.title'),
     description: t(ailab, 'ailab.meta.description'),
     common,
     ogImageFile: true,
