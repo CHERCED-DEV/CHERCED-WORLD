@@ -129,6 +129,27 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
               <span className="cw-visually-hidden">{labels.newTab}</span>
             </a>
           ))}
+          {related.length > 0 ? (
+            <ul className={styles.repos} data-cw-case-related="">
+              {related.map((item) => (
+                <li key={`${item.kind}-${item.id}`}>
+                  <Link
+                    href={item.href}
+                    className={buttonClassName({ variant: 'glass', size: 'lg', className: styles.repo })}
+                    data-cw-case-related-link={item.kind}
+                  >
+                    <PortfolioIcon name={RELATED_ICONS[item.kind]} className={styles.repoIcon} />
+                    <span className={styles.repoText}>
+                      <span className={styles.repoHost}>{item.host}</span>
+                      <span className={styles.repoName} lang={item.lang}>
+                        {item.name}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           {repos.length > 0 ? (
             <ul className={styles.repos} data-cw-case-repos="">
               {repos.map((repo) => (
@@ -148,27 +169,6 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
                     <Icon name="external" size={18} />
                     <span className="cw-visually-hidden">{labels.newTab}</span>
                   </a>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          {related.length > 0 ? (
-            <ul className={styles.repos} data-cw-case-related="">
-              {related.map((item) => (
-                <li key={`${item.kind}-${item.id}`}>
-                  <Link
-                    href={item.href}
-                    className={buttonClassName({ variant: 'glass', size: 'lg', className: styles.repo })}
-                    data-cw-case-related-link={item.kind}
-                  >
-                    <PortfolioIcon name={RELATED_ICONS[item.kind]} className={styles.repoIcon} />
-                    <span className={styles.repoText}>
-                      <span className={styles.repoHost}>{item.host}</span>
-                      <span className={styles.repoName} lang={item.lang}>
-                        {item.name}
-                      </span>
-                    </span>
-                  </Link>
                 </li>
               ))}
             </ul>

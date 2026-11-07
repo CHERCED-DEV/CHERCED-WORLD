@@ -173,7 +173,7 @@ test.describe('JSON-LD Person (FR-470, SC-408)', () => {
       expect(person.name).toBe('Camilo Hernández')
       expect(person.jobTitle).toBe('Software Solutions Engineer')
       expect(person.description).toBe(description)
-      expect(person.sameAs).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV'])
+      expect(person.sameAs).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', 'https://platzi.com/p/Cherced/'])
       expect(person.address).toEqual({ '@type': 'PostalAddress', addressLocality: 'Armenia', addressCountry: 'CO' })
       expect(person.alumniOf).toEqual({ '@type': 'CollegeOrUniversity', name: 'Institución Universitaria EAM' })
       expect(String(person.image)).toMatch(/\/assets\/imgs\/about\/retrato-oscuro\.webp$/)
