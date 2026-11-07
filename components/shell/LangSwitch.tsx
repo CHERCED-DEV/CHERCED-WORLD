@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
@@ -14,17 +13,16 @@ export function LangSwitch({ lang, label, className }: { lang: Locale; label: st
   const target = otherLocale(lang)
 
   return (
-    <Link
+    <a
       href={switchLocalePath(pathname, target)}
       hrefLang={target}
       lang={target}
-      prefetch={false}
       className={cx(styles.pill, className)}
       data-cw-lang-switch=""
       onClick={() => rememberLocale(target)}
     >
       <Icon name="globe" size={18} />
       <span>{label}</span>
-    </Link>
+    </a>
   )
 }

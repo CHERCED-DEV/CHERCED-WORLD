@@ -165,7 +165,7 @@ function PaletteBody({
   }
 
   const preferences = () =>
-    browserPreferences({ lang, pathname: () => pathname ?? `/${lang}`, navigate: (href) => router.push(href) })
+    browserPreferences({ lang, pathname: () => pathname ?? `/${lang}`, navigate: (href) => window.location.assign(href) })
 
   const run = (item: PaletteItem | undefined) => {
     if (!item) return

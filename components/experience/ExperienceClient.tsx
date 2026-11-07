@@ -142,7 +142,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, cvPdfs, areas
             preferences: browserPreferences({
               lang,
               pathname: () => pathRef.current ?? `/${lang}`,
-              navigate: (href) => router.push(href),
+              navigate: (href) => window.location.assign(href),
             }),
           }),
         )
@@ -167,7 +167,7 @@ export function ExperienceClient({ lang, labels, pages, email, cv, cvPdfs, areas
     let alive = true
     let unregister: (() => void) | null = null
     const preferences = () =>
-      browserPreferences({ lang, pathname: () => pathRef.current ?? `/${lang}`, navigate: (href) => router.push(href) })
+      browserPreferences({ lang, pathname: () => pathRef.current ?? `/${lang}`, navigate: (href) => window.location.assign(href) })
     const cancel = whenIdle(() => {
       loadPaletteModel().then(
         (model) => {
