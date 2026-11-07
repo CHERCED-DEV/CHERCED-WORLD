@@ -25,6 +25,10 @@ no se escribe: se agrega primero la evidencia, con fuente y fecha.
 - [ ] T0903 [Todas] Boceto de la subpágina en `specs/009-synergos-showcase/bocetos/arquitectura.html`, con el orden de
   las secciones y los tres diagramas (recorrido CMS → elemento, cadena C# → TS y coordinación de islas), en escritorio
   y en 375 px. El autor lo aprueba antes de escribir código.
+  - Boceto preparado el 2026-11-07: tres diagramas adaptables, Montserrat del proyecto, paleta y superficies de cristal
+    conservadas. Revisado a 1440 y 375 px, sin desborde ni anclas rotas. El atlas muestra seis entradas de ejemplo,
+    tomadas de las evidencias, para revisar la estructura; no implica aprobar la selección completa de T0902.
+    Pendiente del visto bueno del autor; no se ha implementado la ruta pública.
 
 **Checkpoint**: decisiones y boceto aprobados.
 
