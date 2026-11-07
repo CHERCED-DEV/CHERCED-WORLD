@@ -245,14 +245,14 @@ export const synergosShowcase = {
   testsCounted: 6675,
   backend: { api: 20, bff: 10 },
   copy: {
-    title: { es: 'Synergos, mi master product', en: 'Synergos, my master product' },
+    title: { es: 'Synergos, mi proyecto insignia', en: 'Synergos, my flagship project' },
     description: {
-      es: 'Mi master product: una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero, construida con agentes de IA en paralelo.',
-      en: 'My master product: a composition platform where the eighth business vertical costs less than the first, built by AI agents working in parallel.',
+      es: 'Mi proyecto insignia: una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero, construida con agentes de IA en paralelo.',
+      en: 'My flagship project: a composition platform where the eighth business vertical costs less than the first, built by AI agents working in parallel.',
     },
-    cta: { es: 'Ver mi master product', en: 'See my master product' },
+    cta: { es: 'Conoce Synergos', en: 'Explore Synergos' },
     hero: {
-      eyebrow: { es: 'Mi master product', en: 'My master product' },
+      eyebrow: { es: 'Mi proyecto insignia', en: 'My flagship project' },
       catalog: { es: 'Ver el catálogo en vivo', en: 'See the live catalog' },
       caseStudy: { es: 'Leer el caso de estudio', en: 'Read the case study' },
       links: { es: 'Enlaces de Synergos', en: 'Synergos links' },
@@ -265,8 +265,8 @@ export const synergosShowcase = {
         en: 'One core for every business. The interface is composed in three layers, and what crosses the boundary is DOM, not a framework.',
       },
       backend: {
-        es: 'Detrás de la composición, un backend .NET con {api} servicios Api y {bff} servicios Bff.',
-        en: 'Behind the composition, a .NET backend with {api} Api services and {bff} Bff services.',
+        es: 'Detrás de la composición, un backend .NET con {api} servicios de API y {bff} servicios BFF.',
+        en: 'Behind the composition, a .NET backend with {api} API services and {bff} BFF services.',
       },
     },
     verticals: {
@@ -289,8 +289,8 @@ export const synergosShowcase = {
         en: '{count} lines converge on the director, then on the release',
       },
       summary: {
-        es: 'Activas: {active}. Cerradas: {closed}. En pausa: {paused}.',
-        en: 'Active: {active}. Closed: {closed}. Paused: {paused}.',
+        es: 'Activas: {active}. En pausa: {paused}.',
+        en: 'Active: {active}. Paused: {paused}.',
       },
       list: { es: 'Ver las {count} líneas como lista', en: 'See the {count} lines as a list' },
       legend: { es: 'Leyenda', en: 'Legend' },
@@ -300,7 +300,6 @@ export const synergosShowcase = {
     },
     states: {
       active: { es: 'activa', en: 'active' },
-      closed: { es: 'cerrada', en: 'closed' },
       paused: { es: 'en pausa', en: 'paused' },
     },
     mvp: {

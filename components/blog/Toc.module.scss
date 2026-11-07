@@ -33,6 +33,10 @@
   gap: var(--cw-space-3);
   min-height: 32px;
   padding: 6px var(--cw-space-3);
+
+  @media (pointer: coarse), (max-width: 767.98px) {
+    min-height: 44px;
+  }
   border-inline-start: 2px solid transparent;
   border-radius: 0 var(--cw-radius-sm) var(--cw-radius-sm) 0;
   color: var(--cw-fg-muted);

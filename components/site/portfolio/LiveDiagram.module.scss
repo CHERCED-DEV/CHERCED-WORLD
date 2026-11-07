@@ -262,6 +262,10 @@ $step: 240ms;
       &[data-cw-diagram-line=''] {
         border-left-color: var(--cw-glass-border);
         background: transparent;
+
+        @include bp.down(md) {
+          display: none;
+        }
       }
     }
   }

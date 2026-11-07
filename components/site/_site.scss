@@ -29,8 +29,8 @@
   max-width: 72ch;
   font-size: var(--cw-text-md);
   line-height: 1.7;
-  text-align: justify;
-  hyphens: auto;
+  text-align: left;
+  hyphens: manual;
 }
 
 @mixin label-caps($spacing: 0.18538em) {

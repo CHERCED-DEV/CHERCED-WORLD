@@ -59,7 +59,7 @@ test.describe('escritorio sin cambios (SC-601, FR-651)', () => {
       expect(state.headerFilter).toBe('blur(14px) saturate(1.4)')
       expect(['none', 'normal']).toContain(state.headerBefore)
       expect(state.bodyPadding).toBe('0px')
-      expect(['auto', '0px']).toContain(state.scrollPadding)
+      expect(['auto', '0px', '100px'], 'sin el espacio del dock; con JS, solo el del botón del asistente (E3 de la 010)').toContain(state.scrollPadding)
       expect(state.headerBackground).toMatch(/^rgba\(\d+, \d+, \d+, 0\.\d+\)$/)
       expect(state.blur).toBe('14px')
       expect(state.headerHeight).toBe(65)

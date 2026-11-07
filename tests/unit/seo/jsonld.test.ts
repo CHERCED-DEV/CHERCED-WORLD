@@ -49,8 +49,13 @@ function assertValid(node: Node, type: string): void {
 }
 
 describe('Person con sameAs completo (FR-810)', () => {
-  it('enlaza LinkedIn, GitHub CHERCED-DEV y el perfil de Platzi, sin repetir', () => {
-    expect(personSameAs()).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', site.about.courses.platzi.href])
+  it('enlaza LinkedIn, GitHub CHERCED-DEV, Instagram (P-806) y el perfil de Platzi, sin repetir', () => {
+    expect(personSameAs()).toEqual([
+      'https://www.linkedin.com/in/cherced/',
+      'https://github.com/CHERCED-DEV',
+      'https://www.instagram.com/cherced/',
+      site.about.courses.platzi.href,
+    ])
     expect(site.about.courses.platzi.href).toBe('https://platzi.com/p/Cherced/')
   })
 

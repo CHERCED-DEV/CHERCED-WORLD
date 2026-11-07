@@ -106,6 +106,12 @@
   }
 }
 
+.motivation {
+  margin-top: var(--cw-space-4);
+  color: var(--cw-fg-muted);
+  line-height: var(--cw-leading-snug);
+}
+
 .facts {
   display: grid;
   align-content: start;

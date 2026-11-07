@@ -89,7 +89,7 @@ async function cueAnimations(page: Page, part: 'link' | 'icon' = 'link') {
 
 async function contentBoxes(page: Page) {
   return page.evaluate(() =>
-    ['h1', '[data-cw-home-subtitle]', '[data-cw-cv-link]', '[data-cw-availability]'].map((selector) => {
+    ['h1', '[data-cw-home-subtitle]', '[data-cw-cv-download]', '[data-cw-availability]'].map((selector) => {
       const element = document.querySelector(`[data-cw-home-banner] ${selector}`) as HTMLElement
       return { top: element.offsetTop, height: element.offsetHeight }
     }),

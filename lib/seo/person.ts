@@ -65,7 +65,7 @@ export function personId(base: URL = getSiteUrl()): string {
 }
 
 export function personSameAs(content: typeof site = site): string[] {
-  const socials = (['linkedin', 'github'] as const).flatMap((id) => {
+  const socials = (['linkedin', 'github', 'instagram'] as const).flatMap((id) => {
     const href = content.socials.find((social) => social.id === id)?.href
     return href ? [href] : []
   })

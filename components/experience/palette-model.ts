@@ -106,12 +106,12 @@ const ACTION_KEYWORDS: Record<string, string> = {
   assistant: 'asistente assistant pregunta ask chat ia ai',
   'copy-email': 'correo email mail copiar copy contacto contact',
   capsule: 'capsula capsule 2023 tiempo time historia history',
-  'action:cv': 'cv hoja vida resume curriculum linkedin',
+  'action:cv': 'linkedin perfil profile red social network',
   'action:cv-pdf-es': 'cv pdf descargar download hoja vida resume espanol spanish',
   'action:cv-pdf-en': 'cv pdf descargar download hoja vida resume ingles english',
   'action:shortcuts': 'atajos shortcuts teclado keyboard teclas keys',
   'action:now': 'ahora now hoy today',
-  'action:synergos': 'synergos master product showcase vitrina producto product',
+  'action:synergos': 'synergos proyecto insignia flagship project showcase vitrina',
   'action:ai-lab': 'ai lab laboratorio laboratory ia experimentos experiments demos',
 }
 

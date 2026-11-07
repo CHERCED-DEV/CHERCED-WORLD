@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 
 const EMAIL = 'chernandezcediel@gmail.com'
-const EGG = "Officially Uncle Bob's nephew · SOLID runs in the family."
+const EGG = { es: 'Sobrino oficial del tío Bob · SOLID viene de familia.', en: "Officially Uncle Bob's nephew · SOLID runs in the family." } as const
 
 function onlyIn(...projects: string[]) {
   test.beforeEach(({}, testInfo) => {
@@ -22,12 +22,12 @@ async function personJsonLd(page: Page): Promise<Record<string, unknown>> {
 
 test.describe('footer: easter egg y enlace a /now (FR-462, FR-490)', () => {
   for (const lang of ['es', 'en'] as const) {
-    test(`${lang}: la frase va en inglés, discreta y sin enlace`, async ({ page }) => {
+    test(`${lang}: la frase va en el idioma de la página (C7), discreta y sin enlace`, async ({ page }) => {
       await skipIntro(page)
       await page.goto(`/${lang}/aboutMe`)
       const egg = page.locator('footer#footer [data-cw-footer-egg]')
-      await expect(egg).toHaveText(EGG)
-      await expect(egg).toHaveAttribute('lang', 'en')
+      await expect(egg).toHaveText(EGG[lang])
+      await expect(egg).not.toHaveAttribute('lang', /.*/)
       await expect(egg.locator('a')).toHaveCount(0)
       await egg.scrollIntoViewIfNeeded()
       await expect(egg).toBeVisible()
@@ -146,7 +146,7 @@ test.describe('sin JavaScript', () => {
     await expect(mailto).toHaveAttribute('href', `mailto:${EMAIL}`)
     await expect(mailto).toHaveAccessibleName('Escribirme un correo')
     await expect(footer.locator('[data-cw-email-trigger]')).toBeHidden()
-    await expect(footer.locator('[data-cw-footer-egg]')).toHaveText(EGG)
+    await expect(footer.locator('[data-cw-footer-egg]')).toHaveText(EGG.es)
     await expect(footer.locator('[data-cw-footer-now]')).toHaveAttribute('href', '/es/now')
   })
 
@@ -173,7 +173,7 @@ test.describe('JSON-LD Person (FR-470, SC-408)', () => {
       expect(person.name).toBe('Camilo Hernández')
       expect(person.jobTitle).toBe('Software Solutions Engineer')
       expect(person.description).toBe(description)
-      expect(person.sameAs).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', 'https://platzi.com/p/Cherced/'])
+      expect(person.sameAs).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', 'https://www.instagram.com/cherced/', 'https://platzi.com/p/Cherced/'])
       expect(person.address).toEqual({ '@type': 'PostalAddress', addressLocality: 'Armenia', addressCountry: 'CO' })
       expect(person.alumniOf).toEqual({ '@type': 'CollegeOrUniversity', name: 'Institución Universitaria EAM' })
       expect(String(person.image)).toMatch(/\/assets\/imgs\/about\/retrato-oscuro\.webp$/)

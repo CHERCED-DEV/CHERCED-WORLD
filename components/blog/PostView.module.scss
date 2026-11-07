@@ -114,6 +114,10 @@ $toc: 280px;
   display: inline-flex;
   align-items: center;
   min-height: 28px;
+
+  @media (pointer: coarse), (max-width: 767.98px) {
+    min-height: 44px;
+  }
   padding: 2px var(--cw-space-3);
   border-radius: inherit;
   color: inherit;

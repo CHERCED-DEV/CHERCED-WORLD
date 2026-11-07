@@ -8,13 +8,16 @@ import { getAllTechnologies, getProjects } from '@/lib/content'
 const projects = getProjects()
 
 describe('filtro en riel', () => {
-  it('ordena las tecnologías por uso y luego por nombre, con su conteo real', () => {
+  it('E9: ordena las tecnologías por época (el primer caso que las usa, en su orden) y no por conteo, con su conteo real', () => {
     const usage = technologyUsage(projects, getAllTechnologies())
     expect(usage.map((item) => item.name).sort()).toEqual([...getAllTechnologies()].sort())
-    for (let i = 1; i < usage.length; i++) {
-      const [a, b] = [usage[i - 1]!, usage[i]!]
-      expect(a.count > b.count || (a.count === b.count && a.name.localeCompare(b.name, 'en') < 0), `${a.name} antes de ${b.name}`).toBe(true)
-    }
+    const first = [...projects].sort((a, b) => a.order - b.order)[0]!
+    expect(usage.slice(0, first.technologies.length).map((item) => item.name)).toEqual(first.technologies)
+    expect(usage.slice(0, 5).map((item) => item.name)).toEqual(['.NET 8', 'C#', 'ASP.NET CORE', 'UMBRACO 13', 'ANGULAR'])
+    const position = (name: string) => usage.findIndex((item) => item.name === name)
+    for (const old of ['REACT', 'CSS', 'FIGMA', 'HTML']) expect(position(old), old).toBeGreaterThan(position('ANGULAR'))
+    expect(usage.map((item) => item.name)).toContain('NEXT.JS')
+    expect(usage.map((item) => item.name)).not.toContain('NEXTJS')
     for (const item of usage) {
       expect(item.count, item.name).toBe(projects.filter((project) => project.technologies.includes(item.name)).length)
     }
@@ -94,7 +97,7 @@ describe('galería', () => {
     for (const project of projects) {
       const images = galleryImages(project, 'es')
       expect(images[0], project.id).toEqual({
-        src: project.image.src,
+        src: project.image.localizedSrc?.es ?? project.image.src,
         alt: project.image.alt.es,
         width: project.image.width,
         height: project.image.height,

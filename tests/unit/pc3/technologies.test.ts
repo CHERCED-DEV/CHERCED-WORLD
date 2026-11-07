@@ -142,7 +142,7 @@ describe('mapa cerebral y capacidades con el catálogo', () => {
 
 describe('el lóbulo "Idiomas y negocio" dice el nivel del inglés (FR-722)', () => {
   it('el inglés lleva su nivel y la barra conserva el valor', () => {
-    for (const [lang, level] of [['es', 'B1, B2 en uso profesional frecuente'], ['en', 'B1, B2 in regular professional use']] as const) {
+    for (const [lang, level] of [['es', 'B1 (B2 en uso profesional frecuente)'], ['en', 'B1 (B2 in regular professional use)']] as const) {
       const business = brainData(about, projects, lang, '').lobes.find((lobe) => lobe.id === 'business')!
       const english = business.skills.find((skill) => skill.id === 'en')!
       expect(english.levelLabel).toBe(level)
@@ -174,13 +174,14 @@ describe('el lóbulo "Idiomas y negocio" dice el nivel del inglés (FR-722)', ()
             platzi: { href: 'https://platzi.com/p/Cherced/', label: 'Platzi', newTab: '(pestaña nueva)' },
             terminal: { input: 'Comando', hint: 'help', output: 'Salida' },
             sheet: { close: 'Cerrar', prev: 'Anterior', next: 'Siguiente' },
+            sourceGroups: { applied: 'Aplicado en', learned: 'Aprendido en', all: 'Ver todas', fewer: 'Ver menos' },
           },
         },
       }),
     )
     const row = html.match(/data-cw-brain-skill="en"(?:(?!<\/li>).)*/s)?.[0] ?? ''
     expect(row).toContain('INGLÉS')
-    expect(row).toContain('B1, B2 en uso profesional frecuente')
+    expect(row).toContain('B1 (B2 en uso profesional frecuente)')
     expect(row).not.toContain('65 %')
   })
 })

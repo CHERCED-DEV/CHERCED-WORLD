@@ -91,7 +91,7 @@ test.describe('carrusel sin tarjetas vacías (D-02, FR-207)', () => {
 test.describe('filtro por tecnología en riel', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
-  test('ordena por uso, muestra conteos reales y deja "Todos" fijo', async ({ page }) => {
+  test('ordena por época (E9 de la 010), muestra conteos reales y deja "Todos" fijo', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/es/portfolio')
     const chips = page.locator('[data-cw-filter]:not([data-cw-filter=""])')
@@ -102,7 +102,9 @@ test.describe('filtro por tecnología en riel', () => {
     for (const [tech, count] of counts) {
       expect(count, tech).toBe(projects.filter((project) => project.technologies.includes(tech)).length)
     }
-    for (let i = 1; i < counts.length; i++) expect(counts[i - 1]![1]).toBeGreaterThanOrEqual(counts[i]![1])
+    const first = [...projects].sort((a, b) => a.order - b.order)[0]!
+    expect(counts.slice(0, first.technologies.length).map(([tech]) => tech), 'arranca por las tecnologías del caso más reciente').toEqual(first.technologies)
+    expect(counts.map(([tech]) => tech)).not.toContain('NEXTJS')
     const all = page.locator('[data-cw-filter=""]')
     await expect(all).toHaveAccessibleName('Todos')
     await expect(all).toHaveAttribute('aria-pressed', 'true')

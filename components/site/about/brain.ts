@@ -177,6 +177,10 @@ export function brainData(about: SiteContent['about'], projects: readonly Projec
     const principles =
       lobe.id === PRINCIPLES_LOBE ? (about.principles ?? []).map((principle) => principle.short[lang].trim()).filter((text) => text.length > 0) : []
     const sources = lobe.sources.filter((source) => source in SOURCE_REFS)
+    const technologies = lobe.skills.flatMap((id) => {
+      const tech = about.skills.tech.find((item) => item.id === id)
+      return tech ? [{ id, name: tech.name }] : []
+    })
     return {
       id: lobe.id,
       name: lobe.name[lang],
@@ -184,7 +188,7 @@ export function brainData(about: SiteContent['about'], projects: readonly Projec
       sources,
       applied: sources.filter(isAppliedSource),
       learned: sources.filter((source) => !isAppliedSource(source)),
-      projects: lobe.projects ? projectsById(lobe.projects, projects, lang) : projectsForSkills(skills, projects, lang),
+      projects: lobe.projects ? projectsById(lobe.projects, projects, lang) : projectsForSkills(technologies, projects, lang),
       ...(learning ? { learning } : {}),
       ...(words ? { words } : {}),
       ...(principles.length > 0 ? { principles } : {}),
@@ -276,13 +280,13 @@ export const COMPACT_CORE: Point = { x: 200, y: 200 }
 
 export const COMPACT_CORE_RADIUS = 48
 
-export const COMPACT_LOBE_RADIUS = 44
+export const COMPACT_LOBE_RADIUS = 48
 
 export const COMPACT_ORBIT = 132
 
 const COMPACT_RINGS = [
-  { radius: 51, capacity: 9 },
-  { radius: 60, capacity: 10 },
+  { radius: 55, capacity: 9 },
+  { radius: 64, capacity: 10 },
 ]
 
 const COMPACT_SPREAD = (120 * Math.PI) / 180

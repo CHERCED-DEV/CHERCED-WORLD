@@ -14,6 +14,7 @@ import { LiveDiagram, type LiveDiagramLabels } from '../portfolio/LiveDiagram'
 import { PortfolioIcon } from '../portfolio/PortfolioIcon'
 import { caseDiagram, caseStudyRepos } from '../portfolio/projects'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import { AssemblyLine } from './AssemblyLine'
 import {
   countedText,
@@ -21,6 +22,7 @@ import {
   LINE_STATES,
   lineLabel,
   lineSummary,
+  stateLabel,
   MILESTONE_STATES,
   rainDrops,
   showcaseFigures,
@@ -134,7 +136,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
         </div>
         {diagram.length > 0 ? <LiveDiagram layers={diagram} labels={labels.diagram} /> : null}
         <p className={styles.note} data-cw-synergos-backend="">
-          {fillTemplate(copy.what.backend[lang], synergosShowcase.backend)}
+          {typeset(fillTemplate(copy.what.backend[lang], synergosShowcase.backend), lang)}
         </p>
       </section>
 
@@ -157,9 +159,11 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
             >
               <div className={styles.verticalHead}>
                 <h3 className={styles.verticalName}>{line.name[lang]}</h3>
-                <span className={styles.state} data-state={line.state}>
-                  {copy.states[line.state][lang]}
-                </span>
+                {stateLabel(line.state, lang) ? (
+                  <span className={styles.state} data-state={line.state}>
+                    {stateLabel(line.state, lang)}
+                  </span>
+                ) : null}
               </div>
               <p className={styles.verticalText}>{line.does[lang]}</p>
               <p className={styles.tasks}>
@@ -209,9 +213,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
                 <li key={line.id} data-cw-line-item={line.id} data-state={line.state}>
                   <strong>{lineLabel(line, lang)}</strong>
                   {' · '}
-                  {copy.states[line.state][lang]}
-                  {' · '}
-                  {tasksText(line, lang)}
+                  {[stateLabel(line.state, lang), tasksText(line, lang)].filter(Boolean).join(' · ')}
                   <span className={styles.altText}>{line.does[lang]}</span>
                 </li>
               ))}

@@ -10,13 +10,12 @@ import { getProjects, projectTitle } from '@/lib/content'
 
 const { about } = site
 const projects = getProjects()
-const NOV_2026 = new Date(Date.UTC(2026, 10, 5))
 const lobes = about.skills.lobes ?? []
 const es = brainData(about, projects, 'es', 'Actualidad')
 const en = brainData(about, projects, 'en', 'Present')
 
 const LABELS: FigureLabels = {
-  years: { label: 'años construyendo para la web', note: 'desde 2019' },
+  years: { label: 'años construyendo para la web' },
   pieces: { label: 'piezas desplegables en Synergos' },
   adrs: { label: 'decisiones de arquitectura escritas', note: 'ADRs' },
   tests: { label: 'tests automatizados' },
@@ -24,18 +23,18 @@ const LABELS: FigureLabels = {
 
 describe('"En cifras" (T431, FR-436)', () => {
   it('trae años, piezas, ADRs y tests, en ese orden, y ninguna de las cifras que salen', () => {
-    const figures = aboutFigures(about, NOV_2026)
+    const figures = aboutFigures(about)
     expect(figures.map((figure) => figure.id)).toEqual(['years', 'pieces', 'adrs', 'tests'])
-    expect(figures.map((figure) => figure.value)).toEqual([7, synergosFacts.pieces, synergosFacts.adrsAtLeast, synergosFacts.testsAtLeast])
-    expect(figures.map((figure) => figure.plus)).toEqual([true, false, true, true])
+    expect(figures.map((figure) => figure.value)).toEqual([6, synergosFacts.pieces, synergosFacts.adrsAtLeast, synergosFacts.testsAtLeast])
+    expect(figures.map((figure) => figure.plus)).toEqual([false, false, true, true])
   })
 
-  it('los años siguen calculados: el año que viene suman uno sin tocar el contenido', () => {
-    expect(aboutFigures(about, new Date(Date.UTC(2027, 10, 5)))[0]).toEqual({ id: 'years', value: 8, plus: true, since: 2019 })
+  it('C3: los años son los del CV, fijos, sin "+" ni "desde"', () => {
+    expect(aboutFigures(about)[0]).toEqual({ id: 'years', value: 6, plus: false })
   })
 
   it('formatea según el idioma: 6.600+ en ES y 6,600+ en EN', () => {
-    const tests = aboutFigures(about, NOV_2026).find((figure) => figure.id === 'tests')!
+    const tests = aboutFigures(about).find((figure) => figure.id === 'tests')!
     expect(figureText(tests, 'es')).toBe('6.600+')
     expect(figureText(tests, 'en')).toBe('6,600+')
     expect(figureText({ value: synergosFacts.pieces, plus: false }, 'es')).toBe(String(synergosFacts.pieces))
@@ -46,7 +45,7 @@ describe('"En cifras" (T431, FR-436)', () => {
     ['es', '6.600', '6.600+'],
     ['en', '6,600', '6,600+'],
   ] as const)('%s: el servidor pinta el valor final formateado y el texto completo para lectores', (lang, digits, text) => {
-    const html = renderToStaticMarkup(createElement(AboutFigures, { lang, title: 'En cifras', figures: aboutFigures(about, NOV_2026), labels: LABELS }))
+    const html = renderToStaticMarkup(createElement(AboutFigures, { lang, title: 'En cifras', figures: aboutFigures(about), labels: LABELS }))
     expect(html).toContain(`data-cw-figure-value="${synergosFacts.testsAtLeast}">${digits}</span>`)
     expect(html).toContain(`<span class="cw-visually-hidden">${text}</span>`)
     for (const id of ['years', 'pieces', 'adrs', 'tests']) expect(html).toContain(`data-cw-figure="${id}"`)

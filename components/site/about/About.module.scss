@@ -5,7 +5,7 @@
 
 .page {
   --cw-scene-nav-h: 44px;
-  --cw-scene-clear: calc(var(--cw-scene-nav-h) + var(--cw-space-5));
+  --cw-scene-clear: var(--cw-space-3);
   @include layout.container;
   display: flex;
   flex-direction: column;
@@ -64,6 +64,10 @@
   }
 }
 
+:global(:root):has(.sceneNav) {
+  scroll-padding-top: calc(var(--cw-header-h) + var(--cw-space-2) + 44px + 12px);
+}
+
 .sceneNav {
   position: sticky;
   top: calc(var(--cw-header-h) + var(--cw-space-2));
@@ -97,9 +101,14 @@
   padding: var(--cw-space-1) var(--cw-space-3);
   border-radius: 999px;
   color: var(--cw-fg-muted);
-  font-size: 0.6875rem;
+  font-size: var(--cw-text-xs);
   text-decoration: none;
   white-space: nowrap;
+
+  @media (max-width: 359.98px) {
+    padding-inline: var(--cw-space-2);
+    font-size: 0.6875rem;
+  }
   transition:
     color var(--cw-duration-base) var(--cw-ease),
     background-color var(--cw-duration-base) var(--cw-ease),
@@ -148,6 +157,17 @@
     flex-direction: column;
     translate: 0 -50%;
     pointer-events: none;
+    transition:
+      opacity var(--cw-duration-base) var(--cw-ease),
+      visibility 0s linear;
+  }
+
+  :global(:root[data-js]) .sceneDots[data-cw-over-footer] {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--cw-duration-base) var(--cw-ease),
+      visibility 0s linear var(--cw-duration-base);
   }
 }
 
@@ -376,8 +396,8 @@
 
 .figureDigits {
   display: inline-block;
-  min-width: calc(var(--cw-digits, 1) * 1ch);
-  text-align: end;
+  min-width: calc(var(--cw-digits, 1) * 1ch + var(--cw-separators, 0) * 0.2em);
+  text-align: start;
 }
 
 .figurePlus {
@@ -593,7 +613,7 @@
 }
 
 .handStack {
-  --cw-hand-h: 236px;
+  --cw-hand-h: 12.5rem;
   --cw-hand-press: 1;
   position: relative;
   height: calc(var(--cw-hand-h) + 48px);

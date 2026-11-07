@@ -34,32 +34,50 @@ export function cvPdfFormat(pdf: Pick<CvPdf, 'bytes'>, lang: Locale): string {
 }
 
 export function CvDownload({ lang, variant = 'glass', size = 'md', className }: CvLinkProps) {
-  const [pdf] = cvPdfs(lang)
-  if (!pdf) return null
+  const [primary, alternate] = cvPdfs(lang)
+  if (!primary) return null
   return (
-    <a
-      href={pdf.href}
-      download={pdf.filename}
-      type="application/pdf"
-      hrefLang={pdf.lang}
-      aria-label={sharedText(lang, 'common', 'cv.downloadLabel', { size: formatBytes(pdf.bytes, lang) })}
-      className={buttonClassName({ variant, size, className })}
-      data-cw-cv-download=""
-      data-cw-cv-lang={pdf.lang}
-    >
-      <span>{sharedText(lang, 'common', 'cv.download')}</span>
-      <span className={styles.format}>{cvPdfFormat(pdf, lang)}</span>
-    </a>
+    <>
+      <a
+        href={primary.href}
+        download={primary.filename}
+        type="application/pdf"
+        hrefLang={primary.lang}
+        aria-label={sharedText(lang, 'common', 'cv.downloadLabel', { size: formatBytes(primary.bytes, lang) })}
+        className={buttonClassName({ variant, size, className })}
+        data-cw-cv-download=""
+        data-cw-cv-lang={primary.lang}
+      >
+        <span>{sharedText(lang, 'common', 'cv.download')}</span>
+        <span className={styles.format}>{cvPdfFormat(primary, lang)}</span>
+      </a>
+      {alternate ? (
+        <a
+          href={alternate.href}
+          download={alternate.filename}
+          type="application/pdf"
+          hrefLang={alternate.lang}
+          className={styles.alternate}
+          data-cw-cv-alternate=""
+          data-cw-cv-lang={alternate.lang}
+        >
+          <span lang={alternate.lang} className={styles.label}>
+            {sharedText(lang, 'common', 'cv.alternate')}
+          </span>
+          <span className={styles.format}>{cvPdfFormat(alternate, lang)}</span>
+        </a>
+      ) : null}
+    </>
   )
 }
 
-export type CvActionsProps = CvLinkProps & { downloadVariant?: 'solid' | 'glass' }
+export type CvActionsProps = CvLinkProps & { downloadVariant?: 'solid' | 'glass'; linkedin?: boolean }
 
-export function CvActions({ lang, variant, downloadVariant, size, className }: CvActionsProps) {
+export function CvActions({ lang, variant, downloadVariant, size, className, linkedin = false }: CvActionsProps) {
   return (
     <span className={cx('cw-cv-actions', className)} data-cw-cv-actions="">
       <CvDownload lang={lang} variant={downloadVariant ?? variant} size={size} />
-      <CvLink lang={lang} variant={variant} size={size} />
+      {linkedin ? <CvLink lang={lang} variant={variant} size={size} /> : null}
     </span>
   )
 }

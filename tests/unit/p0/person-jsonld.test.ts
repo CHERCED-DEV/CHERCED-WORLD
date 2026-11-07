@@ -22,7 +22,7 @@ describe('JSON-LD Person (FR-470, R-404, SC-408)', () => {
       description: meta('es'),
       url: 'https://cherced-world.vercel.app/',
       image: 'https://cherced-world.vercel.app/assets/imgs/about/retrato-oscuro.webp',
-      sameAs: ['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', 'https://platzi.com/p/Cherced/'],
+      sameAs: ['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', 'https://www.instagram.com/cherced/', 'https://platzi.com/p/Cherced/'],
       address: { '@type': 'PostalAddress', addressLocality: 'Armenia', addressCountry: 'CO' },
       alumniOf: { '@type': 'CollegeOrUniversity', name: 'Institución Universitaria EAM' },
       knowsAbout: ['Software architecture', 'Microservices', 'Micro-frontends', '.NET Core', 'Angular'],

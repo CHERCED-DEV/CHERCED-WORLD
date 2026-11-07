@@ -23,10 +23,10 @@ function tag(html: string, marker: string): string {
   return new RegExp(`<[a-z]+ [^>]*${marker}[^>]*>`).exec(html)?.[0] ?? ''
 }
 
-describe('CvLink (FR-420)', () => {
+describe('CvLink (FR-420, FR-1005): el enlace a LinkedIn se llama perfil, no CV', () => {
   it.each([
-    ['es', 'Ver mi CV en LinkedIn', 'Ver mi CV en LinkedIn (se abre en una pestaña nueva)'],
-    ['en', 'See my CV on LinkedIn', 'See my CV on LinkedIn (opens in a new tab)'],
+    ['es', 'Perfil de LinkedIn', 'Perfil de LinkedIn (se abre en una pestaña nueva)'],
+    ['en', 'LinkedIn profile', 'LinkedIn profile (opens in a new tab)'],
   ] as const)('%s: abre LinkedIn en pestaña nueva y lo anuncia', (lang, text, label) => {
     const html = renderToStaticMarkup(createElement(CvLink, { lang }))
     const anchor = tag(html, 'data-cw-cv-link')
@@ -82,10 +82,11 @@ describe('EmailMenu (FR-464)', () => {
 })
 
 describe('footer (A-407: FR-462, FR-464, FR-490)', () => {
-  it.each(['es', 'en'] as const)('%s: easter egg en inglés, menú de correo y enlace a /now', async (lang) => {
+  it.each(['es', 'en'] as const)('%s: easter egg en el idioma de la página (C7), menú de correo y enlace a /now', async (lang) => {
     const labels = shellLabels(await getDictionary(lang, 'common'))
     const html = withToasts(createElement(SiteFooter, { lang, socials: site.socials, labels }))
-    expect(html).toMatch(/<p class="[^"]*" lang="en" data-cw-footer-egg="">Officially Uncle Bob&#x27;s nephew · SOLID runs in the family\.<\/p>/)
+    const egg = lang === 'es' ? 'Sobrino oficial del tío Bob · SOLID viene de familia\\.' : 'Officially Uncle Bob&#x27;s nephew · SOLID runs in the family\\.'
+    expect(html).toMatch(new RegExp(`<p class="[^"]*" data-cw-footer-egg="">${egg}</p>`))
     expect(tag(html, 'data-cw-footer-now')).toContain(`href="/${lang}/now"`)
     expect(html).toContain(`>${lang === 'es' ? 'Ahora' : 'Now'}</a>`)
     expect(html).toContain('data-cw-email-menu=""')

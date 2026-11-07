@@ -7,6 +7,7 @@ import { CornerMarks, GlowOrb, Hairline } from '@/components/ui/graphics'
 import { Reveal } from '@/components/ui/Reveal'
 import { Sweep } from '@/components/ui/Sweep'
 import { localizedPath, type Locale } from '@/lib/i18n'
+import { typeset } from '../typeset'
 import styles from './Home.module.scss'
 import { splitAround, type NowRole } from './now'
 
@@ -63,7 +64,7 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
               {...glassMotionAttributes({ float: roleFloatLevel(index) })}
             >
               <h3 className={styles.company}>{role.company}</h3>
-              <p className={styles.roleName}>{role.role}</p>
+              <p className={styles.roleName}>{typeset(role.role, lang)}</p>
               <p className={styles.since}>
                 <span>
                   {sinceBefore}
@@ -71,7 +72,9 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   {sinceAfter}
                 </span>
               </p>
-              {role.project ? (
+              {labels.showcase && role.project?.id === SYNERGOS_CASE_ID ? (
+                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
+              ) : role.project ? (
                 <Link
                   href={localizedPath(lang, `/portfolio/${role.project.id}`)}
                   className={cx(styles.link, styles.roleLink)}
@@ -81,9 +84,6 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                   <span className={styles.linkText}>{labels.caseStudy}</span>
                   <Arrow />
                 </Link>
-              ) : null}
-              {labels.showcase && role.project?.id === SYNERGOS_CASE_ID ? (
-                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
               ) : null}
               <Sweep />
             </Reveal>

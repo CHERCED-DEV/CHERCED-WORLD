@@ -7,6 +7,8 @@ import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { tap } from '@/lib/fx/haptics'
 import type { ServiceId } from '@/content/types'
+import type { Locale } from '@/lib/i18n/config'
+import { typeset } from '../typeset'
 import { ServiceIcon } from './ServiceIcon'
 import styles from './Services.module.scss'
 
@@ -21,6 +23,7 @@ export type ServiceCardLabels = {
 
 export type ServiceCardProps = {
   id: ServiceId
+  lang: Locale
   number: string
   title: string
   forWho: string
@@ -41,6 +44,7 @@ function selectingText(): boolean {
 
 export function ServiceCard({
   id,
+  lang,
   number,
   title,
   forWho,
@@ -118,7 +122,7 @@ export function ServiceCard({
               <dt className={styles.faceLabel}>{labels.forWho}</dt>
               <dd>{forWho}</dd>
             </dl>
-            <p className={styles.cardText}>{description}</p>
+            <p className={styles.cardText}>{typeset(description, lang)}</p>
             {example ? <p className={styles.cardExample}>{example}</p> : null}
           </div>
           <div id={backId} className={styles.cardBack} data-cw-face="back">

@@ -80,7 +80,6 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
     await expect(palette(page).getByRole('group')).toHaveCount(1)
     expect(await optionIds(page, 20)).toEqual([
       'action:cv-pdf-es',
-      'action:cv-pdf-en',
       'action:cv',
       'action:copy-email',
       'action:theme',
@@ -91,10 +90,9 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
       'action:synergos',
     ])
     await expect(group.getByRole('option', { name: 'Descargar CV en español' })).toBeVisible()
-    await expect(group.getByRole('option', { name: 'Descargar CV en inglés' })).toBeVisible()
+    await expect(group.getByRole('option', { name: 'Descargar CV en inglés' }), 'T970: la paleta baja solo el PDF del idioma de la página').toHaveCount(0)
     await expect(group.locator('[data-cw-palette-option="action:cv-pdf-es"]')).toContainText('PDF · 175 kB')
-    await expect(group.locator('[data-cw-palette-option="action:cv-pdf-en"]')).toContainText('PDF · 173 kB')
-    await expect(group.getByRole('option', { name: 'Ver mi CV en LinkedIn' })).toBeVisible()
+    await expect(group.getByRole('option', { name: 'Ver mi perfil de LinkedIn' })).toBeVisible()
     await expect(group.getByRole('option', { name: /Ver los atajos de teclado/ })).toHaveAttribute('aria-keyshortcuts', '?')
   })
 
@@ -117,7 +115,7 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
     })
   }
 
-  test('">linkedin" y Enter abren el CV en LinkedIn en una pestaña nueva', async ({ page }) => {
+  test('">linkedin" y Enter abren el perfil de LinkedIn en una pestaña nueva', async ({ page }) => {
     await stubLinkedIn(page)
     await gotoReady(page, '/es')
     await openPalette(page)
@@ -192,7 +190,7 @@ test.describe('el asistente usa el contenido de la 004 (T491)', () => {
     const answers = dialog.locator('[data-cw-answer-kind]')
     await dialog.locator('[data-cw-assistant-input]').fill('¿Me pasas tu hoja de vida?')
     await dialog.getByRole('button', { name: 'Preguntar' }).click()
-    const cv = dialog.getByRole('link', { name: 'Ver mi CV en LinkedIn' })
+    const cv = dialog.getByRole('link', { name: 'Perfil de LinkedIn' })
     await expect(cv).toHaveAttribute('href', CV)
     await expect(cv).toHaveAttribute('target', '_blank')
     await expect(cv).toHaveAttribute('rel', 'noopener noreferrer')

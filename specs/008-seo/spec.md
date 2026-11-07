@@ -177,6 +177,20 @@ publica correo, teléfono ni dirección exacta.
 | P-806 | ¿Va también Instagram (`instagram.com/cherced`) en `sameAs`? | No: el pedido nombra LinkedIn, GitHub y Platzi. Agregarlo es una línea en `personSameAs` | — |
 | P-807 | P-704 de la 007 sigue abierta: el CV dice `github.com/Cherced` y el sitio, `github.com/CHERCED-DEV`. ¿Son las dos suyas? | `sameAs` usa `CHERCED-DEV`. Si las dos son suyas, conviene enlazar las dos | — |
 
+### Respuestas del autor (2026-11-07)
+
+- **P-801**: va a comprar el dominio, un .com o .net propio, en Vercel o donde salga más económico. Cuando lo tenga se
+  cambia `SITE_ORIGIN` (T804).
+- **P-802**: quiere salir primero "cuando busquen que necesitan un desarrollador". El primer puesto para "desarrollador"
+  a secas no se puede prometer (FR-860 lo explica). Se apunta a búsquedas de desarrollador con nicho y ubicación:
+  "desarrollador Angular", "desarrollador .NET", "desarrollador frontend Colombia", "desarrollador full stack Armenia",
+  "AI Engineer Colombia", además de las de su nombre. Se miden en la tabla de FR-860.
+- **P-803**: no tiene Search Console ni Analytics. La guía arranca de cero.
+- **P-806**: sí. Instagram entra en `sameAs` ("a ver si me sigue más gente"). Hecho en `personSameAs`.
+- **P-807**: las dos cuentas son suyas: `Cherced` es de cuando estudiaba y `CHERCED-DEV` de cuando ya trabajaba. El CV
+  nuevo lleva las dos; el sitio sigue enlazando `CHERCED-DEV`.
+- El resto del SEO queda a criterio del orquestador.
+
 ## Criterios de éxito
 
 - **SC-801**: el dominio solo aparece escrito en `lib/site-url.ts` (y en la cápsula 2023, que es historia). Lo

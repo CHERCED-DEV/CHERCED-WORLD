@@ -59,7 +59,7 @@ describe('resolver lo que se escribe (FR-461)', () => {
   it('cada comando responde en su idioma con el copy de contenido.md §15', () => {
     const es = (input: string) => resolveBrainCommand(input, tables.es, LOBES)
     const en = (input: string) => resolveBrainCommand(input, tables.en, LOBES)
-    expect(es('whoami')).toEqual({ kind: 'output', lines: [{ text: `arquitecto · padre adoptivo de ${synergosFacts.capabilities} capacidades · sobrino de Uncle Bob` }] })
+    expect(es('whoami')).toEqual({ kind: 'output', lines: [{ text: `arquitecto · padre adoptivo de ${synergosFacts.capabilities} capacidades · sobrino del tío Bob` }] })
     expect(en('whoami')).toEqual({ kind: 'output', lines: [{ text: `architect · foster parent of ${synergosFacts.capabilities} capabilities · Uncle Bob's nephew` }] })
     expect(es('git log --oneline -1')).toEqual({ kind: 'output', lines: [{ text: 'feat(arquitecto): decidió salir a producción desde el celular' }] })
     expect(en('git log --oneline -1')).toEqual({ kind: 'output', lines: [{ text: 'feat(architect): decided to ship to production from his phone' }] })

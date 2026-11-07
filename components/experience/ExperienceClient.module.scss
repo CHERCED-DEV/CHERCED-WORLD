@@ -45,6 +45,23 @@
   }
 }
 
+.fab[data-cw-compact]:not(:hover, :focus-visible) {
+  justify-content: center;
+  width: 52px;
+  padding: 0;
+
+  .label,
+  .status {
+    @include layout.visually-hidden;
+  }
+}
+
+@include bp.up(md) {
+  :global(:root[data-js]):has(.fab) {
+    scroll-padding-bottom: calc(52px + 2 * var(--cw-space-5));
+  }
+}
+
 .icon {
   flex: none;
 }
