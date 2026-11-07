@@ -54,7 +54,7 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 ## Bloque 4: espacios y superposiciones
 
 - [x] T1040 [E1] `text-align: left` en `site.prose`.
-- [ ] T1041 [E2] Verificación del dock con la e2e de botones tapados.
+- [x] T1041 [E2] Verificación del dock con la e2e de botones tapados.
 - [x] T1042 [E3] Botón del asistente reducido a ícono al bajar y `scroll-padding-bottom` en escritorio.
 - [x] T1043 [E4] `scroll-padding-top` con la barra de escenas en Sobre mí.
 - [x] T1044 [E5] Puntos de escena ocultos con el footer en pantalla (`SceneNav.tsx`).
@@ -80,10 +80,12 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 
 ## Pruebas y cierre
 
-- [ ] T1060 `tests/e2e/ux/justificado.spec.ts`: cero texto justificado en cada página, ES y EN, escritorio y celular.
-- [ ] T1061 `tests/e2e/ux/texto-minimo.spec.ts`: cero texto visible de menos de 12 px a 375 px.
-- [ ] T1062 `tests/e2e/ux/botones-tapados.spec.ts`: ningún botón primario tapado por el dock ni por el botón del
+- [x] T1060 `tests/e2e/ux/justificado.spec.ts`: cero texto justificado en cada página, ES y EN, escritorio y celular.
+- [x] T1061 `tests/e2e/ux/texto-minimo.spec.ts`: cero texto visible de menos de 12 px a 375 px.
+- [x] T1062 `tests/e2e/ux/botones-tapados.spec.ts`: ningún botón primario tapado por el dock ni por el botón del
   asistente a 375 px (y por el asistente a 768 y 1440 px).
-- [ ] T1063 Capturas de cada página a 375, 768 y 1440 px en tema claro y oscuro (handoff privado,
+- [x] T1063 Capturas de cada página a 375, 768 y 1440 px en tema claro y oscuro (handoff privado,
   `capturas-barrido-ux/`).
+- [x] T1065 `tests/e2e/ux/toque.spec.ts`: 44 px de área táctil en lo que pide M2 a M5 (fuentes, casos, blog, AI Lab y
+  footer) a 375 px.
 - [ ] T1064 `npm run verify` y `E2E_TIER=full` en verde.

@@ -38,7 +38,7 @@ test.describe('B1: el CV en PDF (FR-701, FR-702, SC-701, T911)', () => {
     ['/es/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
     ['/en/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
   ] as const) {
-    test(`${path}: "Descargar CV" va junto a LinkedIn`, async ({ page }) => {
+    test(`${path}: "Descargar CV" va con el PDF del otro idioma y sin LinkedIn (A1, A3)`, async ({ page }) => {
       await skipIntro(page)
       await page.goto(path)
       const lang = path.startsWith('/en') ? 'en' : 'es'

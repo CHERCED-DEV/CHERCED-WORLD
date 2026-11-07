@@ -80,7 +80,6 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
     await expect(palette(page).getByRole('group')).toHaveCount(1)
     expect(await optionIds(page, 20)).toEqual([
       'action:cv-pdf-es',
-      'action:cv-pdf-en',
       'action:cv',
       'action:copy-email',
       'action:theme',
@@ -91,9 +90,8 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
       'action:synergos',
     ])
     await expect(group.getByRole('option', { name: 'Descargar CV en español' })).toBeVisible()
-    await expect(group.getByRole('option', { name: 'Descargar CV en inglés' })).toBeVisible()
+    await expect(group.getByRole('option', { name: 'Descargar CV en inglés' }), 'T970: la paleta baja solo el PDF del idioma de la página').toHaveCount(0)
     await expect(group.locator('[data-cw-palette-option="action:cv-pdf-es"]')).toContainText('PDF · 175 kB')
-    await expect(group.locator('[data-cw-palette-option="action:cv-pdf-en"]')).toContainText('PDF · 173 kB')
     await expect(group.getByRole('option', { name: 'Ver mi perfil de LinkedIn' })).toBeVisible()
     await expect(group.getByRole('option', { name: /Ver los atajos de teclado/ })).toHaveAttribute('aria-keyshortcuts', '?')
   })

@@ -89,7 +89,7 @@ test.describe('Contacto sin JavaScript', () => {
     await expect(reach.locator('[data-cw-availability]')).toHaveText('Disponibilidad: Armenia, Colombia · UTC−5 · Abierto a reubicación')
     await expect(reach.locator('[data-cw-cv-download]')).toHaveAttribute('href', '/cv/camilo-hernandez-cv-es.pdf')
     await expect(reach.locator('[data-cw-cv-alternate]')).toHaveAttribute('href', '/cv/camilo-hernandez-cv-en.pdf')
-    await expect(reach.locator('[data-cw-cv-link]'), 'A3: sin botón de LinkedIn').toHaveCount(0)
+    await expect(reach.locator('[data-cw-cv-actions] [data-cw-cv-link]'), 'A3: sin botón de LinkedIn junto al CV').toHaveCount(0)
     await expect(reach.locator('[data-cw-contact-linkedin]')).toHaveAttribute('href', /linkedin\.com\/in\//)
     await expect(reach.getByRole('link', { name: 'Escribirme un correo' })).toHaveAttribute('href', /^mailto:/)
   })

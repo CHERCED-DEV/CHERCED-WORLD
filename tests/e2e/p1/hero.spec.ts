@@ -79,8 +79,9 @@ async function expectBanner(page: Page, lang: Lang) {
   const cv = banner.getByRole('link', { name: CV[lang], exact: true })
   await expect(cv).toBeVisible()
   await expect(cv).toHaveAttribute('href', `/cv/camilo-hernandez-cv-${lang}.pdf`)
-  await expect(banner.locator('[data-cw-cv-alternate]')).toBeVisible()
-  await expect(banner.locator('[data-cw-cv-link]'), 'A1: LinkedIn queda como ícono, no como botón').toHaveCount(0)
+  const actions = banner.locator('[data-cw-cv-actions]').first()
+  await expect(actions.locator('[data-cw-cv-alternate]')).toBeVisible()
+  await expect(actions.locator('[data-cw-cv-link]'), 'A1: LinkedIn queda como ícono, no como botón').toHaveCount(0)
   await expect(banner.locator('[data-cw-availability]')).toContainText(CHIP[lang])
 }
 
