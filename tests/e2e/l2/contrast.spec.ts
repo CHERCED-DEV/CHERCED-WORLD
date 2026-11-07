@@ -49,6 +49,11 @@ async function collectTexts(page: Page): Promise<TextSample[]> {
     const owners = new Map<Element, number>()
     for (const tagged of document.querySelectorAll(`[${ownerAttribute}]`)) tagged.removeAttribute(ownerAttribute)
     const viewport: Box = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight }
+    const header = document.querySelector('body > header, header')
+    const headerPosition = header ? getComputedStyle(header).position : 'static'
+    const headerBottom = header && (headerPosition === 'fixed' || headerPosition === 'sticky') ? header.getBoundingClientRect().bottom : 0
+    const leavingUnderHeader = (element: Element, rects: DOMRect[]) =>
+      headerBottom > 0 && !header!.contains(element) && rects.some((rect) => rect.top < headerBottom && rect.bottom > 0)
 
     const isGlass = (element: Element) =>
       element.hasAttribute('data-cw-glass') || getComputedStyle(element).backdropFilter !== 'none'
@@ -97,7 +102,9 @@ async function collectTexts(page: Page): Promise<TextSample[]> {
       if (opacity < 0.05) continue
       const range = document.createRange()
       range.selectNodeContents(node)
-      const rects = [...range.getClientRects()]
+      const clientRects = [...range.getClientRects()]
+      if (leavingUnderHeader(element, clientRects)) continue
+      const rects = clientRects
         .map((rect) => {
           const x = Math.ceil(Math.max(box.left, rect.left))
           const y = Math.ceil(Math.max(box.top, rect.top))

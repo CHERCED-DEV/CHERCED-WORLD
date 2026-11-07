@@ -210,14 +210,17 @@ test.describe('/synergos: metadatos, OG y JSON-LD (FR-903)', () => {
 test.describe('los botones "Ver mi master product" llevan a la página', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
-  test('desde Sobre mí, justo debajo de las cifras', async ({ page }) => {
+  test('desde Sobre mí, en "Quién soy": bajo el retrato y antes de las certificaciones', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await open(page, 'es', '/aboutMe')
-    const button = page.locator('[data-cw-synergos-cta="about"]')
+    const who = page.locator('[data-cw-scene="who"]')
+    const button = who.locator('[data-cw-synergos-cta="about"]')
     await expect(button).toHaveText(copy.cta.es)
-    const figures = await page.locator('[data-cw-about="figures"]').boundingBox()
+    const portrait = await who.locator('[data-cw-portrait]').boundingBox()
+    const certifications = await who.locator('[data-cw-certifications]').boundingBox()
     const box = await button.boundingBox()
-    expect(box!.y).toBeGreaterThanOrEqual(figures!.y + figures!.height - 1)
+    expect(box!.y).toBeGreaterThanOrEqual(portrait!.y + portrait!.height - 1)
+    expect(box!.y + box!.height).toBeLessThanOrEqual(certifications!.y + 1)
     expect(box!.height, 'objetivo táctil de 44 px').toBeGreaterThanOrEqual(44)
     await button.click()
     await page.waitForURL('**/es/synergos')
