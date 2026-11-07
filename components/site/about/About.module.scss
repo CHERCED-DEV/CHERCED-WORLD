@@ -868,7 +868,12 @@ dialog.deckDialog {
   @include site.crystal(strong);
   @include glass-edge;
   width: min(100% - 2 * var(--cw-space-4), 700px);
+  overflow: hidden;
   transform-origin: 50% 50%;
+
+  .deckOpen {
+    max-height: calc(min(100dvh - 2 * var(--cw-space-6), 720px) - 2 * var(--cw-space-5) - 2px);
+  }
 
   &[open] {
     animation: none;
@@ -899,6 +904,16 @@ dialog.deckDialog {
   @include bp.up(md) {
     padding: var(--cw-space-4);
   }
+}
+
+.deckOpenBody {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--cw-space-3);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .deckOpenPeriod {
@@ -950,6 +965,29 @@ dialog.deckDialog {
   max-width: none;
   margin-top: var(--cw-space-2);
   text-align: left;
+}
+
+.jobHighlights {
+  @include site.prose;
+  display: grid;
+  gap: var(--cw-space-3);
+  max-width: none;
+  margin-top: var(--cw-space-3);
+  padding: 0;
+  text-align: left;
+  list-style: none;
+
+  li {
+    position: relative;
+    padding-left: 1.25em;
+
+    &::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--cw-graphic-accent);
+    }
+  }
 }
 
 

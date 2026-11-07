@@ -10,6 +10,7 @@ import type { Locale } from '@/lib/i18n'
 import styles from './About.module.scss'
 import type { DeckJob } from './CareerDeck'
 import { cycleHand, handOrder, handPose } from './deck'
+import { JobSummary } from './JobSummary'
 import { Period } from './Period'
 
 export type CareerHandLabels = { present: string; open: string; close: string; prev: string; next: string }
@@ -141,9 +142,7 @@ export function CareerHand({ lang, jobs, labels }: CareerHandProps) {
             {job.role}
           </h2>
           <p className={styles.jobCompany}>{job.company}</p>
-          <p id={textId} className={styles.jobText}>
-            {job.description}
-          </p>
+          <JobSummary id={textId} description={job.description} highlights={job.highlights} />
         </div>
       </BottomSheet>
     </div>

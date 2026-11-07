@@ -160,7 +160,7 @@ test.describe('sin JavaScript, todo se lee sin hojas ni dock (FR-624, FR-630, FR
         expect(await page.evaluate(() => document.documentElement.scrollWidth), 'sin scroll horizontal').toBeLessThanOrEqual(width)
         if (path === '/es/aboutMe') {
           await expect(page.locator('[data-cw-hand]'), 'el mazo necesita JS').toBeHidden()
-          await expect(page.locator('[data-cw-timeline] li').filter({ visible: true })).toHaveCount(CAREER.length)
+          await expect(page.locator('[data-cw-timeline] > li').filter({ visible: true })).toHaveCount(CAREER.length)
           for (const tech of site.about.skills.tech.slice(0, 5)) {
             await expect(page.getByText(tech.label?.es ?? tech.name, { exact: true }).filter({ visible: true }).first(), tech.name).toBeVisible()
           }

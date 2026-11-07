@@ -7,6 +7,7 @@ import { SectionTitle } from '../SectionTitle'
 import styles from './About.module.scss'
 import { CareerDeck } from './CareerDeck'
 import { CareerHand } from './CareerHand'
+import { JobSummary } from './JobSummary'
 import { Period } from './Period'
 
 export type AboutCareerProps = {
@@ -28,6 +29,7 @@ export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLab
     role: entry.role[lang],
     company: entry.company,
     description: entry.description[lang],
+    highlights: (entry.highlights ?? []).map((highlight) => highlight[lang]),
     start: entry.start,
     end: entry.end,
   }))
@@ -55,7 +57,7 @@ export function AboutCareer({ id, lang, title, presentLabel, openLabel, closeLab
               <GlassSurface variant="standard" grain depth edge light className={styles.milestoneCard}>
                 <h3 className={styles.jobRole}>{entry.role[lang]}</h3>
                 <p className={styles.jobCompany}>{entry.company}</p>
-                <p className={styles.jobText}>{entry.description[lang]}</p>
+                <JobSummary description={entry.description[lang]} highlights={(entry.highlights ?? []).map((highlight) => highlight[lang])} />
               </GlassSurface>
             </li>
           )

@@ -55,7 +55,7 @@ test.describe('sobre mí sin JavaScript', () => {
       const job = jobs.nth(index)
       await expect(job).toHaveAttribute('data-cw-job', entry.id)
       await expect(job.getByRole('heading', { level: 3 })).toHaveText(entry.role.es)
-      await expect(job.getByText(entry.description.es)).toBeVisible()
+      await expect(job.getByText(entry.highlights?.[0]?.es ?? entry.description.es)).toBeVisible()
       await expect(job.locator('time').first()).toHaveAttribute('datetime', entry.start)
       if (entry.end) await expect(job.locator('time').nth(1)).toHaveAttribute('datetime', entry.end)
       else {

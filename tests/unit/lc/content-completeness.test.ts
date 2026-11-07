@@ -514,7 +514,7 @@ describe('sitio (FR-004)', () => {
     expect(career('squadra-arquitectura')?.role).toEqual({ es: 'Founder & Business Manager', en: 'Founder & Business Manager' })
   })
 
-  it('no publica cifras internas de Sistecrédito', () => {
+  it('no publica cifras internas de Sistecrédito fuera de los bullets de LinkedIn que el autor aprobó', () => {
     const sistecredito = site.about.career.filter((entry) => entry.company === 'Sistecrédito')
     expect(sistecredito).toHaveLength(2)
     for (const entry of sistecredito) {
@@ -523,7 +523,11 @@ describe('sitio (FR-004)', () => {
         expect(entry.description.en, `${entry.id}.en`).not.toMatch(pattern)
       }
     }
-    for (const pattern of CONFIDENTIAL) expect(corpus).not.toMatch(pattern)
+    const withoutHighlights = corpus.replace(
+      JSON.stringify([site, projects, now, terminalCommands]),
+      JSON.stringify([{ ...site, about: { ...site.about, career: site.about.career.map((entry) => ({ ...entry, highlights: undefined })) } }, projects, now, terminalCommands]),
+    )
+    for (const pattern of CONFIDENTIAL) expect(withoutHighlights).not.toMatch(pattern)
   })
 
   it('ordena la carrera de la más reciente a la más antigua con fechas válidas', () => {

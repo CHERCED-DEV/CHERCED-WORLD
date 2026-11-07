@@ -115,6 +115,28 @@ export const site: SiteContent = {
           en: 'I work end to end: micro-frontends on Native Federation, .NET microservices with gRPC, event pipelines between AWS and Azure Service Bus, and legacy migrations that keep the business running. I work AI-first and spec-driven, and I built AI agent skills for the engineering teams.',
           es: 'Trabajo de punta a punta: micro-frontends con Native Federation, microservicios .NET con gRPC, pipelines de eventos entre AWS y Azure Service Bus, y migraciones de legado sin detener la operación. Trabajo AI-first y spec-driven, y creé skills de agentes de IA para los equipos de ingeniería.',
         },
+        highlights: [
+          {
+            es: 'Construyo y mantengo más de 10 micro-frontends en Native Federation y más de 4 microservicios .NET, usados por más de 4 equipos de la compañía.',
+            en: 'Build and maintain 10+ micro-frontends on Native Federation and 4+ .NET microservices, used by 4+ teams across the company.',
+          },
+          {
+            es: 'Mejoré ~90% el rendimiento de la app de contactabilidad embebida en Genesys Cloud frente a su primera versión: optimicé el prefetching de Native Federation y propuse cambios al middleware del Gold Partner de Genesys que implementaron ambos equipos.',
+            en: "Improved the performance of the contactability app embedded in Genesys Cloud by ~90% versus its first release: optimized Native Federation's heavy first-load prefetching and analyzed how the Genesys Gold Partner's middleware used Genesys webhooks and APIs, proposing changes that both teams implemented.",
+          },
+          {
+            es: 'Construí un pipeline de eventos para un contact center de ~700 agentes con miles de interacciones al día: eventos de Genesys desde AWS EventBridge (llamadas, SMS y WhatsApp, entrantes y salientes) mapeados con Redpanda Connect hacia Azure Service Bus y consumidos por un microservicio .NET que escala horizontalmente.',
+            en: 'Built an event pipeline for a contact center of ~700 agents handling thousands of interactions a day: Genesys events from AWS EventBridge (calls, SMS, WhatsApp, inbound and outbound) mapped through a Redpanda Connect pipeline into Azure Service Bus, consumed by a horizontally scalable .NET microservice.',
+          },
+          {
+            es: 'Automaticé con Microsoft Intune el despliegue de aplicaciones de escritorio legadas a ~1.000 equipos de cobranza y servicio al cliente, en una ventana de 40 minutos: 80% de éxito en la primera corrida y cero downtime, frente a cerca de una semana de instalación manual.',
+            en: 'Automated the rollout of legacy desktop applications for collections and customer-service teams to ~1,000 computers through Microsoft Intune, using Windows UI automation scripts in a 40-minute window: 80% success on the first run and zero downtime, replacing about a week of manual installs by a full team.',
+          },
+          {
+            es: 'Creé skills de agentes de IA para los equipos: una convierte la captura de una interfaz en propuestas de componentes del sistema de diseño; otra guía la integración de micro-frontends en el shell de Native Federation.',
+            en: "Built AI agent skills for the engineering teams: one turns a UI screenshot into component proposals that follow the company's design system; another guides teams in embedding micro-frontends into the Native Federation shell.",
+          },
+        ],
       },
       {
         id: 'sistecredito-dev-solutions',
@@ -126,6 +148,20 @@ export const site: SiteContent = {
           en: 'I brought what I learned on airline platforms into fintech: micro-frontends that combine .NET server-side rendering with Angular. I designed a cross-origin postMessage protocol that keeps sensitive data out of message payloads, and implemented GA4/GTM analytics and accessibility improvements.',
           es: 'Llevé al sector fintech lo que aprendí en plataformas de aerolíneas: micro-frontends que combinan server-side rendering de .NET con Angular. Diseñé un protocolo de comunicación cross-origin con postMessage que mantiene los datos sensibles fuera de los mensajes, e implementé analítica con GA4/GTM y mejoras de accesibilidad.',
         },
+        highlights: [
+          {
+            es: 'Llevé al sector fintech la experiencia de plataformas de aerolíneas, con micro-frontends que combinan server-side rendering de .NET con Angular.',
+            en: 'Brought airline-platform experience into fintech, delivering micro-frontends that combine .NET server-side rendering with Angular.',
+          },
+          {
+            es: 'Diseñé el protocolo de comunicación cross-origin (window.postMessage) que embebe la app de contactabilidad de la compañía dentro de Genesys Cloud, manteniendo los datos sensibles fuera de los mensajes.',
+            en: "Designed the cross-origin communication protocol (window.postMessage) that embeds the company's contactability app inside Genesys Cloud, keeping sensitive data out of message payloads.",
+          },
+          {
+            es: 'Implementé eventos de analítica granulares con GA4/GTM y mejoré la accesibilidad (manejo de foco, WCAG).',
+            en: 'Implemented granular GA4/GTM analytics events and improved accessibility (focus management, WCAG).',
+          },
+        ],
       },
       {
         id: 'synergos-labs',
@@ -137,6 +173,24 @@ export const site: SiteContent = {
           es: `Proyecto propio. Diseño y construyo Synergos, una plataforma de composición donde el octavo vertical de negocio cuesta menos que el primero: ${synergosFacts.pieces} piezas desplegables (un CMS, ${synergosFacts.capabilities} capacidades, ${synergosFacts.orchestrators} orquestadores y un proxy), más de ${formatFact(synergosFacts.testsAtLeast, 'es')} tests automatizados y más de ${formatFact(synergosFacts.adrsAtLeast, 'es')} decisiones de arquitectura documentadas. Dirijo un equipo de agentes de IA que construye en paralelo bajo mis reglas.`,
           en: `Personal project. I design and build Synergos, a composition platform where the eighth business vertical costs less than the first: ${synergosFacts.pieces} deployable pieces (a CMS, ${synergosFacts.capabilities} capabilities, ${synergosFacts.orchestrators} orchestrators and a proxy), ${formatFloor(synergosFacts.testsAtLeast, 'en')} automated tests and ${formatFloor(synergosFacts.adrsAtLeast, 'en')} documented architecture decisions. I direct a team of AI agents that builds in parallel under my rules.`,
         },
+        highlights: [
+          {
+            es: 'Creé Synergos, una plataforma digital componible con la que cualquier negocio arma sus productos digitales a partir de una librería de más de 30 componentes reutilizables.',
+            en: 'Created Synergos, a composable digital platform that lets any business assemble its digital products from a library of 30+ reusable components.',
+          },
+          {
+            es: 'Umbraco (.NET) como capa de composición y un proyecto en CDN que sirve los recursos.',
+            en: 'Umbraco (.NET) acts as the composition layer; a separate project deployed on a CDN serves the resources that feed it.',
+          },
+          {
+            es: 'Composición backend-for-frontend limpia, agnóstica al framework incluso en sus rutas de importación, probada con más de 3 frameworks web.',
+            en: 'Clean backend-for-frontend composition, framework-agnostic by design down to its import paths, proven with 3+ web frameworks.',
+          },
+          {
+            es: 'Diseñé y construí cada componente a conciencia, y luego empecé a pilotear la plataforma con desarrollo guiado por especificaciones y agentes de IA.',
+            en: 'Designed and built each component deliberately, then piloted the platform through spec-driven development with AI agents.',
+          },
+        ],
       },
       {
         id: 'flyr',
@@ -148,6 +202,28 @@ export const site: SiteContent = {
           es: 'Pasé de las cuentas de clientes al producto core: la plataforma de retail aéreo de la que se extiende cada aerolínea. Lideré la arquitectura de los módulos de Check-in y Manage My Booking, desplegados en más de 3 aerolíneas internacionales, construí componentes seguros de checkout en Angular para el módulo PCI y trabajé en un proyecto de redención de vouchers para una aerolínea.',
           en: 'I moved from client accounts to the core product: the airline retailing platform every airline account extends from. I led the architecture of the Check-in and Manage My Booking modules, deployed across 3+ international airlines, built secure Angular checkout components for the PCI module and worked on a voucher redemption project for an airline.',
         },
+        highlights: [
+          {
+            es: 'Pasé de las cuentas de clientes al producto core de FLYR: la plataforma de retail aéreo de la que se extiende cada aerolínea.',
+            en: "Moved from client accounts to FLYR's core product, the airline retailing platform that every airline account extends from.",
+          },
+          {
+            es: 'Lideré la arquitectura y el desarrollo de los módulos de Check-in y Manage My Booking, desplegados en más de 3 aerolíneas internacionales.',
+            en: 'Led the architecture and development of the Check-in and Manage My Booking modules, deployed across 3+ major international airlines.',
+          },
+          {
+            es: 'Contribuí al módulo PCI y a la integración de pagos por franquicia con una pasarela externa, construyendo componentes seguros de checkout en Angular.',
+            en: 'Contributed to the PCI module and franchise payment integration with an external payment gateway, building secure Angular checkout components.',
+          },
+          {
+            es: 'Trabajé en un proyecto de redención de vouchers para una aerolínea importante con TypeScript, Angular y .NET.',
+            en: 'Worked on a voucher redemption project for a major airline with TypeScript, Angular and .NET.',
+          },
+          {
+            es: 'Coordiné lanzamientos por aerolínea, trabajé con los clientes y mentoreé desarrolladores en Angular, TypeScript y .NET.',
+            en: 'Coordinated releases tailored to each airline account, worked directly with clients and mentored developers on Angular, TypeScript and .NET architecture decisions.',
+          },
+        ],
       },
       {
         id: 'newshore',
@@ -159,6 +235,20 @@ export const site: SiteContent = {
           en: 'I started on the airline accounts side: I led frontend work on web platforms, including the Avianca PWA, and helped launch 3+ platforms as part of the setups team. I worked with UX on pixel-perfect, accessible interfaces (WCAG, ARIA) using .NET, Angular and Umbraco on Azure.',
           es: 'Empecé del lado de las cuentas de aerolíneas: lideré el frontend de plataformas web, incluida la PWA de Avianca, y ayudé a lanzar más de 3 plataformas como parte del equipo de setups. Trabajé con UX en interfaces pixel-perfect y accesibles (WCAG, ARIA) con .NET, Angular y Umbraco sobre Azure.',
         },
+        highlights: [
+          {
+            es: 'Lideré el frontend de plataformas web de aerolíneas, incluida la PWA de Avianca, desde la entrega del diseño hasta producción.',
+            en: 'Led frontend development on airline web platforms, including the Avianca PWA, from design handoff to production.',
+          },
+          {
+            es: 'Ayudé a lanzar más de 3 plataformas web de aerolíneas como parte del equipo de setups.',
+            en: 'Helped launch 3+ airline web platforms as part of the setups team.',
+          },
+          {
+            es: 'Entregué con el equipo de UX interfaces pixel-perfect y accesibles, alineadas con WCAG y ARIA, con soluciones modulares en .NET y Angular sobre Umbraco CMS, desplegadas en Azure.',
+            en: 'Delivered pixel-perfect, accessible interfaces with the UX team, aligned with WCAG and ARIA, using module-based .NET and Angular solutions on Umbraco CMS, deployed on Azure.',
+          },
+        ],
       },
       {
         id: 'platzi-master',
@@ -181,6 +271,16 @@ export const site: SiteContent = {
           es: 'Refactoricé el portal de pago de impuestos de una entidad pública (PHP, HTML, JavaScript): optimicé recursos y la composición de las páginas y subí su puntaje de rendimiento en Lighthouse en unos 40 puntos. Me encargué de la arquitectura y el empaquetado del proyecto, e introduje desarrollo por componentes.',
           en: "I refactored a public entity's tax-payment portal (PHP, HTML, JavaScript): I optimized assets and page composition and raised its Lighthouse performance score by about 40 points. I owned the project's architecture and packaging, and introduced component-based development.",
         },
+        highlights: [
+          {
+            es: 'Refactoricé el portal de pago de impuestos de una entidad pública (PHP, HTML, JavaScript): optimicé recursos y la composición de las páginas, y subí su puntaje de rendimiento en Lighthouse en unos 40 puntos.',
+            en: 'Refactored a government tax-payment portal (PHP, HTML, JavaScript), optimizing assets and page composition to raise its Lighthouse performance score by ~40 points.',
+          },
+          {
+            es: 'Me encargué de la arquitectura y el empaquetado del proyecto, e introduje desarrollo por componentes; diseñé las interfaces en Figma.',
+            en: 'Owned project architecture and packaging, introducing component-based development; designed interfaces in Figma.',
+          },
+        ],
       },
       {
         id: 'squadra-arquitectura',

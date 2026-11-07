@@ -87,3 +87,7 @@ El autor revisó la vista previa en el celular: "construyamos sobre lo construid
 - [x] T973 "Para reclutadores" es un enlace de texto que abre el pop-up, no un botón grande; el hero del celular
   vuelve a respirar y la señal de scroll queda sobre el dock.
 - [x] T974 Rama `dev`: integra la 007, `main` (Node 22) y `lane/X4` (la base del peloteo; X4b sigue al final).
+- [x] T975 Las tarjetas de experiencia abiertas muestran los bullets de LinkedIn (los mismos del CV), en ES y EN, en
+  vez del párrafo resumen: Sistecrédito (las dos etapas), Synergos Labs, FLYR, Newshore y Growup IT. El autor eligió
+  publicar los de Sistecrédito tal cual LinkedIn, con cifras y proveedores (2026-11-07); el resto del sitio sigue sin
+  cifras internas. Platzi Master y Squadra conservan su descripción porque no tienen bullets en LinkedIn.

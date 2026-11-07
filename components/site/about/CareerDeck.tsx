@@ -8,6 +8,7 @@ import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n'
 import styles from './About.module.scss'
 import { deckSlot, flightFrom, flightTransform } from './deck'
+import { JobSummary } from './JobSummary'
 import { Period } from './Period'
 
 export type DeckJob = {
@@ -15,6 +16,7 @@ export type DeckJob = {
   role: string
   company: string
   description: string
+  highlights: string[]
   start: string
   end: string | null
 }
@@ -215,18 +217,18 @@ export function CareerDeck({ lang, jobs, labels }: CareerDeckProps) {
         <div ref={contentRef} className={styles.deckOpen} data-cw-deck-open={job?.id}>
           {job ? (
             <>
-              <p className={styles.deckOpenPeriod}>
-                <span className={cx(styles.whenChip, job.end === null && styles.whenChipCurrent)} data-cw-glass="strong">
-                  <Period start={job.start} end={job.end} lang={lang} presentLabel={labels.present} />
-                </span>
-              </p>
-              <h3 id="career-dialog-title" className={styles.deckOpenRole}>
-                {job.role}
-              </h3>
-              <p className={styles.jobCompany}>{job.company}</p>
-              <p id="career-dialog-text" className={styles.jobText}>
-                {job.description}
-              </p>
+              <div className={styles.deckOpenBody}>
+                <p className={styles.deckOpenPeriod}>
+                  <span className={cx(styles.whenChip, job.end === null && styles.whenChipCurrent)} data-cw-glass="strong">
+                    <Period start={job.start} end={job.end} lang={lang} presentLabel={labels.present} />
+                  </span>
+                </p>
+                <h3 id="career-dialog-title" className={styles.deckOpenRole}>
+                  {job.role}
+                </h3>
+                <p className={styles.jobCompany}>{job.company}</p>
+                <JobSummary id="career-dialog-text" description={job.description} highlights={job.highlights} />
+              </div>
               <button
                 type="button"
                 className={buttonClassName({ variant: 'glass', size: 'sm', className: styles.deckClose })}

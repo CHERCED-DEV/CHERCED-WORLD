@@ -17,6 +17,7 @@ export type CareerEntry = {
   start: string
   end: string | null
   description: Localized
+  highlights?: Localized[]
   pending?: true
 }
 

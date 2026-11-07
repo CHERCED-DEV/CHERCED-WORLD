@@ -82,7 +82,7 @@ test('clic abre la tarjeta en un diálogo modal y "Cerrar" la devuelve con el fo
   await expect(modal).toBeVisible()
   await expect(modal).toHaveAttribute('open', '')
   await expect(modal.getByRole('heading', { level: 3 })).toHaveText(entry.role.es)
-  await expect(modal.getByText(entry.description.es)).toBeVisible()
+  await expect(modal.getByText(entry.highlights?.[0]?.es ?? entry.description.es)).toBeVisible()
   await expect(source).toHaveAttribute('data-flying', '')
   await settled(page)
   const box = await modal.boundingBox()
@@ -199,11 +199,22 @@ for (const scheme of ['dark', 'light'] as const) {
         const range = document.createRange()
         range.selectNodeContents(text)
         const style = getComputedStyle(element)
+        let clip = node.getBoundingClientRect()
+        for (let current: Element | null = element; current && current !== node; current = current.parentElement) {
+          if (getComputedStyle(current).overflowY !== 'visible') {
+            const box = current.getBoundingClientRect()
+            clip = new DOMRect(clip.x, Math.max(clip.top, box.top), clip.width, Math.min(clip.bottom, box.bottom) - Math.max(clip.top, box.top))
+          }
+        }
+        const rects = [...range.getClientRects()]
+          .filter((rect) => rect.top >= clip.top && rect.bottom <= clip.bottom)
+          .map((rect) => ({ x: Math.ceil(rect.left), y: Math.ceil(rect.top), w: Math.floor(rect.width), h: Math.floor(rect.height) }))
+        if (rects.length === 0) continue
         found.push({
           color: style.color,
           size: Number.parseFloat(style.fontSize),
           weight: Number.parseInt(style.fontWeight, 10),
-          rects: [...range.getClientRects()].map((rect) => ({ x: Math.ceil(rect.left), y: Math.ceil(rect.top), w: Math.floor(rect.width), h: Math.floor(rect.height) })),
+          rects,
         })
       }
       return found

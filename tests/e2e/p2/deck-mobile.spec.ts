@@ -129,7 +129,7 @@ test.describe('carrera como mazo en la mano (T830, FR-630, EM-03)', () => {
     await expect(open).toBeVisible()
     const job = career[2]!
     await expect(page.getByRole('dialog', { name: job.role.es })).toBeVisible()
-    await expect(open.locator(`[data-cw-hand-open="${job.id}"]`)).toContainText(job.description.es)
+    await expect(open.locator(`[data-cw-hand-open="${job.id}"]`)).toContainText(job.highlights?.[0]?.es ?? job.description.es)
     await expect(open.locator('[data-cw-sheet-nav] p')).toHaveText(`3 / ${TOTAL}`)
     expect(await page.evaluate(() => (window as unknown as { __cwVibrate: number[] }).__cwVibrate)).toEqual([8])
     await page.keyboard.press('Escape')
