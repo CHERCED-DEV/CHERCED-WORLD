@@ -303,6 +303,10 @@
 }
 
 @include bp.down(md) {
+  .cueLine {
+    height: clamp(20px, 3.5svh, 40px);
+  }
+
   :global(:root[data-js]) {
     .hero {
       padding-bottom: calc(var(--cw-space-4) + var(--cw-dock-space));
