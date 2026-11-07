@@ -73,7 +73,7 @@ export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
           </strong>{' '}
           {labels.rights}
         </p>
-        <p className={styles.egg} lang="en" data-cw-footer-egg="">
+        <p className={styles.egg} data-cw-footer-egg="">
           {labels.egg}
         </p>
         <div className={styles.links}>

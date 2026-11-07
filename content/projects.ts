@@ -60,7 +60,7 @@ export const projects: Project[] = [
     title: 'CHERCED-WORLD 2026',
     summary: {
       en: 'My 2023 portfolio rebuilt with Spec-Driven Development and AI agents working in parallel.',
-      es: 'Mi portafolio de 2023 reconstruido con Spec-Driven Development y agentes de IA trabajando en paralelo.',
+      es: 'Mi portafolio de 2023 reconstruido con desarrollo guiado por especificaciones (Spec-Driven Development) y agentes de IA trabajando en paralelo.',
     },
     context: {
       en: 'The 2023 portfolio described who I was three years ago: 2022 projects, skills from that time and nothing about my current architecture work. I wanted to update it without rewriting it by hand or adding infrastructure, and to use it as real proof of how I work today: spec first, agents second.',
@@ -535,7 +535,8 @@ export const projects: Project[] = [
     },
     technologies: ['.NET 8', 'C#', 'ASP.NET CORE', 'UMBRACO 13', 'ANGULAR', 'WEB COMPONENTS', 'NX', 'CLOUDFLARE WORKERS', 'DOCKER', 'GITHUB ACTIONS', 'SPEC KIT', 'AI CODING AGENTS'],
     image: {
-      src: '/assets/imgs/projects/synergos.svg',
+      src: '/assets/imgs/projects/synergos-en.svg',
+      localizedSrc: { es: '/assets/imgs/projects/synergos-es.svg', en: '/assets/imgs/projects/synergos-en.svg' },
       alt: {
         en: 'Synergos layered architecture diagram: CDN resources feed Umbraco (.NET) as the composition layer, which serves micro-frontends and Web Components on any web framework',
         es: 'Diagrama de la arquitectura por capas de Synergos: los recursos en CDN alimentan a Umbraco (.NET) como capa de composición, que sirve micro-frontends y Web Components en cualquier framework web',

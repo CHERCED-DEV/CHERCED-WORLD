@@ -42,7 +42,7 @@ describe.each(['es', 'en'] as const)('habilidades en la paleta (FR-450, SC-404) 
         expect(doc, id).toBeDefined()
         expect(doc?.item.command).toEqual({ type: 'navigate', href: `/${lang}/aboutMe#lobe-${lobe.id}` })
         const level = getSite().about.languages.find((language) => language.id === id)?.level?.[lang]
-        expect(doc?.item.hint).toMatch(level ? new RegExp(`^.+ · ${level}$`) : lang === 'es' ? /^.+ · \d+ %$/ : /^.+ · \d+%$/)
+        expect(doc?.item.hint).toMatch(level ? new RegExp(`^.+ · ${level.replace(/[()]/g, '\\$&')}$`) : lang === 'es' ? /^.+ · \d+ %$/ : /^.+ · \d+%$/)
       }
     }
   })

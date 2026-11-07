@@ -50,6 +50,11 @@ function RecruitersBody({
               </li>
             ))}
           </ul>
+          {content.motivation ? (
+            <p className={styles.motivation} data-cw-recruiters-motivation="">
+              {content.motivation[lang]}
+            </p>
+          ) : null}
         </div>
         <dl className={styles.facts}>
           <div className={styles.fact}>

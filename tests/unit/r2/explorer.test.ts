@@ -94,7 +94,7 @@ describe('galería', () => {
     for (const project of projects) {
       const images = galleryImages(project, 'es')
       expect(images[0], project.id).toEqual({
-        src: project.image.src,
+        src: project.image.localizedSrc?.es ?? project.image.src,
         alt: project.image.alt.es,
         width: project.image.width,
         height: project.image.height,

@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import type { Project } from '@/content/types'
+import { imageSrc } from '@/lib/content/image'
 import { projectTitle } from '@/lib/content/project-title'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -183,7 +184,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
       <article className={styles.page} aria-labelledby="case-title" data-cw-case={project.id}>
         <div className={styles.media}>
           <Image
-            src={project.image.src}
+            src={imageSrc(project.image, lang)}
             alt={project.image.alt[lang]}
             width={project.image.width}
             height={project.image.height}
@@ -284,7 +285,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
           id={EMBED_ANCHOR}
           url={project.links.live}
           title={title}
-          poster={{ src: project.image.src, alt: project.image.alt[lang], width: project.image.width, height: project.image.height }}
+          poster={{ src: imageSrc(project.image, lang), alt: project.image.alt[lang], width: project.image.width, height: project.image.height }}
           labels={extra.embed}
         />
       ) : null}

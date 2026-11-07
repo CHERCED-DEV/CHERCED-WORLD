@@ -56,6 +56,8 @@ test.describe('/synergos con y sin JavaScript (FR-901, FR-902)', () => {
     await page.locator('[data-cw-line-list] summary').click()
     await expect(page.locator('[data-cw-line-item]').first()).toBeVisible()
     await expect(page.locator('[data-cw-line-item="001"]')).toContainText('001 Núcleo · activa · 102 de 104 tareas')
+    await expect(page.locator('[data-cw-line-item="004"]'), 'C6: sin "cerrada", solo el avance').toContainText('004 Tienda · 49 de 58 tareas')
+    for (const section of ['line', 'verticals']) await expect(page.locator(`[data-cw-synergos-section="${section}"]`)).not.toContainText(/cerrada/i)
   })
 })
 

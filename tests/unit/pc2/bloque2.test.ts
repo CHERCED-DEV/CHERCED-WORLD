@@ -24,7 +24,7 @@ describe('FR-710: bloque "Para reclutadores"', () => {
     for (const role of recruiters.roles) expect(visible).toContain(role[lang])
     expect(visible).toContain('Angular')
     expect(visible).toContain(lang === 'es' ? 'Remoto · UTC−5 · Abierto a reubicación' : 'Remote · UTC−5 · Open to relocation')
-    expect(visible).toContain(lang === 'es' ? 'B1, B2 en uso profesional frecuente' : 'B1, B2 in regular professional use')
+    expect(visible).toContain(lang === 'es' ? 'B1 (B2 en uso profesional frecuente)' : 'B1 (B2 in regular professional use)')
     expect(visible).not.toMatch(/\d+\s*%/)
     expect(html).toContain('data-cw-cv-download')
     expect(html).toContain('data-cw-cv-alternate')

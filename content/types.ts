@@ -4,7 +4,7 @@ export type { Locale }
 
 export type Localized<T = string> = Record<Locale, T>
 
-export type ImageRef = { src: string; alt: Localized; width: number; height: number }
+export type ImageRef = { src: string; alt: Localized; width: number; height: number; localizedSrc?: Localized }
 
 export type SocialId = 'linkedin' | 'instagram' | 'github' | 'email' | 'facebook'
 
@@ -96,6 +96,7 @@ export type RecruitersContent = {
   intro: Localized
   rolesTitle: Localized
   roles: Localized[]
+  motivation?: Localized
   modalityTitle: Localized
   modality: Localized
   englishTitle: Localized
@@ -113,6 +114,7 @@ export type SiteContent = {
   about: {
     description: Localized
     image: ImageRef
+    experienceYears?: number
     career: CareerEntry[]
     skills: {
       description: Localized

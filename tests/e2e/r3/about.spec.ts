@@ -4,7 +4,7 @@ import { getSite } from '@/lib/content'
 
 const site = getSite()
 const { about } = site
-const figures = aboutFigures(about, new Date())
+const figures = aboutFigures(about)
 const LIGHT_SRC = /retrato-claro/
 const DARK_SRC = /retrato-oscuro/
 
@@ -75,7 +75,8 @@ test.describe('sobre mí sin JavaScript', () => {
       await expect(item.locator('[data-cw-figure-value]')).toHaveText(figureDigits(figure.value, 'es'))
       await expect(item.locator('dd')).toContainText(figureText(figure, 'es'))
     }
-    await expect(page.locator('[data-cw-figure="years"] dt')).toContainText('desde 2019')
+    await expect(page.locator('[data-cw-figure="years"] dt'), 'C3: 6 años, sin la nota "desde 2019"').not.toContainText('2019')
+    for (const id of ['adrs', 'tests']) await expect(page.locator(`[data-cw-figure="${id}"] dt`), 'C4: con la fecha del conteo').toContainText('a nov 2026')
   })
 
 })

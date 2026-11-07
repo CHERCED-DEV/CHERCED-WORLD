@@ -8,7 +8,7 @@ const { about } = getSite()
 const LANGS = ['es', 'en'] as const
 type Lang = (typeof LANGS)[number]
 const data = { es: brainData(about, getProjects(), 'es', 'Actualidad'), en: brainData(about, getProjects(), 'en', 'Present') }
-const figures = aboutFigures(about, new Date())
+const figures = aboutFigures(about)
 const HEIGHT_BUDGET_1440 = Math.floor(5882 * 0.6)
 const CV = {
   es: { text: 'Descargar CV', name: 'Descargar CV en español (PDF, 175 kB)', words: 'Mis habilidades, en palabras', principles: 'Principios' },

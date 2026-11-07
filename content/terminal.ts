@@ -17,7 +17,7 @@ export const terminalCommands: TerminalCommand[] = [
   {
     name: 'whoami',
     output: {
-      es: `arquitecto · padre adoptivo de ${synergosFacts.capabilities} capacidades · sobrino de Uncle Bob`,
+      es: `arquitecto · padre adoptivo de ${synergosFacts.capabilities} capacidades · sobrino del tío Bob`,
       en: `architect · foster parent of ${synergosFacts.capabilities} capabilities · Uncle Bob's nephew`,
     },
   },

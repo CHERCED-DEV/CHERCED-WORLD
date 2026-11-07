@@ -22,7 +22,7 @@ const { postRegistry } = await import('@/content/posts/registry')
 
 const LABELS = { post: caseStudyExtraLabels(portfolioEs).relatedPost, services: caseStudyExtraLabels(portfolioEs).relatedServices }
 const POSTS = [
-  { id: 'post4', title: 'De un portafolio de 2023 a uno hecho con Spec-Driven Development y agentes', lang: 'es' as const },
+  { id: 'post4', title: 'De un portafolio de 2023 a uno hecho con desarrollo guiado por especificaciones y agentes', lang: 'es' as const },
   { id: 'post5', title: 'Querido Camilo de 2023', lang: 'es' as const },
 ]
 

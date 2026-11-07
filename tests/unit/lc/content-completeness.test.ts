@@ -364,7 +364,8 @@ describe('proyectos (FR-083, FR-443, FR-446)', () => {
     const project = content.getProject('12')!
     expect(project.title).toBe('Synergos')
     expect(project.order).toBe(1)
-    expect(project.image.src).toBe('/assets/imgs/projects/synergos.svg')
+    expect(project.image.src).toBe('/assets/imgs/projects/synergos-en.svg')
+    expect(project.image.localizedSrc).toEqual({ es: '/assets/imgs/projects/synergos-es.svg', en: '/assets/imgs/projects/synergos-en.svg' })
     expect(imageSize(publicPath(project.image.src))?.format).toBe('svg')
     expect(project.image.alt.es).toContain('Umbraco')
     expect(project.image.alt.en).toContain('Umbraco')
@@ -552,9 +553,9 @@ describe('sitio (FR-004)', () => {
     expect(site.about.education.find((entry) => entry.id === 'unad')?.degree.es).toContain('no finalizados')
   })
 
-  it('actualiza la experiencia del contacto (C-08)', () => {
-    expect(site.contact.description.en).toContain('since 2019')
-    expect(site.contact.description.es).toContain('desde 2019')
+  it('actualiza la experiencia del contacto (C-08), con los 6 años del CV (C3 de la 010)', () => {
+    expect(site.contact.description.en).toContain('for 6 years')
+    expect(site.contact.description.es).toContain('Llevo 6 años')
     expect(`${site.contact.description.en} ${site.contact.description.es}`).not.toContain('2020')
   })
 

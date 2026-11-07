@@ -289,8 +289,8 @@ export const synergosShowcase = {
         en: '{count} lines converge on the director, then on the release',
       },
       summary: {
-        es: 'Activas: {active}. Cerradas: {closed}. En pausa: {paused}.',
-        en: 'Active: {active}. Closed: {closed}. Paused: {paused}.',
+        es: 'Activas: {active}. En pausa: {paused}.',
+        en: 'Active: {active}. Paused: {paused}.',
       },
       list: { es: 'Ver las {count} líneas como lista', en: 'See the {count} lines as a list' },
       legend: { es: 'Leyenda', en: 'Legend' },
@@ -300,7 +300,6 @@ export const synergosShowcase = {
     },
     states: {
       active: { es: 'activa', en: 'active' },
-      closed: { es: 'cerrada', en: 'closed' },
       paused: { es: 'en pausa', en: 'paused' },
     },
     mvp: {

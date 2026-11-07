@@ -26,24 +26,24 @@ commit (`fix(010)`, `feat(010)`, `test(010)` o `docs(010)`) y las pruebas que to
 
 ## Bloque 2: coherencia y lenguaje
 
-- [ ] T1010 [C1] "Roles que busco" en el orden y con el texto del autor (`content/site.ts`).
-- [ ] T1011 [C2] La línea de las fábricas de software fuera de la lista (`RecruitersContent.motivation`).
-- [ ] T1012 [C3] Años fijos en 6, sin "desde 2019" (`about.experienceYears`, `figures.ts`, Contacto).
-- [ ] T1013 [C4] "a nov 2026" en las cifras de ADR y tests de Sobre mí.
+- [x] T1010 [C1] "Roles que busco" en el orden y con el texto del autor (`content/site.ts`).
+- [x] T1011 [C2] La línea de las fábricas de software fuera de la lista (`RecruitersContent.motivation`).
+- [x] T1012 [C3] Años fijos en 6, sin "desde 2019" (`about.experienceYears`, `figures.ts`, Contacto).
+- [x] T1013 [C4] "a nov 2026" en las cifras de ADR y tests de Sobre mí.
 - [x] T1014 [C5] "Proyecto insignia" / "flagship project" y "Conoce Synergos" / "Explore Synergos"
   (`content/synergos-showcase.ts`, paleta).
-- [ ] T1015 [C6] Sin la etiqueta "cerrada" en las líneas de Synergos (`components/site/synergos/*`).
-- [ ] T1016 [C7] Footer en español y "sobrino del tío Bob" en la terminal (`common.json`, `SiteFooter.tsx`,
+- [x] T1015 [C6] Sin la etiqueta "cerrada" en las líneas de Synergos (`components/site/synergos/*`).
+- [x] T1016 [C7] Footer en español y "sobrino del tío Bob" en la terminal (`common.json`, `SiteFooter.tsx`,
   `content/terminal.ts`).
-- [ ] T1017 [L1] "Componible(s)" en español.
-- [ ] T1018 [L2] Conceptos de las skills en español (`label` en `content/site.ts`), sin romper los proyectos por skill.
-- [ ] T1019 [L3] "Arnés de IA (harness)" en Servicios y en "Para reclutadores".
-- [ ] T1020 [L4] "Desarrollo guiado por especificaciones (Spec-Driven Development)" la primera vez en cada página.
-- [ ] T1021 [L5] Prueba de "AI-First" solo en cargos.
-- [ ] T1022 [L6] "B1 (B2 en uso profesional frecuente)".
-- [ ] T1023 [L7] "PDF · 175 kB" en pantalla (`CvLink.module.scss`).
-- [ ] T1024 [L8] Diagrama de Synergos por idioma (`synergos-{es,en}.svg`, `ImageRef.localizedSrc`, `imageSrc`).
-- [ ] T1025 Pruebas unitarias de contenido (`tests/unit/ux/lenguaje.test.ts`) y ajuste de las existentes.
+- [x] T1017 [L1] "Componible(s)" en español.
+- [x] T1018 [L2] Conceptos de las skills en español (`label` en `content/site.ts`), sin romper los proyectos por skill.
+- [x] T1019 [L3] "Arnés de IA (harness)" en Servicios y en "Para reclutadores".
+- [x] T1020 [L4] "Desarrollo guiado por especificaciones (Spec-Driven Development)" la primera vez en cada página.
+- [x] T1021 [L5] Prueba de "AI-First" solo en cargos.
+- [x] T1022 [L6] "B1 (B2 en uso profesional frecuente)".
+- [x] T1023 [L7] "PDF · 175 kB" en pantalla (`CvLink.module.scss`).
+- [x] T1024 [L8] Diagrama de Synergos por idioma (`synergos-{es,en}.svg`, `ImageRef.localizedSrc`, `imageSrc`).
+- [x] T1025 Pruebas unitarias de contenido (`tests/unit/ux/lenguaje.test.ts`) y ajuste de las existentes.
 
 ## Bloque 3: tipografía
 
