@@ -121,7 +121,7 @@ test.describe('etiquetas con JavaScript (US2, FR-505)', () => {
 
     await page.locator('[data-cw-tag-summary]').getByRole('link', { name: 'Limpiar' }).click()
     await expect(page).toHaveURL(/\/es\/blog$/, { timeout: 30_000 })
-    expect(await visibleCards(page)).toHaveLength(5)
+    expect(await visibleCards(page)).toHaveLength(6)
     await expect(nav.getByRole('link', { name: 'Todas' })).toBeFocused()
   })
 
@@ -158,7 +158,7 @@ test.describe('etiquetas sin JavaScript (FR-505, SC-502)', () => {
     await expect(page.getByRole('heading', { name: '1 post con «cuento»' })).toBeVisible()
     await nav.getByRole('link', { name: 'Todas' }).click()
     await expect(page).toHaveURL(/\/es\/blog$/)
-    expect(await visibleCards(page)).toHaveLength(5)
+    expect(await visibleCards(page)).toHaveLength(6)
     await expect(page.locator('[data-cw-blog-search]')).toBeHidden()
   })
 
@@ -221,7 +221,7 @@ test.describe('búsqueda del blog (US2, FR-506, SC-501)', () => {
       await empty.getByRole('button', { name: 'Limpiar' }).click()
       await expect(input).toHaveValue('')
       await expect(input).toBeFocused()
-      expect(await visibleCards(page)).toHaveLength(5)
+      expect(await visibleCards(page)).toHaveLength(6)
       await expect(page.locator('[data-cw-year-group]').first()).toBeVisible()
     })
   }
@@ -237,7 +237,7 @@ test.describe('búsqueda del blog (US2, FR-506, SC-501)', () => {
     await expect(page.locator('[data-cw-featured] [data-cw-post-card]')).toBeHidden()
     await input.press('Escape')
     await expect(input).toHaveValue('')
-    expect(await visibleCards(page)).toHaveLength(5)
+    expect(await visibleCards(page)).toHaveLength(6)
   })
 })
 

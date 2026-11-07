@@ -52,8 +52,8 @@ La [documentación de Next.js](https://nextjs.org/docs/app/api-reference/file-co
 
 ## Decisiones que siguen pendientes
 
-- BLOG: la spec exige revisión del autor antes de integrar post6. El texto está conservado y sus pruebas seleccionadas pasan; no se integró al registro de dev.
-- Synergos fase 2: T0901–T0903 requieren las respuestas P-904 a P-909, la aprobación del atlas y el boceto antes de implementar.
+- BLOG: el autor aprobó incorporar post6 cuando pasara las validaciones. Se corrigieron sus referencias al SVG retirado por la 010, usando la variante de cada idioma. `verify` pasó con 1.976 unitarias, 27 omitidas y 130 páginas; también 152 e2e del blog y cuatro auditorías de contraste del nuevo post. Preparado para integrar localmente; no autoriza desplegar a main.
+- Synergos fase 2: el autor aprobó la subpágina, el boceto, las 18 entradas del atlas y P-905 a P-909. La implementación continúa en lane/SYN2; las aprobaciones se registran en su spec.
 - Cuarta escena de Sobre mí: T960 requiere la entrevista y aprobación del contenido. No se inventaron respuestas.
 - SEO: compra de dominio, tokens y acciones en Search Console son tareas del autor; no se ejecutaron.
 
@@ -62,4 +62,4 @@ La [documentación de Next.js](https://nextjs.org/docs/app/api-reference/file-co
 1. Resolver el fallo RSC/404 preservando los contratos B6/T940; mantener el escáner estricto.
 2. Repetir el escaneo de privacidad y completar la suite full sobre el resultado final.
 3. Cerrar T1064 solo cuando exista evidencia completa.
-4. Continuar BLOG y Synergos fase 2 con las decisiones del autor.
+4. Incorporar el artículo validado y continuar Synergos fase 2 con las decisiones ya confirmadas del autor.

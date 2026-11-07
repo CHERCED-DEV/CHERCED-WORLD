@@ -15,8 +15,9 @@ test.describe('tarjetas del índice (D-07)', () => {
     test(`en ${lang} cada tarjeta tiene un solo enlace, con el título como nombre, y un "${READ_MORE[lang]}" visible`, async ({ page }) => {
       await page.goto(`/${lang}/blog`)
       const cards = page.locator('[data-cw-post-card]')
-      await expect(cards).toHaveCount(5)
+      await expect(cards).toHaveCount(6)
       expect(await cards.evaluateAll((all) => all.map((card) => card.getAttribute('data-cw-post-card')))).toEqual([
+        'post6',
         'post5',
         'post4',
         'post3',

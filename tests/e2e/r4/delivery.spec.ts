@@ -6,7 +6,7 @@ function onlyIn(...projects: string[]) {
   })
 }
 
-const POSTS = ['post1', 'post2', 'post3', 'post4', 'post5']
+const POSTS = ['post1', 'post2', 'post3', 'post4', 'post5', 'post6']
 const STATIC_PATHS = ['es', 'en'].flatMap((lang) => [`/${lang}/blog`, `/${lang}/blog/catalog`, ...POSTS.map((id) => `/${lang}/blog/${id}`)])
 
 test.describe('el blog se entrega prerenderizado (D-05)', () => {

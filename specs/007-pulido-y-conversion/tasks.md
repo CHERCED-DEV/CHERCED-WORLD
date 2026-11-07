@@ -54,7 +54,9 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 ## Bloque 5: después
 
 - [ ] T950 Ajuste fino del móvil que pida el autor sobre la 006.
-- [ ] T951 Post "Lo que 2.353 tests no vieron", en ES y EN (Q4 de la 005).
+- [x] T951 Post "Lo que 2.353 tests no vieron", en ES y EN (Q4 de la 005).
+  - Aprobado por el autor el 2026-11-07. Integración validada con `verify`, 152 e2e del blog y cuatro auditorías de
+    contraste del post en escritorio/móvil y ambos temas. El despliegue a producción sigue separado.
 
 ## Pedidos del autor del 2026-11-06 (después del bloque 2)
 
