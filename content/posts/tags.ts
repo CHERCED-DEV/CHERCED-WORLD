@@ -17,4 +17,6 @@ export const tags: PostTagNames[] = [
   { es: 'acoplamiento', en: 'coupling' },
   { es: 'guía', en: 'guide' },
   { es: 'mdx', en: 'mdx' },
+  { es: 'pruebas', en: 'testing' },
+  { es: 'sistemas distribuidos', en: 'distributed systems' },
 ]

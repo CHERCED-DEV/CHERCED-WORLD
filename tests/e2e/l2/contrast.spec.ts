@@ -11,6 +11,7 @@ const ROUTES = [
   '/es/blog',
   '/es/blog/post1',
   '/es/blog/post5',
+  '/es/blog/post6',
   '/es/contactMe',
   '/es/privacy',
   '/es/esta-ruta-no-existe',

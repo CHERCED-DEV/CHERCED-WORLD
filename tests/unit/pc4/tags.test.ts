@@ -146,7 +146,7 @@ describe('cada superficie muestra las etiquetas en el idioma de la página (B9)'
       for (const post of searchIndex.facts.posts) for (const tag of post.tags) expect(foreign.has(tag), `${lang}: índice "${tag}"`).toBe(false)
       const architecture = listPostsTool(searchIndex, { tag: 'architecture' }, { origin: null })
       const arquitectura = listPostsTool(searchIndex, { tag: 'arquitectura' }, { origin: null })
-      expect(architecture.posts.map((post) => post.id).sort()).toEqual(['post4', 'post5'])
+      expect(architecture.posts.map((post) => post.id).sort()).toEqual(['post4', 'post5', 'post6'])
       expect(arquitectura.posts.map((post) => post.id)).toEqual(architecture.posts.map((post) => post.id))
       for (const post of architecture.posts) expect(post.tags).toContain(tagIn('architecture', lang))
     })

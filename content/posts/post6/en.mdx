@@ -1,0 +1,98 @@
+export const meta = {
+  id: 'post6',
+  lang: 'en',
+  originalLang: 'es',
+  title: "What 2,353 tests didn't see",
+  description: "The two costliest defects in Synergos got past the tests, because the tests believed what the code believed. Killing a process mid-payment found them.",
+  date: '2026-11-07',
+  tags: ['testing', 'distributed systems', 'ai-agents', 'architecture'],
+  image: {
+    src: '/assets/imgs/projects/synergos.svg',
+    alt: 'Diagram of the Synergos layers: resources on a CDN, Umbraco as the composition layer and web components on top',
+    width: 960,
+    height: 640,
+  },
+  author: 'Camilo Hernández',
+  cover: 'generated',
+}
+
+On August 6, 2026, Synergos' continuous integration counted 2,353 automated tests passing. By November there are more than 6,600. Neither number is what this post is about. It's about what those tests didn't see: the two costliest defects in the project.
+
+With AI agents, writing tests gets cheaper every day. Having a lot of them doesn't say much anymore. What I want to talk about is what a test suite can't see, and why.
+
+## The tests believed what the code believed
+
+Tests weren't missing. The ones we had took for granted the same wrong idea the code did. And a test like that always passes.
+
+<Callout type="learned">
+A green test doesn't say the code is right. It says the code matches what you believed.
+</Callout>
+
+Both defects came from somewhere else: running the real processes and killing one in the middle of a payment.
+
+## First, the context
+
+In Synergos, every business capability owns its own store: payments, scheduling, inventory, orders. An appointment or a purchase crosses several of them, and no transaction spans them all. If a step fails halfway, the earlier ones have to be undone. That's called compensating, and a saga orchestrator coordinates it.
+
+Two decisions matter for what follows. A compensation is recorded the moment something exists that might need undoing, not later, so it survives a crash. And a background sweep runs every minute and retries the compensations that are still due.
+
+## Defect 1: every healthy appointment cancelled itself
+
+The first orchestrator was healthcare: booking an appointment with a copay. Booking holds the slot and authorizes the charge. From that moment on, the appointment carries its two compensations: release the slot and release the charge.
+
+The sweep picked "every saga with a pending compensation". And that describes every healthy appointment waiting for confirmation.
+
+It surfaced when we repeated the exercise of killing scheduling mid-payment, this time with six processes. An appointment was booked at 16:39:33. At 16:39:39, with nobody doing anything, the sweep released the slot and the charge. Six seconds to cancel an appointment that had nothing wrong with it.
+
+No test saw it because they all called the compensating function directly, and none went through the selection: which sagas the sweep picks. The code and the tests shared the same assumption: that a recorded compensation is pending work.
+
+It isn't. It's **armed**, like insurance. It only becomes work once something has already failed. The fix is a one-line guard:
+
+```csharp
+public static bool IsUnwinding(this ISaga saga)
+    => saga.Status is SagaStatus.Compensating or SagaStatus.CompensationFailed;
+```
+
+Two tests came with it that do look at the selection, one in each direction. The first checks that a freshly booked appointment isn't work for the sweep. The second, that an appointment that did fail gets back in, because filtering too much would leave unretried exactly what the sweep exists to retry.
+
+Then the run was repeated with the fix. The healthy appointment went through two sweeps untouched. Killing scheduling again between the payment and the confirmation, the money came back on its own and the slot was released once scheduling returned.
+
+## Defect 2: the order was closed before shipping
+
+The second orchestrator was the store, and that wasn't random: the store doesn't use scheduling. If the saga machinery had been shaped around a slot with an expiry, that's where it would show.
+
+Its tests passed 16 out of 16 on the first try. The run with eight processes didn't. The shipping service was killed between the payment and the shipment, and two of the five compensations got stuck. The capabilities said why:
+
+- `inventory.hold_already_consumed`: returning stock is an adjustment, not a release.
+- `orders.order_closed`: the order was already fulfilled, and a return isn't a cancellation.
+
+They were two bugs with the same root. I already knew a payment's compensation changes: while authorized, undoing it means releasing; once captured, it means refunding. I missed it in two more steps. Once held inventory is consumed, undoing it no longer means releasing the hold: it means restocking. And closing the order takes away the option to cancel it, so closing has to come after shipping.
+
+What taught me the most came next. When I fixed it, five tests went red. It wasn't a regression: they were written against the broken behavior, and they expected the hold to be released where an adjustment now goes. Those tests didn't just miss the defect. They defended it.
+
+With the fix, the same run settled five compensations of three different kinds in a single pass, with a capability down. The stock came back, the money came back on its own, and the order could be cancelled because it wasn't closed yet.
+
+## Why this matters more with AI agents
+
+I work with Spec-Driven Development: I write what has to happen, and AI agents build the code and its tests under my rules. That speeds things up enormously, but it concentrates exactly the risk this post is about.
+
+When the same author writes the code and its tests, both come from the same reading of the problem. If that reading has a hole, the hole ends up on both sides. It happens with people and it happens with agents, except an agent writes code and tests faster than a person can review them. More tests from the same author don't close the hole. They just pile more green on top.
+
+What does close it is something that doesn't share those assumptions: the real system, running. A crashed process doesn't know what the agent believed. And killing it between the payment and the confirmation picks the exact moment a test can't pick.
+
+## What changed
+
+I didn't stop writing tests. I learned which question each thing answers. A test double answers "what happens when the third step fails?", something a real service can't do on demand. A real process answers "does the call honor the contract?". They're two questions, and neither replaces the other.
+
+What did change were the rules:
+
+- **The agent's contract requires it.** If a task crosses services, when it's done the processes come up and one gets killed mid-flow. The rule says why: the two costliest defects were found by a live process, not a test.
+- **The pull request template asks for it.** And it only gets checked if it was really run: a false check is worse than an empty one.
+- **Every defect is filed with two mandatory answers:** why the tests didn't see it, and which one-line change turns it red again. If that line can't be written, the fix isn't understood.
+- **The lessons live in the shared core.** Every orchestrator inherits the "armed isn't pending" guard, and the rule to close as late as possible applies to every domain.
+
+## Green isn't the goal
+
+2,353 passing tests was a good number. But green only confirms what we already believed. What we didn't believe shows up when something really goes down, and you have to make that happen on purpose.
+
+If you want the logs from each run, they're in the public Synergos.CMS repository, in Spanish: [how what's already done gets undone](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/09-compensacion-cruzada.md) and [the promotion of the saga machinery](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/10-promocion-bff-core.md).

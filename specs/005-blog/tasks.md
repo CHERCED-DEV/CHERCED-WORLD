@@ -131,14 +131,18 @@ Rutas: `app/[lang]/blog/[id]/opengraph-image.tsx`, `app/[lang]/feed.xml/**`, `te
 Rutas: `content/posts/post6/**` a `content/posts/post12/**`, `content/posts/registry.ts`, `public/assets/imgs/posts/**`,
 `tests/unit/q4/**`.
 
-- [ ] T640 [P] `tests/unit/q4/posts-confidentiality.test.ts`, para los posts nuevos (FR-541):
+- [x] T640 [P] `tests/unit/q4/posts-confidentiality.test.ts`, para los posts nuevos (FR-541):
   - sin cantidades ligadas al empleador;
   - sin rutas tipo `Desktop/` ni nombres de carpetas privadas;
   - cada post existe en ES y EN (FR-540).
 - [ ] T641 **BLOQUEADA (P-501)**: el orden de publicación. El handoff recomienda arrancar con el post 1. Ningún post se
   integra sin el visto bueno del autor.
-- [ ] T642 Post 1, "Lo que 2.353 tests no vieron" / "What 2,353 tests didn't see", en `content/posts/post6/`.
+  - Orden resuelto por el autor (2026-11-07): post 1, post 2, post 3 y post 4. Sigue abierta hasta su visto bueno de
+    cada post, porque el registro no tiene borradores: integrar la rama es publicar.
+- [x] T642 Post 1, "Lo que 2.353 tests no vieron" / "What 2,353 tests didn't see", en `content/posts/post6/`.
   **BLOQUEADA (P-502)** en el título: por defecto, cifra exacta con la fecha de medición en el primer párrafo.
+  - Escrito en `lane/BLOG` con la cifra exacta y su fecha (6-ago-2026, CI) en el primer párrafo, registrado y con
+    portada generada. Espera el visto bueno del autor antes de integrarse (T641).
 - [ ] T643 [P] Post 2, "Un gate que nunca falló no vigila nada" / "A gate that never failed isn't watching anything", en
   `content/posts/post7/`.
 - [ ] T644 Post 3, "Director y líneas: cómo dirijo agentes en paralelo", en `content/posts/post8/`. **Depende de la 004**:

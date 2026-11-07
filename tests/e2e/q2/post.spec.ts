@@ -18,7 +18,7 @@ async function blockingViolations(page: Page) {
     .map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target.join(' ')).join(', ')}`)
 }
 
-const POSTS = ['post1', 'post2', 'post3', 'post4', 'post5'] as const
+const POSTS = ['post1', 'post2', 'post3', 'post4', 'post5', 'post6'] as const
 
 test.describe('callouts (T620, FR-510)', () => {
   onlyIn('desktop-chromium', 'no-js')
@@ -89,7 +89,7 @@ test.describe('series (T622, FR-512)', () => {
 test.describe('posts relacionados (T623, FR-513)', () => {
   onlyIn('desktop-chromium', 'no-js')
 
-  test('el post 5 sugiere el 3 por "humor" y no repite el anterior; el post 4 no tiene relacionados', async ({ page }) => {
+  test('el post 5 sugiere el 3 por "humor" y no repite el anterior; el post 4 sugiere el 6, que no es su vecino', async ({ page }) => {
     await page.goto('/es/blog/post5')
     const related = page.locator('[data-cw-related]')
     await expect(related.getByRole('heading', { name: 'Posts relacionados' })).toBeVisible()
@@ -102,7 +102,8 @@ test.describe('posts relacionados (T623, FR-513)', () => {
     await expect(related.locator('a[href="/es/blog/post4"]')).toHaveCount(0)
 
     await page.goto('/en/blog/post4')
-    await expect(page.locator('[data-cw-related-link]')).toHaveCount(0)
+    await expect(page.locator('[data-cw-related-link]')).toHaveCount(1)
+    await expect(page.locator('[data-cw-related-link]').first()).toHaveAttribute('href', '/en/blog/post6')
     await expect(page.locator('[data-cw-related] [data-cw-related-case="2"]')).toHaveAttribute('href', '/en/portfolio/2')
   })
 })
@@ -300,7 +301,7 @@ test.describe('accesibilidad de las piezas nuevas (axe)', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
   for (const scheme of ['dark', 'light'] as const) {
-    for (const path of ['/es/blog/catalog', '/es/blog/post5']) {
+    for (const path of ['/es/blog/catalog', '/es/blog/post5', '/en/blog/post6']) {
       test(`${path} sin violaciones críticas ni serias en tema ${scheme}`, async ({ page }) => {
         await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' })
         await skipIntro(page)

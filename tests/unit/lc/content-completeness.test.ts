@@ -31,7 +31,7 @@ const content = await import('@/lib/content')
 
 const LOCALES: Locale[] = ['es', 'en']
 const PUBLIC_DIR = path.resolve(process.cwd(), 'public')
-const POST_IDS = ['post1', 'post2', 'post3', 'post4', 'post5']
+const POST_IDS = ['post1', 'post2', 'post3', 'post4', 'post5', 'post6']
 const PROJECT_IDS = ['12', '13', '2', '14', '15', '1', '3', '4', '5', '6', '7', '8', '9', '10', '11']
 const PROJECTS_WITHOUT_LINKS = ['10', '14', '15']
 const SYNERGOS_REPOS = ['Synergos.CMS', 'Synergos.UI', 'Synergos.Fabrica']
@@ -43,6 +43,7 @@ const POST_ORIGIN: Record<string, { originalLang: Locale; date: RegExp }> = {
   post3: { originalLang: 'en', date: /^2023-\d{2}-\d{2}$/ },
   post4: { originalLang: 'es', date: /^2026-11-02$/ },
   post5: { originalLang: 'es', date: /^2026-11-02$/ },
+  post6: { originalLang: 'es', date: /^2026-11-07$/ },
 }
 
 const SKILLS_2026: Record<string, number> = {
@@ -382,7 +383,7 @@ describe('proyectos (FR-083, FR-443, FR-446)', () => {
 })
 
 describe('posts (FR-064, FR-075)', () => {
-  it('hay 5 posts en español e inglés y todos están en el registro', () => {
+  it('hay 6 posts en español e inglés y todos están en el registro', () => {
     const dirs = readdirSync(POSTS_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
@@ -435,7 +436,7 @@ describe('posts (FR-064, FR-075)', () => {
     expect(en).toContain('looking for opportunities outside Colombia')
   })
 
-  it('lista los 5 posts en cada idioma sin fallback', async () => {
+  it('lista los 6 posts en cada idioma sin fallback', async () => {
     for (const lang of LOCALES) {
       const listed = await content.listPosts(lang)
       expect(listed.map((post) => post.id).sort(), lang).toEqual(POST_IDS)

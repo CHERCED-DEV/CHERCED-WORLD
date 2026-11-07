@@ -121,7 +121,8 @@ describe('posts relacionados (T623, FR-513)', () => {
     }
     expect(related('post5')).toEqual(['post3'])
     expect(related('post3')).toEqual(['post5'])
-    expect(related('post4')).toEqual([])
+    expect(related('post4')).toEqual(['post6'])
+    expect(related('post6')).toEqual(['post4'])
   })
 
   it('sin relacionados no pinta la sección; con ellos, una tarjeta enlazada por post', () => {

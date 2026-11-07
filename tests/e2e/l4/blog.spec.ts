@@ -67,7 +67,12 @@ test.describe('posts sin JavaScript', () => {
     expect(await cards.count()).toBeGreaterThanOrEqual(1)
     for (const card of await cards.all()) {
       await expect(card.getByRole('heading', { level: 2 }).getByRole('link')).toHaveAttribute('href', /^\/es\/blog\/[\w-]+$/)
-      await expect(card.getByRole('img')).toHaveAttribute('alt', /.+/)
+      if ((await card.locator('[data-cw-post-media="generated"]').count()) > 0) {
+        await expect(card.locator('[data-cw-generated-cover]')).toHaveAttribute('aria-hidden', 'true')
+        await expect(card.locator('img')).toHaveCount(0)
+      } else {
+        await expect(card.getByRole('img')).toHaveAttribute('alt', /.+/)
+      }
       await expect(card.locator('time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/)
     }
   })
@@ -82,7 +87,11 @@ test.describe('posts sin JavaScript', () => {
         await expect(post.getByRole('heading', { level: 1 })).toBeVisible()
         await expect(post.locator('header time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/)
         await expect(post.locator('[data-cw-reading-time]')).toHaveText(lang === 'es' ? /^\d+ min de lectura$/ : /^\d+ min read$/)
-        await expect(post.locator('header').getByRole('img')).toHaveAttribute('alt', /.+/)
+        if ((await post.locator('header [data-cw-generated-cover]').count()) > 0) {
+          await expect(post.locator('header [data-cw-generated-cover]')).toHaveAttribute('aria-hidden', 'true')
+        } else {
+          await expect(post.locator('header').getByRole('img')).toHaveAttribute('alt', /.+/)
+        }
         const paragraphs = post.locator('[data-cw-post-body] p')
         expect(await paragraphs.count(), href).toBeGreaterThanOrEqual(2)
         await expect(paragraphs.first()).toBeVisible()

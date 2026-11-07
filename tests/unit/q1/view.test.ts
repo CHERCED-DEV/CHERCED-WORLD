@@ -16,10 +16,10 @@ describe('índice del blog sobre los posts reales (T610, T611)', () => {
   for (const lang of ['es', 'en'] as const) {
     it(`en ${lang}: el destacado va arriba y no se repite en su grupo`, async () => {
       const view = await blogIndexView(lang)
-      expect(view.featured?.post.id).toBe('post5')
+      expect(view.featured?.post.id).toBe('post6')
       expect(view.featured?.badge).toBe(lang === 'es' ? 'Destacado' : 'Featured')
       const grouped = view.groups.flatMap((group) => ids(group.posts))
-      expect(grouped).not.toContain('post5')
+      expect(grouped).not.toContain('post6')
       expect([view.featured?.post.id, ...grouped].sort()).toEqual(ids(await ownPosts(lang)).sort())
     })
 
@@ -29,7 +29,7 @@ describe('índice del blog sobre los posts reales (T610, T611)', () => {
         { year: 2026, label: 'now', title: lang === 'es' ? 'Ahora' : 'Now' },
         { year: 2023, label: 'archive', title: lang === 'es' ? 'Archivo' : 'Archive' },
       ])
-      expect(view.groups.map((group) => ids(group.posts))).toEqual([['post4'], ['post3', 'post2', 'post1']])
+      expect(view.groups.map((group) => ids(group.posts))).toEqual([['post5', 'post4'], ['post3', 'post2', 'post1']])
     })
   }
 
@@ -41,7 +41,7 @@ describe('índice del blog sobre los posts reales (T610, T611)', () => {
     expect(new Set(keys).size).toBe(keys.length)
     expect(view.toolbar.tags).toContainEqual({ key: 'inteligencia-artificial', label: 'inteligencia artificial', href: '/es/blog/tag/inteligencia-artificial' })
     expect(view.toolbar.rss).toEqual({ href: '/es/feed.xml', label: 'Suscríbete por RSS' })
-    expect(view.search?.docs.map((doc) => doc.id).sort()).toEqual(['post1', 'post2', 'post3', 'post4', 'post5'])
+    expect(view.search?.docs.map((doc) => doc.id).sort()).toEqual(['post1', 'post2', 'post3', 'post4', 'post5', 'post6'])
     expect(view.search?.labels).toMatchObject({ result: '1 resultado', results: '{count} resultados', noResults: blogEs['index.noResults'] })
     expect(view.tag).toBeNull()
   })
