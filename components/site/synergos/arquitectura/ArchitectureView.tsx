@@ -6,60 +6,91 @@ import { GlassSurface } from '@/components/ui/GlassSurface'
 import { CornerMarks, GlowOrb, GridLines } from '@/components/ui/graphics'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionTitle } from '@/components/site/SectionTitle'
-import { cx } from '@/components/ui/cx'
+import { buttonClassName } from '@/components/ui/Button'
 import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { RecorridoDiagram } from './RecorridoDiagram'
 import { PatternAtlas } from './PatternAtlas'
 import { SourceLinks } from './SourceLinks'
+import { SystemBlueprint } from './SystemBlueprint'
+import { ChapterNav } from './ChapterNav'
 import styles from './Architecture.module.scss'
 
-function Topic({ id, lang }: { id: string; lang: Locale }) {
+function Topic({ id, lang, skipLead = false }: { id: string; lang: Locale; skipLead?: boolean }) {
   const topic = architecture.topics.find(item => item.id === id)
   if (!topic || topic.private) return null
-  return <article className={styles.topic} data-cw-architecture-topic={id}><h3>{topic.title[lang]}</h3>{topic.body.map(paragraph => <p key={paragraph.en} className={styles.prose}>{paragraph[lang]}</p>)}<SourceLinks sources={topic.sources} lang={lang} /></article>
+  return <article className={styles.topic} data-cw-architecture-topic={id}>
+    <h3>{topic.title[lang]}</h3>
+    {topic.body.slice(skipLead ? 1 : 0).map(paragraph => <p key={paragraph.en} className={styles.prose}>{paragraph[lang]}</p>)}
+    <SourceLinks sources={topic.sources} lang={lang} />
+  </article>
 }
 
 export function ArchitectureView({ lang }: { lang: Locale }) {
   const { copy, facts } = architecture
   const sections = Object.entries(copy.sections)
+  const leadTopics: Record<string, string> = { recorrido: 'frameworks', contratos: 'contratos', islas: 'islas' }
   const counted = new Intl.DateTimeFormat(lang === 'es' ? 'es-CO' : 'en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${facts.countedAt}T00:00:00Z`))
-  return (
-    <div className={styles.page} data-cw-synergos-architecture="">
-      <header className={styles.section}>
-        <Link className={styles.back} href={localizedPath(lang, '/synergos')}>← {copy.back[lang]}</Link>
-        <GlassSurface className={styles.hero} edge grain depth light sweep>
-          <GridLines fade="radial" /><GlowOrb tone="accent" size="lg" x="95%" y="5%" /><CornerMarks />
-          <div className={styles.heroText}>
-          <p className={styles.eyebrow}>{copy.eyebrow[lang]}</p>
+  const ui = lang === 'es' ? { start: 'Ver el recorrido', atlas: 'Explorar los patrones', chapter: 'Dentro del sistema', code: 'El mismo contrato. Dos lenguajes.', factory: 'Lo construido y el siguiente paso.', public: 'Arquitectura abierta', pilot: 'Del spec al resultado' } : { start: 'Explore the system', atlas: 'Explore the patterns', chapter: 'Inside the system', code: 'One contract. Two languages.', factory: 'What exists. What comes next.', public: 'Open architecture', pilot: 'From spec to result' }
+  return <div className={styles.page} data-cw-synergos-architecture="">
+    <header className={styles.opening}>
+      <Link className={styles.back} href={localizedPath(lang, '/synergos')}>← {copy.back[lang]}</Link>
+      <GlassSurface className={styles.hero} edge grain depth light>
+        <GridLines fade="radial" /><GlowOrb tone="accent" size="lg" x="85%" y="45%" /><CornerMarks />
+        <div className={styles.heroText}>
+          <p className={styles.eyebrow}>{ui.public}<span aria-hidden="true"> / 01—05</span></p>
           <SectionTitle as="h1" size="lg" className={styles.title}>{copy.title[lang]}</SectionTitle>
-          <p className={styles.lead}>{copy.lead[lang]}</p>
-          <p className={styles.date}>{copy.counted[lang]} · <time dateTime={facts.countedAt}>{counted}</time></p>
+          <p className={styles.heroStatement}>{copy.lead[lang]}</p>
+          <div className={styles.heroActions}>
+            <a href="#recorrido" className={buttonClassName({ variant: 'solid', size: 'lg' })}>{ui.start} <span aria-hidden="true">↓</span></a>
+            <a href="#patrones" className={styles.textAction}>{ui.atlas} <span aria-hidden="true">↗</span></a>
           </div>
+        </div>
+        <SystemBlueprint lang={lang} />
+        <div className={styles.heroFooter}>
           <div className={styles.facts}>{(['pieces', 'capabilities', 'orchestrators'] as const).map(key => <div key={key} className={styles.fact}><strong>{facts[key]}</strong><span>{copy.facts[key][lang]}</span></div>)}</div>
-        </GlassSurface>
-        <nav className={styles.toc} aria-label={copy.nav[lang]}>{sections.map(([id, label], index) => <a key={id} href={`#${id}`}>{String(index + 1).padStart(2, '0')} · {label[lang]}</a>)}</nav>
-      </header>
-      {sections.map(([id, label], index) => (
-        <Reveal as="section" id={id} key={id} className={styles.section} aria-labelledby={`architecture-${id}`} data-cw-architecture-section={id}>
-          <div className={styles.heading}><span aria-hidden="true">{String(index + 1).padStart(2, '0')} /</span><SectionTitle id={`architecture-${id}`}>{label[lang]}</SectionTitle></div>
-          {id === 'recorrido' ? <>
-            <RecorridoDiagram lang={lang} />
-            <div className={styles.split}><GlassSurface className={styles.card} edge grain depth light><Topic id="frameworks" lang={lang} /></GlassSurface><GlassSurface className={styles.card} edge grain depth light><Topic id="cdn" lang={lang} /></GlassSurface></div>
-            <GlassSurface className={styles.card} edge grain depth light><Topic id="umbraco" lang={lang} /></GlassSurface>
-          </> : null}
-          {id === 'contratos' ? <>
-            <ArchitectureDiagram kind="contratos" lang={lang} />
-            <GlassSurface className={styles.card} edge grain depth light><Topic id="contratos" lang={lang} /></GlassSurface>
-            <div className={styles.examples}>{architecture.examples.map(example => <article key={example.language} className={styles.example}><h3>{example.language}</h3><pre tabIndex={0}><code>{example.code}</code></pre><SourceLinks sources={[example.source]} lang={lang} /></article>)}</div>
-            <GlassSurface className={styles.card} edge grain depth light><Topic id="atomico" lang={lang} /></GlassSurface>
-          </> : null}
-          {id === 'islas' ? <><ArchitectureDiagram kind="islas" lang={lang} /><GlassSurface className={styles.card} edge grain depth light><Topic id="islas" lang={lang} /></GlassSurface></> : null}
-          {id === 'patrones' ? <PatternAtlas lang={lang} /> : null}
-          {id === 'fabrica' ? <div className={styles.factoryGrid}>{(['hecho', 'vision'] as const).map(status => <GlassSurface key={status} as="article" edge grain depth light className={cx(styles.factory, status === 'vision' && styles.vision)} data-cw-factory-status={status}><h3>{status === 'hecho' ? copy.built[lang] : copy.vision[lang]}</h3>{architecture.factory.filter(item => item.status === status).map(item => <div className={styles.milestone} key={item.id}><h4>{item.title[lang]}</h4><p className={styles.prose}>{item.body[lang]}</p><SourceLinks sources={item.sources} lang={lang} /></div>)}</GlassSurface>)}</div> : null}
-        </Reveal>
-      ))}
-      <GlassSurface className={styles.card} edge grain depth light><Topic id="accesibilidad" lang={lang} /></GlassSurface>
-      <p className={styles.date}>{copy.summary[lang]}</p>
-    </div>
-  )
+          <p className={styles.date}>{copy.counted[lang]}<br /><time dateTime={facts.countedAt}>{counted}</time></p>
+        </div>
+      </GlassSurface>
+    </header>
+    <ChapterNav label={copy.nav[lang]} items={sections.map(([id, title]) => ({ id, label: title[lang] }))} />
+    {sections.map(([id, label], index) => {
+      const lead = architecture.topics.find(topic => !topic.private && topic.id === leadTopics[id])?.body[0]
+      return <Reveal as="section" id={id} key={id} className={styles.section} aria-labelledby={`architecture-${id}`} data-cw-architecture-section={id}>
+        <header className={styles.chapterHeading}>
+          <p className={styles.eyebrow}><span className={styles.chapterNumber}>{String(index + 1).padStart(2, '0')}</span>{ui.chapter}</p>
+          <SectionTitle id={`architecture-${id}`}>{label[lang]}</SectionTitle>
+          {lead ? <p className={styles.sectionLead}>{lead[lang]}</p> : null}
+        </header>
+        {id === 'recorrido' ? <>
+          <RecorridoDiagram lang={lang} />
+          <GlassSurface className={styles.editorialGrid} edge grain depth><Topic id="frameworks" lang={lang} skipLead /><Topic id="cdn" lang={lang} /><Topic id="umbraco" lang={lang} /></GlassSurface>
+        </> : null}
+        {id === 'contratos' ? <>
+          <ArchitectureDiagram kind="contratos" lang={lang} />
+          <div className={styles.contractStory}>
+            <GlassSurface className={styles.editorial} edge grain depth><Topic id="contratos" lang={lang} skipLead /></GlassSurface>
+            <GlassSurface className={styles.codeWorkbench} edge grain depth>
+              <p className={styles.eyebrow}>{ui.code}</p>
+              <div className={styles.examples}>{architecture.examples.map(example => <article key={example.language} className={styles.example}><h3><span aria-hidden="true">{example.language === 'C#' ? '{ }' : '⟨ ⟩'}</span>{example.language}</h3><pre tabIndex={0}><code>{example.code}</code></pre><SourceLinks sources={[example.source]} lang={lang} /></article>)}</div>
+            </GlassSurface>
+          </div>
+          <div className={styles.featureBand}><span aria-hidden="true" className={styles.atomicMark}>◈</span><Topic id="atomico" lang={lang} /></div>
+        </> : null}
+        {id === 'islas' ? <div className={styles.islandStory}><ArchitectureDiagram kind="islas" lang={lang} /><GlassSurface className={styles.editorial} edge grain depth><Topic id="islas" lang={lang} skipLead /></GlassSurface></div> : null}
+        {id === 'patrones' ? <PatternAtlas lang={lang} /> : null}
+        {id === 'fabrica' ? <>
+          <p className={styles.factoryLead}>{ui.factory}</p>
+          <div className={styles.factoryGrid}>{(['hecho', 'vision'] as const).map(status => <GlassSurface key={status} as="article" edge grain depth light className={styles.factory} data-cw-factory-status={status}>
+            <div className={styles.factoryTitle}><span className={styles.status} data-status={status}>{status === 'hecho' ? '●' : '◌'}</span><h3>{status === 'hecho' ? copy.built[lang] : copy.vision[lang]}</h3></div>
+            {architecture.factory.filter(item => item.status === status).map((item, i) => <div className={styles.milestone} key={item.id}>
+              <span className={styles.milestoneIndex} aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div><h4>{item.title[lang]}</h4><p className={styles.prose}>{item.body[lang]}</p><SourceLinks sources={item.sources} lang={lang} /></div>
+            </div>)}
+          </GlassSurface>)}</div>
+        </> : null}
+      </Reveal>
+    })}
+    <GlassSurface className={styles.accessibility} edge grain depth><Topic id="accesibilidad" lang={lang} /></GlassSurface>
+    <footer className={styles.closing}><p className={styles.date}>{copy.summary[lang]}</p><Link href={localizedPath(lang, '/synergos')} className={styles.textAction}>← {copy.back[lang]}</Link></footer>
+  </div>
 }

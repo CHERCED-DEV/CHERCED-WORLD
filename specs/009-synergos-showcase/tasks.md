@@ -187,3 +187,5 @@ dice nada que §3.5 no sostenga.
 - Se comprimieron de forma reversible las cachés de compilación creadas en SYN2 y BLOG para recuperar espacio, sin eliminar archivos.
 - T0929 permanece pendiente de la revisión final del autor. La aprobación del boceto y del atlas ya está registrada; esta revisión final no equivale a publicar.
 - El fallo previo RSC/404 y T1064 de la spec 010 continúan abiertos. Esta validación acotada no sustituye la suite global.
+
+- Revisión visual posterior: el autor solicitó recomponer la página completa. Mapa de capas navegable, capítulos con composición diferenciada y atlas agrupado/filtrable implementados. 15 unitarias y 13 e2e aprobadas; T0929 continúa pendiente de aprobación visual del autor.

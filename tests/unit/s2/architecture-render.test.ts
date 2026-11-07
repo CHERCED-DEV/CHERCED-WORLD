@@ -6,6 +6,19 @@ import { ArchitectureView } from '@/components/site/synergos/arquitectura/Archit
 import { architectureJsonLd } from '@/lib/seo/synergos-architecture'
 
 describe.each(['es', 'en'] as const)('arquitectura SSR %s', lang => {
+  it('un tema privado tampoco aparece en la introducción del capítulo', () => {
+    const topic = architecture.topics.find(item => item.id === 'frameworks')!
+    const previous = topic.private
+    topic.private = true
+    try {
+      const html = renderToStaticMarkup(createElement(ArchitectureView, { lang }))
+      expect(html).not.toContain(topic.body[0]![lang])
+      expect(html).not.toContain('data-cw-architecture-topic="frameworks"')
+    } finally {
+      if (previous) topic.private = previous
+      else delete topic.private
+    }
+  })
   it('muestra el atlas aprobado, alternativas en texto y las limitaciones', () => {
     const html = renderToStaticMarkup(createElement(ArchitectureView, { lang }))
     expect(html.match(/data-cw-pattern="/g)).toHaveLength(18)
