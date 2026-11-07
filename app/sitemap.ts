@@ -2,16 +2,18 @@ import type { MetadataRoute } from 'next'
 import { now } from '@/content/now'
 import { site } from '@/content/site'
 import { synergosShowcase, SYNERGOS_PATH } from '@/content/synergos-showcase'
+import { SYNERGOS_ARCHITECTURE_PATH, SYNERGOS_ARCHITECTURE_UPDATED } from '@/content/synergos-architecture'
 import { tagSlugsIn } from '@/lib/blog/source'
 import { tagAlternates, tagKey } from '@/lib/blog/tags'
 import { getProjects, listPosts } from '@/lib/content'
 import { alternates, defaultLocale, locales, localizedPath, type Locale } from '@/lib/i18n'
 import { absoluteUrl } from '@/lib/site-url'
 
-const PUBLIC_PATHS = ['/', '/aboutMe', '/services', '/portfolio', SYNERGOS_PATH, '/now', '/ai-lab', '/blog', '/contactMe', '/privacy'] as const
+const PUBLIC_PATHS = ['/', '/aboutMe', '/services', '/portfolio', SYNERGOS_PATH, SYNERGOS_ARCHITECTURE_PATH, '/now', '/ai-lab', '/blog', '/contactMe', '/privacy'] as const
 
 const PAGE_UPDATED: Partial<Record<string, string>> = {
   [SYNERGOS_PATH]: synergosShowcase.countedAt,
+  [SYNERGOS_ARCHITECTURE_PATH]: SYNERGOS_ARCHITECTURE_UPDATED,
   '/now': now.updatedAt,
   '/privacy': site.privacy.updatedAt,
 }

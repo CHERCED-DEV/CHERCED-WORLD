@@ -112,6 +112,7 @@ const ACTION_KEYWORDS: Record<string, string> = {
   'action:shortcuts': 'atajos shortcuts teclado keyboard teclas keys',
   'action:now': 'ahora now hoy today',
   'action:synergos': 'synergos proyecto insignia flagship project showcase vitrina',
+  'action:synergos-architecture': 'synergos arquitectura architecture patrones patterns contratos contracts',
   'action:ai-lab': 'ai lab laboratorio laboratory ia experimentos experiments demos',
 }
 
@@ -208,6 +209,7 @@ export function buildCommands(labels: Dictionary, context: CommandContext): Pale
       commandOnly: true,
       command: { type: 'navigate', href: context.synergos },
     })
+    commands.push({ id: 'action:synergos-architecture', group: 'actions', title: t(labels, 'palette.action.synergosArchitecture'), hint: `${context.synergos}/arquitectura`, commandOnly: true, command: { type: 'navigate', href: `${context.synergos}/arquitectura` } })
   }
   if (context.aiLab) {
     commands.push({
@@ -232,6 +234,7 @@ export function buildCommands(labels: Dictionary, context: CommandContext): Pale
 }
 
 function groupOf(doc: SearchDoc): PaletteGroup | null {
+  if (doc.id === 'architecture:synergos') return 'pages'
   if (doc.kind === 'page') return 'pages'
   if (doc.kind === 'project') return 'projects'
   if (doc.kind === 'post') return 'posts'
@@ -286,6 +289,7 @@ export function paletteResults(
     return searcher
       .search(commands, { limit: MAX_RESULTS, filter: (doc) => doc.item.group === 'actions' })
       .map((hit) => asCommand(hit.doc.item))
+      .sort((a, b) => fold(commands) === 'synergos' ? Number(b.id === 'action:synergos') - Number(a.id === 'action:synergos') : 0)
   }
   if (isCapsuleCommand(query)) {
     return [{ id: 'secret:capsule', group: 'secret', title: secretLabel, command: { type: 'capsule' } }]
@@ -326,6 +330,7 @@ export type PaletteCommandId =
   | 'action:shortcuts'
   | 'action:now'
   | 'action:synergos'
+  | 'action:synergos-architecture'
   | 'action:ai-lab'
   | 'action:capsule'
   | `extension:${string}`

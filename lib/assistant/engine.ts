@@ -474,6 +474,12 @@ function topics(ctx: Context): string {
 }
 
 function respond(ctx: Context, question: NormalizedQuestion, result: Classification): Draft {
+  const architecture = ctx.facts.architecture
+  if (architecture && !['refusal', 'out_of_scope', 'greeting', 'thanks'].includes(result.intent) && /\bsynergos\b/.test(question.folded) && /\b(?:patrones?|patterns?)\b/.test(question.folded)) {
+    const selected = architecture.patterns.slice(0, 3)
+    const firstSource = selected[0]?.sources[0]
+    return { kind: 'answer', parts: [`${architecture.title}.`, ...selected.map(pattern => `${pattern.name}: ${pattern.description}${pattern.limitation ? ` ${pattern.limitation}` : ''}`)], links: [{ label: architecture.title, href: architecture.url, external: false }, ...selected.map(pattern => ({ label: pattern.name, href: pattern.url, external: false })), ...(firstSource ? [{ label: firstSource.label, href: firstSource.href, external: true }] : [])] }
+  }
   switch (result.intent) {
     case 'refusal':
       return { kind: 'refusal', parts: [tr(ctx, 'assistant.tpl.refusal'), topics(ctx)], links: [] }

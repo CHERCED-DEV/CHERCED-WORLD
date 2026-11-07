@@ -15,6 +15,12 @@ const text = await buildLlmsTxt(BASE)
 const lines = text.split('\n')
 
 describe('/llms.txt (FR-489a, R-405, contenido.md §25)', () => {
+  it('incluye la arquitectura en ambos idiomas y las 18 anclas del atlas con sus fuentes', () => {
+    expect(text).toContain('https://cherced-world.test/es/synergos/arquitectura')
+    expect(text).toContain('https://cherced-world.test/en/synergos/arquitectura')
+    expect(lines.filter(line => line.includes('/en/synergos/arquitectura#patron-'))).toHaveLength(18)
+    expect(text).toContain('https://github.com/CHERCED-DEV/Synergos.CMS/blob/')
+  })
   it('sigue la estructura de §25, en orden', async () => {
     const common = await getDictionary('en', 'common')
     expect(lines.slice(0, 3)).toEqual(['# CHERCED-WORLD', '', `> ${common['meta.description']}`])

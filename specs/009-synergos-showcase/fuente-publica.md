@@ -49,7 +49,7 @@ rutas locales, datos de prueba, códigos de compra ni hashes; nada del repo raí
 - Más de 6.600 tests automáticos en el backend (6.675 en tres suites).
 - 92 gates de arquitectura.
 - Más de 140 ADR escritas.
-- Backend: 20 servicios `Api` y 10 `Bff`.
+- Backend: 20 servicios `Api` y 9 `Bff` desplegables (orquestadores). El décimo proyecto del conteo anterior es una biblioteca compartida; aclaración verificada el 5 de noviembre de 2026 en las evidencias de fase 2.
 
 ## Enlaces públicos
 

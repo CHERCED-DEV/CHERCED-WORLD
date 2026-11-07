@@ -88,6 +88,7 @@ test.describe('modo de comandos > (FR-451, SC-403)', () => {
       'action:shortcuts',
       'action:now',
       'action:synergos',
+      'action:synergos-architecture',
     ])
     await expect(group.getByRole('option', { name: 'Descargar CV en español' })).toBeVisible()
     await expect(group.getByRole('option', { name: 'Descargar CV en inglés' }), 'T970: la paleta baja solo el PDF del idioma de la página').toHaveCount(0)

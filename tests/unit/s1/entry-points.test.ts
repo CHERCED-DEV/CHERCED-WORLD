@@ -127,6 +127,11 @@ describe('paleta: comando > synergos', () => {
     }
     const [first] = model.paletteResults('>synergos', ctx.docs, ctx.searcher, 's')
     expect(first?.title).toBe(lang === 'es' ? 'Conoce Synergos, mi proyecto insignia' : 'Explore Synergos, my flagship project')
+    for (const query of ['> synergos arquitectura', '> synergos architecture']) {
+      const [architecture] = model.paletteResults(query, ctx.docs, ctx.searcher, 's')
+      expect(architecture?.id).toBe('action:synergos-architecture')
+      expect(architecture?.command).toEqual({ type: 'navigate', href: `/${lang}/synergos/arquitectura` })
+    }
   })
 
   it('solo aparece en modo de comandos, detrás de /now', async () => {

@@ -16,19 +16,19 @@ no se escribe: se agrega primero la evidencia, con fuente y fecha.
 
 ## Fase 0: decisiones del autor (bloquea todo lo demás)
 
-- [ ] T0901 [Todas] Entrevista corta con el autor: P-904 a P-909. Las respuestas van a la spec, en "Clarifications"
+- [x] T0901 [Todas] Entrevista corta con el autor: P-904 a P-909. Las respuestas van a la spec, en "Clarifications"
   (una sesión nueva) y en la tabla "Preguntas al autor (fase 2)".
   - P-904 confirmada por el autor el 2026-11-07: subpágina `/synergos/arquitectura`, enlazada desde Synergos.
-    Siguen pendientes P-905 a P-909; la entrevista no se marca como terminada.
-- [ ] T0902 [F2-2] El autor revisa la tabla del atlas (`fase-2-evidencias.md` §4) y aprueba el estado de cada patrón
+    P-905 a P-909 confirmadas posteriormente el mismo día y registradas en la spec.
+- [x] T0902 [F2-2] El autor revisa la tabla del atlas (`fase-2-evidencias.md` §4) y aprueba el estado de cada patrón
   y la lista de "fuera de la lista" que entra (P-906). Es la condición del SC-912.
-- [ ] T0903 [Todas] Boceto de la subpágina en `specs/009-synergos-showcase/bocetos/arquitectura.html`, con el orden de
+- [x] T0903 [Todas] Boceto de la subpágina en `specs/009-synergos-showcase/bocetos/arquitectura.html`, con el orden de
   las secciones y los tres diagramas (recorrido CMS → elemento, cadena C# → TS y coordinación de islas), en escritorio
   y en 375 px. El autor lo aprueba antes de escribir código.
   - Boceto preparado el 2026-11-07: tres diagramas adaptables, Montserrat del proyecto, paleta y superficies de cristal
     conservadas. Revisado a 1440 y 375 px, sin desborde ni anclas rotas. El atlas muestra seis entradas de ejemplo,
     tomadas de las evidencias, para revisar la estructura; no implica aprobar la selección completa de T0902.
-    Pendiente del visto bueno del autor; no se ha implementado la ruta pública.
+    Boceto y 18 entradas del atlas aprobados por el autor el 2026-11-07. Se habilita la implementación.
 
 **Checkpoint**: decisiones y boceto aprobados.
 

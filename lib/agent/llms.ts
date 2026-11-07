@@ -1,4 +1,5 @@
 import { synergosShowcase, SYNERGOS_PATH } from '@/content/synergos-showcase'
+import { architecture, SYNERGOS_ARCHITECTURE_PATH, sourceHref } from '@/content/synergos-architecture'
 import { capabilityDescriptions, createCapabilities, findCapability } from '@/lib/capabilities/registry'
 import { cvPdfs, getSite, pick } from '@/lib/content'
 import type { Locale } from '@/lib/i18n/config'
@@ -68,6 +69,8 @@ export async function buildLlmsTxt(base: URL = getSiteUrl()): Promise<string> {
     '',
     '## Case studies',
     pair(base, SYNERGOS_PATH, synergosShowcase.copy.title.en, synergosShowcase.copy.title.es),
+    pair(base, SYNERGOS_ARCHITECTURE_PATH, architecture.copy.title.en, architecture.copy.title.es),
+    ...architecture.patterns.map(pattern => `- [${label(pattern.name)}](${new URL(`${localizedPath('en', SYNERGOS_ARCHITECTURE_PATH)}#patron-${pattern.id}`, base)}): ${inline(pattern.body.en)}${pattern.limitation ? ` ${inline(pattern.limitation.en)}` : ''} ${pattern.sources.map(source => `[${label(source.label)}](${sourceHref(source)})`).join(' · ')}`),
     ...projects.map((project) => `- [${label(project.title)}](${project.url}): ${inline(project.summary)}`),
     '',
     '## Blog',
