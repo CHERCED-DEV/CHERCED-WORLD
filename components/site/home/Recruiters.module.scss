@@ -140,7 +140,23 @@
 }
 
 .trigger {
+  display: inline-flex;
+  align-items: center;
   gap: var(--cw-space-2);
+  min-height: 44px;
+  padding-inline: var(--cw-space-2);
+  border: 0;
+  background: none;
+  color: var(--cw-fg);
+  font: inherit;
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-color: var(--cw-graphic-accent);
+  text-underline-offset: 0.35em;
+  cursor: pointer;
 }
 
 .triggerDot {

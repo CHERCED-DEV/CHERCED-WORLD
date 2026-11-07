@@ -38,7 +38,8 @@ test.describe('FR-710: "Para reclutadores" se abre como pop-up en Home y Contact
       await expect(block.locator('[data-cw-recruiters-roles] li')).toHaveCount(4)
       await expect(block.locator('[data-cw-recruiters-english]')).toHaveText(lang === 'es' ? 'B1, B2 en uso profesional frecuente' : 'B1, B2 in regular professional use')
       await expect(block.locator('[data-cw-cv-download]')).toHaveAttribute('href', `/cv/camilo-hernandez-cv-${lang}.pdf`)
-      await expect(block.locator('[data-cw-cv-alternate]')).toHaveAttribute('href', `/cv/camilo-hernandez-cv-${lang === 'es' ? 'en' : 'es'}.pdf`)
+      await expect(block.locator('[data-cw-cv-alternate]')).toHaveCount(0)
+      await expect(block.locator('[data-cw-certifications] [data-cw-certification]')).toHaveCount(2)
       await expect(block.locator('[data-cw-cv-link]')).toHaveAttribute('href', /linkedin\.com\/in\/cherced/)
       await expect(block.locator('[data-cw-recruiters-write]')).toHaveAttribute('href', `/${lang}/contactMe`)
     })
@@ -73,13 +74,16 @@ test.describe('FR-710: "Para reclutadores" se abre como pop-up en Home y Contact
 test.describe('FR-711 y FR-712: certificaciones y "Ver código"', () => {
   onlyIn('desktop-chromium', 'no-js')
 
-  test('Sobre mí lista las certificaciones con el perfil de Platzi', async ({ page }) => {
+  test('"Para reclutadores" lista las certificaciones con el perfil de Platzi; "Quién soy" queda como estaba', async ({ page }, testInfo) => {
     await skipIntro(page)
-    await page.goto('/es/aboutMe')
-    const certifications = page.locator('[data-cw-certifications]')
+    await page.goto('/es')
+    const block = await recruiters(page, testInfo.project.name !== 'no-js')
+    const certifications = block.locator('[data-cw-certifications]')
     await expect(certifications.getByRole('heading', { level: 3 })).toHaveText('Certificaciones')
     await expect(certifications.locator('[data-cw-certification]')).toHaveCount(2)
     await expect(certifications.locator('[data-cw-certifications-profile]')).toHaveAttribute('href', 'https://platzi.com/p/Cherced/')
+    await page.goto('/es/aboutMe')
+    await expect(page.locator('[data-cw-scene="who"] [data-cw-certifications]')).toHaveCount(0)
   })
 
   test('Director y líneas muestra "Ver código" hacia Synergos.Fabrica', async ({ page }) => {

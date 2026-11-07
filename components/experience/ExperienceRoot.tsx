@@ -20,7 +20,9 @@ export async function ExperienceRoot({ lang }: ExperienceRootProps): Promise<JSX
       pages={pageDocs(lang, common)}
       email={publicEmail(site)}
       cv={site.profile?.cv.href ?? null}
-      cvPdfs={cvPdfs(lang, site).map((pdf) => ({ lang: pdf.lang, href: pdf.href, filename: pdf.filename, hint: cvPdfFormat(pdf, lang) }))}
+      cvPdfs={cvPdfs(lang, site)
+        .slice(0, 1)
+        .map((pdf) => ({ lang: pdf.lang, href: pdf.href, filename: pdf.filename, hint: cvPdfFormat(pdf, lang) }))}
       areas={(site.about.skills.lobes ?? []).map((lobe) => lobe.id)}
       capsule={getCapsule()}
     />

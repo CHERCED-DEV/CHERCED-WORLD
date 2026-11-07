@@ -198,24 +198,11 @@
 
 @include bp.down(md) {
   .banner {
-    padding-block: 20px var(--cw-space-2);
-  }
-
-  .card {
-    padding-block: var(--cw-space-5);
-  }
-
-  .rule .separator {
-    margin-block: 0.875rem;
-  }
-
-  .actions,
-  .actions .cvActions {
-    gap: var(--cw-space-2);
+    padding-block: var(--cw-space-5) var(--cw-space-3);
   }
 
   .availability {
-    margin-top: var(--cw-space-3);
+    gap: var(--cw-space-1);
   }
 }
 

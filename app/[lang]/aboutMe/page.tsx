@@ -5,7 +5,6 @@ import { AboutCareer } from '@/components/site/about/AboutCareer'
 import { AboutDescription } from '@/components/site/about/AboutDescription'
 import { AboutFigures } from '@/components/site/about/AboutFigures'
 import { BrainScene } from '@/components/site/about/BrainScene'
-import { Certifications } from '@/components/site/about/Certifications'
 import { aboutFigures } from '@/components/site/about/figures'
 import { SceneNav } from '@/components/site/about/SceneNav'
 import { resolveLang, type LangParams } from '@/components/site/lang'
@@ -63,21 +62,6 @@ export default async function AboutMePage({ params }: Props) {
         title={t(dict, 'about.title')}
         description={about.description}
         image={about.image}
-        aside={
-          <>
-            <ShowcaseLink lang={lang} label={synergosShowcase.copy.cta[lang]} from="about" />
-            <Certifications
-              lang={lang}
-              items={about.certifications ?? []}
-              profileHref={about.courses.platzi.href}
-              labels={{
-                title: t(dict, 'about.certifications'),
-                profile: t(dict, 'about.certifications.profile'),
-                newTab: t(dict, 'a11y.newTab'),
-              }}
-            />
-          </>
-        }
       >
         <AboutFigures
           lang={lang}
@@ -99,6 +83,7 @@ export default async function AboutMePage({ params }: Props) {
             tests: { label: t(dict, 'about.figure.tests'), note: t(dict, 'about.figure.testsNote') },
           }}
         />
+        <ShowcaseLink lang={lang} label={synergosShowcase.copy.cta[lang]} from="about" size="md" className={styles.heroShowcase} />
       </AboutDescription>
       <AboutCareer
         id={ABOUT_SCENES.career}

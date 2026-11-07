@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import type { RecruitersContent } from '@/content/types'
 import { buttonClassName } from '@/components/ui/Button'
 import { CvActions } from '@/components/ui/CvLink'
@@ -19,9 +20,17 @@ export type RecruitersBlockProps = {
   bare?: boolean
   id?: string
   className?: string
+  certifications?: ReactNode
 }
 
-function RecruitersBody({ lang, content, writeHref, withCv, titleId }: Omit<RecruitersBlockProps, 'compact' | 'bare' | 'id' | 'className'> & { titleId: string }) {
+function RecruitersBody({
+  lang,
+  content,
+  writeHref,
+  withCv,
+  titleId,
+  certifications,
+}: Omit<RecruitersBlockProps, 'compact' | 'bare' | 'id' | 'className'> & { titleId: string }) {
   return (
     <>
       <div className={styles.head}>
@@ -57,6 +66,7 @@ function RecruitersBody({ lang, content, writeHref, withCv, titleId }: Omit<Recr
           </div>
         </dl>
       </div>
+      {certifications}
       <div className={styles.actions}>
         {withCv ? <CvActions lang={lang} downloadVariant="solid" className={styles.cv} /> : null}
         <Link href={writeHref} className={buttonClassName({ variant: withCv ? 'glass' : 'solid' })} data-cw-recruiters-write="">
@@ -76,9 +86,12 @@ export function RecruitersBlock({
   bare = false,
   id = RECRUITERS_ID,
   className,
+  certifications,
 }: RecruitersBlockProps) {
   const titleId = `${id}-title`
-  const body = <RecruitersBody lang={lang} content={content} writeHref={writeHref} withCv={withCv} titleId={titleId} />
+  const body = (
+    <RecruitersBody lang={lang} content={content} writeHref={writeHref} withCv={withCv} titleId={titleId} certifications={certifications} />
+  )
   if (bare) {
     return (
       <section id={id} className={cx(styles.bare, className)} aria-labelledby={titleId} data-cw-recruiters="">

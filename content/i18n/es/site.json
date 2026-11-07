@@ -60,8 +60,6 @@
   "meta.now.description": "Lo que estoy construyendo, aprendiendo y entrenando este mes.",
   "about.brain.appliedWord": "aplicado en",
   "about.principles": "Principios",
-  "about.certifications": "Certificaciones",
-  "about.certifications.profile": "Ver mis certificados en Platzi",
   "about.figure.pieces": "piezas desplegables en Synergos",
   "about.figure.piecesNote": "CMS · {capabilities} capacidades · {orchestrators} orquestadores",
   "about.figure.adrs": "decisiones de arquitectura escritas",

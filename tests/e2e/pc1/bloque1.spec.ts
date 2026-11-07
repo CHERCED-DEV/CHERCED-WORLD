@@ -35,7 +35,6 @@ test.describe('B1: el CV en PDF (FR-701, FR-702, SC-701, T911)', () => {
 
   for (const [path, scope] of [
     ['/es', '[data-cw-cv-actions]'],
-    ['/es/aboutMe', '[data-cw-cv-actions]'],
     ['/es/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
     ['/en/contactMe', '[data-cw-contact-reach] [data-cw-cv-actions]'],
   ] as const) {
@@ -49,7 +48,7 @@ test.describe('B1: el CV en PDF (FR-701, FR-702, SC-701, T911)', () => {
       await expect(download).toContainText(lang === 'en' ? 'Download CV' : 'Descargar CV')
       await expect(download).toHaveAttribute('href', CV_PDF[lang].href)
       await expect(download).toHaveAttribute('download', CV_PDF[lang].filename)
-      await expect(actions.locator('[data-cw-cv-alternate]')).toBeVisible()
+      await expect(actions.locator('[data-cw-cv-alternate]'), 'un solo PDF: el del idioma de la página').toHaveCount(0)
       await expect(actions.locator('[data-cw-cv-link]')).toBeVisible()
     })
   }

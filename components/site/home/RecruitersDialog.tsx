@@ -34,7 +34,7 @@ export function RecruitersDialog({ label, closeLabel, labelledBy, children, clas
     <>
       <button
         type="button"
-        className={cx(buttonClassName({ variant: 'glass' }), styles.trigger, 'cw-js-only', className)}
+        className={cx(styles.trigger, 'cw-js-only', className)}
         aria-haspopup="dialog"
         onClick={() => setOpen(true)}
         data-cw-recruiters-open=""

@@ -61,7 +61,8 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 - [x] T911 [B1b] CV en español y en inglés: `public/cv/camilo-hernandez-cv-{es,en}.pdf` desde los PDF del handoff, sin
   cambiarlos. Botón principal con el PDF del idioma de la página y enlace secundario al otro idioma (con `hreflang`),
   formato y peso; dos acciones en la paleta; el asistente responde con los dos; `llms.txt` y JSON-LD. e2e de las dos
-  descargas (FR-701b, `tests/unit/cv2` y `tests/e2e/cv2`).
+  descargas (FR-701b, `tests/unit/cv2` y `tests/e2e/cv2`). Enmendada por T970: el botón visible baja solo el PDF
+  del idioma de la página.
 - [x] T944 El buzón del header debe llevar al autor a leer sus mensajes, no solo a Contacto (la 004 lo había mandado a
   Contacto para todos).
 - [ ] T960 Cuarta escena de Sobre mí, "Hacia dónde voy": entrevista al autor ([entrevista-hacia-donde-voy.md](./entrevista-hacia-donde-voy.md)),
@@ -70,3 +71,19 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 - [ ] T962 "Hacia el MVP: la línea de ensamblaje" en el caso de Synergos: diagrama vivo de las líneas de agentes que
   convergen en el release, con hitos reales sacados de la carpeta de Synergos (solo lectura), y un acceso desde Home.
   Boceto primero; se construye con el visto bueno del autor. La raíz de Synergos no se publica hasta el MVP.
+
+## Correcciones del autor del 2026-11-07 (rama `dev`)
+
+El autor revisó la vista previa en el celular: "construyamos sobre lo construido, no avanzar destruyendo lo construido".
+
+- [x] T970 Enmienda a T911: "Descargar CV" baja solo el PDF del idioma de la página. Sin enlace al otro idioma en
+  Home, Contacto ni "Para reclutadores", y una sola acción de descarga en la paleta. El JSON-LD, `llms.txt`
+  y el asistente siguen conociendo los dos PDF.
+- [x] T971 "Quién soy" vuelve a su forma anterior a la 007: retrato a un lado, texto, "Ver mi CV en LinkedIn" y las
+  cifras. "Descargar CV" ya está en Home y no se repite aquí ("no había por qué volverlo a poner en el about"). El
+  botón "Ver mi master product" vuelve justo debajo de las cifras (donde lo dejó S1).
+- [x] T972 Enmienda a T921: las certificaciones pasan de "Quién soy" al pop-up "Para reclutadores". En "Lo que sé"
+  ya estaban como fuentes (Platzi Master, Fundamentos de Arquitectura y el perfil de Platzi).
+- [x] T973 "Para reclutadores" es un enlace de texto que abre el pop-up, no un botón grande; el hero del celular
+  vuelve a respirar y la señal de scroll queda sobre el dock.
+- [x] T974 Rama `dev`: integra la 007, `main` (Node 22) y `lane/X4` (la base del peloteo; X4b sigue al final).
