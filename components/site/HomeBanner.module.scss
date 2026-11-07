@@ -134,6 +134,8 @@
 }
 
 .socials {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   gap: clamp(0.75rem, 3.2cqi, 1.5rem);
