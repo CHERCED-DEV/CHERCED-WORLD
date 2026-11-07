@@ -1,4 +1,5 @@
 import { expect, type APIRequestContext, type BrowserContext, type Locator, type Page } from '@playwright/test'
+import { uniqueIp } from '../../l3/support/helpers'
 import { pendingPage, type Lang } from './pages'
 
 export type EffectName =
@@ -41,6 +42,12 @@ export type ControlRule = {
 
 export const CONTROL_RULES: readonly ControlRule[] = [
   { kind: 'volver arriba', match: '[data-cw-back-to-top]', effect: 'delegated', expect: 'lo verifica "volver arriba" en cada página' },
+  {
+    kind: 'borrar lo del laboratorio',
+    match: '[data-cw-lab-clear]',
+    effect: 'delegated',
+    expect: 'lo verifica x0/ai-lab: borra IndexedDB, la caché del modelo y el consentimiento, y avisa',
+  },
   { kind: 'saltar al contenido', match: 'a.cw-skip-link', effect: 'skipLink', expect: 'el foco pasa a main' },
   { kind: 'cambio de idioma', match: '[data-cw-lang-switch]', effect: 'langSwitch', expect: 'la misma ruta en el otro idioma' },
   { kind: 'tema', match: '[data-cw-theme-toggle]', effect: 'theme', expect: 'data-theme, aria-pressed y la preferencia cambian' },
@@ -868,6 +875,7 @@ export function isLocalUrl(url: URL, baseURL: string): boolean {
 }
 
 export async function prepareContext(context: BrowserContext, baseURL: string): Promise<void> {
+  await context.setExtraHTTPHeaders({ 'x-forwarded-for': uniqueIp() })
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: baseURL })
   await context.route(
     (url) => !isLocalUrl(url, baseURL),
