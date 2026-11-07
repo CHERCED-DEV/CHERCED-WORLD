@@ -625,9 +625,18 @@ const J1: LabExperiment = {
   downloads: [],
   privacy: copy('ailab.j1.privacy'),
   flow: [
-    { es: 'Juegas un rally con teclado, mouse o toque', en: 'You play a rally with keyboard, mouse or touch' },
-    { es: 'La red del rival aprende por refuerzo en un worker', en: "The rival's network learns by reinforcement in a worker" },
-    { es: 'Sus neuronas se encienden y la curva muestra cuánto mejora', en: 'Its neurons light up and the curve shows how much it improves' },
+    {
+      es: 'Mueves tu paleta de cristal con las flechas o W/S, con el mouse o con el dedo; espacio saca y pausa',
+      en: 'You move your glass paddle with the arrow keys or W/S, the mouse or your finger; Space serves and pauses',
+    },
+    {
+      es: 'Después de cada rally, una red de dos capas de 16 neuronas aprende por refuerzo en un worker, sin descargar nada',
+      en: 'After each rally, a network with two layers of 16 neurons learns by reinforcement in a worker, with nothing to download',
+    },
+    {
+      es: 'Sus neuronas se encienden con cada decisión y la curva muestra cuántas bolas más devuelve',
+      en: 'Its neurons light up with each decision and the curve shows how many more balls it returns',
+    },
   ],
   adrCards: [
     {
@@ -642,14 +651,36 @@ const J1: LabExperiment = {
       },
     },
     {
+      decision: { es: 'Sin descargas: la red nace en tu navegador', en: 'No downloads: the network is born in your browser' },
+      why: {
+        es: 'No hay modelo que bajar, así que no hace falta pedirte permiso: empieza con pesos al azar.',
+        en: 'There is no model to fetch, so there is no need to ask for your consent: it starts with random weights.',
+      },
+      tradeoff: {
+        es: 'Empieza sin saber nada: los primeros rallies es torpe de verdad.',
+        en: 'It starts knowing nothing: in the first rallies it really is clumsy.',
+      },
+    },
+    {
       decision: { es: 'REINFORCE con línea base, en un worker', en: 'REINFORCE with a baseline, in a worker' },
       why: {
         es: 'El entrenamiento no le quita fluidez al juego ni al fondo animado.',
         en: 'Training does not take smoothness away from the game or the animated background.',
       },
       tradeoff: {
-        es: 'Los pesos viajan al juego cada pocos rallies, no en cada golpe.',
-        en: 'The weights travel to the game every few rallies, not on every hit.',
+        es: 'Los pesos viajan al juego al final de cada rally (cada dos o cuatro si tu equipo va justo), no en cada golpe.',
+        en: 'The weights travel to the game at the end of each rally (every two or four if your device is running tight), not on every hit.',
+      },
+    },
+    {
+      decision: { es: 'Premio por acercarse a donde va a llegar la bola', en: 'A reward for getting closer to where the ball will arrive' },
+      why: {
+        es: 'Con solo "la devolvió o no", 20 rallies no alcanzan para aprender.',
+        en: 'With only "did it return it or not", 20 rallies are not enough to learn.',
+      },
+      tradeoff: {
+        es: 'Aprende a seguir la bola, no estrategias que yo no le premie.',
+        en: 'It learns to follow the ball, not strategies I do not reward.',
       },
     },
     {
@@ -665,22 +696,17 @@ const J1: LabExperiment = {
     },
   ],
   code: {
-    snippet: `async checkpoint() {
-  if (signal.aborted) throw abortError()
-  while (paused) {
-    await new Promise<void>((resolve) => {
-      const done = () => {
-        signal.removeEventListener('abort', done)
-        resolve()
-      }
-      waiters.push(done)
-      signal.addEventListener('abort', done, { once: true })
-    })
-    if (signal.aborted) throw abortError()
-  }
-},`,
+    snippet: `const advantage = advantages[index]!
+const action = episode.actions[t]!
+for (let j = 0; j < ACTIONS; j += 1) {
+  const p = probs[j]!
+  const policy = advantage * (p - (j === action ? 1 : 0))
+  const spread = options.entropy * p * (Math.log(p + 1e-9) + h)
+  dLogits[j] = policy + spread
+}
+backward(net, trace, dLogits, grads, scratch)`,
     lang: 'ts',
-    repoPath: 'lib/ailab/core/worker-runtime.ts',
+    repoPath: 'lib/ailab/games/rival.ts',
   },
 }
 
@@ -694,8 +720,14 @@ const J2: LabExperiment = {
   downloads: [],
   privacy: copy('ailab.j2.privacy'),
   flow: [
-    { es: 'Juegas unos rallies de grabación', en: 'You play a few recording rallies' },
-    { es: 'La misma red aprende por imitación de tus movimientos', en: 'The same network learns by imitating your moves' },
+    {
+      es: 'Juegas tres rallies de grabación con teclado, mouse o toque, contra un sparring con un guion simple',
+      en: 'You play three recording rallies with keyboard, mouse or touch, against a sparring partner with a simple script',
+    },
+    {
+      es: 'La misma red aprende por imitación de tus movimientos, en un worker y sin descargar nada',
+      en: 'The same network learns by imitating your moves, in a worker and with nothing to download',
+    },
     {
       es: 'Juegas contra un rival que se mueve como tú, con su parecido en pantalla',
       en: 'You play against a rival that moves like you, with its likeness on screen',
@@ -714,6 +746,17 @@ const J2: LabExperiment = {
       },
     },
     {
+      decision: { es: 'El parecido se mide en situaciones que no vio', en: 'The likeness is measured on situations it did not see' },
+      why: {
+        es: 'Medirlo con lo mismo que aprendió inflaría el número.',
+        en: 'Measuring it on what it learned from would inflate the number.',
+      },
+      tradeoff: {
+        es: 'Con pocos rallies, el número cambia bastante de una grabación a otra.',
+        en: 'With few rallies, the number changes quite a bit from one recording to the next.',
+      },
+    },
+    {
       decision: { es: 'El estado guardado lleva versión', en: 'The saved state carries a version' },
       why: {
         es: 'Si el juego cambia, los datos de una versión anterior se descartan y el rival empieza de nuevo.',
@@ -726,18 +769,17 @@ const J2: LabExperiment = {
     },
   ],
   code: {
-    snippet: `async get<T = unknown>(key: string, options: LabStoreGetOptions = {}): Promise<T | null> {
-  const found = await run('readonly', (store) => store.get(key))
-  const value = found.ok ? found.value : memory.get(key)
-  if (value === undefined || value === null) return null
-  if (options.version !== undefined && versionOf(value) !== options.version) {
-    await labStore.delete(key)
-    return null
-  }
-  return value as T
-},`,
+    snippet: `for (const index of batch) {
+  forward(net, demo.inputs.subarray(index * SENSES, (index + 1) * SENSES), trace)
+  const target = demo.actions[index]!
+  const weight = weights[target]!
+  loss -= weight * Math.log(trace.probs[target]! + 1e-9)
+  for (let j = 0; j < ACTIONS; j += 1) dLogits[j] = weight * (trace.probs[j]! - (j === target ? 1 : 0))
+  backward(net, trace, dLogits, grads, scratch)
+}
+adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
     lang: 'ts',
-    repoPath: 'lib/ailab/core/store.ts',
+    repoPath: 'lib/ailab/games/clone.ts',
   },
 }
 
