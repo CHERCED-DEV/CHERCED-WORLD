@@ -40,6 +40,13 @@ export const COMMAND_PREFIX = '>'
 
 const SKILL_WEIGHT = 0.6
 
+const LANG_WEIGHT = 1.5
+
+function docWeight(doc: PaletteDoc): number {
+  if (doc.item.group === 'skills') return SKILL_WEIGHT
+  return doc.item.id === 'action:lang' ? LANG_WEIGHT : 1
+}
+
 const SECRET_COMMANDS = ['2023', 'enecimo intento', 'enesimo intento', 'nth attempt']
 
 export function isCapsuleCommand(query: string): boolean {
@@ -260,7 +267,7 @@ export function toPaletteDocs(docs: SearchDoc[], actions: PaletteItem[], extensi
 }
 
 export function createPaletteSearcher(docs: PaletteDoc[]): Searcher<PaletteDoc> {
-  return createSearcher(docs, { weight: (doc) => (doc.item.group === 'skills' ? SKILL_WEIGHT : 1) })
+  return createSearcher(docs, { weight: docWeight })
 }
 
 function asCommand(item: PaletteItem): PaletteItem {

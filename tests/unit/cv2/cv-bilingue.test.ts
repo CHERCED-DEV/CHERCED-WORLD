@@ -189,4 +189,16 @@ describe.each(['es', 'en'] as const)('T911: la paleta ofrece los dos PDF · %s',
       expect(results(query)[0]?.id, query).toBe(`action:cv-pdf-${other}`)
     }
   })
+
+  it('escribir solo el otro idioma cambia el idioma del sitio, no baja el CV', async () => {
+    const results = await setup()
+    const queries = lang === 'es' ? ['inglés', 'ingles', 'english', '>inglés', '> ingles'] : ['spanish', 'español', 'espanol', '>spanish', '> español']
+    for (const query of queries) {
+      expect(results(query)[0]?.id, query).toBe('action:lang')
+    }
+    const other = lang === 'es' ? 'en' : 'es'
+    for (const query of lang === 'es' ? ['cv inglés', 'descargar cv inglés'] : ['cv spanish', 'download cv spanish']) {
+      expect(results(query)[0]?.id, query).toBe(`action:cv-pdf-${other}`)
+    }
+  })
 })
