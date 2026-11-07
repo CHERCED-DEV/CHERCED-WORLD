@@ -1,6 +1,7 @@
 import { architecture } from '@/content/synergos-architecture'
 import type { Locale } from '@/content/types'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { CornerMarks, GridLines } from '@/components/ui/graphics'
 import { cx } from '@/components/ui/cx'
 import styles from './Architecture.module.scss'
 
@@ -20,7 +21,8 @@ export function ArchitectureDiagram({ kind, lang }: { kind: DiagramKind; lang: L
   const nodes = architecture.diagrams[kind]
   const title = architecture.copy.sections[kind][lang]
   return (
-    <GlassSurface as="figure" className={styles.diagram} data-cw-architecture-diagram={kind}>
+    <GlassSurface as="figure" className={styles.diagram} edge grain depth light data-cw-architecture-diagram={kind}>
+      <GridLines fade="radial" /><CornerMarks />
       <figcaption className="cw-visually-hidden">{title}</figcaption>
       {(['wide', 'tall'] as const).map(variant => {
         const tall = variant === 'tall'

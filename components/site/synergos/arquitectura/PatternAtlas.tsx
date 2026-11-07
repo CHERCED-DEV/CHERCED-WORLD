@@ -9,8 +9,9 @@ export function PatternAtlas({ lang }: { lang: Locale }) {
   return (
     <>
       <div className={styles.patterns} data-cw-pattern-atlas="">
-        {architecture.patterns.filter(pattern => pattern.status !== 'descartado').map(pattern => (
-          <GlassSurface as="article" edge grain light key={pattern.id} id={`patron-${pattern.id}`} className={styles.card} data-cw-pattern={pattern.id}>
+        {architecture.patterns.filter(pattern => pattern.status !== 'descartado').map((pattern, index) => (
+          <GlassSurface as="article" edge grain depth light key={pattern.id} id={`patron-${pattern.id}`} className={`${styles.card} ${styles.pattern}`} data-cw-pattern={pattern.id}>
+            <span className={styles.patternNumber} aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
             <span className={styles.status} data-status={pattern.status}>{copy.statuses[pattern.status][lang]}</span>
             <h3>{pattern.name}</h3>
             <p className={styles.prose}>{pattern.body[lang]}</p>

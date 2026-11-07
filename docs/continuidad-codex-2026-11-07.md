@@ -76,3 +76,9 @@ La [documentación de Next.js](https://nextjs.org/docs/app/api-reference/file-co
 El disco C llegó a unos 110 MB libres y Playwright no pudo guardar dos trazas. Se recuperó espacio aplicando compresión NTFS reversible únicamente a las cachés `.next` de SYN2, BLOG y dev; no se eliminaron archivos. Ambas comprobaciones se repitieron con éxito. El espacio libre sigue siendo limitado.
 
 Vista previa local de la implementación: `http://localhost:3261/es/synergos/arquitectura` y su versión `/en/`. El servidor usa el build validado de SYN2, cuyo contenido coincide con la integración de dev. Las capturas finales de escritorio, móvil e inglés claro están en los outputs del chat.
+
+## Refinamiento visual solicitado por el autor
+
+El autor pidió acercar la página al look and feel del aplicativo y refinar todo el responsive. Se reutilizaron SectionTitle, las capas completas de GlassSurface, GlowOrb y Reveal del sitio. La cabecera incorpora una composición con cifras destacadas; los diagramas, fuentes, atlas y fábrica comparten profundidad, espaciado y jerarquía. Se conservan contenido y decisiones aprobadas; se respeta movimiento reducido y lectura sin JavaScript.
+
+Validación del refinamiento: lint y tipos aprobados, 38 unitarias relacionadas y 11 pruebas de navegador aprobadas (4 omitidas por modo/dispositivo), build de 132 páginas. Sin desbordes a 320, 375, 480, 768, 992, 1024, 1440, 1920 y 2560 px; axe sin incidencias serias o críticas en claro y oscuro. Capturas revisadas de escritorio, móvil e inglés claro. La vista previa de puerto 3261 ahora usa el build refinado de dev. T0929 continúa pendiente de la revisión del autor; el fallo global previo RSC/404 sigue abierto.

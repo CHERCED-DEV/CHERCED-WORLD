@@ -30,7 +30,7 @@ test('responsive, contrastes y movimiento reducido', async ({ page }, info) => {
   await skipIntro(page)
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/es/synergos/arquitectura')
-  for (const width of [320, 375, 768, 1440, 2560]) {
+  for (const width of [320, 375, 480, 768, 992, 1024, 1440, 1920, 2560]) {
     await page.setViewportSize({ width, height: 960 })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), String(width)).toBe(true)
   }
