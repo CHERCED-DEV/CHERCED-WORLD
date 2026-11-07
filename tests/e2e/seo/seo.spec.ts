@@ -133,7 +133,7 @@ test.describe('datos estructurados de entidad (FR-810 a FR-815)', () => {
       const home = await pageLd(page)
       const person = home.find((item) => item['@type'] === 'Person')
       const site = home.find((item) => item['@type'] === 'WebSite')
-      expect(person?.sameAs).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', 'https://platzi.com/p/Cherced/'])
+      expect(person?.sameAs).toEqual(['https://www.linkedin.com/in/cherced/', 'https://github.com/CHERCED-DEV', 'https://www.instagram.com/cherced/', 'https://platzi.com/p/Cherced/'])
       expect(site).toMatchObject({ name: 'CHERCED-WORLD', author: { '@id': person?.['@id'] }, inLanguage: ['es', 'en'] })
       expect(String(site?.url)).toMatch(/^https?:\/\/[^/]+\/$/)
 
