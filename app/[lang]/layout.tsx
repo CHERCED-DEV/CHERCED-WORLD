@@ -11,6 +11,7 @@ import { getSite } from '@/lib/content'
 import { isLocale, locales, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import { jsonLdScript, personJsonLd } from '@/lib/seo/person'
+import { verificationMetadata } from '@/lib/seo/verification'
 import { getSiteUrl } from '@/lib/site-url'
 import { montserrat } from '@/styles/fonts'
 
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: Omit<LayoutProps, 'children'>
   if (!isLocale(lang)) return {}
   const common = await getDictionary(lang, 'common')
   const siteName = t(common, 'brand.name')
+  const verification = verificationMetadata()
   return {
     metadataBase: getSiteUrl(),
     title: { default: t(common, 'meta.title'), template: t(common, 'meta.titleTemplate') },
@@ -40,6 +42,7 @@ export async function generateMetadata({ params }: Omit<LayoutProps, 'children'>
       locale: lang === 'es' ? 'es_CO' : 'en_US',
       images: [{ url: '/assets/icons/brandLogoX2.png', width: 202, height: 202, alt: t(common, 'brand.logoAlt') }],
     },
+    ...(verification ? { verification } : {}),
   }
 }
 

@@ -140,8 +140,8 @@ test.describe('metadatos', () => {
     const expected: Array<[string, RegExp]> = [
       ['/es', /^Camilo Hernández · Software Solutions Engineer · AI-First$/],
       ['/en/aboutMe', /^About me · Camilo Hernández$/],
-      ['/es/services', /^Servicios · Camilo Hernández$/],
-      ['/en/portfolio', /^Portfolio · Camilo Hernández$/],
+      ['/es/services', /^Servicios de IA y arquitectura de software · Camilo Hernández$/],
+      ['/en/portfolio', /^Portfolio: architecture and AI case studies · Camilo Hernández$/],
       [`/es/portfolio/${firstProject.id}`, new RegExp(`^${projectTitle(firstProject, 'es')} · Camilo Hernández$`)],
     ]
     for (const [path, title] of expected) {

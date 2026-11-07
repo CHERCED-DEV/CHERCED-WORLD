@@ -1,14 +1,17 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BackgroundIntensity } from '@/components/motion'
-import { isLocale, localizedPath, t } from '@/lib/i18n'
+import { isLocale, localizedPath, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import { CaseStudy } from '@/components/site/portfolio/CaseStudy'
 import { caseEvidenceLabels, caseStudyExtraLabels } from '@/components/site/portfolio/labels'
 import { caseStudyNeighbors, technologyCounts, type CaseStudyLabels } from '@/components/site/portfolio/projects'
+import { caseRelatedLinks, casePostIds, type RelatedPostTitle } from '@/components/site/portfolio/related'
 import { pageMetadata } from '@/components/site/metadata'
 import { synergosShowcase, SYNERGOS_CASE_ID } from '@/content/synergos-showcase'
-import { getProject, getProjects, projectTitle } from '@/lib/content'
+import { getProject, getProjects, getSite, loadPost, projectTitle } from '@/lib/content'
+import { caseBreadcrumbJsonLd, caseStudyJsonLd } from '@/lib/seo/case-study'
+import { jsonLdScript } from '@/lib/seo/person'
 
 type Props = { params: Promise<{ lang: string; id: string }> }
 
@@ -39,9 +42,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 }
 
+async function relatedPostTitles(projectId: string, lang: Locale): Promise<RelatedPostTitle[]> {
+  const posts = await Promise.all(casePostIds(projectId).map((id) => loadPost(id, lang)))
+  return posts.flatMap((post) => (post ? [{ id: post.meta.id, title: post.meta.title, lang: post.meta.lang }] : []))
+}
+
 export default async function CaseStudyPage({ params }: Props) {
   const { lang, project } = await resolve(params)
-  const [dict, portfolio] = await Promise.all([getDictionary(lang, 'site'), getDictionary(lang, 'portfolio')])
+  const [dict, portfolio, common, posts] = await Promise.all([
+    getDictionary(lang, 'site'),
+    getDictionary(lang, 'portfolio'),
+    getDictionary(lang, 'common'),
+    relatedPostTitles(project.id, lang),
+  ])
   const labels: CaseStudyLabels = {
     context: t(dict, 'project.context'),
     role: t(dict, 'project.role'),
@@ -55,6 +68,7 @@ export default async function CaseStudyPage({ params }: Props) {
   }
 
   const projects = getProjects()
+  const extraLabels = caseStudyExtraLabels(portfolio)
 
   return (
     <>
@@ -64,12 +78,27 @@ export default async function CaseStudyPage({ params }: Props) {
         lang={lang}
         labels={labels}
         extras={{
-          labels: caseStudyExtraLabels(portfolio),
+          labels: extraLabels,
           neighbors: caseStudyNeighbors(projects, project.id, lang),
           usage: technologyCounts(projects),
           portfolioHref: localizedPath(lang, '/portfolio'),
           evidence: caseEvidenceLabels(dict),
           showcase: project.id === SYNERGOS_CASE_ID ? synergosShowcase.copy.cta[lang] : undefined,
+          related: caseRelatedLinks({
+            projectId: project.id,
+            lang,
+            posts,
+            services: getSite().services.items,
+            labels: { post: extraLabels.relatedPost, services: extraLabels.relatedServices },
+          }),
+        }}
+      />
+      <script type="application/ld+json" data-cw-case-ld="" dangerouslySetInnerHTML={{ __html: jsonLdScript(caseStudyJsonLd(project, lang)) }} />
+      <script
+        type="application/ld+json"
+        data-cw-breadcrumbs=""
+        dangerouslySetInnerHTML={{
+          __html: jsonLdScript(caseBreadcrumbJsonLd(project, lang, { home: t(common, 'nav.home'), section: t(common, 'nav.portfolio') })),
         }}
       />
     </>

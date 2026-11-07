@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   const { lang } = await params
   if (!isLocale(lang)) return {}
   const [blog, previous] = await Promise.all([getDictionary(lang, 'blog'), parent])
-  const title = t(blog, 'meta.blog.title')
+  const title = t(blog, 'meta.blog.searchTitle')
   const description = t(blog, 'meta.blog.description')
   return {
     title,

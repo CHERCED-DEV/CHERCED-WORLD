@@ -7,6 +7,8 @@ import { synergosShowcase } from '@/content/synergos-showcase'
 import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
+import { jsonLdScript } from '@/lib/seo/person'
+import { websiteJsonLd } from '@/lib/seo/website'
 
 type Props = { params: LangParams }
 
@@ -48,6 +50,7 @@ export default async function HomePage({ params }: Props) {
           },
         }}
       />
+      <script type="application/ld+json" data-cw-website="" dangerouslySetInnerHTML={{ __html: jsonLdScript(websiteJsonLd(lang)) }} />
     </>
   )
 }

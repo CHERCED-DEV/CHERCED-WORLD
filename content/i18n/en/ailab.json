@@ -5,6 +5,7 @@
   "ailab.privacy": "I don't store your audio or your text. They're processed in your browser and never leave it.",
   "ailab.privacy.more": "Read the privacy policy",
   "ailab.meta.description": "AI experiments that run in your browser: try them, see how they work and read their code.",
+  "ailab.meta.title": "AI Lab: AI experiments in your browser",
   "ailab.runsIn.browser": "Runs in your browser",
   "ailab.theme.voice": "Voice",
   "ailab.theme.architecture": "Architecture you can touch",

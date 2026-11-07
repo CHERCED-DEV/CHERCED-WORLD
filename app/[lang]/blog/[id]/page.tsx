@@ -13,10 +13,11 @@ import { feedAlternates } from '@/lib/blog/feed'
 import { adjacentPosts } from '@/lib/blog/order'
 import { postAlternates, postPath, postUrl } from '@/lib/blog/paths'
 import { relatedPosts } from '@/lib/blog/related'
-import { loadPost, postIds } from '@/lib/content'
-import { isLocale } from '@/lib/i18n'
+import { relatedCases } from '@/components/site/portfolio/related'
+import { getProjects, loadPost, postIds } from '@/lib/content'
+import { isLocale, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
-import { blogPostingJsonLd } from '@/lib/seo/blog-posting'
+import { blogPostingJsonLd, postBreadcrumbJsonLd } from '@/lib/seo/blog-posting'
 import { jsonLdScript } from '@/lib/seo/person'
 
 type Props = { params: Promise<{ lang: string; id: string }> }
@@ -78,7 +79,9 @@ export default async function PostPage({ params }: Props) {
   const related = relatedPosts(meta, posts, [neighbors.previous?.id, neighbors.next?.id].filter((other): other is string => Boolean(other)))
   const series = seriesNavData(id, meta.series, parts, lang)
   const prepared = preparePost(post.Content, { ...postLabels(blog), callout: calloutLabels(blog, lang) })
-  const canonical = post.fallback ? postUrl(meta.lang, id) : postUrl(lang, id)
+  const canonicalLang = post.fallback ? meta.lang : lang
+  const canonical = postUrl(canonicalLang, id)
+  const breadcrumbs = postBreadcrumbJsonLd(meta, lang, postPath(canonicalLang, id), { home: t(common, 'nav.home'), blog: t(common, 'nav.blog') })
 
   return (
     <>
@@ -92,11 +95,13 @@ export default async function PostPage({ params }: Props) {
         blog={blog}
         neighbors={neighbors}
         related={related}
+        relatedCases={relatedCases(id, getProjects(), lang)}
         series={series}
         linkTags
         generatedCover={GeneratedCover}
       />
       <script type="application/ld+json" data-cw-blog-posting="" dangerouslySetInnerHTML={{ __html: jsonLdScript(blogPostingJsonLd(meta, lang, canonical)) }} />
+      <script type="application/ld+json" data-cw-breadcrumbs="" dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumbs) }} />
       <div className="cw-container">
         <CommentsSection lang={lang} postId={id} blog={blog} common={common} />
       </div>

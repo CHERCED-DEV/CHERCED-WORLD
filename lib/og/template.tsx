@@ -5,12 +5,13 @@ import commonEn from '@/content/i18n/en/common.json'
 import commonEs from '@/content/i18n/es/common.json'
 import type { Locale } from '@/lib/i18n/config'
 import { t } from '@/lib/i18n/translate'
+import { SITE_HOST } from '@/lib/site-url'
 
 export const OG_SIZE = { width: 1200, height: 630 } as const
 
 export const OG_CONTENT_TYPE = 'image/png'
 
-export const OG_DOMAIN = 'cherced-world.vercel.app'
+export const OG_DOMAIN = SITE_HOST
 
 export const OG_ACCENT = '#25ED9E'
 

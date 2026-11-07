@@ -84,6 +84,6 @@ describe('B12 y B13: HYROX y nombre', () => {
   it('el JSON-LD usa "Camilo Hernández" y conoce las otras formas del nombre', () => {
     const person = personJsonLd('es', new URL('https://cherced-world.vercel.app'))
     expect(person.name).toBe('Camilo Hernández')
-    expect(person.alternateName).toEqual(['Camilo Hernandez', 'Camilo Alonso Hernández Cediel', 'CHERCED'])
+    expect(person.alternateName).toEqual(['Camilo Hernandez', 'Camilo Hernández Cediel', 'Camilo Alonso Hernández Cediel', 'CHERCED'])
   })
 })

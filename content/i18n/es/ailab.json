@@ -5,6 +5,7 @@
   "ailab.privacy": "No guardo tu audio ni tu texto. Se procesan en tu navegador y no salen de él.",
   "ailab.privacy.more": "Lee la política de privacidad",
   "ailab.meta.description": "Experimentos de IA que corren en tu navegador: pruébalos, mira cómo funcionan y lee su código.",
+  "ailab.meta.title": "AI Lab: experimentos de IA en tu navegador",
   "ailab.runsIn.browser": "Corre en tu navegador",
   "ailab.theme.voice": "Voz",
   "ailab.theme.architecture": "Arquitectura que se toca",

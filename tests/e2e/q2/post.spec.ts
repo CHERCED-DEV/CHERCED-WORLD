@@ -102,7 +102,8 @@ test.describe('posts relacionados (T623, FR-513)', () => {
     await expect(related.locator('a[href="/es/blog/post4"]')).toHaveCount(0)
 
     await page.goto('/en/blog/post4')
-    await expect(page.locator('[data-cw-related]')).toHaveCount(0)
+    await expect(page.locator('[data-cw-related-link]')).toHaveCount(0)
+    await expect(page.locator('[data-cw-related] [data-cw-related-case="2"]')).toHaveAttribute('href', '/en/portfolio/2')
   })
 })
 

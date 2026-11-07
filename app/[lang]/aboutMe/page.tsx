@@ -17,6 +17,8 @@ import { synergosShowcase } from '@/content/synergos-showcase'
 import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
+import { jsonLdScript } from '@/lib/seo/person'
+import { profilePageJsonLd } from '@/lib/seo/profile-page'
 
 type Props = { params: LangParams }
 
@@ -150,6 +152,13 @@ export default async function AboutMePage({ params }: Props) {
           }}
         />
       </section>
+      <script
+        type="application/ld+json"
+        data-cw-profile-page=""
+        dangerouslySetInnerHTML={{
+          __html: jsonLdScript(profilePageJsonLd(lang, { name: t(dict, 'meta.about.title'), description: t(dict, 'meta.about.description') })),
+        }}
+      />
     </div>
   )
 }

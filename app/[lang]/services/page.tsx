@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({
     lang,
     path: '/services',
-    title: t(site, 'meta.services.title'),
+    title: t(site, 'meta.services.searchTitle'),
     description: t(site, 'meta.services.description'),
     common,
     ogImageFile: true,

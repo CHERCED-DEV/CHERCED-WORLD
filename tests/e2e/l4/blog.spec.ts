@@ -57,7 +57,7 @@ test.describe('posts sin JavaScript', () => {
 
   test('el índice muestra bienvenida, átomo y una tarjeta enlazada por post', async ({ page }) => {
     await page.goto('/es/blog')
-    await expect(page).toHaveTitle('Blog · Camilo Hernández')
+    await expect(page).toHaveTitle('Blog de arquitectura y agentes de IA · Camilo Hernández')
     await expect(page.getByRole('heading', { level: 1 })).toContainText('CHERCED-WORLD')
     await expect(page.getByText('Notas de un arquitecto que trabaja con agentes: decisiones, errores y lo que los tests no vieron.', { exact: true })).toBeVisible()
     await expect(page.locator('[data-cw-atom]')).toHaveAttribute('aria-hidden', 'true')

@@ -1,3 +1,4 @@
+import { SITE_ORIGIN } from '@/lib/site-url'
 import { formatFact, formatFloor, synergosFacts as facts } from './synergos'
 import type { Project } from './types'
 
@@ -88,7 +89,7 @@ export const projects: Project[] = [
       height: 870,
     },
     links: {
-      live: 'https://cherced-world.vercel.app/',
+      live: `${SITE_ORIGIN}/`,
       github: 'https://github.com/CHERCED-DEV/CHERCED-WORLD',
     },
     order: 3,

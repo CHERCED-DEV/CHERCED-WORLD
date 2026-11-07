@@ -1,11 +1,20 @@
 import type { MetadataRoute } from 'next'
+import { now } from '@/content/now'
+import { site } from '@/content/site'
+import { synergosShowcase, SYNERGOS_PATH } from '@/content/synergos-showcase'
 import { tagSlugsIn } from '@/lib/blog/source'
 import { tagAlternates, tagKey } from '@/lib/blog/tags'
 import { getProjects, listPosts } from '@/lib/content'
 import { alternates, defaultLocale, locales, localizedPath, type Locale } from '@/lib/i18n'
 import { absoluteUrl } from '@/lib/site-url'
 
-const PUBLIC_PATHS =['/', '/aboutMe', '/services', '/portfolio', '/synergos', '/now', '/ai-lab', '/blog', '/contactMe', '/privacy'] as const
+const PUBLIC_PATHS = ['/', '/aboutMe', '/services', '/portfolio', SYNERGOS_PATH, '/now', '/ai-lab', '/blog', '/contactMe', '/privacy'] as const
+
+const PAGE_UPDATED: Partial<Record<string, string>> = {
+  [SYNERGOS_PATH]: synergosShowcase.countedAt,
+  '/now': now.updatedAt,
+  '/privacy': site.privacy.updatedAt,
+}
 
 type Entry = { path: string; lastModified?: string }
 
@@ -33,7 +42,7 @@ async function tagEntries(): Promise<MetadataRoute.Sitemap> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [posts, tags] = await Promise.all([listPosts(defaultLocale), tagEntries()])
   const entries: Entry[] = [
-    ...PUBLIC_PATHS.map((path) => ({ path })),
+    ...PUBLIC_PATHS.map((path) => ({ path, ...(PAGE_UPDATED[path] ? { lastModified: PAGE_UPDATED[path] } : {}) })),
     ...getProjects().map((project) => ({ path: `/portfolio/${project.id}` })),
     ...posts.map((post) => ({ path: `/blog/${post.id}`, lastModified: post.updated ?? post.date })),
   ]

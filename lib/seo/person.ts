@@ -7,7 +7,7 @@ import { getSiteUrl } from '@/lib/site-url'
 
 export const PERSON_NAME: string = commonEs['brand.author']
 
-export const PERSON_ALTERNATE_NAMES = ['Camilo Hernandez', 'Camilo Alonso Hernández Cediel', 'CHERCED'] as const
+export const PERSON_ALTERNATE_NAMES = ['Camilo Hernandez', 'Camilo Hernández Cediel', 'Camilo Alonso Hernández Cediel', 'CHERCED'] as const
 
 export const PERSON_JOB_TITLE = 'Software Solutions Engineer'
 
@@ -64,12 +64,17 @@ export function personId(base: URL = getSiteUrl()): string {
   return `${origin(base)}/#person`
 }
 
-export function personJsonLd(lang: Locale, base: URL = getSiteUrl()): PersonJsonLd {
-  const root = origin(base)
-  const sameAs = (['linkedin', 'github'] as const).flatMap((id) => {
-    const href = site.socials.find((social) => social.id === id)?.href
+export function personSameAs(content: typeof site = site): string[] {
+  const socials = (['linkedin', 'github'] as const).flatMap((id) => {
+    const href = content.socials.find((social) => social.id === id)?.href
     return href ? [href] : []
   })
+  return [...new Set([...socials, content.about.courses.platzi.href])]
+}
+
+export function personJsonLd(lang: Locale, base: URL = getSiteUrl()): PersonJsonLd {
+  const root = origin(base)
+  const sameAs = personSameAs()
   const alumni = site.about.education.find((entry) => entry.id === 'eam')?.institution ?? ''
   const cv = cvDocument(lang, root)
   return {
