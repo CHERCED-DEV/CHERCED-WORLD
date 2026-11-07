@@ -82,6 +82,12 @@ documento. Lo que allí está marcado como privado hasta el MVP no se enlaza ni 
 
 ### Clarifications
 
+#### Session 2026-11-07 (continuidad con Codex)
+
+- Q: P-904, ¿subpágina o secciones dentro de Synergos? → A: el autor confirma «Sí, subpágina enlazada desde Synergos».
+  Se mantiene `/[lang]/synergos/arquitectura`, con acceso desde «Cómo se construye» en `/[lang]/synergos`.
+  Esta respuesta no resuelve P-905 a P-909 ni aprueba el atlas o el boceto.
+
 #### Session 2026-11-07 (investigación SYN2, sin entrevista todavía)
 
 - Q: ¿Synergos usa BroadcastChannel? → A: sí, con dos buses en el UI público: uno general y otro tipado y con alcance
@@ -286,7 +292,7 @@ rótulo visible de visión.
 
 | # | Pregunta | Por defecto |
 |---|---|---|
-| P-904 | ¿La fase 2 va en una subpágina `/synergos/arquitectura` o como secciones nuevas dentro de `/synergos`? | Subpágina, enlazada desde "Cómo se construye" |
+| P-904 | ¿La fase 2 va en una subpágina `/synergos/arquitectura` o como secciones nuevas dentro de `/synergos`? | Confirmado por el autor (2026-11-07): subpágina enlazada desde Synergos, en "Cómo se construye" |
 | P-905 | ¿El atlas muestra también lo que se decidió no usar (outbox, cortacircuitos hacia el árbol, navegador directo al orquestador)? | Sí, como un grupo corto aparte |
 | P-906 | ¿Cuáles de los patrones "fuera de la lista" entran al atlas (micro-frontends, correlation ID, API composition, contratos generados, reserva en dos tiempos, un solo escritor, firma de webhooks, degradación honesta, interruptores)? | Micro-frontends, correlation ID, contratos generados y reserva en dos tiempos |
 | P-907 | ¿Quieres contar en genérico el embebido entre ventanas que hiciste en tu empleo? Si sí, lo escribes tú. | No en esta fase |

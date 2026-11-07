@@ -18,6 +18,8 @@ no se escribe: se agrega primero la evidencia, con fuente y fecha.
 
 - [ ] T0901 [Todas] Entrevista corta con el autor: P-904 a P-909. Las respuestas van a la spec, en "Clarifications"
   (una sesión nueva) y en la tabla "Preguntas al autor (fase 2)".
+  - P-904 confirmada por el autor el 2026-11-07: subpágina `/synergos/arquitectura`, enlazada desde Synergos.
+    Siguen pendientes P-905 a P-909; la entrevista no se marca como terminada.
 - [ ] T0902 [F2-2] El autor revisa la tabla del atlas (`fase-2-evidencias.md` §4) y aprueba el estado de cada patrón
   y la lista de "fuera de la lista" que entra (P-906). Es la condición del SC-912.
 - [ ] T0903 [Todas] Boceto de la subpágina en `specs/009-synergos-showcase/bocetos/arquitectura.html`, con el orden de
