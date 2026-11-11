@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Prototipo 013 · Hacia dónde voy</title>
+<style>
+  :root {
+    --bg: #000000;
+    --fg: #ffffff;
+    --fg-muted: #cfcfcf;
+    --green: #25ed9e;
+    --glass-bg: rgb(0 0 0 / 0.65);
+    --glass-border: rgb(255 255 255 / 0.16);
+    --header-h: 4rem;
+    --radius: 18px;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(120% 60% at 50% 0%, #0d1f18 0%, #000 60%) fixed, var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  .lang-en [data-l='es'], .lang-es [data-l='en'] { display: none; }
+  .header {
+    position: fixed; inset: 0 0 auto; z-index: 100; height: var(--header-h);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding-inline: 16px; background: rgb(0 0 0 / 0.78); border-bottom: 1px solid var(--glass-border);
+    font-size: 14px; letter-spacing: 0.04em;
+  }
+  .header a { color: var(--fg); min-height: 44px; display: inline-flex; align-items: center; padding-inline: 8px; }
+  .progress {
+    position: fixed; inset-inline: 0; top: var(--header-h); z-index: 101; height: 2px;
+    background: var(--green); transform-origin: 0 50%; transform: scaleX(var(--p, 0));
+    pointer-events: none;
+  }
+  :root[data-progress='none'] .progress, :root[data-progress='css'] .progress { display: none; }
+  main { padding: calc(var(--header-h) + 24px) 16px 40vh; max-width: 1120px; margin-inline: auto; }
+  .note {
+    border: 1px dashed var(--glass-border); border-radius: 12px; padding: 12px 14px;
+    color: var(--fg-muted); font-size: 13px;
+  }
+  .placeholder { margin-block: 32px 64px; }
+  .placeholder h2 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-muted); font-weight: 600; }
+  .block { height: 120px; margin-block: 16px; border-radius: var(--radius); background: rgb(255 255 255 / 0.04); border: 1px solid rgb(255 255 255 / 0.06); }
+  .scene { padding-top: 24px; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin: 0; }
+  .scene h2 { font-size: clamp(28px, 6vw, 44px); line-height: 1.15; margin: 8px 0 12px; }
+  .intro { color: var(--fg-muted); max-width: 60ch; margin: 0 0 32px; }
+  .map {
+    margin: 0 0 40px; padding: 12px; border-radius: var(--radius);
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+  }
+  .map svg { display: block; width: 100%; height: auto; margin-inline: auto; }
+  .map .tall { max-width: 480px; }
+  .map .wide { display: none; }
+  @media (min-width: 1024px) {
+    .map { padding: 24px; }
+    .map .tall { display: none; }
+    .map .wide { display: block; }
+  }
+  .base { fill: none; stroke: rgb(255 255 255 / 0.3); stroke-width: 1.5; }
+  .base.provisional { stroke-dasharray: 5 6; }
+  .trace { display: none; fill: none; stroke: var(--green); stroke-width: 2.5; stroke-linecap: round; }
+  .node rect { fill: rgb(0 0 0 / 0.78); stroke: rgb(255 255 255 / 0.22); }
+  .node.now rect { stroke: rgb(255 255 255 / 0.42); }
+  .node text { fill: var(--fg); font-family: inherit; }
+  .node .ring { fill: none; stroke: var(--green); stroke-width: 1.5; }
+  .column-label { fill: var(--green); letter-spacing: 0.1em; font-family: inherit; }
+  .tall .node text, .tall .column-label { font-size: 14px; }
+  .wide .node text, .wide .column-label { font-size: 17px; }
+  .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  @media (min-width: 768px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; } }
+  .card {
+    position: relative; padding: 24px 20px 20px; border-radius: var(--radius);
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgb(0 0 0 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.08);
+    overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 20px; right: 20px; height: 2px;
+    background: var(--green); transform-origin: 0 50%;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.3; }
+  .card p { margin: 0; color: var(--fg-muted); font-size: 15px; }
+  .harness { margin-top: 64px; }
+  .harness ul { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+  .harness a {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 999px;
+    border: 1px solid var(--glass-border); color: var(--fg); text-decoration: none; font-size: 14px;
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+<style id="enhance">
+  :root[data-progress='css'] body { timeline-scope: --scene; }
+  :root[data-progress='css'] .scene-body { view-timeline: --scene block; view-timeline-inset: var(--header-h) 0; }
+
+  @supports (animation-timeline: view()) and (animation-range: entry 0% cover 50%) {
+    @media (prefers-reduced-motion: no-preference) {
+      :root[data-progress='css'] .progress {
+        display: block;
+        animation: cw-reading linear both;
+        animation-timeline: --scene;
+        animation-range: contain 0% contain 100%;
+      }
+
+      .map svg { view-timeline: --map block; }
+
+      .trace {
+        display: inline;
+        stroke-dasharray: 1;
+        animation: cw-trace linear both;
+        animation-timeline: --map;
+        animation-range: var(--from) var(--to);
+      }
+
+      .ring {
+        animation: cw-arrive linear both;
+        animation-timeline: --map;
+        animation-range: var(--from) var(--to);
+      }
+
+      .card::before {
+        animation: cw-grow linear both;
+        animation-timeline: view();
+        animation-range: entry 25% cover 40%;
+      }
+    }
+  }
+
+  @keyframes cw-reading { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes cw-trace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes cw-arrive { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes cw-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+</style>
+<script>
+  (() => {
+    const q = new URLSearchParams(location.search)
+    const root = document.documentElement
+    const lang = q.get('lang') === 'en' ? 'en' : 'es'
+    root.lang = lang
+    root.classList.add(`lang-${lang}`)
+    root.dataset.progress = ['js', 'css', 'none'].includes(q.get('progress')) ? q.get('progress') : 'css'
+    if (q.has('fallback')) document.getElementById('enhance').remove()
+  })()
+</script>
+</head>
+<body>
+<header class="header">
+  <span>CHERCED · prototipo 013</span>
+  <a href="#hacia-donde-voy"><span data-l="es">Ir a la escena</span><span data-l="en">Go to the scene</span></a>
+</header>
+<div class="progress" aria-hidden="true" data-proto-progress=""></div>
+<div class="page">
+<main>
+  <p class="note">
+    <span data-l="es">Prototipo aislado de la spec 013. No es parte del sitio: no importa componentes ni tokens; copia sus valores. El copy es el borrador de R2.1, pendiente del visto bueno del autor. Las conexiones del mapa son una propuesta para que el autor las confirme; la punteada es la más dudosa. El fondo animado de partículas no se reproduce.</span>
+    <span data-l="en">Isolated prototype for spec 013. It is not part of the site: it imports no components or tokens, it copies their values. The copy is the R2.1 draft awaiting the author's approval. The map connections are a proposal for the author to confirm; the dashed one is the least certain. The animated particle background is not reproduced.</span>
+  </p>
+
+  <section class="placeholder" aria-hidden="true">
+    <h2><span data-l="es">03 · Lo que sé (escena existente, no se toca)</span><span data-l="en">03 · What I know (existing scene, untouched)</span></h2>
+    <div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div>
+  </section>
+
+  <section id="hacia-donde-voy" class="scene" aria-labelledby="hdv-title">
+    <div class="scene-body">
+      <p class="eyebrow">04</p>
+      <h2 id="hdv-title"><span data-l="es">Hacia dónde voy</span><span data-l="en">Where I'm heading</span></h2>
+      <p class="intro">
+        <span data-l="es">Lo que construyo hoy es la base de lo que quiero construir mañana. Estos son los rumbos que estoy tomando.</span>
+        <span data-l="en">What I build today is the groundwork for what I want to build next. These are the directions I'm taking.</span>
+      </p>
+
+      <figure class="map" data-proto-map="">
+        <svg class="wide" viewBox="0 0 960 440" role="img" aria-labelledby="map-wide-title map-wide-desc">
+          <title id="map-wide-title" data-k="title">Mapa: de lo que ya hago a los cuatro rumbos</title>
+          <desc id="map-wide-desc" data-k="desc">Arquitectura componible, agentes de IA y frontend alimentan a Synergos como fábrica. Frontend lleva a interfaces de marca. Agentes de IA llevan a robótica y automatización (conexión provisional). Robótica y automatización lleva a energía desde los residuos.</desc>
+          <text class="column-label" x="40" y="40" data-k="now">LO QUE YA HAGO</text>
+          <text class="column-label" x="620" y="40" data-k="next">HACIA DÓNDE VOY</text>
+          <path class="base" d="M320 126 C 470 126, 470 88, 620 88" />
+          <path class="base" d="M320 216 C 470 216, 470 88, 620 88" />
+          <path class="base" d="M320 306 C 470 306, 470 88, 620 88" />
+          <path class="base provisional" d="M320 216 C 470 216, 470 188, 620 188" />
+          <path class="base" d="M320 306 C 470 306, 470 388, 620 388" />
+          <path class="base" d="M920 188 C 952 188, 952 288, 920 288" />
+          <path class="trace" pathLength="1" style="--from: cover 15%; --to: cover 27%" d="M320 126 C 470 126, 470 88, 620 88" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 19%; --to: cover 31%" d="M320 216 C 470 216, 470 88, 620 88" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 23%; --to: cover 35%" d="M320 306 C 470 306, 470 88, 620 88" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 27%; --to: cover 39%" d="M320 216 C 470 216, 470 188, 620 188" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 31%; --to: cover 43%" d="M320 306 C 470 306, 470 388, 620 388" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 35%; --to: cover 43%" d="M920 188 C 952 188, 952 288, 920 288" aria-hidden="true" />
+          <g class="node now"><rect x="40" y="100" width="280" height="52" rx="12" /><text x="60" y="132" data-k="ac">Arquitectura componible</text></g>
+          <g class="node now"><rect x="40" y="190" width="280" height="52" rx="12" /><text x="60" y="222" data-k="ai">Agentes de IA</text></g>
+          <g class="node now"><rect x="40" y="280" width="280" height="52" rx="12" /><text x="60" y="312" data-k="fe">Frontend</text></g>
+          <g class="node"><rect x="620" y="60" width="300" height="56" rx="12" /><text x="640" y="94" data-k="syn">Synergos como fábrica</text><rect class="ring" style="--from: cover 27%; --to: cover 35%" x="616" y="56" width="308" height="64" rx="15" /></g>
+          <g class="node"><rect x="620" y="160" width="300" height="56" rx="12" /><text x="640" y="194" data-k="rob">Robótica y automatización</text><rect class="ring" style="--from: cover 33%; --to: cover 41%" x="616" y="156" width="308" height="64" rx="15" /></g>
+          <g class="node"><rect x="620" y="260" width="300" height="56" rx="12" /><text x="640" y="294" data-k="ene">Energía desde los residuos</text><rect class="ring" style="--from: cover 39%; --to: cover 45%" x="616" y="256" width="308" height="64" rx="15" /></g>
+          <g class="node"><rect x="620" y="360" width="300" height="56" rx="12" /><text x="640" y="394" data-k="brand">Interfaces de marca</text><rect class="ring" style="--from: cover 37%; --to: cover 45%" x="616" y="356" width="308" height="64" rx="15" /></g>
+        </svg>
+        <svg class="tall" viewBox="0 0 340 600" role="img" aria-labelledby="map-tall-title map-tall-desc">
+          <title id="map-tall-title" data-k="title">Mapa: de lo que ya hago a los cuatro rumbos</title>
+          <desc id="map-tall-desc" data-k="desc">Arquitectura componible, agentes de IA y frontend alimentan a Synergos como fábrica. Frontend lleva a interfaces de marca. Agentes de IA llevan a robótica y automatización (conexión provisional). Robótica y automatización lleva a energía desde los residuos.</desc>
+          <text class="column-label" x="48" y="24" data-k="now">LO QUE YA HAGO</text>
+          <text class="column-label" x="48" y="300" data-k="next">HACIA DÓNDE VOY</text>
+          <path class="base" d="M48 72 H 44 Q 38 72 38 80 V 344 Q 38 352 44 352 H 48" />
+          <path class="base" d="M48 132 H 36 Q 30 132 30 140 V 344 Q 30 352 36 352 H 48" />
+          <path class="base" d="M48 192 H 28 Q 22 192 22 200 V 344 Q 22 352 28 352 H 48" />
+          <path class="base provisional" d="M48 132 H 20 Q 14 132 14 140 V 414 Q 14 422 20 422 H 48" />
+          <path class="base" d="M48 192 H 12 Q 6 192 6 200 V 554 Q 6 562 12 562 H 48" />
+          <path class="base" d="M316 422 Q 334 422 334 432 V 482 Q 334 492 316 492" />
+          <path class="trace" pathLength="1" style="--from: cover 15%; --to: cover 27%" d="M48 72 H 44 Q 38 72 38 80 V 344 Q 38 352 44 352 H 48" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 19%; --to: cover 31%" d="M48 132 H 36 Q 30 132 30 140 V 344 Q 30 352 36 352 H 48" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 23%; --to: cover 35%" d="M48 192 H 28 Q 22 192 22 200 V 344 Q 22 352 28 352 H 48" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 27%; --to: cover 39%" d="M48 132 H 20 Q 14 132 14 140 V 414 Q 14 422 20 422 H 48" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 31%; --to: cover 43%" d="M48 192 H 12 Q 6 192 6 200 V 554 Q 6 562 12 562 H 48" aria-hidden="true" />
+          <path class="trace" pathLength="1" style="--from: cover 35%; --to: cover 43%" d="M316 422 Q 334 422 334 432 V 482 Q 334 492 316 492" aria-hidden="true" />
+          <g class="node now"><rect x="48" y="50" width="268" height="44" rx="12" /><text x="64" y="77" data-k="ac">Arquitectura componible</text></g>
+          <g class="node now"><rect x="48" y="110" width="268" height="44" rx="12" /><text x="64" y="137" data-k="ai">Agentes de IA</text></g>
+          <g class="node now"><rect x="48" y="170" width="268" height="44" rx="12" /><text x="64" y="197" data-k="fe">Frontend</text></g>
+          <g class="node"><rect x="48" y="328" width="268" height="48" rx="12" /><text x="64" y="357" data-k="syn">Synergos como fábrica</text><rect class="ring" style="--from: cover 27%; --to: cover 35%" x="44" y="324" width="276" height="56" rx="15" /></g>
+          <g class="node"><rect x="48" y="398" width="268" height="48" rx="12" /><text x="64" y="427" data-k="rob">Robótica y automatización</text><rect class="ring" style="--from: cover 33%; --to: cover 41%" x="44" y="394" width="276" height="56" rx="15" /></g>
+          <g class="node"><rect x="48" y="468" width="268" height="48" rx="12" /><text x="64" y="497" data-k="ene">Energía desde los residuos</text><rect class="ring" style="--from: cover 39%; --to: cover 45%" x="44" y="464" width="276" height="56" rx="15" /></g>
+          <g class="node"><rect x="48" y="538" width="268" height="48" rx="12" /><text x="64" y="567" data-k="brand">Interfaces de marca</text><rect class="ring" style="--from: cover 37%; --to: cover 45%" x="44" y="534" width="276" height="56" rx="15" /></g>
+        </svg>
+      </figure>
+
+      <ol class="cards">
+        <li class="card">
+          <h3><span data-l="es">Synergos, de plataforma a fábrica</span><span data-l="en">Synergos, from platform to factory</span></h3>
+          <p data-l="es">Hoy Synergos compone productos con piezas reutilizables, como Legos del back y del front. Hacia allá voy: una fábrica de software a la que le pides algo y, con sus arneses y sus líneas de ensamblaje, reutiliza esas piezas para construirlo.</p>
+          <p data-l="en">Today Synergos composes products from reusable pieces, like Lego bricks for the back end and the front end. Where I'm heading: a software factory you ask for something, and its harnesses and assembly lines reuse those pieces to build it.</p>
+        </li>
+        <li class="card">
+          <h3><span data-l="es">Robótica y automatización</span><span data-l="en">Robotics and automation</span></h3>
+          <p data-l="es">Aprendo por mi cuenta microcontroladores, sensores y robótica, con una ruta propia en la que le pregunto a la IA hasta entender cómo funciona cada cosa. Me atrae automatizar procesos productivos: granjas, mecánica industrial y automotriz.</p>
+          <p data-l="en">I'm teaching myself microcontrollers, sensors and robotics, on my own route where I keep asking AI until I understand how each thing works. I'm drawn to automating production: farms, industrial and automotive mechanics.</p>
+        </li>
+        <li class="card">
+          <h3><span data-l="es">Energía desde los residuos</span><span data-l="en">Energy from waste</span></h3>
+          <p data-l="es">Fui ponente de una investigación sobre una empresa belga de biometanización y me enamoré de la teoría: el mismo proceso genera energía, produce compost y resuelve las aguas residuales industriales. Me gustaría automatizar ese tipo de plantas.</p>
+          <p data-l="en">I presented research on a Belgian biomethanization company and fell in love with the theory: one process generates energy, produces compost and treats industrial wastewater. I'd like to automate plants like that.</p>
+        </li>
+        <li class="card">
+          <h3><span data-l="es">Interfaces de marca</span><span data-l="en">Brand interfaces</span></h3>
+          <p data-l="es">Me encantaría hacer el frontend de marcas de producto y de moda: experiencias muy bonitas y accesibles para todo público.</p>
+          <p data-l="en">I'd love to build the front end for product and fashion brands: beautiful experiences that are accessible to everyone.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="harness" aria-labelledby="harness-title">
+    <h2 id="harness-title" class="eyebrow"><span data-l="es">Banco de prueba</span><span data-l="en">Test bench</span></h2>
+    <ul>
+      <li><a href="?">ES · CSS</a></li>
+      <li><a href="?lang=en">EN · CSS</a></li>
+      <li><a href="?fallback">Sin soporte (estático)</a></li>
+      <li><a href="?progress=js">Progreso en JS (como el blog)</a></li>
+      <li><a href="?progress=none">Sin barra</a></li>
+    </ul>
+  </section>
+</main>
+</div>
+<script>
+  (() => {
+    if (document.documentElement.lang !== 'en') return
+    const en = {
+      title: 'Map: from what I already do to the four directions',
+      desc: 'Composable architecture, AI agents and front end feed Synergos as a factory. Front end leads to brand interfaces. AI agents lead to robotics and automation (provisional connection). Robotics and automation leads to energy from waste.',
+      now: 'WHAT I ALREADY DO', next: "WHERE I'M HEADING",
+      ac: 'Composable architecture', ai: 'AI agents', fe: 'Front end',
+      syn: 'Synergos as a factory', rob: 'Robotics and automation', ene: 'Energy from waste', brand: 'Brand interfaces',
+    }
+    for (const node of document.querySelectorAll('[data-k]')) node.textContent = en[node.dataset.k]
+  })()
+  ;(() => {
+    if (document.documentElement.dataset.progress !== 'js') return
+    const bar = document.querySelector('[data-proto-progress]')
+    const target = document.querySelector('.scene-body')
+    const header = document.querySelector('.header')
+    const clamp01 = (v) => (Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0)
+    const readingProgress = (body, viewport, offset) => {
+      const distance = body.height - viewport + offset
+      if (distance <= 0) return body.top + body.height <= viewport ? 1 : 0
+      return clamp01((offset - body.top) / distance)
+    }
+    let frame = 0
+    const run = () => {
+      frame = 0
+      const box = target.getBoundingClientRect()
+      const value = readingProgress({ top: box.top, height: box.height }, window.innerHeight, header.getBoundingClientRect().bottom)
+      bar.style.setProperty('--p', value.toFixed(4))
+    }
+    const schedule = () => { if (frame === 0) frame = requestAnimationFrame(run) }
+    addEventListener('scroll', schedule, { passive: true })
+    addEventListener('resize', schedule, { passive: true })
+    new ResizeObserver(schedule).observe(target)
+    run()
+  })()
+</script>
+</body>
+</html>
