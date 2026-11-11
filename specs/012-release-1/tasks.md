@@ -15,21 +15,21 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [x] R1.1 Auditoría con códigos U1… (375/390/412/768/1440, claro/oscuro, ES/EN, WebKit). Hecha el 2026-11-11: 18 hallazgos, 2 altos, 8 medios y 8 bajos; documento privado `docs/handoff-2026-11-04/13-auditoria-paginas-nuevas.md`.
 - [ ] R1.2 Pulido por código, sin reconstruir; las e2e de la 010 cubren las páginas nuevas.
   - [x] Altos (hechos el 2026-11-11). U1: los trazos ligados al scroll no avanzan en `/synergos` ni en el hero de la arquitectura (el `overflow: hidden` del cristal los congela; `overflow: clip` lo resuelve). U2: el backend de Synergos usa un solo vocabulario, "20 capacidades · 9 orquestadores" (desbloquea R2.4).
-  - [ ] C0 (alto, de la segunda opinión de la 013): en el celular, el mazo apilado de Servicios tapa el foco de teclado (WCAG 2.4.11): 7 de 12 acciones en Chromium y 8 de 12 en WebKit quedan bajo la tarjeta siguiente.
+  - [x] C0 (alto, de la segunda opinión de la 013; hecho el 2026-11-11 con `:has(:focus-visible)`, que saca al frente la tarjeta con foco de teclado): en el celular, el mazo apilado de Servicios tapa el foco de teclado (WCAG 2.4.11): 7 de 12 acciones en Chromium y 8 de 12 en WebKit quedan bajo la tarjeta siguiente.
   - [ ] Medios.
     - [x] U3: acciones visibles al abrir "Para reclutadores" en celular.
     - [x] U4: el cargo actual de la carrera no se corta sin señal en escritorio (desvanecido cuando hay más y alto máximo de 820 px).
     - [x] U5: mesa de peloteo completa en celular (se centra al quedar lista y al jugar).
     - [x] U6: textos de los diagramas del AI Lab de 12 px o más (leyendas HTML en celular; V3 en HTML).
-    - U7: nombres de los patrones de la arquitectura (decide el autor).
+    - [x] U7: patrones con título en español y nombre canónico en inglés; "seams", "back", "design system" y "showcase" traducidos en el texto.
     - [x] U8: panel de capas sin estado vacío y usable al tacto.
     - [x] U9: "Ver qué recibes" y "Quiero esto" de 44 px (ya medían 44 en reposo; los 39–43 eran de la tarjeta encogida al apilarse; queda en `toque.spec.ts`).
-    - U10: acceso a "Synergos por dentro" (decide el autor).
+    - [x] U10: "Synergos por dentro" enlazado desde "Ahora trabajo en", en el inicio.
   - [ ] Bajos.
-    - U11: ↗ solo en enlaces externos.
-    - U12: el caso de estudio una sola vez en `/synergos` (decide el autor).
+    - [x] U11: ↗ solo en enlaces externos (→ a otra página, ↓ dentro de la misma).
+    - [x] U12: no era el mismo caso: el inicio de `/synergos` lleva al caso 12 y "Cómo se construye", al 13. El del 13 dice ahora "Leer este caso".
     - U13: verticales más rápidas en celular.
-    - U14: fugas de idioma (decide el autor los nombres de las líneas).
+    - [x] U14: los nombres de las líneas y de los showcases se quedan; los términos en inglés también (regla del autor en la 010). Solo se corrigió "funciona por completo".
     - U15: compuestos partidos en el guion.
     - U16: contraste de la barra "18/" en claro.
     - U17: 404 de post o caso con salida contextual.

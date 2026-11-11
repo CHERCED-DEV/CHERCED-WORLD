@@ -1,6 +1,6 @@
 {
   "ailab.title": "AI LAB",
-  "ailab.intro": "Aquí no te cuento lo que sé hacer con IA: te dejo probarlo. Cada experimento te dice dónde corre, cómo está hecho y qué decidí. La mayoría funciona completo en tu navegador.",
+  "ailab.intro": "Aquí no te cuento lo que sé hacer con IA: te dejo probarlo. Cada experimento te dice dónde corre, cómo está hecho y qué decidí. La mayoría funciona por completo en tu navegador.",
   "ailab.plugins": "También creo plugins de IA para profesiones concretas. Para una abogada, skills que organizan el material del caso, contrastan hipótesis y generan documentos. Para un ingeniero estructural, un asistente que lee sus bitácoras, ayuda con los cálculos y arma el estimado. Las vitrinas de abajo usan solo datos inventados.",
   "ailab.privacy": "No guardo tu audio ni tu texto. Se procesan en tu navegador y no salen de él.",
   "ailab.privacy.more": "Lee la política de privacidad",

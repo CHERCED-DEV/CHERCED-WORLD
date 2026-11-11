@@ -333,7 +333,7 @@ export const synergosShowcase = {
     },
     build: {
       title: { es: 'Cómo se construye', en: 'How it is built' },
-      caseLink: { es: 'Ver el caso de estudio', en: 'Read the case study' },
+      caseLink: { es: 'Leer este caso', en: 'Read this case' },
       harness: { es: 'El arnés público del modelo director y líneas.', en: 'The public harness behind the director-and-lines model.' },
       harnessLink: { es: 'Ver el arnés: {repo}', en: 'See the harness: {repo}' },
     },

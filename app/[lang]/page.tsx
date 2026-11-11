@@ -3,6 +3,7 @@ import { BackgroundIntensity } from '@/components/motion'
 import { HomeView } from '@/components/site/home/HomeView'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
+import { architecture } from '@/content/synergos-architecture'
 import { synergosShowcase } from '@/content/synergos-showcase'
 import { getProjects, getSite } from '@/lib/content'
 import { t } from '@/lib/i18n'
@@ -47,6 +48,7 @@ export default async function HomePage({ params }: Props) {
             caseStudy: t(home, 'now.caseStudy'),
             more: t(home, 'now.more'),
             showcase: synergosShowcase.copy.cta[lang],
+            inside: architecture.copy.title[lang],
           },
         }}
       />

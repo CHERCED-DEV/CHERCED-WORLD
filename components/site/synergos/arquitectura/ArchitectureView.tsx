@@ -45,7 +45,7 @@ export function ArchitectureView({ lang }: { lang: Locale }) {
           <p className={styles.heroStatement}>{copy.lead[lang]}</p>
           <div className={styles.heroActions}>
             <a href="#recorrido" className={buttonClassName({ variant: 'solid', size: 'lg' })}>{ui.start} <span aria-hidden="true">↓</span></a>
-            <a href="#patrones" className={styles.textAction}>{ui.atlas} <span aria-hidden="true">↗</span></a>
+            <a href="#patrones" className={styles.textAction}>{ui.atlas} <span aria-hidden="true">↓</span></a>
           </div>
         </div>
         <SystemBlueprint lang={lang} />

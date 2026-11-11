@@ -19,6 +19,6 @@ export function SystemBlueprint({ lang }: { lang: Locale }) {
     <a href="#recorrido" className={styles.blueprintTop}><span className={styles.mono}>01 / CDN + UI</span><strong>{labels.top}</strong></a>
     <a href="#recorrido" className={styles.blueprintCore}><span aria-hidden="true">⟨ / ⟩</span><strong>Umbraco</strong><small>{labels.center}</small></a>
     <a href="#islas" className={styles.blueprintBottom}><span className={styles.mono}>{architecture.facts.orchestrators} {labels.orchestrators} → {architecture.facts.capabilities} {labels.capabilities}</span><strong>{labels.bottom}</strong></a>
-    <figcaption>{labels.explore} <span aria-hidden="true">↗</span></figcaption>
+    <figcaption>{labels.explore} <span aria-hidden="true">↓</span></figcaption>
   </figure>
 }

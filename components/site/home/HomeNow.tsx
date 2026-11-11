@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { SYNERGOS_ARCHITECTURE_PATH } from '@/content/synergos-architecture'
 import { SYNERGOS_CASE_ID } from '@/content/synergos-showcase'
 import { ShowcaseLink } from '@/components/site/synergos/ShowcaseLink'
 import { cx } from '@/components/ui/cx'
@@ -17,6 +18,7 @@ export type HomeNowLabels = {
   caseStudy: string
   more: string
   showcase?: string
+  inside?: string
 }
 
 export const HOME_NOW_ID = 'home-now'
@@ -73,7 +75,19 @@ export function HomeNow({ lang, roles, labels }: { lang: Locale; roles: NowRole[
                 </span>
               </p>
               {labels.showcase && role.project?.id === SYNERGOS_CASE_ID ? (
-                <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
+                <>
+                  <ShowcaseLink lang={lang} label={labels.showcase} from="home" size="md" className={styles.roleShowcase} />
+                  {labels.inside ? (
+                    <Link
+                      href={localizedPath(lang, SYNERGOS_ARCHITECTURE_PATH)}
+                      className={cx(styles.link, styles.roleLink)}
+                      data-cw-home-link="architecture"
+                    >
+                      <span className={styles.linkText}>{labels.inside}</span>
+                      <Arrow />
+                    </Link>
+                  ) : null}
+                </>
               ) : role.project ? (
                 <Link
                   href={localizedPath(lang, `/portfolio/${role.project.id}`)}

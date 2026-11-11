@@ -299,7 +299,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
               </h3>
               <p className={styles.buildText}>{build.summary[lang]}</p>
                 <Link href={localizedPath(lang, SYNERGOS_ARCHITECTURE_PATH)} className={buttonClassName({ variant: 'glass', size: 'md', className: styles.button })} data-cw-synergos-architecture-link="">
-                  {architecture.copy.title[lang]} ↗
+                  {architecture.copy.title[lang]} →
                 </Link>
               <Link
                 href={localizedPath(lang, `/portfolio/${build.id}`)}

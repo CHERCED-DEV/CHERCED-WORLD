@@ -81,6 +81,7 @@
 .pattern { display: grid; gap: 24px; border-bottom: 1px solid var(--cw-glass-border); padding: 28px 16px; scroll-margin-top: 160px; @include bp.up(md) { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 48px; padding: 32px 24px; } &:target { background: var(--cw-glass-subtle-bg); outline: 1px solid var(--cw-fg-muted); outline-offset: -1px; } }
 .patternIdentity { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-content: start; gap: 12px; h4 { font-size: clamp(17px, 1.6vw, 21px); letter-spacing: -.02em; } .status { grid-column: 2; } }
 .patternNumber { font: 12px ui-monospace, monospace; color: var(--cw-fg-muted); padding-top: 5px; }
+.canonical { display: block; margin-top: 4px; font: 400 12px/1.5 ui-monospace, monospace; letter-spacing: .02em; color: var(--cw-fg-muted); }
 .patternBody { display: grid; align-content: start; gap: 16px; min-width: 0; }
 .status { display: inline-flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cw-fg-muted); &::before { content: ''; flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--cw-graphic-accent); } &[data-status='parcial']::before { background: transparent; outline: 1px solid currentColor; } }
 .limit { border-left: 2px solid var(--cw-glass-border); padding-left: 16px; strong { display: block; font-size: 12px; margin-bottom: 8px; } }

@@ -122,6 +122,57 @@ test.describe('R1.2: pulido de la auditoría de las páginas nuevas (012)', () =
     await expect(page.locator('[data-cw-rally-legend]')).toBeVisible()
   })
 
+  test('C0: en celular, recorrer el mazo de Servicios con Tab nunca deja el foco tapado (WCAG 2.4.11)', async ({ page }) => {
+    onlyIn('mobile-chromium')
+    await page.setViewportSize({ width: 375, height: 812 })
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await open(page, '/es/services')
+    await expect(page.locator('html')).toHaveAttribute('data-js', /.*/)
+    const actions = page.locator('[data-cw-service-stack] :is([data-cw-service-flip], [data-cw-service-try], [data-cw-service-want])')
+    const total = await actions.count()
+    expect(total).toBeGreaterThanOrEqual(12)
+    await page.locator('[data-cw-service-stack]').evaluate((node) => node.scrollIntoView({ block: 'start', behavior: 'instant' }))
+    await page.keyboard.press('Tab')
+    const covered: string[] = []
+    let seen = 0
+    for (let step = 0; step < 80 && seen < total; step++) {
+      const inside = await page.evaluate(() => Boolean(document.activeElement?.closest('[data-cw-service-stack]')))
+      if (inside) {
+        seen += 1
+        await page.waitForTimeout(450)
+        const hidden = await page.evaluate(() => {
+          const element = document.activeElement as HTMLElement
+          const box = element.getBoundingClientRect()
+          const points = [
+            [box.left + box.width / 2, box.top + box.height / 2],
+            [box.left + 4, box.top + 4],
+            [box.right - 4, box.bottom - 4],
+          ]
+          const visible = points.some(([x, y]) => {
+            const hit = document.elementFromPoint(x!, y!)
+            return hit !== null && (hit === element || element.contains(hit))
+          })
+          return visible ? null : `${element.textContent?.trim().slice(0, 30)}`
+        })
+        if (hidden) covered.push(hidden)
+      }
+      await page.keyboard.press('Tab')
+    }
+    expect(seen).toBe(total)
+    expect(covered).toEqual([])
+  })
+
+  for (const lang of ['es', 'en'] as const) {
+    test(`U10 (${lang}): desde "Ahora trabajo en" se llega a Synergos por dentro`, async ({ page }) => {
+      onlyIn('desktop-chromium', 'mobile-chromium')
+      await open(page, `/${lang}`)
+      const link = page.locator('[data-cw-home-now] [data-cw-home-link="architecture"]')
+      await expect(link).toHaveCount(1)
+      await expect(link).toHaveAttribute('href', `/${lang}/synergos/arquitectura`)
+      await expect(link).toHaveText(lang === 'es' ? /Synergos por dentro/ : /Inside Synergos/)
+    })
+  }
+
   test('U8: la capa 01 llega elegida y la ayuda habla también del toque', async ({ page }) => {
     onlyIn('mobile-chromium')
     await open(page, '/es/synergos')

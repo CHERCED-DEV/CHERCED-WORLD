@@ -316,6 +316,16 @@ $stack-depth-shade: 0.16;
       &[data-cw-stack='behind'] {
         clip-path: inset(0 0 calc(100% - #{$stack-strip}) 0);
       }
+
+      &:has(:focus-visible) {
+        z-index: 4;
+        clip-path: none;
+        transform: none;
+
+        &::after {
+          opacity: 0;
+        }
+      }
     }
   }
 }

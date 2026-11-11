@@ -32,7 +32,7 @@ const topics: ArchitectureTopic[] = [
   },
   {
     id: 'umbraco', title: l('Cómo compone Umbraco', 'How Umbraco composes'),
-    body: [l('El schema se versiona con uSync. El CMS tiene cinco capas: configuración del sitio, composiciones que declaran forma, bloques renderizables, páginas y cableado.', 'The schema is versioned with uSync. The CMS has five layers: site configuration, shape-only compositions, renderable blocks, pages and wiring.'), l('El editor coloca una funcionalidad, que recibe cableado, o una pieza, que recibe contenido y monta su gemela del design system. La configuración de negocio de una funcionalidad no la toca el editor.', 'Editors place either a feature, which receives wiring, or a piece, which receives content and mounts its design-system counterpart. Editors do not change a feature’s business configuration.'), l('Standard, Canvas, Bare y Landing son los cuatro tipos de página canónicos. La Tienda ya se compone por páginas; el despiece de otras verticales sigue en curso.', 'Standard, Canvas, Bare and Landing are the four canonical page types. Storefront is already composed as pages; decomposing other verticals is still in progress.')],
+    body: [l('El schema se versiona con uSync. El CMS tiene cinco capas: configuración del sitio, composiciones que declaran forma, bloques renderizables, páginas y cableado.', 'The schema is versioned with uSync. The CMS has five layers: site configuration, shape-only compositions, renderable blocks, pages and wiring.'), l('El editor coloca una funcionalidad, que recibe cableado, o una pieza, que recibe contenido y monta su gemela del sistema de diseño. La configuración de negocio de una funcionalidad no la toca el editor.', 'Editors place either a feature, which receives wiring, or a piece, which receives content and mounts its design-system counterpart. Editors do not change a feature’s business configuration.'), l('Standard, Canvas, Bare y Landing son los cuatro tipos de página canónicos. La Tienda ya se compone por páginas; el despiece de otras verticales sigue en curso.', 'Standard, Canvas, Bare and Landing are the four canonical page types. Storefront is already composed as pages; decomposing other verticals is still in progress.')],
     sources: [adr('0008-usync-hybrid-source-of-truth', 'ADR 0008'), adr('0023-componentization-layered-architecture', 'ADR 0023'), adr('0134-tres-catalogos-y-dos-tipos-de-colocable-la-funcionalidad-y-la-pieza', 'ADR 0134'), adr('0137-la-configuracion-de-negocio-de-una-funcionalidad-no-la-toca-el-editor', 'ADR 0137'), adr('0022-page-composition-standard', 'ADR 0022')],
   },
   {
@@ -52,7 +52,7 @@ const topics: ArchitectureTopic[] = [
   },
   {
     id: 'atomico', title: l('Diseño atómico en los dos árboles', 'Atomic design in both trees'),
-    body: [l(`El registry del UI clasifica ${system.primitives} primitivas, ${system.compositions} composiciones y ${system.modules} módulos. Un elemento publicado es una app; lo compartido vive en una librería. Una pieza con gemela en el design system la monta y no la reimplementa.`, `The UI registry classifies ${system.primitives} primitives, ${system.compositions} compositions and ${system.modules} modules. A published element is an app; shared components live in a library. A piece with a design-system counterpart mounts it instead of rebuilding it.`), l('En el back, una capacidad puede decir que no sola y es dueña de su almacén. Lo que no tiene almacén es un tipo compartido. El despiece de las apps de cada vertical sigue en curso.', 'In the backend, a capability can reject a request on its own and owns its storage. A piece without storage is a shared type. Decomposing each vertical’s apps is still in progress.')],
+    body: [l(`El registry del UI clasifica ${system.primitives} primitivas, ${system.compositions} composiciones y ${system.modules} módulos. Un elemento publicado es una app; lo compartido vive en una librería. Una pieza con gemela en el sistema de diseño la monta y no la reimplementa.`, `The UI registry classifies ${system.primitives} primitives, ${system.compositions} compositions and ${system.modules} modules. A published element is an app; shared components live in a library. A piece with a design-system counterpart mounts it instead of rebuilding it.`), l('En el backend, una capacidad puede decir que no sola y es dueña de su almacén. Lo que no tiene almacén es un tipo compartido. El despiece de las apps de cada vertical sigue en curso.', 'In the backend, a capability can reject a request on its own and owns its storage. A piece without storage is a shared type. Decomposing each vertical’s apps is still in progress.')],
     sources: [ui('vitals/contracts/src/element-registry.json', 'element-registry.json'), adr('0113-published-elements-are-apps-shared-components-live-in-a-lib', 'ADR 0113'), cms('Synergos.CMS.Web/docs/product/07-diseno-atomico-capacidades.md', '07-diseno-atomico-capacidades.md')],
   },
   {
@@ -68,7 +68,7 @@ const patterns: SynergosPattern[] = [
   pattern('api-gateway', 'API Gateway', l('Un proxy recibe las peticiones públicas. El CMS es la puerta genérica de los flujos y el resto de servicios no publica puertos al exterior.', 'A proxy receives public requests. The CMS is the generic flow gateway; the other services do not expose public ports.'), [cms('Caddyfile', 'Caddyfile'), flow]),
   pattern('bff', 'Backend for Frontend', l(`${synergosFacts.orchestrators} orquestadores componen capacidades por negocio. El navegador entra por el CMS y no habla directamente con ellos.`, `${synergosFacts.orchestrators} orchestrators compose capabilities by business. Browsers enter through the CMS instead of calling them directly.`), [flow]),
   pattern('saga', 'Saga', l('El motor coordina el flujo, deshace, reintenta y termina avisando cuando se agotan los intentos. Las compensaciones son datos y sobreviven a una caída.', 'The engine coordinates the flow, compensates, retries and reports when attempts are exhausted. Compensations are data and survive a process failure.'), [cms('backend/orquestadores/Synergos.Bff.Core/SagaEngine.cs', 'SagaEngine.cs'), flow]),
-  pattern('strangler-fig', 'Strangler Fig', l('Los seams conservan su implementación en proceso mientras un interruptor permite extraer la operación al árbol de servicios, paso a paso.', 'Seams keep their in-process implementation while a switch moves the operation into the service tree incrementally.'), [adr('0130-la-analitica-de-busqueda-sale-del-cms-a-un-servicio-de-sesion', 'ADR 0130'), flow]),
+  pattern('strangler-fig', 'Strangler Fig', l('Las costuras (seams) conservan su implementación en proceso mientras un interruptor permite extraer la operación al árbol de servicios, paso a paso.', 'Seams keep their in-process implementation while a switch moves the operation into the service tree incrementally.'), [adr('0130-la-analitica-de-busqueda-sale-del-cms-a-un-servicio-de-sesion', 'ADR 0130'), flow]),
   pattern('database-per-service', 'Database per Service', l('Cada capacidad es dueña de su almacén JSON y tiene un solo escritor. Son ficheros durables, no un motor de base de datos compartido.', 'Each capability owns its JSON store and has a single writer. These are durable files, not a shared database engine.'), [cms('backend/nucleo/Synergos.Shared/JsonCollectionStore.cs', 'JsonCollectionStore.cs')]),
   pattern('retry', 'Retry', l('Se repite una petición solo si es repetible y el fallo es transitorio. Las compensaciones usan retroceso exponencial; los avisos tienen un techo de intentos.', 'A request is retried only when it is repeatable and the failure is transient. Compensations use exponential backoff; notifications have an attempt limit.'), [client, cms('backend/orquestadores/Synergos.Bff.Core/SagaEngine.cs', 'SagaEngine.cs')]),
   pattern('idempotency', 'Idempotency', l('La llave se deriva por saga, paso e ítem. El libro de idempotencia permite reconocer una operación repetida sin repetir su efecto.', 'The key is derived per saga, step and item. An idempotency ledger recognizes a repeated operation without repeating its effect.'), [idempotency]),
@@ -84,6 +84,33 @@ const patterns: SynergosPattern[] = [
   pattern('contratos-generados', 'Contract-first', l('Los contratos de SynHost y de HTTP se generan desde el código y se vigilan contra la deriva antes de que sus consumidores los usen.', 'SynHost and HTTP contracts are generated from code and checked for drift before consumers use them.'), [contracts, flow], undefined, ['12', '13']),
   pattern('reserva-dos-tiempos', 'Two-phase reservation', l('Apartar no es consumir y autorizar un pago no es capturarlo. Cada transición tiene su compensación: liberar antes, reponer o devolver después.', 'Holding is not consuming, and authorizing a payment is not capturing it. Each transition has its compensation: release before, replenish or refund afterwards.'), [flow]),
 ]
+
+const PATTERN_NAMES_ES: Record<string, string> = {
+  'api-gateway': 'Pasarela de API',
+  'bff': 'Backend para el frontend',
+  'strangler-fig': 'Higuera estranguladora',
+  'database-per-service': 'Base de datos por servicio',
+  'retry': 'Reintento',
+  'idempotency': 'Idempotencia',
+  'anti-corruption-layer': 'Capa anticorrupción',
+  'cache-aside': 'Caché bajo demanda',
+  'rate-limiting': 'Límite de peticiones',
+  'health-check': 'Verificación de salud',
+  'config-externalizada': 'Configuración externalizada',
+  'circuit-breaker': 'Cortacircuitos',
+  'event-driven': 'Dirigido por eventos',
+  'correlation-id': 'Identificador de correlación',
+  'contratos-generados': 'Contrato primero',
+  'reserva-dos-tiempos': 'Reserva en dos tiempos',
+  'outbox': 'Bandeja de salida',
+  'circuito-arbol': 'Cortacircuitos → servicios',
+  'navegador-bff': 'Navegador → BFF',
+}
+
+export function patternName(pattern: SynergosPattern, lang: 'es' | 'en'): { title: string; canonical: string | null } {
+  const spanish = lang === 'es' ? PATTERN_NAMES_ES[pattern.id] : undefined
+  return spanish && spanish !== pattern.name ? { title: spanish, canonical: pattern.name } : { title: pattern.name, canonical: null }
+}
 
 const decisions: SynergosPattern[] = [
   { id: 'outbox', name: 'Outbox', status: 'descartado', body: l('Protege el encolado, no el despacho. En ese borde se eligió at-most-once con un libro de idempotencia para no reintroducir un segundo recibo.', 'It protects enqueueing, not dispatch. At that boundary, at-most-once delivery with an idempotency ledger avoids reintroducing a second receipt.'), sources: [adr('0106-transactional-notifications-dispatcher-and-at-most-once', 'ADR 0106')], cases: [] },
@@ -119,7 +146,7 @@ export const architecture = {
     rejected: l('Lo que decidí no usar', 'What I decided not to use'),
     built: l('Ya construido', 'Already built'), vision: l('Lo que viene', 'What comes next'),
     patternLinks: l('Patrones de esta arquitectura', 'Patterns in this architecture'),
-    summary: l('La cifra se comparte con el showcase y sus casos; el detalle de cada decisión enlaza a una revisión pública de su fuente.', 'Counts are shared with the showcase and its case studies; each decision links to a public revision of its source.'),
+    summary: l('La cifra se comparte con la página de Synergos y sus casos; el detalle de cada decisión enlaza a una revisión pública de su fuente.', 'Counts are shared with the showcase and its case studies; each decision links to a public revision of its source.'),
   },
   topics, patterns, decisions, factory,
   diagrams: {
