@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './About.module.scss'
 
 export type Scene = { id: string; label: string }
@@ -12,6 +12,15 @@ function reducedMotion(): boolean {
 export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) {
   const [current, setCurrent] = useState(scenes[0]?.id ?? '')
   const [footer, setFooter] = useState(false)
+  const listRef = useRef<HTMLOListElement>(null)
+
+  useEffect(() => {
+    const list = listRef.current
+    const link = list?.querySelector<HTMLElement>(`[data-cw-scene-link="${current}"]`)
+    if (!list || !link || list.scrollWidth <= list.clientWidth) return
+    const offset = link.getBoundingClientRect().left - list.getBoundingClientRect().left
+    list.scrollBy({ left: offset - (list.clientWidth - link.offsetWidth) / 2, behavior: reducedMotion() ? 'instant' : 'smooth' })
+  }, [current])
 
   useEffect(() => {
     const targets = scenes.map((scene) => document.getElementById(scene.id)).filter((node): node is HTMLElement => node !== null)
@@ -55,7 +64,7 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
   return (
     <>
       <nav className={styles.sceneNav} aria-label={label} data-cw-scene-nav="">
-        <ol className={styles.sceneList} data-cw-glass="strong">
+        <ol ref={listRef} className={styles.sceneList} data-cw-glass="strong">
           {scenes.map((scene, index) => (
             <li key={scene.id}>
               <a

@@ -206,14 +206,18 @@ test.describe('ancla de lóbulo con JS (T437, contrato con P6)', () => {
 test.describe('presupuestos y accesibilidad', () => {
   onlyIn('desktop-chromium')
 
-  test('a 1440 px la página sigue dentro del 60 % de la altura de antes de las escenas (002)', async ({ page }) => {
+  test('a 1440 px las tres escenas originales siguen dentro del 60 % de la altura de antes (002)', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.emulateMedia({ reducedMotion: 'reduce' })
     for (const lang of LANGS) {
       await open(page, lang)
       await page.waitForLoadState('load')
       await page.evaluate(() => document.fonts.ready.then(() => undefined))
-      const height = await page.evaluate(() => document.documentElement.scrollHeight)
+      const height = await page.evaluate(() => {
+        const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom
+        const heading = document.querySelector('[data-cw-scene="heading"]')?.getBoundingClientRect().bottom ?? knowledge
+        return document.documentElement.scrollHeight - (heading - knowledge)
+      })
       test.info().annotations.push({ type: `altura ${lang}`, description: `${height}px (tope ${HEIGHT_BUDGET_1440}px)` })
       expect(height, lang).toBeLessThanOrEqual(HEIGHT_BUDGET_1440)
     }

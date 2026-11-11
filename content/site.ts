@@ -675,6 +675,53 @@ export const site: SiteContent = {
         date: null,
       },
     ],
+    heading: {
+      title: { es: 'Hacia dónde voy', en: "Where I'm heading" },
+      intro: {
+        es: 'Lo que construyo hoy es la base de lo que quiero construir mañana. Estos son los rumbos que estoy tomando.',
+        en: "What I build today is the groundwork for what I want to build next. These are the directions I'm taking.",
+      },
+      hub: { es: 'Lo que ya hago', en: 'What I do today' },
+      today: [
+        { es: 'Arquitectura componible', en: 'Composable architecture' },
+        { es: 'Agentes de IA', en: 'AI agents' },
+        { es: 'Frontend', en: 'Frontend' },
+      ],
+      directions: [
+        {
+          id: 'fabrica',
+          title: { es: 'Synergos, de plataforma a fábrica', en: 'Synergos, from platform to factory' },
+          text: {
+            es: 'Hoy Synergos compone productos con piezas reutilizables, como Legos del back y del front. Hacia allá voy: una fábrica de software a la que le pides algo y, con sus arneses y sus líneas de ensamblaje, reutiliza esas piezas para construirlo.',
+            en: "Today Synergos composes products from reusable pieces, like Lego bricks for the back end and the front end. Where I'm heading: a software factory you ask for something, and its harnesses and assembly lines reuse those pieces to build it.",
+          },
+        },
+        {
+          id: 'robotica',
+          title: { es: 'Robótica y automatización', en: 'Robotics and automation' },
+          text: {
+            es: 'Aprendo por mi cuenta microcontroladores, sensores y robótica, con una ruta propia en la que le pregunto a la IA hasta entender cómo funciona cada cosa. Me atrae automatizar procesos productivos: granjas, mecánica industrial y automotriz.',
+            en: "I'm teaching myself microcontrollers, sensors and robotics, on my own route where I keep asking AI until I understand how each thing works. I'm drawn to automating production: farms, industrial and automotive mechanics.",
+          },
+        },
+        {
+          id: 'energia',
+          title: { es: 'Energía desde los residuos', en: 'Energy from waste' },
+          text: {
+            es: 'Fui ponente de una investigación sobre una empresa belga de biometanización y me enamoré de la teoría: el mismo proceso genera energía, produce compost y resuelve las aguas residuales industriales. Me gustaría automatizar ese tipo de plantas.',
+            en: 'I presented research on a Belgian biomethanization company and fell in love with the theory: one process generates energy, produces compost and treats industrial wastewater. I would like to automate plants like that.',
+          },
+        },
+        {
+          id: 'marcas',
+          title: { es: 'Interfaces de marca', en: 'Brand interfaces' },
+          text: {
+            es: 'Me encantaría hacer el frontend de marcas de producto y de moda: experiencias muy bonitas y accesibles para todo público.',
+            en: "I'd love to build the front end for product and fashion brands: beautiful experiences that are accessible to everyone.",
+          },
+        },
+      ],
+    },
     education: [
       {
         id: 'unad',

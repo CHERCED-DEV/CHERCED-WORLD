@@ -7,6 +7,7 @@ import { AboutFigures } from '@/components/site/about/AboutFigures'
 import { BrainScene } from '@/components/site/about/BrainScene'
 import { aboutFigures } from '@/components/site/about/figures'
 import { formatMonth } from '@/components/site/format'
+import { HeadingScene } from '@/components/site/about/HeadingScene'
 import { SceneNav } from '@/components/site/about/SceneNav'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
@@ -22,7 +23,7 @@ import { profilePageJsonLd } from '@/lib/seo/profile-page'
 
 type Props = { params: LangParams }
 
-const ABOUT_SCENES = { who: 'scene-who', career: 'scene-career', knowledge: 'scene-knowledge' } as const
+const ABOUT_SCENES = { who: 'scene-who', career: 'scene-career', knowledge: 'scene-knowledge', heading: 'scene-heading' } as const
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = await resolveLang(params)
@@ -55,6 +56,7 @@ export default async function AboutMePage({ params }: Props) {
           { id: ABOUT_SCENES.who, label: t(dict, 'about.scene.who') },
           { id: ABOUT_SCENES.career, label: t(dict, 'about.career') },
           { id: ABOUT_SCENES.knowledge, label: t(dict, 'about.scene.knowledge') },
+          ...(about.heading ? [{ id: ABOUT_SCENES.heading, label: about.heading.title[lang] }] : []),
         ]}
       />
       <AboutDescription
@@ -141,6 +143,9 @@ export default async function AboutMePage({ params }: Props) {
           }}
         />
       </section>
+      {about.heading ? (
+        <HeadingScene id={ABOUT_SCENES.heading} lang={lang} content={about.heading} mapLabel={t(dict, 'about.heading.map')} />
+      ) : null}
       <script
         type="application/ld+json"
         data-cw-profile-page=""

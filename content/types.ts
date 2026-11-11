@@ -21,6 +21,16 @@ export type CareerEntry = {
   pending?: true
 }
 
+export type HeadingDirection = { id: string; title: Localized; text: Localized }
+
+export type HeadingContent = {
+  title: Localized
+  intro: Localized
+  hub: Localized
+  today: Localized[]
+  directions: HeadingDirection[]
+}
+
 export type EducationEntry = {
   id: string
   institution: string
@@ -126,6 +136,7 @@ export type SiteContent = {
     }
     principles?: Principle[]
     certifications?: Certification[]
+    heading?: HeadingContent
     education: EducationEntry[]
     courses: { schools: CourseSchool[]; platzi: { href: string; label: Localized; icon?: string } }
     languages: LanguageSkill[]

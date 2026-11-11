@@ -67,7 +67,7 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
   del idioma de la página.
 - [x] T944 El buzón del header debe llevar al autor a leer sus mensajes, no solo a Contacto (la 004 lo había mandado a
   Contacto para todos).
-- [ ] T960 Cuarta escena de Sobre mí, "Hacia dónde voy": entrevista al autor ([entrevista-hacia-donde-voy.md](./entrevista-hacia-donde-voy.md)),
+- [x] T960 Cuarta escena de Sobre mí, "Hacia dónde voy": entrevista al autor ([entrevista-hacia-donde-voy.md](./entrevista-hacia-donde-voy.md)),
   copy en ES y EN con su visto bueno, la escena con el cristal que ya existe y su entrada en el SceneNav.
 - [ ] T961 Las mejoras que el autor vio en la vista previa (pendiente que las cuente).
 - [x] T962 [Sustituida por la 009; conciliado 2026-11-08, ver `../seguimiento-2026-11-08.md`] "Hacia el MVP: la línea de ensamblaje" en el caso de Synergos: diagrama vivo de las líneas de agentes que

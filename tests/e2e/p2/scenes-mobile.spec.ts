@@ -28,10 +28,10 @@ test.describe('puntos de progreso de las escenas en < sm (T831, FR-631, US9)', (
   onlyIn('mobile-chromium')
 
   for (const width of [375, 390]) {
-    test(`${width} px: tres puntos fijos a la derecha, de 44 px, sin tapar el índice ni desbordar`, async ({ page }) => {
+    test(`${width} px: cuatro puntos fijos a la derecha, de 44 px, sin tapar el índice ni desbordar`, async ({ page }) => {
       await open(page, width)
       const dots = page.locator('[data-cw-scene-dot]')
-      await expect(dots).toHaveCount(3)
+      await expect(dots).toHaveCount(4)
       for (const item of await dots.all()) {
         await expect(item).toBeVisible()
         const box = (await item.boundingBox())!
@@ -39,7 +39,7 @@ test.describe('puntos de progreso de las escenas en < sm (T831, FR-631, US9)', (
         expect(box.height).toBeGreaterThanOrEqual(44)
         expect(box.x + box.width).toBeLessThanOrEqual(width)
       }
-      await expect(page.getByRole('navigation', { name: 'Escenas de Sobre mí' }).getByRole('link')).toHaveCount(3)
+      await expect(page.getByRole('navigation', { name: 'Escenas de Sobre mí' }).getByRole('link')).toHaveCount(4)
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
       await expect.poll(() => current(page)).toEqual(['scene-who'])
     })
@@ -47,7 +47,7 @@ test.describe('puntos de progreso de las escenas en < sm (T831, FR-631, US9)', (
 
   test('el punto de la escena visible se pone verde al hacer scroll', async ({ page }) => {
     await open(page)
-    for (const id of ['scene-knowledge', 'scene-career', 'scene-who']) {
+    for (const id of ['scene-heading', 'scene-knowledge', 'scene-career', 'scene-who']) {
       await page.locator(`#${id}`).evaluate((node) => window.scrollTo({ top: node.getBoundingClientRect().top + window.scrollY - 60, behavior: 'instant' }))
       await expect.poll(() => current(page), { message: id }).toEqual([id])
     }
@@ -58,6 +58,7 @@ test.describe('puntos de progreso de las escenas en < sm (T831, FR-631, US9)', (
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await open(page)
     for (const [id, heading] of [
+      ['scene-heading', '#about-heading'],
       ['scene-career', '#about-career'],
       ['scene-knowledge', '#about-knowledge'],
       ['scene-who', '#about-title'],
@@ -92,7 +93,7 @@ test.describe('puntos de progreso de las escenas en < sm (T831, FR-631, US9)', (
       await page.setViewportSize({ width: 390, height: 844 })
       await page.goto('/es/aboutMe')
       await expect(page.locator('[data-cw-scene-dots]')).toBeHidden()
-      await expect(page.getByRole('navigation', { name: 'Escenas de Sobre mí' }).getByRole('link')).toHaveCount(3)
+      await expect(page.getByRole('navigation', { name: 'Escenas de Sobre mí' }).getByRole('link')).toHaveCount(4)
     })
   })
 })

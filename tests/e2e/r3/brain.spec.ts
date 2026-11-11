@@ -56,9 +56,10 @@ test.describe('tres escenas con índice', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('/es/aboutMe')
     const nav = page.getByRole('navigation', { name: 'Escenas de Sobre mí' })
-    await expect(nav.getByRole('link')).toHaveText([/Quién soy/, /Carrera/, /Lo que sé/])
+    await expect(nav.getByRole('link')).toHaveText([/Quién soy/, /Carrera/, /Lo que sé/, /Hacia dónde voy/])
     await expect(nav.getByRole('link', { name: /Quién soy/ })).toHaveAttribute('aria-current', 'true')
     for (const [name, id] of [
+      ['Hacia dónde voy', 'scene-heading'],
       ['Lo que sé', 'scene-knowledge'],
       ['Carrera', 'scene-career'],
       ['Quién soy', 'scene-who'],
@@ -74,12 +75,16 @@ test.describe('tres escenas con índice', () => {
     await expect(nav).toBeInViewport()
   })
 
-  test('a 1440 px la página mide al menos 40 % menos que antes de las escenas', async ({ page }) => {
+  test('a 1440 px las tres escenas originales miden al menos 40 % menos que antes', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.addInitScript(() => sessionStorage.setItem('cw-intro-seen', '1'))
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('/es/aboutMe', { waitUntil: 'networkidle' })
-    const height = await page.evaluate(() => document.documentElement.scrollHeight)
+    const height = await page.evaluate(() => {
+      const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom
+      const heading = document.querySelector('[data-cw-scene="heading"]')?.getBoundingClientRect().bottom ?? knowledge
+      return document.documentElement.scrollHeight - (heading - knowledge)
+    })
     test.info().annotations.push({ type: 'altura', description: `${height}px frente a ${BEFORE_US6C_1440}px (${Math.round((1 - height / BEFORE_US6C_1440) * 100)} % menos)` })
     expect(height).toBeLessThanOrEqual(BEFORE_US6C_1440 * 0.6)
   })

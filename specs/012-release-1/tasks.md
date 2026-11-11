@@ -17,12 +17,14 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [ ] R1.3 Revisión visual del autor: scroll de Synergos (T1108) y página completa (T0929).
 
 ## R2 — Contenido
-- [ ] R2.1 T960 "Hacia dónde voy": borrador ES/EN, aprobación del autor, escena integrada.
+- [x] R2.1 T960 "Hacia dónde voy": borrador ES/EN, aprobación del autor, escena integrada.
 - [ ] R2.2 Servicios: precios "a convenir".
 - [ ] R2.3 SEO en página para búsquedas de desarrollador con nicho y ubicación (P-802).
 - [ ] R2.4 Cifras de Synergos al día (fase 2).
 - [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.
 - [ ] R2.6 Post 2 (si el autor lo quiere en el release, D-R2).
+- [ ] R2.7 "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
+- [ ] R2.8 Deuda vista al integrar R2.1 (falla igual sin la escena nueva): `tests/e2e/p2/brain-mobile.spec.ts:71` en celular. A 375 px el nombre de un lóbulo no cabe en su círculo, y a 390 y 412 px la lluvia del mapa queda desfasada unos 450 px del mapa tras abrir "Ver todas". Probable efecto del texto mínimo de 12 px (010). Revisar en R1.2.
 
 ## R3 — Specs abiertas y deuda
 - [ ] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734.
