@@ -84,10 +84,27 @@ export function CareerDeck({ lang, jobs, labels }: CareerDeckProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const sources = useRef<Array<HTMLButtonElement | null>>([])
   const contentRef = useRef<HTMLDivElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const [more, setMore] = useState(false)
   const closing = useRef(false)
   const flights = useRef<Animation[]>([])
   const restore = useRef<HTMLButtonElement | null>(null)
   const job = openIndex === null ? null : (jobs[openIndex] ?? null)
+
+  const measureMore = () => {
+    const body = bodyRef.current
+    setMore(body !== null && body.scrollHeight - body.scrollTop - body.clientHeight > 4)
+  }
+
+  useEffect(() => {
+    const body = bodyRef.current
+    if (!body) return
+    measureMore()
+    if (typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(measureMore)
+    observer.observe(body)
+    return () => observer.disconnect()
+  }, [job])
 
   const stopFlights = () => {
     for (const animation of flights.current) animation.cancel()
@@ -218,7 +235,7 @@ export function CareerDeck({ lang, jobs, labels }: CareerDeckProps) {
         <div ref={contentRef} className={styles.deckOpen} data-cw-deck-open={job?.id}>
           {job ? (
             <>
-              <div className={styles.deckOpenBody}>
+              <div ref={bodyRef} className={styles.deckOpenBody} onScroll={measureMore} data-cw-more={more ? '' : undefined}>
                 <p className={styles.deckOpenPeriod}>
                   <span className={cx(styles.whenChip, job.end === null && styles.whenChipCurrent)} data-cw-glass="strong">
                     <Period start={job.start} end={job.end} lang={lang} presentLabel={labels.present} />

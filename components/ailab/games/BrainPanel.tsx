@@ -259,6 +259,11 @@ export function BrainPanel({ sizes, weights, labels, still = false, ref }: Brain
           </g>
         </svg>
       </div>
+      <p className={styles.brainLegend} data-cw-rally-legend="">
+        <span>{labels.senses.join(' · ')}</span>
+        <span aria-hidden="true"> → </span>
+        <span>{labels.actions.join(' · ')}</span>
+      </p>
       <p ref={textRef} className={styles.decision} data-cw-rally-decision="">
         {labels.idle}
       </p>

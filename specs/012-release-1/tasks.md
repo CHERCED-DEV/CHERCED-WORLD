@@ -14,15 +14,16 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 ## R1 — UX de las páginas nuevas
 - [x] R1.1 Auditoría con códigos U1… (375/390/412/768/1440, claro/oscuro, ES/EN, WebKit). Hecha el 2026-11-11: 18 hallazgos, 2 altos, 8 medios y 8 bajos; documento privado `docs/handoff-2026-11-04/13-auditoria-paginas-nuevas.md`.
 - [ ] R1.2 Pulido por código, sin reconstruir; las e2e de la 010 cubren las páginas nuevas.
-  - [ ] Altos. U1: los trazos ligados al scroll no avanzan en `/synergos` ni en el hero de la arquitectura (el `overflow: hidden` del cristal los congela; `overflow: clip` lo resuelve). U2: el backend de Synergos usa un solo vocabulario, "20 capacidades · 9 orquestadores" (desbloquea R2.4).
+  - [x] Altos (hechos el 2026-11-11). U1: los trazos ligados al scroll no avanzan en `/synergos` ni en el hero de la arquitectura (el `overflow: hidden` del cristal los congela; `overflow: clip` lo resuelve). U2: el backend de Synergos usa un solo vocabulario, "20 capacidades · 9 orquestadores" (desbloquea R2.4).
+  - [ ] C0 (alto, de la segunda opinión de la 013): en el celular, el mazo apilado de Servicios tapa el foco de teclado (WCAG 2.4.11): 7 de 12 acciones en Chromium y 8 de 12 en WebKit quedan bajo la tarjeta siguiente.
   - [ ] Medios.
-    - U3: acciones visibles al abrir "Para reclutadores" en celular.
-    - U4: el cargo actual de la carrera no se corta sin señal en escritorio.
-    - U5: mesa de peloteo completa en celular.
-    - U6: textos de los diagramas del AI Lab de 12 px o más.
+    - [x] U3: acciones visibles al abrir "Para reclutadores" en celular.
+    - [x] U4: el cargo actual de la carrera no se corta sin señal en escritorio (desvanecido cuando hay más y alto máximo de 820 px).
+    - [x] U5: mesa de peloteo completa en celular (se centra al quedar lista y al jugar).
+    - [x] U6: textos de los diagramas del AI Lab de 12 px o más (leyendas HTML en celular; V3 en HTML).
     - U7: nombres de los patrones de la arquitectura (decide el autor).
-    - U8: panel de capas sin estado vacío y usable al tacto.
-    - U9: "Ver qué recibes" y "Quiero esto" de 44 px.
+    - [x] U8: panel de capas sin estado vacío y usable al tacto.
+    - [x] U9: "Ver qué recibes" y "Quiero esto" de 44 px (ya medían 44 en reposo; los 39–43 eran de la tarjeta encogida al apilarse; queda en `toque.spec.ts`).
     - U10: acceso a "Synergos por dentro" (decide el autor).
   - [ ] Bajos.
     - U11: ↗ solo en enlaces externos.
@@ -33,6 +34,11 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
     - U16: contraste de la barra "18/" en claro.
     - U17: 404 de post o caso con salida contextual.
     - U18: `/now` enlaza lo que menciona.
+  - [ ] Decisiones del autor, 2026-11-11.
+    - U7: cada patrón con título en español y debajo el nombre canónico en inglés.
+    - U10: a "Synergos por dentro" se llega desde "Ahora trabajo en", en el inicio.
+    - U12: el caso de estudio aparece una sola vez en `/synergos`.
+    - U14: "Booking", "Seller", "Blogs/Social", "Despacho" y "Obra" son nombres propios y no se traducen.
   - [ ] Pruebas que propone la auditoría:
     - U1: el trazo cambia con el scroll.
     - U2: mismo vocabulario en las cuatro páginas.
@@ -53,7 +59,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 ## R3 — Specs abiertas y deuda
 - [ ] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734.
 - [ ] R3.2 002 T228.
-- [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP).
+- [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP). Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir).
 - [ ] R3.4 Buzón para visitantes según D-R1.
 - [ ] R3.5 Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 

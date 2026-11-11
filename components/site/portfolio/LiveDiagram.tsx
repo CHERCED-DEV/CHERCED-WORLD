@@ -13,7 +13,7 @@ export const DIAGRAM_LIT_ATTRIBUTE = 'data-lit'
 export function LiveDiagram({ layers, labels }: LiveDiagramProps) {
   const uid = useId().replace(/:/g, '')
   const ref = useRef<HTMLElement>(null)
-  const [active, setActive] = useState<string | null>(null)
+  const [active, setActive] = useState<string | null>(layers[0]?.id ?? null)
 
   useEffect(() => {
     const element = ref.current

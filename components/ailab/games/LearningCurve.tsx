@@ -48,6 +48,9 @@ export function LearningCurve({ points, labels, smooth = 5 }: LearningCurveProps
         {points.length > 1 ? <polyline className={styles.trend} points={line} /> : null}
         {last !== undefined ? <circle className={styles.head} cx={x(points.length - 1)} cy={y(last)} r={3.4} /> : null}
       </svg>
+      <p className={styles.curveAxis} data-cw-rally-axis="">
+        0–100% · {labels.axis}
+      </p>
       <p className={styles.summary} data-cw-rally-summary="">
         {labels.summary ?? labels.empty}
       </p>

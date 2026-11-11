@@ -87,7 +87,7 @@ describe.each(LANGS)('/%s/synergos renderizada en el servidor (FR-901)', (lang) 
   it('"Qué es" reusa el diagrama de capas del caso 12 y nombra el backend', () => {
     const layers = [...page.matchAll(/data-cw-diagram-layer="([\w-]+)"/g)].map((match) => match[1])
     expect(layers).toEqual(['cdn', 'umbraco', 'micro-frontends'])
-    expect(text(page)).toContain(lang === 'es' ? 'backend .NET con 20 servicios de API y 9 servicios BFF' : '.NET backend with 20 API services and 9 BFF services')
+    expect(text(page)).toContain(lang === 'es' ? 'backend .NET con 20 capacidades y 9 orquestadores' : '.NET backend with 20 capabilities and 9 orchestrators')
   })
 
   it('una tarjeta por vertical, con su frase, su estado y sus tareas', () => {

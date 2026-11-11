@@ -148,9 +148,9 @@ describe('diagrama vivo (FR-445)', () => {
     const html = await render(synergos, lang)
     const layers = [...html.matchAll(/<button[^>]*data-cw-diagram-layer="([^"]+)"[^>]*>/g)]
     expect(layers.map((match) => match[1])).toEqual(['cdn', 'umbraco', 'micro-frontends'])
-    for (const [tag] of layers) {
+    for (const [index, [tag]] of layers.entries()) {
       expect(tag).toContain('type="button"')
-      expect(tag).toContain('aria-pressed="false"')
+      expect(tag, 'U8: la capa 01 llega elegida').toContain(`aria-pressed="${index === 0}"`)
       const described = tag.match(/aria-describedby="([^"]+)"/)?.[1]
       expect(described).toBeTruthy()
       expect(html).toContain(`id="${described}"`)

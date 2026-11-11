@@ -69,6 +69,13 @@ function isClone(labels: RallyLabels, mode: GameMode): labels is CloneLabels {
   return mode === 'clone'
 }
 
+function revealCourt(court: HTMLElement | null, reduced: boolean) {
+  if (!court) return
+  const box = court.getBoundingClientRect()
+  if (box.top >= 0 && box.bottom <= window.innerHeight) return
+  court.scrollIntoView({ block: 'center', behavior: reduced ? 'instant' : 'smooth' })
+}
+
 export function Rally({ mode, experiment, labels }: RallyProps) {
   const ids = useId()
   const helpId = `${ids}-help`
@@ -454,7 +461,36 @@ export function Rally({ mode, experiment, labels }: RallyProps) {
 
   useEffect(() => onLabCleared(() => forget(true)), [forget])
 
-  const focusCourt = () => surfaceRef.current?.focus({ preventScroll: true })
+  const ready = snapshot !== undefined
+
+  useEffect(() => {
+    if (!ready) return
+    let frame = 0
+    let last = ''
+    let steady = 0
+    let frames = 0
+    const settle = () => {
+      const court = surfaceRef.current
+      if (!court) return
+      const box = court.getBoundingClientRect()
+      const key = `${Math.round(box.top)}:${Math.round(box.height)}`
+      steady = key === last ? steady + 1 : 0
+      last = key
+      frames += 1
+      if (steady >= 4 || frames > 120) {
+        revealCourt(court, window.matchMedia(REDUCED_MOTION).matches)
+        return
+      }
+      frame = requestAnimationFrame(settle)
+    }
+    frame = requestAnimationFrame(settle)
+    return () => cancelAnimationFrame(frame)
+  }, [ready])
+
+  const focusCourt = () => {
+    surfaceRef.current?.focus({ preventScroll: true })
+    revealCourt(surfaceRef.current, reduced)
+  }
 
   const primary = () => {
     const controller = controllerRef.current

@@ -182,7 +182,7 @@ test.describe('Synergos: diagrama vivo (FR-445, US4 escenario 6)', () => {
     await expect(buttons).toHaveCount(layers.length)
     const delays = await buttons.evaluateAll((items) => items.map((item) => Number.parseFloat(getComputedStyle(item).transitionDelay)))
     for (let i = 1; i < delays.length; i++) expect(delays[i]!, `capa ${i}`).toBeGreaterThan(delays[i - 1]!)
-    await expect(page.locator('[data-cw-diagram-hint]')).toHaveText('Pasa el puntero o enfoca una capa para ver su rol.')
+    await expect(page.locator('[data-cw-diagram-hint]')).toHaveText('Toca, señala o enfoca una capa para ver su rol.')
 
     const shown = async (id: string, text: string) => {
       await expect(page.locator(`[data-cw-diagram-line="${id}"]`)).toBeVisible()
@@ -194,7 +194,8 @@ test.describe('Synergos: diagrama vivo (FR-445, US4 escenario 6)', () => {
       }
     }
     const before = (await diagram.boundingBox())!.height
-    for (const layer of layers) await expect(page.locator(`[data-cw-diagram-line-item="${layer.id}"]`)).toBeHidden()
+    await expect(page.locator(`[data-cw-diagram-layer="${layers[0]!.id}"]`), 'U8: la capa 01 llega elegida y el panel nunca está vacío').toHaveAttribute('aria-pressed', 'true')
+    await shown(layers[0]!.id, layers[0]!.role.es)
     await page.locator('[data-cw-case-repo="Synergos.Fabrica"]').focus()
     await page.keyboard.press('Tab')
     const first = page.locator(`[data-cw-diagram-layer="${layers[0]!.id}"]`)

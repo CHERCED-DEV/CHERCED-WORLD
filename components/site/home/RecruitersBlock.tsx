@@ -30,7 +30,17 @@ function RecruitersBody({
   withCv,
   titleId,
   certifications,
-}: Omit<RecruitersBlockProps, 'compact' | 'bare' | 'id' | 'className'> & { titleId: string }) {
+  actionsFirst,
+}: Omit<RecruitersBlockProps, 'compact' | 'bare' | 'id' | 'className'> & { titleId: string; actionsFirst: boolean }) {
+  const actions = (
+    <div className={cx(styles.actions, actionsFirst && styles.actionsFirst)} data-cw-recruiters-actions="">
+      {withCv ? <CvActions lang={lang} downloadVariant="solid" className={styles.cv} /> : null}
+      <CvLink lang={lang} />
+      <Link href={writeHref} className={buttonClassName({ variant: withCv ? 'glass' : 'solid' })} data-cw-recruiters-write="">
+        {content.write[lang]}
+      </Link>
+    </div>
+  )
   return (
     <>
       <div className={styles.head}>
@@ -40,6 +50,7 @@ function RecruitersBody({
         <Hairline glint className={styles.headLine} />
       </div>
       <p className={styles.intro}>{content.intro[lang]}</p>
+      {actionsFirst ? actions : null}
       <div className={styles.grid}>
         <div className={styles.block}>
           <h3 className={styles.label}>{content.rolesTitle[lang]}</h3>
@@ -72,13 +83,7 @@ function RecruitersBody({
         </dl>
       </div>
       {certifications ? <div className={styles.certifications}>{certifications}</div> : null}
-      <div className={styles.actions}>
-        {withCv ? <CvActions lang={lang} downloadVariant="solid" className={styles.cv} /> : null}
-        <CvLink lang={lang} />
-        <Link href={writeHref} className={buttonClassName({ variant: withCv ? 'glass' : 'solid' })} data-cw-recruiters-write="">
-          {content.write[lang]}
-        </Link>
-      </div>
+      {actionsFirst ? null : actions}
     </>
   )
 }
@@ -96,7 +101,15 @@ export function RecruitersBlock({
 }: RecruitersBlockProps) {
   const titleId = `${id}-title`
   const body = (
-    <RecruitersBody lang={lang} content={content} writeHref={writeHref} withCv={withCv} titleId={titleId} certifications={certifications} />
+    <RecruitersBody
+      lang={lang}
+      content={content}
+      writeHref={writeHref}
+      withCv={withCv}
+      titleId={titleId}
+      certifications={certifications}
+      actionsFirst={bare}
+    />
   )
   if (bare) {
     return (

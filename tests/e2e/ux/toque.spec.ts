@@ -27,6 +27,7 @@ const CASES: ReadonlyArray<{ code: string; path: string; selector: string; befor
     },
   },
   { code: 'M3 enlaces de "Casos" en Servicios', path: '/es/services', selector: '[data-cw-service-case] h3 a' },
+  { code: 'U9 "Ver qué recibes" y "Quiero esto" en Servicios', path: '/es/services', selector: '[data-cw-service-flip], [data-cw-service-want]' },
   { code: 'M4 etiquetas y RSS del blog', path: '/es/blog', selector: '[data-cw-tag-nav] a, [data-cw-blog-rss]' },
   { code: 'M4 etiquetas e índice del post', path: '/es/blog/post4', selector: '[data-cw-post-tag], [data-cw-toc-link]' },
   { code: 'M5 política de privacidad del AI Lab', path: '/es/ai-lab', selector: '[data-cw-ailab-privacy] a' },

@@ -5,8 +5,8 @@ import journey from '../ScrollJourney.module.scss'
 
 export function SystemBlueprint({ lang }: { lang: Locale }) {
   const labels = lang === 'es'
-    ? { title: 'Las capas de Synergos', top: 'Elementos desde la CDN', bottom: 'Capacidades de negocio', center: 'Compone y conecta', explore: 'Explorar el sistema' }
-    : { title: 'The layers of Synergos', top: 'CDN-delivered elements', bottom: 'Business capabilities', center: 'Composes and connects', explore: 'Explore the system' }
+    ? { title: 'Las capas de Synergos', top: 'Elementos desde la CDN', bottom: 'Capacidades de negocio', center: 'Compone y conecta', explore: 'Explorar el sistema', orchestrators: 'orquestadores', capabilities: 'capacidades' }
+    : { title: 'The layers of Synergos', top: 'CDN-delivered elements', bottom: 'Business capabilities', center: 'Composes and connects', explore: 'Explore the system', orchestrators: 'orchestrators', capabilities: 'capabilities' }
   return <figure className={`${styles.blueprint} ${journey.stage}`} aria-label={labels.title}>
     <svg viewBox="0 0 480 480" aria-hidden="true" className={styles.blueprintLines}>
       <ellipse cx="240" cy="240" rx="206" ry="96" transform="rotate(-32 240 240)" />
@@ -18,7 +18,7 @@ export function SystemBlueprint({ lang }: { lang: Locale }) {
     </svg>
     <a href="#recorrido" className={styles.blueprintTop}><span className={styles.mono}>01 / CDN + UI</span><strong>{labels.top}</strong></a>
     <a href="#recorrido" className={styles.blueprintCore}><span aria-hidden="true">⟨ / ⟩</span><strong>Umbraco</strong><small>{labels.center}</small></a>
-    <a href="#islas" className={styles.blueprintBottom}><span className={styles.mono}>{architecture.facts.orchestrators} BFF → {architecture.facts.capabilities} API</span><strong>{labels.bottom}</strong></a>
+    <a href="#islas" className={styles.blueprintBottom}><span className={styles.mono}>{architecture.facts.orchestrators} {labels.orchestrators} → {architecture.facts.capabilities} {labels.capabilities}</span><strong>{labels.bottom}</strong></a>
     <figcaption>{labels.explore} <span aria-hidden="true">↗</span></figcaption>
   </figure>
 }

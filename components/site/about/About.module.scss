@@ -888,11 +888,12 @@ dialog.deckDialog {
   @include site.crystal(strong);
   @include glass-edge;
   width: min(100% - 2 * var(--cw-space-4), 700px);
+  max-height: min(100dvh - 2 * var(--cw-space-6), 820px);
   overflow: hidden;
   transform-origin: 50% 50%;
 
   .deckOpen {
-    max-height: calc(min(100dvh - 2 * var(--cw-space-6), 720px) - 2 * var(--cw-space-5) - 2px);
+    max-height: calc(min(100dvh - 2 * var(--cw-space-6), 820px) - 2 * var(--cw-space-5) - 2px);
   }
 
   &[open] {
@@ -934,6 +935,10 @@ dialog.deckDialog {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+
+  &[data-cw-more] {
+    mask-image: linear-gradient(#000 calc(100% - 56px), transparent);
+  }
 }
 
 .deckOpenPeriod {

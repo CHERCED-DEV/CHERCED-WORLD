@@ -139,6 +139,15 @@
   border-top: 1px solid var(--_line);
 }
 
+.actionsFirst {
+  margin-top: var(--cw-space-4);
+  margin-bottom: var(--cw-space-5);
+  padding-top: 0;
+  padding-bottom: var(--cw-space-4);
+  border-top: 0;
+  border-bottom: 1px solid var(--_line);
+}
+
 .actions > .cv {
   display: contents;
 }

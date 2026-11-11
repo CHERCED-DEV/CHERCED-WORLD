@@ -165,19 +165,13 @@ export function PostReader({ lang, t }: LabDemoProps) {
           </pre>
         </div>
         <figure className={styles.postFigure}>
-          <svg className={styles.postDiagram} viewBox="0 0 320 64" role="img" aria-label={t('ailab.v3.sample.figureAlt')} data-cw-v3-figure="">
-            <g fill="none" stroke="currentColor" strokeWidth="1.5">
-              <rect x="4" y="16" width="84" height="32" rx="8" />
-              <rect x="118" y="16" width="84" height="32" rx="8" />
-              <rect x="232" y="16" width="84" height="32" rx="8" />
-              <path d="M92 32h20m-6-5 6 5-6 5M206 32h20m-6-5 6 5-6 5" />
-            </g>
-            <g fill="currentColor" fontSize="12" textAnchor="middle">
-              <text x="46" y="36">{t('ailab.v3.sample.figure.post')}</text>
-              <text x="160" y="36">{t('ailab.v3.sample.figure.voice')}</text>
-              <text x="274" y="36">{t('ailab.v3.sample.figure.speaker')}</text>
-            </g>
-          </svg>
+          <div className={styles.postDiagram} role="img" aria-label={t('ailab.v3.sample.figureAlt')} data-cw-v3-figure="">
+            <span className={styles.postStep}>{t('ailab.v3.sample.figure.post')}</span>
+            <span className={styles.postArrow}>→</span>
+            <span className={styles.postStep}>{t('ailab.v3.sample.figure.voice')}</span>
+            <span className={styles.postArrow}>→</span>
+            <span className={styles.postStep}>{t('ailab.v3.sample.figure.speaker')}</span>
+          </div>
           <figcaption className={styles.hint}>{t('ailab.v3.sample.figureCaption')}</figcaption>
         </figure>
         <h6 className={styles.postHeading}>{t('ailab.v3.sample.h2')}</h6>
