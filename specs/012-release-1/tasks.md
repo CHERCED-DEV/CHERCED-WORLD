@@ -49,7 +49,10 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 ## R2 — Contenido
 - [x] R2.1 T960 "Hacia dónde voy": borrador ES/EN, aprobación del autor, escena integrada.
 - [x] R2.2 Servicios: precios "a convenir". Hecho el 2026-11-11 con una sola pregunta frecuente, "¿Cuánto cuesta un servicio?", antes de la de costos de la IA. Las tarjetas siguen sin `priceRange` y no hay cifras. Cierra P-421 de la 004.
-- [ ] R2.3 SEO en página para búsquedas de desarrollador con nicho y ubicación (P-802).
+- [x] R2.3 SEO en página para búsquedas de desarrollador con nicho y ubicación (P-802). Hecho el 2026-11-11: las
+  descripciones de Home (y del `Person`) y de Sobre mí suman "AI Engineer", "Armenia, Colombia" y Angular. El autor
+  eligió no decir "desarrollador" en las descripciones para conservar la identidad de la 004. La tabla FR-860 suma
+  Q14 a Q18 (enmienda en la spec 008).
 - [ ] R2.4 Cifras de Synergos al día (fase 2).
 - [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.
 - [ ] R2.6 Post 2 (si el autor lo quiere en el release, D-R2).

@@ -62,17 +62,17 @@ describe('identidad de hoy (SC-401, FR-403)', () => {
     }
   })
 
-  it('las meta descriptions son las de contenido.md §1, con la enmienda de la 008 (FR-820), en ES y EN', () => {
+  it('las meta descriptions son las de contenido.md §1, con las enmiendas de la 008 (FR-820) y de R2.3 de la 012, en ES y EN', () => {
     const read = (lang: string, ns: string) =>
       JSON.parse(readFileSync(join(I18N, lang, `${ns}.json`), 'utf8')) as Record<string, string>
     const expected: Record<string, Localized> = {
       'common:meta.description': {
-        es: 'Camilo Hernández (CHERCED), Software Solutions Engineer y fundador de Synergos Labs: micro-frontends, microservicios .NET y Azure, AI-first y spec-driven.',
-        en: 'Camilo Hernández (CHERCED), Software Solutions Engineer and founder of Synergos Labs: micro-frontends, .NET microservices and Azure, AI-first and spec-driven.',
+        es: 'Camilo Hernández (CHERCED), Software Solutions Engineer y AI Engineer en Armenia, Colombia: Angular, microservicios .NET y Azure. Fundador de Synergos Labs.',
+        en: 'Camilo Hernández (CHERCED), Software Solutions Engineer and AI Engineer in Armenia, Colombia: Angular, .NET microservices and Azure. Founder of Synergos Labs.',
       },
       'site:meta.about.description': {
-        es: 'Camilo Hernández (CHERCED), Software Solutions Engineer · AI-First: mi carrera en aerolíneas y fintech, Synergos Labs, lo que sé y mi CV en PDF.',
-        en: 'Camilo Hernández (CHERCED), Software Solutions Engineer · AI-First: my career in airlines and fintech, Synergos Labs, what I know and my CV in PDF.',
+        es: 'Camilo Hernández (CHERCED), Software Solutions Engineer · AI-First en Armenia, Colombia: mi carrera en aerolíneas y fintech, Synergos Labs y mi CV en PDF.',
+        en: 'Camilo Hernández (CHERCED), Software Solutions Engineer · AI-First in Armenia, Colombia: my career in airlines and fintech, Synergos Labs and my CV in PDF.',
       },
       'contact:meta.contact.description': {
         es: 'Escríbeme: te respondo en menos de 48 horas. Aquí también están mi CV en PDF y mi LinkedIn.',

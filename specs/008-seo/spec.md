@@ -96,6 +96,18 @@ publica correo, teléfono ni dirección exacta.
   | `site:meta.services.description` | Asistentes de IA para tu profesión, fábricas de software a la medida, optimización de procesos con IA, arquitectura y desarrollo de producto. | Asistentes de IA para tu profesión (abogados, ingenieros), fábricas de software a la medida, optimización de procesos con IA y arquitectura de software. | AI assistants for your profession (lawyers, engineers), tailor-made software factories, AI process optimization and software architecture. |
   | `contact:meta.contact.description` | Escríbeme: te respondo en menos de 48 horas. | Escríbeme: te respondo en menos de 48 horas. Aquí también están mi CV en PDF y mi LinkedIn. | Write to me: I'll reply within 48 hours. My CV in PDF and my LinkedIn are here too. |
 
+  **Enmienda de R2.3 de la 012 (2026-11-11), para las búsquedas de P-802.** Home y Sobre mí suman el oficio y la
+  ciudad. El autor eligió no presentarse como "desarrollador" en las descripciones: se mantiene la identidad de la 004
+  (SC-401) y el inicio sigue tachando "SOY DESARROLLADOR".
+
+  | Clave | Después de R2.3 (ES) | Después de R2.3 (EN) |
+  |---|---|---|
+  | `common:meta.description` y `site:meta.home.description` | Camilo Hernández (CHERCED), Software Solutions Engineer y AI Engineer en Armenia, Colombia: Angular, microservicios .NET y Azure. Fundador de Synergos Labs. | Camilo Hernández (CHERCED), Software Solutions Engineer and AI Engineer in Armenia, Colombia: Angular, .NET microservices and Azure. Founder of Synergos Labs. |
+  | `site:meta.about.description` | Camilo Hernández (CHERCED), Software Solutions Engineer · AI-First en Armenia, Colombia: mi carrera en aerolíneas y fintech, Synergos Labs y mi CV en PDF. | Camilo Hernández (CHERCED), Software Solutions Engineer · AI-First in Armenia, Colombia: my career in airlines and fintech, Synergos Labs and my CV in PDF. |
+
+  "Armenia, Colombia" sale de `profile.availability.location`, "AI Engineer" del rol de "Para reclutadores" y Angular
+  de las tecnologías de Sobre mí.
+
   De dónde sale cada dato: CHERCED es `intro.name`; "fundador de Synergos Labs", el rol "Founder & Software
   Architect" de la carrera; "aerolíneas y fintech", la carrera y la descripción de Sobre mí; "abogados, ingenieros",
   la audiencia "Profesionales independientes" de Servicios; el CV y LinkedIn, los botones de Sobre mí y Contacto. El
@@ -155,6 +167,11 @@ publica correo, teléfono ni dirección exacta.
   | Q11 | spec-driven development con agentes | ES | Post 4 o caso 2 | Nicho | por medir | por medir |
   | Q12 | AWS EventBridge Azure Service Bus Redpanda | EN | Caso 15 | Nicho | por medir | por medir |
   | Q13 | asistente de IA para abogados | ES | Servicios o caso 14 | Nicho de servicio | por medir | por medir |
+  | Q14 | desarrollador Angular | ES | Home o Sobre mí | Oficio con tecnología (P-802) | por medir | por medir |
+  | Q15 | desarrollador .NET | ES | Home o Sobre mí | Oficio con tecnología (P-802) | por medir | por medir |
+  | Q16 | desarrollador frontend Colombia | ES | Home | Oficio con país (P-802) | por medir | por medir |
+  | Q17 | desarrollador full stack Armenia | ES | Home o Sobre mí | Oficio con ciudad (P-802). La descripción no dice "full stack" por la regla de identidad; Sobre mí y "Para reclutadores" sí lo dicen en el texto | por medir | por medir |
+  | Q18 | AI Engineer Colombia | ES y EN | Home | Oficio con país (P-802) | por medir | por medir |
 
 ## Fuera de alcance
 

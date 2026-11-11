@@ -53,10 +53,15 @@ describe('títulos y descripciones para búsqueda (FR-820 a FR-822, SC-804)', ()
     expect(dict('es', 'common')['intro.name']).toBe('CHERCED')
     expect(site.profile?.cv.pdfs?.length).toBe(2)
     expect(site.services.audiences.find((item) => item.id === 'professionals')?.text.es).toMatch(/Abogados, ingenieros/)
+    expect(site.profile?.availability.location.es).toBe('Armenia, Colombia')
+    expect(site.recruiters?.roles.some((role) => role.es.startsWith('AI Engineer:'))).toBe(true)
+    expect(site.about.skills.tech.map((tech) => tech.id)).toEqual(expect.arrayContaining(['angular']))
     for (const lang of LANGS) {
       const home = dict(lang, 'site')['meta.home.description']!
       expect(home).toBe(dict(lang, 'common')['meta.description'])
       expect(home).not.toMatch(/Sistecr[eé]dito|FLYR|Avianca|HYROX|\+57|@/)
+      expect(home, 'R2.3: oficio y ciudad para las búsquedas de P-802').toMatch(/AI Engineer (en|in) Armenia, Colombia: Angular/)
+      expect(dict(lang, 'site')['meta.about.description']).toContain('Armenia, Colombia')
       expect(dict(lang, 'site')['meta.about.description']).not.toMatch(/Sistecr[eé]dito|FLYR|Avianca|HYROX/)
     }
   })
