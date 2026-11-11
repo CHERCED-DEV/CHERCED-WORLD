@@ -190,8 +190,17 @@ en el research R-1308, sin correr suites globales sin motivo.
 
 ## Dudas para el autor
 
-1. ¿La 013 entra antes del Release 1 o después? Recomiendo después: el release ya tiene su lista y esto es
-   enriquecimiento.
+1. ~~¿La 013 entra antes del Release 1 o después?~~ **Respondida el 2026-11-11: antes del release** (R3.5 del
+   plan 012).
+**Respuestas del autor, 2026-11-11:**
+
+- **Entra antes del release** (R3.5 del plan 012).
+- **C1:** espera a que la sesión hija de investigación termine su segunda opinión antes de decidir cómo se llena el índice.
+- **C2:** sí, se puede tocar el carrusel, solo en la imagen y solo en el celular.
+- **Tercer cambio:** **C4**, la ruta de "Hacia dónde voy" que se traza. C3 queda fuera de la 013.
+- **Movimiento reducido:** las barras de progreso de lectura (blog y Synergos) se ven y siguen el scroll, sin brillos ni transiciones, las dos con la misma regla.
+- Sin responder aún: C5 (barra en los casos de estudio) y la descarga de Firefox para Playwright.
+
 2. **C1:** ¿la línea solo en la píldora activa, o también las escenas ya leídas quedan llenas, como capítulos
    completados? ¿El hilo entre los puntos del celular le gusta?
 3. **C2:** ¿se puede tocar el carrusel aprobado, solo en la imagen y solo en el celular?

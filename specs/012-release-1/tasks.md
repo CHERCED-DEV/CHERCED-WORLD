@@ -12,8 +12,32 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   `lane/*` quedan como historial.
 
 ## R1 — UX de las páginas nuevas
-- [ ] R1.1 Auditoría con códigos U1… (375/390/412/768/1440, claro/oscuro, ES/EN, WebKit).
+- [x] R1.1 Auditoría con códigos U1… (375/390/412/768/1440, claro/oscuro, ES/EN, WebKit). Hecha el 2026-11-11: 18 hallazgos, 2 altos, 8 medios y 8 bajos; documento privado `docs/handoff-2026-11-04/13-auditoria-paginas-nuevas.md`.
 - [ ] R1.2 Pulido por código, sin reconstruir; las e2e de la 010 cubren las páginas nuevas.
+  - [ ] Altos. U1: los trazos ligados al scroll no avanzan en `/synergos` ni en el hero de la arquitectura (el `overflow: hidden` del cristal los congela; `overflow: clip` lo resuelve). U2: el backend de Synergos usa un solo vocabulario, "20 capacidades · 9 orquestadores" (desbloquea R2.4).
+  - [ ] Medios.
+    - U3: acciones visibles al abrir "Para reclutadores" en celular.
+    - U4: el cargo actual de la carrera no se corta sin señal en escritorio.
+    - U5: mesa de peloteo completa en celular.
+    - U6: textos de los diagramas del AI Lab de 12 px o más.
+    - U7: nombres de los patrones de la arquitectura (decide el autor).
+    - U8: panel de capas sin estado vacío y usable al tacto.
+    - U9: "Ver qué recibes" y "Quiero esto" de 44 px.
+    - U10: acceso a "Synergos por dentro" (decide el autor).
+  - [ ] Bajos.
+    - U11: ↗ solo en enlaces externos.
+    - U12: el caso de estudio una sola vez en `/synergos` (decide el autor).
+    - U13: verticales más rápidas en celular.
+    - U14: fugas de idioma (decide el autor los nombres de las líneas).
+    - U15: compuestos partidos en el guion.
+    - U16: contraste de la barra "18/" en claro.
+    - U17: 404 de post o caso con salida contextual.
+    - U18: `/now` enlaza lo que menciona.
+  - [ ] Pruebas que propone la auditoría:
+    - U1: el trazo cambia con el scroll.
+    - U2: mismo vocabulario en las cuatro páginas.
+    - U6: texto SVG dentro de `aria-hidden`.
+    - U9: los dos botones en `toque.spec.ts`.
 - [ ] R1.3 Revisión visual del autor: scroll de Synergos (T1108) y página completa (T0929).
 
 ## R2 — Contenido
@@ -31,6 +55,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [ ] R3.2 002 T228.
 - [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP).
 - [ ] R3.4 Buzón para visitantes según D-R1.
+- [ ] R3.5 Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 
 ## R4 — Endurecer
 - [ ] R4.1 Revisión de seguridad de lo nuevo.
