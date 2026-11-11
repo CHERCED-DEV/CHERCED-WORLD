@@ -4,8 +4,12 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 
 ## R0 — Consolidar
 - [x] R0.1 Revisión y validación de la 011 (T1107) y commit en `dev`.
-- [ ] R0.2 legal-workspace: anonimizar municipio e inspección en la copia limpia; push forzado al repo privado.
-- [ ] R0.3 Limpiar worktrees y ramas de lanes integradas.
+- [x] R0.2 legal-workspace: anonimizar municipio e inspección en la copia limpia; push forzado al repo privado.
+  2026-11-11: `CHERCED-DEV/legal-workspace` (privado) queda con un solo commit, 4e21fdd, sin datos personales ni el
+  municipio real. Se borró la rama de backlog. El repo local original y dos bundles de respaldo conservan la historia
+  vieja en el equipo del autor.
+- [x] R0.3 Limpiar worktrees y ramas de lanes integradas. 2026-11-11: se quitaron 42 worktrees integrados; las ramas
+  `lane/*` quedan como historial.
 
 ## R1 — UX de las páginas nuevas
 - [ ] R1.1 Auditoría con códigos U1… (375/390/412/768/1440, claro/oscuro, ES/EN, WebKit).
