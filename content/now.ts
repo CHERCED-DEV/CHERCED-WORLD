@@ -6,10 +6,12 @@ export const now: NowContent = {
     {
       es: 'Synergos, rumbo a producción: un solo núcleo para muchos negocios.',
       en: 'Synergos, on its way to production: one core for many businesses.',
+      href: '/synergos',
     },
     {
       es: 'El AI Lab de este sitio: experimentos de IA que puedes probar, no solo leer.',
       en: "This site's AI Lab: AI experiments you can try, not just read about.",
+      href: '/ai-lab',
     },
     {
       es: 'Mi forma de dirigir agentes de IA en paralelo, con specs y decisiones escritas.',

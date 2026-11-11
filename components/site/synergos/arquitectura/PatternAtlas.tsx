@@ -21,7 +21,7 @@ function PatternTitle({ pattern, lang }: { pattern: SynergosPattern; lang: Local
 export function PatternAtlas({ lang }: { lang: Locale }) {
   const copy = architecture.copy
   return <>
-    <div className={styles.atlasIntro}><strong>{architecture.patterns.length}<span> / </span></strong><p>{lang === 'es' ? 'Patrones aplicados, con sus límites y la decisión que los sostiene.' : 'Applied patterns, their limits and the decisions behind them.'}</p></div>
+    <div className={styles.atlasIntro}><strong>{architecture.patterns.length}<span aria-hidden="true"> / </span></strong><p>{lang === 'es' ? 'Patrones aplicados, con sus límites y la decisión que los sostiene.' : 'Applied patterns, their limits and the decisions behind them.'}</p></div>
     <div data-cw-pattern-atlas="">
       <AtlasExplorer all={lang === 'es' ? 'Todos' : 'All'} label={lang === 'es' ? 'Explorar por función' : 'Explore by purpose'} groups={groups.map(group => ({ id: group.id, label: group[lang], count: group.ids.length }))}>
         {groups.map((group, groupIndex) => <GlassSurface as="section" edge grain depth key={group.id} className={styles.patternGroup} aria-labelledby={`pattern-group-${group.id}`}>

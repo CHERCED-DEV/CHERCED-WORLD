@@ -47,7 +47,7 @@ export function ServicesView({ lang, services, cases, labels, tryHrefs = {} }: S
     <div className={styles.page}>
       <section className={styles.hero} aria-labelledby="services-title" data-cw-services-block="hero">
         <SectionTitle as="h1" id="services-title" size="lg">
-          {services.hero.title[lang]}
+          {typeset(services.hero.title[lang], lang, { keepHyphens: true })}
         </SectionTitle>
         <GlassSurface variant="standard" edge light className={styles.heroCard}>
           <GridLines fade="radial" />

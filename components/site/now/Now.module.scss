@@ -177,6 +177,19 @@
   font-weight: 700;
 }
 
+.leadLink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--cw-intro-accent) 70%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-thickness var(--cw-duration-fast) var(--cw-ease);
+
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
 .mottos {
   container-type: inline-size;
   display: flex;

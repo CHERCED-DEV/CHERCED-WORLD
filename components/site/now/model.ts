@@ -4,7 +4,7 @@ export const NOW_BLOCKS = ['building', 'learning', 'preparing', 'offKeyboard'] a
 
 export type NowBlockId = (typeof NOW_BLOCKS)[number]
 
-export type NowLine = { lead: string | null; rest: string; lang?: 'la' }
+export type NowLine = { lead: string | null; rest: string; lang?: 'la'; href?: string }
 
 export type NowBlock = { id: NowBlockId; lines: NowLine[] }
 
@@ -18,7 +18,7 @@ export function splitLead(text: string): { lead: string | null; rest: string } {
 
 function line(entry: NowEntry, lang: Locale): NowLine {
   const { lead, rest } = splitLead(entry[lang])
-  return entry.lang ? { lead, rest, lang: entry.lang } : { lead, rest }
+  return { lead, rest, ...(entry.lang ? { lang: entry.lang } : {}), ...(entry.href && lead ? { href: entry.href } : {}) }
 }
 
 export function nowBlocks(now: NowContent, lang: Locale): NowBlock[] {

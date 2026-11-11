@@ -112,7 +112,7 @@ export function ServiceCard({
           {number}
         </p>
         <h3 id={titleId} className={styles.cardTitle}>
-          {title}
+          {typeset(title, lang, { keepHyphens: true })}
         </h3>
       </div>
       <div className={styles.cardFaces}>

@@ -6,6 +6,7 @@ import { cx } from '@/components/ui/cx'
 import { glassMotionAttributes } from '@/components/ui/GlassSurface'
 import { Icon } from '@/components/ui/Icon'
 import { Sweep } from '@/components/ui/Sweep'
+import { typeset } from '@/components/site/typeset'
 import { PostMedia, type GeneratedCoverSource } from './PostMedia'
 import styles from './PostCard.module.scss'
 
@@ -59,7 +60,7 @@ export function PostCard({
       ) : null}
       <h2 id={titleId} className={styles.title} lang={contentLang}>
         <Link href={href} className={styles.link} data-cw-post-link="">
-          {post.title}
+          {typeset(post.title, contentLang ?? lang, { keepHyphens: true })}
         </Link>
       </h2>
       <PostMedia

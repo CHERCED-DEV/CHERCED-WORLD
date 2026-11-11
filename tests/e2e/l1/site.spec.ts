@@ -363,7 +363,7 @@ test.describe('proyecto inexistente', () => {
       expect(response?.status()).toBe(404)
       const view = page.locator('[data-cw-not-found]')
       await expect(view).toBeVisible()
-      await expect(view.getByRole('link')).toHaveAttribute('href', path.startsWith('/en') ? '/en' : '/es')
+      await expect(view.getByRole('link').first()).toHaveAttribute('href', path.startsWith('/en') ? '/en' : '/es')
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
     })
   }

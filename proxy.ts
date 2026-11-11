@@ -10,6 +10,7 @@ import {
   LOCALE_HEADER,
   type Locale,
 } from '@/lib/i18n/config'
+import { MISSING_HEADER } from '@/lib/missing'
 
 const BLOG_PAGES = new Set(['catalog'])
 
@@ -65,6 +66,8 @@ export function proxy(request: NextRequest): NextResponse {
     const missingPost = parts.length === 3 && parts[1] === 'blog' && !BLOG_PAGES.has(parts[2]) && !Object.hasOwn(postRegistry, parts[2])
     const missingTag = parts.length === 4 && parts[1] === 'blog' && parts[2] === 'tag' && (!findTag(parts[3]) || tagSlug(parts[3]) !== parts[3])
     const missing = missingProject || missingPost || missingTag
+    headers.delete(MISSING_HEADER)
+    if (missing) headers.set(MISSING_HEADER, missingProject ? 'portfolio' : 'blog')
     const destination = request.nextUrl.clone()
     if (missing) destination.pathname = `/${first}/__missing-content`
     const response = missing

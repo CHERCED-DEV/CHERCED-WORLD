@@ -230,7 +230,7 @@ export type TerminalCommand =
   | { name: string; output: Localized; lang?: 'la' }
   | { name: string; generated: TerminalGenerated }
 
-export type NowEntry = Localized & { lang?: 'la' }
+export type NowEntry = Localized & { lang?: 'la'; href?: string }
 
 export type NowContent = {
   updatedAt: string

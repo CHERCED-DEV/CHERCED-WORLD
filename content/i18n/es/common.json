@@ -26,6 +26,8 @@
   "footer.social": "Redes sociales",
   "notFound.title": "Esta página se fue mar adentro",
   "notFound.cta": "Volver al inicio",
+  "notFound.blog": "Ver todos los posts",
+  "notFound.portfolio": "Ver el portafolio",
   "error.title": "Algo salió mal",
   "error.cta": "Intentar de nuevo",
   "lang.switch": "English",

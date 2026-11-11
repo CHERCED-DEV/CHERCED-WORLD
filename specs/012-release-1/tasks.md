@@ -25,15 +25,15 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
     - [x] U8: panel de capas sin estado vacío y usable al tacto.
     - [x] U9: "Ver qué recibes" y "Quiero esto" de 44 px (ya medían 44 en reposo; los 39–43 eran de la tarjeta encogida al apilarse; queda en `toque.spec.ts`).
     - [x] U10: "Synergos por dentro" enlazado desde "Ahora trabajo en", en el inicio.
-  - [ ] Bajos.
+  - [x] Bajos (U13 y U15 a U18 hechos el 2026-11-11; quedan en `tests/e2e/r1/bajos.spec.ts`).
     - [x] U11: ↗ solo en enlaces externos (→ a otra página, ↓ dentro de la misma).
     - [x] U12: no era el mismo caso: el inicio de `/synergos` lleva al caso 12 y "Cómo se construye", al 13. El del 13 dice ahora "Leer este caso".
-    - U13: verticales más rápidas en celular.
+    - [x] U13: por debajo de 768 px, las verticales de `/synergos` aparecen sin retraso; en escritorio la cuadrícula sigue escalonada.
     - [x] U14: los nombres de las líneas y de los showcases se quedan; los términos en inglés también (regla del autor en la 010). Solo se corrigió "funciona por completo".
-    - U15: compuestos partidos en el guion.
-    - U16: contraste de la barra "18/" en claro.
-    - U17: 404 de post o caso con salida contextual.
-    - U18: `/now` enlaza lo que menciona.
+    - [x] U15: los compuestos con guion quedan enteros en el H1 y las tarjetas de Servicios, los títulos del blog (tarjeta y post) y `/now` (`typeset` con `keepHyphens`).
+    - [x] U16: en tema claro, la "/" de "18 /" usa el verde oscuro que ya usa el Rally (#0b6e47) y queda fuera del lector de pantalla.
+    - [x] U17: el 404 de un post, de una etiqueta o de un caso suma "Ver todos los posts" o "Ver el portafolio" debajo de "Volver al inicio". El proxy marca la sección y borra la que mande el cliente.
+    - [x] U18: en `/now`, "Synergos, rumbo a producción" y "El AI Lab de este sitio" enlazan a su página, sin botones nuevos.
   - [ ] Decisiones del autor, 2026-11-11.
     - U7: cada patrón con título en español y debajo el nombre canónico en inglés.
     - U10: a "Synergos por dentro" se llega desde "Ahora trabajo en", en el inicio.
@@ -61,7 +61,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [ ] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734.
 - [ ] R3.2 002 T228.
 - [x] R3.3a `/blog/catalog` volvía 404 desde la 011 (el proxy lo trataba como post inexistente); corregido el 2026-11-11, y la prueba de anterior y siguiente pasa a post6.
-- [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP). Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir). También el 2026-11-11, al integrar C2 y C8 de la 013: `tests/e2e/r0/shell-v2.spec.ts` "Volver arriba" falla al llegar al final de `/es/aboutMe` en celular (también con teclado) y, a veces, de `/es/blog/catalog` en escritorio. Son páginas que C2 y C8 no tocan, y el catálogo pasó en la primera corrida. La fluidez del fondo del inicio (`integration/performance.spec.ts`, exhaustiva) da 30 fps contra 50 en escritorio, con C8 y sin C8 (medido en el mismo build).
+- [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP). Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir). También el 2026-11-11, al integrar C2 y C8 de la 013: `tests/e2e/r0/shell-v2.spec.ts` "Volver arriba" falla al llegar al final de `/es/aboutMe` en celular (también con teclado) y, a veces, de `/es/blog/catalog` en escritorio. Son páginas que C2 y C8 no tocan, y el catálogo pasó en la primera corrida. La fluidez del fondo del inicio (`integration/performance.spec.ts`, exhaustiva) da 30 fps contra 50 en escritorio, con C8 y sin C8 (medido en el mismo build). Al cerrar los bajos de R1.2: `tests/e2e/l1/site.spec.ts:219` (carrusel con teclado en celular) a veces no salta del primer proyecto al último con la flecha izquierda. Falló 1 de 6 veces sin C2 y 2 de 4 con C2, con una sola prueba a la vez. Causa probable: la espera de 120 ms de `onScroll` en `ProjectsExplorer.tsx` se cumple a mitad del scroll suave y devuelve el índice 0. El LCP de `/es` en celular dio 2672 ms contra 2500 en la corrida con 4 workers y pasa solo.
 - [ ] R3.4 Buzón para visitantes según D-R1.
 - [x] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; C2 y C8, el paso del hero a "Ahora trabajo en", hechos y aprobados el mismo día: "Quedan así", T1309) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 

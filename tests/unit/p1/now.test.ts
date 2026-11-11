@@ -35,6 +35,7 @@ async function render(lang: Locale, content: NowContent = now): Promise<string> 
 
 function text(html: string): string {
   return html
+    .replace(/<\/?(a|span)\b[^>]*>/g, '')
     .replace(/<[^>]+>/g, ' ')
     .replaceAll('&#x27;', "'")
     .replace(/\s+/g, ' ')
@@ -95,6 +96,25 @@ describe('NowView (US10)', () => {
       const visible = text(html)
       for (const id of NOW_BLOCKS) for (const entry of now[id]) expect(visible).toContain(entry[lang])
       for (const motto of now.mottos) expect(visible).toContain(motto[lang])
+    })
+
+    it(`${lang}: U18, lo que menciona en negrita enlaza a su página, con los dos puntos fuera del enlace`, async () => {
+      const html = await render(lang)
+      const links = [...html.matchAll(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>(.)/g)].map((match) => [match[1], match[2]!.replaceAll('&#x27;', "'"), match[3]])
+      const leads = now.building.filter((entry) => entry.href).map((entry) => splitLead(entry[lang]).lead!)
+      expect(links).toEqual([
+        [`/${lang}/synergos`, leads[0]!.slice(0, -1), ':'],
+        [`/${lang}/ai-lab`, leads[1]!.slice(0, -1), ':'],
+      ])
+    })
+
+    it(`${lang}: U15, "snow-capped" y cualquier compuesto con guion no se parte`, async () => {
+      const html = await render(lang)
+      for (const entry of [...now.building, ...now.learning, ...now.preparing, ...now.offKeyboard]) {
+        for (const [word] of entry[lang].matchAll(/[^\s ·]+-[^\s ·]+/gu)) {
+          expect(html, word).toContain(`<span style="white-space:nowrap">${word.replaceAll("'", '&#x27;')}</span>`)
+        }
+      }
     })
 
     it(`${lang}: el lema en latín lleva lang="la" y nada más lo lleva`, async () => {

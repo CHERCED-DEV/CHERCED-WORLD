@@ -12,6 +12,7 @@ import { cx } from '@/components/ui/cx'
 import { Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
 import { sharedText } from '@/components/ui/sharedText'
+import { typeset } from '@/components/site/typeset'
 import { CopyButton } from './CopyButton'
 import { shareCopyLabels } from './labels'
 import type { PreparedPost } from './mdx/prepare'
@@ -116,7 +117,7 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors,
           <span data-cw-reading-time={prepared.minutes}>{t(blog, 'post.readingTime', { n: prepared.minutes })}</span>
         </p>
         <h1 id="cw-post-title" className={styles.title} lang={contentLang}>
-          {meta.title}
+          {typeset(meta.title, contentLang ?? lang, { keepHyphens: true })}
         </h1>
         <p className={styles.description} lang={contentLang}>
           {meta.description}

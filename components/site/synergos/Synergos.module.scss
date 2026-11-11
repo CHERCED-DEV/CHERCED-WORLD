@@ -254,6 +254,12 @@ $pulse: #eafff6;
   }
 }
 
+@include bp.down(md) {
+  .vertical[data-cw-reveal] {
+    transition-delay: 0ms;
+  }
+}
+
 .verticalHead {
   display: flex;
   flex-wrap: wrap;

@@ -6,6 +6,7 @@ import nextConfig from '@/next.config'
 import { proxy } from '@/proxy'
 import { LOCALE_HEADER } from '@/lib/i18n'
 import { localeOf } from '@/lib/i18n/request'
+import { MISSING_HEADER, missingSection } from '@/lib/missing'
 
 const ROOT = path.resolve(__dirname, '..', '..', '..')
 
@@ -39,6 +40,30 @@ describe('el 404 de posts no se lleva las páginas fijas del blog (012)', () => 
       expect(rewrite(`https://cherced.test/${lang}/blog/catalog`)).not.toContain('__missing-content')
       expect(rewrite(`https://cherced.test/${lang}/blog/no-existe`)).toContain('__missing-content')
     }
+  })
+})
+
+describe('U17: el 404 sabe si faltó un post o un caso', () => {
+  const missing = (url: string, init?: ConstructorParameters<typeof NextRequest>[1]) =>
+    proxy(new NextRequest(url, init)).headers.get(`x-middleware-request-${MISSING_HEADER}`)
+
+  it('el proxy le pasa al render la sección que faltó', () => {
+    expect(missing('https://cherced.test/es/portfolio/99')).toBe('portfolio')
+    expect(missing('https://cherced.test/en/blog/no-existe')).toBe('blog')
+    expect(missing('https://cherced.test/es/blog/tag/no-existe-esta-etiqueta')).toBe('blog')
+    expect(missing('https://cherced.test/es/no-existe')).toBeNull()
+  })
+
+  it('el cliente no puede mandar la sección por su cuenta', () => {
+    expect(missing('https://cherced.test/es/no-existe', { headers: { [MISSING_HEADER]: 'blog' } })).toBeNull()
+    expect(missing('https://cherced.test/es/portfolio/99', { headers: { [MISSING_HEADER]: 'blog' } })).toBe('portfolio')
+  })
+
+  it('solo reconoce blog y portafolio', () => {
+    expect(missingSection('blog')).toBe('blog')
+    expect(missingSection('portfolio')).toBe('portfolio')
+    expect(missingSection('admin')).toBeNull()
+    expect(missingSection(null)).toBeNull()
   })
 })
 

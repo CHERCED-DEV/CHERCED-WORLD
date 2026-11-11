@@ -248,7 +248,7 @@ const posts: PostFile[] = POST_IDS.flatMap((id) =>
 
 function isLocalized(value: object): value is Localized<unknown> {
   const keys = Object.keys(value)
-  return keys.includes('es') && keys.includes('en') && keys.every((key) => key === 'es' || key === 'en' || key === 'lang')
+  return keys.includes('es') && keys.includes('en') && keys.every((key) => key === 'es' || key === 'en' || key === 'lang' || key === 'href')
 }
 
 function localizedValues(value: unknown, at: string): Array<{ at: string; value: Localized<unknown> }> {

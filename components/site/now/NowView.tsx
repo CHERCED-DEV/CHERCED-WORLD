@@ -1,11 +1,13 @@
+import Link from 'next/link'
 import type { NowContent } from '@/content/types'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { CornerMarks, GlowOrb, GridLines, Hairline } from '@/components/ui/graphics'
 import { Reveal } from '@/components/ui/Reveal'
-import type { Locale } from '@/lib/i18n'
+import { localizedPath, type Locale } from '@/lib/i18n'
 import { splitAround } from '../home/now'
 import { SectionTitle } from '../SectionTitle'
+import { typeset } from '../typeset'
 import { formatNowDate, nowBlocks, nowMottos, type NowBlockId, type NowLine } from './model'
 import styles from './Now.module.scss'
 
@@ -15,15 +17,27 @@ export type NowViewProps = { lang: Locale; now: NowContent; labels: NowLabels }
 
 const STAGGER = 70
 
-function Line({ line }: { line: NowLine }) {
+function Lead({ text, href, locale }: { text: string; href?: string; locale: Locale }) {
+  if (!href) return <strong className={styles.lead}>{typeset(text, locale, { keepHyphens: true })}</strong>
+  return (
+    <strong className={styles.lead}>
+      <Link href={localizedPath(locale, href)} className={styles.leadLink} data-cw-now-link={href}>
+        {typeset(text.slice(0, -1), locale, { keepHyphens: true })}
+      </Link>
+      {text.slice(-1)}
+    </strong>
+  )
+}
+
+function Line({ line, locale }: { line: NowLine; locale: Locale }) {
   return (
     <p className={styles.text} lang={line.lang}>
       {line.lead ? (
         <>
-          <strong className={styles.lead}>{line.lead}</strong>{' '}
+          <Lead text={line.lead} href={line.href} locale={locale} />{' '}
         </>
       ) : null}
-      {line.rest}
+      {line.lang ? line.rest : typeset(line.rest, locale, { keepHyphens: true })}
     </p>
   )
 }
@@ -77,7 +91,7 @@ export function NowView({ lang, now, labels }: NowViewProps) {
                   <ol className={styles.numbered}>
                     {block.lines.map((line, position) => (
                       <li key={position} className={styles.step}>
-                        <Line line={line} />
+                        <Line line={line} locale={lang} />
                       </li>
                     ))}
                   </ol>
@@ -85,7 +99,7 @@ export function NowView({ lang, now, labels }: NowViewProps) {
                   <ul className={styles.list}>
                     {block.lines.map((line, position) => (
                       <li key={position}>
-                        <Line line={line} />
+                        <Line line={line} locale={lang} />
                       </li>
                     ))}
                   </ul>
