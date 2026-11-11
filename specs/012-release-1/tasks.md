@@ -63,7 +63,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [x] R3.3a `/blog/catalog` volvía 404 desde la 011 (el proxy lo trataba como post inexistente); corregido el 2026-11-11, y la prueba de anterior y siguiente pasa a post6.
 - [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP). Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir).
 - [ ] R3.4 Buzón para visitantes según D-R1.
-- [ ] R3.5 (C1, C4 y barras hechos el 2026-11-11; falta la captura al autor y C2) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
+- [ ] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; solo falta decidir C2) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 
 ## R4 — Endurecer
 - [ ] R4.1 Revisión de seguridad de lo nuevo.
