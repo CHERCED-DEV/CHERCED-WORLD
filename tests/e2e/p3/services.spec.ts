@@ -224,10 +224,10 @@ test.describe('Servicios: cómo trabajo (FR-406e)', () => {
 })
 
 test.describe('Servicios: preguntas frecuentes (FR-406g)', () => {
-  test('cuatro disclosures que abren con un clic, sin la pregunta de propiedad', async ({ page }) => {
+  test('cinco disclosures que abren con un clic, sin la pregunta de propiedad', async ({ page }) => {
     await open(page)
     const items = page.locator('details[data-cw-faq]')
-    await expect(items).toHaveCount(4)
+    await expect(items).toHaveCount(5)
     await expect(page.locator('#main')).not.toContainText('¿Quién es dueño')
     const first = items.first()
     await expect(first).not.toHaveAttribute('open', '')

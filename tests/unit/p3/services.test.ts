@@ -77,7 +77,7 @@ describe('Servicios: datos (FR-406c, FR-406f, FR-406j)', () => {
     }
   })
 
-  it('ningún servicio trae precio mientras P-421 siga abierta', () => {
+  it('ningún servicio trae rango de precio: es a convenir (R2.2, cierra P-421)', () => {
     expect(services.items.filter((item) => item.priceRange)).toEqual([])
   })
 })
@@ -156,11 +156,11 @@ describe('ServicesView (US1b)', () => {
     }
   })
 
-  it.each(locales)('%s: cuatro preguntas como disclosures, sin la de propiedad (P-412)', async (lang) => {
+  it.each(locales)('%s: cinco preguntas como disclosures, sin la de propiedad (P-412)', async (lang) => {
     const html = await render(lang)
     const details = [...html.matchAll(/<details[^>]*data-cw-faq=""[^>]*><summary[^>]*>([\s\S]*?)<\/summary>/g)]
     expect(details.map((match) => text(match[1] ?? ''))).toEqual(services.faq.map((item) => item.q[lang]))
-    expect(details).toHaveLength(4)
+    expect(details).toHaveLength(5)
     expect(text(html)).not.toMatch(/dueño de lo que se construye|who owns what gets built/i)
   })
 

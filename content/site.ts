@@ -1007,6 +1007,13 @@ export const site: SiteContent = {
         },
       },
       {
+        q: { es: '¿Cuánto cuesta un servicio?', en: 'How much does a service cost?' },
+        a: {
+          es: 'El precio es a convenir: depende del alcance de cada proyecto, así que no manejo tarifas fijas. Escríbeme por el formulario de contacto, cuéntame tu caso y te respondo con una propuesta.',
+          en: "The price is to be agreed: it depends on each project's scope, so I don't have fixed rates. Write to me through the contact form, tell me about your case and I'll reply with a proposal.",
+        },
+      },
+      {
         q: { es: '¿Cuánto cuesta usar la IA después?', en: 'How much does using the AI cost afterwards?' },
         a: {
           es: 'Depende del modelo y del volumen. Diseño las soluciones para gastar poco: el trabajo pesado lo hacen scripts, no el modelo. Te entrego una estimación antes de empezar.',

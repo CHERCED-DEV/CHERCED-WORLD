@@ -799,7 +799,7 @@ fuente de verdad. Mientras sigan abiertas, se aplica el valor por defecto indica
 | P-404 | ¿Página `/now`? ¿Qué muestra este mes? | Handoff, pregunta 13 | **Resuelta:** sí, con el contenido de contenido.md §24 |
 | P-405 | ¿Enlace para agendar una llamada después del formulario de contacto? | Handoff, pregunta 16 | **Resuelta:** sí; falta el enlace (P-422) |
 | P-420 | ¿Todos los casos de `legal-workspace/evals/casos/` son sintéticos y ninguno sale del material de la clienta? | Revisión del repo público, 2026-11-04 | El caso Legal workspace sale sin enlace al repo |
-| P-421 | Rangos de precio de cada servicio | Respuesta a P-415 | Sin precios |
+| P-421 | Rangos de precio de cada servicio | Respuesta a P-415 | **Resuelta (R2.2 de la 012, 2026-11-11):** sin rangos; el precio es a convenir y se pide por el formulario, en una pregunta frecuente |
 | P-422 | Enlace de agenda (Calendly, Cal.com u otro) | Respuesta a P-405 | Sin enlace |
 | P-423 | ¿Se registra el sitio en el origin trial de WebMCP de Chrome? Pide una cuenta externa y un token que vence, lo que roza el principio VIII | Plan, research R-401 | Sin token: las herramientas solo aparecen donde el navegador ya expone la API |
 | P-424 | Párrafo "en palabras" del lóbulo Prácticas de ingeniería (T229). Ni el handoff ni contenido.md lo traen | Análisis cruzado del plan | Ese lóbulo no muestra el bloque |

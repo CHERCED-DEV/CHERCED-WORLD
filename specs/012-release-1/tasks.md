@@ -16,7 +16,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [ ] R1.2 Pulido por código, sin reconstruir; las e2e de la 010 cubren las páginas nuevas.
   - [x] Altos (hechos el 2026-11-11). U1: los trazos ligados al scroll no avanzan en `/synergos` ni en el hero de la arquitectura (el `overflow: hidden` del cristal los congela; `overflow: clip` lo resuelve). U2: el backend de Synergos usa un solo vocabulario, "20 capacidades · 9 orquestadores" (desbloquea R2.4).
   - [x] C0 (alto, de la segunda opinión de la 013; hecho el 2026-11-11 con `:has(:focus-visible)`, que saca al frente la tarjeta con foco de teclado): en el celular, el mazo apilado de Servicios tapa el foco de teclado (WCAG 2.4.11): 7 de 12 acciones en Chromium y 8 de 12 en WebKit quedan bajo la tarjeta siguiente.
-  - [ ] Medios.
+  - [x] Medios.
     - [x] U3: acciones visibles al abrir "Para reclutadores" en celular.
     - [x] U4: el cargo actual de la carrera no se corta sin señal en escritorio (desvanecido cuando hay más y alto máximo de 820 px).
     - [x] U5: mesa de peloteo completa en celular (se centra al quedar lista y al jugar).
@@ -48,7 +48,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 
 ## R2 — Contenido
 - [x] R2.1 T960 "Hacia dónde voy": borrador ES/EN, aprobación del autor, escena integrada.
-- [ ] R2.2 Servicios: precios "a convenir".
+- [x] R2.2 Servicios: precios "a convenir". Hecho el 2026-11-11 con una sola pregunta frecuente, "¿Cuánto cuesta un servicio?", antes de la de costos de la IA. Las tarjetas siguen sin `priceRange` y no hay cifras. Cierra P-421 de la 004.
 - [ ] R2.3 SEO en página para búsquedas de desarrollador con nicho y ubicación (P-802).
 - [ ] R2.4 Cifras de Synergos al día (fase 2).
 - [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.

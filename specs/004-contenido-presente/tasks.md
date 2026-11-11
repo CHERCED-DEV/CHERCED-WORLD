@@ -199,8 +199,8 @@ Rutas: `app/[lang]/services/**`, `components/site/services/**`, `tests/unit/p3/*
   respuesta, el orquestador la agrega a `services.faq`.
 - [ ] T447 [US1b] **BLOQUEADA (P-413)**: la selección final de casos reales en Servicios. Hasta entonces sigue el
   valor por defecto de T445.
-- [ ] T448 [US1b] **BLOQUEADA (P-421)**: rangos de precio en las tarjetas (`priceRange`). Sin cifras del autor, no se
-  muestra ningún precio (FR-406j).
+- [x] T448 [US1b] ~~Rangos de precio en las tarjetas (`priceRange`)~~. P-421 se resolvió sin rangos (R2.2 de la 012,
+  2026-11-11): el precio es a convenir y lo explica una pregunta frecuente; ninguna tarjeta muestra precio (FR-406j).
 - [ ] T449 [US1b] **P-417 (por defecto, como está)**: si el autor cambia "fábrica de software" o el título del hero,
   el orquestador ajusta el copy en `content/`. P3 no cambia código.
 - [ ] T450 [US1b] **Depende de la 003 (A4)**: el botón "Probar" de la tarjeta de asistentes, que lleva a la vitrina
