@@ -71,7 +71,7 @@ Vitest en el `prebuild`) y las e2e de `tests/e2e/seo` y de las pruebas que tocó
 - [ ] T863 **Autor**: enlaces desde LinkedIn, GitHub y Platzi al sitio (guía §7).
 - [ ] T864 **Autor**: llenar "Antes" y, a las 8 semanas del dominio, "Después" en la tabla FR-860; prueba de resultados
   enriquecidos en Home, Sobre mí, un caso y un post (SC-807).
-- [ ] T865 Responder P-801 a P-807 y ajustar lo que cambie.
+- [x] T865 Respuestas conciliadas con `spec.md`, sección de respuestas del autor del 2026-11-07 y decisiones delegadas. Instagram aplicado; dominio y verificaciones externas conservan sus tareas abiertas.
 
 ## Cierre de la lane
 
@@ -103,3 +103,4 @@ Vitest en el `prebuild`) y las e2e de `tests/e2e/seo` y de las pruebas que tocó
 | Cero invención | Las descripciones citan su fuente (FR-820); el JSON-LD no trae fechas, precios ni calificaciones; el token de verificación arranca vacío |
 | Conflictos con specs anteriores | FR-706 (007): los títulos de cuatro secciones cambian dentro de su plantilla, pregunta P-805. Contenido.md §1 (004): descripciones enmendadas en FR-820. R-507 (005): se conserva |
 | Lo que solo se verifica fuera del repo | La canónica con `SITE_ORIGIN` en producción, la prueba de resultados enriquecidos, la redirección 301 y la medición |
+

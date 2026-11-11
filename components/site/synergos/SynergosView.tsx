@@ -32,6 +32,7 @@ import {
   wideLayout,
 } from './model'
 import styles from './Synergos.module.scss'
+import { ScrollProgress } from './ScrollProgress'
 
 export type SynergosViewLabels = { newTab: string; github: string; diagram: LiveDiagramLabels }
 
@@ -70,6 +71,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
 
   return (
     <div className={styles.page} data-cw-synergos="">
+      <ScrollProgress />
       <GlassSurface as="header" className={styles.hero} edge grain depth light data-cw-synergos-section="hero">
         <GridLines fade="radial" />
         <GlowOrb tone="accent" size="lg" x="85%" y="0%" />

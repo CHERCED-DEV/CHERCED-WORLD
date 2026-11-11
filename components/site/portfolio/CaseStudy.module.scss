@@ -116,6 +116,14 @@
   flex-wrap: wrap;
   gap: var(--cw-space-3);
   max-width: 100%;
+
+  > a {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
 }
 
 .heroMedia {

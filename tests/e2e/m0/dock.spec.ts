@@ -53,7 +53,7 @@ test.describe('dock flotante (US6, FR-607, FR-608)', () => {
 
       const mailbox = page.locator('header [data-cw-mailbox]')
       await expect(mailbox).toBeVisible()
-      await expect(mailbox).toHaveAttribute('href', '/es/contactMe')
+      await expect(mailbox).toHaveAttribute('href', '/es/inbox')
       const box = await rectOf(page, 'header [data-cw-mailbox]')
       expect(box.bottom).toBeLessThanOrEqual(header.bottom)
       expect(box.right).toBeLessThanOrEqual(width)
@@ -163,3 +163,4 @@ test.describe('dock sin JavaScript (US6, escenario 5)', () => {
     await expect(page.locator('[data-cw-float-menu]')).toBeVisible()
   })
 })
+

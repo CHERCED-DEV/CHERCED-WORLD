@@ -1,0 +1,68 @@
+.progress {
+  display: none;
+}
+
+.path { display: none; pointer-events: none; }
+
+@supports (animation-timeline: scroll()) and (animation-range: entry 0% cover 50%) {
+  @media (prefers-reduced-motion: no-preference) {
+    .progress {
+      display: block;
+      position: fixed;
+      inset: 0 0 auto;
+      width: 100%;
+      max-width: none;
+      height: 3px;
+      z-index: 100;
+      pointer-events: none;
+      background: var(--cw-accent);
+      transform-origin: left;
+      animation: reading linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    .stage {
+      view-timeline-name: --synergos-stage;
+      view-timeline-axis: block;
+    }
+
+    .stage .path {
+      display: inline;
+      stroke: var(--cw-accent);
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 1;
+      animation: trace linear both;
+      animation-timeline: --synergos-stage;
+      animation-range: entry 15% cover 65%;
+    }
+
+    .chapter {
+      view-timeline-name: --synergos-chapter;
+      view-timeline-axis: block;
+    }
+
+    .chapter::after {
+      content: '';
+      display: block;
+      width: min(100%, 12rem);
+      height: 2px;
+      margin: var(--cw-space-5) auto 0;
+      background: var(--cw-accent);
+      transform-origin: left;
+      animation: reading linear both;
+      animation-timeline: --synergos-chapter;
+      animation-range: entry 10% cover 35%;
+    }
+  }
+}
+
+@keyframes reading {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes trace {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}

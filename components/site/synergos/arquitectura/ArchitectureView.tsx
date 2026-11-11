@@ -14,6 +14,8 @@ import { SourceLinks } from './SourceLinks'
 import { SystemBlueprint } from './SystemBlueprint'
 import { ChapterNav } from './ChapterNav'
 import styles from './Architecture.module.scss'
+import journey from '../ScrollJourney.module.scss'
+import { ScrollProgress } from '../ScrollProgress'
 
 function Topic({ id, lang, skipLead = false }: { id: string; lang: Locale; skipLead?: boolean }) {
   const topic = architecture.topics.find(item => item.id === id)
@@ -32,6 +34,7 @@ export function ArchitectureView({ lang }: { lang: Locale }) {
   const counted = new Intl.DateTimeFormat(lang === 'es' ? 'es-CO' : 'en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${facts.countedAt}T00:00:00Z`))
   const ui = lang === 'es' ? { start: 'Ver el recorrido', atlas: 'Explorar los patrones', chapter: 'Dentro del sistema', code: 'El mismo contrato. Dos lenguajes.', factory: 'Lo construido y el siguiente paso.', public: 'Arquitectura abierta', pilot: 'Del spec al resultado' } : { start: 'Explore the system', atlas: 'Explore the patterns', chapter: 'Inside the system', code: 'One contract. Two languages.', factory: 'What exists. What comes next.', public: 'Open architecture', pilot: 'From spec to result' }
   return <div className={styles.page} data-cw-synergos-architecture="">
+    <ScrollProgress />
     <header className={styles.opening}>
       <Link className={styles.back} href={localizedPath(lang, '/synergos')}>← {copy.back[lang]}</Link>
       <GlassSurface className={styles.hero} edge grain depth light>
@@ -56,7 +59,7 @@ export function ArchitectureView({ lang }: { lang: Locale }) {
     {sections.map(([id, label], index) => {
       const lead = architecture.topics.find(topic => !topic.private && topic.id === leadTopics[id])?.body[0]
       return <Reveal as="section" id={id} key={id} className={styles.section} aria-labelledby={`architecture-${id}`} data-cw-architecture-section={id}>
-        <header className={styles.chapterHeading}>
+        <header className={`${styles.chapterHeading} ${journey.chapter}`}>
           <p className={styles.eyebrow}><span className={styles.chapterNumber}>{String(index + 1).padStart(2, '0')}</span>{ui.chapter}</p>
           <SectionTitle id={`architecture-${id}`}>{label[lang]}</SectionTitle>
           {lead ? <p className={styles.sectionLead}>{lead[lang]}</p> : null}

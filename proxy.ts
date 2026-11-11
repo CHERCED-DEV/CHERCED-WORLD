@@ -1,4 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { projects } from '@/content/projects'
+import { postRegistry } from '@/content/posts/registry'
+import { findTag, tagSlug } from '@/lib/blog/tags'
 import {
   defaultLocale,
   isLocale,
@@ -53,7 +56,18 @@ export function proxy(request: NextRequest): NextResponse {
   if (isLocale(first)) {
     const headers = new Headers(request.headers)
     headers.set(LOCALE_HEADER, first)
-    const response = NextResponse.next({ request: { headers } })
+    const parts = pathname.split('/').filter(Boolean).map(part => {
+      try { return decodeURIComponent(part) } catch { return part }
+    })
+    const missingProject = parts.length === 3 && parts[1] === 'portfolio' && !projects.some(project => project.id === parts[2])
+    const missingPost = parts.length === 3 && parts[1] === 'blog' && !Object.hasOwn(postRegistry, parts[2])
+    const missingTag = parts.length === 4 && parts[1] === 'blog' && parts[2] === 'tag' && (!findTag(parts[3]) || tagSlug(parts[3]) !== parts[3])
+    const missing = missingProject || missingPost || missingTag
+    const destination = request.nextUrl.clone()
+    if (missing) destination.pathname = `/${first}/__missing-content`
+    const response = missing
+      ? NextResponse.rewrite(destination, { request: { headers } })
+      : NextResponse.next({ request: { headers } })
     if (isDocumentNavigation(request) && request.cookies.get(LOCALE_COOKIE)?.value !== first) {
       response.cookies.set(LOCALE_COOKIE, first, {
         path: '/',

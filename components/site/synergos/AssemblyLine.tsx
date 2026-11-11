@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { cx } from '@/components/ui/cx'
 import type { LineLayout } from './model'
 import styles from './Synergos.module.scss'
+import journey from './ScrollJourney.module.scss'
 
 export type AssemblyLineLabels = { title: string; desc: string; director: string; release: string; scope: string }
 
@@ -17,7 +18,7 @@ export function AssemblyLine({ layout, variant, labels }: AssemblyLineProps) {
   const { director, release } = layout
   return (
     <svg
-      className={cx(styles.svg, variant === 'wide' ? styles.wide : styles.tall)}
+      className={cx(styles.svg, journey.stage, variant === 'wide' ? styles.wide : styles.tall)}
       viewBox={`0 0 ${layout.width} ${layout.height}`}
       role="img"
       aria-labelledby={`${titleId} ${descId}`}
@@ -29,6 +30,7 @@ export function AssemblyLine({ layout, variant, labels }: AssemblyLineProps) {
       {layout.lanes.map((lane) => (
         <g key={lane.id} className={styles.lane} data-state={lane.state} data-cw-lane={lane.id}>
           <path d={lane.path} className={styles.lanePath} />
+          <path d={lane.path} pathLength={1} className={journey.path} aria-hidden="true" />
           {lane.pulse ? (
             <path d={lane.path} className={styles.pulse} style={{ animationDelay: `${lane.delay}s` } as CSSProperties} data-cw-pulse="" />
           ) : null}

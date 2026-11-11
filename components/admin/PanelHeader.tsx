@@ -34,6 +34,7 @@ export function PanelHeader({
       countLabel: tr('admin.pending', { count: pending }),
       id: 'comments',
     },
+    { href: localizedPath(lang, '/inbox/blog'), label: tr('admin.nav.blog'), count: 0, countLabel: '', id: 'blog' },
     { href: localizedPath(lang, '/inbox/settings'), label: tr('admin.nav.settings'), count: 0, countLabel: '', id: 'settings' },
   ]
 
@@ -50,3 +51,4 @@ export function PanelHeader({
     </GlassSurface>
   )
 }
+

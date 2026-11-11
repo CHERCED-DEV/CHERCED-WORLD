@@ -17,6 +17,7 @@
   "admin.nav.label": "Panel sections",
   "admin.nav.messages": "Messages",
   "admin.nav.comments": "Comments",
+  "admin.nav.blog": "Blog",
   "admin.nav.settings": "Settings",
   "admin.unread": "{count} unread",
   "admin.pending": "{count} pending",
@@ -94,3 +95,4 @@
   "admin.consent.legacy": "Before the privacy policy",
   "admin.field.interest": "Interested in"
 }
+

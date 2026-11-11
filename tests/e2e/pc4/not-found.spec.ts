@@ -57,6 +57,18 @@ test.describe('404 real (B6, T940, T227 de la 002)', () => {
     }
   })
 
+  test('las rutas inexistentes también responden 404 al navegar por RSC', async ({ request }) => {
+    for (const [route] of ROUTES) {
+      const response = await request.get(route, { headers: { RSC: '1' } })
+      expect(response.status(), route).toBe(404)
+      expect(response.headers()['content-type']).toContain('text/x-component')
+      expect(await response.text()).not.toContain('Expected RSC response')
+    }
+    for (const route of ['/es/portfolio/%31', '/en/blog/post1', '/es/blog/tag/humor']) {
+      expect((await request.get(route, { headers: { RSC: '1' } })).status(), route).toBe(200)
+    }
+  })
+
   test('una primera parte que no es idioma ni ruta responde 404 con identidad', async ({ request }) => {
     const response = await request.get('/wp-login.php')
     expect(response.status()).toBe(404)

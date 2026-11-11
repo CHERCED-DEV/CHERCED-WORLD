@@ -101,18 +101,18 @@ test.describe('buzón público (E-01)', () => {
   test.describe('en el header', () => {
     onlyIn('desktop-chromium', 'mobile-chromium')
 
-    test('muestra el número y lleva a Contacto, no al panel', async ({ page }) => {
+    test('muestra el número y lleva al panel (A-1101 de la 011)', async ({ page }) => {
       await page.route('**/api/inbox-count', (route) => route.fulfill({ json: { unread: 3 } }))
       await skipIntro(page)
       await page.goto('/es/aboutMe')
       const mailbox = page.locator('header [data-cw-mailbox]')
       await expect(mailbox).toBeVisible()
-      await expect(mailbox).toHaveAttribute('href', '/es/contactMe')
+      await expect(mailbox).toHaveAttribute('href', '/es/inbox')
       await expect(mailbox.locator('[data-cw-mailbox-badge]')).toHaveText('3')
       await expect(mailbox).toHaveAccessibleName('Buzón, 3 mensajes sin leer')
-      await expect(page.locator('header a[href*="/inbox"]')).toHaveCount(0)
+      await expect(page.locator('header a[href*="/inbox"]'), 'el buzón es el único acceso al panel').toHaveCount(1)
       await mailbox.click()
-      await page.waitForURL('**/es/contactMe')
+      await page.waitForURL('**/es/inbox')
     })
 
     test('sin mensajes no muestra número', async ({ page }) => {
@@ -121,7 +121,7 @@ test.describe('buzón público (E-01)', () => {
       await page.goto('/en/services')
       const mailbox = page.locator('header [data-cw-mailbox]')
       await expect(mailbox).toHaveAccessibleName('Inbox')
-      await expect(mailbox).toHaveAttribute('href', '/en/contactMe')
+      await expect(mailbox).toHaveAttribute('href', '/en/inbox')
       await expect(mailbox.locator('[data-cw-mailbox-badge]')).toHaveCount(0)
     })
 
@@ -161,7 +161,7 @@ test.describe('buzón público (E-01)', () => {
     await page.goto('/es/aboutMe')
     const mailbox = page.locator('header [data-cw-mailbox]')
     await expect(mailbox).toBeVisible()
-    await expect(mailbox).toHaveAttribute('href', '/es/contactMe')
+    await expect(mailbox).toHaveAttribute('href', '/es/inbox')
     await expect(mailbox.locator('[data-cw-mailbox-badge]')).toHaveCount(0)
   })
 })
@@ -309,3 +309,4 @@ test.describe('cristal v2', () => {
     }
   })
 })
+

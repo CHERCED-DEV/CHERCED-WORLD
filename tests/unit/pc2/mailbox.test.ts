@@ -12,9 +12,10 @@ describe('T944: el buzón lleva al autor a sus mensajes', () => {
     expect(hasAuthorHint(null)).toBe(false)
   })
 
-  it('el autor va al panel de mensajes; los visitantes, a Contacto', () => {
-    expect(mailboxHref('es', true)).toBe('/es/inbox')
-    expect(mailboxHref('en', true)).toBe('/en/inbox')
-    expect(mailboxHref('es', false)).toBe('/es/contactMe')
+  it('el acceso al panel no depende de una cookie de autor', () => {
+    expect(mailboxHref('es')).toBe('/es/inbox')
+    expect(mailboxHref('en')).toBe('/en/inbox')
+    expect(mailboxHref('es')).toBe('/es/inbox')
   })
 })
+

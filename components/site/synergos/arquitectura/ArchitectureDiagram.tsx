@@ -4,6 +4,7 @@ import { GlassSurface } from '@/components/ui/GlassSurface'
 import { CornerMarks, GridLines } from '@/components/ui/graphics'
 import { cx } from '@/components/ui/cx'
 import styles from './Architecture.module.scss'
+import journey from '../ScrollJourney.module.scss'
 
 type DiagramKind = keyof typeof architecture.diagrams
 
@@ -22,7 +23,7 @@ export function ArchitectureDiagram({ kind, lang }: { kind: DiagramKind; lang: L
   const title = architecture.copy.sections[kind][lang]
   const glyphs = { recorrido: ['</>', '{ }', '<>', '↗', '◎'], contratos: ['C#', '{ }', 'TS', '✓', '↔'], islas: ['◌', '⟡', '⇄', '⌁', '⋈'] }[kind]
   return (
-    <GlassSurface as="figure" className={styles.diagram} edge grain depth light data-cw-architecture-diagram={kind}>
+    <GlassSurface as="figure" className={`${styles.diagram} ${journey.stage}`} edge grain depth light data-cw-architecture-diagram={kind}>
       <GridLines fade="radial" /><CornerMarks />
       <figcaption className="cw-visually-hidden">{title}</figcaption>
       {(['wide', 'tall'] as const).map(variant => {

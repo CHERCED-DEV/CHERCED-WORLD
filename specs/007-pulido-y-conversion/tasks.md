@@ -70,7 +70,7 @@ y `test:fast` en verde, y una vista previa con la lista de cambios para el autor
 - [ ] T960 Cuarta escena de Sobre mí, "Hacia dónde voy": entrevista al autor ([entrevista-hacia-donde-voy.md](./entrevista-hacia-donde-voy.md)),
   copy en ES y EN con su visto bueno, la escena con el cristal que ya existe y su entrada en el SceneNav.
 - [ ] T961 Las mejoras que el autor vio en la vista previa (pendiente que las cuente).
-- [ ] T962 "Hacia el MVP: la línea de ensamblaje" en el caso de Synergos: diagrama vivo de las líneas de agentes que
+- [x] T962 [Sustituida por la 009; conciliado 2026-11-08, ver `../seguimiento-2026-11-08.md`] "Hacia el MVP: la línea de ensamblaje" en el caso de Synergos: diagrama vivo de las líneas de agentes que
   convergen en el release, con hitos reales sacados de la carpeta de Synergos (solo lectura), y un acceso desde Home.
   Boceto primero; se construye con el visto bueno del autor. La raíz de Synergos no se publica hasta el MVP.
 
@@ -93,3 +93,4 @@ El autor revisó la vista previa en el celular: "construyamos sobre lo construid
   vez del párrafo resumen: Sistecrédito (las dos etapas), Synergos Labs, FLYR, Newshore y Growup IT. El autor eligió
   publicar los de Sistecrédito tal cual LinkedIn, con cifras y proveedores (2026-11-07); el resto del sitio sigue sin
   cifras internas. Platzi Master y Squadra conservan su descripción porque no tienen bullets en LinkedIn.
+

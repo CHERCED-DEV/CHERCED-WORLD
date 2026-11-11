@@ -124,7 +124,8 @@ describe('Dock (FR-607, FR-608, EM-05)', () => {
     const positions = order.map((marker) => dock.indexOf(marker))
     expect(positions.every((position) => position > 0)).toBe(true)
     expect([...positions].sort((a, b) => a - b)).toEqual(positions)
-    expect(html).toContain('href="/es/contactMe"')
+    const mailbox = /<a [^>]*data-cw-mailbox=""[^>]*>/.exec(html)?.[0] ?? ''
+    expect(mailbox, 'A-1101: el buzón abre el panel').toContain('href="/es/inbox"')
     expect(html.match(/data-cw-menu-button/g)).toHaveLength(1)
   })
 })

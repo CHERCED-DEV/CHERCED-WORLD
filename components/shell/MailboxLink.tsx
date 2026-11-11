@@ -55,7 +55,7 @@ export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLab
 
   return (
     <SelfLink
-      href={mailboxHref(lang, author)}
+      href={mailboxHref(lang)}
       prefetch={false}
       className={cx(controls.iconButton, controls.mailbox)}
       aria-label={mailboxLabel(unread, labels)}

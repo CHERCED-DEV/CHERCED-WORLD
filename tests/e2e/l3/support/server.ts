@@ -35,7 +35,7 @@ async function waitUntilUp(baseURL: string, child: ChildProcess, timeoutMs: numb
   throw new Error('el servidor aislado no respondió a tiempo')
 }
 
-export async function startIsolatedServer(): Promise<IsolatedServer> {
+export async function startIsolatedServer(options: { cwd?: string } = {}): Promise<IsolatedServer> {
   const port = await freePort()
   const baseURL = `http://localhost:${port}`
   const env: NodeJS.ProcessEnv = { ...process.env, NODE_ENV: 'production' }
@@ -43,7 +43,7 @@ export async function startIsolatedServer(): Promise<IsolatedServer> {
   delete env.VERCEL
   const nextBin = require.resolve('next/dist/bin/next', { paths: [ROOT] })
   const child = spawn(process.execPath, [nextBin, 'start', '--port', String(port)], {
-    cwd: ROOT,
+    cwd: options.cwd ?? ROOT,
     env,
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
