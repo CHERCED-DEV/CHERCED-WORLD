@@ -12,7 +12,7 @@ const MB = 1_000_000
 const SPEC_COPY: Record<string, Localized> = {
   'ailab.title': { es: 'AI LAB', en: 'AI LAB' },
   'ailab.intro': {
-    es: 'Aquí no te cuento lo que sé hacer con IA: te dejo probarlo. Cada experimento te dice dónde corre, cómo está hecho y qué decidí. La mayoría funciona completo en tu navegador.',
+    es: 'Aquí no te cuento lo que sé hacer con IA: te dejo probarlo. Cada experimento te dice dónde corre, cómo está hecho y qué decidí. La mayoría funciona por completo en tu navegador.',
     en: "Here I don't tell you what I can do with AI: I let you try it. Each experiment tells you where it runs, how it's built and what I decided. Most of them run entirely in your browser.",
   },
   'ailab.plugins': {

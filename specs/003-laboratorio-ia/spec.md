@@ -431,7 +431,7 @@ la genera un servicio en línea.
 | Clave | ES | EN |
 |---|---|---|
 | `ailab.title` | AI LAB | AI LAB |
-| `ailab.intro` | Aquí no te cuento lo que sé hacer con IA: te dejo probarlo. Cada experimento te dice dónde corre, cómo está hecho y qué decidí. La mayoría funciona completo en tu navegador. | Here I don't tell you what I can do with AI: I let you try it. Each experiment tells you where it runs, how it's built and what I decided. Most of them run entirely in your browser. |
+| `ailab.intro` | Aquí no te cuento lo que sé hacer con IA: te dejo probarlo. Cada experimento te dice dónde corre, cómo está hecho y qué decidí. La mayoría funciona por completo en tu navegador. | Here I don't tell you what I can do with AI: I let you try it. Each experiment tells you where it runs, how it's built and what I decided. Most of them run entirely in your browser. |
 | `ailab.plugins` | También creo plugins de IA para profesiones concretas. Para una abogada, skills que organizan el material del caso, contrastan hipótesis y generan documentos. Para un ingeniero estructural, un asistente que lee sus bitácoras, ayuda con los cálculos y arma el estimado. Las vitrinas de abajo usan solo datos inventados. | I also build AI plugins for specific professions. For a lawyer, skills that organize case material, test hypotheses and draft documents. For a structural engineer, an assistant that reads his logs, helps with calculations and builds the estimate. The showcases below use made-up data only. |
 | `ailab.privacy` | No guardo tu audio ni tu texto. Se procesan en tu navegador y no salen de él. | I don't store your audio or your text. They're processed in your browser and never leave it. |
 | `ailab.runsIn.browser` | Corre en tu navegador | Runs in your browser |
