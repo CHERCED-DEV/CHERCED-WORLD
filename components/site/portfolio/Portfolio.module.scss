@@ -591,4 +591,28 @@ $card-gap: 6px;
       }
     }
   }
+
+  @supports (animation-timeline: view(inline)) {
+    @media (prefers-reduced-motion: no-preference) {
+      :global(:root[data-js]) .slideMedia {
+        animation: cw-slide-media linear both;
+        animation-timeline: view(inline);
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+}
+
+@keyframes cw-slide-media {
+  0%,
+  100% {
+    opacity: 0.55;
+    scale: 0.92;
+  }
+
+  35%,
+  65% {
+    opacity: 1;
+    scale: 1;
+  }
 }

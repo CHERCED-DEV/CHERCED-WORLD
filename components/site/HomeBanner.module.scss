@@ -7,6 +7,7 @@
   place-items: center;
   width: 100%;
   padding: var(--cw-space-6) 14px;
+  scroll-margin-block: calc(var(--cw-space-6) * -1);
 }
 
 .card {
@@ -195,6 +196,7 @@
 @include bp.down(md) {
   .banner {
     padding-block: var(--cw-space-5) var(--cw-space-3);
+    scroll-margin-block: calc(var(--cw-space-5) * -1) calc(var(--cw-space-3) * -1);
   }
 
   .availability {

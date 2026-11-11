@@ -146,7 +146,9 @@ test.describe('controles del home', () => {
     await expect
       .poll(() => section.evaluate((element) => Math.round(element.getBoundingClientRect().top)), { timeout: 5000 })
       .toBeLessThan(140)
-    expect(await section.evaluate((element) => element.getBoundingClientRect().top)).toBeGreaterThanOrEqual(0)
+    const panelTop = await section.locator('> [data-cw-glass]').evaluate((element) => element.getBoundingClientRect().top)
+    const headerBottom = await page.locator('#header').evaluate((element) => element.getBoundingClientRect().bottom)
+    expect(panelTop, 'el panel queda entero bajo el header (con C8 la parada es el panel)').toBeGreaterThanOrEqual(headerBottom)
     await expect(page.locator('#home-now-title')).toBeInViewport()
   })
 

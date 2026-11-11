@@ -305,7 +305,7 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
                 data-orientation={ratio >= 1 ? 'landscape' : 'portrait'}
                 style={{ '--cw-media-ratio': ratio.toFixed(4) } as CSSProperties}
               >
-                <div className={styles.slideMedia}>
+                <div className={styles.slideMedia} data-cw-slide-media="">
                   <ViewTransition name={position === index ? projectMediaName(project.id) : undefined} share="auto" default="none">
                     <Image
                       src={project.image.src}

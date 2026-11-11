@@ -345,3 +345,52 @@
     animation: none !important;
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(:root[data-js]:has([data-cw-home-now])) {
+    scroll-snap-type: y mandatory;
+
+    .hero > :global([data-cw-home-banner]) {
+      scroll-snap-align: end;
+    }
+
+    .panel {
+      scroll-snap-align: start;
+    }
+
+    :global(#footer) {
+      scroll-snap-align: end;
+    }
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :global(:root[data-js]) {
+      .hero > :global([data-cw-home-banner]) > :global([data-cw-glass]) {
+        animation: cw-home-recede linear both;
+        animation-timeline: view(auto);
+        animation-range: exit-crossing 30% exit-crossing 100%;
+      }
+
+      .panel {
+        animation: cw-home-arrive linear both;
+        animation-timeline: view(auto);
+        animation-range: entry 0% entry 80%;
+      }
+    }
+  }
+}
+
+@keyframes cw-home-recede {
+  to {
+    opacity: 0.35;
+    scale: 0.9;
+  }
+}
+
+@keyframes cw-home-arrive {
+  from {
+    opacity: 0.35;
+  }
+}

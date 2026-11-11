@@ -29,11 +29,16 @@ async function cardMetrics(page: Page): Promise<CardMetrics[]> {
       }
       const image = slide.querySelector('img') as HTMLImageElement
       const stage = image.parentElement!
+      const scale = Number.parseFloat(getComputedStyle(stage).scale) || 1
+      const unscaled = (element: Element) => {
+        const r = box(element)
+        return { ...r, width: r.width / scale, height: r.height / scale }
+      }
       return {
         id: (slide as HTMLElement).dataset.cwSlide ?? '',
         card: box(slide.querySelector('article')),
-        image: box(image),
-        stage: box(stage),
+        image: unscaled(image),
+        stage: unscaled(stage),
         pad: Number.parseFloat(getComputedStyle(stage).paddingTop),
         natural: Number(image.getAttribute('width')) / Number(image.getAttribute('height')),
         title: box(slide.querySelector('h3')),

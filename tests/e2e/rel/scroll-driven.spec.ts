@@ -102,6 +102,123 @@ test.describe('013: animaciones guiadas por scroll', () => {
     expect(await scale(page, '[data-cw-heading-map] ol > li', 'x')).toEqual([1, 1, 1, 1])
   })
 
+  test('C2: en celular la imagen centrada está en 1 y la que llega crece durante el gesto', async ({ page }) => {
+    onlyIn('mobile-chromium')
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await open(page, '/es/portfolio')
+    const media = '[data-cw-slide-media]'
+    const state = () =>
+      page.locator(media).evaluateAll((nodes) =>
+        nodes.slice(0, 2).map((node) => {
+          const style = getComputedStyle(node)
+          return [Number(Number(style.opacity).toFixed(2)), Number(Number(style.scale).toFixed(2))]
+        }),
+      )
+    const track = page.locator('[data-cw-slide]').first().locator('..')
+    await track.scrollIntoViewIfNeeded()
+    await expect.poll(state).toEqual([
+      [1, 1],
+      [0.55, 0.92],
+    ])
+    await track.evaluate((node) => {
+      node.style.scrollSnapType = 'none'
+      node.scrollTo({ left: node.clientWidth / 2, behavior: 'instant' })
+    })
+    await expect
+      .poll(async () => {
+        const [current, next] = await state()
+        return current![0]! < 1 && next![0]! > 0.55 && next![1]! > 0.92
+      })
+      .toBe(true)
+    expect(await page.locator('[data-cw-slide]').first().locator('h3').evaluate((node) => getComputedStyle(node).opacity)).toBe('1')
+  })
+
+  test('C2 con movimiento reducido: la imagen no se anima', async ({ page }) => {
+    onlyIn('mobile-chromium')
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await open(page, '/es/portfolio')
+    const names = await page.locator('[data-cw-slide-media]').evaluateAll((nodes) => nodes.map((node) => getComputedStyle(node).animationName))
+    expect(new Set(names)).toEqual(new Set(['none']))
+  })
+
+  for (const lang of ['es', 'en'] as const) {
+    test(`C8 (${lang}): una flecha pasa del hero al panel, al pie y de regreso, y cada parada queda en 1`, async ({ page }) => {
+      onlyIn('desktop-chromium', 'mobile-chromium')
+      await page.emulateMedia({ reducedMotion: 'no-preference' })
+      await open(page, `/${lang}`)
+      const card = page.locator('[data-cw-home-banner] > [data-cw-glass]')
+      const panel = page.locator('[data-cw-home-now] > [data-cw-glass]')
+      const fade = (locator: typeof card) => locator.evaluate((node) => Number(Number(getComputedStyle(node).opacity).toFixed(2)))
+      const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight)
+      const panelStop = await panel.evaluate((node) => {
+        const padding = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)
+        return Math.round(node.getBoundingClientRect().top + window.scrollY - padding)
+      })
+      expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollSnapType)).toBe('y mandatory')
+      await expect.poll(() => fade(card)).toBe(1)
+      await page.locator('main').focus()
+      const press = async (key: 'ArrowDown' | 'ArrowUp', stop: number) => {
+        await page.keyboard.press(key)
+        await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 4000 }).toBe(stop)
+      }
+      await press('ArrowDown', panelStop)
+      await expect.poll(() => fade(panel)).toBe(1)
+      expect(await panel.evaluate((node) => Math.round(node.getBoundingClientRect().top))).toBeGreaterThan(0)
+      await press('ArrowDown', max)
+      await press('ArrowUp', panelStop)
+      await press('ArrowUp', 0)
+      await expect.poll(() => fade(card)).toBe(1)
+    })
+  }
+
+  test('C8: la tarjeta se aleja y el panel llega durante el paso', async ({ page }) => {
+    onlyIn('desktop-chromium', 'mobile-chromium')
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await open(page, '/es')
+    const midway = await page.evaluate(async () => {
+      document.documentElement.style.scrollSnapType = 'none'
+      const panel = document.querySelector('[data-cw-home-now] > [data-cw-glass]')!
+      const stop = panel.getBoundingClientRect().top + window.scrollY - 80
+      window.scrollTo({ top: stop / 2, behavior: 'instant' })
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      const card = getComputedStyle(document.querySelector('[data-cw-home-banner] > [data-cw-glass]')!)
+      return { card: Number(card.opacity), scale: Number(card.scale), panel: Number(getComputedStyle(panel).opacity) }
+    })
+    expect(midway.card).toBeLessThan(1)
+    expect(midway.scale).toBeLessThan(1)
+    expect(midway.panel).toBeGreaterThan(0.35)
+    expect(midway.panel).toBeLessThan(1)
+  })
+
+  test('C8: si el hero no cabe, se recorre libre hasta ver la tarjeta completa', async ({ page }) => {
+    onlyIn('mobile-chromium')
+    await page.setViewportSize({ width: 375, height: 600 })
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await open(page, '/es')
+    const bottom = await page.evaluate(async () => {
+      const card = document.querySelector('[data-cw-home-banner] > [data-cw-glass]')!
+      const padding = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom)
+      const target = card.getBoundingClientRect().bottom + window.scrollY - (window.innerHeight - padding)
+      window.scrollTo({ top: target, behavior: 'instant' })
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      return { card: card.getBoundingClientRect().bottom, limit: window.innerHeight - padding, y: window.scrollY, opacity: Number(getComputedStyle(card).opacity) }
+    })
+    expect(bottom.y).toBeGreaterThan(0)
+    expect(bottom.card).toBeLessThanOrEqual(bottom.limit + 1)
+    expect(bottom.opacity).toBeGreaterThan(0.9)
+  })
+
+  test('C8 con movimiento reducido: sin snap y sin animación', async ({ page }) => {
+    onlyIn('desktop-chromium', 'mobile-chromium')
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await open(page, '/es')
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollSnapType)).toBe('none')
+    const names = await page
+      .locator('[data-cw-home-banner] > [data-cw-glass], [data-cw-home-now] > [data-cw-glass]')
+      .evaluateAll((nodes) => nodes.map((node) => getComputedStyle(node).animationName))
+    expect(names).toEqual(['none', 'none'])
+  })
+
   test('la barra de lectura de Synergos se ve y avanza con movimiento reducido, sin brillo', async ({ page }) => {
     onlyIn('desktop-chromium', 'mobile-chromium')
     await page.emulateMedia({ reducedMotion: 'reduce' })
