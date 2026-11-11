@@ -54,14 +54,16 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.
 - [ ] R2.6 Post 2 (si el autor lo quiere en el release, D-R2).
 - [ ] R2.7 "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
+- [ ] R2.9 Botón de WhatsApp para que escriban directo al autor (pedido el 2026-11-11, para más adelante). El autor aprobó el 2026-11-11 que el número quede público (enlace `wa.me`). Falta que lo dé y decidir dónde va sin duplicar llamados (Contacto, pop-up de reclutadores o el botón flotante) y cómo se mide.
 - [ ] R2.8 Deuda vista al integrar R2.1 (falla igual sin la escena nueva): `tests/e2e/p2/brain-mobile.spec.ts:71` en celular. A 375 px el nombre de un lóbulo no cabe en su círculo, y a 390 y 412 px la lluvia del mapa queda desfasada unos 450 px del mapa tras abrir "Ver todas". Probable efecto del texto mínimo de 12 px (010). Revisar en R1.2.
 
 ## R3 — Specs abiertas y deuda
 - [ ] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734.
 - [ ] R3.2 002 T228.
+- [x] R3.3a `/blog/catalog` volvía 404 desde la 011 (el proxy lo trataba como post inexistente); corregido el 2026-11-11, y la prueba de anterior y siguiente pasa a post6.
 - [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP). Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir).
 - [ ] R3.4 Buzón para visitantes según D-R1.
-- [ ] R3.5 Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
+- [ ] R3.5 (C1, C4 y barras hechos el 2026-11-11; falta la captura al autor y C2) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 
 ## R4 — Endurecer
 - [ ] R4.1 Revisión de seguridad de lo nuevo.

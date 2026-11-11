@@ -49,10 +49,12 @@ $spine: 14px;
 }
 
 .routes {
+  --_base: color-mix(in srgb, var(--cw-graphic-accent) 60%, transparent);
   position: relative;
   display: grid;
   gap: var(--cw-space-3);
   padding: 0 0 0 calc(#{$spine} * 2);
+  background: linear-gradient(var(--_base), var(--_base)) no-repeat $spine 22px / 1px calc(100% - 44px);
   list-style: none;
 
   &::before {
@@ -60,10 +62,11 @@ $spine: 14px;
     position: absolute;
     top: 22px;
     bottom: 22px;
-    left: $spine;
-    width: 1px;
+    left: calc(#{$spine} - 0.5px);
+    width: 2px;
+    border-radius: 1px;
     background: var(--cw-graphic-accent);
-    opacity: 0.6;
+    transform-origin: 50% 0;
   }
 
   @include bp.up(lg) {
@@ -83,7 +86,8 @@ $spine: 14px;
 .route {
   position: relative;
 
-  &::before {
+  &::before,
+  &::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -92,6 +96,59 @@ $spine: 14px;
     height: 1px;
     background: var(--cw-graphic-accent);
     opacity: 0.6;
+  }
+
+  &::after {
+    top: calc(50% - 0.5px);
+    height: 2px;
+    opacity: 1;
+    transform-origin: 0 50%;
+  }
+
+  @for $i from 2 through 4 {
+    &:nth-child(#{$i}) {
+      --_step: #{$i - 1};
+    }
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .map {
+      view-timeline: --cw-heading-map block;
+    }
+
+    .routes::before {
+      animation: cw-route-spine linear both;
+      animation-timeline: --cw-heading-map;
+      animation-range: entry 5% entry 60%;
+    }
+
+    .route::after {
+      animation: cw-route-branch linear both;
+      animation-timeline: --cw-heading-map;
+      animation-range: entry calc(25% + var(--_step, 0) * 15%) entry calc(45% + var(--_step, 0) * 15%);
+    }
+  }
+}
+
+@keyframes cw-route-spine {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes cw-route-branch {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
   }
 }
 

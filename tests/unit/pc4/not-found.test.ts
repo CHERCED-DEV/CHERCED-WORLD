@@ -31,6 +31,17 @@ describe('idioma del 404 global (B6)', () => {
   })
 })
 
+describe('el 404 de posts no se lleva las páginas fijas del blog (012)', () => {
+  const rewrite = (url: string) => proxy(new NextRequest(url)).headers.get('x-middleware-rewrite') ?? ''
+
+  it('/blog/catalog se sirve y un post inexistente va al 404', () => {
+    for (const lang of ['es', 'en']) {
+      expect(rewrite(`https://cherced.test/${lang}/blog/catalog`)).not.toContain('__missing-content')
+      expect(rewrite(`https://cherced.test/${lang}/blog/no-existe`)).toContain('__missing-content')
+    }
+  })
+})
+
 describe('rutas inexistentes sin catch-all (B6)', () => {
   it('global-not-found está activo y la ruta comodín ya no existe', () => {
     expect(nextConfig.experimental?.globalNotFound).toBe(true)

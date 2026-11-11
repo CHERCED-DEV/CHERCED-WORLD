@@ -21,4 +21,9 @@
     background: blog.$accent-mix;
     box-shadow: 0 0 8px color-mix(in srgb, var(--cw-intro-accent) 40%, transparent);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    box-shadow: none;
+    will-change: auto;
+  }
 }

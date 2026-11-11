@@ -216,9 +216,9 @@ test.describe('anterior y siguiente', () => {
   })
 
   test('en los extremos solo aparece el lado que existe y siempre hay vuelta al índice', async ({ page }) => {
-    await page.goto('/en/blog/post5')
+    await page.goto('/en/blog/post6')
     await expect(page.locator('[data-cw-post-nav-link="next"]')).toHaveCount(0)
-    await expect(page.locator('[data-cw-post-nav-link="previous"]')).toHaveAttribute('href', '/en/blog/post4')
+    await expect(page.locator('[data-cw-post-nav-link="previous"]')).toHaveAttribute('href', '/en/blog/post5')
     await page.goto('/en/blog/post1')
     await expect(page.locator('[data-cw-post-nav-link="previous"]')).toHaveCount(0)
     await expect(page.locator('[data-cw-post-nav-link="next"]')).toHaveAttribute('href', '/en/blog/post2')

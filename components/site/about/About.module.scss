@@ -213,6 +213,95 @@
   }
 }
 
+$scene-timelines: (
+  who: --cw-scene-who,
+  career: --cw-scene-career,
+  knowledge: --cw-scene-knowledge,
+  heading: --cw-scene-heading,
+);
+
+@supports (animation-timeline: view()) and (timeline-scope: none) {
+  @media (prefers-reduced-motion: no-preference) {
+    .page {
+      timeline-scope: --cw-scene-who, --cw-scene-career, --cw-scene-knowledge, --cw-scene-heading;
+    }
+
+    .sceneLink {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: var(--cw-space-3);
+        bottom: 5px;
+        left: var(--cw-space-3);
+        height: 2px;
+        border-radius: 1px;
+        background: var(--cw-intro-accent);
+        transform-origin: 0 50%;
+        animation: cw-scene-fill linear both;
+        animation-range: contain;
+        pointer-events: none;
+      }
+    }
+
+    .sceneDot {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 29.5px;
+        right: 6.5px;
+        width: 2px;
+        height: 29px;
+        border-radius: 1px;
+        background: var(--cw-intro-accent);
+        transform-origin: 50% 0;
+        animation: cw-scene-thread linear both;
+        animation-range: contain;
+        pointer-events: none;
+      }
+
+      &:last-child::after {
+        display: none;
+      }
+    }
+
+    @each $scene, $timeline in $scene-timelines {
+      .page [data-cw-scene='#{$scene}'] {
+        view-timeline: #{$timeline} block;
+        view-timeline-inset: auto;
+      }
+
+      .sceneLink[data-cw-scene-link='scene-#{$scene}']::after,
+      .sceneDot[data-cw-scene-dot='scene-#{$scene}']::after {
+        animation-timeline: #{$timeline};
+      }
+    }
+  }
+}
+
+@keyframes cw-scene-fill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes cw-scene-thread {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
 .vitrine {
   position: relative;
   width: min(340px, 78vw);

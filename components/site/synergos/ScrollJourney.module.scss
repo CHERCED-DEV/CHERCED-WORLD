@@ -5,22 +5,22 @@
 .path { display: none; pointer-events: none; }
 
 @supports (animation-timeline: scroll()) and (animation-range: entry 0% cover 50%) {
-  @media (prefers-reduced-motion: no-preference) {
-    .progress {
-      display: block;
-      position: fixed;
-      inset: 0 0 auto;
-      width: 100%;
-      max-width: none;
-      height: 3px;
-      z-index: 100;
-      pointer-events: none;
-      background: var(--cw-accent);
-      transform-origin: left;
-      animation: reading linear both;
-      animation-timeline: scroll(root block);
-    }
+  .progress {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    height: 3px;
+    z-index: 100;
+    pointer-events: none;
+    background: var(--cw-accent);
+    transform-origin: left;
+    animation: reading linear both;
+    animation-timeline: scroll(root block);
+  }
 
+  @media (prefers-reduced-motion: no-preference) {
     .stage {
       view-timeline-name: --synergos-stage;
       view-timeline-axis: block;

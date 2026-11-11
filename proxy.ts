@@ -11,6 +11,8 @@ import {
   type Locale,
 } from '@/lib/i18n/config'
 
+const BLOG_PAGES = new Set(['catalog'])
+
 const BYPASS_PREFIXES = ['/_next', '/api', '/capsule']
 
 export function shouldBypass(pathname: string): boolean {
@@ -60,7 +62,7 @@ export function proxy(request: NextRequest): NextResponse {
       try { return decodeURIComponent(part) } catch { return part }
     })
     const missingProject = parts.length === 3 && parts[1] === 'portfolio' && !projects.some(project => project.id === parts[2])
-    const missingPost = parts.length === 3 && parts[1] === 'blog' && !Object.hasOwn(postRegistry, parts[2])
+    const missingPost = parts.length === 3 && parts[1] === 'blog' && !BLOG_PAGES.has(parts[2]) && !Object.hasOwn(postRegistry, parts[2])
     const missingTag = parts.length === 4 && parts[1] === 'blog' && parts[2] === 'tag' && (!findTag(parts[3]) || tagSlug(parts[3]) !== parts[3])
     const missing = missingProject || missingPost || missingTag
     const destination = request.nextUrl.clone()
