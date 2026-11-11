@@ -239,7 +239,7 @@ const milestones: ShowcaseMilestone[] = [
 ]
 
 export const synergosShowcase = {
-  countedAt: '2026-11-05',
+  countedAt: synergosFacts.countedAt,
   lines,
   milestones,
   gates: 92,

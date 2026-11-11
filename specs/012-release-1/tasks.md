@@ -53,7 +53,10 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   descripciones de Home (y del `Person`) y de Sobre mí suman "AI Engineer", "Armenia, Colombia" y Angular. El autor
   eligió no decir "desarrollador" en las descripciones para conservar la identidad de la 004. La tabla FR-860 suma
   Q14 a Q18 (enmienda en la spec 008).
-- [ ] R2.4 Cifras de Synergos al día (fase 2).
+- [x] R2.4 Cifras de Synergos al día (fase 2). Revisado el 2026-11-11: todas salen de `content/synergos.ts` (31
+  piezas, 20 capacidades, 9 orquestadores, más de 6.600 tests y más de 140 ADR, contados el 2026-11-05). La fecha de
+  la vitrina dejó de ser una copia, y una prueba vigila que el piso de tests no pase del conteo exacto (6.675). El
+  "2.353" del post 6 es la cifra fechada del 6 de agosto y el post ya dice "más de 6.600" para noviembre.
 - [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.
 - [ ] R2.6 Post 2 (si el autor lo quiere en el release, D-R2).
 - [ ] R2.7 "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.

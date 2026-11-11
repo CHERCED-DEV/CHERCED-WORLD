@@ -94,6 +94,15 @@ describe('hitos y cifras (FR-904)', () => {
     expect(SOURCE).toContain(`${lines.length} líneas con su spec`)
   })
 
+  it('R2.4: una sola fuente; la fecha del conteo es la de synergosFacts y el piso de tests no pasa del conteo exacto', () => {
+    expect(synergosShowcase.countedAt).toBe(synergosFacts.countedAt)
+    expect(synergosFacts.measuredAt).toBe(synergosFacts.countedAt)
+    expect(synergosFacts.testsAtLeast).toBeLessThanOrEqual(synergosShowcase.testsCounted)
+    expect(synergosShowcase.testsCounted - synergosFacts.testsAtLeast).toBeLessThan(100)
+    expect(synergosShowcase.backend).toEqual({ api: synergosFacts.capabilities, bff: synergosFacts.orchestrators })
+    expect([synergosFacts.pieces, synergosFacts.capabilities, synergosFacts.orchestrators]).toEqual([31, 20, 9])
+  })
+
   it('Sobre mí y la página dicen las mismas cifras de tests y ADR, medidas el mismo día (P-901)', () => {
     expect(synergosFacts.testsAtLeast).toBe(6600)
     expect(synergosFacts.adrsAtLeast).toBe(140)
