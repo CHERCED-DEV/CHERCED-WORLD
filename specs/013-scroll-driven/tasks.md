@@ -12,4 +12,5 @@
       el 2026-11-11.
 - [x] T1308 Pruebas e2e de C2 y C8: la imagen centrada en 1 y la que llega por debajo; las tres paradas del inicio
       con teclado; la tarjeta y el panel en 1 en cada parada; sin snap ni animación con movimiento reducido.
-- [ ] T1309 El autor prueba C2 en su teléfono y C8 con su mouse, su trackpad y su teléfono.
+- [x] T1309 El autor prueba C2 en su teléfono y C8 con su mouse, su trackpad y su teléfono. Aprobada el 2026-11-11:
+      "Quedan así".
