@@ -15,6 +15,18 @@ export function portfolioIntro(portfolio: SiteContent['portfolio'], lang: Locale
   return text.length > 0 ? text : null
 }
 
+export type Lede = { lede: string; rest: string }
+
+export function splitLede(text: string): Lede {
+  const match = /^(.+?[.!?])\s+(\S[\s\S]*)$/u.exec(text.trim())
+  return match ? { lede: match[1]!, rest: match[2]! } : { lede: text.trim(), rest: '' }
+}
+
+export function projectYears(list: readonly Pick<Project, 'era'>[]): { from: number; to: number } | null {
+  const years = list.flatMap((project) => (project.era.match(/\d{4}/g) ?? []).map(Number))
+  return years.length > 0 ? { from: Math.min(...years), to: Math.max(...years) } : null
+}
+
 export function toSlide(project: Project, lang: Locale): SlideProject {
   return {
     id: project.id,

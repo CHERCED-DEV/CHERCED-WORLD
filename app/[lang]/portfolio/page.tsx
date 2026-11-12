@@ -13,6 +13,7 @@ type Props = { params: LangParams }
 const EXPLORER_KEYS = {
   title: 'portfolio.title',
   projects: 'portfolio.projects',
+  eyebrow: 'portfolio.eyebrow',
   filter: 'portfolio.filter',
   filterAll: 'portfolio.filterAll',
   carousel: 'portfolio.carousel',

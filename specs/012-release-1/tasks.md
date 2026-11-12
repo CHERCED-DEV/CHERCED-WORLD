@@ -102,6 +102,27 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   con su marca (`cw-author`, la que deja el inicio de sesión), al panel. El panel sigue entrando por URL directa.
   Es el comportamiento de la T944 de la 007, que la 011 había cambiado.
 - [x] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; C2 y C8, el paso del hero a "Ahora trabajo en", hechos y aprobados el mismo día: "Quedan así", T1309) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
+- [x] R3.6 Diseño del inicio y del portafolio, ítems 1 a 5 de la auditoría de diseño del 2026-11-12 (pedido del autor:
+  "Limpia y sigue 1–5"). Hecho el mismo día, más el desborde P1 del blog en inglés:
+  - **1, vitrina en el inicio:** un panel "Proyectos destacados" debajo de "Ahora trabajo en", sin tocar el hero.
+    Usa el mismo cristal y el mismo encabezado. Trae los 3 primeros casos por orden sin Synergos ni los que ya
+    enlaza "Ahora trabajo en", y un enlace "Ver los 15 proyectos". En el celular son filas con miniatura y en
+    pantallas anchas, 3 columnas. C8 sigue con dos paradas: el snap del panel quedó solo en `.now .panel` y su
+    `scroll-margin-block-end` sube de 100rem a 300rem, porque debajo hay entre 1.230 y 1.360 px.
+  - **2, hero del portafolio:** como el de Synergos: "15 proyectos · 2022–2026" (se calcula de las épocas), la caja
+    PORTAFOLIO y la primera frase destacada con el resto atenuado (máx. 68ch). Se quitó la banda "PROYECTOS" y
+    el `h2` queda solo para lectores de pantalla. La primera tarjeta pasa de y≈1.167 a 607 en el celular a 390 y de
+    934 a 698 a 1440.
+  - **3, carrusel en el celular:** épocas y tecnologías en una sola fila deslizable y fija (61 px, antes 194). El
+    "Mostrando los 15 proyectos" sale de la parte fija, y la tarjeta mide 588 px y cabe entre la barra y el dock a
+    375, 390 y 412.
+  - **4, tablet:** la imagen y el texto se apilan hasta 992 px (`lg`), y el botón no pasa del ancho de la tarjeta.
+  - **5, carrusel:** todas las tarjetas miden lo mismo, la imagen va en una fila de alto fijo y el botón queda
+    abajo. Los puntos van dentro de la barra de controles y "¡Y muchos más por venir!" es una línea atenuada.
+  - **P1:** con `keepHyphens`, `typeset` dejaba entero "Spec-Driven Development" y el título de post4 se salía a
+    375. Ahora solo "Spec-Driven" queda sin cortar.
+  Quedan para que el autor decida: los ítems 6 a 12 (el 7 y el 11 necesitan su texto), y si el blog adopta la
+  navegación estándar (A o B) y se quitan los enlaces de temas del hero del AI Lab.
 
 ## R4 — Endurecer
 - [x] R4.1 Revisión de seguridad de lo nuevo. La revisión (solo lectura) terminó el 2026-11-11: no hay nada alto.

@@ -36,6 +36,7 @@
   "services.explore": "Explorar",
   "portfolio.title": "Portafolio",
   "portfolio.projects": "Proyectos",
+  "portfolio.eyebrow": "{count} proyectos · {from}–{to}",
   "portfolio.filter": "Filtrar por tecnología",
   "portfolio.filterAll": "Todos",
   "portfolio.carousel": "Proyectos",

@@ -5,7 +5,7 @@ import { locales, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
 const root = process.cwd()
-const KEYS = ['hero.cue', 'now.caseStudy', 'now.more', 'now.since', 'now.title']
+const KEYS = ['featured.all', 'featured.title', 'featured.viewCase', 'hero.cue', 'now.caseStudy', 'now.more', 'now.since', 'now.title']
 
 function own(lang: Locale): Record<string, string> {
   return JSON.parse(readFileSync(join(root, 'content', 'i18n', lang, 'home.json'), 'utf8')) as Record<string, string>
@@ -29,6 +29,7 @@ describe('namespace home', () => {
     const en = own('en')
     for (const key of KEYS) expect(en[key], key).not.toBe(es[key])
     for (const dict of [es, en]) expect(dict['now.since']).toContain('{date}')
+    for (const dict of [es, en]) expect(dict['featured.all']).toContain('{count}')
   })
 
   it('la señal del hero nombra el bloque al que baja', () => {

@@ -3,6 +3,7 @@ import { BackgroundIntensity } from '@/components/motion'
 import { HomeView } from '@/components/site/home/HomeView'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
+import { eraLabels } from '@/components/site/portfolio/labels'
 import { architecture } from '@/content/synergos-architecture'
 import { synergosShowcase } from '@/content/synergos-showcase'
 import { getProjects, getSite } from '@/lib/content'
@@ -49,6 +50,12 @@ export default async function HomePage({ params }: Props) {
             more: t(home, 'now.more'),
             showcase: synergosShowcase.copy.cta[lang],
             inside: architecture.copy.title[lang],
+          },
+          featured: {
+            title: t(home, 'featured.title'),
+            viewCase: t(home, 'featured.viewCase'),
+            all: t(home, 'featured.all'),
+            eras: eraLabels(dict),
           },
         }}
       />

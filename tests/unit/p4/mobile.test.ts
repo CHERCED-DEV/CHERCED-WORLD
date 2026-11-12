@@ -63,6 +63,7 @@ async function explorerLabels(lang: 'es' | 'en'): Promise<PortfolioViewProps['la
   const keys = {
     title: 'portfolio.title',
     projects: 'portfolio.projects',
+    eyebrow: 'portfolio.eyebrow',
     filter: 'portfolio.filter',
     filterAll: 'portfolio.filterAll',
     carousel: 'portfolio.carousel',

@@ -137,7 +137,8 @@ test.describe('filtros sticky con conteo (T842, US12 escenario 2)', () => {
       const start = (await box(filters)).y + (await page.evaluate(() => window.scrollY))
       await page.evaluate((top) => window.scrollTo({ top: top + 400, behavior: 'instant' }), start)
       await expect.poll(async () => Math.abs((await box(filters)).y - (await headerBottom(page)))).toBeLessThanOrEqual(1)
-      await expect(count).toBeInViewport()
+      expect((await box(filters)).height, 'R3.6 (auditoría 3): épocas y tecnologías en una sola fila').toBeLessThanOrEqual(72)
+      await expect(filters.locator('[data-cw-filter-count]'), 'el conteo ya no va en la parte fija').toHaveCount(0)
       await expect(page.locator('[data-cw-era-filter="2024-2026"]')).toBeInViewport()
 
       await page.locator('[data-cw-era-filter="2024-2026"]').tap()

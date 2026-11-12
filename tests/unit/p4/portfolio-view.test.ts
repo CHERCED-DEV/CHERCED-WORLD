@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { eraLabels } from '@/components/site/portfolio/labels'
 import { PortfolioView, type PortfolioViewProps } from '@/components/site/portfolio/PortfolioView'
+import { projectYears, splitLede } from '@/components/site/portfolio/projects'
 import { getAllTechnologies, getProjects, getSite } from '@/lib/content'
 import { locales, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
@@ -12,6 +13,7 @@ const projects = getProjects()
 const KEYS = {
   title: 'portfolio.title',
   projects: 'portfolio.projects',
+  eyebrow: 'portfolio.eyebrow',
   filter: 'portfolio.filter',
   filterAll: 'portfolio.filterAll',
   carousel: 'portfolio.carousel',
@@ -49,6 +51,24 @@ describe('portafolio en el HTML del servidor (US1, US4)', () => {
     const intro = [...html.matchAll(/<p[^>]*data-cw-portfolio-intro=""[^>]*>([\s\S]*?)<\/p>/g)]
     expect(intro).toHaveLength(1)
     expect(intro[0]![1]).toContain(lang === 'es' ? 'Aquí está mi camino completo.' : 'This is my full path.')
+  })
+
+  it.each(locales)('el hero compacto trae la cuenta y los años, la primera frase destacada y ninguna banda (%s)', async (lang) => {
+    const html = await render(lang)
+    const eyebrow = html.match(/data-cw-portfolio-eyebrow=""[^>]*>([^<]+)</)?.[1]
+    expect(eyebrow).toBe(lang === 'es' ? `${projects.length} proyectos · 2022–2026` : `${projects.length} projects · 2022–2026`)
+    expect(html).toMatch(/data-cw-portfolio-intro=""[^>]*><span class="[^"]*">(Aquí está mi camino completo\.|This is my full path\.)<\/span> /)
+    expect(html).not.toContain('data-cw-portfolio-band')
+    expect(html).toMatch(/<h2 id="portfolio-projects" class="cw-visually-hidden">/)
+    expect(html).toMatch(/<p [^>]*data-cw-portfolio-more=""[^>]*>/)
+    expect(html.match(/<p [^>]*data-cw-portfolio-more=""[^>]*>/)?.[0]).not.toContain('data-cw-glass')
+  })
+
+  it('separa la primera frase y calcula los años de las épocas', () => {
+    expect(splitLede('Uno. Dos y tres.')).toEqual({ lede: 'Uno.', rest: 'Dos y tres.' })
+    expect(splitLede('Sin punto final')).toEqual({ lede: 'Sin punto final', rest: '' })
+    expect(projectYears(projects)).toEqual({ from: 2022, to: 2026 })
+    expect(projectYears([])).toBeNull()
   })
 
   it.each(locales)('pinta los 15 casos en orden, cada uno con su época (%s)', async (lang) => {

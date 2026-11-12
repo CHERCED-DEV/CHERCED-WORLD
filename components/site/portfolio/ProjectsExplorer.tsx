@@ -265,10 +265,10 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
           </div>
         </div>
       </div>
+      </div>
       <p className={cx('cw-js-only', styles.filterCount)} data-cw-filter-count="">
         {summary(total, tech, era)}
       </p>
-      </div>
 
       <p id={hintId} className="cw-visually-hidden">
         {labels.carouselHint}
@@ -373,20 +373,21 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
         })}
       </div>
 
-      {total > 1 ? (
-        <ol className={cx('cw-js-only', styles.dots)} aria-hidden="true" data-cw-carousel-dots="">
-          {visible.map((project, position) => (
-            <li key={project.id} className={styles.dot} data-current={position === index ? '' : undefined} />
-          ))}
-        </ol>
-      ) : null}
-
       <div className={cx('cw-js-only', styles.controls)} data-cw-glass="strong">
         <button type="button" className={styles.control} aria-label={labels.prev} onClick={() => goTo(index - 1)} data-cw-prev="">
           <span aria-hidden="true">&lt;</span>
         </button>
-        <span className={styles.counter} aria-hidden="true">
-          {total > 0 ? `${index + 1} / ${total}` : ''}
+        <span className={styles.position}>
+          <span className={styles.counter} aria-hidden="true">
+            {total > 0 ? `${index + 1} / ${total}` : ''}
+          </span>
+          {total > 1 ? (
+            <ol className={styles.dots} aria-hidden="true" data-cw-carousel-dots="">
+              {visible.map((project, position) => (
+                <li key={project.id} className={styles.dot} data-current={position === index ? '' : undefined} />
+              ))}
+            </ol>
+          ) : null}
         </span>
         <button type="button" className={styles.control} aria-label={labels.next} onClick={() => goTo(index + 1)} data-cw-next="">
           <span aria-hidden="true">&gt;</span>

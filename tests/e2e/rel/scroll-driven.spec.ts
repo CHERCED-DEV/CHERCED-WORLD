@@ -202,7 +202,12 @@ test.describe('013: animaciones guiadas por scroll', () => {
       expect(free, 'bajo el panel una flecha avanza un paso, no salta al pie').toBeGreaterThan(panelStop)
       expect(free).toBeLessThanOrEqual(panelStop + 100)
       await press('End', max)
-      await press('PageUp', panelStop)
+      let up = max
+      for (let page_ = 0; page_ < 12 && up > panelStop; page_++) {
+        await page.keyboard.press('PageUp')
+        up = await c8Rest(page)
+      }
+      expect(up, 'subiendo por páginas desde el pie, la última parada es el panel').toBe(panelStop)
       await press('ArrowUp', 0)
       await expect.poll(() => fade(card)).toBe(1)
     })

@@ -59,6 +59,11 @@ cercana y no reproduce el mouse. A 1280×800 las paradas eran hero 0, panel 804 
   holgura si el pie crece.
 - El panel lleva `scroll-snap-stop: always`: un flick de dedo o de trackpad desde el hero, o `PageUp` desde el pie, no
   pasan de largo el panel.
+- **Actualización del 2026-11-12 (R3.6, vitrina "Proyectos destacados"):** debajo del panel ahora hay otro panel con
+  la misma clase `.panel`. El snap quedó en `.now .panel` para que la vitrina no sea una tercera parada, y el margen
+  sube a `300rem` (4.800 px), porque del borde inferior del panel al final hay entre 1.230 px (768) y 1.360 px (375 y
+  1440). En la prueba, `PageUp` desde el pie ya no llega al panel de un golpe: sube por páginas y la última parada
+  es el panel.
 - No cambia nada visual, ni el banner, ni las animaciones, ni el movimiento reducido.
 
 ## Lo que el CSS no puede arreglar (límites de Chromium)

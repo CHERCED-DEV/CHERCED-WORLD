@@ -98,3 +98,42 @@ describe('plantilla de fecha', () => {
     expect(splitAround('Desde', 'date')).toEqual(['Desde ', ''])
   })
 })
+
+describe('vitrina de proyectos del home (auditoría 1)', () => {
+  const featured = {
+    ...labels,
+    featured: {
+      title: 'Proyectos destacados',
+      viewCase: 'Ver caso',
+      all: 'Ver los {count} proyectos',
+      eras: { '2026': '2026', '2024-2026': '2024–2026', '2022-2023': '2022–2023' },
+    },
+  } satisfies HomeViewLabels
+
+  function renderFeatured(): string {
+    return renderToStaticMarkup(
+      createElement(Provider, { closeLabel: 'Cerrar' }, createElement(HomeView, { lang: 'es', site, projects, labels: featured })),
+    )
+  }
+
+  it('va después de «Ahora trabajo en» con tres casos que no repiten Synergos y un enlace al portafolio', () => {
+    const html = renderFeatured()
+    expect(html.indexOf('data-cw-home-featured')).toBeGreaterThan(html.indexOf('data-cw-home-now'))
+    const block = section(html, 'data-cw-home-featured')
+    expect(block).toMatch(/<h2 id="home-featured-title"[^>]*>Proyectos destacados<\/h2>/)
+    const cases = [...block.matchAll(/data-cw-home-case="([^"]+)"/g)].map((match) => match[1])
+    const expected = [...projects].sort((a, b) => a.order - b.order).filter((project) => project.id !== '12').slice(0, 3)
+    expect(cases).toEqual(expected.map((project) => project.id))
+    for (const id of cases) expect(block).toContain(`href="/es/portfolio/${id}"`)
+    expect(block).not.toContain('href="/es/portfolio/12"')
+    const all = block.match(/<a [^>]*data-cw-home-link="portfolio"[^>]*>[\s\S]*?<\/a>/)?.[0] ?? ''
+    expect(all).toContain('href="/es/portfolio"')
+    expect(all).toContain('Ver los 15 proyectos')
+  })
+
+  it('sin las etiquetas no aparece, y el carril de «Ahora trabajo en» sigue igual', () => {
+    const html = render()
+    expect(html).not.toContain('data-cw-home-featured')
+    expect([...section(html, 'data-cw-home-now').matchAll(/data-cw-home-link="case"/g)]).toHaveLength(1)
+  })
+})

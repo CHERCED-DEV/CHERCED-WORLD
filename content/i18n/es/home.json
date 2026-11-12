@@ -3,5 +3,8 @@
   "now.title": "Ahora trabajo en",
   "now.since": "Desde {date}",
   "now.caseStudy": "Ver caso de estudio",
-  "now.more": "Conoce mi trayectoria"
+  "now.more": "Conoce mi trayectoria",
+  "featured.title": "Proyectos destacados",
+  "featured.viewCase": "Ver caso",
+  "featured.all": "Ver los {count} proyectos"
 }
