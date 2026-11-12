@@ -6,6 +6,7 @@ export const FRAMES = 4
 export const MAX_SCROLL_STEPS = 20
 export const FREEZE_STYLE = '*,*::before,*::after{transition:none!important}'
 const HIDE_TEXT_ID = 'cw-contrast-hide-text'
+const SETTLE_MS = 450
 
 type TextSample = {
   text: string
@@ -155,6 +156,7 @@ export async function auditContrast(page: Page, route: string): Promise<{ minimu
   const step = await page.evaluate(() => window.innerHeight - 80)
   for (let top = 0, i = 0; i < MAX_SCROLL_STEPS; top += step, i++) {
     await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top)
+    await page.waitForTimeout(SETTLE_MS)
     minimum = Math.min(minimum, await auditViewport(page, route, failures))
     audited += 1
     if (top + step >= total) break

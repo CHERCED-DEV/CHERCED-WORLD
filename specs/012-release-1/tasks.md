@@ -181,6 +181,28 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [x] R4.5 P2 de la exhaustiva (2026-11-12): sin JS, en Contacto el bloque para reclutadores quedaba dentro de un
   `<noscript>` de 50 px en la columna centrada, y "Perfil de LinkedIn" desbordaba a 375, 390 y 412 px. El
   `<noscript>` ahora ocupa todo el ancho de la columna (`PageSection.module.scss`).
+- [x] R4.6 Volver arriba al cambiar de página (pedido del autor, 2026-11-12: "estoy en el footer, le doy a Now o a IA
+  Lab y él no me devuelve hasta la parte de arriba"). Pasaba en las páginas con la pestaña de navegación (Now, AI Lab,
+  Servicios, casos y Synergos), no en Privacidad. Dos causas:
+  - La pestaña sticky era el primer hijo de la página y su `scroll-padding-top` la dejaba "fuera" del área útil.
+    Next llamaba `scrollIntoView` sobre cada hijo del fragmento, y en la pestaña sticky eso devolvía la página al
+    final. Ahora `SectionNav` recibe la página como `children` y todo va en un solo `<div data-cw-section-page>`, como
+    ya hacía Sobre mí.
+  - `html` tiene `scroll-behavior: smooth`, y sin `data-scroll-behavior="smooth"` Next no lo apaga al navegar: subía
+    animando casi 1,5 s desde el pie. Se agregó el atributo en `app/[lang]/layout.tsx`.
+  Medido en 22 navegaciones (escritorio y celular, desde el pie y desde el menú): todas quedan en 0. La prueba está
+  en `tests/e2e/rel/volver-arriba.spec.ts`.
+- [x] R4.7 Hallazgos de la exhaustiva (2026-11-12):
+  - **N1:** el contraste de la pestaña en tema oscuro era un falso positivo. `auditContrast` medía justo después de
+    hacer scroll; la pestaña se escondía al llegar al pie y su texto quedaba medido contra el contenido de abajo.
+    Ahora espera 450 ms después de cada scroll (`tests/e2e/integration/support/contrast.ts`).
+  - **P3:** "Proyectos destacados" se veía atenuado mientras entraba, por `cw-home-arrive`. Esa animación quedó solo
+    en el panel de "Ahora trabajo en".
+  - **P4:** a 320 px, la fecha de la respuesta del autor a un comentario se salía. `.meta` ahora hace
+    `flex-wrap`.
+  - El INP de los lóbulos de `/es/aboutMe` a 375 px era carga: con la máquina libre pasó 9 de 9.
+  - FR-320: la prueba del laboratorio permite solo el GET de `/api/search-vectors/{lang}`, que no envía datos del
+    visitante. Es una decisión técnica de la sesión principal, pendiente del visto bueno del autor.
 
 ## R5 — Publicar
 - [ ] R5.1 Confirmación del autor y `dev` → `main`.

@@ -40,8 +40,6 @@ release lleva a producción todo lo que hay en `dev`: las specs 001 a 015, en m�
 
 ## Conocido, para después del release
 
-- La suite exhaustiva está verificando el tiempo de respuesta al tocar los lóbulos de `/es/aboutMe` a 375 px con la
-  CPU 4 veces más lenta: dio 370 ms contra un tope de 200 ms.
 - Ítems 6 a 12 de la auditoría de diseño. El 7 y el 11 necesitan el texto del autor.
 - Decidir si se quitan los enlaces de temas del hero del AI Lab, que repiten la pestaña.
 - R5.3: dominio, Search Console, Bing, enlaces y medición.

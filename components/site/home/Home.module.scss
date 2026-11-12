@@ -515,7 +515,7 @@
         animation-range: exit-crossing 30% exit-crossing 100%;
       }
 
-      .panel {
+      .now .panel {
         animation: cw-home-arrive linear both;
         animation-timeline: view(auto);
         animation-range: entry 0% entry 80%;
