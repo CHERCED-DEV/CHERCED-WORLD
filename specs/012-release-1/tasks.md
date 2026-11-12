@@ -97,8 +97,28 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [x] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; C2 y C8, el paso del hero a "Ahora trabajo en", hechos y aprobados el mismo día: "Quedan así", T1309) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 
 ## R4 — Endurecer
-- [ ] R4.1 Revisión de seguridad de lo nuevo. En curso el 2026-11-11, de solo lectura: el informe se anota aquí
-  cuando termine. Si no quedó anotado, hay que repetirla mañana.
+- [ ] R4.1 Revisión de seguridad de lo nuevo. La revisión (solo lectura) terminó el 2026-11-11: no hay nada alto.
+  Arreglos por hacer, en este orden:
+  - **M1 (media):** cambiar la contraseña no cierra las otras sesiones del panel. Además, una sesión que se usa cada
+    12 h no vence nunca (`lib/actions/auth.ts:124`, `lib/auth/guard.ts:48-52`, `lib/auth/session.ts:59-61`).
+    Arreglo: `deleteAllSessions()` en el repo, y en `changePassword` borrar todas e iniciar una nueva. Opcional:
+    tope absoluto desde `createdAt`.
+  - **B2:** `/api/admin/updates` devuelve los registros completos. El sondeo solo usa `id` y `updatedAt`, así que
+    `changedSince` debe traer solo eso (`lib/data/mongo/messages.ts:70-75`, `comments.ts:92-97`).
+  - **B1:** no hay cabeceras de seguridad. Agregar `headers()` en `next.config.ts` con `frame-ancestors 'none'`,
+    `base-uri 'self'`, `object-src 'none'`, `nosniff`, `Referrer-Policy` y `Permissions-Policy`, sin `script-src`
+    estricto (los scripts inline lo impiden sin nonces).
+  - **B5:** el antispam del contacto acepta un `renderedAt` futuro o muy viejo (`lib/security/anti-spam.ts:21-26`).
+    Rechazarlos y firmar el valor con `hmacHex`.
+  - **B7:** subir scrypt de N=2^15 a 2^17 (`lib/auth/password.ts:5`); los hashes viejos siguen validando.
+  - Se aceptan o quedan para después:
+    - B3: Pyodide desde jsDelivr sin verificar integridad; B2 reduce el riesgo.
+    - B4: el límite por IP no agrupa IPv6 por /64.
+    - B6: cualquiera puede restar reacciones; es un contador decorativo.
+  Bien hechos: la sesión (token de 32 bytes con hash, cookie httpOnly/secure/lax), scrypt con comparación en tiempo
+  constante, el setup con código de un solo uso, `requireAdmin` en cada acción, zod con límites, el escape del
+  resaltado de código y del JSON-LD, y los workers del AI Lab solo después del consentimiento. Las rutas API
+  heredadas responden 410.
 - [ ] R4.2 Rendimiento, accesibilidad, sin JS y SEO en la vista previa. Barrido del 2026-11-11: se revisaron con curl
   las 92 URLs del sitemap de la vista previa n2un7d4fo. Están limpios el código 200, `lang`, un `h1`, los títulos,
   las descripciones, las canónicas, el `hreflang`, el JSON-LD, los `alt`, el contenido sin JS y 131 de 133 enlaces.
