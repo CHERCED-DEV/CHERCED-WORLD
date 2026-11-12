@@ -28,6 +28,10 @@
   align-items: center;
   gap: var(--cw-space-6);
   text-align: center;
+
+  > noscript {
+    align-self: stretch;
+  }
 }
 
 .title {
