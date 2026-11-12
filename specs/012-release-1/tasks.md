@@ -149,8 +149,9 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
      administrador. Está protegido por el código de un solo uso de los logs, pero el ícono del buzón lleva ahí.
   Rendimiento: las 16 pruebas de rendimiento pasan con la GPU (R3.3). Accesibilidad: falta la corrida completa de
   la exhaustiva (R4.3).
-- [ ] R4.3 Suite exhaustiva en verde con la máquina libre. **Decisión del autor del 2026-11-12: se corre al final, justo
-  antes de R5.** Mientras tanto, unitarias más las e2e de lo que se toca. La corrida completa quedó lanzada el 2026-11-11 sobre
+- [ ] R4.3 Suite exhaustiva en verde con la máquina libre. **Decisión del autor del 2026-11-12: se corre, pero NO bloquea
+  el release.** Corre en paralelo (sesión aparte), y lo que encuentre se arregla después de publicar. Para el release
+  bastan las unitarias, lint y typecheck (que Vercel corre antes de compilar) más las e2e de lo que se toca. La corrida completa quedó lanzada el 2026-11-11 sobre
   c79606b (3 workers). Si su resultado no quedó anotado aquí, hay que relanzarla mañana con
   `E2E_TIER=exhaustive E2E_PORT=3200 npx playwright test --workers=3`.
 - [ ] R4.4 Notas del release y QA final del autor.
