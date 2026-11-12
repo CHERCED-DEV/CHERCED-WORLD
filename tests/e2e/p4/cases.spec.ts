@@ -425,6 +425,14 @@ test.describe('accesibilidad de lo nuevo', () => {
   onlyIn('desktop-chromium', 'mobile-chromium')
 
   async function scan(page: Page, label: string) {
+    await page.locator('#main').evaluate((root) =>
+      Promise.all(
+        root
+          .getAnimations({ subtree: true })
+          .filter((animation) => animation.timeline instanceof DocumentTimeline && animation.effect?.getComputedTiming().iterations !== Infinity)
+          .map((animation) => animation.finished.catch(() => undefined)),
+      ),
+    )
     const results = await new AxeBuilder({ page }).include('#main').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze()
     const blocking = results.violations
       .filter((violation) => violation.impact === 'critical' || violation.impact === 'serious')

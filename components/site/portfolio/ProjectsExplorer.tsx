@@ -51,6 +51,7 @@ export type ProjectsExplorerProps = {
 }
 
 const SETTLE_MS = 120
+const HEADING_MS = 1500
 const VISIBLE_CHIPS = 4
 
 function scrollBehavior(): ScrollBehavior {
@@ -67,6 +68,7 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
   const railRef = useRef<HTMLUListElement>(null)
   const indexRef = useRef(0)
   const settleRef = useRef<number | undefined>(undefined)
+  const headingRef = useRef<{ target: number; until: number } | null>(null)
   const uid = useId().replace(/:/g, '')
   const hintId = `${uid}-hint`
   const filterId = `${uid}-filter`
@@ -104,7 +106,9 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
       select(next)
       const track = trackRef.current
       const slide = track?.children[next] as HTMLElement | undefined
-      if (track && slide) track.scrollTo({ left: slide.offsetLeft, behavior: scrollBehavior() })
+      if (!track || !slide) return
+      headingRef.current = { target: next, until: performance.now() + HEADING_MS }
+      track.scrollTo({ left: slide.offsetLeft, behavior: scrollBehavior() })
     },
     [select, total],
   )
@@ -124,6 +128,11 @@ export function ProjectsExplorer({ projects, technologies, labels }: ProjectsExp
       const slides = track.children
       const step = slideStep((slides[0] as HTMLElement | undefined)?.offsetLeft, (slides[1] as HTMLElement | undefined)?.offsetLeft, track.clientWidth)
       const next = nearestIndex(track.scrollLeft, step, total)
+      const heading = headingRef.current
+      if (heading) {
+        if (next !== heading.target && performance.now() < heading.until) return
+        headingRef.current = null
+      }
       if (next !== indexRef.current) select(next)
     }, SETTLE_MS)
   }

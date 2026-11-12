@@ -2,7 +2,7 @@ import { test, type Locator, type Page, type TestInfo } from '@playwright/test'
 import {
   INTEGRATED,
   LANGS,
-  SOON,
+  GAMES,
   attachShot,
   blockHeavy,
   card,
@@ -44,7 +44,7 @@ function sizesFor(project: string): Size[] {
   return DESKTOP
 }
 
-const ALL_CARDS: CardId[] = [...INTEGRATED, ...SOON]
+const ALL_CARDS: CardId[] = [...INTEGRATED, ...GAMES]
 
 async function openDisclosures(page: Page, id: CardId): Promise<void> {
   for (const part of ['how', 'code']) {
@@ -126,7 +126,7 @@ test.describe('T763 · la página entera de /ai-lab, de 320 a 2560 px: sin scrol
       if (javaScriptOn(testInfo)) {
         await blockHeavy(context)
         await open(page, lang)
-        for (const id of SOON) await openDemo(page, id)
+        for (const id of GAMES) await openDemo(page, id)
       } else {
         await page.goto(`/${lang}/ai-lab`)
       }
@@ -150,7 +150,7 @@ test.describe('T763 · la página entera de /ai-lab, de 320 a 2560 px: sin scrol
     await fakeSpeech(page)
     await open(page, 'en')
     for (const id of INTEGRATED) await prepareDemo(page, id, 'en')
-    for (const id of SOON) await openDemo(page, id)
+    for (const id of GAMES) await openDemo(page, id)
     const problems: string[] = []
     for (const size of sizes) {
       await page.setViewportSize(size)

@@ -4,7 +4,7 @@ import {
   COPY,
   INTEGRATED,
   LANGS,
-  SOON,
+  GAMES,
   answerConsent,
   blockHeavy,
   card,
@@ -55,7 +55,7 @@ test.describe('T762 · axe en la página y con cada experimento abierto, en tema
         await open(page, lang)
         await expect(page.locator('html')).toHaveAttribute('data-theme', scheme)
         for (const id of INTEGRATED) await prepareDemo(page, id, lang)
-        for (const id of SOON) await expect((await openDemo(page, id)).locator('[data-cw-lab-soon]')).toBeVisible()
+        for (const id of GAMES) await expect((await openDemo(page, id)).locator('[data-cw-rally][data-ready]')).toBeVisible({ timeout: 30_000 })
         const found: Record<string, string[]> = {}
         found['demos abiertas'] = await serious(page, { include: ['#main'] })
         expect(found).toEqual(Object.fromEntries(Object.keys(found).map((key) => [key, []])))

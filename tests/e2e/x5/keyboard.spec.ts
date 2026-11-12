@@ -3,7 +3,7 @@ import {
   COPY,
   INTEGRATED,
   LANGS,
-  SOON,
+  GAMES,
   blockHeavy,
   card,
   consent,
@@ -71,6 +71,17 @@ async function checkRing(page: Page, rings: string[]): Promise<void> {
   const focus = await focusNow(page)
   expect(focus.body, 'el foco no se pierde en <body>').toBe(false)
   if (!focus.ring) rings.push(focus.what)
+}
+
+async function playRally(page: Page, stage: Locator, rings: string[]): Promise<void> {
+  await expect(stage.locator('[data-cw-rally][data-ready]')).toBeVisible({ timeout: 30_000 })
+  const court = stage.locator('[data-cw-rally-court]')
+  await tabTo(page, court, rings)
+  await expect(court).toHaveAttribute('data-state', 'paused')
+  await page.keyboard.press('Space')
+  await expect(court).toHaveAttribute('data-state', 'running')
+  await page.keyboard.press('Space')
+  await expect(court).toHaveAttribute('data-state', 'paused')
 }
 
 type Flow = (args: { page: Page; stage: Locator; lang: Lang; rings: string[] }) => Promise<void>
@@ -201,13 +212,11 @@ const FLOWS: Record<CardId, Flow> = {
     await expect(stage.locator('[data-cw-obra-status="declined"]')).toBeVisible()
     if (!(await isFocused(run))) await run.focus()
   },
-  J1: async ({ stage, lang }) => {
-    await expect(stage.locator('[data-cw-lab-soon]')).toHaveText(COPY[lang]['ailab.try.soon'])
-    await expect(stage.locator('[data-cw-lab-soon]')).toContainText(lang === 'es' ? 'pronto' : 'soon')
+  J1: async ({ page, stage, rings }) => {
+    await playRally(page, stage, rings)
   },
-  J2: async ({ stage, lang }) => {
-    await expect(stage.locator('[data-cw-lab-soon]')).toHaveText(COPY[lang]['ailab.try.soon'])
-    await expect(stage.locator('[data-cw-lab-soon]')).toContainText(lang === 'es' ? 'pronto' : 'soon')
+  J2: async ({ page, stage, rings }) => {
+    await playRally(page, stage, rings)
   },
 }
 
@@ -490,7 +499,7 @@ test.describe('T764 · con movimiento reducido no hay animaciones en los experim
       await v1.locator('[data-cw-v1-record]').click()
       await expect(v1.locator('[data-cw-v1-record="idle"]')).toBeVisible()
 
-      for (const id of SOON) {
+      for (const id of GAMES) {
         await openDemo(page, id)
         found[id] = await motionIn(card(page, id))
       }

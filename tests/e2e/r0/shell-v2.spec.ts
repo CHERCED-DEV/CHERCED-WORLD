@@ -30,8 +30,14 @@ async function skipIntro(page: Page) {
 }
 
 async function scrollToEnd(page: Page) {
-  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }))
-  await expect.poll(() => page.evaluate(() => window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2)).toBe(true)
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' })
+        return window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2
+      }),
+    )
+    .toBe(true)
 }
 
 const scrollY = (page: Page) => page.evaluate(() => Math.round(window.scrollY))
