@@ -2,7 +2,7 @@
 
 import '@/lib/data/mongo/register'
 import { redirect } from 'next/navigation'
-import { rotateSession, signIn, signOut, requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
+import { endAllSessions, signIn, signOut, requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
 import { burnPasswordCheck, hashPassword, verifyPassword } from '@/lib/auth/password'
 import { changePasswordSchema, loginSchema } from '@/lib/auth/schemas'
 import { verifySetupCode } from '@/lib/auth/setup'
@@ -121,7 +121,7 @@ export async function changePassword(_prev: ActionResult | null, formData: FormD
     const next = await hashPassword(parsed.data.password, now)
     await repos.admin.updateCredential({ ...next, createdAt: credential.createdAt })
     await resetRateLimit(repos.rateLimits, 'login', ip)
-    await rotateSession(now)
+    await endAllSessions(now)
     return ok()
   } catch (error) {
     logServerError('auth.changePassword', error)

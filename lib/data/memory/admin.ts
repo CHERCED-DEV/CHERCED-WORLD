@@ -44,5 +44,8 @@ export function createMemoryAdminRepo(): AdminRepo {
     async deleteSession(tokenHash) {
       sessions.delete(tokenHash)
     },
+    async deleteAllSessions() {
+      sessions.clear()
+    },
   }
 }

@@ -78,5 +78,8 @@ export function createMongoAdminRepo(db: DbProvider): AdminRepo {
     async deleteSession(tokenHash) {
       await (await sessionsCollection(db)).deleteOne({ _id: tokenHash })
     },
+    async deleteAllSessions() {
+      await (await sessionsCollection(db)).deleteMany({})
+    },
   }
 }

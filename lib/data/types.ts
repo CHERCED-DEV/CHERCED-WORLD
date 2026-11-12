@@ -99,6 +99,8 @@ export function emptyReactionCounts(): ReactionCounts {
 
 export const SESSION_IDLE_MS = 12 * 60 * 60 * 1000
 
+export const SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
+
 export const MESSAGE_TRANSITIONS: Record<MessageStatus, readonly MessageStatus[]> = {
   unread: ['read', 'archived'],
   read: ['unread', 'archived'],
@@ -146,6 +148,7 @@ export interface AdminRepo {
   getSession(tokenHash: string): Promise<AdminSession | null>
   touchSession(tokenHash: string, now: Date): Promise<void>
   deleteSession(tokenHash: string): Promise<void>
+  deleteAllSessions(): Promise<void>
 }
 
 export interface RateLimitRepo {

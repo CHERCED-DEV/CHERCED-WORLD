@@ -1,6 +1,6 @@
 import 'server-only'
 import { randomBytes } from 'node:crypto'
-import { SESSION_IDLE_MS, type AdminRepo, type AdminSession } from '@/lib/data/types'
+import { SESSION_IDLE_MS, SESSION_MAX_AGE_MS, type AdminRepo, type AdminSession } from '@/lib/data/types'
 import { sha256Hex } from '@/lib/security/keys'
 
 export const SESSION_COOKIE = 'cw-admin'
@@ -52,7 +52,7 @@ export async function resolveSession(
   const tokenHash = hashSessionToken(token)
   const session = await admin.getSession(tokenHash)
   if (!session) return null
-  if (session.expiresAt.getTime() <= now.getTime()) {
+  if (session.expiresAt.getTime() <= now.getTime() || now.getTime() - session.createdAt.getTime() >= SESSION_MAX_AGE_MS) {
     await admin.deleteSession(tokenHash)
     return null
   }

@@ -6,7 +6,7 @@ import { getApprovedComments, submitComment } from '@/lib/actions/comments'
 import { submitContact } from '@/lib/actions/contact'
 import { hashPassword, verifyPassword } from '@/lib/auth/password'
 import { AUTHOR_HINT_COOKIE, AUTHOR_HINT_MAX_AGE_S } from '@/lib/auth/author-hint'
-import { hashSessionToken, SESSION_COOKIE } from '@/lib/auth/session'
+import { hashSessionToken, SESSION_COOKIE, startSession } from '@/lib/auth/session'
 import { ensureSetupCode } from '@/lib/auth/setup'
 import { getRepos, registerRepoFactory } from '@/lib/data'
 import { createMemoryRepos } from '@/lib/data/memory'
@@ -256,8 +256,9 @@ describe('cambio de contraseña', () => {
     })
   })
 
-  it('pide la contraseña actual y rota la sesión', async () => {
+  it('pide la contraseña actual y cierra todas las sesiones, también las de otros equipos (R4.1 M1)', async () => {
     await signedIn()
+    const other = await startSession(repos.admin, new Date())
     const before = request.cookies.get(SESSION_COOKIE)?.value ?? ''
     expect(await changePassword(null, form({ current: 'no es la actual', password: 'nueva contraseña larga', confirm: 'nueva contraseña larga' }))).toMatchObject({
       error: 'validation',
@@ -273,6 +274,8 @@ describe('cambio de contraseña', () => {
     const after = request.cookies.get(SESSION_COOKIE)?.value ?? ''
     expect(after).not.toBe(before)
     expect(await repos.admin.getSession(hashSessionToken(before))).toBeNull()
+    expect(await repos.admin.getSession(other.session.tokenHash), 'la sesión del otro equipo también se cierra').toBeNull()
+    expect(await repos.admin.getSession(hashSessionToken(after))).not.toBeNull()
   })
 })
 

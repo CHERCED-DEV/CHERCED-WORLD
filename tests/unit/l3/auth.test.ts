@@ -23,7 +23,7 @@ import {
   verifySetupCode,
 } from '@/lib/auth/setup'
 import { createMemoryAdminRepo } from '@/lib/data/memory'
-import { SESSION_IDLE_MS } from '@/lib/data/types'
+import { SESSION_IDLE_MS, SESSION_MAX_AGE_MS } from '@/lib/data/types'
 import { SETUP_CODE_ALPHABET, SETUP_CODE_LENGTH } from '@/lib/validation'
 
 vi.mock('node:crypto', async (importOriginal) => {
@@ -118,6 +118,18 @@ describe('session', () => {
     expect(touch).toHaveBeenCalledTimes(1)
     expect(touched?.expiresAt).toEqual(new Date(later.getTime() + SESSION_IDLE_MS))
     expect((await admin.getSession(session.tokenHash))?.lastActivityAt).toEqual(later)
+  })
+
+  it('R4.1 M1: una sesión usada sin parar vence igual a los 7 días de creada', async () => {
+    const admin = createMemoryAdminRepo()
+    const { token, session } = await startSession(admin, t0)
+    let now = t0
+    while (now.getTime() - t0.getTime() < SESSION_MAX_AGE_MS - SESSION_IDLE_MS) {
+      now = new Date(now.getTime() + SESSION_IDLE_MS - 60_000)
+      expect(await resolveSession(admin, token, now, { touch: true })).not.toBeNull()
+    }
+    expect(await resolveSession(admin, token, new Date(t0.getTime() + SESSION_MAX_AGE_MS), { touch: true })).toBeNull()
+    expect(await admin.getSession(session.tokenHash)).toBeNull()
   })
 
   it('no desliza cuando quien llama pide solo leer', async () => {

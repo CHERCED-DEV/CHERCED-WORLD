@@ -45,8 +45,7 @@ export async function signOut(): Promise<void> {
   await endSession(getRepos().admin, token)
 }
 
-export async function rotateSession(now: Date): Promise<void> {
-  const token = await readSessionToken()
-  await endSession(getRepos().admin, token)
+export async function endAllSessions(now: Date): Promise<void> {
+  await getRepos().admin.deleteAllSessions()
   await signIn(now)
 }

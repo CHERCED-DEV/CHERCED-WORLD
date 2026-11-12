@@ -251,6 +251,11 @@ export function runRepoContract(name: string, options: RepoContractOptions): voi
         await repos.admin.deleteSession('t1')
         expect(await repos.admin.getSession('t1')).toBeNull()
         expect(await repos.admin.getSession('desconocida')).toBeNull()
+        for (const tokenHash of ['t2', 't3']) {
+          await repos.admin.createSession({ tokenHash, createdAt: start, lastActivityAt: start, expiresAt: new Date(start.getTime() + SESSION_IDLE_MS) })
+        }
+        await repos.admin.deleteAllSessions()
+        expect([await repos.admin.getSession('t2'), await repos.admin.getSession('t3')]).toEqual([null, null])
       })
     })
 

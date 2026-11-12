@@ -23,5 +23,5 @@ export {
   verifySetupCode,
   type SetupCodeState,
 } from './setup'
-export { UnauthorizedError, getAdminSession, requireAdmin, readSessionToken, signIn, signOut, rotateSession } from './guard'
+export { UnauthorizedError, getAdminSession, requireAdmin, readSessionToken, signIn, signOut, endAllSessions } from './guard'
 export { changePasswordSchema, loginSchema, type ChangePasswordInput } from './schemas'
