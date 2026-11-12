@@ -19,7 +19,7 @@ test.describe('auditoría de interacción (US1, FR-201)', () => {
       const pending = pendingPage(path)
       test.skip(Boolean(pending), pending ?? '')
       test.setTimeout(300_000)
-      const audit = await auditPage(page, context, path, langOf(path))
+      const audit = await auditPage(page, context, path, langOf(path), (controls) => test.setTimeout(Math.max(300_000, controls * 5_000)))
       const failed = audit.controls.filter((control) => !control.ok).length
       testInfo.annotations.push({ type: 'inventario', description: `${audit.controls.length} controles, ${failed} sin efecto verificable` })
       await testInfo.attach('inventario.json', { body: JSON.stringify(audit, null, 2), contentType: 'application/json' })

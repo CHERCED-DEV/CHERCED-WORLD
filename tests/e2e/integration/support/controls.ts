@@ -50,6 +50,12 @@ export const CONTROL_RULES: readonly ControlRule[] = [
     expect: 'lo verifica x0/ai-lab: borra IndexedDB, la caché del modelo y el consentimiento, y avisa',
   },
   { kind: 'no tocar', match: '[data-cw-no-tocar]', effect: 'delegated', expect: 'lo verifica tests/e2e/fun/no-tocar.spec.ts' },
+  {
+    kind: 'probar experimento',
+    match: '[data-cw-lab-open]',
+    effect: 'delegated',
+    expect: 'lo verifican x5/keyboard y x0/ai-lab: abre la demo o pide el consentimiento, y se cierra devolviendo el foco',
+  },
   { kind: 'saltar al contenido', match: 'a.cw-skip-link', effect: 'skipLink', expect: 'el foco pasa a main' },
   { kind: 'cambio de idioma', match: '[data-cw-lang-switch]', effect: 'langSwitch', expect: 'la misma ruta en el otro idioma' },
   { kind: 'tema', match: '[data-cw-theme-toggle]', effect: 'theme', expect: 'data-theme, aria-pressed y la preferencia cambian' },
@@ -225,7 +231,7 @@ export async function inventory(page: Page, scope: string | null, nested = false
       for (const element of document.querySelectorAll(`[${attr}]`)) element.removeAttribute(attr)
       const root = scope ? document.querySelector(scope) : document
       if (!root) return []
-      const blockers = '[hidden], dialog:not([open]), [popover]:not(:popover-open), [inert], [aria-hidden="true"]'
+      const blockers = '[hidden], dialog:not([open]), [popover]:not(:popover-open), [inert], [aria-hidden="true"], details:not([open]) > :not(summary)'
       const visible = (element: Element) => {
         if (element.matches('.cw-skip-link')) return true
         const rect = element.getBoundingClientRect()
@@ -672,23 +678,37 @@ const EFFECTS: Record<EffectName, Effect> = {
 
   async pressedToggle({ page, target, control }) {
     const pressed = () => target.getAttribute('aria-pressed')
+    const sheets = () => page.evaluate(() => document.querySelectorAll('dialog[open]').length)
+    const baseSheets = await sheets()
+    let opensSheet = false
+    const closeSheet = async () => {
+      if (!(await settle(sheets, (count) => count > baseSheets, 300)).ok) return
+      opensSheet = true
+      await page.keyboard.press('Escape')
+      if (!(await settle(sheets, (count) => count === baseSheets)).ok) fail('abre una hoja que Esc no cierra')
+    }
+    const press = async (locator: Locator) => {
+      await activate(locator)
+      await closeSheet()
+    }
+    const sheetNote = () => (opensSheet ? '; abre su hoja y Esc la cierra' : '')
     const before = await pressed()
-    await activate(target)
+    await press(target)
     const after = await settle(pressed, (value) => value !== before, 2000)
     if (after.ok) {
-      await activate(target)
-      return `aria-pressed ${before} → ${after.value}`
+      await press(target)
+      return `aria-pressed ${before} → ${after.value}${sheetNote()}`
     }
     if (before !== 'true') fail(`aria-pressed sigue en ${before}`)
     const sibling = page.locator(`[data-cw-audit="${control.id}"]`).locator('xpath=..').locator('xpath=..').locator('button[aria-pressed]:not([data-cw-audit="' + control.id + '"])').first()
     if ((await sibling.count()) === 0) fail('ya estaba presionado y el clic no lo cambia, y no hay otra opción en su grupo')
-    await activate(sibling)
+    await press(sibling)
     const released = await settle(pressed, (value) => value === 'false', 2000)
     if (!released.ok) fail('al elegir otra opción del grupo, este botón sigue presionado')
-    await activate(target)
+    await press(target)
     const chosen = await settle(pressed, (value) => value === 'true', 2000)
     if (!chosen.ok) fail('el clic no lo vuelve a elegir')
-    return 'elección exclusiva: queda presionado y suelta a los demás'
+    return `elección exclusiva: queda presionado y suelta a los demás${sheetNote()}`
   },
 
   async expandedToggle({ target }) {
@@ -957,10 +977,17 @@ async function fresh(page: Page, url: string, baseline: Control[]): Promise<Cont
   return signatures(current) === signatures(baseline) ? current : null
 }
 
-export async function auditPage(page: Page, context: BrowserContext, path: string, lang: Lang): Promise<PageAudit> {
+export async function auditPage(
+  page: Page,
+  context: BrowserContext,
+  path: string,
+  lang: Lang,
+  onInventory?: (controls: number) => void,
+): Promise<PageAudit> {
   await openPage(page, path)
   const url = page.url()
   const baseline = await inventory(page, null)
+  onInventory?.(baseline.length)
   const results: ControlResult[] = []
   const record = (control: Control, scope: string, outcome: { ok: boolean; detail: string; ms?: number }) =>
     results.push({ signature: control.signature, kind: control.kind, label: control.label, href: control.href, region: control.region, scope, ms: 0, ...outcome })
