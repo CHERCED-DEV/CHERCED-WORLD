@@ -12,7 +12,6 @@ import { RecorridoDiagram } from './RecorridoDiagram'
 import { PatternAtlas } from './PatternAtlas'
 import { SourceLinks } from './SourceLinks'
 import { SystemBlueprint } from './SystemBlueprint'
-import { ChapterNav } from './ChapterNav'
 import styles from './Architecture.module.scss'
 import journey from '../ScrollJourney.module.scss'
 import { ScrollProgress } from '../ScrollProgress'
@@ -56,7 +55,6 @@ export function ArchitectureView({ lang }: { lang: Locale }) {
         </div>
       </GlassSurface>
     </header>
-    <ChapterNav label={copy.nav[lang]} items={chapters} />
     {chapters.map(({ id, number, label }) => {
       const lead = architecture.topics.find(topic => !topic.private && topic.id === leadTopics[id])?.body[0]
       return <Reveal as="section" id={id} key={id} className={styles.section} aria-labelledby={`architecture-${id}`} data-cw-architecture-section={id}>

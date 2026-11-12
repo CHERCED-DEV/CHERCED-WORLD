@@ -30,13 +30,15 @@ Se construye sobre la página aprobada el 2026-11-12 (R1.3). No se agregó conte
   izquierda. La flecha baja por la columna de los íconos. Cada paso mide 102 px, así que los cinco caben en una
   pantalla del celular. Desde 740 px sigue el SVG ancho aprobado, con "Leer el diagrama como texto". En el celular la
   lista ya es el texto, así que ese desplegable no se repite. Se quitó el SVG alto.
-- **Riel (AM2, AM6).**
-  - No se ve la barra de scroll y cada píldora va en una línea.
-  - Al cambiar de capítulo, la píldora activa se centra en el riel (con movimiento reducido, sin animación).
-  - Desde `lg`, las píldoras pueden partir línea si no caben, como estaba aprobado.
-  - Se corrigió el capítulo activo. Antes se elegía por la proporción visible de cada sección, y "Patrones" (unos
-    7000 px en el celular) perdía siempre contra el borde de "Islas": al saltar a Patrones, el riel seguía marcando
-    Islas. Ahora el activo es el capítulo que cruza una línea de lectura al 40 % de la pantalla.
+- **Índice (AM2, AM6).** El riel horizontal se quitó: por decisión del autor, la página usa la navegación estándar
+  (`components/site/section-nav/SectionNav`), la misma pestaña con puntos de Sobre mí.
+  - `app/[lang]/synergos/arquitectura/page.tsx` la monta antes de la vista, con los capítulos de
+    `architectureChapters(lang)` y el nombre "Secciones de arquitectura" / "Architecture sections".
+  - El componente pone la línea de progreso de cada capítulo y elige el capítulo activo con la línea de lectura del
+    blog. Antes se elegía por la proporción visible de cada sección, y "Patrones" (unos 7000 px en el celular) perdía
+    siempre contra el borde de "Islas".
+  - Las secciones y las anclas `#patron-*` bajan su `scroll-margin-top` de 160 a 16 px. El `scroll-padding-top` de la
+    página ya cuenta la pestaña (128 px en escritorio, 132 en el celular).
 - **Cifras (AM3).** En el celular van en una fila de tres columnas iguales: la cifra arriba y la etiqueta debajo.
 - **Ritmo y lectura (AM4, AM5).** Debajo de `md`:
   - el encabezado del capítulo, la introducción, "18 /" y la frase de la fábrica van alineados a la izquierda;
@@ -53,11 +55,6 @@ Se construye sobre la página aprobada el 2026-11-12 (R1.3). No se agregó conte
     reducido o sin JS, la página es estática.
   - Con las capas activas, el `Reveal` del capítulo entero queda quieto para no sumar dos entradas.
   - No hay scroll-snap.
-- **Capítulo activo en el riel.** Cada píldora lleva una línea de 2 px que se llena con el avance de su capítulo. Es
-  el mismo método de C1 en Sobre mí: `view-timeline` con nombre por capítulo, `timeline-scope` en `.page`,
-  `animation-range: contain` y `view-timeline-inset: auto`. Los capítulos leídos quedan llenos, el actual va a medias
-  y los de abajo en cero. Con las líneas activas, la píldora activa deja su subrayado fijo, porque la línea ya cumple
-  esa función.
 - **Lo que ya existía.** La línea bajo cada capítulo y la barra de lectura de la U1 de la 012 siguen igual. En el
   celular, la línea del capítulo arranca a la izquierda, junto con el encabezado.
 - **Explicación de cómo se recorre la página.** Debajo de la frase del hero va una línea corta, sin acciones nuevas:
@@ -70,9 +67,7 @@ Se construye sobre la página aprobada el 2026-11-12 (R1.3). No se agregó conte
   navegación estándar de todas las páginas.
   - `content/synergos-architecture.ts` exporta `SYNERGOS_ARCHITECTURE_CHAPTERS`, con id estable, número y etiqueta en
     ES y EN, y `architectureChapters(lang)`.
-  - La página arma con eso las secciones y el índice.
-  - El riel horizontal se queda como está hasta que llegue el componente estándar. Entonces se monta aquí y el riel
-    se quita.
+  - La página arma con eso las secciones y el índice estándar.
 
 ## Pruebas
 
@@ -81,16 +76,16 @@ Se construye sobre la página aprobada el 2026-11-12 (R1.3). No se agregó conte
     - las animaciones solo usan `transform` y `opacity`;
     - cada `animation-timeline` está guardada por `@supports` y por movimiento reducido;
     - las capas solo existen con `:root[data-js]`;
-    - la página no usa scroll-snap;
-    - el riel no muestra barra de scroll y sus píldoras no parten línea;
+    - la página no usa scroll-snap ni declara sus propias líneas de capítulo;
+    - los capítulos son datos con id, número y etiqueta en ES y EN, y la ruta se los pasa a `SectionNav` en orden;
     - cada diagrama tiene cinco pasos en HTML con número, título y detalle.
   - `architecture-render` ahora cuenta las tres listas de pasos.
 - **E2e** (`tests/e2e/s2/arquitectura-capas.spec.ts`, con `E2E_PORT=3600`):
   - las capas entran al bajar y quedan en 1 en reposo;
-  - en cada parada del riel, lo que se lee está en 1;
+  - en cada capítulo, lo que se lee está en 1;
   - con movimiento reducido y sin JS, nada se anima;
-  - la línea de cada píldora se llena con su capítulo;
-  - el riel no muestra barra, cada píldora va en una línea y la activa queda a la vista;
+  - la página monta la navegación estándar con los cinco capítulos y sin el riel viejo;
+  - al llegar a cada capítulo, la pestaña lo marca (también "Patrones") y el encabezado queda debajo de ella;
   - el flujo alinea ícono y texto;
   - el recorrido en escritorio sigue siendo el SVG ancho;
   - las cifras van en una fila pareja a 375, 390 y 412;

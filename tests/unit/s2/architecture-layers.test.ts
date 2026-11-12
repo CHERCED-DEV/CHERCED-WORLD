@@ -6,6 +6,7 @@ import { compile } from 'sass'
 import { describe, expect, it } from 'vitest'
 import { ArchitectureDiagram } from '@/components/site/synergos/arquitectura/ArchitectureDiagram'
 import { ArchitectureView } from '@/components/site/synergos/arquitectura/ArchitectureView'
+import { SectionNav } from '@/components/site/section-nav/SectionNav'
 import { architecture, architectureChapters, SYNERGOS_ARCHITECTURE_CHAPTERS } from '@/content/synergos-architecture'
 
 const root = process.cwd()
@@ -29,22 +30,18 @@ function properties(body: string): string[] {
 }
 
 describe('arquitectura en el celular: capas guiadas por scroll (009, refinamiento del 2026-11-12)', () => {
-  it('las capas y el llenado del riel solo animan transform y opacity (FR-653)', () => {
+  it('las capas solo animan transform y opacity (FR-653)', () => {
     expect(properties(block(css, '@keyframes architecture-layer')).sort()).toEqual(['opacity', 'transform'])
-    expect(properties(block(css, '@keyframes architecture-fill'))).toEqual(['transform'])
   })
 
-  it('cada animation-timeline nueva va dentro de @supports y de prefers-reduced-motion: no-preference', () => {
+  it('cada animation-timeline va dentro de @supports y de prefers-reduced-motion: no-preference', () => {
     const layers = block(css, '@supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%)')
     expect(layers).toMatch(/@media \(prefers-reduced-motion: no-preference\)[\s\S]*:root\[data-js\][\s\S]*animation-timeline: view\(\)/)
-    const fill = block(css, '@supports (animation-timeline: view()) and (timeline-scope: none)')
-    expect(fill).toMatch(/@media \(prefers-reduced-motion: no-preference\)[\s\S]*timeline-scope: --arq-recorrido/)
-    for (const id of Object.keys(architecture.copy.sections)) {
-      expect(fill).toContain(`view-timeline: --arq-${id} block`)
-      expect(fill).toContain(`animation-timeline: --arq-${id}`)
-    }
-    const outside = css.replace(layers, '').replace(fill, '')
-    expect(outside).not.toMatch(/animation-timeline/)
+    expect(css.replace(layers, '')).not.toMatch(/animation-timeline/)
+  })
+
+  it('la página ya no declara sus propias líneas de capítulo: las pone el índice estándar', () => {
+    expect(css).not.toMatch(/timeline-scope|view-timeline|--arq-/)
   })
 
   it('las capas solo existen con JavaScript: sin JS la página queda estática', () => {
@@ -55,14 +52,6 @@ describe('arquitectura en el celular: capas guiadas por scroll (009, refinamient
 
   it('la página no usa scroll-snap', () => {
     expect(source).not.toMatch(/scroll-snap/)
-  })
-
-  it('el riel de capítulos esconde la barra de scroll y deja cada píldora en una línea', () => {
-    const toc = block(css, '.toc {')
-    expect(toc).toContain('scrollbar-width: none')
-    expect(toc).toContain('overflow-x: auto')
-    expect(css).toMatch(/\.toc::-webkit-scrollbar \{\s*display: none;/)
-    expect(block(css, '.toc a {')).toContain('white-space: nowrap')
   })
 })
 
@@ -82,14 +71,30 @@ describe('los capítulos son datos listos para la navegación estándar', () => 
     const html = renderToStaticMarkup(createElement(ArchitectureView, { lang }))
     for (const chapter of architectureChapters(lang)) {
       expect(html).toContain(`id="${chapter.id}"`)
-      expect(html).toContain(`data-cw-chapter-link="${chapter.id}"`)
       expect(html).toMatch(new RegExp(`>${chapter.number}</span>`))
     }
+    expect(html).not.toContain('data-cw-chapter-nav')
+    expect(html).not.toContain('data-cw-chapter-link')
     expect(html.match(/data-cw-architecture-guide=""[^>]*>([^<]+)</)?.[1]).toBe(
       lang === 'es'
         ? 'Cinco capítulos, del CMS a la fábrica. Cada tema enlaza a sus fuentes públicas y el índice marca el capítulo en el que vas.'
         : 'Five chapters, from the CMS to the factory. Each topic links to its public sources, and the index marks the chapter you are reading.',
     )
+  })
+})
+
+describe.each(['es', 'en'] as const)('la página monta el índice estándar con sus capítulos (%s)', (lang) => {
+  it('la ruta pasa a SectionNav los cinco capítulos en orden, con su etiqueta en el idioma', () => {
+    const page = readFileSync(join(root, 'app', '[lang]', 'synergos', 'arquitectura', 'page.tsx'), 'utf8')
+    expect(page).toMatch(/<SectionNav label=\{architecture\.copy\.nav\[lang\]\} sections=\{architectureChapters\(lang\)/)
+    const sections = architectureChapters(lang).map(({ id, label }) => ({ id, label }))
+    const html = renderToStaticMarkup(createElement(SectionNav, { label: architecture.copy.nav[lang], sections }))
+    expect([...html.matchAll(/data-cw-scene-link="([^"]+)"/g)].map((match) => match[1])).toEqual(SYNERGOS_ARCHITECTURE_CHAPTERS.map((chapter) => chapter.id))
+    for (const [index, chapter] of SYNERGOS_ARCHITECTURE_CHAPTERS.entries()) {
+      expect(html).toContain(`>${chapter.label[lang]}</a>`)
+      expect(html).toContain(`#${chapter.id}{view-timeline:--cw-section-${index + 1} block`)
+    }
+    expect(html).toContain(`aria-label="${architecture.copy.nav[lang]}"`)
   })
 })
 

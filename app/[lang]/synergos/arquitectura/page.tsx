@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { BackgroundIntensity } from '@/components/motion'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
+import { SectionNav } from '@/components/site/section-nav/SectionNav'
 import { ArchitectureView } from '@/components/site/synergos/arquitectura/ArchitectureView'
-import { architecture, SYNERGOS_ARCHITECTURE_PATH } from '@/content/synergos-architecture'
+import { architecture, architectureChapters, SYNERGOS_ARCHITECTURE_PATH } from '@/content/synergos-architecture'
 import { getDictionary } from '@/lib/i18n/server'
 import { architectureJsonLd } from '@/lib/seo/synergos-architecture'
 import { jsonLdScript } from '@/lib/seo/person'
@@ -17,5 +18,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArchitecturePage({ params }: Props) {
   const lang = await resolveLang(params)
-  return <><BackgroundIntensity value="subtle" /><ArchitectureView lang={lang} /><script type="application/ld+json" data-cw-architecture-ld="" dangerouslySetInnerHTML={{ __html: jsonLdScript(architectureJsonLd(lang)) }} /></>
+  return <>
+    <BackgroundIntensity value="subtle" />
+    <SectionNav label={architecture.copy.nav[lang]} sections={architectureChapters(lang).map(({ id, label }) => ({ id, label }))} />
+    <ArchitectureView lang={lang} />
+    <script type="application/ld+json" data-cw-architecture-ld="" dangerouslySetInnerHTML={{ __html: jsonLdScript(architectureJsonLd(lang)) }} />
+  </>
 }

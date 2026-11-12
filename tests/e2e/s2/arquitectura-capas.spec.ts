@@ -46,16 +46,6 @@ function layered(page: Page) {
   )
 }
 
-function fills(page: Page) {
-  return page.locator('[data-cw-chapter-link]').evaluateAll((links) =>
-    links.map((link) => {
-      const transform = getComputedStyle(link, '::after').transform
-      if (transform === 'none') return 1
-      return Number(Number(transform.match(/matrix\(([^)]+)\)/)![1]!.split(',')[0]).toFixed(2))
-    }),
-  )
-}
-
 test.describe('arquitectura de Synergos: capas guiadas por scroll y celular (009, 2026-11-12)', () => {
   test('cada bloque entra como una capa al bajar y queda en opacidad 1 en reposo', async ({ page }) => {
     onlyIn('desktop-chromium', 'mobile-chromium')
@@ -76,7 +66,7 @@ test.describe('arquitectura de Synergos: capas guiadas por scroll y celular (009
     await expect.poll(() => layer(page, diagram)).toMatchObject({ opacity: 1, identity: true })
   })
 
-  test('en cada parada del riel, lo que se lee está en opacidad 1', async ({ page }) => {
+  test('en cada capítulo, lo que se lee está en opacidad 1', async ({ page }) => {
     onlyIn('desktop-chromium', 'mobile-chromium')
     await page.emulateMedia({ reducedMotion: 'no-preference' })
     await open(page)
@@ -97,9 +87,6 @@ test.describe('arquitectura de Synergos: capas guiadas por scroll y celular (009
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await open(page)
     expect(await layered(page)).toEqual([])
-    expect(await fills(page)).toEqual([1, 1, 1, 1, 1])
-    const contents = await page.locator('[data-cw-chapter-link]').evaluateAll((links) => links.map((link) => getComputedStyle(link, '::after').content))
-    expect(new Set(contents)).toEqual(new Set(['none']))
     await place(page, '[data-cw-architecture-diagram="islas"]', 0.95)
     expect(await layer(page, '[data-cw-architecture-diagram="islas"]')).toMatchObject({ opacity: 1, identity: true })
   })
@@ -113,61 +100,27 @@ test.describe('arquitectura de Synergos: capas guiadas por scroll y celular (009
     expect(await layer(page, '[data-cw-architecture-diagram="islas"]')).toMatchObject({ opacity: 1, identity: true })
   })
 
-  test('la línea de cada píldora del riel se llena con el avance de su capítulo', async ({ page }) => {
-    onlyIn('desktop-chromium', 'mobile-chromium')
-    await page.emulateMedia({ reducedMotion: 'no-preference' })
+  test('la página monta la navegación estándar con sus cinco capítulos y sin el riel viejo', async ({ page }) => {
     await open(page)
-    await expect.poll(() => fills(page)).toEqual([0, 0, 0, 0, 0])
-    await page.locator('#islas').evaluate((node) => {
-      const box = node.getBoundingClientRect()
-      window.scrollTo({ top: box.top + window.scrollY + box.height / 2 - window.innerHeight / 2, behavior: 'instant' })
-    })
-    await expect
-      .poll(async () => {
-        const [recorrido, contratos, islas, patrones, fabrica] = await fills(page)
-        return recorrido === 1 && contratos === 1 && islas! > 0 && islas! < 1 && patrones === 0 && fabrica === 0
-      })
-      .toBe(true)
-    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }))
-    await expect.poll(() => fills(page)).toEqual([1, 1, 1, 1, 1])
+    await expect(page.locator('[data-cw-scene-nav]')).toHaveCount(1)
+    await expect(page.locator('[data-cw-scene-nav]')).toHaveAttribute('aria-label', 'Secciones de arquitectura')
+    expect(await page.locator('[data-cw-scene-nav] [data-cw-scene-link]').evaluateAll((links) => links.map((link) => link.getAttribute('data-cw-scene-link')))).toEqual([...CHAPTERS])
+    await expect(page.locator('[data-cw-chapter-nav], [data-cw-chapter-link]')).toHaveCount(0)
   })
 
-  test('el riel no muestra barra de scroll, cada píldora va en una línea y la activa queda a la vista', async ({ page }) => {
-    onlyIn('mobile-chromium')
+  test('al llegar a cada capítulo, la pestaña lo marca y su encabezado queda debajo de ella', async ({ page }) => {
+    onlyIn('desktop-chromium', 'mobile-chromium')
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await open(page)
-    const nav = page.locator('[data-cw-chapter-nav]')
-    const frame = await nav.evaluate((node: HTMLElement) => {
-      const style = getComputedStyle(node)
-      return {
-        scrollbar: style.scrollbarWidth,
-        bar: node.offsetHeight - node.clientHeight - parseFloat(style.borderTopWidth) - parseFloat(style.borderBottomWidth),
-        scrolls: node.scrollWidth > node.clientWidth,
-      }
-    })
-    expect(frame).toEqual({ scrollbar: 'none', bar: 0, scrolls: true })
-    const lines = await nav.locator('a').evaluateAll((links) =>
-      links.map((link) => {
-        const style = getComputedStyle(link)
-        return { space: style.whiteSpace, height: Math.round(link.getBoundingClientRect().height) }
-      }),
-    )
-    expect(lines).toEqual(CHAPTERS.map(() => ({ space: 'nowrap', height: 48 })))
     for (const id of CHAPTERS) {
       await page.evaluate((chapter) => document.getElementById(chapter)!.scrollIntoView({ behavior: 'instant', block: 'start' }), id)
-      const link = nav.locator(`[data-cw-chapter-link="${id}"]`)
-      await expect(link, id).toHaveAttribute('aria-current', 'location')
-      await expect
-        .poll(
-          () =>
-            link.evaluate((node) => {
-              const box = node.getBoundingClientRect()
-              const rail = node.parentElement!.getBoundingClientRect()
-              return box.left >= rail.left - 1 && box.right <= rail.right + 1
-            }),
-          { message: `${id} a la vista en el riel` },
-        )
-        .toBe(true)
+      await expect(page.locator(`[data-cw-scene-nav] [data-cw-scene-link="${id}"]`), id).toHaveAttribute('aria-current', 'true')
+      const gap = await page.evaluate((chapter) => {
+        const heading = document.querySelector(`#${chapter} > header`)!.getBoundingClientRect()
+        const tab = document.querySelector('[data-cw-scene-tab]')!.getBoundingClientRect()
+        return Math.round(heading.top - tab.bottom)
+      }, id)
+      expect(gap, `${id}: el encabezado no queda bajo la pestaña`).toBeGreaterThanOrEqual(0)
     }
   })
 

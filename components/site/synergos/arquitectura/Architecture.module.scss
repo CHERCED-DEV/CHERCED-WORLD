@@ -38,8 +38,7 @@
 .blueprintBottom { bottom: 8%; .mono { text-wrap: balance; } }
 .blueprintCore { width: 39%; min-width: 110px; aspect-ratio: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; box-shadow: 0 0 64px var(--cw-graphic-glow), inset 0 0 28px var(--cw-graphic-glow); gap: 8px; > span { color: var(--cw-graphic-accent); font: 28px ui-monospace, monospace; } strong { font-size: clamp(20px, 2vw, 28px); letter-spacing: -.04em; } small { font-size: 12px; color: var(--cw-fg-muted); max-width: 16ch; line-height: 1.5; } }
 .blueprint figcaption { position: absolute; bottom: -10px; font-size: 12px; color: var(--cw-fg-muted); letter-spacing: .04em; }
-.toc { position: sticky; top: 76px; z-index: 20; display: flex; justify-content: flex-start; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; padding: 6px; border: 1px solid var(--cw-glass-border); border-radius: 24px; background: var(--cw-glass-strong-bg); backdrop-filter: blur(20px); margin-block: -48px; scrollbar-width: none; &::-webkit-scrollbar { display: none; } a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1 0 auto; padding: 12px 14px; min-height: 48px; white-space: nowrap; border: 1px solid transparent; border-radius: 18px; color: var(--cw-fg-muted); font-size: 12px; font-weight: 600; line-height: 1.5; text-decoration: none; span { font: 12px ui-monospace, monospace; } &:hover, &[aria-current] { color: var(--cw-fg); background: var(--cw-glass-subtle-bg); border-color: var(--cw-glass-border); } &[aria-current] { box-shadow: inset 0 -2px var(--cw-graphic-accent); } } @include bp.up(lg) { a { flex: 1 1 auto; white-space: normal; } } }
-.section { display: grid; gap: clamp(32px, 4vw, 48px); scroll-margin-top: 160px; }
+.section { display: grid; gap: clamp(32px, 4vw, 48px); scroll-margin-top: var(--cw-space-4); }
 .chapterHeading { display: grid; justify-items: center; text-align: center; gap: 24px; > h2 { font-size: var(--cw-text-sm); max-width: 100%; } }
 .chapterNumber { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--cw-glass-border); border-radius: 50%; font: 12px ui-monospace, monospace; }
 .sectionLead { max-width: 70ch; font-size: clamp(1rem, 1.4vw, 1.18rem); line-height: 1.85; color: var(--cw-fg-muted); text-wrap: pretty; }
@@ -94,7 +93,7 @@
 .groupHeading { display: flex; align-items: center; gap: 20px; padding-bottom: 24px; h3 { font-size: clamp(20px, 2vw, 28px); letter-spacing: -.035em; } > .mono { color: var(--cw-fg-muted); } }
 .groupCount { margin-left: auto; font: 12px ui-monospace, monospace; color: var(--cw-fg-muted); }
 .patterns { border-top: 1px solid var(--cw-glass-border); }
-.pattern { display: grid; gap: 24px; border-bottom: 1px solid var(--cw-glass-border); padding: 28px 16px; scroll-margin-top: 160px; @include bp.up(md) { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 48px; padding: 32px 24px; } &:target { background: var(--cw-glass-subtle-bg); outline: 1px solid var(--cw-fg-muted); outline-offset: -1px; } }
+.pattern { display: grid; gap: 24px; border-bottom: 1px solid var(--cw-glass-border); padding: 28px 16px; scroll-margin-top: var(--cw-space-4); @include bp.up(md) { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 48px; padding: 32px 24px; } &:target { background: var(--cw-glass-subtle-bg); outline: 1px solid var(--cw-fg-muted); outline-offset: -1px; } }
 .patternIdentity { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-content: start; gap: 12px; h4 { font-size: clamp(17px, 1.6vw, 21px); letter-spacing: -.02em; } .status { grid-column: 2; } }
 .patternNumber { font: 12px ui-monospace, monospace; color: var(--cw-fg-muted); padding-top: 5px; }
 .canonical { display: block; margin-top: 4px; font: 400 12px/1.5 ui-monospace, monospace; letter-spacing: .02em; color: var(--cw-fg-muted); }
@@ -117,7 +116,6 @@
   .heroFooter { gap: 20px; }
   .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--cw-space-4); width: 100%; }
   .fact { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--cw-space-1); strong { font-size: 28px; line-height: 1.2; } span { font-size: 12px; line-height: 1.5; } }
-  .toc { top: 72px; border-radius: 20px; scroll-padding-inline: 6px; a { flex: 0 0 auto; } }
   .chapterHeading > h2 { font-size: 12px; letter-spacing: .15em; padding: 16px; border-width: 5px; }
   .eyebrow { font-size: 12px; }
   .title.title { padding: 16px 12px; border-width: 5px; letter-spacing: .16em; }
@@ -137,23 +135,6 @@
 @media (prefers-reduced-motion: reduce) { .blueprint a { transition: none; } }
 @keyframes architecture-flow { to { stroke-dashoffset: -60; } }
 
-$chapters: recorrido, contratos, islas, patrones, fabrica;
-
-@supports (animation-timeline: view()) and (timeline-scope: none) {
-  @include site.motion-ok {
-    .page { timeline-scope: --arq-recorrido, --arq-contratos, --arq-islas, --arq-patrones, --arq-fabrica; }
-    .toc a {
-      position: relative;
-      &::after { content: ''; position: absolute; right: 14px; bottom: 5px; left: 14px; height: 2px; border-radius: 1px; background: var(--cw-graphic-accent); transform-origin: 0 50%; animation: architecture-fill linear both; animation-range: contain; pointer-events: none; }
-      &[aria-current] { box-shadow: none; }
-    }
-    @each $id in $chapters {
-      .page > [data-cw-architecture-section='#{$id}'] { view-timeline: --arq-#{$id} block; view-timeline-inset: auto; }
-      .toc a[data-cw-chapter-link='#{$id}']::after { animation-timeline: --arq-#{$id}; }
-    }
-  }
-}
-
 @supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
   .page > .section[data-cw-reveal] {
     @include site.js-motion { opacity: 1; transform: none; transition: none; }
@@ -161,11 +142,6 @@ $chapters: recorrido, contratos, islas, patrones, fabrica;
   .section > :is(.chapterHeading, .diagram, .editorialGrid, .featureBand, .atlasIntro, .details, .factoryLead), .contractStory > *, .islandStory > *, .patternGroup, .factoryGrid > *, .page > .accessibility {
     @include site.js-motion { animation: architecture-layer linear both; animation-timeline: view(); animation-range: entry 0% entry 30vh; }
   }
-}
-
-@keyframes architecture-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
 }
 
 @keyframes architecture-layer {
