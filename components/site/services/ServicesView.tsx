@@ -45,7 +45,7 @@ export function ServicesView({ lang, services, cases, labels, tryHrefs = {} }: S
 
   return (
     <div className={styles.page}>
-      <section className={styles.hero} aria-labelledby="services-title" data-cw-services-block="hero">
+      <section id="section-hero" className={styles.hero} aria-labelledby="services-title" data-cw-services-block="hero">
         <SectionTitle as="h1" id="services-title" size="lg">
           {typeset(services.hero.title[lang], lang, { keepHyphens: true })}
         </SectionTitle>
@@ -64,7 +64,7 @@ export function ServicesView({ lang, services, cases, labels, tryHrefs = {} }: S
 
       <ServiceAudiences lang={lang} title={labels.audiences} audiences={services.audiences} />
 
-      <section className={styles.block} aria-labelledby="services-offer" data-cw-services-block="services">
+      <section id="section-services" className={styles.block} aria-labelledby="services-offer" data-cw-services-block="services">
         <SectionTitle id="services-offer">{labels.title}</SectionTitle>
         <ServiceStack
           cards={services.items.map((item, index) => ({
@@ -89,7 +89,7 @@ export function ServicesView({ lang, services, cases, labels, tryHrefs = {} }: S
 
       <ServiceFaq lang={lang} title={labels.faq} faq={services.faq} />
 
-      <section className={cx(styles.block, styles.ctaSection)} aria-labelledby="services-cta" data-cw-services-block="cta">
+      <section id="section-cta" className={cx(styles.block, styles.ctaSection)} aria-labelledby="services-cta" data-cw-services-block="cta">
         <GlassSurface variant="strong" grain depth edge light className={styles.cta}>
           <span className={styles.ctaAccent} aria-hidden="true" />
           <div className={styles.ctaCopy}>

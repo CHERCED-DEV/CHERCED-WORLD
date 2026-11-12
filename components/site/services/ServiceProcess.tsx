@@ -15,7 +15,7 @@ export type ServiceProcessProps = {
 
 export function ServiceProcess({ lang, process, principlesTitle }: ServiceProcessProps) {
   return (
-    <section className={styles.block} aria-labelledby="services-process" data-cw-services-block="process">
+    <section id="section-process" className={styles.block} aria-labelledby="services-process" data-cw-services-block="process">
       <SectionTitle id="services-process">{process.title[lang]}</SectionTitle>
       <GlassSurface variant="standard" grain depth edge className={styles.process}>
         <Reveal as="ol" className={styles.steps} data-cw-steps="">

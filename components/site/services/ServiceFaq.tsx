@@ -9,7 +9,7 @@ export function ServiceFaq({ lang, title, faq }: ServiceFaqProps) {
   if (faq.length === 0) return null
 
   return (
-    <section className={styles.block} aria-labelledby="services-faq" data-cw-services-block="faq">
+    <section id="section-faq" className={styles.block} aria-labelledby="services-faq" data-cw-services-block="faq">
       <SectionTitle id="services-faq">{title}</SectionTitle>
       <div className={styles.faq}>
         {faq.map((item) => (

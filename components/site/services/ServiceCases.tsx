@@ -14,7 +14,7 @@ export function ServiceCases({ lang, title, cases, items }: ServiceCasesProps) {
   const titles = new Map(items.map((item) => [item.id, item.title[lang]]))
 
   return (
-    <section className={styles.block} aria-labelledby="services-cases" data-cw-services-block="cases">
+    <section id="section-cases" className={styles.block} aria-labelledby="services-cases" data-cw-services-block="cases">
       <SectionTitle id="services-cases">{title}</SectionTitle>
       <ul className={styles.cases}>
         {cases.map(({ project, services }) => (

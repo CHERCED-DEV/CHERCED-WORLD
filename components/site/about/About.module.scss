@@ -63,28 +63,6 @@
   }
 }
 
-$scene-timelines: (
-  who: --cw-scene-who,
-  career: --cw-scene-career,
-  knowledge: --cw-scene-knowledge,
-  heading: --cw-scene-heading,
-);
-
-@supports (animation-timeline: view()) and (timeline-scope: none) {
-  @media (prefers-reduced-motion: no-preference) {
-    .page {
-      timeline-scope: --cw-scene-who, --cw-scene-career, --cw-scene-knowledge, --cw-scene-heading;
-    }
-
-    @each $scene, $timeline in $scene-timelines {
-      .page [data-cw-scene='#{$scene}'] {
-        view-timeline: #{$timeline} block;
-        view-timeline-inset: auto;
-      }
-    }
-  }
-}
-
 .vitrine {
   position: relative;
   width: min(340px, 78vw);

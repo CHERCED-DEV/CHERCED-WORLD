@@ -49,7 +49,7 @@ export function NowView({ lang, now, labels }: NowViewProps) {
 
   return (
     <div className={styles.page} data-cw-now="">
-      <header className={styles.hero}>
+      <header id="section-now" className={styles.hero}>
         <SectionTitle as="h1" id="now-title" size="lg">
           {labels.title}
         </SectionTitle>
@@ -72,6 +72,7 @@ export function NowView({ lang, now, labels }: NowViewProps) {
             <Reveal key={block.id} className={cx(styles.cell, wide && styles.wide)} delay={index * STAGGER}>
               <GlassSurface
                 as="section"
+                id={`section-${block.id}`}
                 className={styles.panel}
                 aria-labelledby={headingId}
                 edge
@@ -114,6 +115,7 @@ export function NowView({ lang, now, labels }: NowViewProps) {
         <Reveal className={styles.cell} delay={blocks.length * STAGGER}>
           <GlassSurface
             as="section"
+            id="section-mottos"
             variant="strong"
             className={styles.mottos}
             aria-labelledby="now-mottos"

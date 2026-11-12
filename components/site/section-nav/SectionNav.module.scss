@@ -1,11 +1,12 @@
+@use 'sass:list';
 @use 'glass' as *;
 @use 'breakpoints' as bp;
 @use '../site' as site;
 
 $pill-h: 36px;
 $edge: 4px;
-$gutter: 14px;
 $fade: 28px;
+$sections: 12;
 
 :global(:root):has(.sceneNav) {
   --cw-scene-tab-h: 44px;
@@ -26,6 +27,11 @@ $fade: 28px;
   justify-content: center;
   margin-bottom: calc(-1 * var(--cw-space-5));
   pointer-events: none;
+
+  @include bp.up(md) {
+    width: min(100% - 32px, calc(var(--cw-container-max) - 32px));
+    margin-inline: auto;
+  }
 }
 
 .tab {
@@ -160,12 +166,13 @@ $fade: 28px;
     --cw-scene-pad: max(#{$edge}, env(safe-area-inset-left, 0px));
     --cw-scene-pill-inset: calc((var(--cw-scene-tab-h) - 2px - #{$pill-h}) / 2);
     justify-content: flex-start;
-    margin-inline-start: -$gutter;
+    margin-inline-start: calc(50% - 50vw);
     margin-bottom: calc(-1 * var(--cw-space-5) - 4px);
   }
 
   .tab {
     @include glass-edge;
+    max-width: min(100%, calc(100vw - 14px));
     border-left-width: 0;
     border-radius: 0 999px 999px 0;
 
@@ -210,7 +217,16 @@ $fade: 28px;
   }
 }
 
+.sceneNav[data-cw-over-footer]:not(:focus-within) .tab {
+  opacity: 0;
+  pointer-events: none;
+}
+
 @include site.motion-ok {
+  .tab {
+    transition: opacity var(--cw-duration-base) var(--cw-ease);
+  }
+
   .sceneNav[data-cw-measured] .sceneIndicator {
     transition:
       transform var(--cw-duration-slow) var(--cw-ease-out),
@@ -326,15 +342,20 @@ $fade: 28px;
   }
 }
 
-$scene-timelines: (
-  who: --cw-scene-who,
-  career: --cw-scene-career,
-  knowledge: --cw-scene-knowledge,
-  heading: --cw-scene-heading,
-);
+@function section-timelines($count) {
+  $names: ();
+  @for $index from 1 through $count {
+    $names: list.append($names, --cw-section-#{$index}, $separator: comma);
+  }
+  @return $names;
+}
 
 @supports (animation-timeline: view()) and (timeline-scope: none) {
   @media (prefers-reduced-motion: no-preference) {
+    :global(:root):has(.sceneNav) {
+      timeline-scope: section-timelines($sections);
+    }
+
     .sceneLink::after {
       content: '';
       position: absolute;
@@ -373,10 +394,10 @@ $scene-timelines: (
       }
     }
 
-    @each $scene, $timeline in $scene-timelines {
-      .sceneLink[data-cw-scene-link='scene-#{$scene}']::after,
-      .sceneDot[data-cw-scene-dot='scene-#{$scene}']::after {
-        animation-timeline: #{$timeline};
+    @for $index from 1 through $sections {
+      .sceneLink[data-cw-scene-index='#{$index}']::after,
+      .sceneDot[data-cw-scene-index='#{$index}']::after {
+        animation-timeline: --cw-section-#{$index};
       }
     }
   }

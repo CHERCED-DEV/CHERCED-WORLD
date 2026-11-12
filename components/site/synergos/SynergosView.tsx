@@ -72,7 +72,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
   return (
     <div className={styles.page} data-cw-synergos="">
       <ScrollProgress />
-      <GlassSurface as="header" className={styles.hero} edge grain depth light data-cw-synergos-section="hero">
+      <GlassSurface as="header" id="section-hero" className={styles.hero} edge grain depth light data-cw-synergos-section="hero">
         <GridLines fade="radial" />
         <GlowOrb tone="accent" size="lg" x="85%" y="0%" />
         <CornerMarks />
@@ -132,7 +132,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
         </nav>
       </GlassSurface>
 
-      <section className={styles.section} aria-labelledby="synergos-what" data-cw-synergos-section="what">
+      <section id="section-what" className={styles.section} aria-labelledby="synergos-what" data-cw-synergos-section="what">
         <div className={styles.head}>
           <SectionTitle id="synergos-what">{copy.what.title[lang]}</SectionTitle>
           <p className={styles.lead}>{copy.what.lead[lang]}</p>
@@ -143,7 +143,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
         </p>
       </section>
 
-      <section className={styles.section} aria-labelledby="synergos-verticals" data-cw-synergos-section="verticals">
+      <section id="section-verticals" className={styles.section} aria-labelledby="synergos-verticals" data-cw-synergos-section="verticals">
         <div className={styles.head}>
           <SectionTitle id="synergos-verticals">{copy.verticals.title[lang]}</SectionTitle>
           <p className={styles.lead}>{copy.verticals.lead[lang]}</p>
@@ -180,7 +180,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
         </ul>
       </section>
 
-      <section className={styles.section} aria-labelledby="synergos-line" data-cw-synergos-section="line">
+      <section id="section-line" className={styles.section} aria-labelledby="synergos-line" data-cw-synergos-section="line">
         <div className={styles.head}>
           <SectionTitle id="synergos-line">{copy.line.title[lang]}</SectionTitle>
         </div>
@@ -225,7 +225,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
         </GlassSurface>
       </section>
 
-      <section className={styles.section} aria-labelledby="synergos-mvp" data-cw-synergos-section="mvp">
+      <section id="section-mvp" className={styles.section} aria-labelledby="synergos-mvp" data-cw-synergos-section="mvp">
         <div className={styles.head}>
           <SectionTitle id="synergos-mvp">{copy.mvp.title[lang]}</SectionTitle>
         </div>
@@ -287,7 +287,7 @@ export function SynergosView({ lang, project, build, labels }: SynergosViewProps
         </div>
       </section>
 
-      <section className={styles.section} aria-labelledby="synergos-build" data-cw-synergos-section="build">
+      <section id="section-build" className={styles.section} aria-labelledby="synergos-build" data-cw-synergos-section="build">
         <div className={styles.head}>
           <SectionTitle id="synergos-build">{copy.build.title[lang]}</SectionTitle>
         </div>

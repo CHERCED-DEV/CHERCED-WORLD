@@ -1,58 +1,38 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FocusEvent, type MouseEvent } from 'react'
-import { useMediaQuery, useScrollDirection, type ScrollDirection } from '@/lib/fx/viewport'
-import styles from './SceneNav.module.scss'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type FocusEvent, type MouseEvent } from 'react'
+import { useMediaQuery, useScrollDirection } from '@/lib/fx/viewport'
+import {
+  activeSection,
+  navSections,
+  readingLine,
+  SECTION_TAB_QUERY,
+  SECTION_TAB_RELEASE,
+  sectionNumber,
+  sectionTabGeometry,
+  sectionTabState,
+  sectionTimelineCss,
+  type NavSection,
+} from './model'
+import styles from './SectionNav.module.scss'
 
-export type Scene = { id: string; label: string }
+export type { NavSection } from './model'
 
-export const SCENE_TAB_QUERY = '(max-width: 767.98px) and (prefers-reduced-motion: no-preference)'
-
-export const SCENE_TAB_RELEASE = 48
-
-export type SceneTabState = 'open' | 'compact'
-
-export function sceneTabState({
-  compactable,
-  direction,
-  pinned,
-  focused,
-}: {
-  compactable: boolean
-  direction: ScrollDirection
-  pinned: boolean
-  focused: boolean
-}): SceneTabState {
-  return compactable && direction === 'down' && !pinned && !focused ? 'compact' : 'open'
-}
-
-export type SceneTabMetrics = {
-  track: number
-  start: number
-  end: number
-  badge: number
-  scroll: number
-  width: number
-  lefts: number[]
-}
-
-export function sceneTabGeometry({ track, start, end, badge, scroll, width, lefts }: SceneTabMetrics): { shift: number; pulls: number[] } {
-  const shift = Math.max(0, Math.round(track - (start + badge + width + end)))
-  return { shift, pulls: lefts.map((left) => Math.round(shift + start + badge - left + scroll)) }
-}
+export type SectionNavProps = { label: string; sections: readonly NavSection[] }
 
 function reducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
-export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) {
-  const [current, setCurrent] = useState(scenes[0]?.id ?? '')
+export function SectionNav({ label, sections: given }: SectionNavProps) {
+  const sections = useMemo(() => navSections(given), [given])
+  const [current, setCurrent] = useState(sections[0]?.id ?? '')
   const [footer, setFooter] = useState(false)
   const [pin, setPin] = useState<number | null>(null)
   const [focused, setFocused] = useState(false)
-  const compactable = useMediaQuery(SCENE_TAB_QUERY)
+  const compactable = useMediaQuery(SECTION_TAB_QUERY)
   const direction = useScrollDirection()
-  const compact = sceneTabState({ compactable, direction, pinned: pin !== null, focused }) === 'compact'
+  const compact = sectionTabState({ compactable, direction, pinned: pin !== null, focused }) === 'compact'
   const navRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLOListElement>(null)
@@ -60,7 +40,7 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
   const indicatorRef = useRef<HTMLSpanElement>(null)
   const placed = useRef<{ id: string; x: number; width: number } | null>(null)
   const pressedCompact = useRef(false)
-  const position = Math.max(0, scenes.findIndex((scene) => scene.id === current))
+  const position = Math.max(0, sections.findIndex((section) => section.id === current))
 
   const place = useCallback(() => {
     const nav = navRef.current
@@ -71,7 +51,7 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
     const item = items[position]
     if (!nav || !track || !list || !indicator || !item) return
     const style = getComputedStyle(list)
-    const { shift, pulls } = sceneTabGeometry({
+    const { shift, pulls } = sectionTabGeometry({
       track: track.clientWidth,
       start: Number.parseFloat(style.paddingLeft) || 0,
       end: Number.parseFloat(style.paddingRight) || 0,
@@ -143,35 +123,41 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
   useEffect(() => {
     if (pin === null) return
     const release = () => {
-      if (Math.abs(window.scrollY - pin) > SCENE_TAB_RELEASE) setPin(null)
+      if (Math.abs(window.scrollY - pin) > SECTION_TAB_RELEASE) setPin(null)
     }
     window.addEventListener('scroll', release, { passive: true })
     return () => window.removeEventListener('scroll', release)
   }, [pin])
 
   useEffect(() => {
-    const targets = scenes.map((scene) => document.getElementById(scene.id)).filter((node): node is HTMLElement => node !== null)
-    if (targets.length === 0 || typeof IntersectionObserver === 'undefined') return
-    const visible = new Map<string, number>()
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) visible.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0)
-        let best = ''
-        let ratio = 0
-        for (const scene of scenes) {
-          const value = visible.get(scene.id) ?? 0
-          if (value > ratio) {
-            ratio = value
-            best = scene.id
-          }
-        }
-        if (best) setCurrent(best)
-      },
-      { rootMargin: '-120px 0px -35% 0px', threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
-    )
-    for (const target of targets) observer.observe(target)
-    return () => observer.disconnect()
-  }, [scenes])
+    const targets = sections.map((section) => document.getElementById(section.id)).filter((node): node is HTMLElement => node !== null)
+    if (targets.length === 0) return
+    let frame = 0
+    const read = () => {
+      frame = 0
+      const root = document.documentElement
+      const next = activeSection(
+        targets.map((target) => ({ id: target.id, top: target.getBoundingClientRect().top })),
+        {
+          line: readingLine(window.innerHeight, document.getElementById('header')?.getBoundingClientRect().bottom ?? 0),
+          viewport: window.innerHeight,
+          atEnd: window.scrollY > 0 && window.scrollY + window.innerHeight >= root.scrollHeight - 2,
+        },
+      )
+      if (next) setCurrent(next)
+    }
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(read)
+    }
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule, { passive: true })
+    schedule()
+    return () => {
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [sections])
 
   useEffect(() => {
     const footer = document.getElementById('footer')
@@ -212,6 +198,7 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
         aria-label={label}
         data-cw-scene-nav=""
         data-cw-compact={compact ? '' : undefined}
+        data-cw-over-footer={footer ? '' : undefined}
         onFocus={onFocus}
         onBlur={onBlur}
       >
@@ -225,27 +212,28 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
           onClick={onTabClick}
         >
           <span ref={badgeRef} className={styles.sceneBadge} aria-hidden="true" data-cw-scene-badge="">
-            {String(position + 1).padStart(2, '0')}
+            {sectionNumber(position)}
           </span>
           <div ref={trackRef} className={styles.track}>
             <span ref={indicatorRef} className={styles.sceneIndicator} aria-hidden="true" data-cw-scene-indicator="" />
             <ol ref={listRef} className={styles.sceneList}>
-              {scenes.map((scene, index) => (
-                <li key={scene.id} className={styles.sceneItem} data-current={current === scene.id ? '' : undefined}>
+              {sections.map((section, index) => (
+                <li key={section.id} className={styles.sceneItem} data-current={current === section.id ? '' : undefined}>
                   <a
-                    href={`#${scene.id}`}
+                    href={`#${section.id}`}
                     className={styles.sceneLink}
-                    aria-current={current === scene.id ? 'true' : undefined}
-                    data-cw-scene-link={scene.id}
+                    aria-current={current === section.id ? 'true' : undefined}
+                    data-cw-scene-link={section.id}
+                    data-cw-scene-index={index + 1}
                     onClick={() => {
-                      setCurrent(scene.id)
+                      setCurrent(section.id)
                       setPin(null)
                     }}
                   >
                     <span className={styles.sceneIndex} aria-hidden="true">
-                      {String(index + 1).padStart(2, '0')}
+                      {sectionNumber(index)}
                     </span>
-                    {scene.label}
+                    {section.label}
                   </a>
                 </li>
               ))}
@@ -254,19 +242,21 @@ export function SceneNav({ label, scenes }: { label: string; scenes: Scene[] }) 
         </div>
       </nav>
       <div className={styles.sceneDots} aria-hidden="true" data-cw-scene-dots="" data-cw-over-footer={footer ? '' : undefined}>
-        {scenes.map((scene) => (
+        {sections.map((section, index) => (
           <button
-            key={scene.id}
+            key={section.id}
             type="button"
             tabIndex={-1}
             className={styles.sceneDot}
-            title={scene.label}
-            data-current={current === scene.id ? '' : undefined}
-            data-cw-scene-dot={scene.id}
-            onClick={() => goTo(scene.id)}
+            title={section.label}
+            data-current={current === section.id ? '' : undefined}
+            data-cw-scene-dot={section.id}
+            data-cw-scene-index={index + 1}
+            onClick={() => goTo(section.id)}
           />
         ))}
       </div>
+      <style data-cw-scene-timelines="">{sectionTimelineCss(sections)}</style>
     </>
   )
 }

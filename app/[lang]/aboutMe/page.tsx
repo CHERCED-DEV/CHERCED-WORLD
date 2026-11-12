@@ -8,9 +8,9 @@ import { BrainScene } from '@/components/site/about/BrainScene'
 import { aboutFigures } from '@/components/site/about/figures'
 import { formatMonth } from '@/components/site/format'
 import { HeadingScene } from '@/components/site/about/HeadingScene'
-import { SceneNav } from '@/components/site/about/SceneNav'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
+import { SectionNav } from '@/components/site/section-nav/SectionNav'
 import { SectionTitle } from '@/components/site/SectionTitle'
 import { ShowcaseLink } from '@/components/site/synergos/ShowcaseLink'
 import { formatFact, synergosFacts } from '@/content/synergos'
@@ -50,9 +50,9 @@ export default async function AboutMePage({ params }: Props) {
   return (
     <div className={styles.page}>
       <BackgroundIntensity value="subtle" />
-      <SceneNav
+      <SectionNav
         label={t(dict, 'about.scenes')}
-        scenes={[
+        sections={[
           { id: ABOUT_SCENES.who, label: t(dict, 'about.scene.who') },
           { id: ABOUT_SCENES.career, label: t(dict, 'about.career') },
           { id: ABOUT_SCENES.knowledge, label: t(dict, 'about.scene.knowledge') },

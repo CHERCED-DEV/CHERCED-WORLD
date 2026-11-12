@@ -3,17 +3,32 @@ import { notFound } from 'next/navigation'
 import { BackgroundIntensity } from '@/components/motion'
 import { isLocale, localizedPath, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
-import { CaseStudy } from '@/components/site/portfolio/CaseStudy'
+import { CaseStudy, EMBED_ANCHOR } from '@/components/site/portfolio/CaseStudy'
 import { caseEvidenceLabels, caseStudyExtraLabels } from '@/components/site/portfolio/labels'
-import { caseStudyNeighbors, technologyCounts, type CaseStudyLabels } from '@/components/site/portfolio/projects'
+import {
+  caseAdrCards,
+  caseHighlights,
+  caseStorySections,
+  caseStudyNeighbors,
+  technologyCounts,
+  type CaseStudyLabels,
+} from '@/components/site/portfolio/projects'
 import { caseRelatedLinks, casePostIds, type RelatedPostTitle } from '@/components/site/portfolio/related'
+import { stackGroups } from '@/components/site/portfolio/stack'
 import { pageMetadata } from '@/components/site/metadata'
+import { localizeSections } from '@/components/site/section-nav/model'
+import { SectionNav } from '@/components/site/section-nav/SectionNav'
 import { synergosShowcase, SYNERGOS_CASE_ID } from '@/content/synergos-showcase'
+import type { Localized } from '@/content/types'
 import { getProject, getProjects, getSite, loadPost, projectTitle } from '@/lib/content'
 import { caseBreadcrumbJsonLd, caseStudyJsonLd } from '@/lib/seo/case-study'
 import { jsonLdScript } from '@/lib/seo/person'
 
 type Props = { params: Promise<{ lang: string; id: string }> }
+
+const SECTIONS_LABEL = { es: 'Secciones del caso', en: 'Case sections' }
+
+const STORY_LABELS: Record<string, Localized> = { decisions: { es: 'Decisiones', en: 'Decisions' } }
 
 export const dynamicParams = false
 
@@ -73,6 +88,22 @@ export default async function CaseStudyPage({ params }: Props) {
   return (
     <>
       <BackgroundIntensity value="subtle" />
+      <SectionNav
+        label={SECTIONS_LABEL[lang]}
+        sections={localizeSections(
+          [
+            { id: 'section-hero', label: { es: 'Resumen', en: 'Overview' } },
+            ...(caseHighlights(project, lang).length > 0 ? [{ id: 'section-highlights', label: { es: 'Destacados', en: 'Highlights' } }] : []),
+            ...(project.links.live ? [{ id: EMBED_ANCHOR, label: { es: 'En vivo', en: 'Live' } }] : []),
+            ...caseStorySections(project, lang, labels, caseAdrCards(project, lang).length > 0).map((section) => ({
+              id: `section-${section.id}`,
+              label: STORY_LABELS[section.id] ?? section.heading,
+            })),
+            ...(stackGroups(project.technologies).length > 0 ? [{ id: 'section-stack', label: { es: 'Tecnologías', en: 'Technologies' } }] : []),
+          ],
+          lang,
+        )}
+      />
       <CaseStudy
         project={project}
         lang={lang}

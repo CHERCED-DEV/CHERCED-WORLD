@@ -9,7 +9,7 @@ export type ServiceAudiencesProps = { lang: Locale; title: string; audiences: Se
 
 export function ServiceAudiences({ lang, title, audiences }: ServiceAudiencesProps) {
   return (
-    <section className={styles.block} aria-labelledby="services-audiences" data-cw-services-block="audiences">
+    <section id="section-audiences" className={styles.block} aria-labelledby="services-audiences" data-cw-services-block="audiences">
       <SectionTitle id="services-audiences">{title}</SectionTitle>
       <ul className={styles.audiences}>
         {audiences.map((audience) => (

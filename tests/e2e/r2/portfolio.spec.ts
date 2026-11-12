@@ -497,6 +497,7 @@ test.describe('accesibilidad de los casos de estudio', () => {
           if (testInfo.project.name === 'desktop-chromium') {
             await page.locator('[data-cw-embed-load]').click()
             await expect(page.locator('[data-cw-embed]')).toHaveAttribute('data-state', 'ready')
+            await page.locator('[data-cw-embed]').evaluate((embed) => embed.scrollIntoView({ block: 'start', behavior: 'instant' }))
             await scan('embebido')
           } else {
             await page.locator('[data-cw-embed-sheet-open]').click()

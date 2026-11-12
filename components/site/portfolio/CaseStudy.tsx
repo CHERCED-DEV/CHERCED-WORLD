@@ -90,7 +90,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
   const story = (
     <GlassSurface variant="standard" className={styles.body}>
       {sections.map((section) => (
-        <section key={section.id} className={styles.block} aria-labelledby={`case-${section.id}`} data-cw-case-section={section.id}>
+        <section key={section.id} id={`section-${section.id}`} className={styles.block} aria-labelledby={`case-${section.id}`} data-cw-case-section={section.id}>
           <h2 id={`case-${section.id}`} className={styles.heading}>
             {section.heading}
           </h2>
@@ -214,6 +214,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
   return (
     <article className={styles.page} aria-labelledby="case-title" data-cw-case={project.id}>
       <header
+        id="section-hero"
         className={styles.hero}
         data-orientation={landscape ? 'landscape' : 'portrait'}
         data-cw-glass="standard"
@@ -259,7 +260,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
       <PatternLinks ids={project.patterns} lang={lang} />
 
       {highlights.length > 0 ? (
-        <section className={styles.highlights} aria-labelledby="case-highlights" data-cw-case-highlights="">
+        <section id="section-highlights" className={styles.highlights} aria-labelledby="case-highlights" data-cw-case-highlights="">
           <h2 id="case-highlights" className={styles.heading}>
             {extra.highlights}
           </h2>
@@ -299,7 +300,7 @@ export function CaseStudy({ project, lang, labels, extras }: CaseStudyProps) {
       {evidence && diagram.length > 0 ? <LiveDiagram layers={diagram} labels={evidence.diagram} /> : null}
 
       {groups.length > 0 ? (
-        <section className={styles.stack} aria-labelledby="case-technologies" data-cw-case-stack="">
+        <section id="section-stack" className={styles.stack} aria-labelledby="case-technologies" data-cw-case-stack="">
           <div className={styles.stackHead}>
             <h2 id="case-technologies" className={styles.heading}>
               {labels.technologies}

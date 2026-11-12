@@ -142,6 +142,7 @@ test.describe('/now: accesibilidad y responsive', () => {
         const found: string[] = []
         if (document.documentElement.scrollWidth > window.innerWidth + 1) found.push(`scroll ${document.documentElement.scrollWidth}`)
         for (const element of document.querySelectorAll('#main h1, #main h2, #main p, #main li')) {
+          if (element.closest('[data-cw-scene-nav]')) continue
           const rect = element.getBoundingClientRect()
           if (rect.left < -0.5 || rect.right > window.innerWidth + 0.5) found.push(`${element.tagName} se sale`)
           if (element.scrollWidth > element.clientWidth + 1) found.push(`${element.tagName} desborda`)

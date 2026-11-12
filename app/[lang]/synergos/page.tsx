@@ -4,6 +4,8 @@ import { BackgroundIntensity } from '@/components/motion'
 import { resolveLang, type LangParams } from '@/components/site/lang'
 import { pageMetadata } from '@/components/site/metadata'
 import { caseEvidenceLabels } from '@/components/site/portfolio/labels'
+import { localizeSections } from '@/components/site/section-nav/model'
+import { SectionNav } from '@/components/site/section-nav/SectionNav'
 import { SynergosView } from '@/components/site/synergos/SynergosView'
 import { synergosShowcase, SYNERGOS_BUILD_CASE_ID, SYNERGOS_CASE_ID, SYNERGOS_PATH } from '@/content/synergos-showcase'
 import { getProject } from '@/lib/content'
@@ -13,6 +15,8 @@ import { jsonLdScript } from '@/lib/seo/person'
 import { synergosJsonLd } from '@/lib/seo/synergos'
 
 type Props = { params: LangParams }
+
+const SECTIONS_LABEL = { es: 'Secciones de Synergos', en: 'Synergos sections' }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = await resolveLang(params)
@@ -32,10 +36,25 @@ export default async function SynergosPage({ params }: Props) {
   const project = getProject(SYNERGOS_CASE_ID)
   if (!project) notFound()
   const dict = await getDictionary(lang, 'site')
+  const { copy } = synergosShowcase
 
   return (
     <>
       <BackgroundIntensity value="subtle" />
+      <SectionNav
+        label={SECTIONS_LABEL[lang]}
+        sections={localizeSections(
+          [
+            { id: 'section-hero', label: 'Synergos' },
+            { id: 'section-what', label: copy.what.title },
+            { id: 'section-verticals', label: { es: 'Verticales', en: 'Verticals' } },
+            { id: 'section-line', label: { es: 'Línea de ensamblaje', en: 'Assembly line' } },
+            { id: 'section-mvp', label: { es: 'Hitos', en: 'Milestones' } },
+            { id: 'section-build', label: copy.build.title },
+          ],
+          lang,
+        )}
+      />
       <SynergosView
         lang={lang}
         project={project}

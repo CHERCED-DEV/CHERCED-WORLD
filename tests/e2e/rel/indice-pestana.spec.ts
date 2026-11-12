@@ -7,18 +7,28 @@ function onlyIn(...names: string[]) {
   test.skip(!names.includes(test.info().project.name), `solo en ${names.join(', ')}`)
 }
 
+const PAGES = [
+  { path: '/es/aboutMe', name: 'Escenas de Sobre mí' },
+  { path: '/es/services', name: 'Secciones de Servicios' },
+  { path: '/en/services', name: 'Services sections' },
+  { path: '/es/portfolio/1', name: 'Secciones del caso' },
+  { path: '/es/synergos', name: 'Secciones de Synergos' },
+  { path: '/es/ai-lab', name: 'Secciones del AI Lab' },
+  { path: '/en/now', name: 'Now sections' },
+] as const
+
 const nav = (page: Page) => page.locator('[data-cw-scene-nav]')
 const tab = (page: Page) => page.locator('[data-cw-scene-tab]')
 const active = (page: Page) => nav(page).locator('a[aria-current="true"]')
 
-async function open(page: Page, { lang = 'es', width }: { lang?: 'es' | 'en'; width?: number } = {}) {
+async function open(page: Page, { lang = 'es', width, path }: { lang?: 'es' | 'en'; width?: number; path?: string } = {}) {
   if (width) await page.setViewportSize({ width, height: HEIGHTS[width] ?? 844 })
   await page.addInitScript(() => {
     try {
       sessionStorage.setItem('cw-intro-seen', '1')
     } catch {}
   })
-  await page.goto(`/${lang}/aboutMe`)
+  await page.goto(path ?? `/${lang}/aboutMe`)
   await expect(nav(page)).toHaveAttribute('data-cw-measured', '')
 }
 
@@ -247,5 +257,79 @@ test.describe('índice de Sobre mí como pestaña fija en celular', () => {
       await expect(nav(page)).not.toHaveAttribute('data-cw-compact')
       expect(await opacities(page)).toEqual(['1', '1', '1', '1'])
     })
+  })
+})
+
+test.describe('la misma navegación es el estándar de las páginas con varias secciones', () => {
+  for (const { path, name } of PAGES) {
+    test(`${path}: pestaña fija bajo el header y puntos, cada enlace lleva a una sección que existe`, async ({ page }) => {
+      onlyIn('mobile-chromium')
+      await page.emulateMedia({ reducedMotion: 'no-preference' })
+      await open(page, { path })
+      const links = page.getByRole('navigation', { name, exact: true }).getByRole('link')
+      const count = await links.count()
+      expect(count).toBeGreaterThanOrEqual(2)
+      const targets = await links.evaluateAll((items) => items.map((item) => Boolean(document.getElementById(item.getAttribute('href')!.slice(1)))))
+      expect(targets).toEqual(Array(count).fill(true))
+      await expect(page.locator('[data-cw-scene-dot]')).toHaveCount(count)
+      const box = (await tab(page).boundingBox())!
+      expect(box.x).toBe(0)
+      expect(box.x + box.width).toBeLessThanOrEqual(390 - 14)
+      const gap = await gapUnderHeader(page)
+      expect(gap).toBeGreaterThanOrEqual(6)
+      expect(gap).toBeLessThanOrEqual(9)
+      const heading = (await page.locator('main h1').first().boundingBox())!
+      expect(heading.y, 'el título no queda debajo de la pestaña').toBeGreaterThanOrEqual(box.y + box.height)
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+      await glide(page, 1200)
+      await expect(nav(page)).toHaveAttribute('data-cw-compact', '')
+      await expect.poll(() => gapUnderHeader(page)).toBe(gap)
+      await expect.poll(() => opacities(page).then((values) => values.filter((value) => value === '1').length)).toBe(1)
+      const index = await active(page).getAttribute('data-cw-scene-index')
+      await expect(nav(page).locator('[data-cw-scene-badge]')).toHaveText(index!.padStart(2, '0'))
+      await expect(page.locator(`[data-cw-scene-dot][data-current][data-cw-scene-index="${index}"]`)).toHaveCount(1)
+      const results = await new AxeBuilder({ page }).include('[data-cw-scene-nav]').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze()
+      expect(results.violations.map((violation) => violation.id)).toEqual([])
+      await glide(page, -240)
+      await expect(nav(page)).not.toHaveAttribute('data-cw-compact')
+      await expect.poll(() => opacities(page).then((values) => values.every((value) => value === '1'))).toBe(true)
+      await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }))
+      await expect(nav(page), 'sobre el pie se aparta para no tapar lo último de la página').toHaveAttribute('data-cw-over-footer', '')
+      await expect.poll(() => tab(page).evaluate((node) => getComputedStyle(node).opacity)).toBe('0')
+    })
+
+    test(`${path}: en escritorio queda centrada, entera y sin compactarse`, async ({ page }) => {
+      onlyIn('desktop-chromium')
+      await page.emulateMedia({ reducedMotion: 'no-preference' })
+      await open(page, { path })
+      const center = await page.evaluate(() => document.documentElement.clientWidth / 2)
+      const box = (await tab(page).boundingBox())!
+      expect(Math.abs(box.x + box.width / 2 - center)).toBeLessThan(2)
+      expect(box.height).toBe(44)
+      expect(await tab(page).locator('div').first().evaluate((track) => track.scrollWidth <= track.clientWidth + 1), 'las secciones caben sin desplazar').toBe(true)
+      await glide(page, 1200)
+      await page.waitForTimeout(400)
+      await expect(nav(page)).not.toHaveAttribute('data-cw-compact')
+      await expect(page.locator('[data-cw-scene-dots]')).toBeHidden()
+    })
+  }
+
+  test.describe('sin JavaScript', () => {
+    test.use({ javaScriptEnabled: false })
+
+    for (const { path, name } of PAGES.slice(1)) {
+      test(`${path}: la navegación queda fija y entera, sin puntos`, async ({ page }) => {
+        onlyIn('mobile-chromium')
+        await page.setViewportSize({ width: 390, height: 844 })
+        await page.goto(path)
+        const links = page.getByRole('navigation', { name, exact: true }).getByRole('link')
+        expect(await links.count()).toBeGreaterThanOrEqual(2)
+        await expect(links.first()).toBeVisible()
+        await expect(page.locator('[data-cw-scene-dots]')).toBeHidden()
+        const gap = await gapUnderHeader(page)
+        await page.evaluate(() => window.scrollTo({ top: 1500, behavior: 'instant' }))
+        await expect.poll(() => gapUnderHeader(page)).toBe(gap)
+      })
+    }
   })
 })
