@@ -145,3 +145,22 @@ test.describe('U18: /now enlaza lo que menciona', () => {
     })
   }
 })
+
+test.describe('R4.2: SEO y navegación que encontró el barrido de la vista previa', () => {
+  onlyIn('desktop-chromium')
+
+  test('/privacy comparte imagen, URL e idioma como las demás páginas', async ({ page }) => {
+    for (const lang of ['es', 'en'] as const) {
+      await page.goto(`/${lang}/privacy`)
+      await expect(page.locator('meta[property="og:image"]').first()).toHaveAttribute('content', /^https?:\/\//)
+      await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', new RegExp(`/${lang}/privacy$`))
+      await expect(page.locator('meta[property="og:locale"]')).toHaveCount(1)
+    }
+  })
+
+  test('"Regresar" en una etiqueta del blog lleva al blog, no a /blog/tag', async ({ page }) => {
+    await skipIntro(page)
+    await page.goto('/es/blog/tag/humor')
+    await expect(page.locator('[data-cw-back]').first()).toHaveAttribute('href', '/es/blog')
+  })
+})

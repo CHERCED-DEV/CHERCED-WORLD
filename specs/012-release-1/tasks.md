@@ -123,11 +123,12 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   las 92 URLs del sitemap de la vista previa n2un7d4fo. Están limpios el código 200, `lang`, un `h1`, los títulos,
   las descripciones, las canónicas, el `hreflang`, el JSON-LD, los `alt`, el contenido sin JS y 131 de 133 enlaces.
   Pendiente para mañana, en este orden:
-  1. El 404 sale en Vercel sin `<meta name="robots" content="noindex">` (en local Next la pone sola). Hay que
-     declararla en `app/global-not-found.tsx` (`robots: { index: false }`) y revisar que no quede duplicada.
-  2. "Regresar" en las 28 páginas de etiqueta lleva a `/[lang]/blog/tag`, que es 404. `parentPath`
+  1. [x] El 404 sale en Vercel sin `<meta name="robots" content="noindex">`. Next la pone solo cuando al renderizar
+     ya sabe que el estado es 404, y en Vercel no lo sabe. Se deja así: la respuesta es HTTP 404, y Google no indexa
+     un 404. Declararla duplicaba la etiqueta en local y rompía seis pruebas (2026-11-12).
+  2. [x] (2026-11-12) "Regresar" en las 28 páginas de etiqueta lleva a `/[lang]/blog/tag`, que es 404. `parentPath`
      (`components/shell/nav.ts`) debe mandar a `/[lang]/blog`.
-  3. `/privacy` pierde `og:image`, `og:url`, `og:locale` y `twitter:card` grande, porque su `openGraph` reemplaza el
+  3. [x] (2026-11-12) `/privacy` pierde `og:image`, `og:url`, `og:locale` y `twitter:card` grande, porque su `openGraph` reemplaza el
      del layout. Hay que usar `pageMetadata` (`components/site/metadata.ts`), como las otras páginas.
   4. Menor: el cambio de idioma en 20 etiquetas con slug traducido pasa por un 308; sin JS, las reacciones quedan
      en "cargando".

@@ -8,7 +8,8 @@ import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { Separator } from '@/components/ui/Separator'
 import { getSite, pick } from '@/lib/content'
-import { alternates, isLocale, localizedPath, t, type Locale } from '@/lib/i18n'
+import { pageMetadata } from '@/components/site/metadata'
+import { isLocale, localizedPath, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
 type Props = { params: Promise<{ lang: string }> }
@@ -22,15 +23,14 @@ function formatDay(value: string, lang: Locale): string {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params
   if (!isLocale(lang)) return {}
-  const privacy = await getDictionary(lang, 'privacy')
-  const title = t(privacy, 'meta.privacy.title')
-  const description = t(privacy, 'meta.privacy.description')
-  return {
-    title,
-    description,
-    alternates: alternates(localizedPath(lang, '/privacy')),
-    openGraph: { title, description },
-  }
+  const [privacy, common] = await Promise.all([getDictionary(lang, 'privacy'), getDictionary(lang, 'common')])
+  return pageMetadata({
+    lang,
+    path: '/privacy',
+    title: t(privacy, 'meta.privacy.title'),
+    description: t(privacy, 'meta.privacy.description'),
+    common,
+  })
 }
 
 export default async function PrivacyPage({ params }: Props) {

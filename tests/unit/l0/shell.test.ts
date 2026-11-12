@@ -25,6 +25,8 @@ describe('navegación del shell', () => {
     expect(parentPath('/es')).toBeNull()
     expect(parentPath('/es/inbox/setup')).toBe('/es')
     expect(parentPath('/en/inbox/comments')).toBe('/en/inbox')
+    expect(parentPath('/es/blog/tag/humor'), 'R4.2: /blog/tag no existe; las etiquetas vuelven al blog').toBe('/es/blog')
+    expect(parentPath('/en/blog/tag/coupling')).toBe('/en/blog')
   })
 
   it('T228: reconoce el panel privado para no precargar el shell en cada acción', () => {

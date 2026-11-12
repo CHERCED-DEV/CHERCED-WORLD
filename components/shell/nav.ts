@@ -73,6 +73,7 @@ export function parentPath(pathname: string): string | null {
   const segments = pathname.split('/').filter(Boolean)
   if (segments.length < 3) return null
   if (segments[1] === 'inbox' && segments[2] === 'setup') return `/${segments[0]}`
+  if (segments[1] === 'blog' && segments[2] === 'tag') return `/${segments[0]}/blog`
   return `/${segments.slice(0, -1).join('/')}`
 }
 
