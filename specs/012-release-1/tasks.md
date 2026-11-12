@@ -59,7 +59,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   la vitrina dejó de ser una copia, y una prueba vigila que el piso de tests no pase del conteo exacto (6.675). El
   "2.353" del post 6 es la cifra fechada del 6 de agosto y el post ya dice "más de 6.600" para noviembre.
 - [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.
-- [ ] R2.6 Post 2 (si el autor lo quiere en el release, D-R2).
+- [x] R2.6 Post 2 (si el autor lo quiere en el release, D-R2). Decisión del autor del 2026-11-12: sale después del release.
 - [x] R2.7 (hecho el 2026-11-12: `continuousStart` encadena los cargos de la misma empresa con hasta un mes de hueco; Sistecrédito dice "Desde mar 2025") "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
 - [ ] R2.9 Botón de WhatsApp para que escriban directo al autor (pedido el 2026-11-11, para más adelante). El autor aprobó el 2026-11-11 que el número quede público (enlace `wa.me`). Falta que lo dé y decidir dónde va sin duplicar llamados (Contacto, pop-up de reclutadores o el botón flotante) y cómo se mide.
 - [x] R2.8 (hecho el 2026-11-11: el círculo del lóbulo en celular mide al menos 7,5 em, unos 90 px, para que
@@ -95,7 +95,9 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
     buzón lleva ahí. Se resuelve con la decisión D-R1 (R3.4).
 
   Historial: Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir). También el 2026-11-11, al integrar C2 y C8 de la 013: `tests/e2e/r0/shell-v2.spec.ts` "Volver arriba" falla al llegar al final de `/es/aboutMe` en celular (también con teclado) y, a veces, de `/es/blog/catalog` en escritorio. Son páginas que C2 y C8 no tocan, y el catálogo pasó en la primera corrida. La fluidez del fondo del inicio (`integration/performance.spec.ts`, exhaustiva) da 30 fps contra 50 en escritorio, con C8 y sin C8 (medido en el mismo build). Al cerrar los bajos de R1.2: `tests/e2e/l1/site.spec.ts:219` (carrusel con teclado en celular) a veces no salta del primer proyecto al último con la flecha izquierda. Falló 1 de 6 veces sin C2 y 2 de 4 con C2, con una sola prueba a la vez. Causa probable: la espera de 120 ms de `onScroll` en `ProjectsExplorer.tsx` se cumple a mitad del scroll suave y devuelve el índice 0. El LCP de `/es` en celular dio 2672 ms contra 2500 en la corrida con 4 workers y pasa solo.
-- [ ] R3.4 Buzón para visitantes según D-R1.
+- [x] R3.4 Buzón para visitantes según D-R1. Decisión del autor del 2026-11-12: el visitante va a Contacto y el autor,
+  con su marca (`cw-author`, la que deja el inicio de sesión), al panel. El panel sigue entrando por URL directa.
+  Es el comportamiento de la T944 de la 007, que la 011 había cambiado.
 - [x] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; C2 y C8, el paso del hero a "Ahora trabajo en", hechos y aprobados el mismo día: "Quedan así", T1309) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 
 ## R4 — Endurecer
@@ -124,7 +126,8 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   constante, el setup con código de un solo uso, `requireAdmin` en cada acción, zod con límites, el escape del
   resaltado de código y del JSON-LD, y los workers del AI Lab solo después del consentimiento. Las rutas API
   heredadas responden 410.
-- [ ] R4.2 Rendimiento, accesibilidad, sin JS y SEO en la vista previa. Barrido del 2026-11-11: se revisaron con curl
+- [x] R4.2 Rendimiento, accesibilidad, sin JS y SEO en la vista previa. La accesibilidad completa va con la exhaustiva
+  (R4.3, al final). Barrido del 2026-11-11: se revisaron con curl
   las 92 URLs del sitemap de la vista previa n2un7d4fo. Están limpios el código 200, `lang`, un `h1`, los títulos,
   las descripciones, las canónicas, el `hreflang`, el JSON-LD, los `alt`, el contenido sin JS y 131 de 133 enlaces.
   Pendiente para mañana, en este orden:
