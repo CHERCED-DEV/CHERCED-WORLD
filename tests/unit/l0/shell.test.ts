@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { copyrightYears, isPaletteShortcut, NAV_ITEMS, navItems, parentPath, shellLabels } from '@/components/shell/nav'
+import { copyrightYears, inPrivatePanel, isPaletteShortcut, NAV_ITEMS, navItems, parentPath, shellLabels } from '@/components/shell/nav'
 import { getDictionary } from '@/lib/i18n/server'
 
 describe('navegación del shell', () => {
@@ -25,6 +25,11 @@ describe('navegación del shell', () => {
     expect(parentPath('/es')).toBeNull()
     expect(parentPath('/es/inbox/setup')).toBe('/es')
     expect(parentPath('/en/inbox/comments')).toBe('/en/inbox')
+  })
+
+  it('T228: reconoce el panel privado para no precargar el shell en cada acción', () => {
+    expect([inPrivatePanel('/es/inbox'), inPrivatePanel('/en/inbox/comments'), inPrivatePanel('/es/inbox/settings')]).toEqual([true, true, true])
+    expect([inPrivatePanel('/es'), inPrivatePanel('/es/blog/inbox-zero'), inPrivatePanel('/es/inboxes'), inPrivatePanel(null)]).toEqual([false, false, false, false])
   })
 
   it('reconoce Ctrl+K y ⌘+K, sin modificadores extra', () => {

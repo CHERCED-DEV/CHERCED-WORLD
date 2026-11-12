@@ -13,7 +13,7 @@ export function NavTabs({ tabs, label }: { tabs: PanelTab[]; label: string }) {
       <ul className={styles.tabs}>
         {tabs.map((tab) => (
           <li key={tab.id}>
-            <Link href={tab.href} className={styles.tab} aria-current={pathname === tab.href ? 'page' : undefined}>
+            <Link href={tab.href} prefetch={false} className={styles.tab} aria-current={pathname === tab.href ? 'page' : undefined}>
               {tab.label}
               {tab.count > 0 ? (
                 <>

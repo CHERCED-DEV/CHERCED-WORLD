@@ -40,7 +40,7 @@ export function PanelHeader({
 
   return (
     <GlassSurface as="header" variant="standard" className={styles.panelHeader} data-cw-panel-header="">
-      <Link href={localizedPath(lang, '/inbox')} className={styles.panelTitle}>
+      <Link href={localizedPath(lang, '/inbox')} prefetch={false} className={styles.panelTitle}>
         {tr('admin.panel.title')}
       </Link>
       <NavTabs tabs={tabs} label={tr('admin.nav.label')} />

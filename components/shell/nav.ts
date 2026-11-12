@@ -65,6 +65,10 @@ export function shellLabels(common: Dictionary): ShellLabels {
   }
 }
 
+export function inPrivatePanel(pathname: string | null): boolean {
+  return /^\/[a-z]{2}\/inbox(\/|$)/.test(pathname ?? '')
+}
+
 export function parentPath(pathname: string): string | null {
   const segments = pathname.split('/').filter(Boolean)
   if (segments.length < 3) return null

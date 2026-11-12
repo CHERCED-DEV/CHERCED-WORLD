@@ -13,6 +13,7 @@ export function FilterGroup({ label, options, current }: { label: string; option
         <Link
           key={option.value}
           href={option.href}
+          prefetch={false}
           className={styles.chip}
           aria-current={option.value === current ? 'page' : undefined}
           data-cw-filter={option.value}

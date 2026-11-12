@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState, useTransition, type FormEvent } from 'react'
+import { useOptimistic, useState, useTransition, type FormEvent } from 'react'
 import { fieldErrorText } from '@/components/contact/fieldErrors'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
@@ -26,20 +26,24 @@ export function ReplyEditor({ save, current, labels, results, errors }: ReplyEdi
   const [editing, setEditing] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const [pending, startTransition] = useTransition()
+  const [shown, showSaved] = useOptimistic(current)
   const toast = useToast()
   const router = useRouter()
 
   const send = (text: string | null) =>
     startTransition(async () => {
       const actionLabel = text === null ? labels.remove : labels.save
+      showSaved(text)
       const result = await save(text)
       if (result.ok) {
-        setEditing(false)
-        setError(undefined)
+        startTransition(() => {
+          setEditing(false)
+          setError(undefined)
+        })
         return
       }
       const fieldKey = result.fieldErrors?.text
-      setError(fieldErrorText(errors, fieldKey, 'text'))
+      startTransition(() => setError(fieldErrorText(errors, fieldKey, 'text')))
       toast.error(failureText(result, results) ?? results.unavailable, notCompletedTitle(results, actionLabel))
       if (result.error === 'unauthorized') router.refresh()
     })
@@ -55,11 +59,11 @@ export function ReplyEditor({ save, current, labels, results, errors }: ReplyEdi
     send(parsed.data.text)
   }
 
-  if (!editing && current) {
+  if (!editing && shown) {
     return (
       <div className={styles.reply} data-cw-author-reply="">
         <p className={styles.replyLabel}>{labels.label}</p>
-        <p className={styles.body}>{current}</p>
+        <p className={styles.body}>{shown}</p>
         <div className={styles.actions}>
           <Button size="sm" variant="glass" onClick={() => setEditing(true)} disabled={pending}>
             {labels.edit}

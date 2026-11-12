@@ -78,7 +78,7 @@ lane 002 necesita cambiarlas, lo pide como enmienda al orquestador.
   - Ningún skill se borra: vuelven React, Next.js, Node.js, MongoDB y Figma, y Arquitectura se completa con Clean Architecture, SOLID, patrones de diseño y sistemas distribuidos
   - "Oficio" se reemplaza por "Prácticas de ingeniería" e "Idiomas y negocio" (6 lóbulos)
   - Niveles con chips de años de uso, aprobados tal como los propuso el autor
-- [ ] T228 Pendiente (L3 congelada): al guardar una respuesta, el panel muestra un instante la anterior, y cada acción de moderación dispara de 8 a 15 prefetch extra (`components/admin/ReplyEditor.tsx`, `lib/actions/admin.ts`)
+- [x] T228 Resuelta en R3.2 de la 012 (2026-11-11). Antes: al guardar una respuesta, el panel muestra un instante la anterior, y cada acción de moderación dispara de 8 a 15 prefetch extra (`components/admin/ReplyEditor.tsx`, `lib/actions/admin.ts`)
 - [ ] T223 R4: lectura refinada (portada, índice flotante, citas, código), post 5 integrado e investigación de D-05
 
 ### R5 (en paralelo; corre su auditoría completa al integrar)

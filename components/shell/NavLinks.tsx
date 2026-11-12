@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { cx } from '@/components/ui/cx'
 import type { Locale } from '@/lib/i18n/config'
 import { localizedPath } from '@/lib/i18n/paths'
-import type { NavItem } from './nav'
+import { inPrivatePanel, type NavItem } from './nav'
 import styles from './SiteHeader.module.scss'
 
 export type NavLinksProps = {
@@ -30,6 +30,7 @@ export function NavLinks({ lang, items, label, variant, onNavigate }: NavLinksPr
             <li key={item.path}>
               <Link
                 href={href}
+                prefetch={inPrivatePanel(pathname) ? false : undefined}
                 className={styles.navLink}
                 aria-current={current ? 'page' : undefined}
                 data-active={current || inSection ? '' : undefined}

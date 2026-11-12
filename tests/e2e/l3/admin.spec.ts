@@ -1,4 +1,4 @@
-import { expect, test, type Browser, type BrowserContext, type Locator, type Page } from '@playwright/test'
+import { expect, test, type Browser, type BrowserContext, type Locator, type Page, type Request } from '@playwright/test'
 import {
   ACTION_MS,
   fillContact,
@@ -394,10 +394,28 @@ test('la moderación publica, responde como autor, rechaza y elimina, sin expone
 
   await item.getByRole('button', { name: 'Editar respuesta' }).click()
   await item.getByLabel('Respuesta del autor').fill('Gracias por leer, de verdad.')
+  await page.evaluate(() => {
+    const seen: string[] = []
+    ;(window as unknown as { __cwReplies: string[] }).__cwReplies = seen
+    new MutationObserver(() => {
+      for (const body of document.querySelectorAll('[data-cw-author-reply] p:nth-of-type(2)')) seen.push(body.textContent ?? '')
+    }).observe(document.body, { subtree: true, childList: true, characterData: true })
+  })
   await saveReply(page, item, 'Gracias por leer, de verdad.')
+  const seen = await page.evaluate(() => (window as unknown as { __cwReplies: string[] }).__cwReplies)
+  expect(seen, 'T228: al guardar no asoma la respuesta anterior').not.toContain('Gracias por leer.')
 
+  const prefetches: string[] = []
+  const onRequest = (request: Request) => {
+    const headers = request.headers()
+    if (headers['next-router-prefetch'] || headers['next-router-segment-prefetch']) prefetches.push(new URL(request.url()).pathname)
+  }
+  page.on('request', onRequest)
   await item.locator('[data-cw-action="reject"]').click()
   await expect(item).toHaveCount(0)
+  await page.waitForTimeout(1500)
+  page.off('request', onRequest)
+  expect(prefetches, 'T228: una acción de moderación no vuelve a precargar los enlaces del panel').toEqual([])
   await expect
     .poll(
       async () => {

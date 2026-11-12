@@ -68,7 +68,9 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 
 ## R3 — Specs abiertas y deuda
 - [ ] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734.
-- [ ] R3.2 002 T228.
+- [x] R3.2 002 T228 (hecho el 2026-11-11): al guardar, el panel muestra la respuesta nueva con `useOptimistic` y el
+  editor se cierra en la misma transición, así que ya no asoma la anterior. Una acción de moderación dejó de disparar
+  21 precargas: el panel y el shell no precargan dentro de `/inbox`. Queda en `tests/e2e/l3/admin.spec.ts`.
 - [x] R3.3a `/blog/catalog` volvía 404 desde la 011 (el proxy lo trataba como post inexistente); corregido el 2026-11-11, y la prueba de anterior y siguiente pasa a post6.
 - [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP). Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir). También el 2026-11-11, al integrar C2 y C8 de la 013: `tests/e2e/r0/shell-v2.spec.ts` "Volver arriba" falla al llegar al final de `/es/aboutMe` en celular (también con teclado) y, a veces, de `/es/blog/catalog` en escritorio. Son páginas que C2 y C8 no tocan, y el catálogo pasó en la primera corrida. La fluidez del fondo del inicio (`integration/performance.spec.ts`, exhaustiva) da 30 fps contra 50 en escritorio, con C8 y sin C8 (medido en el mismo build). Al cerrar los bajos de R1.2: `tests/e2e/l1/site.spec.ts:219` (carrusel con teclado en celular) a veces no salta del primer proyecto al último con la flecha izquierda. Falló 1 de 6 veces sin C2 y 2 de 4 con C2, con una sola prueba a la vez. Causa probable: la espera de 120 ms de `onScroll` en `ProjectsExplorer.tsx` se cumple a mitad del scroll suave y devuelve el índice 0. El LCP de `/es` en celular dio 2672 ms contra 2500 en la corrida con 4 workers y pasa solo.
 - [ ] R3.4 Buzón para visitantes según D-R1.
