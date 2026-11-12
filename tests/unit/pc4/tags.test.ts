@@ -3,7 +3,7 @@ import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { tags as catalog } from '@/content/posts/tags'
 import type { Locale } from '@/content/types'
-import { findTag, hasTag, tagAlternates, tagIn, tagPath, tagSlug, tagSlugIn, tagsIn } from '@/lib/blog/tags'
+import { findTag, hasTag, switchLocaleKeepingTag, tagAlternates, tagIn, tagPath, tagSlug, tagSlugIn, tagsIn } from '@/lib/blog/tags'
 import { readMeta } from '../l5/support/mdx-registry'
 
 vi.mock('@/content/posts/registry', async () => {
@@ -193,5 +193,16 @@ describe('URL de etiqueta estables (B9)', () => {
     expect(await tagLangs('carrera')).toEqual(['es', 'en'])
     expect(await tagLangs('architecture')).toEqual(['es', 'en'])
     expect(await tagLangs('arquitectura')).toEqual(['es', 'en'])
+  })
+})
+
+describe('R4.2: cambiar de idioma en una etiqueta lleva al slug del otro idioma, sin pasar por un 308', () => {
+  it('traduce el slug de la etiqueta y deja igual el resto de las rutas', () => {
+    expect(switchLocaleKeepingTag('/es/blog/tag/acoplamiento', 'en')).toBe('/en/blog/tag/coupling')
+    expect(switchLocaleKeepingTag('/en/blog/tag/coupling', 'es')).toBe('/es/blog/tag/acoplamiento')
+    expect(switchLocaleKeepingTag('/es/blog/tag/humor', 'en')).toBe('/en/blog/tag/humor')
+    expect(switchLocaleKeepingTag('/es/blog/tag/no-existe', 'en')).toBe('/en/blog/tag/no-existe')
+    expect(switchLocaleKeepingTag('/es/aboutMe', 'en')).toBe('/en/aboutMe')
+    expect(switchLocaleKeepingTag('/es/blog/post1', 'en')).toBe('/en/blog/post1')
   })
 })

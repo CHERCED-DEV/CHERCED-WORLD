@@ -1,7 +1,7 @@
 import { emit, type Theme } from '@/lib/events'
 import type { Locale } from '@/lib/i18n/config'
 import { rememberLocale } from '@/lib/i18n/cookie'
-import { switchLocalePath } from '@/lib/i18n/paths'
+import { switchLocaleKeepingTag } from '@/lib/blog/tags'
 
 export type PreferencesPort = {
   language(): Locale
@@ -26,7 +26,7 @@ export function browserPreferences({ lang, pathname, navigate }: BrowserPreferen
     setLanguage(target) {
       if (target === lang) return
       rememberLocale(target)
-      navigate(switchLocalePath(pathname(), target))
+      navigate(switchLocaleKeepingTag(pathname(), target))
     },
     theme: readTheme,
     setTheme(theme) {

@@ -135,7 +135,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
      (`components/shell/nav.ts`) debe mandar a `/[lang]/blog`.
   3. [x] (2026-11-12) `/privacy` pierde `og:image`, `og:url`, `og:locale` y `twitter:card` grande, porque su `openGraph` reemplaza el
      del layout. Hay que usar `pageMetadata` (`components/site/metadata.ts`), como las otras páginas.
-  4. Menor: el cambio de idioma en 20 etiquetas con slug traducido pasa por un 308; sin JS, las reacciones quedan
+  4. [x] (2026-11-12, `switchLocaleKeepingTag`) Menor: el cambio de idioma en 20 etiquetas con slug traducido pasa por un 308; sin JS, las reacciones quedan
      en "cargando".
   5. Para la decisión D-R1 (R3.4): `/es/inbox/setup` muestra a cualquiera el formulario de crear la contraseña de
      administrador. Está protegido por el código de un solo uso de los logs, pero el ícono del buzón lleva ahí.

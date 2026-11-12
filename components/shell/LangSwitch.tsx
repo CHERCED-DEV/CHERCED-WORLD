@@ -5,7 +5,7 @@ import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
 import { otherLocale, type Locale } from '@/lib/i18n/config'
 import { rememberLocale } from '@/lib/i18n/cookie'
-import { switchLocalePath } from '@/lib/i18n/paths'
+import { switchLocaleKeepingTag } from '@/lib/blog/tags'
 import styles from './controls.module.scss'
 
 export function LangSwitch({ lang, label, className }: { lang: Locale; label: string; className?: string }) {
@@ -14,7 +14,7 @@ export function LangSwitch({ lang, label, className }: { lang: Locale; label: st
 
   return (
     <a
-      href={switchLocalePath(pathname, target)}
+      href={switchLocaleKeepingTag(pathname, target)}
       hrefLang={target}
       lang={target}
       className={cx(styles.pill, className)}

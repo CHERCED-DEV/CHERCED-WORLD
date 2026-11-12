@@ -1,5 +1,5 @@
 import { tags as catalog, type PostTagNames } from '@/content/posts/tags'
-import { defaultLocale, locales, localizedPath, stripLocale, type Alternates, type Locale } from '@/lib/i18n'
+import { defaultLocale, locales, localizedPath, stripLocale, switchLocalePath, type Alternates, type Locale } from '@/lib/i18n'
 import { slugify } from './slug'
 
 export type Taggable = { tags: readonly string[] }
@@ -39,6 +39,18 @@ export function tagKey(tag: string): string {
 
 export function tagPath(lang: Locale, tag: string): string {
   return localizedPath(lang, `/blog/tag/${encodeURIComponent(tagSlugIn(tag, lang))}`)
+}
+
+const TAG_PAGE = /^\/[a-z]{2}\/blog\/tag\/([^/?#]+)\/?$/
+
+export function switchLocaleKeepingTag(pathname: string, to: Locale): string {
+  const slug = TAG_PAGE.exec(pathname)?.[1]
+  if (slug === undefined) return switchLocalePath(pathname, to)
+  let tag = slug
+  try {
+    tag = decodeURIComponent(slug)
+  } catch {}
+  return findTag(tag) ? tagPath(to, tag) : switchLocalePath(pathname, to)
 }
 
 export function tagAlternates(lang: Locale, tag: string, langs: readonly Locale[]): TagAlternates {
