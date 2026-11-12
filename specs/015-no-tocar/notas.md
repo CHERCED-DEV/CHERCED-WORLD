@@ -41,6 +41,10 @@ Huevo de pascua de humor que pidió el autor el 2026-11-12: "me gusta mucho o te
 
 ## Pruebas
 
-- Unitarias en `tests/unit/fun`: frases, temporizador, pausa, memoria y sprite.
-- E2E en `tests/e2e/fun` con `E2E_PORT=3700`. Por pedido del autor, se corren al final, cuando esté satisfecho con lo
-  que vea en la vista previa.
+- Unitarias en `tests/unit/fun`: frases, temporizador, pausa, memoria y sprite. Pasan junto con las guardas de i18n y
+  del footer.
+- E2E en `tests/e2e/fun` con `E2E_PORT=3700`, corrida después de que el autor aprobó la vista previa. En nivel full
+  pasan 12 y se omiten 18 por proyecto: el botón en ES y EN, sin JS, que solo finge, el minuto con reloj simulado, Esc
+  y "Quieto", movimiento reducido, el celular y axe en los dos temas.
+- Con cuatro navegadores en paralelo, la carga diferida tardó hasta 10 s en la máquina local. Por eso `wake()` espera
+  la primera aparición hasta 20 s. En la vista previa sale al instante.
