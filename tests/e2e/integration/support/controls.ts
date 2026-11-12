@@ -48,6 +48,7 @@ export const CONTROL_RULES: readonly ControlRule[] = [
     effect: 'delegated',
     expect: 'lo verifica x0/ai-lab: borra IndexedDB, la caché del modelo y el consentimiento, y avisa',
   },
+  { kind: 'no tocar', match: '[data-cw-no-tocar]', effect: 'delegated', expect: 'lo verifica tests/e2e/fun/no-tocar.spec.ts' },
   { kind: 'saltar al contenido', match: 'a.cw-skip-link', effect: 'skipLink', expect: 'el foco pasa a main' },
   { kind: 'cambio de idioma', match: '[data-cw-lang-switch]', effect: 'langSwitch', expect: 'la misma ruta en el otro idioma' },
   { kind: 'tema', match: '[data-cw-theme-toggle]', effect: 'theme', expect: 'data-theme, aria-pressed y la preferencia cambian' },
