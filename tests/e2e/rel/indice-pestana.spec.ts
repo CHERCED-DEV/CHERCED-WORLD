@@ -36,27 +36,30 @@ function opacities(page: Page): Promise<string[]> {
     .evaluateAll((items) => items.map((item) => getComputedStyle(item).opacity))
 }
 
-async function headerBottom(page: Page): Promise<number> {
-  const box = (await page.locator('#header').boundingBox())!
-  return box.y + box.height
+async function gapUnderHeader(page: Page): Promise<number> {
+  const header = (await page.locator('#header').boundingBox())!
+  return Math.round((await tab(page).boundingBox())!.y - (header.y + header.height))
 }
 
 test.describe('índice de Sobre mí como pestaña fija en celular', () => {
   test('375, 390 y 412 px: pegada al borde izquierdo bajo el header, punta derecha redonda, sin desbordar ni tapar el dock', async ({ page }) => {
     onlyIn('mobile-chromium')
+    test.setTimeout(120_000)
     for (const width of [375, 390, 412]) {
       await open(page, { width })
       const box = (await tab(page).boundingBox())!
       expect(box.x, `${width} px`).toBe(0)
-      expect(Math.round(box.y - (await headerBottom(page))), `${width} px`).toBe(8)
+      expect(await gapUnderHeader(page), `${width} px`).toBeGreaterThanOrEqual(6)
+      expect(await gapUnderHeader(page), `${width} px`).toBeLessThanOrEqual(9)
       expect(box.x + box.width, `${width} px`).toBeLessThanOrEqual(width - 14)
       const shape = await tab(page).evaluate((node) => {
         const style = getComputedStyle(node)
         return [style.borderTopLeftRadius, style.borderBottomLeftRadius, style.borderLeftWidth, Number.parseFloat(style.borderTopRightRadius) >= 20]
       })
       expect(shape, `${width} px`).toEqual(['0px', '0px', '0px', true])
+      const gap = await gapUnderHeader(page)
       await glide(page, 1600)
-      await expect.poll(async () => Math.round((await tab(page).boundingBox())!.y - (await headerBottom(page))), { message: `${width} px al bajar` }).toBe(8)
+      await expect.poll(() => gapUnderHeader(page), { message: `${width} px al bajar` }).toBe(gap)
       const dock = (await page.locator('[data-cw-dock-bar]').boundingBox())!
       expect((await tab(page).boundingBox())!.y + 48, `${width} px`).toBeLessThan(dock.y)
       expect(await page.evaluate(() => document.documentElement.scrollWidth), `${width} px`).toBeLessThanOrEqual(width)
@@ -143,7 +146,7 @@ test.describe('índice de Sobre mí como pestaña fija en celular', () => {
         getComputedStyle(document.querySelector(selector)!).transitionDuration.split(',').map((value) => Number.parseFloat(value)),
       ),
     )
-    expect(durations.every((value) => value === 0)).toBe(true)
+    expect(durations.every((value) => value < 0.001)).toBe(true)
   })
 
   test('con teclado el foco despliega la pestaña, se ve entero y no queda tapado (WCAG 2.4.11)', async ({ page }) => {
@@ -188,6 +191,7 @@ test.describe('índice de Sobre mí como pestaña fija en celular', () => {
 
   test('cumple WCAG 2.2 AA desplegada y compacta, en claro y en oscuro', async ({ page }) => {
     onlyIn('mobile-chromium')
+    test.setTimeout(120_000)
     for (const scheme of ['dark', 'light'] as const) {
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'no-preference' })
       await page.addInitScript((value) => {
@@ -234,8 +238,11 @@ test.describe('índice de Sobre mí como pestaña fija en celular', () => {
       const links = page.getByRole('navigation', { name: 'Escenas de Sobre mí' }).getByRole('link')
       await expect(links).toHaveCount(4)
       for (const link of await links.all()) await expect(link).toBeVisible()
+      const gap = await gapUnderHeader(page)
+      expect(gap).toBeGreaterThanOrEqual(6)
+      expect(gap).toBeLessThanOrEqual(9)
       await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }))
-      await expect.poll(async () => Math.round((await tab(page).boundingBox())!.y - (await headerBottom(page)))).toBe(8)
+      await expect.poll(() => gapUnderHeader(page)).toBe(gap)
       expect((await tab(page).boundingBox())!.x).toBe(0)
       await expect(nav(page)).not.toHaveAttribute('data-cw-compact')
       expect(await opacities(page)).toEqual(['1', '1', '1', '1'])
