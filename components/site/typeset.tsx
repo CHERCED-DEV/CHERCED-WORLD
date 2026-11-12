@@ -43,6 +43,13 @@ export function nbsp(text: string): string {
   return text.replace(/ (\.NET\b)/g, `${NBSP}$1`)
 }
 
+function keepWords(term: string): ReactNode[] {
+  return term.split(/(\S+-\S+)/u).flatMap<ReactNode>((part, index) => {
+    if (!part) return []
+    return index % 2 === 1 ? [<span key={index} style={NOWRAP}>{part}</span>] : [part]
+  })
+}
+
 export type TypesetOptions = { keepHyphens?: boolean }
 
 export function typeset(text: string, lang: Locale, { keepHyphens = false }: TypesetOptions = {}): ReactNode {
@@ -56,9 +63,10 @@ export function typeset(text: string, lang: Locale, { keepHyphens = false }: Typ
     const unbroken = UNBREAKABLE.test(token) || (keepHyphens && token.includes('-'))
     if (!english && !unbroken) continue
     if (match.index > last) nodes.push(source.slice(last, match.index))
+    const whole = unbroken && !/\s/u.test(token)
     nodes.push(
-      <span key={match.index} lang={english ? 'en' : undefined} style={unbroken ? NOWRAP : undefined}>
-        {token}
+      <span key={match.index} lang={english ? 'en' : undefined} style={whole ? NOWRAP : undefined}>
+        {unbroken && !whole ? keepWords(token) : token}
       </span>,
     )
     last = match.index + token.length

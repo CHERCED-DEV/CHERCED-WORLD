@@ -57,4 +57,14 @@ describe('T3: "AI-First" no se parte en el guion', () => {
     expect(html(typeset('Micro-frontends y más', 'en', { keepHyphens: true }))).toBe('<span style="white-space:nowrap">Micro-frontends</span> y más')
     expect(html(typeset('Micro-frontends y más', 'en'))).toBe('Micro-frontends y más')
   })
+
+  it('P1: con keepHyphens, un término de varias palabras se parte entre palabras y solo la palabra con guion queda entera', () => {
+    const title = 'built with Spec-Driven Development and agents'
+    expect(html(typeset(title, 'en', { keepHyphens: true }))).toBe(
+      'built with <span><span style="white-space:nowrap">Spec-Driven</span> Development</span> and agents',
+    )
+    expect(html(typeset(title, 'es', { keepHyphens: true }))).toBe(
+      'built with <span lang="en"><span style="white-space:nowrap">Spec-Driven</span> Development</span> and agents',
+    )
+  })
 })
