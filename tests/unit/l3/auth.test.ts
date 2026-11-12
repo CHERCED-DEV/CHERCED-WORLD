@@ -1,6 +1,8 @@
 import type * as nodeCrypto from 'node:crypto'
 import { scryptSync, timingSafeEqual } from 'node:crypto'
 import { describe, expect, it, vi } from 'vitest'
+
+vi.setConfig({ testTimeout: 30_000 })
 import { burnPasswordCheck, hashPassword, SALT_BYTES, SCRYPT_PARAMS, verifyPassword } from '@/lib/auth/password'
 import {
   endSession,

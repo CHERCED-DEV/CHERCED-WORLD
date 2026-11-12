@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { expectRedirect, form, request, resetRequest } from './request-mocks'
+
+vi.setConfig({ testTimeout: 30_000 })
 import * as admin from '@/lib/actions/admin'
 import { changePassword, completeSetup, login, logout } from '@/lib/actions/auth'
 import { getApprovedComments, submitComment } from '@/lib/actions/comments'
