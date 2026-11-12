@@ -23,6 +23,7 @@
 .eyebrow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 12px; font-weight: 700; line-height: 1.6; letter-spacing: .15em; text-transform: uppercase; color: var(--cw-fg-muted); }
 .heroText > .eyebrow { width: 100%; justify-content: space-between; }
 .heroStatement { font-size: clamp(1.2rem, 2.2vw, 1.85rem); font-weight: 700; line-height: 1.5; letter-spacing: -.025em; text-wrap: pretty; max-width: 30ch; }
+.heroGuide { max-width: 46ch; font-size: var(--cw-text-sm); line-height: 1.7; color: var(--cw-fg-muted); text-wrap: pretty; }
 .heroActions { display: flex; min-width: 0; flex-wrap: wrap; gap: 8px 24px; align-items: center; max-width: 100%; > a { box-sizing: border-box; min-width: 0; max-width: 100%; white-space: normal; text-align: center; } }
 .heroFooter { position: relative; z-index: 1; grid-column: 1 / -1; border-top: 1px solid var(--cw-glass-border); padding-top: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
 .facts { display: flex; flex-wrap: wrap; gap: 24px; }

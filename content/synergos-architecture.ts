@@ -1,5 +1,5 @@
 import { synergosFacts } from './synergos'
-import type { ArchitectureTopic, FactoryMilestone, Localized, SynergosPattern, SynergosSource } from './types'
+import type { ArchitectureTopic, FactoryMilestone, Locale, Localized, SynergosPattern, SynergosSource } from './types'
 
 export const SYNERGOS_ARCHITECTURE_PATH = '/synergos/arquitectura'
 export const SYNERGOS_ARCHITECTURE_UPDATED = '2026-11-07'
@@ -176,4 +176,20 @@ export const architecture = {
     { language: 'C#', code: 'public sealed record TagProps(\n    [property: CampoSynHost(OrigenDelCampo.Contenido)] string? Label,\n    [property: CampoSynHost(OrigenDelCampo.Decision)] string? Color);', source: cms('Synergos.CMS.Interfaces/SynHost/TagProps.cs', 'TagProps.cs') },
     { language: 'TypeScript', code: 'export interface TagProps {\n  readonly label?: string;\n  readonly color?: string;\n}', source: ui('vitals/contracts/src/elementos-synhost.contract.ts', 'elementos-synhost.contract.ts') },
   ],
+}
+
+export type ArchitectureChapterId = keyof typeof architecture.copy.sections
+
+export type ArchitectureChapter = { id: ArchitectureChapterId; number: string; label: Localized }
+
+const CHAPTER_ORDER: readonly ArchitectureChapterId[] = ['recorrido', 'contratos', 'islas', 'patrones', 'fabrica']
+
+export const SYNERGOS_ARCHITECTURE_CHAPTERS: readonly ArchitectureChapter[] = CHAPTER_ORDER.map((id, index) => ({
+  id,
+  number: String(index + 1).padStart(2, '0'),
+  label: architecture.copy.sections[id],
+}))
+
+export function architectureChapters(lang: Locale): { id: ArchitectureChapterId; number: string; label: string }[] {
+  return SYNERGOS_ARCHITECTURE_CHAPTERS.map(chapter => ({ id: chapter.id, number: chapter.number, label: chapter.label[lang] }))
 }

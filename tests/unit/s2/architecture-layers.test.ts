@@ -5,7 +5,8 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { compile } from 'sass'
 import { describe, expect, it } from 'vitest'
 import { ArchitectureDiagram } from '@/components/site/synergos/arquitectura/ArchitectureDiagram'
-import { architecture } from '@/content/synergos-architecture'
+import { ArchitectureView } from '@/components/site/synergos/arquitectura/ArchitectureView'
+import { architecture, architectureChapters, SYNERGOS_ARCHITECTURE_CHAPTERS } from '@/content/synergos-architecture'
 
 const root = process.cwd()
 const file = join(root, 'components', 'site', 'synergos', 'arquitectura', 'Architecture.module.scss')
@@ -62,6 +63,33 @@ describe('arquitectura en el celular: capas guiadas por scroll (009, refinamient
     expect(toc).toContain('overflow-x: auto')
     expect(css).toMatch(/\.toc::-webkit-scrollbar \{\s*display: none;/)
     expect(block(css, '.toc a {')).toContain('white-space: nowrap')
+  })
+})
+
+describe('los capítulos son datos listos para la navegación estándar', () => {
+  it('cada capítulo tiene un id estable, su número y su etiqueta en ES y EN', () => {
+    expect(SYNERGOS_ARCHITECTURE_CHAPTERS.map((chapter) => chapter.id)).toEqual(['recorrido', 'contratos', 'islas', 'patrones', 'fabrica'])
+    expect(SYNERGOS_ARCHITECTURE_CHAPTERS.map((chapter) => chapter.number)).toEqual(['01', '02', '03', '04', '05'])
+    for (const chapter of SYNERGOS_ARCHITECTURE_CHAPTERS) {
+      expect(chapter.label).toEqual(architecture.copy.sections[chapter.id])
+      expect(chapter.label.es.trim()).not.toBe('')
+      expect(chapter.label.en.trim()).not.toBe('')
+    }
+    expect(architectureChapters('en')[2]).toEqual({ id: 'islas', number: '03', label: 'Coordinated islands' })
+  })
+
+  it.each(['es', 'en'] as const)('%s: cada sección usa el id y el número de su capítulo, y el hero explica cómo se lee', (lang) => {
+    const html = renderToStaticMarkup(createElement(ArchitectureView, { lang }))
+    for (const chapter of architectureChapters(lang)) {
+      expect(html).toContain(`id="${chapter.id}"`)
+      expect(html).toContain(`data-cw-chapter-link="${chapter.id}"`)
+      expect(html).toMatch(new RegExp(`>${chapter.number}</span>`))
+    }
+    expect(html.match(/data-cw-architecture-guide=""[^>]*>([^<]+)</)?.[1]).toBe(
+      lang === 'es'
+        ? 'Cinco capítulos, del CMS a la fábrica. Cada tema enlaza a sus fuentes públicas y el índice marca el capítulo en el que vas.'
+        : 'Five chapters, from the CMS to the factory. Each topic links to its public sources, and the index marks the chapter you are reading.',
+    )
   })
 })
 

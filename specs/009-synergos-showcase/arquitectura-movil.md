@@ -60,9 +60,19 @@ Se construye sobre la página aprobada el 2026-11-12 (R1.3). No se agregó conte
   esa función.
 - **Lo que ya existía.** La línea bajo cada capítulo y la barra de lectura de la U1 de la 012 siguen igual. En el
   celular, la línea del capítulo arranca a la izquierda, junto con el encabezado.
-- **Explicación de cómo se recorre la página.** No se agregó texto. El hero ya dice "01—05" y ofrece tres accesos
-  hacia abajo, y el riel numerado con su línea de avance muestra en qué capítulo va el lector. Sumar otra frase habría
-  repetido acciones.
+- **Explicación de cómo se recorre la página.** Debajo de la frase del hero va una línea corta, sin acciones nuevas:
+  - ES: "Cinco capítulos, del CMS a la fábrica. Cada tema enlaza a sus fuentes públicas y el índice marca el capítulo
+    en el que vas."
+  - EN: "Five chapters, from the CMS to the factory. Each topic links to its public sources, and the index marks the
+    chapter you are reading."
+  - No habla de animación, así que vale también con movimiento reducido. El autor puede pedir quitarla.
+- **Capítulos como datos (cambio de alcance del 2026-11-12).** La pestaña y los puntos de Sobre mí pasan a ser la
+  navegación estándar de todas las páginas.
+  - `content/synergos-architecture.ts` exporta `SYNERGOS_ARCHITECTURE_CHAPTERS`, con id estable, número y etiqueta en
+    ES y EN, y `architectureChapters(lang)`.
+  - La página arma con eso las secciones y el índice.
+  - El riel horizontal se queda como está hasta que llegue el componente estándar. Entonces se monta aquí y el riel
+    se quita.
 
 ## Pruebas
 

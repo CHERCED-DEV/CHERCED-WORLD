@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { architecture } from '@/content/synergos-architecture'
+import { architecture, architectureChapters } from '@/content/synergos-architecture'
 import type { Locale } from '@/content/types'
 import { localizedPath } from '@/lib/i18n/paths'
 import { GlassSurface } from '@/components/ui/GlassSurface'
@@ -29,10 +29,10 @@ function Topic({ id, lang, skipLead = false }: { id: string; lang: Locale; skipL
 
 export function ArchitectureView({ lang }: { lang: Locale }) {
   const { copy, facts } = architecture
-  const sections = Object.entries(copy.sections)
+  const chapters = architectureChapters(lang)
   const leadTopics: Record<string, string> = { recorrido: 'frameworks', contratos: 'contratos', islas: 'islas' }
   const counted = new Intl.DateTimeFormat(lang === 'es' ? 'es-CO' : 'en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${facts.countedAt}T00:00:00Z`))
-  const ui = lang === 'es' ? { start: 'Ver el recorrido', atlas: 'Explorar los patrones', chapter: 'Dentro del sistema', code: 'El mismo contrato. Dos lenguajes.', factory: 'Lo construido y el siguiente paso.', public: 'Arquitectura abierta', pilot: 'Del spec al resultado' } : { start: 'Explore the system', atlas: 'Explore the patterns', chapter: 'Inside the system', code: 'One contract. Two languages.', factory: 'What exists. What comes next.', public: 'Open architecture', pilot: 'From spec to result' }
+  const ui = lang === 'es' ? { start: 'Ver el recorrido', atlas: 'Explorar los patrones', chapter: 'Dentro del sistema', code: 'El mismo contrato. Dos lenguajes.', factory: 'Lo construido y el siguiente paso.', public: 'Arquitectura abierta', pilot: 'Del spec al resultado', guide: 'Cinco capítulos, del CMS a la fábrica. Cada tema enlaza a sus fuentes públicas y el índice marca el capítulo en el que vas.' } : { start: 'Explore the system', atlas: 'Explore the patterns', chapter: 'Inside the system', code: 'One contract. Two languages.', factory: 'What exists. What comes next.', public: 'Open architecture', pilot: 'From spec to result', guide: 'Five chapters, from the CMS to the factory. Each topic links to its public sources, and the index marks the chapter you are reading.' }
   return <div className={styles.page} data-cw-synergos-architecture="">
     <ScrollProgress />
     <header className={styles.opening}>
@@ -43,6 +43,7 @@ export function ArchitectureView({ lang }: { lang: Locale }) {
           <p className={styles.eyebrow}>{ui.public}<span aria-hidden="true"> / 01—05</span></p>
           <SectionTitle as="h1" size="lg" className={styles.title}>{copy.title[lang]}</SectionTitle>
           <p className={styles.heroStatement}>{copy.lead[lang]}</p>
+          <p className={styles.heroGuide} data-cw-architecture-guide="">{ui.guide}</p>
           <div className={styles.heroActions}>
             <a href="#recorrido" className={buttonClassName({ variant: 'solid', size: 'lg' })}>{ui.start} <span aria-hidden="true">↓</span></a>
             <a href="#patrones" className={styles.textAction}>{ui.atlas} <span aria-hidden="true">↓</span></a>
@@ -55,13 +56,13 @@ export function ArchitectureView({ lang }: { lang: Locale }) {
         </div>
       </GlassSurface>
     </header>
-    <ChapterNav label={copy.nav[lang]} items={sections.map(([id, title]) => ({ id, label: title[lang] }))} />
-    {sections.map(([id, label], index) => {
+    <ChapterNav label={copy.nav[lang]} items={chapters} />
+    {chapters.map(({ id, number, label }) => {
       const lead = architecture.topics.find(topic => !topic.private && topic.id === leadTopics[id])?.body[0]
       return <Reveal as="section" id={id} key={id} className={styles.section} aria-labelledby={`architecture-${id}`} data-cw-architecture-section={id}>
         <header className={`${styles.chapterHeading} ${journey.chapter}`}>
-          <p className={styles.eyebrow}><span className={styles.chapterNumber}>{String(index + 1).padStart(2, '0')}</span>{ui.chapter}</p>
-          <SectionTitle id={`architecture-${id}`}>{label[lang]}</SectionTitle>
+          <p className={styles.eyebrow}><span className={styles.chapterNumber}>{number}</span>{ui.chapter}</p>
+          <SectionTitle id={`architecture-${id}`}>{label}</SectionTitle>
           {lead ? <p className={styles.sectionLead}>{lead[lang]}</p> : null}
         </header>
         {id === 'recorrido' ? <>
