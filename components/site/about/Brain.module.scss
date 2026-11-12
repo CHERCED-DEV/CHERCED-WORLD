@@ -964,7 +964,7 @@ $compact-map: 30rem;
     left: var(--cw-cx);
     display: grid;
     place-items: center;
-    width: max(64px, 24%);
+    width: max(64px, 24%, 7.5em);
     min-height: 0;
     aspect-ratio: 1;
     padding: 0;

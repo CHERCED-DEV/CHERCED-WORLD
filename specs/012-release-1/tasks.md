@@ -61,7 +61,9 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [ ] R2.6 Post 2 (si el autor lo quiere en el release, D-R2).
 - [ ] R2.7 "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
 - [ ] R2.9 Botón de WhatsApp para que escriban directo al autor (pedido el 2026-11-11, para más adelante). El autor aprobó el 2026-11-11 que el número quede público (enlace `wa.me`). Falta que lo dé y decidir dónde va sin duplicar llamados (Contacto, pop-up de reclutadores o el botón flotante) y cómo se mide.
-- [ ] R2.8 Deuda vista al integrar R2.1 (falla igual sin la escena nueva): `tests/e2e/p2/brain-mobile.spec.ts:71` en celular. A 375 px el nombre de un lóbulo no cabe en su círculo, y a 390 y 412 px la lluvia del mapa queda desfasada unos 450 px del mapa tras abrir "Ver todas". Probable efecto del texto mínimo de 12 px (010). Revisar en R1.2.
+- [x] R2.8 (hecho el 2026-11-11: el círculo del lóbulo en celular mide al menos 7,5 em, unos 90 px, para que
+  "ARQUITECTURA" y "ARCHITECTURE" quepan con la letra de 12 px; la lluvia no estaba desfasada: la prueba comparaba la
+  caja del mapa de antes del toque, que desplaza la página, y ahora mide las dos juntas) Deuda vista al integrar R2.1 (falla igual sin la escena nueva): `tests/e2e/p2/brain-mobile.spec.ts:71` en celular. A 375 px el nombre de un lóbulo no cabe en su círculo, y a 390 y 412 px la lluvia del mapa queda desfasada unos 450 px del mapa tras abrir "Ver todas". Probable efecto del texto mínimo de 12 px (010). Revisar en R1.2.
 
 ## R3 — Specs abiertas y deuda
 - [ ] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734.

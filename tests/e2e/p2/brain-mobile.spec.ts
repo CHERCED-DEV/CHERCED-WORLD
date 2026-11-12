@@ -100,9 +100,9 @@ test.describe('mapa compacto a 375, 390 y 412 px (T820, FR-620, SC-604, SC-605)'
       for (const control of await sources.all()) {
         expect((await control.boundingBox())!.height, 'M2: objetivo táctil de 44 px').toBeGreaterThanOrEqual(44)
       }
-      const rain = (await page.locator('[data-cw-rain]').boundingBox())!
-      expect(Math.abs(rain.y - box.y)).toBeLessThanOrEqual(1)
-      expect(Math.abs(rain.height - box.height)).toBeLessThanOrEqual(1)
+      const [rain, after] = await Promise.all([page.locator('[data-cw-rain]').boundingBox(), map.boundingBox()])
+      expect(Math.abs(rain!.y - after!.y), 'la lluvia sigue sobre el mapa (las dos cajas medidas juntas tras abrir "Ver todas")').toBeLessThanOrEqual(1)
+      expect(Math.abs(rain!.height - after!.height)).toBeLessThanOrEqual(1)
       await expect(page.locator('[data-cw-terminal]')).toBeHidden()
     })
 
