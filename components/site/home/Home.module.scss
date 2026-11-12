@@ -356,10 +356,8 @@
 
     .panel {
       scroll-snap-align: start;
-    }
-
-    :global(#footer) {
-      scroll-snap-align: end;
+      scroll-snap-stop: always;
+      scroll-margin-block-end: 100rem;
     }
   }
 }

@@ -141,35 +141,164 @@ test.describe('013: animaciones guiadas por scroll', () => {
     expect(new Set(names)).toEqual(new Set(['none']))
   })
 
+  const C8_CARD = '[data-cw-home-banner] > [data-cw-glass]'
+  const C8_PANEL = '[data-cw-home-now] > [data-cw-glass]'
+
+  type GpuBenchmarking = {
+    MOUSE_INPUT: number
+    smoothScrollBy: (distance: number, done: () => void, x: number, y: number, source: number, direction: string, speed: number, precise: boolean) => void
+  }
+
+  async function c8Stops(page: Page) {
+    return page.locator(C8_PANEL).evaluate((node) => {
+      const padding = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)
+      return {
+        panel: Math.round(node.getBoundingClientRect().top + window.scrollY - padding),
+        max: Math.round(document.documentElement.scrollHeight - window.innerHeight),
+      }
+    })
+  }
+
+  async function c8Rest(page: Page) {
+    let last = Number.NaN
+    let still = 0
+    for (let pass = 0; pass < 60 && still < 2; pass++) {
+      await page.waitForTimeout(300)
+      const y = await page.evaluate(() => Math.round(window.scrollY))
+      still = y === last ? still + 1 : 0
+      last = y
+    }
+    return last
+  }
+
+  async function c8ToPanel(page: Page, panelStop: number) {
+    await page.locator('main').focus()
+    await page.keyboard.press('ArrowDown')
+    await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 15_000 }).toBe(panelStop)
+  }
+
   for (const lang of ['es', 'en'] as const) {
-    test(`C8 (${lang}): una flecha pasa del hero al panel, al pie y de regreso, y cada parada queda en 1`, async ({ page }) => {
+    test(`C8 (${lang}): una flecha pasa del hero al panel y vuelve, bajo el panel se recorre libre hasta el pie, y cada parada queda en 1`, async ({ page }) => {
       onlyIn('desktop-chromium', 'mobile-chromium')
       await page.emulateMedia({ reducedMotion: 'no-preference' })
       await open(page, `/${lang}`)
-      const card = page.locator('[data-cw-home-banner] > [data-cw-glass]')
-      const panel = page.locator('[data-cw-home-now] > [data-cw-glass]')
+      const card = page.locator(C8_CARD)
+      const panel = page.locator(C8_PANEL)
       const fade = (locator: typeof card) => locator.evaluate((node) => Number(Number(getComputedStyle(node).opacity).toFixed(2)))
-      const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight)
-      const panelStop = await panel.evaluate((node) => {
-        const padding = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)
-        return Math.round(node.getBoundingClientRect().top + window.scrollY - padding)
-      })
+      const { panel: panelStop, max } = await c8Stops(page)
       expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollSnapType)).toBe('y mandatory')
+      expect(await page.locator('#footer').evaluate((node) => getComputedStyle(node).scrollSnapAlign)).toBe('none')
+      expect(await panel.evaluate((node) => getComputedStyle(node).scrollSnapStop)).toBe('always')
       await expect.poll(() => fade(card)).toBe(1)
-      await page.locator('main').focus()
-      const press = async (key: 'ArrowDown' | 'ArrowUp', stop: number) => {
+      const press = async (key: string, stop: number) => {
         await page.keyboard.press(key)
-        await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 4000 }).toBe(stop)
+        await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 15_000 }).toBe(stop)
       }
-      await press('ArrowDown', panelStop)
+      await c8ToPanel(page, panelStop)
       await expect.poll(() => fade(panel)).toBe(1)
       expect(await panel.evaluate((node) => Math.round(node.getBoundingClientRect().top))).toBeGreaterThan(0)
-      await press('ArrowDown', max)
-      await press('ArrowUp', panelStop)
+      await page.keyboard.press('ArrowDown')
+      const free = await c8Rest(page)
+      expect(free, 'bajo el panel una flecha avanza un paso, no salta al pie').toBeGreaterThan(panelStop)
+      expect(free).toBeLessThanOrEqual(panelStop + 100)
+      await press('End', max)
+      await press('PageUp', panelStop)
       await press('ArrowUp', 0)
       await expect.poll(() => fade(card)).toBe(1)
     })
   }
+
+  test('C8: una ráfaga de rueda bajo el panel avanza sin rebotar al panel ni saltar al pie', async ({ page }) => {
+    onlyIn('desktop-chromium')
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await open(page, '/es')
+    const { panel: panelStop, max } = await c8Stops(page)
+    await c8ToPanel(page, panelStop)
+    await page.evaluate(() => {
+      const trail: number[] = []
+      ;(window as unknown as { __c8: number[] }).__c8 = trail
+      const tick = () => {
+        trail.push(Math.round(window.scrollY))
+        requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    })
+    await page.mouse.move(640, 400)
+    for (let step = 0; step < 8; step++) {
+      await page.mouse.wheel(0, 30)
+      await page.waitForTimeout(40)
+    }
+    const rest = await c8Rest(page)
+    const trail = await page.evaluate(() => (window as unknown as { __c8: number[] }).__c8)
+    let peak = trail[0]!
+    const back = trail.some((y) => {
+      peak = Math.max(peak, y)
+      return y < peak - 2
+    })
+    expect(back, 'la ráfaga no rebota hacia el panel').toBe(false)
+    expect(rest).toBeGreaterThan(panelStop + 150)
+    expect(rest, 'la ráfaga no salta hasta el pie').toBeLessThan(max)
+  })
+
+  test('C8: con la rueda del mouse, un golpe más desde el panel no salta al pie y uno de vuelta regresa al panel', async ({ browser, baseURL }) => {
+    onlyIn('desktop-chromium')
+    test.setTimeout(120_000)
+    const wheel = await browser.browserType().launch({ args: ['--enable-gpu-benchmarking'] })
+    try {
+      const page = await wheel.newPage({ baseURL, viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' })
+      await open(page, '/es')
+      const { panel: panelStop, max } = await c8Stops(page)
+      const notch = (direction: 'down' | 'up') =>
+        page.evaluate(
+          (direction) =>
+            new Promise<void>((resolve) => {
+              const bench = (window as unknown as { chrome: { gpuBenchmarking: GpuBenchmarking } }).chrome.gpuBenchmarking
+              bench.smoothScrollBy(100, resolve, innerWidth / 2, innerHeight / 2, bench.MOUSE_INPUT, direction, 4000, false)
+            }),
+          direction,
+        )
+      await notch('down')
+      expect(await c8Rest(page), 'un golpe pasa del hero al panel').toBe(panelStop)
+      await notch('down')
+      const below = await c8Rest(page)
+      expect(below).toBeGreaterThan(panelStop)
+      expect(below, 'el segundo golpe no salta hasta el pie').toBeLessThan(max)
+      expect(below - panelStop).toBeLessThanOrEqual(210)
+      await notch('up')
+      expect(await c8Rest(page), 'un golpe de vuelta regresa al panel').toBe(panelStop)
+      await notch('up')
+      expect(await c8Rest(page), 'y otro, al hero').toBe(0)
+    } finally {
+      await wheel.close()
+    }
+  })
+
+  test('C8 en celular: en el hero el dedo vuelve a la parada y bajo el panel se queda donde lo suelta', async ({ page }) => {
+    onlyIn('mobile-chromium')
+    test.setTimeout(120_000)
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await open(page, '/es')
+    const { panel: panelStop, max } = await c8Stops(page)
+    const cdp = await page.context().newCDPSession(page)
+    const drag = async (distance: number) => {
+      const x = 195
+      const from = 600
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: from }] })
+      for (let step = 1; step <= 12; step++) {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: from - (distance * step) / 12 }] })
+        await page.waitForTimeout(40)
+      }
+      await page.waitForTimeout(250)
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    }
+    await drag(150)
+    expect(await c8Rest(page), 'en el hero un arrastre corto vuelve al hero').toBe(0)
+    await c8ToPanel(page, panelStop)
+    await drag(180)
+    const rest = await c8Rest(page)
+    expect(rest, 'bajo el panel el dedo recorre libre').toBeGreaterThan(panelStop + 100)
+    expect(rest).toBeLessThan(max)
+  })
 
   test('C8: la tarjeta se aleja y el panel llega durante el paso', async ({ page }) => {
     onlyIn('desktop-chromium', 'mobile-chromium')
