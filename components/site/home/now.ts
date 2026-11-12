@@ -25,6 +25,29 @@ export function currentRoles(career: readonly CareerEntry[]): CareerEntry[] {
     .sort((a, b) => b.start.localeCompare(a.start))
 }
 
+function monthIndex(value: string): number {
+  const [year = 0, month = 1] = value.split('-').map(Number)
+  return year * 12 + month - 1
+}
+
+export function continuousStart(entry: CareerEntry, career: readonly CareerEntry[]): string {
+  const company = normalize(entry.company)
+  let start = entry.start
+  for (;;) {
+    const from = monthIndex(start)
+    const previous = career.find(
+      (item) =>
+        item.end !== null &&
+        normalize(item.company) === company &&
+        monthIndex(item.start) < from &&
+        monthIndex(item.end) <= from &&
+        from - monthIndex(item.end) <= 1,
+    )
+    if (!previous) return start
+    start = previous.start
+  }
+}
+
 export function relatedProject(entry: Pick<CareerEntry, 'company'>, projects: readonly Project[]): Project | null {
   const company = normalize(entry.company)
   return (
@@ -40,12 +63,13 @@ export function relatedProject(entry: Pick<CareerEntry, 'company'>, projects: re
 export function nowRoles(career: readonly CareerEntry[], projects: readonly Project[], lang: Locale): NowRole[] {
   return currentRoles(career).map((entry) => {
     const project = relatedProject(entry, projects)
+    const start = continuousStart(entry, career)
     return {
       id: entry.id,
       company: entry.company,
       role: keepSeparators(entry.role[lang]),
-      start: entry.start,
-      since: formatMonth(entry.start, lang),
+      start,
+      since: formatMonth(start, lang),
       project: project ? { id: project.id, title: projectTitle(project, lang) } : null,
     }
   })

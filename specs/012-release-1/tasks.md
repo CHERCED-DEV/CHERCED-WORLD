@@ -60,7 +60,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   "2.353" del post 6 es la cifra fechada del 6 de agosto y el post ya dice "más de 6.600" para noviembre.
 - [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.
 - [ ] R2.6 Post 2 (si el autor lo quiere en el release, D-R2).
-- [ ] R2.7 "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
+- [x] R2.7 (hecho el 2026-11-12: `continuousStart` encadena los cargos de la misma empresa con hasta un mes de hueco; Sistecrédito dice "Desde mar 2025") "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
 - [ ] R2.9 Botón de WhatsApp para que escriban directo al autor (pedido el 2026-11-11, para más adelante). El autor aprobó el 2026-11-11 que el número quede público (enlace `wa.me`). Falta que lo dé y decidir dónde va sin duplicar llamados (Contacto, pop-up de reclutadores o el botón flotante) y cómo se mide.
 - [x] R2.8 (hecho el 2026-11-11: el círculo del lóbulo en celular mide al menos 7,5 em, unos 90 px, para que
   "ARQUITECTURA" y "ARCHITECTURE" quepan con la letra de 12 px; la lluvia no estaba desfasada: la prueba comparaba la
@@ -141,7 +141,8 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
      administrador. Está protegido por el código de un solo uso de los logs, pero el ícono del buzón lleva ahí.
   Rendimiento: las 16 pruebas de rendimiento pasan con la GPU (R3.3). Accesibilidad: falta la corrida completa de
   la exhaustiva (R4.3).
-- [ ] R4.3 Suite exhaustiva en verde con la máquina libre. La corrida completa quedó lanzada el 2026-11-11 sobre
+- [ ] R4.3 Suite exhaustiva en verde con la máquina libre. **Decisión del autor del 2026-11-12: se corre al final, justo
+  antes de R5.** Mientras tanto, unitarias más las e2e de lo que se toca. La corrida completa quedó lanzada el 2026-11-11 sobre
   c79606b (3 workers). Si su resultado no quedó anotado aquí, hay que relanzarla mañana con
   `E2E_TIER=exhaustive E2E_PORT=3200 npx playwright test --workers=3`.
 - [ ] R4.4 Notas del release y QA final del autor.

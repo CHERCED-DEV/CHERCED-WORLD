@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { currentRoles, keepSeparators, nowRoles, relatedProject } from '@/components/site/home/now'
+import { continuousStart, currentRoles, keepSeparators, nowRoles, relatedProject } from '@/components/site/home/now'
 import type { CareerEntry, Project } from '@/content/types'
 import { getProjects, getSite } from '@/lib/content'
 
@@ -33,7 +33,7 @@ describe('"Ahora trabajo en" con el contenido real', () => {
         expect(source, role.id).toBeDefined()
         expect(role.company).toBe(source?.company)
         expect(role.role.replaceAll(' ', ' ')).toBe(source?.role[lang])
-        expect(role.start).toBe(source?.start)
+        expect(role.start).toBe(continuousStart(source!, site.about.career))
         expect(source?.end).toBeNull()
       }
     }
@@ -46,15 +46,31 @@ describe('"Ahora trabajo en" con el contenido real', () => {
     expect(projects.some((project) => project.id === synergos?.project?.id)).toBe(true)
   })
 
-  it('formatea el inicio en cada idioma', () => {
-    const [es] = nowRoles(site.about.career, projects, 'es')
+  it('R2.7: en Sistecrédito cuenta desde el primer cargo continuo (mar 2025), no desde el AI-First (feb 2026)', () => {
+    const [es, synergosEs] = nowRoles(site.about.career, projects, 'es')
     const [en] = nowRoles(site.about.career, projects, 'en')
-    expect(es?.since).toMatch(/^feb 2026$/i)
-    expect(en?.since).toMatch(/^Feb 2026$/)
+    expect(es?.role.replaceAll(' ', ' ')).toBe('Software Solutions Engineer · AI-First')
+    expect(es?.start).toBe('2025-03')
+    expect(es?.since).toMatch(/^mar 2025$/i)
+    expect(en?.since).toMatch(/^Mar 2025$/)
+    expect(synergosEs?.start).toBe('2024-02')
   })
 })
 
 describe('reglas de selección', () => {
+  it('R2.7: encadena los cargos de la misma empresa sin huecos de más de un mes', () => {
+    const actual = entry({ id: 'actual', company: 'Acme', start: '2026-02' })
+    const career = [
+      actual,
+      entry({ id: 'antes', company: 'Acme', start: '2025-03', end: '2026-01' }),
+      entry({ id: 'primero', company: 'ACME ', start: '2023-01', end: '2025-03' }),
+      entry({ id: 'otra', company: 'Otra', start: '2020-01', end: '2023-01' }),
+    ]
+    expect(continuousStart(actual, career)).toBe('2023-01')
+    const gap = [actual, entry({ id: 'lejos', company: 'Acme', start: '2024-01', end: '2025-06' })]
+    expect(continuousStart(actual, gap), 'un hueco de 8 meses corta la cadena').toBe('2026-02')
+  })
+
   it('descarta los empleos terminados y los pendientes del autor', () => {
     const roles = currentRoles([
       entry({ id: 'fin', end: '2024-01' }),
