@@ -33,9 +33,8 @@ Huevo de pascua de humor que pidió el autor el 2026-11-12: "me gusta mucho o te
 
 ## Pendientes para otras sesiones
 
-- **Suite exhaustiva.** La auditoría de interacción necesita una regla para `[data-cw-no-tocar]` en
-  `CONTROL_RULES`. Ya se le pidió esta línea:
-  `{ kind: 'no tocar', match: '[data-cw-no-tocar]', effect: 'delegated', expect: 'lo verifica tests/e2e/fun/no-tocar.spec.ts' }`.
+- **Suite exhaustiva (resuelto).** La auditoría de interacción ya delega `[data-cw-no-tocar]` en
+  `tests/e2e/fun/no-tocar.spec.ts` (commit `bf3881d`). La suite lo verá cuando se relance sobre `integracion-hijas`.
 - **Privacidad.** `privacy.technical.body` dice que en el navegador solo quedan preferencias. El contador de
   despertares es un dato más del mismo tipo; conviene nombrarlo ("y cuántas veces despertaste al muñeco"). El archivo
   no es de esta sesión.
