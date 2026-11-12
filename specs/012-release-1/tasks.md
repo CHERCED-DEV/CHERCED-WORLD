@@ -59,7 +59,9 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   piezas, 20 capacidades, 9 orquestadores, más de 6.600 tests y más de 140 ADR, contados el 2026-11-05). La fecha de
   la vitrina dejó de ser una copia, y una prueba vigila que el piso de tests no pase del conteo exacto (6.675). El
   "2.353" del post 6 es la cifra fechada del 6 de agosto y el post ya dice "más de 6.600" para noviembre.
-- [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio.
+- [ ] R2.5 CV regenerado con las dos cuentas de GitHub (lo hace el agente del autor) y reemplazado en el sitio. El 2026-11-12 el autor
+  decidió esperar el CV nuevo antes de publicar. Al llegar: reemplazar los PDF de `public/cv/` (ES y EN), actualizar
+  `bytes` en `content/site.ts` y correr las pruebas del CV; después, la exhaustiva (R4.3).
 - [x] R2.6 Post 2 (si el autor lo quiere en el release, D-R2). Decisión del autor del 2026-11-12: sale después del release.
 - [x] R2.7 (hecho el 2026-11-12: `continuousStart` encadena los cargos de la misma empresa con hasta un mes de hueco; Sistecrédito dice "Desde mar 2025") "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
 - [ ] R2.9 Botón de WhatsApp para que escriban directo al autor (pedido el 2026-11-11, para más adelante). El autor aprobó el 2026-11-11 que el número quede público (enlace `wa.me`). Falta que lo dé y decidir dónde va sin duplicar llamados (Contacto, pop-up de reclutadores o el botón flotante) y cómo se mide.
