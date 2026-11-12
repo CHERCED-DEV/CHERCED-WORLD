@@ -1062,7 +1062,7 @@ export const site: SiteContent = {
     },
   },
   privacy: {
-    updatedAt: '2026-11-05',
+    updatedAt: '2026-11-12',
     sections: [
       {
         heading: { es: 'Quién es el responsable', en: 'Who is responsible' },
