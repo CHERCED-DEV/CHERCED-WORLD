@@ -97,9 +97,27 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [x] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; C2 y C8, el paso del hero a "Ahora trabajo en", hechos y aprobados el mismo día: "Quedan así", T1309) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 
 ## R4 — Endurecer
-- [ ] R4.1 Revisión de seguridad de lo nuevo.
-- [ ] R4.2 Rendimiento, accesibilidad, sin JS y SEO en la vista previa.
-- [ ] R4.3 Suite exhaustiva en verde con la máquina libre.
+- [ ] R4.1 Revisión de seguridad de lo nuevo. En curso el 2026-11-11, de solo lectura: el informe se anota aquí
+  cuando termine. Si no quedó anotado, hay que repetirla mañana.
+- [ ] R4.2 Rendimiento, accesibilidad, sin JS y SEO en la vista previa. Barrido del 2026-11-11: se revisaron con curl
+  las 92 URLs del sitemap de la vista previa n2un7d4fo. Están limpios el código 200, `lang`, un `h1`, los títulos,
+  las descripciones, las canónicas, el `hreflang`, el JSON-LD, los `alt`, el contenido sin JS y 131 de 133 enlaces.
+  Pendiente para mañana, en este orden:
+  1. El 404 sale en Vercel sin `<meta name="robots" content="noindex">` (en local Next la pone sola). Hay que
+     declararla en `app/global-not-found.tsx` (`robots: { index: false }`) y revisar que no quede duplicada.
+  2. "Regresar" en las 28 páginas de etiqueta lleva a `/[lang]/blog/tag`, que es 404. `parentPath`
+     (`components/shell/nav.ts`) debe mandar a `/[lang]/blog`.
+  3. `/privacy` pierde `og:image`, `og:url`, `og:locale` y `twitter:card` grande, porque su `openGraph` reemplaza el
+     del layout. Hay que usar `pageMetadata` (`components/site/metadata.ts`), como las otras páginas.
+  4. Menor: el cambio de idioma en 20 etiquetas con slug traducido pasa por un 308; sin JS, las reacciones quedan
+     en "cargando".
+  5. Para la decisión D-R1 (R3.4): `/es/inbox/setup` muestra a cualquiera el formulario de crear la contraseña de
+     administrador. Está protegido por el código de un solo uso de los logs, pero el ícono del buzón lleva ahí.
+  Rendimiento: las 16 pruebas de rendimiento pasan con la GPU (R3.3). Accesibilidad: falta la corrida completa de
+  la exhaustiva (R4.3).
+- [ ] R4.3 Suite exhaustiva en verde con la máquina libre. La corrida completa quedó lanzada el 2026-11-11 sobre
+  c79606b (3 workers). Si su resultado no quedó anotado aquí, hay que relanzarla mañana con
+  `E2E_TIER=exhaustive E2E_PORT=3200 npx playwright test --workers=3`.
 - [ ] R4.4 Notas del release y QA final del autor.
 
 ## R5 — Publicar
