@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright'
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 import en from '@/content/i18n/en/fun.json'
 import es from '@/content/i18n/es/fun.json'
 
@@ -40,6 +40,14 @@ async function open(page: Page, path: string) {
   }, BUTTON)
   await button.scrollIntoViewIfNeeded()
   return button
+}
+
+const FIRST_WAKE_MS = 20_000
+
+async function wake(page: Page, button: Locator, warned: string, how: 'click' | 'tap' = 'click'): Promise<void> {
+  if (how === 'tap') await button.tap()
+  else await button.click()
+  await expect(page.locator('[data-cw-fun-line]')).toHaveText(warned, { timeout: FIRST_WAKE_MS })
 }
 
 async function actorBox(page: Page) {
@@ -86,9 +94,8 @@ test.describe('No tocar: el muñeco', () => {
   test('al tocarlo regaña, persigue y finge picar: sin clics reales, sin navegar y sin robar el foco', async ({ page, context }) => {
     const button = await open(page, '/es/privacy')
     const url = page.url()
-    await button.click()
+    await wake(page, button, es['fun.warned'])
     await expect(page.locator('[data-cw-fun-actor]')).toBeVisible()
-    await expect(page.locator('[data-cw-fun-line]')).toHaveText(es['fun.warned'])
     await expect(page.locator('[data-cw-fun-live]')).toHaveText(es['fun.warned'])
     expect(await buttonHasFocus(page)).toBe(true)
 
@@ -111,8 +118,7 @@ test.describe('No tocar: el muñeco', () => {
   test('se calma solo volviendo al botón pasado el minuto; antes ruega', async ({ page }) => {
     await page.clock.install()
     const button = await open(page, '/es/privacy')
-    await button.click()
-    await expect(page.locator('[data-cw-fun-line]')).toHaveText(es['fun.warned'])
+    await wake(page, button, es['fun.warned'])
 
     await button.click()
     await expect(page.locator('[data-cw-fun-line]')).toHaveText(es['fun.line.10'])
@@ -134,8 +140,7 @@ test.describe('No tocar: el muñeco', () => {
 
   test('Esc lo deja quieto al instante y "Quieto" lo suelta (WCAG 2.2.2)', async ({ page }) => {
     const button = await open(page, '/es/privacy')
-    await button.click()
-    await expect(page.locator('[data-cw-fun-line]')).toHaveText(es['fun.warned'])
+    await wake(page, button, es['fun.warned'])
     await page.keyboard.press('Escape')
     await expect(page.locator('[data-cw-fun]')).toHaveAttribute('data-phase', 'sulking')
     await expect(page.locator('[data-cw-fun-actor]')).toHaveAttribute('data-pose', 'sulk')
@@ -161,9 +166,8 @@ test.describe('No tocar: el muñeco', () => {
   test('con movimiento reducido no persigue: aparece quieto en una esquina y habla', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     const button = await open(page, '/en/privacy')
-    await button.click()
+    await wake(page, button, en['fun.warned'])
     await expect(page.locator('[data-cw-fun]')).toHaveAttribute('data-reduced', '')
-    await expect(page.locator('[data-cw-fun-line]')).toHaveText(en['fun.warned'])
     const viewport = page.viewportSize()!
     const corner = (await actorBox(page))!
     expect(corner.x + corner.width).toBeGreaterThan(viewport.width - 40)
@@ -178,8 +182,7 @@ test.describe('No tocar: el muñeco', () => {
     test(`sin violaciones críticas ni serias de axe con el muñeco despierto y quieto, tema ${scheme}`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' })
       const button = await open(page, '/es/privacy')
-      await button.click()
-      await expect(page.locator('[data-cw-fun-line]')).toHaveText(es['fun.warned'])
+      await wake(page, button, es['fun.warned'])
       for (const state of ['despierto', 'quieto'] as const) {
         if (state === 'quieto') await page.keyboard.press('Escape')
         const results = await new AxeBuilder({ page })
@@ -204,8 +207,7 @@ test.describe('No tocar: en el celular', () => {
   test('el toque lo despierta, sigue el dedo y "Quieto" se alcanza con el pulgar', async ({ page }) => {
     const button = await open(page, '/es/privacy')
     const url = page.url()
-    await button.tap()
-    await expect(page.locator('[data-cw-fun-line]')).toHaveText(es['fun.warned'])
+    await wake(page, button, es['fun.warned'], 'tap')
     const before = (await actorBox(page))!
     const viewport = page.viewportSize()!
     await page.locator('footer#footer [data-cw-footer-egg]').tap()
