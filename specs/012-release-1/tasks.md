@@ -13,7 +13,7 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 
 ## R1 — UX de las páginas nuevas
 - [x] R1.1 Auditoría con códigos U1… (375/390/412/768/1440, claro/oscuro, ES/EN, WebKit). Hecha el 2026-11-11: 18 hallazgos, 2 altos, 8 medios y 8 bajos; documento privado `docs/handoff-2026-11-04/13-auditoria-paginas-nuevas.md`.
-- [ ] R1.2 Pulido por código, sin reconstruir; las e2e de la 010 cubren las páginas nuevas.
+- [x] R1.2 Pulido por código, sin reconstruir; las e2e de la 010 cubren las páginas nuevas.
   - [x] Altos (hechos el 2026-11-11). U1: los trazos ligados al scroll no avanzan en `/synergos` ni en el hero de la arquitectura (el `overflow: hidden` del cristal los congela; `overflow: clip` lo resuelve). U2: el backend de Synergos usa un solo vocabulario, "20 capacidades · 9 orquestadores" (desbloquea R2.4).
   - [x] C0 (alto, de la segunda opinión de la 013; hecho el 2026-11-11 con `:has(:focus-visible)`, que saca al frente la tarjeta con foco de teclado): en el celular, el mazo apilado de Servicios tapa el foco de teclado (WCAG 2.4.11): 7 de 12 acciones en Chromium y 8 de 12 en WebKit quedan bajo la tarjeta siguiente.
   - [x] Medios.
@@ -34,12 +34,13 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
     - [x] U16: en tema claro, la "/" de "18 /" usa el verde oscuro que ya usa el Rally (#0b6e47) y queda fuera del lector de pantalla.
     - [x] U17: el 404 de un post, de una etiqueta o de un caso suma "Ver todos los posts" o "Ver el portafolio" debajo de "Volver al inicio". El proxy marca la sección y borra la que mande el cliente.
     - [x] U18: en `/now`, "Synergos, rumbo a producción" y "El AI Lab de este sitio" enlazan a su página, sin botones nuevos.
-  - [ ] Decisiones del autor, 2026-11-11.
+  - [x] Decisiones del autor, 2026-11-11 (aplicadas en U7, U10, U12 y U14).
     - U7: cada patrón con título en español y debajo el nombre canónico en inglés.
     - U10: a "Synergos por dentro" se llega desde "Ahora trabajo en", en el inicio.
     - U12: el caso de estudio aparece una sola vez en `/synergos`.
     - U14: "Booking", "Seller", "Blogs/Social", "Despacho" y "Obra" son nombres propios y no se traducen.
-  - [ ] Pruebas que propone la auditoría:
+  - [x] Pruebas que propone la auditoría (U1 y U6 en `tests/e2e/rel/pulido-r12.spec.ts`, U6 también revisa que el texto
+    del SVG quede en `aria-hidden`; U2 en `tests/unit/rel/vocabulario.test.ts`; U9 en `tests/e2e/ux/toque.spec.ts`):
     - U1: el trazo cambia con el scroll.
     - U2: mismo vocabulario en las cuatro páginas.
     - U6: texto SVG dentro de `aria-hidden`.

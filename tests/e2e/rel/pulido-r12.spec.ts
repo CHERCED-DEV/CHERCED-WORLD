@@ -118,6 +118,12 @@ test.describe('R1.2: pulido de la auditoría de las páginas nuevas (012)', () =
         return found
       })
       expect(tiny, id).toEqual([])
+      const exposed = await card.evaluate((root) =>
+        [...root.querySelectorAll('svg text')]
+          .filter((text) => text.textContent!.trim() && !text.closest('[aria-hidden="true"]'))
+          .map((text) => text.textContent!.trim().slice(0, 24)),
+      )
+      expect(exposed, `${id}: el texto del SVG va dentro de aria-hidden; lo dicen las leyendas HTML`).toEqual([])
     }
     await expect(page.locator('[data-cw-rally-legend]')).toBeVisible()
   })
