@@ -22,13 +22,20 @@ test('el scroll mueve el progreso y el movimiento reducido conserva la lectura',
     await page.emulateMedia({ reducedMotion: 'no-preference' })
     await page.goto(route)
     const progress = page.locator('[data-cw-scroll-progress]')
-    if (await page.evaluate(() => CSS.supports('animation-timeline: scroll()'))) {
-      const before = await progress.evaluate(element => getComputedStyle(element).transform)
+    const transform = () => progress.evaluate(element => getComputedStyle(element).transform)
+    const supported = await page.evaluate(() => CSS.supports('animation-timeline: scroll()'))
+    if (supported) {
+      const before = await transform()
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2))
-      await expect.poll(() => progress.evaluate(element => getComputedStyle(element).transform)).not.toBe(before)
+      await expect.poll(transform).not.toBe(before)
     }
     await page.emulateMedia({ reducedMotion: 'reduce' })
-    await expect(progress).toBeHidden()
+    if (supported) {
+      await expect(progress, 'FR-1303: con movimiento reducido la barra de lectura se ve').toBeVisible()
+      const middle = await transform()
+      await page.evaluate(() => scrollTo(0, 0))
+      await expect.poll(transform, { message: 'FR-1303: y sigue el scroll' }).not.toBe(middle)
+    } else await expect(progress).toBeHidden()
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   }
 })

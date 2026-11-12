@@ -11,6 +11,7 @@ const LOBES = 6
 const lobeNames = (lang: Lang): string[] => (site.about.skills.lobes ?? []).map((lobe) => lobe.name[lang])
 const HEIGHT_001_AT_1440: Record<Lang, number> = { es: 7598, en: 7390 }
 const MAX_HEIGHT_RATIO = 0.6
+const SCENES = 4
 
 function onlyIn(...projects: string[]) {
   test.beforeEach(({}, testInfo) => {
@@ -31,9 +32,9 @@ async function sceneIndex(page: Page): Promise<Locator> {
     const nav = candidates.nth(index)
     const links = nav.locator('a[href]')
     const hrefs = await links.evaluateAll((items) => items.map((item) => item.getAttribute('href') ?? ''))
-    if (hrefs.length === 3 && hrefs.every((href) => href.startsWith('#'))) return nav
+    if (hrefs.length === SCENES && hrefs.every((href) => href.startsWith('#'))) return nav
   }
-  throw new Error('no hay un índice de escenas: un nav en main con tres enlaces a anclas')
+  throw new Error(`no hay un índice de escenas: un nav en main con ${SCENES} enlaces a anclas`)
 }
 
 async function scenes(page: Page): Promise<Locator[]> {
@@ -70,8 +71,12 @@ test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
         await expect(links.nth(position), `el índice marca la escena ${position + 1}`).toHaveAttribute('aria-current', /^(?!false$).+/)
         await expect(targets[position]!.getByRole('heading').first()).toBeVisible()
       }
-      const height = await page.evaluate(() => document.documentElement.scrollHeight)
-      expect(height, `altura a 1440 px (la 001 medía ${HEIGHT_001_AT_1440[lang]})`).toBeLessThanOrEqual(Math.round(HEIGHT_001_AT_1440[lang] * MAX_HEIGHT_RATIO))
+      const height = await page.evaluate(() => {
+        const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom
+        const heading = document.querySelector('[data-cw-scene="heading"]')?.getBoundingClientRect().bottom ?? knowledge
+        return document.documentElement.scrollHeight - (heading - knowledge)
+      })
+      expect(height, `altura de las tres escenas originales a 1440 px (la 001 medía ${HEIGHT_001_AT_1440[lang]})`).toBeLessThanOrEqual(Math.round(HEIGHT_001_AT_1440[lang] * MAX_HEIGHT_RATIO))
     })
   }
 
