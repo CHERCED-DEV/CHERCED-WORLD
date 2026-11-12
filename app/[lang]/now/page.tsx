@@ -44,21 +44,22 @@ export default async function NowPage({ params }: Props) {
           ],
           lang,
         )}
-      />
-      <NowView
-        lang={lang}
-        now={now}
-        labels={{
-          title: t(dict, 'nowPage.title'),
-          lead: t(dict, 'meta.now.description'),
-          updated: t(dict, 'nowPage.updated'),
-          building: t(dict, 'nowPage.building'),
-          learning: t(dict, 'nowPage.learning'),
-          preparing: t(dict, 'nowPage.preparing'),
-          offKeyboard: t(dict, 'nowPage.offKeyboard'),
-          mottos: t(dict, 'nowPage.mottos'),
-        }}
-      />
+      >
+        <NowView
+          lang={lang}
+          now={now}
+          labels={{
+            title: t(dict, 'nowPage.title'),
+            lead: t(dict, 'meta.now.description'),
+            updated: t(dict, 'nowPage.updated'),
+            building: t(dict, 'nowPage.building'),
+            learning: t(dict, 'nowPage.learning'),
+            preparing: t(dict, 'nowPage.preparing'),
+            offKeyboard: t(dict, 'nowPage.offKeyboard'),
+            mottos: t(dict, 'nowPage.mottos'),
+          }}
+        />
+      </SectionNav>
     </>
   )
 }

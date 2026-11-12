@@ -53,25 +53,26 @@ export default async function ServicesPage({ params }: Props) {
           ],
           lang,
         )}
-      />
-      <ServicesView
-        lang={lang}
-        services={services}
-        cases={cases}
-        labels={{
-          title: t(dict, 'services.title'),
-          audiences: t(dict, 'services.audiences'),
-          forWho: t(dict, 'services.forWho'),
-          deliverables: t(dict, 'services.deliverables'),
-          flip: t(dict, 'services.flip'),
-          flipBack: t(dict, 'services.flipBack'),
-          want: t(dict, 'services.want'),
-          try: t(dict, 'services.try'),
-          principles: t(dict, 'services.principles'),
-          cases: t(dict, 'services.cases'),
-          faq: t(dict, 'services.faq'),
-        }}
-      />
+      >
+        <ServicesView
+          lang={lang}
+          services={services}
+          cases={cases}
+          labels={{
+            title: t(dict, 'services.title'),
+            audiences: t(dict, 'services.audiences'),
+            forWho: t(dict, 'services.forWho'),
+            deliverables: t(dict, 'services.deliverables'),
+            flip: t(dict, 'services.flip'),
+            flipBack: t(dict, 'services.flipBack'),
+            want: t(dict, 'services.want'),
+            try: t(dict, 'services.try'),
+            principles: t(dict, 'services.principles'),
+            cases: t(dict, 'services.cases'),
+            faq: t(dict, 'services.faq'),
+          }}
+        />
+      </SectionNav>
     </>
   )
 }

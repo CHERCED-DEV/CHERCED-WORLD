@@ -35,8 +35,9 @@ export default async function AiLabPage({ params }: Props) {
       <SectionNav
         label={SECTIONS_LABEL[lang]}
         sections={labThemes().map((group) => ({ id: themeSectionId(group.theme), label: labels.themes[group.theme] }))}
-      />
-      <LabPage lang={lang} />
+      >
+        <LabPage lang={lang} />
+      </SectionNav>
     </>
   )
 }

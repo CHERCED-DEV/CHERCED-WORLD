@@ -103,27 +103,28 @@ export default async function CaseStudyPage({ params }: Props) {
           ],
           lang,
         )}
-      />
-      <CaseStudy
-        project={project}
-        lang={lang}
-        labels={labels}
-        extras={{
-          labels: extraLabels,
-          neighbors: caseStudyNeighbors(projects, project.id, lang),
-          usage: technologyCounts(projects),
-          portfolioHref: localizedPath(lang, '/portfolio'),
-          evidence: caseEvidenceLabels(dict),
-          showcase: project.id === SYNERGOS_CASE_ID ? synergosShowcase.copy.cta[lang] : undefined,
-          related: caseRelatedLinks({
-            projectId: project.id,
-            lang,
-            posts,
-            services: getSite().services.items,
-            labels: { post: extraLabels.relatedPost, services: extraLabels.relatedServices },
-          }),
-        }}
-      />
+      >
+        <CaseStudy
+          project={project}
+          lang={lang}
+          labels={labels}
+          extras={{
+            labels: extraLabels,
+            neighbors: caseStudyNeighbors(projects, project.id, lang),
+            usage: technologyCounts(projects),
+            portfolioHref: localizedPath(lang, '/portfolio'),
+            evidence: caseEvidenceLabels(dict),
+            showcase: project.id === SYNERGOS_CASE_ID ? synergosShowcase.copy.cta[lang] : undefined,
+            related: caseRelatedLinks({
+              projectId: project.id,
+              lang,
+              posts,
+              services: getSite().services.items,
+              labels: { post: extraLabels.relatedPost, services: extraLabels.relatedServices },
+            }),
+          }}
+        />
+      </SectionNav>
       <script type="application/ld+json" data-cw-case-ld="" dangerouslySetInnerHTML={{ __html: jsonLdScript(caseStudyJsonLd(project, lang)) }} />
       <script
         type="application/ld+json"

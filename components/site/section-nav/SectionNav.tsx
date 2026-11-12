@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type FocusEvent, type MouseEvent } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type FocusEvent, type MouseEvent, type ReactNode } from 'react'
 import { useMediaQuery, useScrollDirection } from '@/lib/fx/viewport'
 import {
   activeSection,
@@ -18,13 +18,13 @@ import styles from './SectionNav.module.scss'
 
 export type { NavSection } from './model'
 
-export type SectionNavProps = { label: string; sections: readonly NavSection[] }
+export type SectionNavProps = { label: string; sections: readonly NavSection[]; children?: ReactNode }
 
 function reducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
-export function SectionNav({ label, sections: given }: SectionNavProps) {
+export function SectionNav({ label, sections: given, children }: SectionNavProps) {
   const sections = useMemo(() => navSections(given), [given])
   const [current, setCurrent] = useState(sections[0]?.id ?? '')
   const [footer, setFooter] = useState(false)
@@ -190,7 +190,7 @@ export function SectionNav({ label, sections: given }: SectionNavProps) {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false)
   }
 
-  return (
+  const nav = (
     <>
       <nav
         ref={navRef}
@@ -258,5 +258,12 @@ export function SectionNav({ label, sections: given }: SectionNavProps) {
       </div>
       <style data-cw-scene-timelines="">{sectionTimelineCss(sections)}</style>
     </>
+  )
+  if (children === undefined) return nav
+  return (
+    <div data-cw-section-page="">
+      {nav}
+      {children}
+    </div>
   )
 }

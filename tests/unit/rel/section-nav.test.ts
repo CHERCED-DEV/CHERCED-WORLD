@@ -123,6 +123,18 @@ describe('navegación de secciones: pestaña y puntos', () => {
     expect(html).toContain('#scene-heading{view-timeline:--cw-section-4 block')
   })
 
+  it('R4.6: con contenido, la pestaña y la página van en un solo contenedor, para que Next empiece arriba al navegar', () => {
+    const html = renderToStaticMarkup(createElement(SectionNav, { label: 'Secciones', sections }, createElement('section', { id: 'scene-who' }, 'x')))
+    expect(html).toMatch(/^<div data-cw-section-page=""><nav [^>]*data-cw-scene-nav=""/)
+    expect(html).toMatch(/<section id="scene-who">x<\/section><\/div>$/)
+    expect(renderToStaticMarkup(createElement(SectionNav, { label: 'Secciones', sections }))).not.toContain('data-cw-section-page')
+    const pages = ['now', 'ai-lab', 'services', 'synergos', 'synergos/arquitectura', 'portfolio/[id]'].map((route) =>
+      readFileSync(path.resolve(root, 'app/[lang]', route, 'page.tsx'), 'utf8'),
+    )
+    for (const page of pages) expect(page).toContain('</SectionNav>')
+    expect(readFileSync(path.resolve(root, 'app/[lang]/layout.tsx'), 'utf8')).toContain('data-scroll-behavior="smooth"')
+  })
+
   it('compacta solo en < md y con movimiento; solo anima translate, transform y opacity (FR-650, FR-653)', () => {
     expect(css).toMatch(/@include bp\.down\(md\) \{\s*@include site\.motion-ok \{[\s\S]*?\.sceneNav\[data-cw-compact\] \{/)
     const compactBlock = css.slice(css.indexOf('.sceneNav[data-cw-compact]'))

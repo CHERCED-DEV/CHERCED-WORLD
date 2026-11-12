@@ -54,17 +54,18 @@ export default async function SynergosPage({ params }: Props) {
           ],
           lang,
         )}
-      />
-      <SynergosView
-        lang={lang}
-        project={project}
-        build={getProject(SYNERGOS_BUILD_CASE_ID)}
-        labels={{
-          newTab: t(dict, 'a11y.newTab'),
-          github: t(dict, 'project.github'),
-          diagram: caseEvidenceLabels(dict).diagram,
-        }}
-      />
+      >
+        <SynergosView
+          lang={lang}
+          project={project}
+          build={getProject(SYNERGOS_BUILD_CASE_ID)}
+          labels={{
+            newTab: t(dict, 'a11y.newTab'),
+            github: t(dict, 'project.github'),
+            diagram: caseEvidenceLabels(dict).diagram,
+          }}
+        />
+      </SectionNav>
       <script type="application/ld+json" data-cw-synergos-ld="" dangerouslySetInnerHTML={{ __html: jsonLdScript(synergosJsonLd(lang)) }} />
     </>
   )

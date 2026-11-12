@@ -20,8 +20,9 @@ export default async function ArchitecturePage({ params }: Props) {
   const lang = await resolveLang(params)
   return <>
     <BackgroundIntensity value="subtle" />
-    <SectionNav label={architecture.copy.nav[lang]} sections={architectureChapters(lang).map(({ id, label }) => ({ id, label }))} />
-    <ArchitectureView lang={lang} />
+    <SectionNav label={architecture.copy.nav[lang]} sections={architectureChapters(lang).map(({ id, label }) => ({ id, label }))}>
+      <ArchitectureView lang={lang} />
+    </SectionNav>
     <script type="application/ld+json" data-cw-architecture-ld="" dangerouslySetInnerHTML={{ __html: jsonLdScript(architectureJsonLd(lang)) }} />
   </>
 }

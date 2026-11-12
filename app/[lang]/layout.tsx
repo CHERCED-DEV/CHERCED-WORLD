@@ -64,7 +64,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   const items = navItems(common)
 
   return (
-    <html lang={lang} className={montserrat.variable} suppressHydrationWarning>
+    <html lang={lang} className={montserrat.variable} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
