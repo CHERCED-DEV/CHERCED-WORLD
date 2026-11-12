@@ -253,7 +253,7 @@ test.describe('013: animaciones guiadas por scroll', () => {
           (direction) =>
             new Promise<void>((resolve) => {
               const bench = (window as unknown as { chrome: { gpuBenchmarking: GpuBenchmarking } }).chrome.gpuBenchmarking
-              bench.smoothScrollBy(100, resolve, innerWidth / 2, innerHeight / 2, bench.MOUSE_INPUT, direction, 4000, false)
+              bench.smoothScrollBy(100, resolve, innerWidth / 2, innerHeight / 2, bench.MOUSE_INPUT, direction, 100_000, false)
             }),
           direction,
         )
