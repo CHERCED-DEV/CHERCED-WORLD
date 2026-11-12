@@ -1,0 +1,400 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--cw-z-menu) + 10);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.actor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 75px;
+  height: 99px;
+  will-change: transform;
+}
+
+.layer[data-reduced] .actor {
+  top: auto;
+  right: var(--cw-space-4);
+  bottom: calc(var(--cw-space-4) + env(safe-area-inset-bottom, 0px));
+  left: auto;
+  transform: none !important;
+  will-change: auto;
+}
+
+.layer[data-phase='leaving'] .actor {
+  animation: fun-leave 0.45s var(--cw-ease-in) both;
+  animation-delay: calc(var(--fun-bye) - 450ms);
+}
+
+.figure {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: fun-pop 0.4s var(--cw-ease-spring) both;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -14px -12px -4px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(37 237 158 / 0.6), rgb(37 237 158 / 0));
+    opacity: 0;
+  }
+
+  &[data-powered]::before {
+    opacity: 0.55;
+  }
+}
+
+.actor[data-facing='left'] .figure {
+  transform: scaleX(-1);
+}
+
+.actor[data-pose='power'] .figure::before {
+  opacity: 1;
+  animation: fun-aura 1.2s var(--cw-ease-in-out) infinite alternate;
+}
+
+.sprite {
+  position: relative;
+  display: block;
+  overflow: visible;
+}
+
+.bubble {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  width: max-content;
+  max-width: min(24ch, 70vw);
+  padding: 6px 10px;
+  border: 2px solid var(--cw-fg);
+  border-radius: 10px;
+  background: var(--cw-bg);
+  box-shadow: 3px 3px 0 #25ed9e;
+  color: var(--cw-fg);
+  font-size: var(--cw-text-sm);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  animation: fun-say 0.28s var(--cw-ease-spring) both;
+}
+
+.actor[data-bubble='start'] .bubble {
+  left: 0;
+  transform: none;
+  transform-origin: bottom left;
+}
+
+.actor[data-bubble='end'] .bubble,
+.layer[data-reduced] .bubble {
+  right: 0;
+  left: auto;
+  transform: none;
+  transform-origin: bottom right;
+}
+
+.tap {
+  position: absolute;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #25ed9e;
+  box-shadow: 0 0 0 2px #000000;
+  color: #000000;
+  font-size: var(--cw-text-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  animation: fun-tap 0.7s var(--cw-ease-out) both;
+}
+
+.calm {
+  position: absolute;
+  bottom: calc(var(--cw-space-4) + env(safe-area-inset-bottom, 0px));
+  left: var(--cw-space-4);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--cw-space-4);
+  border: 2px solid var(--cw-fg);
+  border-radius: 999px;
+  background: var(--cw-bg);
+  box-shadow: 3px 3px 0 #25ed9e;
+  color: var(--cw-fg);
+  font: inherit;
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: auto;
+
+  &[aria-pressed='true'] {
+    border-color: #000000;
+    background: #25ed9e;
+    color: #000000;
+  }
+
+  &:active {
+    transform: scale(var(--cw-press-scale));
+  }
+}
+
+:global(:root[data-cw-dock]) .calm {
+  bottom: calc(12px + var(--cw-dock-space));
+}
+
+:global(:root[data-cw-dock]) .layer[data-reduced] .actor {
+  bottom: calc(12px + var(--cw-dock-space));
+}
+
+.outline {
+  fill: var(--cw-fg);
+}
+
+.hair {
+  fill: #161616;
+}
+
+.fade {
+  fill: #6b6b6b;
+}
+
+.skin {
+  fill: #ececec;
+}
+
+.shade {
+  fill: #bdbdbd;
+}
+
+.ink {
+  fill: #000000;
+}
+
+.lens {
+  fill: #25ed9e;
+}
+
+.shine {
+  fill: #ffffff;
+}
+
+.tee {
+  fill: #0d0d0d;
+}
+
+.white {
+  fill: #f4f4f4;
+}
+
+.mouth {
+  fill: #2a2a2a;
+}
+
+.step,
+.sit,
+.crossed,
+.armPoke,
+.spikes,
+.sweat,
+.pout,
+.yell,
+.tear {
+  display: none;
+}
+
+.layer[data-animate] {
+  .head,
+  .spikes {
+    animation: fun-bob 0.8s steps(1, end) infinite;
+  }
+
+  .actor[data-walking] .legs {
+    animation: fun-frame-a 0.3s steps(1, end) infinite;
+  }
+
+  .actor[data-walking] .step {
+    display: inline;
+    animation: fun-frame-b 0.3s steps(1, end) infinite;
+  }
+
+  .actor[data-pose='poke'] .armPoke {
+    animation: fun-jab 0.24s var(--cw-ease-out) 2;
+  }
+
+  .actor[data-pose='beg'] .sweat {
+    animation: fun-drip 0.5s steps(2, end) infinite;
+  }
+
+  .actor[data-pose='power'] .sprite {
+    animation: fun-shake 0.16s steps(2, end) infinite;
+  }
+
+  .actor[data-pose='power'] .spikes {
+    animation: fun-rise 0.5s steps(3, end) both;
+  }
+}
+
+.actor[data-pose='poke'] {
+  .armDown {
+    display: none;
+  }
+
+  .armPoke {
+    display: inline;
+  }
+}
+
+.actor[data-pose='beg'] {
+  .sweat,
+  .pout {
+    display: inline;
+  }
+}
+
+.actor[data-pose='power'] {
+  .spikes,
+  .yell {
+    display: inline;
+  }
+}
+
+.figure[data-powered] .spikes {
+  display: inline;
+}
+
+.actor[data-pose='sulk'] {
+  .torso,
+  .armDown,
+  .armPoke,
+  .legs,
+  .step {
+    display: none;
+  }
+
+  .crossed,
+  .sit,
+  .pout,
+  .tear {
+    display: inline;
+  }
+}
+
+.layer:not([data-animate]) {
+  .figure,
+  .bubble,
+  .tap {
+    animation: none;
+  }
+}
+
+@keyframes fun-pop {
+  from {
+    opacity: 0;
+    scale: 0.3;
+    translate: 0 30px;
+  }
+}
+
+@keyframes fun-leave {
+  to {
+    opacity: 0;
+    scale: 0.3;
+  }
+}
+
+@keyframes fun-say {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
+@keyframes fun-tap {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+  }
+
+  25% {
+    opacity: 1;
+    scale: 1.15;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 1;
+    translate: 0 -14px;
+  }
+}
+
+@keyframes fun-aura {
+  from {
+    scale: 0.9;
+  }
+
+  to {
+    scale: 1.12;
+  }
+}
+
+@keyframes fun-bob {
+  50% {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes fun-frame-a {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fun-frame-b {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fun-jab {
+  from {
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes fun-drip {
+  50% {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes fun-shake {
+  50% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes fun-rise {
+  from {
+    transform: translateY(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer *,
+  .layer[data-phase='leaving'] .actor {
+    animation: none !important;
+  }
+}

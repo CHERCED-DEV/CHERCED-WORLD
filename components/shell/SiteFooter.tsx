@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { SocialId, SocialLink } from '@/content/types'
+import { NoTocar } from '@/components/fun/NoTocar'
 import { cx } from '@/components/ui/cx'
 import { EmailMenu } from '@/components/ui/EmailMenu'
 import { GlowOrb, GridLines, Hairline, Scanline } from '@/components/ui/graphics'
@@ -76,6 +77,7 @@ export function SiteFooter({ lang, socials, labels }: SiteFooterProps) {
         <p className={styles.egg} data-cw-footer-egg="">
           {labels.egg}
         </p>
+        <NoTocar lang={lang} />
         <div className={styles.links}>
           <SelfLink href={`/${lang}/now`} className={styles.privacy} data-cw-footer-now="">
             {labels.now}
