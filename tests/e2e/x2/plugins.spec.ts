@@ -4,6 +4,7 @@ import { expect, test, type Locator, type Page, type Request } from '@playwright
 import en from '@/content/i18n/en/ailab.json'
 import es from '@/content/i18n/es/ailab.json'
 import { labExperiment } from '@/content/ailab/catalog'
+import { encodeVector, MEANING_DIMS, MEANING_MODEL, MEANING_VECTORS_VERSION, quantize } from '@/lib/ailab/search/meaning'
 import { validateSkillMd } from '@/lib/ailab/skill/generate'
 
 test.describe.configure({ timeout: 120_000 })
@@ -264,12 +265,103 @@ test.describe('A5 · Buscador con caja de cristal (US8 escenario 1, FR-357)', ()
     await expect(results).toHaveCount(0)
 
     await expect(stage.locator('[data-cw-glass-meaning]')).toHaveText(es['ailab.a5.meaning'])
-    await expect(stage.getByRole('button', { name: /significado/i })).toHaveCount(0)
+    await expect(stage.locator('[data-cw-glass-mode="words"]')).toHaveAttribute('aria-pressed', 'true')
+    await expect(stage.locator('[data-cw-glass-mode="meaning"]')).toHaveAttribute('aria-pressed', 'false')
     expect(carrying(requests.slice(since), 'synergos')).toEqual([])
     expect(carrying(requests.slice(since), 'zzzzqqqq')).toEqual([])
     expect(requests.filter((request) => HEAVY.test(request.url())).map((request) => request.url())).toEqual([])
     expect(await blockingViolations(page, '[data-cw-lab-card="A5"]')).toEqual([])
     await noOverflow(page)
+  })
+
+  test('T734: por significado pide permiso, compara los dos rankings y la pregunta no sale del navegador', async ({ page }) => {
+    const axis = (index: number) => Array.from({ length: MEANING_DIMS }, (_, at) => (at === index ? 1 : 0))
+    const vectors = {
+      version: MEANING_VECTORS_VERSION,
+      lang: 'es',
+      model: MEANING_MODEL,
+      dims: MEANING_DIMS,
+      docs: [
+        ['page:home', 2],
+        ['project:12', 0],
+        ['architecture:synergos', 1],
+      ].map(([id, index]) => ({ id, v: encodeVector(quantize(axis(index as number))) })),
+    }
+    await page.route('**/api/search-vectors/es', (route) => route.fulfill({ json: vectors }))
+    await page.addInitScript((dims) => {
+      const calls: string[] = []
+      Object.assign(window, { __meaningCalls: calls })
+      class FakeWorker extends EventTarget {
+        dead = false
+        postMessage(message: { cw?: string; id?: number; payload?: { type: string; text?: string } }) {
+          if (this.dead || message?.cw !== 'call' || message.id === undefined || !message.payload) return
+          const { id, payload } = message
+          calls.push(payload.type)
+          setTimeout(() => {
+            if (payload.type === 'load') {
+              this.dispatchEvent(new MessageEvent('message', { data: { cw: 'progress', id, payload: { stage: 'download', loaded: 1, total: 2 } } }))
+              this.dispatchEvent(new MessageEvent('message', { data: { cw: 'result', id, payload: { type: 'loaded', ms: 12 } } }))
+            } else {
+              const vector = new Float32Array(dims)
+              vector[0] = 1
+              this.dispatchEvent(new MessageEvent('message', { data: { cw: 'result', id, payload: { type: 'embedded', vector, ms: 7 } } }))
+            }
+          }, 20)
+        }
+        terminate() {
+          this.dead = true
+        }
+      }
+      Object.defineProperty(window, 'Worker', { value: FakeWorker, configurable: true, writable: true })
+    }, MEANING_DIMS)
+    const requests = watch(page)
+    await open(page)
+    const stage = await tryDemo(page, 'A5')
+    await expect(stage.locator('[data-cw-glassbox]')).toHaveAttribute('data-cw-glassbox', 'ready', { timeout: 30_000 })
+    const query = '¿cómo maneja Synergos las sagas?'
+    await stage.getByRole('searchbox', { name: es['ailab.a5.label'] }).fill(query)
+
+    await stage.locator('[data-cw-glass-mode="meaning"]').click()
+    const consent = page.locator('dialog[open]').filter({ has: page.locator('[data-cw-lab-consent-text]') })
+    await expect(consent).toContainText('multilingual-e5-small')
+    await consent.locator('[data-cw-lab-consent-accept]').click()
+    await expect(stage.locator('[data-cw-glass-mode="meaning"]')).toHaveAttribute('aria-pressed', 'true')
+    await expect(stage.locator('[data-cw-glass-hint], p').filter({ hasText: es['ailab.a5.hint.meaning'] })).toHaveCount(1)
+
+    const compare = stage.locator('[data-cw-glass-compare]')
+    await expect(compare).toBeVisible()
+    const first = compare.locator('[data-cw-meaning-result]').first()
+    await expect(first).toHaveAttribute('data-cw-meaning-result', 'project:12')
+    await expect(first).toContainText('Synergos')
+    await expect(first.locator('[data-cw-meaning-score]')).toContainText('Similitud')
+    await expect(first.locator('[data-cw-meaning-words]')).toContainText(/Por palabras: puesto \d+|Por palabras no aparece/)
+    await expect(compare.locator('[data-cw-glass-compare-word]').first()).toBeVisible()
+    await expect(stage.locator('[data-cw-glass-status]')).toContainText('Por significado para')
+
+    expect(await page.evaluate(() => (window as unknown as { __meaningCalls: string[] }).__meaningCalls)).toEqual(['load', 'embed'])
+    expect(carrying(requests, 'sagas')).toEqual([])
+    expect(requests.filter((request) => HEAVY.test(request.url())).map((request) => request.url())).toEqual([])
+
+    await stage.locator('[data-cw-glass-mode="words"]').click()
+    await expect(stage.locator('[data-cw-glass-compare]')).toHaveCount(0)
+    await expect(stage.locator('[data-cw-glass-result]').first()).toBeVisible()
+    expect(await blockingViolations(page, '[data-cw-lab-card="A5"]')).toEqual([])
+  })
+
+  test('T734: si no aceptas la descarga, no se baja nada y por palabras sigue', async ({ page }) => {
+    const requests = watch(page)
+    await open(page)
+    const stage = await tryDemo(page, 'A5')
+    await expect(stage.locator('[data-cw-glassbox]')).toHaveAttribute('data-cw-glassbox', 'ready', { timeout: 30_000 })
+    await stage.getByRole('searchbox', { name: es['ailab.a5.label'] }).fill('Angular')
+    await stage.locator('[data-cw-glass-mode="meaning"]').click()
+    const consent = page.locator('dialog[open]').filter({ has: page.locator('[data-cw-lab-consent-text]') })
+    await consent.locator('[data-cw-lab-consent-cancel]').click()
+    await expect(stage.locator('[data-cw-glass-status]')).toHaveText(es['ailab.a5.meaning.declined'])
+    await expect(stage.locator('[data-cw-glass-compare]')).toHaveCount(0)
+    expect(requests.filter((request) => HEAVY.test(request.url())).map((request) => request.url())).toEqual([])
+    await stage.locator('[data-cw-glass-mode="words"]').click()
+    await expect(stage.locator('[data-cw-glass-result]').first()).toBeVisible()
   })
 
   test('en inglés busca en el índice en inglés', async ({ page }) => {

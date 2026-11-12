@@ -133,7 +133,7 @@ Rutas: `components/ailab/plugins/**`, `components/ailab/search/**`, `lib/ailab/s
 - [ ] T733 [US8] Caja de cristal en modo palabras (FR-357): `lib/ailab/search/glassbox.ts`, sobre el cliente del índice
   que ya existe, y `components/ailab/search/GlassBoxSearch.tsx`, con fragmento, puntaje, fuente y enlace. Sin el PDF
   del CV.
-- [ ] T734 [US8] (T730 cumple; queda para después del release 1 por ser una función nueva, decisión del 2026-11-11) Modo por significado, **condicionado a T730 y a P-3k**: vectores precalculados en el build, un worker de
+- [x] T734 [US8] (hecho el 2026-11-12 en la rama de funciones post-release: `app/api/search-vectors/[lang]` precalcula en el build 98 vectores int8 por idioma, unos 53 KB; `meaning.worker.ts` embebe la pregunta con consentimiento; A5 compara los rankings lado a lado; `staticPageGenerationTimeout` sube a 300 s) Modo por significado, **condicionado a T730 y a P-3k**: vectores precalculados en el build, un worker de
   embeddings con consentimiento y la comparación de rankings. Si T730 no cumple el umbral de R-703, se cierra sin hacerse.
 - [ ] T735 **BLOQUEADA (P-3c)**: mostrar la estructura del plugin para abogados del autor en vez del ejemplo neutral,
   sin nada del material de la clienta.

@@ -5,9 +5,11 @@ import type { LabDemoProps, LabTranslate } from '@/components/ailab/shell/types'
 import { Button } from '@/components/ui/Button'
 import { createGlassBox, type GlassBox, type GlassField, type GlassMatch, type GlassResult, type GlassTerm } from '@/lib/ailab/search/glassbox'
 import type { Locale } from '@/lib/i18n/config'
+import { compareRankings, type MeaningHit } from '@/lib/ailab/search/meaning'
 import { loadSearchIndex } from '@/lib/search/client'
 import type { SearchDocKind } from '@/lib/search/types'
 import styles from './GlassBox.module.scss'
+import { useMeaning, type MeaningState } from './use-meaning'
 
 const NUMBER_LOCALE: Record<Locale, string> = { es: 'es-CO', en: 'en-US' }
 
@@ -115,9 +117,111 @@ function Result({ result, t, format, total }: { result: GlassResult; t: LabTrans
   )
 }
 
-export function GlassBoxSearch({ lang, t }: LabDemoProps) {
+type Mode = 'words' | 'meaning'
+
+function meaningStatus(meaning: MeaningState, t: LabTranslate, percent: (value: number) => string): string {
+  switch (meaning.phase) {
+    case 'off':
+    case 'asking':
+      return t('ailab.a5.meaning.asking')
+    case 'declined':
+      return t('ailab.a5.meaning.declined')
+    case 'loading': {
+      const share = meaning.download && meaning.download.total > 0 ? meaning.download.loaded / meaning.download.total : 0
+      return t('ailab.a5.meaning.loading', { percent: percent(share) })
+    }
+    case 'failed':
+      return t('ailab.a5.meaning.failed')
+    case 'unavailable':
+      return t('ailab.a5.meaning.unavailable')
+    case 'ready':
+      return meaning.hits && meaning.query ? t('ailab.a5.meaning.count', { query: meaning.query, ms: meaning.ms ?? 0 }) : t('ailab.a5.meaning.ready')
+  }
+}
+
+function Compare({
+  hits,
+  words,
+  box,
+  t,
+  format,
+}: {
+  hits: MeaningHit[]
+  words: GlassResult[]
+  box: GlassBox
+  t: LabTranslate
+  format: (value: number) => string
+}) {
+  const shifts = compareRankings(
+    hits,
+    words.map((result) => result.doc.id),
+  )
+  return (
+    <div className={styles.compare} data-cw-glass-compare="">
+      <section className={styles.column} aria-labelledby="cw-glass-meaning-title">
+        <h4 id="cw-glass-meaning-title" className={styles.columnTitle}>
+          {t('ailab.a5.compare.meaning')}
+        </h4>
+        <ol className={styles.results}>
+          {shifts.map((shift, index) => {
+            const doc = box.doc(shift.id)
+            const hit = hits[index]
+            if (!doc || !hit) return null
+            return (
+              <li key={shift.id} className={styles.result} data-cw-meaning-result={shift.id}>
+                <div className={styles.resultHead}>
+                  <span className={styles.rank} aria-hidden="true">
+                    {String(shift.meaning).padStart(2, '0')}
+                  </span>
+                  <a className={styles.title} href={doc.url}>
+                    {doc.title}
+                  </a>
+                  <span className={styles.score} data-cw-meaning-score={hit.score.toFixed(4)}>
+                    {t('ailab.a5.meaning.score', { score: format(hit.score) })}
+                  </span>
+                </div>
+                <p className={styles.shift} data-cw-meaning-words={shift.words ?? ''}>
+                  {shift.words === null ? t('ailab.a5.compare.missing') : t('ailab.a5.compare.words', { rank: shift.words })}
+                </p>
+              </li>
+            )
+          })}
+        </ol>
+      </section>
+      <section className={styles.column} aria-labelledby="cw-glass-words-title">
+        <h4 id="cw-glass-words-title" className={styles.columnTitle}>
+          {t('ailab.a5.compare.wordsTitle')}
+        </h4>
+        {words.length > 0 ? (
+          <ol className={styles.results}>
+            {words.map((result) => (
+              <li key={result.doc.id} className={styles.result} data-cw-glass-compare-word={result.doc.id}>
+                <div className={styles.resultHead}>
+                  <span className={styles.rank} aria-hidden="true">
+                    {String(result.rank).padStart(2, '0')}
+                  </span>
+                  <a className={styles.title} href={result.doc.url}>
+                    {result.doc.title}
+                  </a>
+                  <span className={styles.score}>{t('ailab.a5.score', { score: format(result.score) })}</span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className={styles.muted}>{t('ailab.a5.compare.wordsNone')}</p>
+        )}
+      </section>
+    </div>
+  )
+}
+
+export function GlassBoxSearch({ lang, t, experiment, downloads }: LabDemoProps) {
   const [attempt, setAttempt] = useState(0)
   const [query, setQuery] = useState('')
+  const [mode, setMode] = useState<Mode>('words')
+  const meaning = useMeaning(experiment, lang, downloads[0] ?? null)
+  const { search: searchMeaning, enable: enableMeaning } = meaning
   const state = useGlassBox(lang, attempt)
   const deferred = useDeferredValue(query)
   const base = useId().replace(/:/g, '')
@@ -127,6 +231,21 @@ export function GlassBoxSearch({ lang, t }: LabDemoProps) {
   }, [lang])
   const box = state.phase === 'ready' ? state.box : null
   const found = useMemo(() => (box && deferred.trim() ? box.search(deferred) : null), [box, deferred])
+  const percent = useMemo(() => {
+    const formatter = new Intl.NumberFormat(NUMBER_LOCALE[lang], { style: 'percent', maximumFractionDigits: 0 })
+    return (value: number) => formatter.format(value)
+  }, [lang])
+  const phase = meaning.state.phase
+  const meaningReady = phase === 'ready'
+
+  useEffect(() => {
+    if (mode === 'meaning' && meaningReady) void searchMeaning(deferred)
+  }, [mode, meaningReady, deferred, searchMeaning])
+
+  const chooseMeaning = () => {
+    setMode('meaning')
+    if (phase !== 'ready' && phase !== 'loading' && phase !== 'asking') void enableMeaning()
+  }
 
   const submit = (event: FormEvent<HTMLFormElement>) => event.preventDefault()
 
@@ -155,8 +274,16 @@ export function GlassBoxSearch({ lang, t }: LabDemoProps) {
           data-cw-glass-query=""
         />
         <p id={`${base}-hint`} className={styles.hint}>
-          {t('ailab.a5.hint')}
+          {t(mode === 'meaning' ? 'ailab.a5.hint.meaning' : 'ailab.a5.hint')}
         </p>
+        <div className={styles.modes} role="group" aria-label={t('ailab.a5.mode.label')} data-cw-glass-modes="">
+          <button type="button" className={styles.mode} aria-pressed={mode === 'words'} onClick={() => setMode('words')} data-cw-glass-mode="words">
+            {t('ailab.a5.mode.words')}
+          </button>
+          <button type="button" className={styles.mode} aria-pressed={mode === 'meaning'} onClick={chooseMeaning} data-cw-glass-mode="meaning">
+            {t('ailab.a5.mode.meaning')}
+          </button>
+        </div>
         <div className={styles.examples}>
           <span className={styles.examplesLabel}>{t('ailab.a5.examples')}</span>
           {EXAMPLE_KEYS.map((key) => (
@@ -170,8 +297,9 @@ export function GlassBoxSearch({ lang, t }: LabDemoProps) {
       <div className={styles.state} role="status" aria-live="polite" aria-atomic="true" data-cw-glass-status="">
         {state.phase === 'loading' ? t('ailab.a5.loading') : null}
         {state.phase === 'failed' ? t('ailab.a5.failed') : null}
-        {state.phase === 'ready' && !found ? t('ailab.a5.ready', { count: state.box.size }) : null}
-        {found ? summary : null}
+        {mode === 'words' && state.phase === 'ready' && !found ? t('ailab.a5.ready', { count: state.box.size }) : null}
+        {mode === 'words' && found ? summary : null}
+        {mode === 'meaning' && state.phase === 'ready' ? meaningStatus(meaning.state, t, percent) : null}
       </div>
       {state.phase === 'failed' ? (
         <div>
@@ -181,7 +309,11 @@ export function GlassBoxSearch({ lang, t }: LabDemoProps) {
         </div>
       ) : null}
 
-      {found && found.terms.length > 0 ? (
+      {mode === 'meaning' && box && meaningReady && meaning.state.hits && deferred.trim() ? (
+        <Compare hits={meaning.state.hits} words={found?.results ?? []} box={box} t={t} format={format} />
+      ) : null}
+
+      {mode === 'words' && found && found.terms.length > 0 ? (
         <div className={styles.tokens} data-cw-glass-terms="">
           <p className={styles.label}>{t('ailab.a5.terms')}</p>
           <ul className={styles.tokenList}>
@@ -197,7 +329,7 @@ export function GlassBoxSearch({ lang, t }: LabDemoProps) {
         </div>
       ) : null}
 
-      {found && found.results.length > 0 ? (
+      {mode === 'words' && found && found.results.length > 0 ? (
         <ol className={styles.results} aria-label={summary} data-cw-glass-results="">
           {found.results.map((result) => (
             <Result key={result.doc.id} result={result} t={t} format={format} total={found.total} />
@@ -209,7 +341,7 @@ export function GlassBoxSearch({ lang, t }: LabDemoProps) {
         <summary className={styles.whySummary}>{t('ailab.a5.legend.title')}</summary>
         <p>{t('ailab.a5.legend')}</p>
       </details>
-      <p className={styles.meaning} data-cw-glass-meaning="">
+      <p className={styles.meaning} data-cw-glass-meaning={phase}>
         {t('ailab.a5.meaning')}
       </p>
     </div>

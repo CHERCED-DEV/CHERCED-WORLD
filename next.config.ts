@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: SECURITY_HEADERS }]
   },
+  staticPageGenerationTimeout: 300,
   reactStrictMode: true,
   poweredByHeader: false,
   agentRules: false,

@@ -45,7 +45,11 @@ export type GlassResult = {
 
 export type GlassSearch = { query: string; terms: GlassQueryTerm[]; total: number; results: GlassResult[] }
 
-export type GlassBox = { size: number; search: (query: string, options?: { limit?: number }) => GlassSearch }
+export type GlassBox = { size: number; search: (query: string, options?: { limit?: number }) => GlassSearch; doc: (id: string) => SearchDoc | null }
+
+export function isIndexedDoc(doc: Pick<SearchDoc, 'url'>): boolean {
+  return !PDF.test(doc.url)
+}
 
 const PDF = /\.pdf(?:$|[?#])/i
 const WORD = /([\p{L}\p{N}@+#]+)/u
@@ -156,7 +160,8 @@ export function fragmentOf(doc: SearchDoc, terms: readonly GlassTerm[], total: n
 }
 
 export function createGlassBox(index: { docs: readonly SearchDoc[] }): GlassBox {
-  const docs = index.docs.filter((doc) => !PDF.test(doc.url))
+  const docs = index.docs.filter(isIndexedDoc)
+  const byId = new Map(docs.map((doc) => [doc.id, doc]))
   const searcher = createSearcher(docs)
   const perTerm = new Map<string, Map<string, number>>()
   const perDoc = new Map<string, Record<GlassField, string[]>>()
@@ -208,6 +213,7 @@ export function createGlassBox(index: { docs: readonly SearchDoc[] }): GlassBox 
 
   return {
     size: searcher.size,
+    doc: (id) => byId.get(id) ?? null,
     search(query, options = {}) {
       const terms = counted(queryTerms(query))
       const hits = searcher.search(query, { limit: options.limit ?? GLASS_DEFAULT_LIMIT })

@@ -441,14 +441,14 @@ const A5: LabExperiment = {
       },
     },
     {
-      decision: { es: 'La búsqueda por significado llega en una próxima versión', en: 'Search by meaning arrives in a future version' },
+      decision: { es: 'La búsqueda por significado compara su ranking con el de palabras', en: 'Search by meaning compares its ranking with the one by words' },
       why: {
-        es: 'Ya medí el costo: precalcular los vectores de multilingual-e5-small para los 196 fragmentos del sitio toma unos 14 s en el build. Cabe, y llegará con su permiso de descarga.',
-        en: "I already measured the cost: precomputing the multilingual-e5-small vectors for the site's 196 passages takes about 14 s in the build. It fits, and it will arrive with its download permission.",
+        es: 'Los vectores de multilingual-e5-small se precalculan al publicar el sitio (unos 14 s en el build) y se guardan en int8. Tu pregunta se vuelve vector en tu navegador, con tu permiso, y nada sale de él.',
+        en: 'The multilingual-e5-small vectors are precomputed when the site is published (about 14 s in the build) and stored as int8. Your question becomes a vector in your browser, with your permission, and nothing leaves it.',
       },
       tradeoff: {
-        es: 'Mientras tanto, una pregunta escrita con otras palabras no encuentra lo que dice lo mismo.',
-        en: 'In the meantime, a question written with other words does not find what says the same thing.',
+        es: 'La primera vez hay que descargar 118 MB, y la similitud no explica su puntaje palabra por palabra como BM25: por eso se ven los dos rankings lado a lado.',
+        en: 'The first time it downloads 118 MB, and similarity does not explain its score word by word like BM25: that is why both rankings are shown side by side.',
       },
     },
   ],
