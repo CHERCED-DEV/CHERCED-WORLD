@@ -103,7 +103,8 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   Es el comportamiento de la T944 de la 007, que la 011 había cambiado.
 - [x] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; C2 y C8, el paso del hero a "Ahora trabajo en", hechos y aprobados el mismo día: "Quedan así", T1309) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 - [x] R3.6 Diseño del inicio y del portafolio, ítems 1 a 5 de la auditoría de diseño del 2026-11-12 (pedido del autor:
-  "Limpia y sigue 1–5"). Hecho el mismo día, más el desborde P1 del blog en inglés:
+  "Limpia y sigue 1–5"). Hecho el mismo día, más el desborde P1 del blog en inglés. **Aprobado por el autor en su
+  teléfono el 2026-11-12 ("Aprobado")**, sobre c67d996:
   - **1, vitrina en el inicio:** un panel "Proyectos destacados" debajo de "Ahora trabajo en", sin tocar el hero.
     Usa el mismo cristal y el mismo encabezado. Trae los 3 primeros casos por orden sin Synergos ni los que ya
     enlaza "Ahora trabajo en", y un enlace "Ver los 15 proyectos". En el celular son filas con miniatura y en
@@ -175,7 +176,11 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   bastan las unitarias, lint y typecheck (que Vercel corre antes de compilar) más las e2e de lo que se toca. La corrida completa quedó lanzada el 2026-11-11 sobre
   c79606b (3 workers). Si su resultado no quedó anotado aquí, hay que relanzarla mañana con
   `E2E_TIER=exhaustive E2E_PORT=3200 npx playwright test --workers=3`.
-- [ ] R4.4 Notas del release y QA final del autor.
+- [ ] R4.4 Notas del release y QA final del autor. Borrador de las notas, con la lista de QA para el teléfono y la
+  tablet, en `notas-del-release.md` (2026-11-12). Falta el QA del autor.
+- [x] R4.5 P2 de la exhaustiva (2026-11-12): sin JS, en Contacto el bloque para reclutadores quedaba dentro de un
+  `<noscript>` de 50 px en la columna centrada, y "Perfil de LinkedIn" desbordaba a 375, 390 y 412 px. El
+  `<noscript>` ahora ocupa todo el ancho de la columna (`PageSection.module.scss`).
 
 ## R5 — Publicar
 - [ ] R5.1 Confirmación del autor y `dev` → `main`.
