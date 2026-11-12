@@ -168,7 +168,7 @@ test.describe('buzón público (E-01)', () => {
     await page.goto('/es/aboutMe')
     const mailbox = page.locator('header [data-cw-mailbox]')
     await expect(mailbox).toBeVisible()
-    await expect(mailbox).toHaveAttribute('href', '/es/inbox')
+    await expect(mailbox, 'D-R1: el visitante va a Contacto').toHaveAttribute('href', '/es/contactMe')
     await expect(mailbox.locator('[data-cw-mailbox-badge]')).toHaveCount(0)
   })
 })

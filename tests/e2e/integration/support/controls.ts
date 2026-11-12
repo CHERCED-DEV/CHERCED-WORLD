@@ -12,6 +12,7 @@ export type EffectName =
   | 'popover'
   | 'closePopover'
   | 'carouselStep'
+  | 'handStep'
   | 'filter'
   | 'copy'
   | 'keyboardRegion'
@@ -64,6 +65,7 @@ export const CONTROL_RULES: readonly ControlRule[] = [
   { kind: 'menú', match: '[data-cw-menu-button]', effect: 'popover', expect: 'abre el menú con el foco dentro; Esc lo cierra', nested: true },
   { kind: 'cerrar menú', match: 'button[popovertargetaction="hide"]', effect: 'closePopover', expect: 'cierra el menú' },
   { kind: 'carrusel', match: '[data-cw-prev], [data-cw-next]', effect: 'carouselStep', expect: 'cambia la diapositiva actual' },
+  { kind: 'mazo de la carrera', match: '[data-cw-hand-prev], [data-cw-hand-next]', effect: 'handStep', expect: 'cambia la carta de arriba y el contador' },
   { kind: 'cargar sitio embebido', match: '[data-cw-embed-load]', effect: 'embedLoad', expect: 'monta el sitio en un iframe con título, sandbox y carga diferida (FR-206)' },
   { kind: 'abrir sitio embebido', match: '[data-cw-embed-sheet-open]', effect: 'dialog', expect: 'abre el sitio en una hoja modal; Esc la cierra' },
   { kind: 'pantalla completa', match: '[data-cw-embed-fullscreen]', effect: 'fullscreen', expect: 'entra y sale de pantalla completa' },
@@ -528,6 +530,20 @@ const EFFECTS: Record<EffectName, Effect> = {
     const after = await settle(current, (value) => value !== before)
     if (!after.ok) fail(`la diapositiva actual sigue en ${before}`)
     return `diapositiva ${before} → ${after.value}`
+  },
+
+  async handStep({ page, target }) {
+    const hand = page.locator('[data-cw-hand]').filter({ has: target })
+    const state = async () => {
+      const top = await hand.locator('[data-cw-hand-card][data-top]').first().getAttribute('data-cw-hand-card')
+      const counter = (await hand.locator('[data-cw-hand-counter]').textContent())?.trim() ?? ''
+      return `${top ?? ''} ${counter}`
+    }
+    const before = await state()
+    await activate(target)
+    const after = await settle(state, (value) => value !== before)
+    if (!after.ok) fail(`la carta de arriba y el contador siguen en ${before}`)
+    return `carta ${before} → ${after.value}`
   },
 
   async filter({ page, target }) {

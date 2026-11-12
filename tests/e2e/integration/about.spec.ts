@@ -58,7 +58,7 @@ test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
   onlyIn('desktop-chromium')
 
   for (const lang of LANGS) {
-    test(`/${lang}/aboutMe a 1440 px: tres escenas, índice que marca la visible y 40 % menos de altura`, async ({ page }) => {
+    test(`/${lang}/aboutMe a 1440 px: cuatro escenas, índice que marca la visible y las tres originales 40 % más bajas`, async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 })
       await open(page, lang)
       const index = await sceneIndex(page)
