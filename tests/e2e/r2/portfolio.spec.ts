@@ -329,6 +329,8 @@ test.describe('ProjectEmbed en escritorio (D-03, FR-206)', () => {
     await page.clock.install()
     await skipIntro(page)
     await page.goto(`/es/portfolio/${first.id}`)
+    await expect(page.locator('[data-cw-assistant-button]')).toHaveAttribute('data-cw-ready', '', { timeout: 30_000 })
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000))
     await page.locator('[data-cw-embed-load]').click()
     const embed = await frame(page)
     await expect(embed).toHaveAttribute('data-state', 'loading')

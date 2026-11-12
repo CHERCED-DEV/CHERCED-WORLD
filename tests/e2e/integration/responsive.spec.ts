@@ -53,7 +53,7 @@ async function audit(page: Page, width: number): Promise<Finding[]> {
       const label = (el: Element) =>
         (el.getAttribute('aria-label') || (el as HTMLElement).innerText || el.getAttribute('alt') || el.tagName).trim().split('\n')[0]!.slice(0, 40)
       const path = (el: Element) => `${el.tagName.toLowerCase()}.${String((el as HTMLElement).className).split(' ')[0]}`
-      const hiddenScope = '[hidden], dialog:not([open]), [popover]:not(:popover-open), [inert]'
+      const hiddenScope = '[hidden], dialog:not([open]), [popover]:not(:popover-open), [inert], details:not([open]) > :not(summary)'
       const visible = (el: Element) => {
         const r = el.getBoundingClientRect()
         const cs = getComputedStyle(el)

@@ -188,7 +188,12 @@ export async function returnTo(page: Page, url: string): Promise<void> {
   const target = new URL(url, page.url()).href
   if (samePage(page.url(), target)) return
   await page.goBack({ timeout: 10_000 }).catch(() => null)
-  if (!samePage(page.url(), target)) await page.goto(target)
+  if (!samePage(page.url(), target)) {
+    await page.goto(target).catch(async (error: unknown) => {
+      if (!String(error).includes('is interrupted by another navigation')) throw error
+      await page.waitForURL((current) => samePage(current.href, target))
+    })
+  }
   await waitReady(page)
 }
 
@@ -394,7 +399,7 @@ const EFFECTS: Record<EffectName, Effect> = {
     const htmlLang = await settle(() => page.locator('html').getAttribute('lang'), (value) => value === other)
     if (!htmlLang.ok) fail(`la página quedó con lang="${htmlLang.value}"`)
     if (fromNotFound) {
-      if (!(await showsNotFound(page))) fail(`${expected} debería seguir mostrando el 404 en el otro idioma`)
+      if (!(await settle(() => showsNotFound(page), (shown) => shown)).ok) fail(`${expected} debería seguir mostrando el 404 en el otro idioma`)
       return `cambia a ${expected} (el 404 en el otro idioma)`
     }
     await assertNotMissing(page, context.request, expected)

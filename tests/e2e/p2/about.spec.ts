@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { brainData } from '@/components/site/about/brain'
 import { aboutFigures, figureDigits, figureText } from '@/components/site/about/figures'
 import { getProjects, getSite } from '@/lib/content'
+import { originalAboutHeight } from '../integration/support/pages'
 
 const { about } = getSite()
 const LANGS = ['es', 'en'] as const
@@ -213,12 +214,8 @@ test.describe('presupuestos y accesibilidad', () => {
       await open(page, lang)
       await page.waitForLoadState('load')
       await page.evaluate(() => document.fonts.ready.then(() => undefined))
-      const height = await page.evaluate(() => {
-        const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom
-        const heading = document.querySelector('[data-cw-scene="heading"]')?.getBoundingClientRect().bottom ?? knowledge
-        return document.documentElement.scrollHeight - (heading - knowledge)
-      })
-      test.info().annotations.push({ type: `altura ${lang}`, description: `${height}px (tope ${HEIGHT_BUDGET_1440}px)` })
+      const { height, noTocar } = await originalAboutHeight(page)
+      test.info().annotations.push({ type: `altura ${lang}`, description: `${height}px sin "Hacia dónde voy" ni los ${noTocar}px del botón "No tocar" (tope ${HEIGHT_BUDGET_1440}px)` })
       expect(height, lang).toBeLessThanOrEqual(HEIGHT_BUDGET_1440)
     }
   })

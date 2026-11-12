@@ -59,3 +59,19 @@ export async function skipIntro(page: Page): Promise<void> {
     } catch {}
   })
 }
+
+export async function originalAboutHeight(page: Page): Promise<{ height: number; noTocar: number }> {
+  return page.evaluate(() => {
+    const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom
+    const heading = document.querySelector('[data-cw-scene="heading"]')?.getBoundingClientRect().bottom ?? knowledge
+    const button = document.querySelector<HTMLElement>('[data-cw-no-tocar]')
+    let noTocar = 0
+    if (button) {
+      const full = document.documentElement.scrollHeight
+      button.style.display = 'none'
+      noTocar = full - document.documentElement.scrollHeight
+      button.style.removeProperty('display')
+    }
+    return { height: document.documentElement.scrollHeight - (heading - knowledge) - noTocar, noTocar }
+  })
+}

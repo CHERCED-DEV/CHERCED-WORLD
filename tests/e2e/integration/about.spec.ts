@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { getSite } from '@/lib/content'
-import { LANGS, skipIntro, type Lang } from './support/pages'
+import { LANGS, originalAboutHeight, skipIntro, type Lang } from './support/pages'
 
 test.describe.configure({ timeout: 90_000 })
 
@@ -71,11 +71,7 @@ test.describe('Sobre mí en tres escenas (US6c, FR-213)', () => {
         await expect(links.nth(position), `el índice marca la escena ${position + 1}`).toHaveAttribute('aria-current', /^(?!false$).+/)
         await expect(targets[position]!.getByRole('heading').first()).toBeVisible()
       }
-      const height = await page.evaluate(() => {
-        const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom
-        const heading = document.querySelector('[data-cw-scene="heading"]')?.getBoundingClientRect().bottom ?? knowledge
-        return document.documentElement.scrollHeight - (heading - knowledge)
-      })
+      const { height } = await originalAboutHeight(page)
       expect(height, `altura de las tres escenas originales a 1440 px (la 001 medía ${HEIGHT_001_AT_1440[lang]})`).toBeLessThanOrEqual(Math.round(HEIGHT_001_AT_1440[lang] * MAX_HEIGHT_RATIO))
     })
   }

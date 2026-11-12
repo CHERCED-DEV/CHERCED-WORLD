@@ -61,7 +61,7 @@ async function opensPost(page: Page, index: string, activate: () => Promise<void
 }
 
 async function clickWithin(card: Locator, part: Locator): Promise<void> {
-  await part.scrollIntoViewIfNeeded()
+  await part.scrollIntoViewIfNeeded({ timeout: 5000 })
   const [outer, inner] = await Promise.all([card.boundingBox(), part.boundingBox()])
   if (!outer || !inner) throw new Error('la parte de la tarjeta no tiene caja visible')
   await card.click({ position: { x: inner.x - outer.x + inner.width / 2, y: inner.y - outer.y + inner.height / 2 }, timeout: 5000 })
@@ -81,7 +81,7 @@ test.describe('tarjetas del blog (D-07)', () => {
         const card = () => page.locator(`[data-cw-post-card="${id}"]`)
         const probes: Array<[string, () => Promise<void>]> = [
           ['el título', () => card().getByRole('heading').first().click({ timeout: 5000 })],
-          ['la imagen', () => clickWithin(card(), card().locator('img').first())],
+          ['la imagen', () => clickWithin(card(), card().locator('[data-cw-post-media]').first())],
           [
             'una esquina vacía de la tarjeta',
             async () => {

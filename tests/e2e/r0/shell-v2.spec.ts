@@ -107,13 +107,14 @@ test.describe('buzón público (E-01)', () => {
   test.describe('en el header', () => {
     onlyIn('desktop-chromium', 'mobile-chromium')
 
-    test('muestra el número y lleva al panel (A-1101 de la 011)', async ({ page }) => {
+    test('muestra el número y lleva al panel (A-1101 de la 011)', async ({ page, context, baseURL }) => {
       await page.route('**/api/inbox-count', (route) => route.fulfill({ json: { unread: 3 } }))
+      await context.addCookies([{ name: 'cw-author', value: '1', url: baseURL! }])
       await skipIntro(page)
       await page.goto('/es/aboutMe')
       const mailbox = page.locator('header [data-cw-mailbox]')
       await expect(mailbox).toBeVisible()
-      await expect(mailbox).toHaveAttribute('href', '/es/inbox')
+      await expect(mailbox, 'D-R1: con la marca de autor va al panel').toHaveAttribute('href', '/es/inbox')
       await expect(mailbox.locator('[data-cw-mailbox-badge]')).toHaveText('3')
       await expect(mailbox).toHaveAccessibleName('Buzón, 3 mensajes sin leer')
       await expect(page.locator('header a[href*="/inbox"]'), 'el buzón es el único acceso al panel').toHaveCount(1)
@@ -127,7 +128,7 @@ test.describe('buzón público (E-01)', () => {
       await page.goto('/en/services')
       const mailbox = page.locator('header [data-cw-mailbox]')
       await expect(mailbox).toHaveAccessibleName('Inbox')
-      await expect(mailbox).toHaveAttribute('href', '/en/inbox')
+      await expect(mailbox, 'D-R1: el visitante va a Contacto').toHaveAttribute('href', '/en/contactMe')
       await expect(mailbox.locator('[data-cw-mailbox-badge]')).toHaveCount(0)
     })
 

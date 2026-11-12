@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { brainData } from '@/components/site/about/brain'
 import { getProjects, getSite } from '@/lib/content'
+import { originalAboutHeight } from '../integration/support/pages'
 
 const { about } = getSite()
 const data = brainData(about, getProjects(), 'es', 'Actualidad')
@@ -80,12 +81,8 @@ test.describe('tres escenas con índice', () => {
     await page.addInitScript(() => sessionStorage.setItem('cw-intro-seen', '1'))
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('/es/aboutMe', { waitUntil: 'networkidle' })
-    const height = await page.evaluate(() => {
-      const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom
-      const heading = document.querySelector('[data-cw-scene="heading"]')?.getBoundingClientRect().bottom ?? knowledge
-      return document.documentElement.scrollHeight - (heading - knowledge)
-    })
-    test.info().annotations.push({ type: 'altura', description: `${height}px frente a ${BEFORE_US6C_1440}px (${Math.round((1 - height / BEFORE_US6C_1440) * 100)} % menos)` })
+    const { height, noTocar } = await originalAboutHeight(page)
+    test.info().annotations.push({ type: 'altura', description: `${height}px frente a ${BEFORE_US6C_1440}px (${Math.round((1 - height / BEFORE_US6C_1440) * 100)} % menos), sin los ${noTocar}px del botón "No tocar"` })
     expect(height).toBeLessThanOrEqual(BEFORE_US6C_1440 * 0.6)
   })
 })

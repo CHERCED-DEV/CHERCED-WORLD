@@ -1,8 +1,11 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { test, type Page } from '@playwright/test'
+import { LAB_DB_NAME, LAB_DB_STORE } from '@/lib/ailab/core/store'
+import { GAME_KEYS } from '@/lib/ailab/games/persist'
 import {
   COPY,
+  GAMES,
   HEAVY,
   LANGS,
   WORKER_CHUNK,
@@ -36,7 +39,7 @@ test.describe.configure({ timeout: 180_000 })
 
 async function leftovers(page: Page): Promise<{ resources: string[]; caches: string[]; databases: string[] }> {
   return page.evaluate(
-    async ({ heavy, chunk }) => {
+    async ({ heavy, chunk, lab }) => {
       const heavyRe = new RegExp(heavy.source, heavy.flags)
       const chunkRe = new RegExp(chunk.source, chunk.flags)
       const resources = performance
@@ -44,10 +47,48 @@ async function leftovers(page: Page): Promise<{ resources: string[]; caches: str
         .map((entry) => entry.name)
         .filter((name) => heavyRe.test(name) || chunkRe.test(name))
       const caches = (await window.caches.keys()).filter((name) => /transformers|cw-ailab|pyodide/i.test(name))
-      const databases = (await indexedDB.databases()).map((db) => db.name ?? '').filter((name) => /cw-ailab|pyodide|transformers/i.test(name))
+      const onlyGameState = (name: string) =>
+        new Promise<boolean>((resolve) => {
+          const request = indexedDB.open(name)
+          request.onerror = () => resolve(false)
+          request.onsuccess = () => {
+            const db = request.result
+            const stores = [...db.objectStoreNames]
+            if (stores.some((store) => store !== lab.store)) {
+              db.close()
+              resolve(false)
+              return
+            }
+            if (stores.length === 0) {
+              db.close()
+              resolve(true)
+              return
+            }
+            const keys = db.transaction(lab.store).objectStore(lab.store).getAllKeys()
+            keys.onerror = () => {
+              db.close()
+              resolve(false)
+            }
+            keys.onsuccess = () => {
+              db.close()
+              resolve(keys.result.every((key) => lab.games.includes(String(key))))
+            }
+          }
+        })
+      const databases: string[] = []
+      for (const db of await indexedDB.databases()) {
+        const name = db.name ?? ''
+        if (!/cw-ailab|pyodide|transformers/i.test(name)) continue
+        if (name === lab.name && (await onlyGameState(name))) continue
+        databases.push(name)
+      }
       return { resources, caches, databases }
     },
-    { heavy: { source: HEAVY.source, flags: HEAVY.flags }, chunk: { source: WORKER_CHUNK.source, flags: WORKER_CHUNK.flags } },
+    {
+      heavy: { source: HEAVY.source, flags: HEAVY.flags },
+      chunk: { source: WORKER_CHUNK.source, flags: WORKER_CHUNK.flags },
+      lab: { name: LAB_DB_NAME, store: LAB_DB_STORE, games: Object.values(GAME_KEYS) },
+    },
   )
 }
 
@@ -129,9 +170,13 @@ async function touchEverythingWithoutConsent(page: Page, lang: Lang): Promise<vo
   await answerConsent(page, 'cancel', 'Pyodide 0.29.0')
   await expect(a4.locator('[data-cw-obra-status="declined"]')).toBeVisible()
 
-  for (const id of ['J1', 'J2'] as const) {
+  for (const id of GAMES) {
     const stage = await openDemo(page, id)
-    await expect(stage.locator('[data-cw-lab-soon]')).toHaveText(copy['ailab.try.soon'])
+    await expect(stage.locator('[data-cw-rally][data-ready]')).toBeVisible({ timeout: 30_000 })
+    const court = stage.locator('[data-cw-rally-court]')
+    await court.focus()
+    await page.keyboard.press('Space')
+    await expect(court).toHaveAttribute('data-state', 'running')
   }
 }
 

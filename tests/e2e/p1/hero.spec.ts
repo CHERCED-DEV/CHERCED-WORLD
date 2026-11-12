@@ -171,7 +171,9 @@ test.describe('guiño del hero (FR-460, US7)', () => {
   })
 
   test('espera a que termine la intro', async ({ page }) => {
-    await page.clock.install()
+    const start = Date.now()
+    await page.clock.install({ time: start })
+    await page.clock.pauseAt(start + 1000)
     await page.goto('/es', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('html')).toHaveAttribute('data-intro', 'pending')
     expect(await wink(page)).toBe('play')
