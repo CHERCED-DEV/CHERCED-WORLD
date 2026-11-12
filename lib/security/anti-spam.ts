@@ -4,6 +4,8 @@ export const RENDERED_AT_FIELD = 'renderedAt'
 
 export const MIN_FILL_MS = 3000
 
+export const CLOCK_SKEW_MS = 5 * 60 * 1000
+
 type FieldSource = { get(name: string): FormDataEntryValue | null }
 
 export function isHoneypotFilled(form: FieldSource): boolean {
@@ -22,5 +24,5 @@ export function isTooFast(form: FieldSource, now: Date): boolean {
   const renderedAt = parseRenderedAt(form)
   if (renderedAt === null) return true
   const elapsed = now.getTime() - renderedAt
-  return elapsed >= 0 && elapsed < MIN_FILL_MS
+  return elapsed < -CLOCK_SKEW_MS || (elapsed >= 0 && elapsed < MIN_FILL_MS)
 }

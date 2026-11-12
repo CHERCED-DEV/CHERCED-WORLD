@@ -1,7 +1,7 @@
 import { createHash, createHmac } from 'node:crypto'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryRateLimitRepo } from '@/lib/data/memory'
-import { isHoneypotFilled, isTooFast, MIN_FILL_MS, parseRenderedAt } from '@/lib/security/anti-spam'
+import { CLOCK_SKEW_MS, isHoneypotFilled, isTooFast, MIN_FILL_MS, parseRenderedAt } from '@/lib/security/anti-spam'
 import { goneHandlers, goneResponse } from '@/lib/security/gone'
 import { clientIp, ipHash, UNKNOWN_IP } from '@/lib/security/ip'
 import { DATABASE_ENV, serverKey } from '@/lib/security/keys'
@@ -113,6 +113,15 @@ describe('anti-spam', () => {
     expect(isTooFast(at(2999), now)).toBe(true)
     expect(isTooFast(at(3000), now)).toBe(false)
     expect(isTooFast(at(60_000), now)).toBe(false)
+  })
+
+  it('R4.1 B5: una hora del futuro solo pasa dentro del desfase de reloj del navegador', () => {
+    const now = new Date('2026-11-12T12:00:00Z')
+    const at = (ms: number) => form({ renderedAt: String(now.getTime() - ms) })
+    expect(isTooFast(at(-60_000), now)).toBe(false)
+    expect(isTooFast(at(-CLOCK_SKEW_MS), now)).toBe(false)
+    expect(isTooFast(at(-CLOCK_SKEW_MS - 1), now)).toBe(true)
+    expect(isTooFast(at(-24 * 60 * 60 * 1000), now)).toBe(true)
   })
 
   it('trata como bot un renderedAt ausente o con basura', () => {

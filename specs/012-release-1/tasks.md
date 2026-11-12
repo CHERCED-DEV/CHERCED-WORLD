@@ -91,26 +91,31 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   - Las pruebas de teclado y de axe del AI Lab juegan J1 y J2 en vez de esperar "muy pronto".
   - La del buscador en inglés acepta que la página de arquitectura salga primero ante "sagas".
   - Queda: el LCP del celular se pasa de 2,5 s solo con varias pruebas a la vez (pasa solo); J1 al abrirse (R3.1).
+  - `tests/e2e/l3/public.spec.ts:188` espera que el sitio público no enlace `/inbox`, pero desde la 011 el ícono del
+    buzón lleva ahí. Se resuelve con la decisión D-R1 (R3.4).
 
   Historial: Intermitente visto el 2026-11-11: `tests/e2e/p4/cases.spec.ts:436` (contraste del botón "Todos" del filtro en tema claro durante su transición; pasa al repetir). También el 2026-11-11, al integrar C2 y C8 de la 013: `tests/e2e/r0/shell-v2.spec.ts` "Volver arriba" falla al llegar al final de `/es/aboutMe` en celular (también con teclado) y, a veces, de `/es/blog/catalog` en escritorio. Son páginas que C2 y C8 no tocan, y el catálogo pasó en la primera corrida. La fluidez del fondo del inicio (`integration/performance.spec.ts`, exhaustiva) da 30 fps contra 50 en escritorio, con C8 y sin C8 (medido en el mismo build). Al cerrar los bajos de R1.2: `tests/e2e/l1/site.spec.ts:219` (carrusel con teclado en celular) a veces no salta del primer proyecto al último con la flecha izquierda. Falló 1 de 6 veces sin C2 y 2 de 4 con C2, con una sola prueba a la vez. Causa probable: la espera de 120 ms de `onScroll` en `ProjectsExplorer.tsx` se cumple a mitad del scroll suave y devuelve el índice 0. El LCP de `/es` en celular dio 2672 ms contra 2500 en la corrida con 4 workers y pasa solo.
 - [ ] R3.4 Buzón para visitantes según D-R1.
 - [x] R3.5 (C1, C4 y barras hechos y aprobados por el autor el 2026-11-11; C2 y C8, el paso del hero a "Ahora trabajo en", hechos y aprobados el mismo día: "Quedan así", T1309) Spec 013, animaciones guiadas por scroll (`../013-scroll-driven/`): C1 llenado del índice de Sobre mí (espera la segunda opinión de la sesión hija), C2 imagen del carrusel en celular y C4 ruta de "Hacia dónde voy" que se traza; las barras de lectura se ven con movimiento reducido, sin efectos. El autor decidió el 2026-11-11 que entra antes del release.
 
 ## R4 — Endurecer
-- [ ] R4.1 Revisión de seguridad de lo nuevo. La revisión (solo lectura) terminó el 2026-11-11: no hay nada alto.
-  Arreglos por hacer, en este orden:
-  - **M1 (media):** cambiar la contraseña no cierra las otras sesiones del panel. Además, una sesión que se usa cada
+- [x] R4.1 Revisión de seguridad de lo nuevo. La revisión (solo lectura) terminó el 2026-11-11: no hay nada alto.
+  Arreglos hechos el 2026-11-12 (M1, B2, B1, B5 y B7):
+  - [x] **M1 (media):** cambiar la contraseña no cierra las otras sesiones del panel. Además, una sesión que se usa cada
     12 h no vence nunca (`lib/actions/auth.ts:124`, `lib/auth/guard.ts:48-52`, `lib/auth/session.ts:59-61`).
     Arreglo: `deleteAllSessions()` en el repo, y en `changePassword` borrar todas e iniciar una nueva. Opcional:
     tope absoluto desde `createdAt`.
-  - **B2:** `/api/admin/updates` devuelve los registros completos. El sondeo solo usa `id` y `updatedAt`, así que
+  - [x] **B2:** `/api/admin/updates` devuelve los registros completos. El sondeo solo usa `id` y `updatedAt`, así que
     `changedSince` debe traer solo eso (`lib/data/mongo/messages.ts:70-75`, `comments.ts:92-97`).
-  - **B1:** no hay cabeceras de seguridad. Agregar `headers()` en `next.config.ts` con `frame-ancestors 'none'`,
+  - [x] **B1:** no hay cabeceras de seguridad. Hecho con `frame-ancestors 'self'` y no `'none'`, porque el caso 2 muestra el sitio en vivo
+    dentro de su propia página. Agregar `headers()` en `next.config.ts` con `frame-ancestors 'none'`,
     `base-uri 'self'`, `object-src 'none'`, `nosniff`, `Referrer-Policy` y `Permissions-Policy`, sin `script-src`
     estricto (los scripts inline lo impiden sin nonces).
-  - **B5:** el antispam del contacto acepta un `renderedAt` futuro o muy viejo (`lib/security/anti-spam.ts:21-26`).
-    Rechazarlos y firmar el valor con `hmacHex`.
-  - **B7:** subir scrypt de N=2^15 a 2^17 (`lib/auth/password.ts:5`); los hashes viejos siguen validando.
+  - [x] **B5** (en parte): el antispam del contacto acepta un `renderedAt` futuro o muy viejo (`lib/security/anti-spam.ts:21-26`).
+    Rechazarlos y firmar el valor con `hmacHex`. Hecho: se rechaza una hora más de 5 minutos en el futuro. Queda sin
+    hacer firmar la hora, que solo serviría en Contacto (en los comentarios la pone el navegador), y no se pone
+    vencimiento, para que nadie pierda un mensaje por dejar la página abierta.
+  - [x] **B7:** subir scrypt de N=2^15 a 2^17 (`lib/auth/password.ts:5`); los hashes viejos siguen validando.
   - Se aceptan o quedan para después:
     - B3: Pyodide desde jsDelivr sin verificar integridad; B2 reduce el riesgo.
     - B4: el límite por IP no agrupa IPv6 por /64.

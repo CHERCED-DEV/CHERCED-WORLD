@@ -1,5 +1,5 @@
 import type * as nodeCrypto from 'node:crypto'
-import { timingSafeEqual } from 'node:crypto'
+import { scryptSync, timingSafeEqual } from 'node:crypto'
 import { describe, expect, it, vi } from 'vitest'
 import { burnPasswordCheck, hashPassword, SALT_BYTES, SCRYPT_PARAMS, verifyPassword } from '@/lib/auth/password'
 import {
@@ -32,13 +32,22 @@ vi.mock('node:crypto', async (importOriginal) => {
 })
 
 describe('password (scrypt)', () => {
-  it('usa N=2^15 y sal de 16 bytes, y nunca guarda la contraseña', async () => {
+  it('usa N=2^17 y sal de 16 bytes, y nunca guarda la contraseña', async () => {
     const credential = await hashPassword('una-contraseña-larga')
-    expect(SCRYPT_PARAMS).toEqual({ N: 32768, r: 8, p: 1, keyLen: 64 })
+    expect(SCRYPT_PARAMS, 'R4.1 B7: el mínimo de OWASP').toEqual({ N: 131072, r: 8, p: 1, keyLen: 64 })
     expect(credential.params).toEqual(SCRYPT_PARAMS)
     expect(Buffer.from(credential.salt, 'base64')).toHaveLength(SALT_BYTES)
     expect(Buffer.from(credential.hash, 'base64')).toHaveLength(64)
     expect(JSON.stringify(credential)).not.toContain('una-contraseña-larga')
+  })
+
+  it('R4.1 B7: la contraseña guardada con N=2^15 sigue entrando después de subir el costo', async () => {
+    const salt = Buffer.alloc(SALT_BYTES, 7)
+    const params = { N: 2 ** 15, r: 8, p: 1, keyLen: 64 }
+    const hash = scryptSync('clave de antes', salt, 64, { N: params.N, r: params.r, p: params.p, maxmem: 64 * 1024 * 1024 })
+    const old = { hash: hash.toString('base64'), salt: salt.toString('base64'), params, createdAt: new Date(), updatedAt: new Date() }
+    expect(await verifyPassword('clave de antes', old)).toBe(true)
+    expect(await verifyPassword('otra clave', old)).toBe(false)
   })
 
   it('verifica la contraseña correcta y rechaza las demás', async () => {

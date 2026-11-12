@@ -50,6 +50,10 @@ describe('GET /api/admin/updates', () => {
     expect(body.pending).toBe(1)
     expect((body.messages as unknown[]).length).toBe(1)
     expect((body.comments as unknown[]).length).toBe(1)
+    for (const change of [...(body.messages as object[]), ...(body.comments as object[])]) {
+      expect(Object.keys(change).sort(), 'R4.1 B2: el sondeo solo lleva id y fecha, nunca el contenido').toEqual(['id', 'updatedAt'])
+    }
+    expect(JSON.stringify(body)).not.toMatch(/ana@example|l@example|"Ana"/)
     expect(new Date(String(body.now)).getTime()).not.toBeNaN()
   })
 

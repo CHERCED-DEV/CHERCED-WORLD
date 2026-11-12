@@ -2,7 +2,7 @@ import 'server-only'
 import { randomBytes, scrypt, timingSafeEqual, type ScryptOptions } from 'node:crypto'
 import type { AdminCredential, ScryptParams } from '@/lib/data/types'
 
-export const SCRYPT_PARAMS: ScryptParams = { N: 2 ** 15, r: 8, p: 1, keyLen: 64 }
+export const SCRYPT_PARAMS: ScryptParams = { N: 2 ** 17, r: 8, p: 1, keyLen: 64 }
 
 export const SALT_BYTES = 16
 

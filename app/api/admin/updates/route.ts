@@ -24,6 +24,10 @@ function parseSince(value: string | null, now: Date): Date | null {
   return parsed.getTime() > now.getTime() ? now : parsed
 }
 
+function changeKey({ id, updatedAt }: { id: string; updatedAt: Date }): { id: string; updatedAt: Date } {
+  return { id, updatedAt }
+}
+
 export async function GET(request: NextRequest): Promise<Response> {
   const now = new Date()
   try {
@@ -44,7 +48,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       window ? repos.messages.changedSince(window) : Promise.resolve([]),
       window ? repos.comments.changedSince(window) : Promise.resolve([]),
     ])
-    return json({ now: now.toISOString(), unread, pending, messages, comments }, 200)
+    return json({ now: now.toISOString(), unread, pending, messages: messages.map(changeKey), comments: comments.map(changeKey) }, 200)
   } catch (error) {
     logServerError('admin.updates', error)
     return json({ error: 'unavailable' }, 503)
