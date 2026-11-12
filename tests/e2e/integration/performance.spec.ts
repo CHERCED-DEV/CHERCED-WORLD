@@ -8,6 +8,8 @@ const PAGES: ReadonlyArray<{ path: string; what: string }> = [
   { path: '/es/portfolio/12', what: 'el caso Synergos' },
 ]
 
+test.use({ launchOptions: { args: process.platform === 'win32' ? ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist'] : ['--enable-gpu', '--ignore-gpu-blocklist'] } })
+
 const LCP_MS = 2500
 const CLS = 0.1
 const INP_MS = 200
