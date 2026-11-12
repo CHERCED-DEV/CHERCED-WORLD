@@ -67,7 +67,17 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   caja del mapa de antes del toque, que desplaza la página, y ahora mide las dos juntas) Deuda vista al integrar R2.1 (falla igual sin la escena nueva): `tests/e2e/p2/brain-mobile.spec.ts:71` en celular. A 375 px el nombre de un lóbulo no cabe en su círculo, y a 390 y 412 px la lluvia del mapa queda desfasada unos 450 px del mapa tras abrir "Ver todas". Probable efecto del texto mínimo de 12 px (010). Revisar en R1.2.
 
 ## R3 — Specs abiertas y deuda
-- [ ] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734.
+- [x] R3.1 AI Lab: T723 y T761 medidos; decisión sobre T730/T734. Hecho el 2026-11-11 en la vista previa, en este
+  portátil (i5-10300H; GPU integrada Intel UHD, activada en Chromium sin ventana con `--enable-gpu --use-angle=d3d11`):
+  - T723: Whisper base transcribe 30 s de voz en español en 15 y 16 s con WASM (SC-303 pide 60). Base sigue por
+    defecto.
+  - T761: el fondo va a 60 fps con cada uno de los 11 experimentos abierto. El INP al abrir va de 32 a 152 ms, salvo J1,
+    que varió de 40 a 232 ms en cuatro mediciones. Según los Long Animation Frames, el retraso está en pintar el
+    escenario nuevo (lienzo y cristal), no en código: el manejador tarda 4 ms. Abrir en una transición no sirve,
+    porque los demos cargan con Suspense y la transición espera el chunk. Queda anotado en R3.3.
+  - T730: 196 fragmentos ES y EN se vectorizan en 13 a 14 s con `onnxruntime-node`, que ya está en el proyecto.
+    Cumple R-703 si el modelo se guarda en `.next/cache`. T734 (el modo por significado) queda para después del
+    release por ser una función nueva; la ficha de A5 en el AI Lab ya no dice "todavía no medí".
 - [x] R3.2 002 T228 (hecho el 2026-11-11): al guardar, el panel muestra la respuesta nueva con `useOptimistic` y el
   editor se cierra en la misma transición, así que ya no asoma la anterior. Una acción de moderación dejó de disparar
   21 precargas: el panel y el shell no precargan dentro de `/inbox`. Queda en `tests/e2e/l3/admin.spec.ts`.

@@ -93,7 +93,7 @@ Rutas: `components/ailab/voice/**`, `lib/ailab/voice/**`, `content/ailab/voice-c
   - micrófono negado → ofrecer subir;
   - aviso para audios de más de 10 minutos;
   - selector de modelo de respaldo.
-- [ ] T723 [US2] Medir SC-303 en la vista previa, en un portátil de gama media, y fijar el modelo por defecto en
+- [x] T723 [US2] (medido el 2026-11-11 en la vista previa, en un portátil i5-10300H con WASM: Whisper base transcribe 30 s de voz en 15 y 16 s; base sigue por defecto) Medir SC-303 en la vista previa, en un portátil de gama media, y fijar el modelo por defecto en
   `content/ailab/catalog.ts` (R-701). Se mide cuando la máquina no esté corriendo la suite.
 - [ ] T724 [US5] Navega hablando (FR-351, R-702):
   - `content/ailab/voice-commands.ts`;
@@ -121,7 +121,7 @@ Rutas: `components/ailab/voice/**`, `lib/ailab/voice/**`, `content/ailab/voice-c
 Rutas: `components/ailab/plugins/**`, `components/ailab/search/**`, `lib/ailab/skill/**`, `lib/ailab/search/**`,
 `content/ailab/plugin-example/**`, `tests/unit/x2/**` y `tests/e2e/x2/**`.
 
-- [ ] T730 [US8] Medir el costo en el build de precalcular los vectores de e5-small (R-703): tiempo extra y si el
+- [x] T730 [US8] (medido el 2026-11-11 con `onnxruntime-node`, que ya está en el proyecto: 196 fragmentos ES y EN en 13 a 14 s, modelo de 130 MB en caché; cumple R-703 si el modelo vive en `.next/cache`) Medir el costo en el build de precalcular los vectores de e5-small (R-703): tiempo extra y si el
   modelo se baja en cada build. Se mide en la vista previa, no en esta máquina mientras corra la suite. El resultado
   decide T734.
 - [ ] T731 [P] [US3] Anatomía de un plugin (FR-352):
@@ -133,7 +133,7 @@ Rutas: `components/ailab/plugins/**`, `components/ailab/search/**`, `lib/ailab/s
 - [ ] T733 [US8] Caja de cristal en modo palabras (FR-357): `lib/ailab/search/glassbox.ts`, sobre el cliente del índice
   que ya existe, y `components/ailab/search/GlassBoxSearch.tsx`, con fragmento, puntaje, fuente y enlace. Sin el PDF
   del CV.
-- [ ] T734 [US8] Modo por significado, **condicionado a T730 y a P-3k**: vectores precalculados en el build, un worker de
+- [ ] T734 [US8] (T730 cumple; queda para después del release 1 por ser una función nueva, decisión del 2026-11-11) Modo por significado, **condicionado a T730 y a P-3k**: vectores precalculados en el build, un worker de
   embeddings con consentimiento y la comparación de rankings. Si T730 no cumple el umbral de R-703, se cierra sin hacerse.
 - [ ] T735 **BLOQUEADA (P-3c)**: mostrar la estructura del plugin para abogados del autor en vez del ejemplo neutral,
   sin nada del material de la clienta.
@@ -217,7 +217,7 @@ Rutas: `tests/e2e/x5/**`.
 - [ ] T760 [P] Auditoría de red:
   - 0 bytes de modelos, pesos o `.wasm` antes del consentimiento (SC-301);
   - 0 peticiones con audio, texto, archivos o movimientos del visitante (SC-305, FR-320).
-- [ ] T761 [P] fps del fondo y INP con cada experimento activo (SC-302, FR-331, SC-204, SC-205). Se mide en la vista previa con
+- [x] T761 [P] (medido el 2026-11-11 en la vista previa con la GPU integrada: 60 fps con cada uno de los 11 experimentos abierto; INP de 32 a 152 ms, salvo J1, que varía de 40 a 232 ms al abrirse por el pintado del escenario, no por código; ver R3.1 de la 012) fps del fondo y INP con cada experimento activo (SC-302, FR-331, SC-204, SC-205). Se mide en la vista previa con
   la GPU real.
 - [ ] T762 [P] axe en la página y en cada experimento abierto (SC-306).
 - [ ] T763 [P] Responsive de 320 a 2560 px de `/ai-lab`, en ES y EN.

@@ -441,10 +441,10 @@ const A5: LabExperiment = {
       },
     },
     {
-      decision: { es: 'La búsqueda por significado espera una medición', en: 'Search by meaning waits for a measurement' },
+      decision: { es: 'La búsqueda por significado llega en una próxima versión', en: 'Search by meaning arrives in a future version' },
       why: {
-        es: 'Precalcular los vectores de multilingual-e5-small en el build tiene un costo que todavía no medí. Si cabe, llega con su permiso de descarga.',
-        en: 'Precomputing the multilingual-e5-small vectors in the build has a cost I have not measured yet. If it fits, it arrives with its download permission.',
+        es: 'Ya medí el costo: precalcular los vectores de multilingual-e5-small para los 196 fragmentos del sitio toma unos 14 s en el build. Cabe, y llegará con su permiso de descarga.',
+        en: "I already measured the cost: precomputing the multilingual-e5-small vectors for the site's 196 passages takes about 14 s in the build. It fits, and it will arrive with its download permission.",
       },
       tradeoff: {
         es: 'Mientras tanto, una pregunta escrita con otras palabras no encuentra lo que dice lo mismo.',
