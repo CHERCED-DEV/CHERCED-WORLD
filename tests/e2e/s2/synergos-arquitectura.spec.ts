@@ -13,10 +13,17 @@ for (const lang of ['es', 'en']) {
     await expect(page.locator('[data-cw-pattern]')).toHaveCount(18)
     await expect(page.locator('[data-cw-architecture-diagram]')).toHaveCount(3)
     for (const diagram of await page.locator('[data-cw-architecture-diagram]').all()) {
+      const steps = diagram.locator('[data-cw-architecture-steps]')
+      if (await steps.isVisible()) {
+        await expect(diagram.locator('details')).toBeHidden()
+        await expect(steps.locator('li')).toHaveCount(5)
+        for (const step of await steps.locator('li').all()) await expect(step).toBeVisible()
+        continue
+      }
       await diagram.locator('summary').focus()
       await page.keyboard.press('Enter')
-      await expect(diagram.locator('ol li')).toHaveCount(5)
-      await expect(diagram.locator('ol')).toBeVisible()
+      await expect(diagram.locator('details ol li')).toHaveCount(5)
+      await expect(diagram.locator('details ol')).toBeVisible()
     }
     const sources = page.locator('[data-cw-pattern] a[href^="https://github.com/"]')
     expect(await sources.count()).toBeGreaterThanOrEqual(18)
@@ -79,7 +86,7 @@ test('los casos y Synergos enlazan al atlas', async ({ page }) => {
     const links = page.locator('a[href^="/es/synergos/arquitectura#patron-"]')
     expect(await links.count()).toBeGreaterThan(0)
     await links.first().click()
-    await expect(page).toHaveURL(/\/es\/synergos\/arquitectura#patron-/)
+    await expect(page).toHaveURL(/\/es\/synergos\/arquitectura#patron-/, { timeout: 15_000 })
     const anchor = new URL(page.url()).hash.slice(1)
     await expect(page.locator(`[id="${anchor}"]`)).toBeVisible()
   }

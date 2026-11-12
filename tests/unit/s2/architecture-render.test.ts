@@ -23,7 +23,10 @@ describe.each(['es', 'en'] as const)('arquitectura SSR %s', lang => {
     const html = renderToStaticMarkup(createElement(ArchitectureView, { lang }))
     expect(html.match(/data-cw-pattern="/g)).toHaveLength(18)
     expect(html.match(/data-cw-architecture-diagram="/g)).toHaveLength(3)
-    expect(html.match(/<ol /g)).toHaveLength(3)
+    expect(html.match(/data-cw-architecture-steps="/g)).toHaveLength(3)
+    expect(html.match(/data-cw-architecture-step="/g)).toHaveLength(15)
+    expect(html.match(/<details /g)?.length).toBeGreaterThanOrEqual(3)
+    expect(html.match(/<ol /g)).toHaveLength(6)
     expect(html.match(/<h1 /g)).toHaveLength(1)
     for (const pattern of architecture.patterns) {
       expect(html).toContain(`id="patron-${pattern.id}"`)

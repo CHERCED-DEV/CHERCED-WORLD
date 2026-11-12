@@ -50,7 +50,7 @@ export function ArchitectureView({ lang }: { lang: Locale }) {
         </div>
         <SystemBlueprint lang={lang} />
         <div className={styles.heroFooter}>
-          <div className={styles.facts}>{(['pieces', 'capabilities', 'orchestrators'] as const).map(key => <div key={key} className={styles.fact}><strong>{facts[key]}</strong><span>{copy.facts[key][lang]}</span></div>)}</div>
+          <div className={styles.facts} data-cw-architecture-facts="">{(['pieces', 'capabilities', 'orchestrators'] as const).map(key => <div key={key} className={styles.fact}><strong>{facts[key]}</strong><span>{copy.facts[key][lang]}</span></div>)}</div>
           <p className={styles.date}>{copy.counted[lang]}<br /><time dateTime={facts.countedAt}>{counted}</time></p>
         </div>
       </GlassSurface>
