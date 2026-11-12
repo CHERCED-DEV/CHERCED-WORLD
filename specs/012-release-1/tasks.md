@@ -45,7 +45,8 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
     - U2: mismo vocabulario en las cuatro páginas.
     - U6: texto SVG dentro de `aria-hidden`.
     - U9: los dos botones en `toque.spec.ts`.
-- [ ] R1.3 Revisión visual del autor: scroll de Synergos (T1108) y página completa (T0929).
+- [x] R1.3 Revisión visual del autor: scroll de Synergos (T1108) y página completa (T0929). Aprobada por el autor el
+  2026-11-12 en la vista previa a9cwsnuqq.
 
 ## R2 — Contenido
 - [x] R2.1 T960 "Hacia dónde voy": borrador ES/EN, aprobación del autor, escena integrada.

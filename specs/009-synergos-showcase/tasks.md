@@ -163,7 +163,7 @@ dice nada que §3.5 no sostenga.
   `tests/unit/p6/llms.test.ts` (SC-915).
 - [x] T0928 [Todas] Accesibilidad y responsive (FR-923): axe sin violaciones serias, teclado, movimiento reducido y de
   320 a 2560 px, en la e2e de T0915 (SC-914).
-- [ ] T0929 [Todas] Revisión del autor en la vista previa: confidencialidad (SC-911), lectura en voz alta de la F2-1
+- [x] T0929 [Todas] (aprobada por el autor el 2026-11-12, R1.3 de la 012) Revisión del autor en la vista previa: confidencialidad (SC-911), lectura en voz alta de la F2-1
   (SC-913) y el atlas contra lo aprobado (SC-912).
 
 ---

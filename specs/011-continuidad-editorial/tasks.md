@@ -8,6 +8,6 @@
 - [x] T1105 CSS progresivo ligado al scroll para Synergos, respetando movimiento reducido.
 - [x] T1106 Conciliar decisiones y sustituir únicamente pendientes históricos con evidencia inequívoca.
 - [x] T1107 Validar comportamiento integrado, recorrido editorial, responsive y compilación final. 2026-11-11: `npm run build` en verde (1.999 unitarias), e2e de editorial, 404, shell, dock, buzón, UX, Synergos y cambio de idioma en verde (283 pasan). Se ajustaron dos pruebas que seguían el comportamiento anterior del buzón (A-1101) y la búsqueda del contenido del editor tras recargar. El proxy queda en Node con un chunk de 247 KB; los posts se cargan aparte.
-- [ ] T1108 Revisión visual del autor del refinamiento y recorrido de scroll.
+- [x] T1108 Revisión visual del autor del refinamiento y recorrido de scroll. Aprobada el 2026-11-12 (R1.3 de la 012).
 
 T1101–T1105 describen implementación; T1107 conserva su validación final separada. No cierran T0929 ni T1064.
