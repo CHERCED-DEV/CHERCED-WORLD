@@ -223,7 +223,7 @@ test.describe('etiquetas del post (contrato de URL de etiqueta)', () => {
 test.describe('índice en una hoja en móvil (T857)', () => {
   onlyIn('mobile-chromium')
 
-  test('el botón flotante aparece al pasar el índice, abre la hoja y lleva a la sección', async ({ page }) => {
+  test('la pestaña aparece al pasar el índice con el título en curso, abre la hoja y lleva a la sección', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/es/blog/post5')
     const button = page.locator('[data-cw-toc-button]')
@@ -233,9 +233,15 @@ test.describe('índice en una hoja en móvil (T857)', () => {
       if (body) window.scrollTo({ top: window.scrollY + body.getBoundingClientRect().top + 600, behavior: 'instant' })
     })
     await expect(button).toBeVisible()
-    await expect(button).toHaveAccessibleName('En este post')
-    const box = await button.boundingBox()
-    expect(box && box.width >= 44 && box.height >= 44, 'objetivo táctil de 44 px').toBe(true)
+    await expect(button).toHaveAccessibleName(/^En este post: \d{2} \S/)
+    await expect(button.locator('[data-cw-toc-chapter-number]')).toHaveText(/^\d{2}$/)
+    const box = (await button.boundingBox())!
+    expect(box.width >= 44 && box.height >= 44, 'objetivo táctil de 44 px').toBe(true)
+    const headerBottom = await page.locator('#header').evaluate((element) => element.getBoundingClientRect().bottom)
+    await expect.poll(async () => Math.round((await button.boundingBox())!.x), 'pegada al borde izquierdo').toBe(0)
+    expect(box.y - headerBottom, 'justo bajo el header').toBeGreaterThanOrEqual(6)
+    expect(box.y - headerBottom, 'justo bajo el header').toBeLessThanOrEqual(9)
+    expect(await button.evaluate((element) => getComputedStyle(element).borderTopLeftRadius)).toBe('0px')
 
     await button.click()
     const sheet = page.getByRole('dialog', { name: 'En este post' })
@@ -247,11 +253,12 @@ test.describe('índice en una hoja en móvil (T857)', () => {
     const heading = page.locator('h2#sintoma-4-los-sockets-que-eran-polling')
     await expect(heading).toBeInViewport()
     await expect(heading).toBeFocused()
-    const [top, header] = await Promise.all([
+    await expect(button.locator('[data-cw-toc-chapter]')).toHaveText('Síntoma 4: los "sockets" que eran polling')
+    const [top, tab] = await Promise.all([
       heading.evaluate((element) => element.getBoundingClientRect().top),
-      page.locator('#header').evaluate((element) => element.getBoundingClientRect().bottom),
+      button.evaluate((element) => element.getBoundingClientRect().bottom),
     ])
-    expect(top, 'el encabezado no queda tapado por el header').toBeGreaterThanOrEqual(header - 1)
+    expect(top, 'el encabezado no queda tapado por el header ni por la pestaña').toBeGreaterThanOrEqual(tab - 1)
   })
 
   test('Esc cierra la hoja y el foco vuelve al botón', async ({ page }) => {
@@ -268,20 +275,37 @@ test.describe('índice en una hoja en móvil (T857)', () => {
     await expect(button).toBeFocused()
   })
 
-  test('la barra de progreso va en el borde inferior del header', async ({ page }) => {
+  test('la línea de lectura va en la pestaña y reemplaza la barra de arriba', async ({ page }) => {
     await skipIntro(page)
     await page.goto('/es/blog/post5')
     await page.evaluate(() => {
       const body = document.querySelector('[data-cw-post-body]')
       if (body) window.scrollTo({ top: window.scrollY + body.getBoundingClientRect().top + 800, behavior: 'instant' })
     })
-    const [bar, header] = await Promise.all([
-      page.locator('[data-cw-reading-progress]').evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect),
-      page.locator('#header').evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect),
-    ])
-    expect(bar.top).toBeGreaterThanOrEqual(header.top)
-    expect(Math.abs(bar.bottom - header.bottom), 'coincide con el borde del header').toBeLessThanOrEqual(1)
+    await expect(page.locator('[data-cw-reading-progress]')).toBeHidden()
+    const line = page.locator('[data-cw-toc-button] [data-cw-reading-line]')
+    await expect(line).toBeVisible()
     await expect.poll(async () => Number(await page.locator('[data-cw-reading-progress]').getAttribute('data-cw-reading-progress'))).toBeGreaterThan(0)
+    const progress = Number(await page.locator('[data-cw-reading-progress]').getAttribute('data-cw-reading-progress'))
+    const scale = await line.evaluate((element) => new DOMMatrix(getComputedStyle(element).transform).a)
+    expect(Math.abs(scale - progress), 'la línea marca el mismo avance que la barra').toBeLessThanOrEqual(0.02)
+  })
+
+  test('un post sin índice conserva la barra de arriba', async ({ page }) => {
+    await skipIntro(page)
+    await page.goto('/es/blog')
+    const withoutToc = await page.evaluate(async () => {
+      const links = [...document.querySelectorAll<HTMLAnchorElement>('a[href*="/blog/post"]')].map((link) => link.getAttribute('href')!)
+      return [...new Set(links)]
+    })
+    for (const href of withoutToc) {
+      await page.goto(href)
+      if ((await page.locator('[data-cw-toc-button]').count()) > 0) continue
+      await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight / 3, behavior: 'instant' }))
+      await expect(page.locator('[data-cw-reading-progress]')).toBeVisible()
+      return
+    }
+    test.skip(true, 'todos los posts tienen índice')
   })
 })
 

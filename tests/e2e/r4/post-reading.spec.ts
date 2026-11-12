@@ -131,12 +131,9 @@ test.describe('barra de progreso de lectura', () => {
     const bar = page.locator('[data-cw-reading-progress]')
     await expect(bar).toHaveAttribute('aria-hidden', 'true')
     await expect(bar).toHaveAttribute('data-cw-reading-progress', '0.00')
-    if (testInfo.project.name === 'mobile-chromium') {
-      const [barBox, headerBottom] = await Promise.all([
-        bar.evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect),
-        page.locator('#header').evaluate((element) => element.getBoundingClientRect().bottom),
-      ])
-      expect(Math.abs(barBox.bottom - headerBottom), 'en móvil va en el borde inferior del header (T857), no sobre el texto').toBeLessThanOrEqual(1)
+    const mobile = testInfo.project.name === 'mobile-chromium'
+    if (mobile) {
+      await expect(bar, 'en móvil la línea va en la pestaña del índice (opción A del autor)').toBeHidden()
     } else {
       expect(await bar.evaluate((element) => element.getBoundingClientRect().top), 'va en el borde superior, no sobre el texto').toBe(0)
     }
@@ -156,7 +153,8 @@ test.describe('barra de progreso de lectura', () => {
 
     await scrollToBody(1.05)
     await expect(bar).toHaveAttribute('data-cw-reading-progress', '1.00')
-    const scale = await bar.evaluate((element) => new DOMMatrix(getComputedStyle(element).transform).a)
+    const line = mobile ? page.locator('[data-cw-toc-button] [data-cw-reading-line]') : bar
+    const scale = await line.evaluate((element) => new DOMMatrix(getComputedStyle(element).transform).a)
     expect(scale).toBeCloseTo(1, 2)
   })
 })

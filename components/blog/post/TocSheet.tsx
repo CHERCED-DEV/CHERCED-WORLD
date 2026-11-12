@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import type { TocHeading } from '@/lib/blog/outline'
 import { useMediaQuery } from '@/lib/fx/viewport'
 import type { Locale } from '@/lib/i18n'
+import { sectionNumber } from '@/components/site/section-nav/model'
 import { BottomSheet } from '@/components/ui/BottomSheet'
 import { cx } from '@/components/ui/cx'
 import { headerOffset, onScrollFrame, ownPost } from '../scroll'
@@ -19,6 +20,19 @@ export type TocSheetLabels = { title: string; close: string }
 export function tocButtonShown(toc: { bottom: number } | null, body: { bottom: number } | null, offset: number): boolean {
   if (!toc || !body) return false
   return toc.bottom <= offset && body.bottom > offset
+}
+
+export function tocChapter(headings: readonly TocHeading[], active: string | null): { number: string; text: string } | null {
+  let position = -1
+  let chapter: TocHeading | null = null
+  for (const heading of headings) {
+    if (heading.level === 2) {
+      position += 1
+      chapter = heading
+    }
+    if (heading.id === active) return chapter ? { number: sectionNumber(position), text: chapter.text } : null
+  }
+  return null
 }
 
 function goToHeading(id: string) {
@@ -37,7 +51,8 @@ export function TocSheet({ headings, labels, contentLang }: { headings: TocHeadi
   const list = useRef<HTMLDivElement>(null)
   const pending = useRef<string | null>(null)
   const compact = useMediaQuery(TOC_SHEET_QUERY)
-  const active = useActiveHeading(headings, button, open)
+  const active = useActiveHeading(headings, button, compact || open)
+  const chapter = tocChapter(headings, active)
 
   useEffect(() => {
     if (!compact) return
@@ -76,18 +91,24 @@ export function TocSheet({ headings, labels, contentLang }: { headings: TocHeadi
         ref={button}
         type="button"
         className={cx('cw-js-only', styles.button)}
-        aria-label={labels.title}
         aria-haspopup="dialog"
         title={labels.title}
         data-cw-toc-button=""
         data-state={(compact && shown) || open ? 'shown' : 'hidden'}
         onClick={() => setOpen(true)}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" focusable="false">
-          <path d="M9 6h11M9 12h11M9 18h11" />
-          <path d="M4 6h.01M4 12h.01M4 18h.01" strokeWidth="3" />
-        </svg>
-        <span className={styles.label}>{labels.title}</span>
+        <span className="cw-visually-hidden">{chapter ? `${labels.title}: ` : labels.title}</span>
+        {chapter ? (
+          <span className={styles.badge} data-cw-toc-chapter-number="">
+            {chapter.number}
+          </span>
+        ) : null}{' '}
+        <span className={styles.pill}>
+          <span className={styles.title} lang={contentLang} aria-hidden={chapter ? undefined : 'true'} data-cw-toc-chapter="">
+            {chapter ? chapter.text : labels.title}
+          </span>
+          <span className={styles.line} aria-hidden="true" data-cw-reading-line="" />
+        </span>
       </button>
       <BottomSheet
         open={open}

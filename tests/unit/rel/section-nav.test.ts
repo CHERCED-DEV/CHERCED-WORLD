@@ -26,6 +26,8 @@ const sections = [
 
 const root = process.cwd()
 const css = readFileSync(path.resolve(root, 'components/site/section-nav/SectionNav.module.scss'), 'utf8')
+const tabCss = readFileSync(path.resolve(root, 'components/site/section-nav/_tab.scss'), 'utf8')
+const tocCss = readFileSync(path.resolve(root, 'components/blog/post/TocSheet.module.scss'), 'utf8')
 const source = readFileSync(path.resolve(root, 'components/site/section-nav/SectionNav.tsx'), 'utf8')
 
 describe('navegación de secciones: pestaña y puntos', () => {
@@ -133,7 +135,15 @@ describe('navegación de secciones: pestaña y puntos', () => {
   })
 
   it('el acento solo marca la sección activa y la línea de progreso, sin colores nuevos', () => {
-    const colors = new Set([...css.matchAll(/#[0-9a-f]{3,8}\b|rgb\([^)]*\)/gi)].map((match) => match[0].toLowerCase()))
+    const colors = new Set([...`${css}${tabCss}${tocCss}`.matchAll(/#[0-9a-f]{3,8}\b|rgb\([^)]*\)/gi)].map((match) => match[0].toLowerCase()))
     expect([...colors].sort()).toEqual(['#000', 'rgb(37 237 158 / 0.32)', 'rgb(37 237 158 / 0.7)'])
+  })
+
+  it('la pestaña del blog reutiliza la forma, la píldora, el número y la línea de la navegación', () => {
+    expect(css).toMatch(/@use 'tab';/)
+    for (const mixin of ['edge-shape', 'pill', 'badge', 'label', 'line']) expect(css).toContain(`@include tab.${mixin}`)
+    expect(tocCss).toMatch(/@use '\.\.\/\.\.\/site\/section-nav\/tab';/)
+    for (const mixin of ['edge-shape', 'pill', 'badge', 'label', 'line']) expect(tocCss).toContain(`@include tab.${mixin}`)
+    expect(tocCss).toMatch(/:global\(\[data-cw-post\]\):has\(\.button\) :global\(\[data-cw-reading-progress\]\) \{\s*display: none;/)
   })
 })

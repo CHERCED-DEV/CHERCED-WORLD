@@ -2,8 +2,9 @@
 @use 'glass' as *;
 @use 'breakpoints' as bp;
 @use '../site' as site;
+@use 'tab';
 
-$pill-h: 36px;
+$pill-h: tab.$pill-h;
 $edge: 4px;
 $fade: 28px;
 $sections: 12;
@@ -121,13 +122,11 @@ $sections: 12;
   }
 
   .sceneNav:not([data-cw-measured]) &[aria-current='true']::before {
+    @include tab.pill;
     content: '';
     position: absolute;
     inset: var(--cw-scene-pill-inset) 0;
     z-index: -1;
-    border-radius: inherit;
-    background: color-mix(in srgb, var(--cw-fg) 10%, transparent);
-    box-shadow: inset 0 0 0 1px rgb(37 237 158 / 0.32);
   }
 }
 
@@ -140,14 +139,12 @@ $sections: 12;
 }
 
 .sceneIndicator {
+  @include tab.pill;
   position: absolute;
   top: 50%;
   left: 0;
   height: $pill-h;
   margin-top: calc(-0.5 * #{$pill-h});
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--cw-fg) 10%, transparent);
-  box-shadow: inset 0 0 0 1px rgb(37 237 158 / 0.32);
   opacity: 0;
   pointer-events: none;
   transform-origin: 0 50%;
@@ -171,14 +168,8 @@ $sections: 12;
   }
 
   .tab {
-    @include glass-edge;
+    @include tab.edge-shape;
     max-width: min(100%, calc(100vw - 14px));
-    border-left-width: 0;
-    border-radius: 0 999px 999px 0;
-
-    &::before {
-      padding-inline-start: 0;
-    }
   }
 
   .sceneList {
@@ -186,11 +177,9 @@ $sections: 12;
   }
 
   .sceneLink {
+    @include tab.label;
     min-height: calc(var(--cw-scene-tab-h) - 2px);
     padding-inline: 9px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    text-transform: none;
 
     &:focus-visible {
       outline-offset: calc(-1 * var(--cw-scene-pill-inset) + 1px);
@@ -200,7 +189,7 @@ $sections: 12;
 
 @include bp.down(sm) {
   .sceneBadge {
-    @include site.label-caps(0.06em);
+    @include tab.badge;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -209,9 +198,6 @@ $sections: 12;
     display: flex;
     align-items: center;
     padding-inline: 8px 4px;
-    color: var(--cw-fg-muted);
-    font-size: var(--cw-text-xs);
-    font-variant-numeric: tabular-nums;
     opacity: 0;
     pointer-events: none;
   }
@@ -357,15 +343,12 @@ $sections: 12;
     }
 
     .sceneLink::after {
+      @include tab.line;
       content: '';
       position: absolute;
       right: var(--cw-space-3);
       bottom: calc(var(--cw-scene-pill-inset) + 5px);
       left: var(--cw-space-3);
-      height: 2px;
-      border-radius: 1px;
-      background: var(--cw-intro-accent);
-      transform-origin: 0 50%;
       animation: cw-scene-fill linear both;
       animation-range: contain;
       pointer-events: none;

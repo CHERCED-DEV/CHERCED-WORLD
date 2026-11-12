@@ -41,9 +41,9 @@ Cada página pasa sus secciones como datos y solo agrega `id` a las secciones qu
 | AI Lab | Un enlace por tema, con los ids que ya tenía cada sección |
 | `/now` | Ahora, los bloques que tenga y Mis lemas |
 
-- Quedan fuera las páginas cortas (Contacto, Privacidad, 404), el inicio (lo lleva la sesión del scroll del inicio) y
-  `/synergos/arquitectura`, que lo monta su sesión.
-- En el blog no se tocó nada: abajo está la propuesta.
+- Quedan fuera las páginas cortas (Contacto, Privacidad, 404) y el inicio (lo lleva la sesión del scroll del inicio).
+- `/synergos/arquitectura` ya usa el componente (lo montó su sesión).
+- El blog usa la misma pestaña como acceso a su índice (opción A, abajo).
 
 ## Comportamiento (igual en todas)
 
@@ -83,29 +83,38 @@ Cada página pasa sus secciones como datos y solo agrega `id` a las secciones qu
 - En el teléfono se puede arrastrar, ocultar desde su menú o apagar para las vistas previas en la configuración del
   proyecto en Vercel. Esa configuración es del autor.
 
-## Propuesta para el blog (pendiente del autor)
+## El blog (opción A, elegida por el autor)
 
-Hoy un post tiene:
+Antes, un post tenía:
 
 - el índice lateral (`Toc`) desde 1248 px;
-- un botón flotante que abre el índice en una hoja (`TocSheet`) debajo de 1248 px;
+- un botón flotante abajo a la izquierda que abría el índice en una hoja (`TocSheet`) debajo de 1248 px;
 - la barra de lectura arriba (`ReadingProgress`).
 
-Hay dos formas de unificarlo sin duplicar acciones:
+Ahora, debajo de 1248 px:
 
-- **A (recomendada).**
-  - Debajo de 1248 px, la pestaña reemplaza el botón flotante.
-  - Compacta muestra el título actual (h2) con la línea de progreso de lectura, que reemplaza la barra de arriba.
-  - Al tocarla abre la misma hoja con todos los títulos, porque los títulos de los posts son largos para una fila.
-  - El índice lateral de escritorio no cambia.
-- **B.** La pestaña completa como en las otras páginas, solo con los h2, más los puntos. Se retiran la hoja y la barra.
-  Con títulos largos la fila se desplaza mucho.
+- **El botón de `TocSheet` es la pestaña.** Va en el mismo lugar y con la misma forma que la de las otras páginas.
+  - Muestra el número y el h2 en curso (también estando en un h3 debajo de él), cortado con puntos suspensivos si no
+    cabe.
+  - Aparece al pasar el índice del principio y sale por el marco al terminar el cuerpo.
+  - Al tocarla abre la misma hoja con todos los títulos.
+  - Su nombre accesible es "En este post: 03 título".
+- **La línea de lectura va en la pestaña y reemplaza la barra de arriba.**
+  - `ReadingProgress` sigue siendo un solo elemento.
+  - Además de su barra, pinta `--cw-progress` en cada `[data-cw-reading-line]` del post.
+  - La barra se oculta solo en los posts que tienen la pestaña. Los posts sin índice conservan la barra.
+- **`scroll-padding-top` cuenta la pestaña**, así que el título al que lleva la hoja no queda debajo de ella.
+- **El escritorio (≥ 1248 px) no cambia:** índice lateral y barra arriba.
+- **Estilos compartidos.** La forma, la píldora, el número, la etiqueta y la línea viven en el parcial
+  `components/site/section-nav/_tab.scss`, que usan `SectionNav.module.scss` y `TocSheet.module.scss`. No hay
+  componentes nuevos.
 
 ## Pruebas
 
 - **Unitarias:** `tests/unit/rel/section-nav.test.ts` cubre:
   - estado y geometría;
-  - sección más visible;
+  - sección activa por línea de lectura;
+  - que la pestaña del blog use el parcial compartido;
   - ids seguros y límite;
   - `localizeSections`;
   - el CSS de las líneas;
@@ -120,6 +129,12 @@ Hay dos formas de unificarlo sin duplicar acciones:
   - la pestaña quede fija y no tape el h1;
   - al bajar se compacte con el número correcto, y no haya violaciones de axe;
   - en escritorio quepa sin desplazarse.
+- **Blog:**
+  - `tests/unit/q2/post.test.ts` revisa `tocChapter` y que haya una sola barra y una sola línea.
+  - `tests/e2e/q2/post.spec.ts` revisa que la pestaña quede bajo el header y pegada al borde, con el título en curso y
+    su nombre accesible, y que la línea marque el mismo avance que la barra, que se oculta.
+  - También revisa que un post sin índice conserve la barra.
+  - `tests/e2e/r4/post-reading.spec.ts` mide la línea en la pestaña en celular.
 
 ## Hallazgos fuera de este cambio
 

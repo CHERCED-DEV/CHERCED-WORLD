@@ -6,19 +6,26 @@ import { cx } from '@/components/ui/cx'
 import styles from './ReadingProgress.module.scss'
 import { headerOffset, onScrollFrame, ownPost } from './scroll'
 
+export const READING_LINE_SELECTOR = '[data-cw-reading-line]'
+
 export function ReadingProgress({ target: selector }: { target: string }) {
   const bar = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const element = bar.current
-    const target = ownPost(element)?.querySelector(selector)
-    if (!element || !target) return
-    element.style.setProperty('--cw-progress', '0')
+    const post = ownPost(element)
+    const target = post?.querySelector(selector)
+    if (!element || !post || !target) return
+    const paint = (value: string) => {
+      element.style.setProperty('--cw-progress', value)
+      for (const line of post.querySelectorAll<HTMLElement>(READING_LINE_SELECTOR)) line.style.setProperty('--cw-progress', value)
+    }
+    paint('0')
     element.dataset.cwReadingProgress = '0.00'
     return onScrollFrame(() => {
       const box = target.getBoundingClientRect()
       const value = readingProgress({ top: box.top, height: box.height }, window.innerHeight, headerOffset())
-      element.style.setProperty('--cw-progress', value.toFixed(4))
+      paint(value.toFixed(4))
       element.dataset.cwReadingProgress = value.toFixed(2)
     }, target)
   }, [selector])

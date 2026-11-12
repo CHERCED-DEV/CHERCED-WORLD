@@ -1,64 +1,50 @@
 @use 'glass' as *;
 @use 'breakpoints' as bp;
-@use 'layout';
+@use '../../site/section-nav/tab';
 
 .button {
   @include glass(strong);
   @include glass-grain;
-  @include glass-edge;
+  @include glass-depth;
+  @include tab.edge-shape;
   position: fixed;
-  bottom: calc(var(--cw-space-5) + env(safe-area-inset-bottom, 0px));
-  left: calc(var(--cw-space-5) + env(safe-area-inset-left, 0px));
-  z-index: var(--cw-z-header);
+  top: calc(var(--cw-header-h) + var(--cw-space-2));
+  left: 0;
+  z-index: calc(var(--cw-z-header) - 1);
   display: inline-flex;
   align-items: center;
-  gap: var(--cw-space-2);
-  min-width: 48px;
-  min-height: 48px;
-  padding: 0 var(--cw-space-4);
-  border-radius: 999px;
+  box-sizing: border-box;
+  max-width: min(calc(100vw - 14px), 30rem);
+  height: tab.$tab-h;
+  padding: 0 4px 0 max(4px, env(safe-area-inset-left, 0px));
   color: var(--cw-fg);
-  font-size: var(--cw-text-sm);
-  font-weight: 600;
+  font: inherit;
+  text-align: start;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   transition:
     opacity var(--cw-duration-base) var(--cw-ease-out),
-    translate var(--cw-duration-base) var(--cw-ease-out),
-    visibility 0s linear 0s,
-    border-color var(--cw-duration-fast) var(--cw-ease);
-
-  &:hover {
-    border-color: var(--cw-fg);
-  }
+    translate var(--cw-duration-slow) var(--cw-ease-out),
+    visibility 0s linear 0s;
 
   &[data-state='hidden'] {
     visibility: hidden;
     opacity: 0;
-    translate: 0 8px;
+    translate: -100% 0;
     pointer-events: none;
     transition:
       opacity var(--cw-duration-base) var(--cw-ease-out),
-      translate var(--cw-duration-base) var(--cw-ease-out),
-      visibility 0s linear var(--cw-duration-base);
+      translate var(--cw-duration-slow) var(--cw-ease-out),
+      visibility 0s linear var(--cw-duration-slow);
   }
 
-  svg {
-    flex: none;
+  &:focus-visible {
+    outline: 2px solid var(--cw-focus);
+    outline-offset: 2px;
   }
 
   @include bp.up(xl) {
     display: none !important;
-  }
-
-  @include bp.down(md) {
-    bottom: calc(var(--cw-dock-offset) + var(--cw-dock-pad) + env(safe-area-inset-bottom, 0px));
-    left: max(8px, env(safe-area-inset-left, 0px));
-    justify-content: center;
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-    min-height: 44px;
-    padding: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -70,9 +56,46 @@
   }
 }
 
-.label {
-  @include bp.down(md) {
-    @include layout.visually-hidden;
+.badge {
+  @include tab.badge;
+  flex: none;
+  padding-inline: 8px 4px;
+}
+
+.pill {
+  @include tab.pill;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  height: tab.$pill-h;
+  padding-inline: 12px;
+}
+
+.title {
+  @include tab.label;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line {
+  @include tab.line;
+  position: absolute;
+  right: 12px;
+  bottom: 5px;
+  left: 12px;
+  transform: scaleX(var(--cw-progress, 0));
+  pointer-events: none;
+}
+
+@include bp.down(xl) {
+  :global(:root):has(.button) {
+    scroll-padding-top: calc(var(--cw-header-h) + var(--cw-space-2) + #{tab.$tab-h} + 12px);
+  }
+
+  :global([data-cw-post]):has(.button) :global([data-cw-reading-progress]) {
+    display: none;
   }
 }
 

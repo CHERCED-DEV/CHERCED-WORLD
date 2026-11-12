@@ -7,7 +7,7 @@ import { RelatedPosts } from '@/components/blog/post/RelatedPosts'
 import { seriesNavData } from '@/components/blog/post/series'
 import { SeriesNav } from '@/components/blog/post/SeriesNav'
 import { splitTemplate } from '@/components/blog/post/template'
-import { tocButtonShown } from '@/components/blog/post/TocSheet'
+import { tocButtonShown, tocChapter } from '@/components/blog/post/TocSheet'
 import { translatedFrom, TranslatedNote } from '@/components/blog/post/TranslatedNote'
 import { PostView, UpdatedDate } from '@/components/blog/PostView'
 import type { PostSeries } from '@/content/posts/series'
@@ -183,6 +183,20 @@ describe('índice en una hoja (T857)', () => {
     expect(tocButtonShown(null, { bottom: 3000 }, 64)).toBe(false)
   })
 
+  it('la pestaña muestra el h2 en curso con su número, también desde un h3 debajo de él', () => {
+    const headings = [
+      { id: 'uno', text: 'Uno', level: 2 as const },
+      { id: 'uno-a', text: 'Uno A', level: 3 as const },
+      { id: 'dos', text: 'Dos', level: 2 as const },
+      { id: 'dos-a', text: 'Dos A', level: 3 as const },
+    ]
+    expect(tocChapter(headings, 'uno')).toEqual({ number: '01', text: 'Uno' })
+    expect(tocChapter(headings, 'uno-a')).toEqual({ number: '01', text: 'Uno' })
+    expect(tocChapter(headings, 'dos-a')).toEqual({ number: '02', text: 'Dos' })
+    expect(tocChapter(headings, null)).toBeNull()
+    expect(tocChapter([{ id: 'suelto', text: 'Suelto', level: 3 as const }], 'suelto')).toBeNull()
+  })
+
   it('con índice, el post trae la hoja con su propio título y enlaces que no se confunden con los del índice', () => {
     const headings = [
       { id: 'uno', text: 'Uno', level: 2 as const },
@@ -191,7 +205,9 @@ describe('índice en una hoja (T857)', () => {
     ]
     const html = render(h(PostView, { lang: 'es', meta: post('p'), fallback: false, prepared: { ...prepared, headings }, url: 'u', blog: es }))
     expect(html.match(/data-cw-toc=""/g)).toHaveLength(1)
-    expect(html).toMatch(/<button[^>]*aria-label="En este post"[^>]*aria-haspopup="dialog"[^>]*data-cw-toc-button=""[^>]*data-state="hidden"/)
+    expect(html).toMatch(/<button[^>]*aria-haspopup="dialog"[^>]*data-cw-toc-button=""[^>]*data-state="hidden"><span class="cw-visually-hidden">En este post<\/span>/)
+    expect(html.match(/data-cw-reading-line=""/g)).toHaveLength(1)
+    expect(html.match(/data-cw-reading-progress=/g)).toHaveLength(1)
     expect(html).toContain('data-cw-toc-sheet=""')
     expect(html).toContain('id="cw-toc-sheet-title"')
     expect(html).toContain('aria-label="Cerrar"')
