@@ -1,0 +1,22 @@
+[
+ {"id": "T-01", "existe": true, "texto": "El sitio DEBE publicar un feed RSS con los artículos del blog en cada idioma.", "archivos": ["app/[lang]/feed.xml/"]},
+ {"id": "T-02", "existe": true, "texto": "El visitante DEBE poder cambiar entre tema claro y tema oscuro, y la preferencia DEBE recordarse.", "archivos": ["components/shell/ThemeToggle", "components/shell/themeScript", "components/experience/preferences"]},
+ {"id": "T-03", "existe": true, "texto": "El sitio DEBE estar disponible en español e inglés con rutas por idioma.", "archivos": ["lib/i18n/", "proxy.ts", "app/[lang]/layout"]},
+ {"id": "T-04", "existe": true, "texto": "El laboratorio DEBE transcribir audio en el navegador con Whisper sin enviar el audio a un servidor.", "archivos": ["lib/ailab/voice/", "components/ailab/voice/Transcriber", "components/ailab/voice/use-whisper"]},
+ {"id": "T-05", "existe": true, "texto": "Cada página DEBE generar una imagen Open Graph para compartir en redes sociales.", "archivos": ["app/[lang]/opengraph-image", "app/[lang]/blog/[id]/opengraph-image", "app/[lang]/portfolio/opengraph-image"]},
+ {"id": "T-06", "existe": true, "texto": "El sitio DEBE ofrecer una paleta de comandos para navegar con el teclado.", "archivos": ["components/experience/CommandPalette", "components/experience/palette-model", "components/shell/PaletteTrigger"]},
+ {"id": "T-07", "existe": true, "texto": "Los lectores DEBEN poder reaccionar a un artículo del blog y el autor DEBE moderar los comentarios en un panel.", "archivos": ["app/api/reactions/", "app/[lang]/inbox/(panel)/comments", "components/admin/CommentList"]},
+ {"id": "T-08", "existe": true, "texto": "El sitio DEBE exponer un archivo llms.txt para que los modelos de lenguaje lean el portafolio.", "archivos": ["app/llms.txt/"]},
+ {"id": "T-09", "existe": true, "texto": "El laboratorio DEBE simular una saga distribuida con compensaciones cuando falla un servicio.", "archivos": ["components/ailab/saga/", "lib/ailab/saga/", "components/ailab/shell/demos/x3-saga"]},
+ {"id": "T-10", "existe": true, "texto": "El sitio DEBE generar un sitemap y un robots.txt para los buscadores.", "archivos": ["app/sitemap", "app/robots"]},
+ {"id": "T-11", "existe": false, "texto": "El sitio DEBE permitir pagar con tarjeta de crédito una asesoría en línea.", "archivos": []},
+ {"id": "T-12", "existe": false, "texto": "El visitante DEBE poder agregar productos a un carrito de compras.", "archivos": []},
+ {"id": "T-13", "existe": false, "texto": "El panel DEBE enviar una notificación a Slack cuando llega un mensaje nuevo.", "archivos": []},
+ {"id": "T-14", "existe": false, "texto": "El autor DEBE poder exportar las estadísticas de visitas a Excel.", "archivos": []},
+ {"id": "T-15", "existe": false, "texto": "El sitio DEBE tener una aplicación nativa para iOS publicada en la App Store.", "archivos": []},
+ {"id": "T-16", "existe": false, "texto": "El inicio de sesión del panel DEBE usar SSO corporativo con SAML.", "archivos": []},
+ {"id": "T-17", "existe": false, "texto": "El sitio DEBE enviar un boletín por correo cada semana a los suscriptores.", "archivos": []},
+ {"id": "T-18", "existe": false, "texto": "El visitante DEBE poder agendar una cita en un calendario integrado.", "archivos": []},
+ {"id": "T-19", "existe": false, "texto": "El sitio DEBE ofrecer un chat en vivo atendido por una persona.", "archivos": []},
+ {"id": "T-20", "existe": false, "texto": "El blog DEBE permitir que los lectores escriban artículos invitados con editor visual.", "archivos": []}
+]

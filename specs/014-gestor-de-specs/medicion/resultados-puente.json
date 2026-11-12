@@ -1,0 +1,312 @@
+{
+ "archivos": 627,
+ "indice_ms": 5069,
+ "sin_puente": {
+  "label": "sin_puente",
+  "acierto_top5": "5/10",
+  "puntaje_top1_existe": [
+   62.5,
+   336.9
+  ],
+  "puntaje_top1_no_existe": [
+   8.5,
+   104.7
+  ],
+  "filas": [
+   {
+    "id": "T-01",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "app/[lang]/feed.xml/rss.ts",
+    "puntaje_top1": 170.5
+   },
+   {
+    "id": "T-02",
+    "existe": true,
+    "acierto_top5": false,
+    "top1": "content/ailab/voice-commands.ts",
+    "puntaje_top1": 196.7
+   },
+   {
+    "id": "T-03",
+    "existe": true,
+    "acierto_top5": false,
+    "top1": "content/i18n/es/ailab.json",
+    "puntaje_top1": 119.7
+   },
+   {
+    "id": "T-04",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "content/i18n/es/ailab.json",
+    "puntaje_top1": 336.9
+   },
+   {
+    "id": "T-05",
+    "existe": true,
+    "acierto_top5": false,
+    "top1": "content/i18n/es/common.json",
+    "puntaje_top1": 88.5
+   },
+   {
+    "id": "T-06",
+    "existe": true,
+    "acierto_top5": false,
+    "top1": "content/i18n/es/experience.json",
+    "puntaje_top1": 62.5
+   },
+   {
+    "id": "T-07",
+    "existe": true,
+    "acierto_top5": false,
+    "top1": "lib/assistant/lexicon.ts",
+    "puntaje_top1": 120.3
+   },
+   {
+    "id": "T-08",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "app/llms.txt/route.ts",
+    "puntaje_top1": 114.4
+   },
+   {
+    "id": "T-09",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "content/ailab/catalog.ts",
+    "puntaje_top1": 99.7
+   },
+   {
+    "id": "T-10",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "app/robots.ts",
+    "puntaje_top1": 83.6
+   },
+   {
+    "id": "T-11",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 35.5
+   },
+   {
+    "id": "T-12",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 92.3
+   },
+   {
+    "id": "T-13",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/i18n/es/contact.json",
+    "puntaje_top1": 76.1
+   },
+   {
+    "id": "T-14",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/i18n/es/contact.json",
+    "puntaje_top1": 8.5
+   },
+   {
+    "id": "T-15",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 51.8
+   },
+   {
+    "id": "T-16",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 104.7
+   },
+   {
+    "id": "T-17",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/site.ts",
+    "puntaje_top1": 40.7
+   },
+   {
+    "id": "T-18",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/i18n/es/contact.json",
+    "puntaje_top1": 8.5
+   },
+   {
+    "id": "T-19",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 31.8
+   },
+   {
+    "id": "T-20",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "components/admin/editorial/BlogStudio.tsx",
+    "puntaje_top1": 31
+   }
+  ]
+ },
+ "con_puente": {
+  "label": "con_puente",
+  "acierto_top5": "9/10",
+  "puntaje_top1_existe": [
+   114.4,
+   1106.4
+  ],
+  "puntaje_top1_no_existe": [
+   11.1,
+   398.9
+  ],
+  "filas": [
+   {
+    "id": "T-01",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "app/[lang]/feed.xml/rss.ts",
+    "puntaje_top1": 1106.4
+   },
+   {
+    "id": "T-02",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "content/ailab/voice-commands.ts",
+    "puntaje_top1": 521.1
+   },
+   {
+    "id": "T-03",
+    "existe": true,
+    "acierto_top5": false,
+    "top1": "content/i18n/es/experience.json",
+    "puntaje_top1": 418.4
+   },
+   {
+    "id": "T-04",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "content/i18n/es/ailab.json",
+    "puntaje_top1": 723.8
+   },
+   {
+    "id": "T-05",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 135.9
+   },
+   {
+    "id": "T-06",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "components/experience/palette-model.ts",
+    "puntaje_top1": 245.2
+   },
+   {
+    "id": "T-07",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "content/i18n/es/admin.json",
+    "puntaje_top1": 461.6
+   },
+   {
+    "id": "T-08",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "app/llms.txt/route.ts",
+    "puntaje_top1": 114.4
+   },
+   {
+    "id": "T-09",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "content/ailab/catalog.ts",
+    "puntaje_top1": 185.5
+   },
+   {
+    "id": "T-10",
+    "existe": true,
+    "acierto_top5": true,
+    "top1": "app/robots.ts",
+    "puntaje_top1": 167.3
+   },
+   {
+    "id": "T-11",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/ailab/catalog.ts",
+    "puntaje_top1": 56.1
+   },
+   {
+    "id": "T-12",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 256
+   },
+   {
+    "id": "T-13",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/i18n/es/admin.json",
+    "puntaje_top1": 214.9
+   },
+   {
+    "id": "T-14",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "components/motion/Background.tsx",
+    "puntaje_top1": 11.1
+   },
+   {
+    "id": "T-15",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 71.1
+   },
+   {
+    "id": "T-16",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/i18n/es/admin.json",
+    "puntaje_top1": 398.9
+   },
+   {
+    "id": "T-17",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/site.ts",
+    "puntaje_top1": 66.8
+   },
+   {
+    "id": "T-18",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/synergos-showcase.ts",
+    "puntaje_top1": 62.2
+   },
+   {
+    "id": "T-19",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "content/projects.ts",
+    "puntaje_top1": 133.5
+   },
+   {
+    "id": "T-20",
+    "existe": false,
+    "acierto_top5": null,
+    "top1": "components/blog/post/RelatedPosts.tsx",
+    "puntaje_top1": 156
+   }
+  ]
+ }
+}

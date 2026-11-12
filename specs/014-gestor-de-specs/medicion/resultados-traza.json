@@ -1,0 +1,470 @@
+{
+ "nota": "Primera corrida del 2026-11-12. Solo se conserva la capa C4 (traza contra el repo), que no depende del corpus sintetico. Las metricas de C1 a C3 de esa corrida usaban un corpus con errores y se descartaron.",
+ "maquina": {
+  "cpu": "Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz",
+  "hilos": 8,
+  "ram_gb": 34.1,
+  "node": "v20.19.0",
+  "plataforma": "win32 10.0.26200"
+ },
+ "capas": {
+  "4a_indice_bm25_repo": {
+   "ms": 3552.1,
+   "rss_pico_mb": 518,
+   "archivos": 627,
+   "lineas": 63673
+  },
+  "4b_consultas_bm25": {
+   "ms": 236.3,
+   "rss_pico_mb": 519,
+   "consultas": 20
+  },
+  "4c_embeddings_repo": {
+   "ms": 2530583.7,
+   "rss_pico_mb": 1573,
+   "fragmentos": 1902
+  },
+  "4d_consultas_embeddings": {
+   "ms": 18643.8,
+   "rss_pico_mb": 1457,
+   "consultas": 20
+  }
+ },
+ "precision": {
+  "traza_bm25": {
+   "acierto_top5": "5/10",
+   "filas": [
+    {
+     "id": "T-01",
+     "existe": true,
+     "top1": "app/[lang]/feed.xml/rss.ts",
+     "puntaje_top1": 170.453,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-02",
+     "existe": true,
+     "top1": "content/ailab/voice-commands.ts",
+     "puntaje_top1": 196.741,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-03",
+     "existe": true,
+     "top1": "content/i18n/es/ailab.json",
+     "puntaje_top1": 119.74,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-04",
+     "existe": true,
+     "top1": "content/i18n/es/ailab.json",
+     "puntaje_top1": 336.879,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-05",
+     "existe": true,
+     "top1": "content/i18n/es/common.json",
+     "puntaje_top1": 88.45,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-06",
+     "existe": true,
+     "top1": "content/i18n/es/experience.json",
+     "puntaje_top1": 62.502,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-07",
+     "existe": true,
+     "top1": "lib/assistant/lexicon.ts",
+     "puntaje_top1": 120.349,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-08",
+     "existe": true,
+     "top1": "app/llms.txt/route.ts",
+     "puntaje_top1": 114.434,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-09",
+     "existe": true,
+     "top1": "content/ailab/catalog.ts",
+     "puntaje_top1": 99.656,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-10",
+     "existe": true,
+     "top1": "app/robots.ts",
+     "puntaje_top1": 83.626,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-11",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 35.529,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-12",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 92.303,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-13",
+     "existe": false,
+     "top1": "content/i18n/es/contact.json",
+     "puntaje_top1": 76.084,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-14",
+     "existe": false,
+     "top1": "content/i18n/es/contact.json",
+     "puntaje_top1": 8.544,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-15",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 51.78,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-16",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 104.731,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-17",
+     "existe": false,
+     "top1": "content/site.ts",
+     "puntaje_top1": 40.735,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-18",
+     "existe": false,
+     "top1": "content/i18n/es/contact.json",
+     "puntaje_top1": 8.544,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-19",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 31.829,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-20",
+     "existe": false,
+     "top1": "components/admin/editorial/BlogStudio.tsx",
+     "puntaje_top1": 30.957,
+     "acierto_top5": null
+    }
+   ]
+  },
+  "traza_embeddings": {
+   "acierto_top5": "3/10",
+   "filas": [
+    {
+     "id": "T-01",
+     "existe": true,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.891,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-02",
+     "existe": true,
+     "top1": "content/ailab/voice-commands.ts",
+     "puntaje_top1": 0.864,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-03",
+     "existe": true,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.873,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-04",
+     "existe": true,
+     "top1": "content/ailab/catalog.ts",
+     "puntaje_top1": 0.902,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-05",
+     "existe": true,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 0.865,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-06",
+     "existe": true,
+     "top1": "components/site/synergos/arquitectura/PatternAtlas.tsx",
+     "puntaje_top1": 0.878,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-07",
+     "existe": true,
+     "top1": "components/blog/post/TocSheet.module.scss",
+     "puntaje_top1": 0.876,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-08",
+     "existe": true,
+     "top1": "components/site/portfolio/ProjectsExplorer.tsx",
+     "puntaje_top1": 0.881,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-09",
+     "existe": true,
+     "top1": "lib/ailab/saga/engine.ts",
+     "puntaje_top1": 0.88,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-10",
+     "existe": true,
+     "top1": "content/site.ts",
+     "puntaje_top1": 0.887,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-11",
+     "existe": false,
+     "top1": "content/i18n/es/experience.json",
+     "puntaje_top1": 0.855,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-12",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 0.862,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-13",
+     "existe": false,
+     "top1": "content/i18n/es/common.json",
+     "puntaje_top1": 0.868,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-14",
+     "existe": false,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.87,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-15",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 0.864,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-16",
+     "existe": false,
+     "top1": "content/i18n/es/common.json",
+     "puntaje_top1": 0.871,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-17",
+     "existe": false,
+     "top1": "components/blog/PostMedia.module.scss",
+     "puntaje_top1": 0.874,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-18",
+     "existe": false,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.865,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-19",
+     "existe": false,
+     "top1": "content/i18n/en/blog.json",
+     "puntaje_top1": 0.86,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-20",
+     "existe": false,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.872,
+     "acierto_top5": null
+    }
+   ]
+  },
+  "traza_hibrida_rrf": {
+   "acierto_top5": "5/10",
+   "filas": [
+    {
+     "id": "T-01",
+     "existe": true,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.032,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-02",
+     "existe": true,
+     "top1": "content/ailab/voice-commands.ts",
+     "puntaje_top1": 0.033,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-03",
+     "existe": true,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.032,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-04",
+     "existe": true,
+     "top1": "content/ailab/catalog.ts",
+     "puntaje_top1": 0.033,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-05",
+     "existe": true,
+     "top1": "content/i18n/es/common.json",
+     "puntaje_top1": 0.032,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-06",
+     "existe": true,
+     "top1": "content/ailab/catalog.ts",
+     "puntaje_top1": 0.031,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-07",
+     "existe": true,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.031,
+     "acierto_top5": false
+    },
+    {
+     "id": "T-08",
+     "existe": true,
+     "top1": "app/llms.txt/route.ts",
+     "puntaje_top1": 0.032,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-09",
+     "existe": true,
+     "top1": "content/ailab/catalog.ts",
+     "puntaje_top1": 0.033,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-10",
+     "existe": true,
+     "top1": "app/robots.ts",
+     "puntaje_top1": 0.03,
+     "acierto_top5": true
+    },
+    {
+     "id": "T-11",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 0.031,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-12",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 0.033,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-13",
+     "existe": false,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.032,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-14",
+     "existe": false,
+     "top1": "content/i18n/es/blog.json",
+     "puntaje_top1": 0.032,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-15",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 0.033,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-16",
+     "existe": false,
+     "top1": "content/projects.ts",
+     "puntaje_top1": 0.032,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-17",
+     "existe": false,
+     "top1": "content/site.ts",
+     "puntaje_top1": 0.033,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-18",
+     "existe": false,
+     "top1": "content/synergos-showcase.ts",
+     "puntaje_top1": 0.029,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-19",
+     "existe": false,
+     "top1": "content/i18n/es/portfolio.json",
+     "puntaje_top1": 0.032,
+     "acierto_top5": null
+    },
+    {
+     "id": "T-20",
+     "existe": false,
+     "top1": "content/editorial.ts",
+     "puntaje_top1": 0.03,
+     "acierto_top5": null
+    }
+   ]
+  }
+ }
+}
