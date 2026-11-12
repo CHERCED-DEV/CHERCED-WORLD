@@ -54,6 +54,20 @@ cristal del sistema.
   - escritorio;
   - sin JS.
 
+Resultado sobre `integracion-hijas`, puerto 3400, sin la suite exhaustiva:
+
+- Unitarias, lint y tipos: en verde.
+- E2E de Sobre mí (`rel/indice-pestana`, `rel/scroll-driven`, `rel/heading`, `p2/scenes-mobile`, `r3/about-fixes`,
+  `p2/about`) en escritorio, celular y sin JS: todo en verde menos una prueba ajena al índice.
+- Los timeouts del mapa cerebral y de la terminal con 3 workers pasan con 1 worker: fueron carga de la máquina.
+
+## Hallazgos fuera de este cambio
+
+- **Altura a 1440 px.** `p2/about.spec.ts:209` mide 3585 px contra un tope de 3529 en ES. El índice de escritorio no
+  cambia de alto (44 px). Los 56 px de más coinciden con el botón "No tocar" del pie (015: 44 px más el espacio).
+- **Botón flotante sobre los puntos.** En < 480 px, el botón flotante redondo de la derecha que llegó con
+  `integracion-hijas` cae entre los puntos de escena de Sobre mí.
+
 ## Pendiente del autor
 
 - Los puntos de escena de la derecha (< 480 px, 006) siguen como estaban. Con la pestaña compacta mostrando la escena
