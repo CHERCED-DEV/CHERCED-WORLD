@@ -291,7 +291,7 @@ describe('No tocar: el sprite', () => {
       const width = grid.rows[0]!.length
       for (const row of grid.rows) {
         expect(row.length, name).toBe(width)
-        expect(row, name).toMatch(/^[.hfsSkgGtwbm]+$/)
+        expect(row, name).toMatch(/^[.hbBfsSkgGtwm]+$/)
       }
     }
   })

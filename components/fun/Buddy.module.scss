@@ -10,8 +10,6 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 75px;
-  height: 99px;
   will-change: transform;
 }
 
@@ -156,19 +154,27 @@
 }
 
 .hair {
-  fill: #161616;
+  fill: #0f0f0f;
+}
+
+.beard {
+  fill: #1f1f1f;
+}
+
+.stubble {
+  fill: #444444;
 }
 
 .fade {
-  fill: #6b6b6b;
+  fill: #6e6e6e;
 }
 
 .skin {
-  fill: #ececec;
+  fill: #d4d4d4;
 }
 
 .shade {
-  fill: #bdbdbd;
+  fill: #a3a3a3;
 }
 
 .ink {

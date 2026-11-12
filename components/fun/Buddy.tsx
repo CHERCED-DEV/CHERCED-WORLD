@@ -335,7 +335,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
       <div
         ref={actorRef}
         className={styles.actor}
-        style={{ transform: `translate3d(${start.x}px, ${start.y}px, 0)` }}
+        style={{ width: SIZE.width, height: SIZE.height, transform: `translate3d(${start.x}px, ${start.y}px, 0)` }}
         data-cw-fun-actor=""
         data-pose={pose}
       >

@@ -4,7 +4,8 @@ import styles from './Buddy.module.scss'
 
 const COLOR_CLASS: Record<string, string | undefined> = {
   h: styles.hair,
-  b: styles.hair,
+  b: styles.beard,
+  B: styles.stubble,
   f: styles.fade,
   s: styles.skin,
   S: styles.shade,

@@ -4,11 +4,11 @@ export type Grid = { x: number; y: number; rows: readonly string[] }
 
 export const EMPTY = '.'
 
-export const SPRITE_COLORS = ['h', 'f', 's', 'S', 'k', 'g', 'G', 't', 'w', 'b', 'm'] as const
+export const SPRITE_COLORS = ['h', 'b', 'B', 'f', 's', 'S', 'k', 'g', 'G', 't', 'w', 'm'] as const
 
 export type SpriteColor = (typeof SPRITE_COLORS)[number]
 
-export const SPRITE_VIEWBOX = { x: 0, y: -5, width: 25, height: 33 } as const
+export const SPRITE_VIEWBOX = { x: 0, y: -5, width: 26, height: 33 } as const
 
 export const SPRITE_SCALE = 3
 
@@ -17,67 +17,83 @@ const HEAD: Grid = {
   y: 0,
   rows: [
     '.....hhhhhh.....',
-    '...hhhhhhhhhhh..',
-    '..hhhhhhhhhhhhh.',
-    '.fhhhhhhhhhhhhhf',
-    '.ffsssssssssssff',
-    '.fsshhhssshhhssf',
+    '...hhhhhhhhhh...',
+    '..fhhhhhhhhhhf..',
+    '.ffssssssssssff.',
+    '.fshhhsssshhhsf.',
     'kkkkkkkkkkkkkkkk',
     'kgGgggggggggGggk',
     'kggGgggggggggGgk',
-    'skgggggkkgggggks',
-    'sbbssssSSssssbbs',
-    '.bbbbssssssbbbb.',
-    '.bbbbmwwwwmbbbb.',
-    '..bbbbmmmmbbbb..',
-    '...bbbbbbbbbb...',
-    '.....bbbbbb.....',
+    '.kkkkkkSSkkkkkk.',
+    'ssbssssSSssssbss',
+    '.sbBssssssssBbs.',
+    '.bbBbbbbbbbbBbb.',
+    '.bBbbwwwwwwbbBb.',
+    '..bbBbmmmmbBbb..',
+    '...bBbbbbbbBb...',
+    '.....bbBBbb.....',
   ],
 }
 
 const SPIKES: Grid = {
   x: 1,
   y: -4,
-  rows: ['...h....h....h..', '...hh..hh...hh..', '..hhh.hhhh.hhh..', '..hhhhhhhhhhhhh.'],
+  rows: ['....h...h...h...', '...hh..hh..hh...', '...hhh.hhhh.hhh.', '...hhhhhhhhhhhh.'],
 }
 
 const TORSO: Grid = {
-  x: 2,
+  x: 1,
   y: 16,
-  rows: ['..tttttttttt..', '.tttttttttttt.', 'sstttttttttt..', 'sSttttwwtttt..', 'sSttttwttttt..', 'kktttttttttt..', 'sswwwwwwwwww..'],
+  rows: [
+    '....tttttttt....',
+    '..tttttttttttt..',
+    '.tttttttttttttt.',
+    'sSSttttwwtttt...',
+    'sSSttttwttttt...',
+    '.kktttttttttt...',
+    '.sswwwwwwwwww...',
+  ],
 }
 
 const CROSSED: Grid = {
-  x: 2,
+  x: 1,
   y: 16,
-  rows: ['..tttttttttt..', '.tttttttttttt.', '.tttttttttttt.', 'tsssssssssssst', 'tkksssssssssSt', '.tttttttttttt.', '..wwwwwwwwww..'],
+  rows: [
+    '....tttttttt....',
+    '..tttttttttttt..',
+    '.tttttttttttttt.',
+    'sStsssssssssstSs',
+    'sStSSSSSkkSSStSs',
+    '.tttttttttttttt.',
+    '...wwwwwwwwww...',
+  ],
 }
 
 const ARM_DOWN: Grid = {
-  x: 2,
+  x: 1,
   y: 16,
-  rows: ['..............', '..............', '............ss', '............Ss', '............Ss', '............ss', '............ss'],
+  rows: ['................', '................', '................', '.............SSs', '.............SSs', '.............ss.', '.............ss.'],
 }
 
 const ARM_POKE: Grid = {
-  x: 2,
+  x: 1,
   y: 16,
-  rows: ['......................', '......................', '............sssssss...', '............SSssssssss'],
+  rows: ['........................', '........................', '........................', '.............SSssssss...', '.............SSsssssssss'],
 }
 
-const LEGS: Grid = { x: 2, y: 23, rows: ['..wwwwwwwwww..', '..wwww..wwww..', '..wwww..wwww..', '.kkkkk..kkkkk.'] }
+const LEGS: Grid = { x: 1, y: 23, rows: ['...wwwwwwwwww...', '...wwww..wwww...', '...wwww..wwww...', '..kkkkk..kkkkk..'] }
 
-const STEP: Grid = { x: 2, y: 23, rows: ['..wwwwwwwwww..', '.wwww....wwww.', '.www......www.', 'kkkk......kkkk'] }
+const STEP: Grid = { x: 1, y: 23, rows: ['...wwwwwwwwww...', '..wwww....wwww..', '..www......www..', '.kkkk......kkkk.'] }
 
-const SIT: Grid = { x: 2, y: 23, rows: ['..wwwwwwwwww..', '.wwwwwwwwwwww.', 'kkkkk....kkkkk'] }
+const SIT: Grid = { x: 1, y: 23, rows: ['...wwwwwwwwww...', '..wwwwwwwwwwww..', '.kkkkk....kkkkk.'] }
 
 const SWEAT: Grid = { x: 18, y: 3, rows: ['.w.', 'www', 'www', '.w.'] }
 
-export const POUT: Grid = { x: 1, y: 12, rows: ['.bbbbbmmmmbbbbb.', '..bbbbmbbmbbbb..'] }
+export const POUT: Grid = { x: 1, y: 12, rows: ['.bBbbbmmmmbbbBb.', '..bbBbmbbmbBbb..'] }
 
-export const YELL: Grid = { x: 1, y: 12, rows: ['.bbbbmmmmmmbbbb.', '..bbbmwwwwmbbb..', '...bbbmmmmbbb...'] }
+export const YELL: Grid = { x: 1, y: 12, rows: ['.bBbmmmmmmmmbBb.', '..bbmwwwwwwmbb..', '...bbmmmmmmbb...'] }
 
-export const TEAR: Grid = { x: 4, y: 10, rows: ['g', 'g'] }
+export const TEAR: Grid = { x: 4, y: 9, rows: ['g', 'g'] }
 
 export const PARTS = {
   legs: LEGS,
