@@ -17,6 +17,7 @@ import { CopyButton } from './CopyButton'
 import { shareCopyLabels } from './labels'
 import type { PreparedPost } from './mdx/prepare'
 import { AuthorBox } from './post/AuthorBox'
+import { ListenPlayer } from './post/ListenPlayer'
 import { usesGeneratedCover, type GeneratedCoverComponent } from './post/cover'
 import { RelatedPosts, type RelatedCaseCard, type RelatedPost } from './post/RelatedPosts'
 import type { SeriesNavData } from './post/series'
@@ -140,6 +141,18 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors,
             </ul>
           ) : null}
           {original ? <TranslatedNote originalLang={original} lang={lang} blog={blog} /> : null}
+          <ListenPlayer
+            lang={contentLang ?? lang}
+            title={meta.title}
+            target={POST_BODY_ID}
+            labels={{
+              play: t(blog, 'listen.play'),
+              pause: t(blog, 'listen.pause'),
+              resume: t(blog, 'listen.resume'),
+              stop: t(blog, 'listen.stop'),
+              status: t(blog, 'listen.status'),
+            }}
+          />
         </div>
         <figure className={styles.cover} data-cw-post-cover="">
           {GeneratedCover ? (

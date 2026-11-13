@@ -103,7 +103,7 @@ Rutas: `app/[lang]/blog/[id]/page.tsx`, `components/blog/{PostView,PostNav,Toc,R
   - el JSON-LD `BlogPosting` con `blogPostingJsonLd` y `jsonLdScript` (FR-521);
   - `alternates.types` del feed (FR-523);
   - la portada generada de Q1 cuando `cover: 'generated'`.
-- [ ] T628 [US5] **BLOQUEADA (003, V3, y P-505)**: "Escuchar este post".
+- [x] T628 [US5] (hecha el 2026-11-13 con el camino A, la voz del navegador: `ListenPlayer` en el encabezado del post, con el motor de V3, y el comando de la paleta solo en posts) **BLOQUEADA (003, V3, y P-505)**: "Escuchar este post".
   - `components/blog/post/ListenPlayer.tsx`, con el motor que decida la 003 (FR-530, FR-531).
   - A-506: el comando "Escuchar este post" en la paleta solo en páginas de post (FR-532).
 - [ ] T629 [US3] **BLOQUEADA (P-503)**: diagramas con Mermaid renderizados en el build. Solo si el autor elige Mermaid y

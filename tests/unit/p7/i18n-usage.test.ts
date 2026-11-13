@@ -47,12 +47,6 @@ const KEPT: Record<string, string> = {
   'services.explore': 'tests/unit/l1/site-dictionary.test.ts (congelada) conserva los textos firma de 2023',
   'about.showMore': 'tests/unit/l1/site-dictionary.test.ts (congelada) conserva los textos firma de 2023',
   'about.languages': 'tests/unit/l1/site-dictionary.test.ts (congelada) conserva los textos firma de 2023',
-  'palette.action.listen': 'punto de extensión de la paleta para la 005 (FR-451); lo prueba tests/unit/p6/palette.test.ts',
-  'listen.play': 'copy de "Escuchar este post" (005, T628), bloqueada por V3 de la 003 y P-505; Q0 la dejó lista',
-  'listen.pause': 'copy de "Escuchar este post" (005, T628), bloqueada por V3 de la 003 y P-505; Q0 la dejó lista',
-  'listen.resume': 'copy de "Escuchar este post" (005, T628), bloqueada por V3 de la 003 y P-505; Q0 la dejó lista',
-  'listen.stop': 'copy de "Escuchar este post" (005, T628), bloqueada por V3 de la 003 y P-505; Q0 la dejó lista',
-  'listen.status': 'copy de "Escuchar este post" (005, T628), bloqueada por V3 de la 003 y P-505; Q0 la dejó lista',
 }
 
 const usage = usageOf(SOURCES.flatMap(files).map((file) => readFileSync(file, 'utf8')))
