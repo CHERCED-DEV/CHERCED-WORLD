@@ -1,0 +1,92 @@
+export const meta = {
+  id: 'post7',
+  lang: 'en',
+  originalLang: 'es',
+  title: "A gate that never failed isn't watching anything",
+  description: 'Synergos has 92 architecture gates. None gets in without first proving it can fail, and that proof caught failures in the gates themselves.',
+  date: '2026-11-13',
+  tags: ['testing', 'architecture', 'ai-agents'],
+  image: {
+    src: '/assets/imgs/projects/synergos-en.svg',
+    alt: 'Diagram of the Synergos layers: resources on a CDN, Umbraco as the composition layer and web components on top',
+    width: 960,
+    height: 640,
+  },
+  author: 'Camilo Hernández',
+  cover: 'generated',
+}
+
+Synergos has 92 architecture gates, counted on November 5, 2026. They are tests that don't check whether a function returns the right value. They check whether the system still follows its rules: that the pieces stay within their boundaries, that the configuration they declare is in use, that health checks are in place.
+
+This post isn't about the number. It's about a rule I apply to each of those gates before trusting it: it must have failed at least once, on purpose.
+
+## A convention that doesn't break the build doesn't exist
+
+First, why gates. In a project where AI agents work in parallel, a convention written in a document lasts as long as it takes the next agent not to read it. If the rule matters, it has to break the build when someone violates it. That's called a fitness function: an automated test for a property of the architecture.
+
+The problem is that a gate looks the same whether it's watching or not. Either way, it's green.
+
+<Callout type="learned">
+A green gate can mean the system follows the rule, or that the gate isn't looking. From the outside you can't tell.
+</Callout>
+
+## Mutating the gate
+
+The only way I've found to tell them apart is to break, on purpose, what the gate exists to protect, and watch it turn red. I call it mutating the gate, after mutation testing. Here no tool does the mutation: it's the exact defect the gate should catch.
+
+The procedure has three steps:
+
+1. Reintroduce the defect, one at a time.
+2. Run the gate and expect red. Not just any red: one whose message names the defect.
+3. Restore the code, touch the file so the build picks up the restore, and expect green.
+
+Touching the file sounds like a detail, but it isn't. A restore the build never sees leaves a green that proves nothing, which is exactly what this procedure is meant to prevent.
+
+## The gate that signed in as the only survivor
+
+The case that taught me the most came from the admin panel audit. An empty argument in a query (`memberTypeAlias: string.Empty` instead of `null`) left the member list incomplete. With the list incomplete, locking an account, resetting two-factor auth or erasing personal data couldn't be done from the UI. One character.
+
+The fix came with a gate that starts the panel and checks the list. Before trusting it, we mutated it: we reintroduced the three defects it should catch, one at a time.
+
+The mutation found two failures, and neither was in the code. Both were in the gate.
+
+- **The empty queue.** The moderation queue has two branches: with items and empty. On a fresh database the gate always saw the empty one, so it never rendered the markup that had the bug. It passed green on a screen that proved nothing.
+- **The only survivor.** The gate asked for *one* member to appear in the list. But with the defect, the only member left was the first one ever registered, and that was exactly the one the gate signed in with. The gate would have passed green on the very defect it existed to catch.
+
+Now the gate seeds the queue so the branch with items shows up. It also requires the full list, with a witness member who is neither the first one nor the one in the session.
+
+<Callout type="decision">
+A gate enters the repository with its mutation, meaning the defect that turns it red is written next to it.
+</Callout>
+
+## The gate that read its own explanation
+
+The second case involved gates that read source code. One silently dropped every parameter with an `=` in its comment. Another was fooled by its own explanation: it took its comments as if they were the code it had to check. It stopped fooling itself once the comments were stripped before searching.
+
+That became a project rule: a gate that parses code or text needs mutations of its own. A gate that validates prose with regular expressions will pass green on an incomplete spec. And a green over nothing gets inherited: whoever trusts that gate next is trusting nothing.
+
+## Why it matters more with agents
+
+AI agents write gates as fast as they write tests. A gate written by the same agent that wrote the code shares its assumptions, just like the tests did in the previous post. If the agent believed the list filled itself, it writes a gate that doesn't notice when it doesn't.
+
+Mutation doesn't share those assumptions. Reintroducing the defect asks the gate something its author never asked. So in the Synergos factory, mutation is a delivery step of its own:
+
+1. gates;
+2. mutation;
+3. live processes;
+4. connected smoke tests;
+5. pull request.
+
+The agent harness repository requires it for its own tooling too: every change to its meter comes with its fixture and its mutation.
+
+## What it costs
+
+Mutating every gate takes time, and with 92 gates you notice it. Something unexpected happens too: a single misplaced symlink knocked down six gates at once. Failing together isn't a problem. It's proof they're watching.
+
+The cost I don't accept is the other one: a gate that has been green for months without anyone knowing whether it could ever turn red. That gate isn't watching anything. It just decorates the pipeline.
+
+## Green has to be earned
+
+A green gate is worth something only if I saw it red first, for the right reason. If it never failed, I don't know whether it's watching or looking the other way.
+
+The records of both cases are in the public Synergos.CMS repository: [the audit closure](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/04-cierre-auditoria.md) and [the factory](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/13-la-fabrica.md).

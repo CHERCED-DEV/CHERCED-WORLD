@@ -64,6 +64,9 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   `bytes` en `content/site.ts` y correr las pruebas del CV; después, la exhaustiva (R4.3).
 - [x] R2.6 Post 2 (si el autor lo quiere en el release, D-R2). Decisión del autor del 2026-11-12: sale después del release.
 - [x] R2.7 (hecho el 2026-11-12: `continuousStart` encadena los cargos de la misma empresa con hasta un mes de hueco; Sistecrédito dice "Desde mar 2025") "Ahora trabajo en" (home) dice "Desde feb 2026" porque toma solo el cargo AI-First. El autor pide sumar su etapa anterior en la misma empresa (Development Solutions Engineer, desde 2025-03): la fecha debe salir del primer cargo continuo en la empresa actual, no del último. Pedido el 2026-11-11 para después, no para ya.
+- [x] R2.10 Post 7, "Un gate que nunca falló no vigila nada" (ES/EN), y tarjetas de decisiones de los casos 2, 13, 14 y 15
+  (cuatro por caso, P-408). Borrador del 2026-11-13; el autor lo revisó en local y pidió subirlo el mismo día, con
+  los puntos "(confirma)" tal como quedaron.
 - [ ] R2.9 Botón de WhatsApp para que escriban directo al autor (pedido el 2026-11-11, para más adelante). El autor aprobó el 2026-11-11 que el número quede público (enlace `wa.me`). Falta que lo dé y decidir dónde va sin duplicar llamados (Contacto, pop-up de reclutadores o el botón flotante) y cómo se mide.
 - [x] R2.8 (hecho el 2026-11-11: el círculo del lóbulo en celular mide al menos 7,5 em, unos 90 px, para que
   "ARQUITECTURA" y "ARCHITECTURE" quepan con la letra de 12 px; la lluvia no estaba desfasada: la prueba comparaba la
@@ -138,6 +141,11 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
     especificidad a `.body`) y el borrador elegido lleva el acento del sitio en vez del gris del navegador.
   - Mensajes en celular: los datos van uno sobre otro, los filtros en una fila deslizable y las acciones en dos
     columnas, con "Responder por correo" y "Eliminar" a todo el ancho.
+
+- [x] R3.9 Cuentas e ingreso con Google (spec `../017-cuentas-e-ingreso/`, pedido del autor del 2026-11-13): botón
+  "Ingresar", Mi cuenta, Personas, posts invitados con aprobación del autor y comentarios con cuenta. En dev desde
+  83768b8. Falta del lado del autor: crear el cliente OAuth y poner `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en
+  Vercel (`../017-cuentas-e-ingreso/configurar-google.md`).
 
 ## R4 — Endurecer
 - [x] R4.1 Revisión de seguridad de lo nuevo. La revisión (solo lectura) terminó el 2026-11-11: no hay nada alto.

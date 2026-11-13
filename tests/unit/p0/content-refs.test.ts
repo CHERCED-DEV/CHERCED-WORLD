@@ -42,6 +42,8 @@ function filled(value: Localized | undefined, at: string) {
   for (const lang of ['es', 'en'] as const) expect(value![lang].trim(), `${at}.${lang}`).not.toBe('')
 }
 
+const WITH_CARDS = ['2', '13', '14', '15']
+
 describe('portafolio: 15 casos, orden y época (FR-405, FR-443, E-04)', () => {
   it('sigue el orden de contenido.md §4 con su época', () => {
     expect(sorted.map((project) => [project.id, project.era])).toEqual(ORDER)
@@ -49,7 +51,7 @@ describe('portafolio: 15 casos, orden y época (FR-405, FR-443, E-04)', () => {
     for (const project of projects) expect(PROJECT_ERAS, project.id).toContain(project.era)
   })
 
-  it('solo Synergos trae tarjetas ADR, diagrama y repos', () => {
+  it('Synergos trae tarjetas ADR, diagrama y repos; los casos 2, 13, 14 y 15 solo tarjetas (P-408)', () => {
     const synergos = projects.find((project) => project.id === '12')!
     expect(synergos.adrCards).toHaveLength(4)
     for (const card of synergos.adrCards ?? []) {
@@ -72,7 +74,14 @@ describe('portafolio: 15 casos, orden y época (FR-405, FR-443, E-04)', () => {
       ],
     })
     for (const project of projects.filter((item) => item.id !== '12')) {
-      expect(project.adrCards, project.id).toBeUndefined()
+      if (WITH_CARDS.includes(project.id)) {
+        expect(project.adrCards, project.id).toHaveLength(4)
+        for (const card of project.adrCards ?? []) {
+          filled(card.decision, `${project.id}.decision`)
+          filled(card.why, `${project.id}.why`)
+          filled(card.tradeoff, `${project.id}.tradeoff`)
+        }
+      } else expect(project.adrCards, project.id).toBeUndefined()
       expect(project.diagram, project.id).toBeUndefined()
       if (project.id === '13') expect(project.links.repos?.map((repo) => repo.label)).toEqual(['Synergos.Fabrica'])
       else expect(project.links.repos, project.id).toBeUndefined()

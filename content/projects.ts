@@ -100,6 +100,52 @@ export const projects: Project[] = [
       { es: 'Sin costos de infraestructura nuevos', en: 'No new infrastructure costs' },
       { es: 'Un problema de privacidad detectado y corregido con un hotfix en producción', en: 'A privacy issue found and fixed with a hotfix in production' },
     ],
+    adrCards: [
+      {
+        decision: { es: 'Ocho lanes, cada una dueña de sus archivos', en: 'Eight lanes, each owning its files' },
+        why: {
+          es: 'Para que los agentes trabajen en paralelo sin conflictos y sin que yo coordine a mano.',
+          en: 'So agents work in parallel without conflicts and without me coordinating by hand.',
+        },
+        tradeoff: {
+          es: 'Los contratos compartidos se congelan antes de cada ola, y cambiarlos exige una enmienda.',
+          en: 'Shared contracts are frozen before each wave, and changing them takes an amendment.',
+        },
+      },
+      {
+        decision: { es: 'La especificación antes que el código', en: 'Spec before code' },
+        why: {
+          es: 'Cada lane arranca de una spec con requisitos medibles, y mis decisiones quedan escritas.',
+          en: 'Each lane starts from a spec with measurable requirements, and my decisions are written down.',
+        },
+        tradeoff: {
+          es: 'Escribir y revisar specs toma tiempo antes de ver la primera línea de código.',
+          en: 'Writing and reviewing specs takes time before the first line of code shows up.',
+        },
+      },
+      {
+        decision: { es: 'Sin infraestructura nueva', en: 'No new infrastructure' },
+        why: {
+          es: 'El panel, el buzón, los comentarios y los posts publicados reutilizan la base y el hosting que ya existían.',
+          en: 'The panel, inbox, comments and published posts reuse the database and hosting that already existed.',
+        },
+        tradeoff: {
+          es: 'Sin proveedor de correo, el aviso de posts nuevos va por RSS.',
+          en: 'With no email provider, new-post alerts go through RSS.',
+        },
+      },
+      {
+        decision: { es: 'Un hotfix de privacidad directo a producción', en: 'A privacy hotfix straight to production' },
+        why: {
+          es: 'Había datos de contacto públicos que no debían estarlo, y eso no podía esperar al release.',
+          en: "Contact details that shouldn't be public were public, and that couldn't wait for the release.",
+        },
+        tradeoff: {
+          es: 'El arreglo se integró después a la rama de trabajo, para no perderlo al publicar.',
+          en: "The fix was merged back into the working branch afterwards, so it wouldn't be lost on release.",
+        },
+      },
+    ],
   },
   {
     id: '3',
@@ -697,6 +743,49 @@ export const projects: Project[] = [
         en: '19 decision batches resolved between October and November 2026',
       },
     ],
+    adrCards: [
+      {
+        decision: { es: 'Solo el director toca lo compartido', en: 'Only the director touches shared code' },
+        why: {
+          es: 'Varios agentes a la vez se pisaban y rompían lo compartido.',
+          en: 'Several agents at once stepped on each other and broke shared code.',
+        },
+        tradeoff: { es: 'Lo compartido avanza al ritmo del director.', en: "Shared code moves at the director's pace." },
+      },
+      {
+        decision: { es: 'Cada línea en su worktree, su rama y su spec', en: 'Each line in its own worktree, branch and spec' },
+        why: {
+          es: 'Que el trabajo de una línea no toque el de otra y cada tarea quede trazada a su commit.',
+          en: "So one line's work never touches another's, and every task is traced to its commit.",
+        },
+        tradeoff: {
+          es: 'Las ramas se integran al final, y un conflicto entre líneas se ve tarde.',
+          en: 'Branches are merged at the end, so a conflict between lines shows up late.',
+        },
+      },
+      {
+        decision: { es: 'Una constitución compartida y Spec Kit', en: 'A shared constitution and Spec Kit' },
+        why: {
+          es: 'Todas las líneas siguen las mismas reglas y el mismo ciclo: specify, clarify, plan, tasks, analyze e implement.',
+          en: 'Every line follows the same rules and the same cycle: specify, clarify, plan, tasks, analyze and implement.',
+        },
+        tradeoff: {
+          es: 'Cambiar una regla de la constitución afecta a todas las líneas a la vez.',
+          en: 'Changing a constitution rule affects every line at once.',
+        },
+      },
+      {
+        decision: { es: 'Las decisiones de arquitectura llegan en lotes', en: 'Architecture decisions arrive in batches' },
+        why: {
+          es: 'Decido solo lo que me toca, con una recomendación delante, y mi respuesta escrita manda sobre cualquier supuesto.',
+          en: "I decide only what's mine, with a recommendation in front of me, and my written answer overrides any assumption.",
+        },
+        tradeoff: {
+          es: 'Una línea puede quedar esperando el lote. Entre octubre y noviembre de 2026 fueron 19.',
+          en: 'A line may wait for the batch. There were 19 between October and November 2026.',
+        },
+      },
+    ],
   },
   {
     id: '14',
@@ -742,6 +831,52 @@ export const projects: Project[] = [
       },
       { es: '13 decisiones de arquitectura documentadas', en: '13 documented architecture decisions' },
     ],
+    adrCards: [
+      {
+        decision: { es: 'Una frontera de confianza', en: 'A trust boundary' },
+        why: {
+          es: 'La persona, el agente y el LLM se tratan como no confiables y solo hablan por MCP con el núcleo.',
+          en: 'The person, the agent and the LLM are treated as untrusted and only talk to the core through MCP.',
+        },
+        tradeoff: {
+          es: 'Cada acción pasa por el núcleo, con más pasos que darle al agente acceso directo.',
+          en: 'Every action goes through the core, with more steps than giving the agent direct access.',
+        },
+      },
+      {
+        decision: { es: 'Nada se consolida sin revisión humana', en: 'Nothing is consolidated without human review' },
+        why: {
+          es: 'En un expediente, una suposición no puede quedar como prueba.',
+          en: "In a case file, an assumption can't end up recorded as evidence.",
+        },
+        tradeoff: {
+          es: 'La abogada revisa cada consolidación. El agente propone, no decide.',
+          en: "The lawyer reviews every consolidation. The agent proposes; it doesn't decide.",
+        },
+      },
+      {
+        decision: { es: 'Originales y auditoría en el núcleo', en: 'Originals and an audit log in the core' },
+        why: {
+          es: 'El estado canónico, los originales y el log de auditoría viven en un solo lugar.',
+          en: 'The canonical state, the originals and the audit log live in one place.',
+        },
+        tradeoff: {
+          es: 'Todo cambio queda registrado, también los que luego se descartan.',
+          en: 'Every change is recorded, including the ones later discarded.',
+        },
+      },
+      {
+        decision: { es: 'Métodos medidos y reglas probadas con mutantes', en: 'Measured methods and rules tested with mutants' },
+        why: {
+          es: 'Que un método funcione se mide con evaluaciones, y una regla que no puede fallar no protege.',
+          en: "Whether a method works is measured with evals, and a rule that can't fail doesn't protect.",
+        },
+        tradeoff: {
+          es: 'El banco de evaluaciones se mantiene a la par del plugin.',
+          en: 'The eval bench has to be maintained alongside the plugin.',
+        },
+      },
+    ],
   },
   {
     id: '15',
@@ -783,6 +918,46 @@ export const projects: Project[] = [
       { es: 'Azure Service Bus como frontera entre nubes', en: 'Azure Service Bus as the boundary between clouds' },
       { es: 'Productores y consumidores desacoplados', en: 'Producers and consumers decoupled' },
       { es: 'Un consumidor .NET que escala según la carga', en: 'A .NET consumer that scales with the load' },
+    ],
+    adrCards: [
+      {
+        decision: { es: 'Azure Service Bus como frontera entre nubes', en: 'Azure Service Bus as the boundary between clouds' },
+        why: {
+          es: 'Desacopla a quien produce en AWS de quien consume en Azure.',
+          en: 'It decouples producers on AWS from consumers on Azure.',
+        },
+        tradeoff: { es: 'Un servicio más que operar entre las dos nubes.', en: 'One more service to run between the two clouds.' },
+      },
+      {
+        decision: { es: 'El mapeo como configuración, con Redpanda Connect', en: 'Mapping as configuration, with Redpanda Connect' },
+        why: {
+          es: 'Mapear y transformar los eventos en un pipeline en YAML, sin escribir un servicio para eso.',
+          en: 'Map and transform events in a YAML pipeline instead of writing a service for it.',
+        },
+        tradeoff: {
+          es: 'La lógica de transformación vive en YAML y se prueba aparte del código.',
+          en: 'The transformation logic lives in YAML and is tested separately from the code.',
+        },
+      },
+      {
+        decision: { es: 'AWS EventBridge como origen', en: 'AWS EventBridge as the source' },
+        why: {
+          es: 'Los eventos de llamadas, SMS y WhatsApp ya salían de ahí.',
+          en: 'Call, SMS and WhatsApp events already came out of it.',
+        },
+        tradeoff: {
+          es: 'El puente depende del formato de eventos de la plataforma.',
+          en: "The bridge depends on the platform's event format.",
+        },
+      },
+      {
+        decision: { es: 'Un consumidor .NET que escala horizontalmente', en: 'A .NET consumer that scales horizontally' },
+        why: { es: 'Absorber la carga de eventos agregando instancias.', en: 'Absorb event load by adding instances.' },
+        tradeoff: {
+          es: 'Con varias instancias, un mensaje puede llegar dos veces, así que el consumidor debe ser idempotente.',
+          en: 'With several instances a message can arrive twice, so the consumer must be idempotent.',
+        },
+      },
     ],
   },
 ]

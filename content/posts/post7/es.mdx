@@ -1,0 +1,92 @@
+export const meta = {
+  id: 'post7',
+  lang: 'es',
+  originalLang: 'es',
+  title: 'Un gate que nunca falló no vigila nada',
+  description: 'En Synergos hay 92 gates de arquitectura. Ninguno entra sin probar antes que sabe fallar, y esa prueba atrapó fallas en los propios gates.',
+  date: '2026-11-13',
+  tags: ['pruebas', 'arquitectura', 'agentes de IA'],
+  image: {
+    src: '/assets/imgs/projects/synergos-es.svg',
+    alt: 'Diagrama de las capas de Synergos: recursos en CDN, Umbraco como capa de composición y componentes web encima',
+    width: 960,
+    height: 640,
+  },
+  author: 'Camilo Hernández',
+  cover: 'generated',
+}
+
+Synergos tiene 92 gates de arquitectura, contados el 5 de noviembre de 2026. Son pruebas que no miran si una función devuelve lo correcto. Miran si el sistema sigue respetando sus reglas: que las piezas respeten sus límites, que la configuración que se declara de verdad se use, que los chequeos de salud estén en su sitio.
+
+Este post no es sobre la cifra. Es sobre una regla que aplico a cada uno de esos gates antes de confiar en él: tiene que haber fallado al menos una vez, a propósito.
+
+## Una convención que no rompe el build no existe
+
+Primero, el porqué de los gates. En un proyecto con agentes de IA trabajando en paralelo, una convención escrita en un documento dura lo que tarda el siguiente agente en no leerla. Si la regla importa, tiene que romper el build cuando alguien la viola. A eso se le llama fitness function: una prueba automática de una propiedad de la arquitectura.
+
+El problema es que un gate se ve igual cuando vigila y cuando no. En los dos casos sale en verde.
+
+<Callout type="learned">
+Un gate en verde puede significar que el sistema cumple la regla, o que el gate no está mirando. Desde afuera no se distinguen.
+</Callout>
+
+## Mutar el gate
+
+La única forma que encontré de distinguirlos es romper a propósito lo que el gate existe para proteger y ver que se ponga en rojo. Lo llamo mutar el gate, por la prueba de mutación. Aquí la mutación no la hace una herramienta: es el defecto exacto que el gate debería atrapar.
+
+El procedimiento tiene tres pasos:
+
+1. Reintroduzco el defecto, uno a la vez.
+2. Corro el gate y espero el rojo. No cualquier rojo: uno cuyo mensaje nombre el defecto.
+3. Restauro el código, toco el archivo para que la restauración de verdad se compile, y espero el verde.
+
+Lo de tocar el archivo parece un detalle, pero no lo es. Una restauración que la compilación no ve deja un verde que no prueba nada, y eso es justo lo que este procedimiento quiere evitar.
+
+## El gate que entraba con el único que sobrevivía
+
+El caso que más me enseñó salió de la auditoría del panel de administración. Un argumento vacío en una consulta (`memberTypeAlias: string.Empty` en vez de `null`) dejaba la lista de miembros incompleta. Con la lista incompleta, bloquear una cuenta, resetear el doble factor o borrar datos personales no se podía hacer desde la interfaz. Un solo carácter.
+
+El arreglo llegó con un gate que levanta el panel y revisa la lista. Antes de confiar en él, lo mutamos: reintrodujimos uno por uno los tres defectos que debía atrapar.
+
+La mutación encontró dos fallas, y ninguna en el código. Las dos estaban en el gate.
+
+- **La cola vacía.** La cola de moderación tiene dos ramas: con elementos y vacía. Con una base nueva, el gate siempre veía la vacía, así que nunca renderizaba el marcado que tenía el error. Pasaba en verde sobre una pantalla que no probaba nada.
+- **El único que sobrevivía.** El gate pedía que en la lista apareciera *un* miembro. Pero con el defecto, el único que sobrevivía era el primero que se había registrado, y ese era justo con el que el gate iniciaba sesión. El gate habría dado verde sobre el defecto que existía para atrapar.
+
+Ahora el gate siembra la cola para que salga la rama con elementos. Además, exige la lista completa, con un miembro testigo que no es ni el primero ni el de la sesión.
+
+<Callout type="decision">
+Un gate entra al repositorio con su mutación, es decir, con el defecto que lo pone en rojo escrito al lado.
+</Callout>
+
+## El gate que leía su propia explicación
+
+El segundo caso fue con gates que leen código fuente. Uno perdía en silencio todo parámetro que tuviera un `=` en su comentario. Otro se engañaba con su propia explicación: tomaba sus comentarios como si fueran el código que debía revisar. Dejó de engañarse cuando se le quitaron los comentarios antes de buscar.
+
+De ahí salió una regla del proyecto: un gate que analiza código o texto necesita sus propias mutaciones. Un gate que valida prosa con expresiones regulares va a salir verde sobre una especificación incompleta. Y un verde sobre el vacío se hereda: el siguiente que confía en ese gate está confiando en nada.
+
+## Por qué con agentes importa más
+
+Los agentes de IA escriben gates igual de rápido que escriben pruebas. Un gate escrito por el mismo agente que escribió el código comparte sus suposiciones, como pasaba con las pruebas en el post anterior. Si el agente creía que la lista se llenaba sola, escribe un gate que no nota cuando no se llena.
+
+La mutación no comparte esas suposiciones. Reintroducir el defecto es preguntarle al gate algo que su autor no se preguntó. Por eso, en la fábrica de Synergos, la mutación es un paso propio de la entrega:
+
+1. gates;
+2. mutación;
+3. procesos vivos;
+4. humo conectado;
+5. solicitud de integración (pull request).
+
+El repositorio del arnés de agentes también lo exige para sus herramientas: todo cambio a su medidor entra con su fixture y su mutación.
+
+## Lo que cuesta
+
+Mutar cada gate toma tiempo, y con 92 gates el tiempo se nota. También pasa algo que uno no espera: un solo enlace simbólico mal puesto tumbó seis gates a la vez. Que fallen juntos no es un problema. Es la prueba de que miran.
+
+El costo que no acepto es el otro: un gate que lleva meses en verde sin que nadie sepa si alguna vez pudo estar en rojo. Ese gate no vigila nada, solo decora el pipeline.
+
+## El verde hay que ganárselo
+
+Un gate en verde vale solo si antes lo vi en rojo por la razón correcta. Si nunca falló, no sé si está vigilando o mirando para otro lado.
+
+Los registros de los dos casos están en el repositorio público de Synergos.CMS: [el cierre de la auditoría](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/04-cierre-auditoria.md) y [la fábrica](https://github.com/CHERCED-DEV/Synergos.CMS/blob/master/Synergos.CMS.Web/docs/product/13-la-fabrica.md).

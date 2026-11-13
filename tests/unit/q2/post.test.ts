@@ -119,9 +119,9 @@ describe('posts relacionados (T623, FR-513)', () => {
       const { previous, next } = adjacentPosts(posts, id)
       return relatedPosts(meta, posts, [previous?.id, next?.id].filter((other): other is string => Boolean(other))).map((item) => item.id)
     }
-    expect(related('post5')).toEqual(['post3'])
+    expect(related('post5')).toEqual(['post7', 'post3'])
     expect(related('post3')).toEqual(['post5'])
-    expect(related('post4')).toEqual(['post6'])
+    expect(related('post4')).toEqual(['post7', 'post6'])
     expect(related('post6')).toEqual(['post4'])
   })
 

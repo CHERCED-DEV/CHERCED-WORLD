@@ -84,8 +84,11 @@ describe('tarjetas ADR (FR-442)', () => {
     }
   })
 
-  it('ningún otro caso trae tarjetas todavía (P-408)', () => {
-    for (const project of projects.filter((item) => item.id !== '12')) expect(caseAdrCards(project, 'es'), project.id).toEqual([])
+  it('los casos 2, 13, 14 y 15 traen sus 4 tarjetas y el resto ninguna (P-408, aprobada por el autor el 2026-11-13)', () => {
+    for (const project of projects.filter((item) => item.id !== '12')) {
+      const expected = ['2', '13', '14', '15'].includes(project.id) ? 4 : 0
+      for (const lang of ['es', 'en'] as const) expect(caseAdrCards(project, lang), `${project.id}/${lang}`).toHaveLength(expected)
+    }
   })
 
   it('descarta una tarjeta con un campo vacío', () => {
