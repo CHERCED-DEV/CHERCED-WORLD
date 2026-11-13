@@ -29,6 +29,13 @@ export async function listDrafts(): Promise<EditorialDraft[]> {
   return (await readLocal()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
 }
 
+export async function getDraft(id: string): Promise<EditorialDraft | null> {
+  const storage = editorialStorage()
+  if (storage === 'unavailable') throw new Error('EditorialUnavailable')
+  if (storage === 'mongo') return (await getDb()).collection<EditorialDraft>('editorialDrafts').findOne({ id }, { projection: { _id: 0 } })
+  return (await readLocal()).find((draft) => draft.id === id) ?? null
+}
+
 export async function saveDraft(input: DraftInput): Promise<EditorialDraft> {
   const storage = editorialStorage()
   if (storage === 'unavailable') throw new Error('EditorialUnavailable')

@@ -1,7 +1,7 @@
 'use server'
 
 import '@/lib/data/mongo/register'
-import { postIds } from '@/lib/content'
+import { isKnownPost } from '@/lib/blog/source'
 import { getRepos } from '@/lib/data'
 import type { PublicComment } from '@/lib/data/types'
 import { defaultLocale, isLocale } from '@/lib/i18n'
@@ -12,10 +12,6 @@ import { requestIpHash, requestLocale } from '@/lib/security/request'
 import { commentSchema, parseForm } from '@/lib/validation'
 import { fail, ok, type ActionResult } from './result'
 
-function isKnownPost(postId: string): boolean {
-  return postIds().includes(postId)
-}
-
 export async function submitComment(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
   if (isHoneypotFilled(formData)) return ok()
 
@@ -24,7 +20,7 @@ export async function submitComment(_prev: ActionResult | null, formData: FormDa
     const error = parsed.fieldErrors.consent ? 'consent_required' : 'validation'
     return fail(error, { fieldErrors: parsed.fieldErrors })
   }
-  if (!isKnownPost(parsed.data.postId)) return fail('not_found')
+  if (!(await isKnownPost(parsed.data.postId))) return fail('not_found')
 
   const now = new Date()
   if (isTooFast(formData, now)) return fail('validation')
@@ -46,7 +42,7 @@ export async function submitComment(_prev: ActionResult | null, formData: FormDa
 }
 
 export async function getApprovedComments(postId: string): Promise<PublicComment[]> {
-  if (typeof postId !== 'string' || !isKnownPost(postId)) return []
+  if (typeof postId !== 'string' || !(await isKnownPost(postId))) return []
   try {
     const comments = await getRepos().comments.listPublic(postId)
     return comments.map(({ id, userName, comment, createdAt, authorReply }) => ({

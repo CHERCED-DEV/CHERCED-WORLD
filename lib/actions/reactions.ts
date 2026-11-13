@@ -1,7 +1,7 @@
 'use server'
 
 import '@/lib/data/mongo/register'
-import { postIds } from '@/lib/content'
+import { isKnownPost } from '@/lib/blog/source'
 import { getRepos } from '@/lib/data'
 import type { ReactionCounts, ReactionKind, ReactionOp } from '@/lib/data/types'
 import { logServerError } from '@/lib/security/log'
@@ -14,7 +14,7 @@ export type ReactionResult = ActionResult<{ counts: ReactionCounts }>
 
 export async function toggleReaction(postId: string, kind: ReactionKind, op: ReactionOp): Promise<ReactionResult> {
   const parsed = parseInput(reactionSchema, { postId, kind, op })
-  if (!parsed.success || !postIds().includes(parsed.data.postId)) return fail('validation')
+  if (!parsed.success || !(await isKnownPost(parsed.data.postId))) return fail('validation')
 
   try {
     const repos = getRepos()

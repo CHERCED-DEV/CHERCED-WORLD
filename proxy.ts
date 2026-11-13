@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { projects } from '@/content/projects'
 import { postRegistry } from '@/content/posts/registry'
 import { findTag, tagSlug } from '@/lib/blog/tags'
+import { isPublishedId, PUBLISHED_HEADER, PUBLISHED_ROUTE } from '@/lib/editorial/published-id'
 import {
   defaultLocale,
   isLocale,
@@ -63,14 +64,19 @@ export function proxy(request: NextRequest): NextResponse {
       try { return decodeURIComponent(part) } catch { return part }
     })
     const missingProject = parts.length === 3 && parts[1] === 'portfolio' && !projects.some(project => project.id === parts[2])
-    const missingPost = parts.length === 3 && parts[1] === 'blog' && !BLOG_PAGES.has(parts[2]) && !Object.hasOwn(postRegistry, parts[2])
+    const missingPost =
+      parts.length === 3 && parts[1] === 'blog' && !BLOG_PAGES.has(parts[2]) && !Object.hasOwn(postRegistry, parts[2]) && !isPublishedId(parts[2])
     const missingTag = parts.length === 4 && parts[1] === 'blog' && parts[2] === 'tag' && (!findTag(parts[3]) || tagSlug(parts[3]) !== parts[3])
     const missing = missingProject || missingPost || missingTag
+    const published = parts.length === 3 && parts[1] === 'blog' && isPublishedId(parts[2])
     headers.delete(MISSING_HEADER)
+    headers.delete(PUBLISHED_HEADER)
     if (missing) headers.set(MISSING_HEADER, missingProject ? 'portfolio' : 'blog')
+    if (published) headers.set(PUBLISHED_HEADER, parts[2])
     const destination = request.nextUrl.clone()
     if (missing) destination.pathname = `/${first}/__missing-content`
-    const response = missing
+    else if (published) destination.pathname = `/${first}/blog/${PUBLISHED_ROUTE}`
+    const response = missing || published
       ? NextResponse.rewrite(destination, { request: { headers } })
       : NextResponse.next({ request: { headers } })
     if (isDocumentNavigation(request) && request.cookies.get(LOCALE_COOKIE)?.value !== first) {

@@ -45,4 +45,4 @@ export {
   toFeedItems,
   type FeedItem,
 } from './feed'
-export { allTagSlugs, blogPosts, feedItems, ownPosts, seriesParts, tagSlugsIn } from './source'
+export { allTagSlugs, blogPosts, feedItems, isKnownPost, ownPosts, publishedListed, resolvePost, seriesParts, tagSlugsIn } from './source'

@@ -5,7 +5,7 @@ import { startIsolatedServer } from '../l3/support/server'
 
 test('editor privado: entrar, escribir, guardar, recargar, exportar y proteger el contenido', async ({ browser }, info) => {
   test.skip(info.project.name !== 'desktop-chromium')
-  test.setTimeout(120_000)
+  test.setTimeout(360_000)
   const root = path.resolve(__dirname, '../../..')
   const sandbox = info.outputPath('editorial-isolated')
   await mkdir(sandbox, { recursive: true })
@@ -59,6 +59,35 @@ test('editor privado: entrar, escribir, guardar, recargar, exportar y proteger e
       await expect(anonymous.locator('[data-cw-login]')).toBeVisible()
       expect(await anonymous.content()).not.toContain('Texto privado 011')
       expect(await (await anonymous.request.get('/es/blog')).text()).not.toContain('Borrador privado de prueba 011')
+
+      await page.setViewportSize({ width: 1280, height: 900 })
+      await page.getByLabel('Etiquetas, separadas por comas').fill('arquitectura, etiqueta inventada')
+      await page.getByRole('button', { name: 'Publicar', exact: true }).click()
+      await expect(page.locator('[data-cw-blog-studio]').getByRole('status')).toContainText('Publicado en el blog.')
+      await expect(page.locator('[data-cw-blog-studio]').getByRole('status')).toContainText('etiqueta inventada')
+      const href = await page.locator('[data-cw-published-link] a').getAttribute('href')
+      expect(href).toBe('/es/blog/p-borrador-privado-de-prueba-011')
+      await anonymous.goto(href!)
+      await expect(anonymous.getByRole('heading', { level: 1 })).toHaveText('Borrador privado de prueba 011')
+      await expect(anonymous.locator('#cw-post-body')).toContainText('Texto privado 011')
+      await expect(anonymous.locator('#cw-post-body h2')).toHaveText(/Mi idea/)
+      expect(await anonymous.evaluate(() => 'editorialUnsafe' in window)).toBe(false)
+      await expect.poll(async () => (await anonymous.request.get('/es/blog')).text(), { timeout: 20_000 }).toContain('Borrador privado de prueba 011')
+      expect((await anonymous.request.get('/en/blog/p-borrador-privado-de-prueba-011')).status()).toBe(200)
+      expect((await anonymous.request.get('/es/blog/p-no-existe')).status()).toBe(404)
+
+      await page.getByRole('textbox', { name: 'Contenido', exact: true }).fill('## Mi idea\n\nTexto corregido 016')
+      await page.getByRole('button', { name: 'Actualizar publicación' }).click()
+      await expect(page.locator('[data-cw-blog-studio]').getByRole('status')).toContainText('Publicación actualizada.')
+      await expect.poll(async () => (await anonymous.request.get(href!)).text(), { timeout: 20_000 }).toContain('Texto corregido 016')
+
+      page.once('dialog', (dialog) => void dialog.accept())
+      await page.getByRole('button', { name: 'Despublicar' }).click()
+      await expect(page.locator('[data-cw-blog-studio]').getByRole('status')).toContainText('Se retiró del blog.')
+      await expect.poll(async () => (await anonymous.request.get(href!)).status(), { timeout: 20_000 }).toBe(404)
+      for (const url of ['/es/blog', '/en/blog', '/es/feed.xml', '/en/feed.xml', '/sitemap.xml']) {
+        await expect.poll(async () => (await anonymous.request.get(url)).text(), { message: `${url} ya no lista el post`, timeout: 30_000 }).not.toContain('p-borrador-privado-de-prueba-011')
+      }
     } finally { await visitor.close() }
     await page.goto('/en/inbox/blog')
     await expect(page.getByRole('heading', { name: 'Blog studio' })).toBeVisible()

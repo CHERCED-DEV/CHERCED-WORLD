@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { formatPostDate } from '@/lib/blog/format'
-import { loadPost } from '@/lib/content'
+import { resolvePost } from '@/lib/blog/source'
 import { isLocale } from '@/lib/i18n'
 import { OG_DEFAULT_ID } from '@/lib/og/sections'
 import { ogImageMetadata, renderOgImage, type OgInput } from '@/lib/og/template'
@@ -9,7 +9,7 @@ type Params = { lang: string; id: string }
 
 async function postOg(lang: string, id: string): Promise<OgInput | null> {
   if (!isLocale(lang)) return null
-  const post = await loadPost(id, lang)
+  const post = await resolvePost(id, lang)
   if (!post) return null
   const { title, date, tags } = post.meta
   return { lang, title, line: [formatPostDate(date, lang), ...tags].join(' · ') }

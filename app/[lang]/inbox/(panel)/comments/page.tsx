@@ -7,6 +7,7 @@ import { adminText } from '@/components/admin/labels'
 import { pickParam, queryHref } from '@/components/admin/query'
 import { SessionExpired } from '@/components/admin/Views'
 import { getAdminSession } from '@/lib/auth/guard'
+import { publishedPosts } from '@/lib/blog/source'
 import { postIds } from '@/lib/content'
 import { getRepos } from '@/lib/data'
 import { isLocale, localizedPath } from '@/lib/i18n'
@@ -43,7 +44,7 @@ export default async function CommentsPage({ params, searchParams }: Props) {
           options={VIEWS.map((value) => ({ value, label: tr(`admin.filter.${value}`), href: queryHref(base, { view: value }) }))}
         />
       </div>
-      <CommentList comments={comments} text={text} postIds={postIds()} />
+      <CommentList comments={comments} text={text} postIds={[...postIds(), ...(await publishedPosts()).map((post) => post.id)]} />
     </section>
   )
 }

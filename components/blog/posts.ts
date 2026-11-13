@@ -1,18 +1,19 @@
-import { adjacentPosts, orderPosts, type Adjacent } from '@/lib/blog/order'
-import { listPosts, loadPost, postIds, type ListedPost } from '@/lib/content'
+import { adjacentPosts, type Adjacent } from '@/lib/blog/order'
+import { blogPosts, resolvePost } from '@/lib/blog/source'
+import type { ListedPost } from '@/lib/content'
 import { t, type Dictionary, type Locale } from '@/lib/i18n'
 import { readingStats } from './mdx/prepare'
 import type { PostCardPost } from './PostCard'
 
 export async function orderedPosts(lang: Locale): Promise<ListedPost[]> {
-  return orderPosts(await listPosts(lang), postIds())
+  return blogPosts(lang)
 }
 
 export async function postCards(lang: Locale, blog: Dictionary): Promise<PostCardPost[]> {
   const posts = await orderedPosts(lang)
   return Promise.all(
     posts.map(async (post) => {
-      const loaded = await loadPost(post.id, lang)
+      const loaded = await resolvePost(post.id, lang)
       if (!loaded) return post
       return { ...post, readingTime: t(blog, 'post.readingTime', { n: readingStats(loaded.Content).minutes }) }
     }),

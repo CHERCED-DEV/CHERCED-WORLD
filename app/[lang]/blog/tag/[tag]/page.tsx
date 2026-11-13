@@ -5,7 +5,7 @@ import { tagAlternates, tagIndexView, tagLangs, tagSummary } from '@/components/
 import { BackgroundIntensity } from '@/components/motion'
 import { feedAlternates } from '@/lib/blog/feed'
 import { allTagSlugs } from '@/lib/blog/source'
-import { tagPath, tagSlug, tagSlugIn } from '@/lib/blog/tags'
+import { catalogTagSlugs, tagPath, tagSlug, tagSlugIn } from '@/lib/blog/tags'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
@@ -14,7 +14,7 @@ type Props = { params: Promise<{ lang: string; tag: string }> }
 export const dynamicParams = false
 
 export async function generateStaticParams() {
-  return (await allTagSlugs()).map((tag) => ({ tag }))
+  return [...new Set([...(await allTagSlugs()), ...catalogTagSlugs()])].map((tag) => ({ tag }))
 }
 
 function decode(value: string): string {

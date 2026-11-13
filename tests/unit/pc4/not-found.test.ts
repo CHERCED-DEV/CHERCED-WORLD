@@ -80,4 +80,9 @@ describe('rutas inexistentes sin catch-all (B6)', () => {
       expect(source(file)).toMatch(/^export const dynamicParams = false$/m)
     },
   )
+
+  it('016 A-1603: los p-… llegan por una reescritura del proxy a una página interna, sin abrir rutas dinámicas', () => {
+    expect(source('app/[lang]/blog/publicado/page.tsx')).toMatch(/if \(!resolved\) notFound\(\)/)
+    expect(source('app/[lang]/blog/publicado/page.tsx')).toContain('PUBLISHED_HEADER')
+  })
 })

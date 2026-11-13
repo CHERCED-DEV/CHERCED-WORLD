@@ -21,6 +21,10 @@ export function findTag(tag: string): PostTagNames | null {
   return bySlug.get(tagSlug(tag)) ?? null
 }
 
+export function catalogTagSlugs(): string[] {
+  return [...new Set(catalog.flatMap((names) => locales.map((lang) => tagSlug(names[lang]))))]
+}
+
 export function tagIn(tag: string, lang: Locale): string {
   return findTag(tag)?.[lang] ?? tag
 }
