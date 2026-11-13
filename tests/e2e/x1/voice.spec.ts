@@ -6,6 +6,7 @@ import { defaultDownload, labExperiment } from '@/content/ailab/catalog'
 import en from '@/content/i18n/en/ailab.json'
 import es from '@/content/i18n/es/ailab.json'
 import { ONNX_RUNTIME } from '@/lib/ailab/voice/models'
+import { belowStickyBars } from '../integration/support/pages'
 
 const expect = baseExpect.configure({ timeout: 15_000 })
 
@@ -290,6 +291,7 @@ function wav(seconds: number, rate = 16_000, bits: 8 | 16 = 16): Buffer {
 }
 
 async function blockingViolations(page: Page, include: string): Promise<string[]> {
+  await belowStickyBars(page, include)
   const results = await new AxeBuilder({ page }).include(include).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze()
   return results.violations
     .filter((violation) => violation.impact === 'critical' || violation.impact === 'serious')

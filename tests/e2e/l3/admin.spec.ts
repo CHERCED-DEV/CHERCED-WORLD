@@ -15,7 +15,7 @@ import {
   type ContactValues,
 } from './support/helpers'
 import { INBOX_COUNT_PATH, inboxCountProblem, inspectBody, scanPublicSurface, type Finding } from './support/privacy'
-import { startIsolatedServer, type IsolatedServer } from './support/server'
+import { isolatedBuild, startIsolatedServer, type IsolatedServer } from './support/server'
 
 const FIRST_PASSWORD = `primera-clave-${uniqueToken()}`
 const SECOND_PASSWORD = `segunda-clave-${uniqueToken()}`
@@ -35,7 +35,7 @@ test.describe.configure({ mode: 'serial', timeout: 120_000 })
 
 test.beforeAll(async ({}, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'el servidor aislado corre una vez, en desktop-chromium')
-  server = await startIsolatedServer()
+  server = await startIsolatedServer({ cwd: await isolatedBuild(testInfo.outputPath('admin-isolated')) })
 })
 
 test.afterAll(async () => {

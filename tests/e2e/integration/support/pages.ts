@@ -60,6 +60,20 @@ export async function skipIntro(page: Page): Promise<void> {
   })
 }
 
+export async function belowStickyBars(page: Page, selector: string): Promise<void> {
+  await page
+    .locator(selector)
+    .first()
+    .evaluate((element) => {
+      const covered = [...document.querySelectorAll('#header, [data-cw-scene-nav]')].map((bar) => {
+        const style = getComputedStyle(bar)
+        const pinned = (style.position === 'sticky' || style.position === 'fixed') && style.top !== 'auto'
+        return pinned ? (Number.parseFloat(style.top) || 0) + bar.getBoundingClientRect().height : 0
+      })
+      window.scrollBy({ top: element.getBoundingClientRect().top - Math.max(0, ...covered) - 8, behavior: 'instant' })
+    })
+}
+
 export async function originalAboutHeight(page: Page): Promise<{ height: number; noTocar: number }> {
   return page.evaluate(() => {
     const knowledge = document.querySelector('[data-cw-scene="knowledge"]')!.getBoundingClientRect().bottom

@@ -350,6 +350,10 @@ test.describe('T760 · control del detector', () => {
 
 const NETWORK_API =/\bfetch\s*\(|sendBeacon|XMLHttpRequest|new\s+WebSocket|EventSource|RTCPeerConnection|navigator\.share\b|method:\s*['"](POST|PUT|PATCH)['"]|<form[^>]*\baction=/
 
+const DOWNLOADS_ONLY: ReadonlyArray<{ file: string; line: RegExp }> = [
+  { file: 'components/ailab/search/use-meaning.ts', line: /^const response = await fetch\(meaningVectorsUrl\(lang\), \{ headers: \{ accept: 'application\/json' \} \}\)$/ },
+]
+
 function sources(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
     const full = path.join(dir, name)
@@ -364,11 +368,19 @@ test.describe('T760 · el código del laboratorio no tiene por dónde enviar dat
   test('components/ailab y lib/ailab no usan fetch, sendBeacon, XMLHttpRequest, WebSocket, EventSource ni formularios con action', () => {
     const files = [...sources(path.resolve('components/ailab')), ...sources(path.resolve('lib/ailab'))]
     expect(files.length).toBeGreaterThan(40)
-    const hits = files.flatMap((file) =>
-      readFileSync(file, 'utf8')
+    const hits = files.flatMap((file) => {
+      const relative = path.relative(process.cwd(), file).replace(/\\/g, '/')
+      return readFileSync(file, 'utf8')
         .split('\n')
-        .flatMap((line, index) => (NETWORK_API.test(line) ? [`${path.relative(process.cwd(), file).replace(/\\/g, '/')}:${index + 1}: ${line.trim()}`] : [])),
+        .flatMap((line, index) => {
+          if (!NETWORK_API.test(line)) return []
+          if (DOWNLOADS_ONLY.some((allowed) => allowed.file === relative && allowed.line.test(line.trim()))) return []
+          return [`${relative}:${index + 1}: ${line.trim()}`]
+        })
+    })
+    expect(hits, 'solo se permite bajar los vectores de /api/search-vectors/{lang}: un GET al propio sitio sin datos del visitante').toEqual([])
+    expect(readFileSync(path.resolve('components/ailab/search/use-meaning.ts'), 'utf8'), 'la URL de los vectores no lleva nada más que el idioma').toMatch(
+      /export function meaningVectorsUrl\(lang: Locale\): string \{\s*return `\/api\/search-vectors\/\$\{lang\}`\s*\}/,
     )
-    expect(hits).toEqual([])
   })
 })

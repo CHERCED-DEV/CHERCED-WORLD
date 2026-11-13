@@ -18,6 +18,7 @@ import {
   openDemo,
   prepareDemo,
 } from './support'
+import { belowStickyBars } from '../integration/support/pages'
 
 test.describe.configure({ timeout: 180_000 })
 
@@ -30,6 +31,7 @@ const H1_TREE = '[data-cw-lab-card="A2"] [role="tree"]'
 type Scope = { include?: string[]; exclude?: string[]; disable?: string[] }
 
 async function serious(page: Page, { include = [], exclude = [], disable = [] }: Scope = {}): Promise<string[]> {
+  if (include.length === 1 && include[0] !== '#main') await belowStickyBars(page, include[0]!)
   let builder = new AxeBuilder({ page }).withTags(TAGS)
   for (const selector of include) builder = builder.include(selector)
   for (const selector of exclude) builder = builder.exclude(selector)
