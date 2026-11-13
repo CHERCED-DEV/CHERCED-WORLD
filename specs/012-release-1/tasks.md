@@ -145,7 +145,8 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
 - [x] R3.9 Cuentas e ingreso con Google (spec `../017-cuentas-e-ingreso/`, pedido del autor del 2026-11-13): botón
   "Ingresar", Mi cuenta, Personas, posts invitados con aprobación del autor y comentarios con cuenta. En dev desde
   83768b8. Falta del lado del autor: crear el cliente OAuth y poner `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en
-  Vercel (`../017-cuentas-e-ingreso/configurar-google.md`).
+  Vercel (`../017-cuentas-e-ingreso/configurar-google.md`). Decisión del autor del 2026-11-13: lo configura antes del
+  release, así que es una puerta de R5.1 (`notas-del-release.md`), y el botón "Ingresar" se queda visible.
 
 ## R4 — Endurecer
 - [x] R4.1 Revisión de seguridad de lo nuevo. La revisión (solo lectura) terminó el 2026-11-11: no hay nada alto.
