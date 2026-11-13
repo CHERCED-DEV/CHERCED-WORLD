@@ -85,7 +85,9 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   editor se cierra en la misma transición, así que ya no asoma la anterior. Una acción de moderación dejó de disparar
   21 precargas: el panel y el shell no precargan dentro de `/inbox`. Queda en `tests/e2e/l3/admin.spec.ts`.
 - [x] R3.3a `/blog/catalog` volvía 404 desde la 011 (el proxy lo trataba como post inexistente); corregido el 2026-11-11, y la prueba de anterior y siguiente pasa a post6.
-- [ ] R3.3 Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e INP). Avance del 2026-11-11:
+- [x] R3.3 (cerrada el 2026-11-13: el autor detuvo la suite exhaustiva y no se vuelve a correr; se prueba lo que se
+  entrega. Lo que queda abajo es historial) Deuda de la suite exhaustiva (reglas de auditoría, presupuestos de fps e
+  INP). Avance del 2026-11-11:
   - Las pruebas de rendimiento miden con la GPU real: los 30 fps eran del render por software, y las 16 pasan.
   - El carrusel con teclado ya no vuelve al primer proyecto a mitad del salto: ignora las posiciones intermedias
     hasta el destino (6 de 6).
@@ -183,7 +185,8 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
      administrador. Está protegido por el código de un solo uso de los logs, pero el ícono del buzón lleva ahí.
   Rendimiento: las 16 pruebas de rendimiento pasan con la GPU (R3.3). Accesibilidad: falta la corrida completa de
   la exhaustiva (R4.3).
-- [ ] R4.3 Suite exhaustiva en verde con la máquina libre. **Decisión del autor del 2026-11-12: se corre, pero NO bloquea
+- [x] R4.3 (cerrada por decisión del autor; sus arreglos de pruebas se integraron en `dev` el 2026-11-13 y la rama se
+  borró) Suite exhaustiva en verde con la máquina libre. **Decisión del autor del 2026-11-12: se corre, pero NO bloquea
   el release.** Corre en paralelo (sesión aparte), y lo que encuentre se arregla después de publicar. Para el release
   bastan las unitarias, lint y typecheck (que Vercel corre antes de compilar) más las e2e de lo que se toca.
   **Detenida por orden del autor el 2026-11-12 ("se prueba lo que se entrega"): no hay más corridas exhaustivas.**
