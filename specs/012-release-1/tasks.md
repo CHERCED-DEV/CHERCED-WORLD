@@ -185,9 +185,47 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   la exhaustiva (R4.3).
 - [ ] R4.3 Suite exhaustiva en verde con la máquina libre. **Decisión del autor del 2026-11-12: se corre, pero NO bloquea
   el release.** Corre en paralelo (sesión aparte), y lo que encuentre se arregla después de publicar. Para el release
-  bastan las unitarias, lint y typecheck (que Vercel corre antes de compilar) más las e2e de lo que se toca. La corrida completa quedó lanzada el 2026-11-11 sobre
-  c79606b (3 workers). Si su resultado no quedó anotado aquí, hay que relanzarla mañana con
-  `E2E_TIER=exhaustive E2E_PORT=3200 npx playwright test --workers=3`.
+  bastan las unitarias, lint y typecheck (que Vercel corre antes de compilar) más las e2e de lo que se toca.
+  **Detenida por orden del autor el 2026-11-12 ("se prueba lo que se entrega"): no hay más corridas exhaustivas.**
+  Resultado, en la rama `claude/r43-exhaustiva-b058a6`, puerto 3300 y 2 workers:
+  - Corrida 1 sobre 49f27c0, con 6963 pruebas: pasaron 3146, fallaron 81, se saltaron 3730 y 6 no corrieron (6 h, con
+    la CPU al 100 % por otras sesiones). De los 81: 29 eran deuda de la prueba (arreglada), 17 eran del producto
+    (P1 y P2), 32 eran de carga y 3 eran artefactos de mis propias corridas.
+  - Repeticiones con 1 worker:
+    - Sobre 5297e37, 85 pruebas: pasaron 50; las 29 que fallaron quedaron explicadas: P1 y P2 en un build viejo, la
+      auditoría de interacción todavía sin ajustar y `l3/admin`, que es serial y no se puede correr suelta.
+    - Sobre c67d996 (ya con P1), 63 pruebas: pasaron las 63. Entre ellas, el INP de los lóbulos de `/es/aboutMe`
+      con la CPU 4× (9 de 9 en 390, 375 y 412 px): era carga.
+  - Corrida 2 sobre c67d996, con 7131 pruebas: se cortó en la 4180 cuando se detuvo la suite, con 44 fallos. De ahí
+    salieron P3, P4 y N1 (falso positivo de la auditoría de contraste), que la sesión principal arregló en efa32d1,
+    más la deuda de prueba que se arregló en bef8751 (abajo).
+  - Arreglos de pruebas (8efba7c, f974e02, f5e4caa, bef8751; solo `tests/`):
+    - Expectativas viejas: Sobre mí con cuatro escenas y alturas sin "Hacia dónde voy" ni el botón "No tocar"
+      (`originalAboutHeight`); el buzón de D-R1, con y sin JS; la barra de Synergos visible con movimiento reducido
+      (FR-1303); los juegos J1 y J2, que ya se juegan; la portada generada de post6.
+    - Esperas frágiles: el reloj de `clock.install`, que corría en tiempo real, en el embebido y en la intro; la saga;
+      el choque de navegaciones en `returnTo`; el 404 en el otro idioma.
+    - Auditorías: se ignora el contenido de los `<details>` cerrados; nuevas reglas para el mazo de la carrera y
+      "Probar"; en celular, las hojas de los lóbulos se cierran con Esc; el tope es de 8 s por control (la
+      arquitectura tiene 109).
+    - axe en el AI Lab mira por debajo de la pestaña fija (`belowStickyBars`), que tapaba campos de Obra y de V4.
+    - `l3/admin` usa un build aislado (`isolatedBuild`). Antes compartía el `.next` y su página ISR de post1, con el
+      comentario de prueba, la veía la suite.
+    - La guarda de FR-320 (`x5/network`) deja pasar solo el GET de `/api/search-vectors/{lang}` de la búsqueda por
+      significado. Es una decisión técnica de la sesión principal, pendiente del visto bueno del autor.
+  - Qué queda y por qué:
+    - No hubo una corrida completa en verde después de los últimos arreglos, porque el autor la detuvo.
+    - Los cambios de bef8751 (`belowStickyBars`, `isolatedBuild`, la excepción de FR-320 y el tope de 8 s) se
+      escribieron con la corrida 2 en curso y no se probaron solos.
+    - Sin cerrar, todos de la corrida 2 con 2 workers y sin repetir solos:
+      - el ancla "05 Decisiones" de la pestaña en celular (casos 13 a 15), que no cambia la URL en la auditoría pero
+        sí con un clic suelto;
+      - "VER QUÉ RECIBES" de Servicios en celular, tapado por la tarjeta de encima, que pasó solo en la repetición
+        sobre 5297e37;
+      - "Quiero esto" de Servicios en celular, con contraste 1 en la captura;
+      - el segundo Ctrl+K de la paleta;
+      - los cuadros por segundo del fondo tras 10 navegaciones;
+      - el LCP de `/es/portfolio` en celular y el INP del menú del dock.
 - [ ] R4.4 Notas del release y QA final del autor. Borrador de las notas, con la lista de QA para el teléfono y la
   tablet, en `notas-del-release.md` (2026-11-12). Falta el QA del autor.
 - [x] R4.5 P2 de la exhaustiva (2026-11-12): sin JS, en Contacto el bloque para reclutadores quedaba dentro de un
