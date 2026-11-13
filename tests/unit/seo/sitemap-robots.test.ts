@@ -35,7 +35,7 @@ function noindexRoutes(dir: string, route = ''): string[] {
 describe('sitemap sin páginas noindex (FR-830, SC-803)', () => {
   it('las rutas marcadas noindex en el código no aparecen en el sitemap', () => {
     const routes = [...new Set(noindexRoutes(APP))]
-    expect(routes.sort()).toEqual(['/blog/catalog', '/blog/tag/[tag]', '/inbox'].sort())
+    expect(routes.sort()).toEqual(['/account', '/blog/catalog', '/blog/tag/[tag]', '/inbox'].sort())
     for (const route of routes.filter((item) => !(item in CONDITIONAL_NOINDEX))) {
       for (const lang of ['es', 'en']) {
         expect(paths.filter((item) => item === `/${lang}${route}` || item.startsWith(`/${lang}${route}/`)), route).toEqual([])

@@ -1,12 +1,15 @@
 'use client'
 
 import { startTransition, useActionState, useEffect, useEffectEvent, useId, useRef, useState, type FormEvent } from 'react'
+import { usePathname } from 'next/navigation'
+import { useAccountSummary } from '@/components/account/useAccountSummary'
 import { ConsentField, type ConsentLabels } from '@/components/contact/ConsentField'
+import { accountCopy } from '@/content/account'
 import { Button } from '@/components/ui/Button'
 import { FormField } from '@/components/ui/FormField'
 import { Icon } from '@/components/ui/Icon'
 import type { Locale } from '@/lib/i18n'
-import { commentSchema, LIMITS, parseForm } from '@/lib/validation'
+import { accountCommentSchema, commentSchema, LIMITS, parseForm } from '@/lib/validation'
 import type { CommentFormLabels } from '../labels'
 import styles from './Comments.module.scss'
 import { fieldErrorText, firstInvalidField, serverFieldErrors, statusOf, type CommentAction } from './state'
@@ -32,6 +35,8 @@ export function CommentForm({ action, postId, lang, privacyHref, renderedAt, lab
   const [clientErrors, setClientErrors] = useState<Record<string, string> | null>(null)
   const successRef = useRef<HTMLDivElement>(null)
   const formId = useId()
+  const account = useAccountSummary()
+  const pathname = usePathname()
   const status = statusOf(result)
   const errors = pending ? {} : (clientErrors ?? serverFieldErrors(result))
   const hasErrors = Object.keys(errors).length > 0
@@ -48,7 +53,7 @@ export function CommentForm({ action, postId, lang, privacyHref, renderedAt, lab
     event.preventDefault()
     const form = event.currentTarget
     const formData = new FormData(form)
-    const parsed = parseForm(commentSchema, formData)
+    const parsed = account.signedIn ? parseForm(accountCommentSchema, formData) : parseForm(commentSchema, formData)
     if (!parsed.success) {
       setClientErrors(parsed.fieldErrors)
       const field = firstInvalidField(parsed.fieldErrors)
@@ -96,12 +101,28 @@ export function CommentForm({ action, postId, lang, privacyHref, renderedAt, lab
         <input id={`${formId}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
       </div>
 
-      <FormField label={labels.name} error={error('userName')}>
-        <input name="userName" type="text" autoComplete="name" maxLength={LIMITS.name} required />
-      </FormField>
-      <FormField label={labels.email} error={error('email')}>
-        <input name="email" type="email" autoComplete="email" maxLength={LIMITS.email} required />
-      </FormField>
+      {account.signedIn ? (
+        <>
+          <input type="hidden" name="account" value="1" />
+          <p className={styles.accountNote} data-cw-comment-account="">
+            {accountCopy[lang].commentAs.replace('{name}', account.name)}
+          </p>
+        </>
+      ) : (
+        <>
+          <p className={styles.accountNote}>
+            <a href={`/${lang}/account?next=${encodeURIComponent(pathname ?? `/${lang}/blog`)}`} data-cw-comment-signin="">
+              {accountCopy[lang].commentSignIn}
+            </a>
+          </p>
+          <FormField label={labels.name} error={error('userName')}>
+            <input name="userName" type="text" autoComplete="name" maxLength={LIMITS.name} required />
+          </FormField>
+          <FormField label={labels.email} error={error('email')}>
+            <input name="email" type="email" autoComplete="email" maxLength={LIMITS.email} required />
+          </FormField>
+        </>
+      )}
       <FormField label={labels.comment} hint={labels.commentHint} error={error('comment')}>
         <textarea name="comment" maxLength={LIMITS.comment} rows={5} required />
       </FormField>

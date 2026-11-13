@@ -1,6 +1,6 @@
 import 'server-only'
 import type { Collection, Db, ObjectId } from 'mongodb'
-import type { AuthorReply, CommentStatus, MessageStatus, ScryptParams } from '@/lib/data/types'
+import type { AuthorReply, CommentStatus, MessageStatus, Permission, ScryptParams } from '@/lib/data/types'
 
 export const COLLECTIONS = {
   messages: 'messages',
@@ -10,6 +10,9 @@ export const COLLECTIONS = {
   sessions: 'admin_sessions',
   rateLimits: 'rate_limits',
   reactions: 'post_reactions',
+  accounts: 'accounts',
+  accountSessions: 'account_sessions',
+  teamGrants: 'team_grants',
 } as const
 
 export const CREDENTIAL_ID = 'admin'
@@ -39,6 +42,7 @@ export type CommentDoc = {
   status?: CommentStatus | unknown
   consentAt?: unknown
   authorReply?: AuthorReply | null | unknown
+  accountId?: unknown
   date?: unknown
   createdAt?: unknown
   updatedAt?: unknown
@@ -73,6 +77,20 @@ export type ReactionDoc = {
   updatedAt?: unknown
 }
 
+export type AccountDoc = {
+  _id: string
+  googleSub: string
+  email: string
+  name: string
+  createdAt: Date
+  lastLoginAt: Date
+  blockedAt: Date | null
+}
+
+export type AccountSessionDoc = SessionDoc & { accountId: string }
+
+export type TeamGrantDoc = { _id: string; permissions: Permission[]; createdAt: Date; updatedAt: Date }
+
 export type DbProvider = () => Promise<Db>
 
 export async function messagesCollection(db: DbProvider): Promise<Collection<MessageDoc>> {
@@ -101,4 +119,16 @@ export async function rateLimitsCollection(db: DbProvider): Promise<Collection<R
 
 export async function reactionsCollection(db: DbProvider): Promise<Collection<ReactionDoc>> {
   return (await db()).collection<ReactionDoc>(COLLECTIONS.reactions)
+}
+
+export async function accountsCollection(db: DbProvider): Promise<Collection<AccountDoc>> {
+  return (await db()).collection<AccountDoc>(COLLECTIONS.accounts)
+}
+
+export async function accountSessionsCollection(db: DbProvider): Promise<Collection<AccountSessionDoc>> {
+  return (await db()).collection<AccountSessionDoc>(COLLECTIONS.accountSessions)
+}
+
+export async function teamGrantsCollection(db: DbProvider): Promise<Collection<TeamGrantDoc>> {
+  return (await db()).collection<TeamGrantDoc>(COLLECTIONS.teamGrants)
 }

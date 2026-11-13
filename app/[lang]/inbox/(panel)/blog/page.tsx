@@ -5,7 +5,7 @@ import adminStyles from '@/components/admin/admin.module.scss'
 import { adminText } from '@/components/admin/labels'
 import { SessionExpired } from '@/components/admin/Views'
 import { editorialCopy } from '@/content/editorial'
-import { getAdminSession } from '@/lib/auth/guard'
+import { guardPanel } from '@/components/admin/gate'
 import { editorialStorage, listDrafts } from '@/lib/data/editorial'
 import { blogPosts, publishedPosts } from '@/lib/blog/source'
 import { summaryOf } from '@/lib/editorial/published'
@@ -18,15 +18,17 @@ export const dynamic = 'force-dynamic'
 export default async function BlogStudioPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
-  if (!(await getAdminSession())) return <SessionExpired text={await adminText(lang)} />
+  const actor = await guardPanel(lang, 'posts')
+  if (!actor) return <SessionExpired text={await adminText(lang)} />
   const copy = editorialCopy[lang]
   const storage = editorialStorage()
   let drafts: EditorialDraft[] | null = null
-  try { drafts = await listDrafts() } catch (error) { logServerError('editorial.list', error) }
+  const guest = actor.kind === 'team' ? { id: actor.account.id, name: actor.account.name } : null
+  try { drafts = await listDrafts(guest) } catch (error) { logServerError('editorial.list', error) }
   const [posts, published] = await Promise.all([blogPosts(lang), publishedPosts()])
   return <section className={adminStyles.section}>
     <header><h1 className={adminStyles.sectionTitle}>{copy.title}</h1><p>{copy.intro}</p></header>
-    {drafts && storage !== 'unavailable' ? <BlogStudio lang={lang} initialDrafts={drafts} initialPublished={published.map(summaryOf)} storage={storage} /> : <p role="alert">{copy.unavailable}</p>}
+    {drafts && storage !== 'unavailable' ? <BlogStudio lang={lang} initialDrafts={drafts} initialPublished={published.map(summaryOf)} storage={storage} role={guest ? 'guest' : 'owner'} /> : <p role="alert">{copy.unavailable}</p>}
     <section className={adminStyles.section} aria-labelledby="published-articles"><h2 id="published-articles">{copy.published}</h2><p className={styles.note}>{copy.existing}</p><ul className={styles.published}>{posts.map(post => <li key={post.id}><strong>{post.title}</strong><a href={`/${lang}/blog/${post.id}`} target="_blank" rel="noopener noreferrer">{copy.publicLink}<span className="cw-visually-hidden">: {post.title}</span></a></li>)}</ul></section>
   </section>
 }

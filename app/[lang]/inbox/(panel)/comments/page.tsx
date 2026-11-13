@@ -6,7 +6,7 @@ import { FilterGroup } from '@/components/admin/FilterBar'
 import { adminText } from '@/components/admin/labels'
 import { pickParam, queryHref } from '@/components/admin/query'
 import { SessionExpired } from '@/components/admin/Views'
-import { getAdminSession } from '@/lib/auth/guard'
+import { guardPanel } from '@/components/admin/gate'
 import { publishedPosts } from '@/lib/blog/source'
 import { postIds } from '@/lib/content'
 import { getRepos } from '@/lib/data'
@@ -25,7 +25,8 @@ export default async function CommentsPage({ params, searchParams }: Props) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
   const text = await adminText(lang)
-  if (!(await getAdminSession())) return <SessionExpired text={text} />
+  const actor = await guardPanel(lang, 'comments')
+  if (!actor) return <SessionExpired text={text} />
 
   const view = pickParam((await searchParams).view, VIEWS, 'pending')
   const comments = await getRepos().comments.listForModeration({ status: view })
@@ -44,7 +45,7 @@ export default async function CommentsPage({ params, searchParams }: Props) {
           options={VIEWS.map((value) => ({ value, label: tr(`admin.filter.${value}`), href: queryHref(base, { view: value }) }))}
         />
       </div>
-      <CommentList comments={comments} text={text} postIds={[...postIds(), ...(await publishedPosts()).map((post) => post.id)]} />
+      <CommentList comments={comments} text={text} postIds={[...postIds(), ...(await publishedPosts()).map((post) => post.id)]} canReply={actor.kind === 'owner'} />
     </section>
   )
 }

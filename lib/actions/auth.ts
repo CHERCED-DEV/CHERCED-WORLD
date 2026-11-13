@@ -2,6 +2,7 @@
 
 import '@/lib/data/mongo/register'
 import { redirect } from 'next/navigation'
+import { endAccountSession } from '@/lib/auth/accounts'
 import { endAllSessions, signIn, signOut, requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
 import { burnPasswordCheck, hashPassword, verifyPassword } from '@/lib/auth/password'
 import { changePasswordSchema, loginSchema } from '@/lib/auth/schemas'
@@ -57,6 +58,7 @@ export async function login(_prev: ActionResult | null, formData: FormData): Pro
 export async function logout(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
   try {
     await signOut()
+    await endAccountSession()
   } catch (error) {
     logServerError('auth.logout', error)
   }

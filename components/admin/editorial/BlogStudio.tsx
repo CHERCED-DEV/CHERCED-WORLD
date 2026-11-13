@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { editorialCopy } from '@/content/editorial'
 import type { Locale } from '@/content/types'
-import { publishEditorialDraft, saveEditorialDraft, unpublishEditorialDraft } from '@/lib/actions/editorial'
+import { publishEditorialDraft, requestEditorialReview, saveEditorialDraft, unpublishEditorialDraft } from '@/lib/actions/editorial'
 import { exportDraft, type EditorialDraft, type DraftInput } from '@/lib/editorial/model'
 import type { PublishedSummary } from '@/lib/editorial/published'
 import { buttonClassName } from '@/components/ui/Button'
@@ -21,11 +21,13 @@ export function BlogStudio({
   initialDrafts,
   initialPublished = [],
   storage,
+  role = 'owner',
 }: {
   lang: Locale
   initialDrafts: EditorialDraft[]
   initialPublished?: PublishedSummary[]
   storage: Storage
+  role?: 'owner' | 'guest'
 }) {
   const copy = editorialCopy[lang]
   const [drafts, setDrafts] = useState(initialDrafts)
@@ -37,6 +39,8 @@ export function BlogStudio({
   const [preview, setPreview] = useState(false)
   const [status, setStatus] = useState('')
   const live = draft ? published[draft.id] : undefined
+  const meta = draft ? drafts.find(item => item.id === draft.id) : undefined
+  const owner = role === 'owner'
 
   useEffect(() => {
     if (!dirty) return
@@ -88,6 +92,7 @@ export function BlogStudio({
       if (!result.ok) { setStatus(result.error === 'unavailable' ? copy.publishUnavailable : copy[result.error]); return }
       const again = Boolean(published[saved.id])
       setPublished(items => ({ ...items, [saved.id]: result.post }))
+      setDrafts(items => items.map(item => item.id === saved.id ? { ...item, review: null } : item))
       const note = result.dropped.length > 0 ? ` ${copy.dropped.replace('{tags}', result.dropped.join(', '))}` : ''
       setStatus(`${again ? copy.republished : copy.publishedNow}${note}`)
     } catch { setStatus(copy.publishUnavailable) }
@@ -106,6 +111,20 @@ export function BlogStudio({
     finally { setPending(false) }
   }
 
+  async function sendForReview() {
+    if (!draft || pending) return
+    setPending(true); setStatus('')
+    try {
+      const saved = dirty || draft.version === 0 ? await persist() : draft
+      if (!saved) return
+      const result = await requestEditorialReview({ id: saved.id, version: saved.version })
+      if (!result.ok) { setStatus(copy[result.error]); return }
+      setDrafts(items => [result.draft, ...items.filter(item => item.id !== result.draft.id)])
+      setStatus(copy.requested)
+    } catch { setStatus(copy.unavailable) }
+    finally { setPending(false) }
+  }
+
   function download() {
     const input = current()
     if (!input) return
@@ -121,10 +140,12 @@ export function BlogStudio({
     <aside className={styles.library} aria-label={copy.drafts}>
       <h2>{copy.drafts}</h2>
       <button className={buttonClassName({ variant: 'solid', size: 'sm' })} disabled={pending} onClick={() => select({ id: crypto.randomUUID(), version: 0, lang, title: '', description: '', body: '', tags: [] })}>{copy.create}</button>
-      <div className={styles.list}>{drafts.map(item => <button key={item.id} className={styles.draft} aria-current={draft?.id === item.id ? 'true' : undefined} disabled={pending} onClick={() => select(item)}><strong>{item.title}</strong><small>{item.lang.toUpperCase()} · {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(item.updatedAt))}{published[item.id] ? <> · <span className={styles.live} data-cw-draft-live="">{copy.live}</span></> : null}</small></button>)}</div>
+      <div className={styles.list}>{drafts.map(item => <button key={item.id} className={styles.draft} aria-current={draft?.id === item.id ? 'true' : undefined} disabled={pending} onClick={() => select(item)}><strong>{item.title}</strong><small>{item.lang.toUpperCase()} · {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(item.updatedAt))}{published[item.id] ? <> · <span className={styles.live} data-cw-draft-live="">{copy.live}</span></> : null}{item.review ? <> · <span className={styles.live} data-cw-draft-review="">{copy.inReview}</span></> : null}{owner && item.author ? <> · {item.author.name}</> : null}</small></button>)}</div>
+      {owner ? null : <p className={styles.note} data-cw-guest-note="">{copy.guestNote}</p>}
       <p className={styles.note}>{copy[storage]}</p>
     </aside>
     {draft ? <form className={styles.editor} onSubmit={event => { event.preventDefault(); void save() }}>
+      {owner && meta?.author ? <p className={styles.note} data-cw-draft-author="">{copy.authorNote.replace('{name}', meta.author.name)}</p> : null}
       <label className={styles.field}>{copy.titleLabel}<input name="title" value={draft.title} required maxLength={180} disabled={pending} onChange={event => change({ title: event.target.value })} /></label>
       <label className={styles.field}>{copy.description}<textarea name="description" rows={2} maxLength={320} disabled={pending} value={draft.description} onChange={event => change({ description: event.target.value })} /></label>
       <div className={styles.metadata}>
@@ -136,13 +157,13 @@ export function BlogStudio({
       <p id="editorial-hint" className={styles.note}>{copy.hint}</p>
       <div className={styles.actions}>
         <button type="submit" className={buttonClassName({ variant: 'solid' })} disabled={pending || !draft.title.trim()}>{pending ? copy.saving : copy.save}</button>
-        <button type="button" className={buttonClassName({ variant: 'solid' })} disabled={pending || !ready} onClick={() => void publish()} data-cw-publish="">{pending ? copy.publishing : live ? copy.republish : copy.publish}</button>
-        {live ? <button type="button" className={buttonClassName({})} disabled={pending} onClick={() => void unpublish()} data-cw-unpublish="">{copy.unpublish}</button> : null}
+        {owner ? <button type="button" className={buttonClassName({ variant: 'solid' })} disabled={pending || !ready} onClick={() => void publish()} data-cw-publish="">{pending ? copy.publishing : live ? copy.republish : copy.publish}</button> : <button type="button" className={buttonClassName({ variant: 'solid' })} disabled={pending || !ready} onClick={() => void sendForReview()} data-cw-request-review="">{pending ? copy.requesting : copy.requestReview}</button>}
+        {owner && live ? <button type="button" className={buttonClassName({})} disabled={pending} onClick={() => void unpublish()} data-cw-unpublish="">{copy.unpublish}</button> : null}
         <button type="button" className={buttonClassName({})} onClick={download}>{copy.export}</button>
       </div>
       {live ? <p className={styles.note} data-cw-published-link=""><a href={`/${live.lang}/blog/${live.id}`} target="_blank" rel="noopener noreferrer">{copy.view}</a> · /{live.lang}/blog/{live.id}</p> : null}
       <p className={styles.status} role="status" aria-live="polite">{status || (dirty ? copy.unsaved : '')}</p>
-      <p className={styles.note}>{copy.review}</p>
-    </form> : <div className={styles.editor}><p>{copy.empty}</p><p className={styles.note}>{copy.review}</p></div>}
+      <p className={styles.note}>{owner ? copy.review : copy.guestReview}</p>
+    </form> : <div className={styles.editor}><p>{copy.empty}</p><p className={styles.note}>{owner ? copy.review : copy.guestReview}</p></div>}
   </div>
 }

@@ -39,6 +39,7 @@ export type PublishedPost = {
   updated?: string
   publishedAt: string
   updatedAt: string
+  author?: string
 }
 
 export const publishInput = z.object({ id: z.string().uuid(), version: z.number().int().min(1) })
@@ -85,7 +86,7 @@ export function publishedMeta(post: PublishedPost): PostMeta {
     ...(post.updated ? { updated: post.updated } : {}),
     tags: [...post.tags],
     image: { src: publishedImagePath(post.lang, post.id), alt: post.title, width: 1200, height: 630 },
-    author: 'Camilo Hernández',
+    author: post.author ?? 'Camilo Hernández',
     cover: 'generated',
   }
 }

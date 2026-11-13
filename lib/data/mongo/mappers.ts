@@ -97,6 +97,7 @@ export function toCommentRecord(doc: CommentDoc): CommentRecord {
     status: commentStatusOf(doc.status),
     consentAt: validDate(doc.consentAt) ? new Date(doc.consentAt as Date) : null,
     authorReply: replyOf(doc.authorReply),
+    accountId: typeof doc.accountId === 'string' ? doc.accountId : null,
     ...timestamps(doc),
   }
 }

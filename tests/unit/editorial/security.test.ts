@@ -4,20 +4,21 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { MarkdownPreview } from '@/components/admin/editorial/MarkdownPreview'
 import { draftInput, exportDraft } from '@/lib/editorial/model'
 
-const mocks = vi.hoisted(() => ({ requireAdmin: vi.fn(), saveDraft: vi.fn() }))
+const mocks = vi.hoisted(() => ({ requireAdmin: vi.fn(), requirePermission: vi.fn(), saveDraft: vi.fn() }))
 vi.mock('@/lib/auth/guard', () => ({ requireAdmin: mocks.requireAdmin, UnauthorizedError: class UnauthorizedError extends Error {} }))
-vi.mock('@/lib/data/editorial', () => ({ saveDraft: mocks.saveDraft, DraftConflict: class DraftConflict extends Error {} }))
+vi.mock('@/lib/auth/accounts', () => ({ requirePermission: mocks.requirePermission }))
+vi.mock('@/lib/data/editorial', () => ({ saveDraft: mocks.saveDraft, DraftConflict: class DraftConflict extends Error {}, DraftForbidden: class DraftForbidden extends Error {} }))
 import { UnauthorizedError } from '@/lib/auth/guard'
 import { DraftConflict } from '@/lib/data/editorial'
 import { saveEditorialDraft } from '@/lib/actions/editorial'
 
 const input = { id: 'a1993b3d-2fc0-4f8b-9dc4-a47c8df544cf', version: 0, lang: 'es' as const, title: 'Un borrador privado', description: '', body: 'Texto original', tags: ['arquitectura'] }
 
-beforeEach(() => { vi.clearAllMocks(); mocks.requireAdmin.mockResolvedValue({}); mocks.saveDraft.mockResolvedValue({ ...input, version: 1 }) })
+beforeEach(() => { vi.clearAllMocks(); mocks.requireAdmin.mockResolvedValue({}); mocks.requirePermission.mockResolvedValue({ kind: 'owner' }); mocks.saveDraft.mockResolvedValue({ ...input, version: 1 }) })
 
 describe('editorial privado', () => {
   it('autoriza antes de validar o escribir', async () => {
-    mocks.requireAdmin.mockRejectedValue(new UnauthorizedError())
+    mocks.requirePermission.mockRejectedValue(new UnauthorizedError())
     expect(await saveEditorialDraft(input)).toEqual({ ok: false, error: 'unauthorized' })
     expect(mocks.saveDraft).not.toHaveBeenCalled()
   })
@@ -32,7 +33,12 @@ describe('editorial privado', () => {
   })
   it('guarda una entrada válida con la versión devuelta por el repositorio', async () => {
     expect(await saveEditorialDraft(input)).toMatchObject({ ok: true, draft: { version: 1 } })
-    expect(mocks.saveDraft).toHaveBeenCalledWith(input)
+    expect(mocks.saveDraft).toHaveBeenCalledWith(input, null)
+  })
+  it('un invitado guarda con su firma y no puede hacerse pasar por otro (FR-1708)', async () => {
+    mocks.requirePermission.mockResolvedValue({ kind: 'team', account: { id: 'a1', name: 'Ana' }, permissions: ['posts'] })
+    await saveEditorialDraft({ ...input, author: { id: 'otro', name: 'Suplantado' } })
+    expect(mocks.saveDraft).toHaveBeenCalledWith(input, { id: 'a1', name: 'Ana' })
   })
   it('la vista previa escapa HTML, scripts y componentes', () => {
     const html = renderToStaticMarkup(createElement(MarkdownPreview, { body: '<script>alert(1)</script>\n\n<img src=x onerror=alert(1)>\n\n{process.env.SECRET}' }))

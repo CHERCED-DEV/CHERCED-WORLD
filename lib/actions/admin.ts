@@ -2,9 +2,10 @@
 
 import '@/lib/data/mongo/register'
 import { refresh, revalidatePath } from 'next/cache'
+import { requirePermission } from '@/lib/auth/accounts'
 import { requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
 import { getRepos } from '@/lib/data'
-import type { CommentStatus, MessageStatus, Repos } from '@/lib/data/types'
+import type { CommentStatus, MessageStatus, Permission, Repos } from '@/lib/data/types'
 import { logServerError } from '@/lib/security/log'
 import { parseInput, replySchema } from '@/lib/validation'
 import { fail, ok, type ActionResult } from './result'
@@ -19,9 +20,10 @@ function validId(id: unknown): id is string {
   return typeof id === 'string' && id.length > 0 && id.length <= MAX_ID_LENGTH
 }
 
-async function asAdmin(scope: string, run: (repos: Repos) => Promise<ActionResult>): Promise<ActionResult> {
+async function asPanel(permission: Permission | 'owner', scope: string, run: (repos: Repos) => Promise<ActionResult>): Promise<ActionResult> {
   try {
-    await requireAdmin()
+    if (permission === 'owner') await requireAdmin()
+    else await requirePermission(permission)
   } catch (error) {
     if (error instanceof UnauthorizedError) return fail('unauthorized')
     logServerError(scope, error)
@@ -45,7 +47,7 @@ function refreshPublicComments(): void {
 }
 
 export async function setMessageStatus(id: string, status: MessageStatus): Promise<ActionResult> {
-  return asAdmin('admin.setMessageStatus', async (repos) => {
+  return asPanel('messages', 'admin.setMessageStatus', async (repos) => {
     if (!validId(id) || !MESSAGE_STATUSES.includes(status)) return fail('validation')
     if (!(await repos.messages.setStatus(id, status))) return fail('not_found')
     refreshPanel()
@@ -54,7 +56,7 @@ export async function setMessageStatus(id: string, status: MessageStatus): Promi
 }
 
 export async function deleteMessage(id: string): Promise<ActionResult> {
-  return asAdmin('admin.deleteMessage', async (repos) => {
+  return asPanel('messages', 'admin.deleteMessage', async (repos) => {
     if (!validId(id)) return fail('validation')
     if (!(await repos.messages.remove(id))) return fail('not_found')
     refreshPanel()
@@ -63,7 +65,7 @@ export async function deleteMessage(id: string): Promise<ActionResult> {
 }
 
 export async function setCommentStatus(id: string, status: CommentStatus): Promise<ActionResult> {
-  return asAdmin('admin.setCommentStatus', async (repos) => {
+  return asPanel('comments', 'admin.setCommentStatus', async (repos) => {
     if (!validId(id) || !COMMENT_STATUSES.includes(status)) return fail('validation')
     if (!(await repos.comments.setStatus(id, status))) return fail('not_found')
     refreshPublicComments()
@@ -72,7 +74,7 @@ export async function setCommentStatus(id: string, status: CommentStatus): Promi
 }
 
 export async function setCommentReply(id: string, text: string | null): Promise<ActionResult> {
-  return asAdmin('admin.setCommentReply', async (repos) => {
+  return asPanel('owner', 'admin.setCommentReply', async (repos) => {
     if (!validId(id)) return fail('validation')
     let reply: string | null = null
     if (text !== null) {
@@ -87,7 +89,7 @@ export async function setCommentReply(id: string, text: string | null): Promise<
 }
 
 export async function deleteComment(id: string): Promise<ActionResult> {
-  return asAdmin('admin.deleteComment', async (repos) => {
+  return asPanel('comments', 'admin.deleteComment', async (repos) => {
     if (!validId(id)) return fail('validation')
     if (!(await repos.comments.remove(id))) return fail('not_found')
     refreshPublicComments()

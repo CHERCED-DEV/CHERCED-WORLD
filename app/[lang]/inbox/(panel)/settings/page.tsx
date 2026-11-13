@@ -5,7 +5,7 @@ import { ChangePasswordForm, LogoutButton } from '@/components/admin/AuthForms'
 import { adminErrors, adminText, changePasswordLabels } from '@/components/admin/labels'
 import { SessionExpired } from '@/components/admin/Views'
 import { GlassSurface } from '@/components/ui/GlassSurface'
-import { getAdminSession } from '@/lib/auth/guard'
+import { guardPanel } from '@/components/admin/gate'
 import { isLocale } from '@/lib/i18n'
 
 type Props = { params: Promise<{ lang: string }> }
@@ -16,7 +16,8 @@ export default async function SettingsPage({ params }: Props) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
   const text = await adminText(lang)
-  if (!(await getAdminSession())) return <SessionExpired text={text} />
+  const actor = await guardPanel(lang, 'owner')
+  if (!actor) return <SessionExpired text={text} />
   const { tr } = text
 
   return (

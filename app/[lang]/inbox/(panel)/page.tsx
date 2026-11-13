@@ -6,7 +6,7 @@ import { adminText } from '@/components/admin/labels'
 import { pickParam, queryHref } from '@/components/admin/query'
 import { MessageList } from '@/components/admin/MessageList'
 import { SessionExpired } from '@/components/admin/Views'
-import { getAdminSession } from '@/lib/auth/guard'
+import { guardPanel } from '@/components/admin/gate'
 import { getRepos } from '@/lib/data'
 import type { MessageSort } from '@/lib/data/types'
 import { isLocale, localizedPath } from '@/lib/i18n'
@@ -25,7 +25,8 @@ export default async function MessagesPage({ params, searchParams }: Props) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
   const text = await adminText(lang)
-  if (!(await getAdminSession())) return <SessionExpired text={text} />
+  const actor = await guardPanel(lang, 'messages')
+  if (!actor) return <SessionExpired text={text} />
 
   const query = await searchParams
   const view = pickParam(query.view, VIEWS, 'inbox')

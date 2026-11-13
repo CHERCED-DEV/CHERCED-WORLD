@@ -1,5 +1,6 @@
 import 'server-only'
 import type { Repos } from '../types'
+import { createMemoryAccountRepo } from './accounts'
 import { createMemoryAdminRepo } from './admin'
 import { createMemoryCommentRepo } from './comments'
 import { createMemoryMessageRepo } from './messages'
@@ -11,9 +12,10 @@ export function createMemoryRepos(): Repos {
     messages: createMemoryMessageRepo(),
     comments: createMemoryCommentRepo(),
     admin: createMemoryAdminRepo(),
+    accounts: createMemoryAccountRepo(),
     rateLimits: createMemoryRateLimitRepo(),
     reactions: createMemoryReactionRepo(),
   }
 }
 
-export { createMemoryAdminRepo, createMemoryCommentRepo, createMemoryMessageRepo, createMemoryRateLimitRepo, createMemoryReactionRepo }
+export { createMemoryAccountRepo, createMemoryAdminRepo, createMemoryCommentRepo, createMemoryMessageRepo, createMemoryRateLimitRepo, createMemoryReactionRepo }

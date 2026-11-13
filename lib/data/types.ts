@@ -38,6 +38,7 @@ export type NewComment = {
   comment: string
   lang: Locale
   consentAt: Date
+  accountId?: string | null
 }
 
 export type AuthorReply = { text: string; createdAt: Date; updatedAt: Date }
@@ -52,6 +53,7 @@ export type CommentRecord = {
   status: CommentStatus
   consentAt: Date | null
   authorReply: AuthorReply | null
+  accountId: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -82,6 +84,23 @@ export type AdminSession = {
   lastActivityAt: Date
   expiresAt: Date
 }
+
+export const PERMISSIONS = ['posts', 'messages', 'comments'] as const
+
+export type Permission = (typeof PERMISSIONS)[number]
+
+export type AccountProfile = { googleSub: string; email: string; name: string }
+
+export type AccountRecord = AccountProfile & {
+  id: string
+  createdAt: Date
+  lastLoginAt: Date
+  blockedAt: Date | null
+}
+
+export type TeamGrant = { email: string; permissions: Permission[]; createdAt: Date; updatedAt: Date }
+
+export type AccountSession = AdminSession & { accountId: string }
 
 export type RateLimitRule = { limit: number; windowMs: number; blockMs?: number }
 
@@ -133,6 +152,7 @@ export interface CommentRepo {
   setStatus(id: string, status: CommentStatus): Promise<boolean>
   setReply(id: string, text: string | null): Promise<boolean>
   remove(id: string): Promise<boolean>
+  removeByAccount(accountId: string): Promise<number>
   countPending(): Promise<number>
   changedSince(since: Date): Promise<CommentRecord[]>
 }
@@ -151,6 +171,23 @@ export interface AdminRepo {
   deleteAllSessions(): Promise<void>
 }
 
+export interface AccountRepo {
+  upsertFromGoogle(profile: AccountProfile, now: Date): Promise<AccountRecord>
+  get(id: string): Promise<AccountRecord | null>
+  list(): Promise<AccountRecord[]>
+  setBlocked(id: string, blockedAt: Date | null): Promise<boolean>
+  remove(id: string): Promise<boolean>
+  getGrant(email: string): Promise<TeamGrant | null>
+  listGrants(): Promise<TeamGrant[]>
+  setGrant(email: string, permissions: Permission[], now: Date): Promise<void>
+  removeGrant(email: string): Promise<boolean>
+  createSession(s: AccountSession): Promise<void>
+  getSession(tokenHash: string): Promise<AccountSession | null>
+  touchSession(tokenHash: string, now: Date): Promise<void>
+  deleteSession(tokenHash: string): Promise<void>
+  deleteSessionsFor(accountId: string): Promise<void>
+}
+
 export interface RateLimitRepo {
   hit(key: string, rule: RateLimitRule, now: Date): Promise<RateLimitResult>
   reset(key: string): Promise<void>
@@ -165,6 +202,7 @@ export interface Repos {
   messages: MessageRepo
   comments: CommentRepo
   admin: AdminRepo
+  accounts: AccountRepo
   rateLimits: RateLimitRepo
   reactions: ReactionRepo
 }

@@ -1,5 +1,6 @@
 import 'server-only'
 import type { Repos } from '@/lib/data/types'
+import { createMongoAccountRepo } from './accounts'
 import { createMongoAdminRepo } from './admin'
 import type { DbProvider } from './collections'
 import { createMongoCommentRepo } from './comments'
@@ -12,11 +13,12 @@ export function createMongoRepos(db: DbProvider): Repos {
     messages: createMongoMessageRepo(db),
     comments: createMongoCommentRepo(db),
     admin: createMongoAdminRepo(db),
+    accounts: createMongoAccountRepo(db),
     rateLimits: createMongoRateLimitRepo(db),
     reactions: createMongoReactionRepo(db),
   }
 }
 
-export { createMongoAdminRepo, createMongoCommentRepo, createMongoMessageRepo, createMongoRateLimitRepo, createMongoReactionRepo }
+export { createMongoAccountRepo, createMongoAdminRepo, createMongoCommentRepo, createMongoMessageRepo, createMongoRateLimitRepo, createMongoReactionRepo }
 export { COLLECTIONS, type DbProvider } from './collections'
 export { ensureIndexes, TTL_INDEXES } from './indexes'

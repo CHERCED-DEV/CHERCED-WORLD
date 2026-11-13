@@ -128,6 +128,13 @@
   }
 }
 
+.accountNote {
+  margin-bottom: var(--cw-space-4);
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+  line-height: 1.6;
+}
+
 .trap {
   @include layout.visually-hidden;
 }

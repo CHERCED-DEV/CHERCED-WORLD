@@ -21,6 +21,10 @@ export const editorialCopy = {
     conflict: 'Este borrador cambió en otra pestaña. Exporta tu versión antes de recargar para no perderla.',
     discard: 'Hay cambios sin guardar. ¿Quieres cambiar de borrador y dejar estos cambios?',
     published: 'Artículos publicados', publicLink: 'Leer en el blog', existing: 'Los seis artículos del repo conservan su contenido versionado. Los que publiques desde aquí salen junto a ellos.',
+    requestReview: 'Enviar a revisión', requesting: 'Enviando…', requested: 'Enviado a revisión. El autor decide si se publica.',
+    inReview: 'En revisión', guestNote: 'Escribes como invitado: tus borradores solo los ves tú y el autor.',
+    guestReview: 'Guardar no publica. Enviar a revisión le avisa al autor, que decide si sale en el blog y cuándo.',
+    authorNote: 'Escrito por {name}. Si lo publicas, sale firmado con su nombre.',
   },
   en: {
     title: 'Blog studio', intro: 'A place to develop your ideas, save drafts and prepare your next article.',
@@ -44,5 +48,9 @@ export const editorialCopy = {
     conflict: 'This draft changed in another tab. Export your version before reloading to avoid losing it.',
     discard: 'You have unsaved changes. Switch drafts and leave these changes behind?',
     published: 'Published articles', publicLink: 'Read on the blog', existing: 'The six articles in the repo keep their versioned content. The ones you publish here appear next to them.',
+    requestReview: 'Send for review', requesting: 'Sending…', requested: 'Sent for review. The author decides whether it gets published.',
+    inReview: 'In review', guestNote: 'You are writing as a guest: only you and the author see your drafts.',
+    guestReview: 'Saving does not publish. Sending for review lets the author know; they decide if and when it goes on the blog.',
+    authorNote: 'Written by {name}. If you publish it, it goes out under their name.',
   },
 } as const

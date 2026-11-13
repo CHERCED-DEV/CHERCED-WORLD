@@ -37,5 +37,5 @@ export type _BlogContract = [
 
 export type _BlogPostingContract = [
   Expect<Fits<typeof BlogPosting.blogPostingJsonLd, (meta: PostMeta, lang: Locale, url: string) => Record<string, unknown>>>,
-  Expect<Is<BlogPosting.BlogPostingJsonLd['author'], { '@id': string }>>,
+  Expect<Is<BlogPosting.BlogPostingJsonLd['author'], { '@id': string } | { '@type': 'Person'; name: string }>>,
 ]

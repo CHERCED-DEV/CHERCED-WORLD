@@ -9,7 +9,7 @@ import { ConsentDetail } from './ConsentDetail'
 import { adminErrors, confirmLabels, formatDateTime, replyLabels, resultLabels, type AdminText } from './labels'
 import { ReplyEditor } from './ReplyEditor'
 
-function CommentItem({ comment, text, known }: { comment: CommentRecord; text: AdminText; known: boolean }) {
+function CommentItem({ comment, text, known, canReply }: { comment: CommentRecord; text: AdminText; known: boolean; canReply: boolean }) {
   const { tr, lang } = text
   const results = resultLabels(text)
 
@@ -19,6 +19,7 @@ function CommentItem({ comment, text, known }: { comment: CommentRecord; text: A
         <header className={styles.itemHeader}>
           <h3 className={styles.itemTitle}>{comment.userName}</h3>
           <span className={styles.badge}>{tr(`admin.status.${comment.status}`)}</span>
+          {comment.accountId ? <span className={styles.badge} data-cw-comment-account="">{tr('admin.comment.account')}</span> : null}
         </header>
         <dl className={styles.details}>
           <dt>{tr('admin.field.email')}</dt>
@@ -61,7 +62,7 @@ function CommentItem({ comment, text, known }: { comment: CommentRecord; text: A
             name="delete"
           />
         </div>
-        {comment.status === 'approved' ? (
+        {canReply && comment.status === 'approved' ? (
           <ReplyEditor
             save={setCommentReply.bind(null, comment.id)}
             current={comment.authorReply?.text ?? null}
@@ -75,14 +76,24 @@ function CommentItem({ comment, text, known }: { comment: CommentRecord; text: A
   )
 }
 
-export function CommentList({ comments, text, postIds }: { comments: CommentRecord[]; text: AdminText; postIds: string[] }) {
+export function CommentList({
+  comments,
+  text,
+  postIds,
+  canReply = true,
+}: {
+  comments: CommentRecord[]
+  text: AdminText
+  postIds: string[]
+  canReply?: boolean
+}) {
   if (comments.length === 0) {
     return <p className={styles.empty}>{text.tr('admin.comments.empty')}</p>
   }
   return (
     <ul className={styles.list} data-cw-comments="">
       {comments.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} text={text} known={postIds.includes(comment.postId)} />
+        <CommentItem key={comment.id} comment={comment} text={text} known={postIds.includes(comment.postId)} canReply={canReply} />
       ))}
     </ul>
   )

@@ -61,6 +61,7 @@ function nextPost(draft: EditorialDraft, existing: PublishedPost | undefined, ta
     tags: catalogTags(draft.tags, draft.lang).kept,
     body: draft.body,
     updatedAt: stamp,
+    ...(draft.author ? { author: draft.author.name } : {}),
   }
   if (existing) return { ...existing, ...base, ...(day > existing.date ? { updated: day } : {}) }
   return { ...base, id: publishedId(draft.title, taken), date: day, publishedAt: stamp }

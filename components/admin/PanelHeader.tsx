@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { can, type PanelActor } from '@/lib/accounts/permissions'
 import { localizedPath } from '@/lib/i18n'
 import styles from './admin.module.scss'
 import { LogoutButton } from './AuthForms'
@@ -12,20 +13,24 @@ export function PanelHeader({
   unread,
   pending,
   now,
+  actor,
 }: {
   text: AdminText
   unread: number
   pending: number
   now: Date
+  actor: PanelActor
 }) {
   const { lang, tr } = text
-  const tabs: PanelTab[] = [
+  const owner = actor.kind === 'owner'
+  const all: (PanelTab & { visible: boolean })[] = [
     {
       href: localizedPath(lang, '/inbox'),
       label: tr('admin.nav.messages'),
       count: unread,
       countLabel: tr('admin.unread', { count: unread }),
       id: 'messages',
+      visible: can(actor, 'messages'),
     },
     {
       href: localizedPath(lang, '/inbox/comments'),
@@ -33,10 +38,13 @@ export function PanelHeader({
       count: pending,
       countLabel: tr('admin.pending', { count: pending }),
       id: 'comments',
+      visible: can(actor, 'comments'),
     },
-    { href: localizedPath(lang, '/inbox/blog'), label: tr('admin.nav.blog'), count: 0, countLabel: '', id: 'blog' },
-    { href: localizedPath(lang, '/inbox/settings'), label: tr('admin.nav.settings'), count: 0, countLabel: '', id: 'settings' },
+    { href: localizedPath(lang, '/inbox/blog'), label: tr('admin.nav.blog'), count: 0, countLabel: '', id: 'blog', visible: can(actor, 'posts') },
+    { href: localizedPath(lang, '/inbox/people'), label: tr('admin.nav.people'), count: 0, countLabel: '', id: 'people', visible: owner },
+    { href: localizedPath(lang, '/inbox/settings'), label: tr('admin.nav.settings'), count: 0, countLabel: '', id: 'settings', visible: owner },
   ]
+  const tabs: PanelTab[] = all.filter((tab) => tab.visible).map(({ visible: _visible, ...tab }) => tab)
 
   return (
     <GlassSurface as="header" variant="standard" className={styles.panelHeader} data-cw-panel-header="">

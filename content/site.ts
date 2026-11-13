@@ -1062,7 +1062,7 @@ export const site: SiteContent = {
     },
   },
   privacy: {
-    updatedAt: '2026-11-12',
+    updatedAt: '2026-11-13',
     sections: [
       {
         heading: { es: 'Quién es el responsable', en: 'Who is responsible' },
@@ -1083,6 +1083,13 @@ export const site: SiteContent = {
         body: {
           es: 'Uso tus datos solo para responder tus mensajes de contacto y para moderar los comentarios del blog. Tu correo nunca se publica.',
           en: 'I use your data only to reply to your contact messages and to moderate blog comments. Your email is never published.',
+        },
+      },
+      {
+        heading: { es: 'Si ingresas con tu cuenta de Google', en: 'If you sign in with your Google account' },
+        body: {
+          es: 'Google me confirma tu nombre y tu correo. Guardo esos dos datos, un identificador de tu cuenta y las fechas en que ingresas, solo para que comentes sin escribirlos y, si te invité al equipo, para darte acceso al panel. No guardo tu foto ni tu contraseña, y no tengo acceso a tu cuenta de Google. Puedes borrar tu cuenta y tus comentarios cuando quieras desde «Mi cuenta».',
+          en: 'Google confirms your name and email to me. I store those two, an identifier for your account and the dates you sign in, only so you can comment without typing them and, if I invited you to the team, to give you access to the panel. I do not store your photo or your password, and I have no access to your Google account. You can delete your account and your comments at any time from “My account”.',
         },
       },
       {

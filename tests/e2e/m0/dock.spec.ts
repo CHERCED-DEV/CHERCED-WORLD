@@ -5,6 +5,7 @@ const ACTIONS = [
   { selector: '[data-cw-palette-trigger]', name: /Busca o salta a/ },
   { selector: '[data-cw-dock-assistant]', name: /Pregúntale a mi portafolio/ },
   { selector: '[data-cw-theme-toggle]', name: /Tema oscuro/ },
+  { selector: '[data-cw-account-link]', name: /Ingresar/ },
   { selector: '[data-cw-menu-button]', name: /Abrir menú/ },
 ] as const
 
@@ -27,7 +28,7 @@ test.describe('dock flotante (US6, FR-607, FR-608)', () => {
   test.beforeEach(async ({ page }) => skipIntro(page))
 
   for (const width of MOBILE_WIDTHS) {
-    test(`a ${width} px agrupa búsqueda, asistente, tema y menú abajo al centro; el buzón sigue en el header`, async ({ page }) => {
+    test(`a ${width} px agrupa búsqueda, asistente, tema, cuenta y menú abajo al centro; el buzón sigue en el header`, async ({ page }) => {
       await page.setViewportSize({ width, height: MOBILE_HEIGHT })
       await page.goto('/es/aboutMe')
       await expect.poll(() => dockAttribute(page)).toBe('shown')

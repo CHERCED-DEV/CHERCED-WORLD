@@ -35,6 +35,7 @@ export function createMongoCommentRepo(db: DbProvider): CommentRepo {
         status: 'pending',
         consentAt: input.consentAt,
         authorReply: null,
+        ...(input.accountId ? { accountId: input.accountId } : {}),
         createdAt: now,
         updatedAt: now,
       }
@@ -85,6 +86,10 @@ export function createMongoCommentRepo(db: DbProvider): CommentRepo {
       if (!_id) return false
       const result = await (await commentsCollection(db)).deleteOne({ _id })
       return result.deletedCount === 1
+    },
+    async removeByAccount(accountId) {
+      const result = await (await commentsCollection(db)).deleteMany({ accountId })
+      return result.deletedCount
     },
     async countPending() {
       return (await commentsCollection(db)).countDocuments({ status: 'pending' })

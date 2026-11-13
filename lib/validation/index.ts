@@ -101,6 +101,8 @@ export const commentSchema = z.object({
   consent,
 })
 
+export const accountCommentSchema = commentSchema.omit({ userName: true, email: true })
+
 export const passwordSchema = z
   .string({ error: ERROR_KEYS.required })
   .min(LIMITS.passwordMin, { error: ERROR_KEYS.passwordTooShort })

@@ -39,6 +39,7 @@ export function createMemoryCommentRepo(): CommentRepo {
         status: 'pending',
         consentAt: input.consentAt,
         authorReply: null,
+        accountId: input.accountId ?? null,
         createdAt: now,
         updatedAt: now,
       }
@@ -80,6 +81,16 @@ export function createMemoryCommentRepo(): CommentRepo {
     async remove(id) {
       order.delete(id)
       return store.delete(id)
+    },
+    async removeByAccount(accountId) {
+      let removed = 0
+      for (const [id, record] of store) {
+        if (record.accountId !== accountId) continue
+        store.delete(id)
+        order.delete(id)
+        removed++
+      }
+      return removed
     },
     async countPending() {
       return [...store.values()].filter((c) => c.status === 'pending').length

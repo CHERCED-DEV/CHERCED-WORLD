@@ -1,6 +1,7 @@
 import '@/lib/data/mongo/register'
 import type { NextRequest } from 'next/server'
-import { requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
+import { can } from '@/lib/accounts/permissions'
+import { getPanelActor } from '@/lib/auth/accounts'
 import { getRepos } from '@/lib/data'
 import { logServerError } from '@/lib/security/log'
 
@@ -30,10 +31,14 @@ function changeKey({ id, updatedAt }: { id: string; updatedAt: Date }): { id: st
 
 export async function GET(request: NextRequest): Promise<Response> {
   const now = new Date()
+  let messagesAllowed = false
+  let commentsAllowed = false
   try {
-    await requireAdmin({ touch: false })
+    const actor = await getPanelActor()
+    if (!actor) return json({ error: 'unauthorized' }, 401)
+    messagesAllowed = can(actor, 'messages')
+    commentsAllowed = can(actor, 'comments')
   } catch (error) {
-    if (error instanceof UnauthorizedError) return json({ error: 'unauthorized' }, 401)
     logServerError('admin.updates.session', error)
     return json({ error: 'unavailable' }, 503)
   }
@@ -43,10 +48,10 @@ export async function GET(request: NextRequest): Promise<Response> {
     const since = parseSince(request.nextUrl.searchParams.get('since'), now)
     const window = since ? new Date(since.getTime() - OVERLAP_MS) : null
     const [unread, pending, messages, comments] = await Promise.all([
-      repos.messages.countUnread(),
-      repos.comments.countPending(),
-      window ? repos.messages.changedSince(window) : Promise.resolve([]),
-      window ? repos.comments.changedSince(window) : Promise.resolve([]),
+      messagesAllowed ? repos.messages.countUnread() : Promise.resolve(0),
+      commentsAllowed ? repos.comments.countPending() : Promise.resolve(0),
+      window && messagesAllowed ? repos.messages.changedSince(window) : Promise.resolve([]),
+      window && commentsAllowed ? repos.comments.changedSince(window) : Promise.resolve([]),
     ])
     return json({ now: now.toISOString(), unread, pending, messages: messages.map(changeKey), comments: comments.map(changeKey) }, 200)
   } catch (error) {

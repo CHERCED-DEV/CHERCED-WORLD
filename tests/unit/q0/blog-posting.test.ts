@@ -34,8 +34,13 @@ describe('JSON-LD BlogPosting (FR-521, R-507)', () => {
   it('el autor es el mismo @id del Person del layout, sin repetir sus datos', () => {
     const data = blogPostingJsonLd(meta, 'en', 'https://cherced-world.test/en/blog/post4', BASE)
     expect(data.author).toEqual({ '@id': personId(BASE) })
-    expect(data.author['@id']).toBe(personJsonLd('en', BASE)['@id'])
+    expect((data.author as { '@id': string })['@id']).toBe(personJsonLd('en', BASE)['@id'])
     expect(Object.keys(data.author)).toEqual(['@id'])
+  })
+
+  it('un post invitado lleva el nombre de quien lo escribió, no el Person del sitio (spec 017)', () => {
+    const data = blogPostingJsonLd({ ...meta, author: 'Ana Invitada' }, 'es', 'u', BASE)
+    expect(data.author).toEqual({ '@type': 'Person', name: 'Ana Invitada' })
   })
 
   it('solo publica dateModified si hay updated', () => {

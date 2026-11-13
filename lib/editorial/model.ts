@@ -11,8 +11,18 @@ export const draftInput = z.object({
 })
 
 export type DraftInput = z.infer<typeof draftInput>
-export type EditorialDraft = DraftInput & { createdAt: string; updatedAt: string }
+export type DraftAuthor = { id: string; name: string }
+export type DraftReview = { requestedAt: string }
+export type EditorialDraft = DraftInput & { createdAt: string; updatedAt: string; author?: DraftAuthor | null; review?: DraftReview | null }
 export type SaveDraftResult = { ok: true; draft: EditorialDraft } | { ok: false; error: 'unauthorized' | 'validation' | 'conflict' | 'unavailable' }
+export type ReviewResult = { ok: true; draft: EditorialDraft } | { ok: false; error: 'unauthorized' | 'validation' | 'conflict' | 'incomplete' | 'unavailable' }
+
+export const reviewInput = z.object({ id: z.string().uuid(), version: z.number().int().min(1) })
+
+export function canEditDraft(draft: Pick<EditorialDraft, 'author'> | null | undefined, guest: DraftAuthor | null): boolean {
+  if (!guest) return true
+  return Boolean(draft?.author && draft.author.id === guest.id)
+}
 
 export function exportDraft(draft: DraftInput): string {
   const metadata = { title: draft.title, description: draft.description, lang: draft.lang, tags: draft.tags, status: 'draft' }

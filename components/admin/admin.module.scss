@@ -241,8 +241,46 @@
 .authWrap {
   display: grid;
   place-items: center;
+  align-content: center;
+  gap: var(--cw-space-4);
   min-height: calc(100dvh - 3 * var(--cw-header-h));
   padding-block: var(--cw-space-7);
+}
+
+.authAlt {
+  margin: 0;
+  text-align: center;
+  font-size: var(--cw-text-sm);
+}
+
+.permissions {
+  display: grid;
+  gap: var(--cw-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: var(--cw-space-2);
+    font-weight: 600;
+  }
+}
+
+.permission {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cw-space-2);
+  min-height: 44px;
+  padding-block: var(--cw-space-2);
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 2px 0 0;
+    accent-color: var(--cw-graphic-accent);
+  }
 }
 
 .authCard {

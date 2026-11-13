@@ -7,6 +7,7 @@ import { shareTargets } from '@/lib/blog/share'
 import { tagPath } from '@/lib/blog/tags'
 import type { ListedPost } from '@/lib/content'
 import { t, type Dictionary, type Locale } from '@/lib/i18n'
+import { PERSON_NAME } from '@/lib/seo/person'
 import { buttonClassName } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
 import { Hairline } from '@/components/ui/graphics'
@@ -181,7 +182,7 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors,
       </div>
 
       <Hairline glint className={styles.rule} />
-      <AuthorBox lang={lang} blog={blog} />
+      {meta.author === PERSON_NAME ? <AuthorBox lang={lang} blog={blog} /> : null}
       <Share url={url} title={meta.title} blog={blog} />
       <RelatedPosts posts={related} cases={relatedCases} lang={lang} blog={blog} />
       {neighbors ? <PostNav neighbors={neighbors} lang={lang} blog={blog} /> : null}

@@ -1,9 +1,11 @@
 import Image from 'next/image'
+import { accountCopy } from '@/content/account'
 import { cx } from '@/components/ui/cx'
 import { Hairline } from '@/components/ui/graphics'
 import { Icon } from '@/components/ui/Icon'
 import { sharedText } from '@/components/ui/sharedText'
 import type { Locale } from '@/lib/i18n/config'
+import { AccountLink } from './AccountLink'
 import { BackLink } from './BackLink'
 import controls from './controls.module.scss'
 import { Dock, DockAssistant } from './Dock'
@@ -35,6 +37,7 @@ export function SiteHeader({ lang, items, labels }: SiteHeaderProps) {
             <DockAssistant label={sharedText(lang, 'experience', 'assistant.open')} />
             <LangSwitch lang={lang} label={labels.lang} className={styles.desktopOnly} />
             <MailboxLink lang={lang} labels={{ name: labels.mailbox, one: labels.mailboxOne, many: labels.mailboxMany }} />
+            <AccountLink lang={lang} labels={{ signIn: accountCopy[lang].signIn, account: accountCopy[lang].myAccount }} />
             <ThemeToggle label={labels.themeDark} />
             <button
               type="button"

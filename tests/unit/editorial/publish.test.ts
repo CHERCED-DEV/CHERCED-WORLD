@@ -74,7 +74,7 @@ describe('016: ids y slugs de lo publicado desde el panel', () => {
   })
 
   it('el post publicado usa la portada generada y su propia imagen para redes', () => {
-    const meta = publishedMeta({ ...draft, id: 'p-x', draftId: draft.id, tags: ['arquitectura'], date: '2026-11-12', publishedAt: '', updatedAt: '' })
+    const meta = publishedMeta({ ...draft, author: undefined, id: 'p-x', draftId: draft.id, tags: ['arquitectura'], date: '2026-11-12', publishedAt: '', updatedAt: '' })
     expect(meta.cover).toBe('generated')
     expect(meta.image.src).toBe('/es/blog/p-x/opengraph-image/og')
     expect(meta.author).toBe('Camilo Hernández')

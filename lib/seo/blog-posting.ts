@@ -5,7 +5,7 @@ import { localizedPath } from '@/lib/i18n/paths'
 import { OG_DEFAULT_ID } from '@/lib/og/sections'
 import { getSiteUrl } from '@/lib/site-url'
 import { breadcrumbJsonLd, type BreadcrumbListJsonLd } from './breadcrumbs'
-import { personId } from './person'
+import { PERSON_NAME, personId } from './person'
 
 export type BlogPostingJsonLd = {
   '@context': 'https://schema.org'
@@ -19,7 +19,7 @@ export type BlogPostingJsonLd = {
   keywords: string[]
   url: string
   isPartOf: { '@type': 'Blog'; url: string }
-  author: { '@id': string }
+  author: { '@id': string } | { '@type': 'Person'; name: string }
 }
 
 export type PostCrumbLabels = { home: string; blog: string }
@@ -58,6 +58,6 @@ export function blogPostingJsonLd(meta: PostMeta, lang: Locale, url: string, bas
     keywords: [...meta.tags],
     url,
     isPartOf: { '@type': 'Blog', url: new URL(blogPath(lang), base).toString() },
-    author: { '@id': personId(base) },
+    author: meta.author === PERSON_NAME ? { '@id': personId(base) } : { '@type': 'Person', name: meta.author },
   }
 }
