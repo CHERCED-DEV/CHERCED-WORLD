@@ -125,6 +125,18 @@ Ver `plan.md`. Cada tarea lleva su código en los commits.
   Quedan para que el autor decida: los ítems 6 a 12 (el 7 y el 11 necesitan su texto), y si el blog adopta la
   navegación estándar (A o B) y se quitan los enlaces de temas del hero del AI Lab.
 
+- [x] R3.7 Publicar desde el panel (spec `../016-publicar-desde-el-panel/`, pedido del autor del 2026-11-12: "lo de
+  escribir blogs y publicarlos"; "Sí, constrúyela"). El Taller del blog publica, actualiza y despublica. Lo publicado
+  queda en la misma base de los mensajes y sale en `/{lang}/blog/p-{slug}`, en la portada del blog, las etiquetas,
+  el RSS y el sitemap, con comentarios y reacciones. El proxy reescribe los `p-` a una página interna, así que no se
+  abrió ninguna ruta dinámica. La e2e del Taller publica, lee el post, lo actualiza, lo despublica y comprueba el 404.
+- [x] R3.8 Panel responsive (pedido del autor: "todo full responsive y siguiendo los patrones y estilos y diseño").
+  Revisado con capturas a 390, 768 y 1280 px en claro y oscuro, con sesión y mensajes reales de prueba:
+  - Taller: el área de contenido es un editor alto (antes 44 px, porque la regla del formulario le ganaba en
+    especificidad a `.body`) y el borrador elegido lleva el acento del sitio en vez del gris del navegador.
+  - Mensajes en celular: los datos van uno sobre otro, los filtros en una fila deslizable y las acciones en dos
+    columnas, con "Responder por correo" y "Eliminar" a todo el ancho.
+
 ## R4 — Endurecer
 - [x] R4.1 Revisión de seguridad de lo nuevo. La revisión (solo lectura) terminó el 2026-11-11: no hay nada alto.
   Arreglos hechos el 2026-11-12 (M1, B2, B1, B5 y B7):
