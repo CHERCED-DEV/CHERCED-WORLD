@@ -272,6 +272,44 @@
   }
 }
 
+.cardTry {
+  display: flex;
+  margin-top: calc(-1 * var(--cw-space-3));
+}
+
+.cardTryLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  min-height: 44px;
+  color: var(--cw-fg);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-decoration: none;
+  text-transform: uppercase;
+
+  > span {
+    padding-block: 2px;
+    background: linear-gradient(var(--cw-graphic-accent), var(--cw-graphic-accent)) 0 100% / 100% 1px no-repeat;
+  }
+
+  svg {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--cw-duration-base) var(--cw-ease-spring);
+  }
+
+  &:hover svg,
+  &:focus-visible svg {
+    transform: translateX(4px);
+  }
+}
+
 .cardActions {
   display: flex;
   flex-wrap: wrap;

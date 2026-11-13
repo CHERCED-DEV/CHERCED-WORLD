@@ -6,13 +6,18 @@ import { localizeSections } from '@/components/site/section-nav/model'
 import { SectionNav } from '@/components/site/section-nav/SectionNav'
 import { serviceCases } from '@/components/site/services/model'
 import { ServicesView } from '@/components/site/services/ServicesView'
+import { labCardId } from '@/components/ailab/shell/LabCard'
+import { labCatalog } from '@/content/ailab/catalog'
+import type { LabExperimentId } from '@/content/types'
 import { getProjects, getSite } from '@/lib/content'
-import { t } from '@/lib/i18n'
+import { localizedPath, t } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 
 type Props = { params: LangParams }
 
 const SECTIONS_LABEL = { es: 'Secciones de Servicios', en: 'Services sections' }
+
+const DESPACHO_SHOWCASE: LabExperimentId = 'A4'
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = await resolveLang(params)
@@ -35,6 +40,7 @@ export default async function ServicesPage({ params }: Props) {
     getProjects(),
     services.items.map((item) => item.id),
   )
+  const tryHrefs = labCatalog.some((item) => item.id === DESPACHO_SHOWCASE) ? { 'ai-harness': localizedPath(lang, `/ai-lab#${labCardId(DESPACHO_SHOWCASE)}`) } : {}
 
   return (
     <>
@@ -58,6 +64,7 @@ export default async function ServicesPage({ params }: Props) {
           lang={lang}
           services={services}
           cases={cases}
+          tryHrefs={tryHrefs}
           labels={{
             title: t(dict, 'services.title'),
             audiences: t(dict, 'services.audiences'),

@@ -203,7 +203,7 @@ Rutas: `app/[lang]/services/**`, `components/site/services/**`, `tests/unit/p3/*
   2026-11-11): el precio es a convenir y lo explica una pregunta frecuente; ninguna tarjeta muestra precio (FR-406j).
 - [ ] T449 [US1b] **P-417 (por defecto, como está)**: si el autor cambia "fábrica de software" o el título del hero,
   el orquestador ajusta el copy en `content/`. P3 no cambia código.
-- [ ] T450 [US1b] **Depende de la 003 (A4)**: el botón "Probar" de la tarjeta de asistentes, que lleva a la vitrina
+- [x] T450 [US1b] (hecha el 2026-11-13: el enlace "Probar" va debajo del ejemplo de la tarjeta y lleva a la vitrina A4 del AI Lab, `/ai-lab#lab-a4`) **Depende de la 003 (A4)**: el botón "Probar" de la tarjeta de asistentes, que lleva a la vitrina
   "Despacho". No aparece mientras la vitrina no exista (FR-406i).
 - [ ] T451 [P] [US8] `app/[lang]/services/opengraph-image.tsx`.
 - [ ] T452 Pruebas y cierre:

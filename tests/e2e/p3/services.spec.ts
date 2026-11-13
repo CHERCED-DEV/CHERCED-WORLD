@@ -45,7 +45,10 @@ test.describe('Servicios: estructura (US1b, FR-406a a FR-406c)', () => {
       await expect(page.locator('[data-cw-services-contact]')).toHaveText(services.cta.button[lang])
       await expect(page.locator('[data-cw-services-contact]')).toHaveAttribute('href', `/${lang}/contactMe`)
       await expect(page.locator('[data-cw-audience]')).toHaveCount(3)
-      await expect(page.locator('[data-cw-service-try]')).toHaveCount(0)
+      const tryLink = page.locator('[data-cw-service-try]')
+      await expect(tryLink, 'T450: "Probar" solo en asistentes, hacia la vitrina Despacho').toHaveCount(1)
+      await expect(tryLink).toHaveAttribute('data-cw-service-try', 'ai-harness')
+      await expect(tryLink).toHaveAttribute('href', `/${lang}/ai-lab#lab-a4`)
       await expect(page.locator('#main')).not.toContainText(/\$|USD|COP|€/)
     })
   }

@@ -124,6 +124,16 @@ export function ServiceCard({
             </dl>
             <p className={styles.cardText}>{typeset(description, lang)}</p>
             {example ? <p className={styles.cardExample}>{example}</p> : null}
+            {tryHref ? (
+              <p className={styles.cardTry}>
+                <Link href={tryHref} className={styles.cardTryLink} aria-label={`${labels.try}: ${title}`} data-cw-service-try={id}>
+                  <span>{labels.try}</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                    <path d="M4 12h15M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+              </p>
+            ) : null}
           </div>
           <div id={backId} className={styles.cardBack} data-cw-face="back">
             <h4 className={styles.faceLabel}>{labels.deliverables}</h4>
@@ -147,16 +157,6 @@ export function ServiceCard({
         >
           {flipped ? labels.flipBack : labels.flip}
         </button>
-        {tryHref ? (
-          <Link
-            href={tryHref}
-            className={buttonClassName({ variant: 'glass', size: 'sm' })}
-            aria-label={`${labels.try}: ${title}`}
-            data-cw-service-try={id}
-          >
-            {labels.try}
-          </Link>
-        ) : null}
         <Link
           href={wantHref}
           className={buttonClassName({ variant: 'solid', size: 'sm' })}
