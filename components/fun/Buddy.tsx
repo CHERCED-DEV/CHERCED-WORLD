@@ -2,12 +2,29 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
-import { FUN_BYE_MS, FUN_CALM_AFTER_MS, FUN_POKE_MS, FUN_POKE_RADIUS, FUN_POWER_AT_MS, FUN_POWER_MS } from '@/content/fun'
+import {
+  FUN_BYE_MS,
+  FUN_CALM_AFTER_MS,
+  FUN_GUIDE_AFTER,
+  FUN_GUIDE_ARRIVE_MS,
+  FUN_GUIDE_CHEER_MS,
+  FUN_GUIDE_GIVE_UP_MS,
+  FUN_GUIDE_GRACE_MS,
+  FUN_GUIDE_HUSH_MS,
+  FUN_GUIDE_JUMP_MS,
+  FUN_GUIDE_TAP_MS,
+  FUN_POKE_MS,
+  FUN_POKE_RADIUS,
+  FUN_POWER_AT_MS,
+  FUN_POWER_MS,
+  FUN_RUN_SPEED,
+} from '@/content/fun'
 import { useMediaQuery } from '@/lib/fx/viewport'
 import type { Locale } from '@/lib/i18n/config'
 import { t } from '@/lib/i18n/translate'
 import { BuddySprite } from './BuddySprite'
 import { funDictionary } from './dictionary'
+import { findTarget, pageBusy, readInteraction, useGuideRoute } from './guide'
 import {
   activity,
   approach,
@@ -17,19 +34,28 @@ import {
   canAnnounce,
   clampToView,
   closestPoint,
+  countsAsInteraction,
   facingOf,
   followTarget,
+  GUIDE_START,
+  inAiLab,
   levelFor,
   nearestBox,
+  nextGuide,
   nextPhase,
   paceFor,
+  pickGuideLine,
   pickLine,
   recordWake,
+  runToward,
   settled,
+  standNear,
   type Box,
   type Facing,
   type FunEvent,
   type FunPhase,
+  type Guide,
+  type GuideEvent,
   type Point,
   type Size,
 } from './logic'
@@ -49,7 +75,9 @@ type Line = { id: number; text: string }
 
 type Tap = { id: number; x: number; y: number }
 
-type Transient = 'poke' | 'beg'
+type Transient = 'poke' | 'beg' | 'cheer'
+
+type Trip = { startedAt: number; spot: Point | null; tapped: boolean }
 
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
 
@@ -93,6 +121,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
   const dict = useMemo(() => funDictionary(lang), [lang])
   const level = levelFor(wakes)
   const reduced = useMediaQuery(REDUCED_MOTION)
+  const { pathname, goToLab } = useGuideRoute(lang)
 
   const [phase, setPhase] = useState<FunPhase>('awake')
   const [line, setLine] = useState<Line | null>(null)
@@ -102,7 +131,15 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
   const [powered, setPowered] = useState(false)
   const [taps, setTaps] = useState<Tap[]>([])
 
+  const layerRef = useRef<HTMLDivElement>(null)
   const actorRef = useRef<HTMLDivElement>(null)
+  const guide = useRef<Guide>(GUIDE_START)
+  const trip = useRef<Trip | null>(null)
+  const kick = useRef<(() => void) | null>(null)
+  const tapRef = useRef<(() => void) | null>(null)
+  const stepRef = useRef<(event: GuideEvent) => void>(() => {})
+  const pathRef = useRef(pathname)
+  const hushUntil = useRef(0)
   const phaseRef = useRef<FunPhase>('awake')
   const startAt = useRef(0)
   const lastAnnounce = useRef<number | null>(null)
@@ -171,6 +208,128 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
     [later, setTransient],
   )
 
+  const addTap = useCallback(
+    (spot: Point) => {
+      sequence.current += 1
+      const tap = { id: sequence.current, x: spot.x, y: spot.y }
+      setTaps((list) => [...list.slice(1 - MAX_TAPS), tap])
+      later(() => setTaps((list) => list.filter((item) => item.id !== tap.id)), TAP_MS)
+    },
+    [later, setTaps],
+  )
+
+  const endTrip = useCallback(() => {
+    trip.current = null
+    const actor = actorRef.current
+    if (!actor) return
+    delete actor.dataset.at
+    actor.style.removeProperty('--fun-at-x')
+    actor.style.removeProperty('--fun-at-y')
+  }, [])
+
+  const tapLab = useCallback(() => {
+    const current = trip.current
+    const actor = actorRef.current
+    if (!current || current.tapped || !actor) return
+    current.tapped = true
+    const spot = current.spot ?? findTarget(viewport())?.spot ?? null
+    if (spot) {
+      const rect = actor.getBoundingClientRect()
+      facing.current = facingOf({ x: rect.left + rect.width / 2, y: spot.y }, spot, facing.current)
+      actor.dataset.facing = facing.current
+      addTap(spot)
+    }
+    flash('poke', FUN_POKE_MS)
+    const wait = Math.max(FUN_GUIDE_TAP_MS, FUN_GUIDE_GRACE_MS - (Date.now() - current.startedAt))
+    later(() => {
+      if (trip.current !== current) return
+      goToLab()
+      later(() => {
+        if (trip.current === current) endTrip()
+      }, FUN_GUIDE_ARRIVE_MS)
+    }, wait)
+  }, [addTap, flash, later, goToLab, endTrip])
+
+  const startTrip = useCallback(() => {
+    const view = viewport()
+    const found = findTarget(view)
+    const current: Trip = { startedAt: Date.now(), spot: found?.spot ?? null, tapped: false }
+    trip.current = current
+    say(t(dict, 'fun.guide.go'), true)
+    later(() => {
+      if (trip.current === current) tapRef.current?.()
+    }, FUN_GUIDE_GIVE_UP_MS)
+    if (!reduced) {
+      kick.current?.()
+      return
+    }
+    const actor = actorRef.current
+    if (actor && found) {
+      const goal = clampToView(standNear(found.target, SIZE, view, BOUNDS), SIZE, view, BOUNDS)
+      actor.style.setProperty('--fun-at-x', `${goal.x.toFixed(1)}px`)
+      actor.style.setProperty('--fun-at-y', `${goal.y.toFixed(1)}px`)
+      actor.dataset.at = ''
+    }
+    later(() => {
+      if (trip.current === current) tapRef.current?.()
+    }, FUN_GUIDE_JUMP_MS)
+  }, [dict, reduced, say, later])
+
+  const celebrate = useCallback(
+    (arrived: boolean) => {
+      endTrip()
+      hushUntil.current = Date.now() + FUN_GUIDE_HUSH_MS
+      flash('cheer', FUN_GUIDE_CHEER_MS)
+      say(arrived ? t(dict, `fun.guide.line.${pickGuideLine(Math.random)}`) : t(dict, 'fun.guide.here'), true)
+    },
+    [dict, endTrip, flash, say],
+  )
+
+  const stepGuide = useCallback(
+    (event: GuideEvent) => {
+      const outcome = nextGuide(guide.current, event)
+      guide.current = outcome.guide
+      const layer = layerRef.current
+      if (layer) layer.dataset.guide = outcome.guide.status
+      if (outcome.action === 'run') startTrip()
+      else if (outcome.action === 'celebrate') celebrate(event.type === 'arrived')
+      else if (event.type === 'stop' && trip.current) endTrip()
+    },
+    [startTrip, celebrate, endTrip],
+  )
+
+  useEffect(() => {
+    stepRef.current = stepGuide
+    tapRef.current = tapLab
+  }, [stepGuide, tapLab])
+
+  useEffect(() => {
+    const layer = layerRef.current
+    if (layer) layer.dataset.guide = guide.current.status
+  }, [])
+
+  useEffect(() => {
+    pathRef.current = pathname
+    if (guide.current.status === 'running' && inAiLab(pathname)) stepRef.current({ type: 'arrived' })
+  }, [pathname])
+
+  useEffect(() => {
+    const onInput = (event: PointerEvent | KeyboardEvent) => {
+      if (!countsAsInteraction(readInteraction(event))) return
+      const path = pathRef.current
+      const inLab = inAiLab(path)
+      const last = guide.current.status === 'counting' && guide.current.count + 1 >= FUN_GUIDE_AFTER
+      const blocked = last && !inLab && (pageBusy(path) || findTarget(viewport()) === null)
+      stepRef.current({ type: 'interaction', phase: phaseRef.current, inLab, blocked })
+    }
+    window.addEventListener('pointerdown', onInput, { capture: true, passive: true })
+    window.addEventListener('keydown', onInput, { capture: true })
+    return () => {
+      window.removeEventListener('pointerdown', onInput, { capture: true })
+      window.removeEventListener('keydown', onInput, { capture: true })
+    }
+  }, [])
+
   const dispatch = useCallback(
     (event: FunEvent) => {
       const elapsed = Date.now() - startAt.current
@@ -179,6 +338,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
         phaseRef.current = outcome.phase
         setPhase(outcome.phase)
       }
+      if (outcome.phase !== 'awake') stepRef.current({ type: 'stop' })
       if (outcome.reply === 'sulk') say(t(dict, 'fun.sulk'), true)
       else if (outcome.reply === 'free') say(t(dict, 'fun.free'), true)
       else if (outcome.reply === 'beg') {
@@ -225,6 +385,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
   useEffect(() => {
     if (!act.lines) return
     const id = window.setInterval(() => {
+      if (trip.current || Date.now() < hushUntil.current) return
       const next = pickLine({ level, elapsedMs: Date.now() - startAt.current, previous: previousLine.current, random: Math.random })
       previousLine.current = next
       say(t(dict, `fun.line.${next}`, { level }), false)
@@ -236,7 +397,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
     if (!act.pokes) return
     const id = window.setInterval(() => {
       const actor = actorRef.current
-      if (!actor) return
+      if (!actor || trip.current) return
       const here = position.current
       const hand = { x: here.x + (facing.current === 'right' ? SIZE.width * 0.85 : SIZE.width * 0.15), y: here.y + SIZE.height * 0.6 }
       const boxes = pokeable()
@@ -246,13 +407,10 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
       facing.current = facingOf({ x: here.x + SIZE.width / 2, y: hand.y }, spot, facing.current)
       actor.dataset.facing = facing.current
       flash('poke', FUN_POKE_MS)
-      sequence.current += 1
-      const tap = { id: sequence.current, x: spot.x, y: spot.y }
-      setTaps((list) => [...list.slice(1 - MAX_TAPS), tap])
-      later(() => setTaps((list) => list.filter((item) => item.id !== tap.id)), TAP_MS)
+      addTap(spot)
     }, pace.pokeMs)
     return () => window.clearInterval(id)
-  }, [act.pokes, pace.pokeMs, flash, later])
+  }, [act.pokes, pace.pokeMs, flash, addTap])
 
   useEffect(() => {
     if (!act.chase) return
@@ -265,9 +423,19 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
       const dt = last ? now - last : 16
       last = now
       const view = viewport()
+      const current = trip.current
+      const running = current !== null && !current.tapped
+      if (running) {
+        const found = findTarget(view)
+        if (found) {
+          current.spot = found.spot
+          target.current = standNear(found.target, SIZE, view, BOUNDS)
+        }
+      }
       const goal = clampToView(target.current, SIZE, view, BOUNDS)
       const before = position.current
-      const next = clampToView(approach(before, goal, dt, rate.current), SIZE, view, BOUNDS)
+      const step = running ? runToward(before, goal, dt, FUN_RUN_SPEED) : approach(before, goal, dt, rate.current)
+      const next = clampToView(step, SIZE, view, BOUNDS)
       const turned = facingOf(before, next, facing.current)
       if (turned !== facing.current) {
         facing.current = turned
@@ -283,6 +451,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
         frame = 0
         last = 0
         delete actor.dataset.walking
+        if (running) tapRef.current?.()
         return
       }
       frame = window.requestAnimationFrame(tick)
@@ -295,11 +464,13 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
     }
 
     const onPointer = (event: PointerEvent) => {
+      if (trip.current) return
       target.current = followTarget({ x: event.clientX, y: event.clientY }, SIZE, event.pointerType === 'touch')
       run()
     }
 
     const onFocus = (event: FocusEvent) => {
+      if (trip.current) return
       const element = event.target
       if (!(element instanceof Element) || element.closest('[data-cw-fun]') || !element.matches(':focus-visible')) return
       const rect = element.getBoundingClientRect()
@@ -310,8 +481,10 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
     window.addEventListener('pointermove', onPointer, { passive: true })
     window.addEventListener('pointerdown', onPointer, { passive: true })
     document.addEventListener('focusin', onFocus)
+    kick.current = run
     run()
     return () => {
+      kick.current = null
       window.cancelAnimationFrame(frame)
       window.removeEventListener('pointermove', onPointer)
       window.removeEventListener('pointerdown', onPointer)
@@ -325,6 +498,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
 
   return createPortal(
     <div
+      ref={layerRef}
       className={styles.layer}
       style={layerStyle}
       data-cw-fun=""

@@ -22,6 +22,14 @@
   will-change: auto;
 }
 
+.layer[data-reduced] .actor[data-at],
+:global(:root[data-cw-dock]) .layer[data-reduced] .actor[data-at] {
+  top: var(--fun-at-y);
+  right: auto;
+  bottom: auto;
+  left: var(--fun-at-x);
+}
+
 .layer[data-phase='leaving'] .actor {
   animation: fun-leave 0.45s var(--cw-ease-in) both;
   animation-delay: calc(var(--fun-bye) - 450ms);
@@ -243,6 +251,14 @@
   .actor[data-pose='power'] .spikes {
     animation: fun-rise 0.5s steps(3, end) both;
   }
+
+  .actor[data-pose='cheer'] .sprite {
+    animation: fun-hop 0.35s var(--cw-ease-out) 4;
+  }
+}
+
+.actor[data-pose='cheer'] .yell {
+  display: inline;
 }
 
 .actor[data-pose='poke'] {
@@ -389,6 +405,12 @@
 @keyframes fun-shake {
   50% {
     transform: translateX(1px);
+  }
+}
+
+@keyframes fun-hop {
+  50% {
+    translate: 0 -8px;
   }
 }
 

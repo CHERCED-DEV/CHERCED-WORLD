@@ -3,6 +3,8 @@ import {
   FUN_BASE_LINES,
   FUN_BEG_LINE,
   FUN_CALM_AFTER_MS,
+  FUN_GUIDE_AFTER,
+  FUN_GUIDE_LINES,
   FUN_HINT_LINE,
   FUN_LEVEL_LINES,
   FUN_MAX_LEVEL,
@@ -179,4 +181,83 @@ export function bubbleAlign(x: number, size: Size, view: Size, room = 80): Bubbl
   if (x < room) return 'start'
   if (x + size.width > view.width - room) return 'end'
   return 'center'
+}
+
+export type GuideStatus = 'counting' | 'running' | 'done'
+
+export type Guide = { status: GuideStatus; count: number }
+
+export const GUIDE_START: Guide = Object.freeze({ status: 'counting', count: 0 })
+
+export type GuideEvent =
+  | { type: 'interaction'; phase: FunPhase; inLab: boolean; blocked: boolean }
+  | { type: 'stop' }
+  | { type: 'arrived' }
+
+export type GuideAction = 'run' | 'celebrate' | null
+
+export type GuideOutcome = { guide: Guide; action: GuideAction }
+
+export function nextGuide(guide: Guide, event: GuideEvent, after: number = FUN_GUIDE_AFTER): GuideOutcome {
+  if (event.type === 'stop') return guide.status === 'running' ? { guide: { ...guide, status: 'done' }, action: null } : { guide, action: null }
+  if (event.type === 'arrived') return guide.status === 'running' ? { guide: { ...guide, status: 'done' }, action: 'celebrate' } : { guide, action: null }
+  if (guide.status !== 'counting' || event.phase !== 'awake') return { guide, action: null }
+  const count = Math.min(after, guide.count + 1)
+  if (count < after) return { guide: { status: 'counting', count }, action: null }
+  if (event.inLab) return { guide: { status: 'done', count }, action: 'celebrate' }
+  if (event.blocked) return { guide: { status: 'counting', count }, action: null }
+  return { guide: { status: 'running', count }, action: 'run' }
+}
+
+export type Interaction =
+  | { kind: 'pointer'; trusted: boolean; own: boolean }
+  | { kind: 'key'; trusted: boolean; own: boolean; key: string; repeat: boolean; typing: boolean }
+
+const QUIET_KEYS = new Set(['Escape', 'Shift', 'Control', 'Alt', 'AltGraph', 'Meta', 'OS', 'CapsLock', 'Fn', 'FnLock', 'Dead', 'Unidentified'])
+
+export function countsAsInteraction(input: Interaction): boolean {
+  if (!input.trusted || input.own) return false
+  if (input.kind === 'pointer') return true
+  return !input.repeat && !input.typing && !QUIET_KEYS.has(input.key)
+}
+
+export function inAiLab(pathname: string | null): boolean {
+  return /^\/[a-z]{2}\/ai-lab(\/|$)/.test(pathname ?? '')
+}
+
+export function pickGuideLine(random: () => number): number {
+  return FUN_GUIDE_LINES[clamp(Math.floor(random() * FUN_GUIDE_LINES.length), 0, FUN_GUIDE_LINES.length - 1)]!
+}
+
+export type GuideTarget = { kind: 'link' | 'dock'; box: Box }
+
+export function fitsView(box: Box | null, view: Size): box is Box {
+  if (!box || box.width <= 0 || box.height <= 0) return false
+  return box.left >= 0 && box.top >= 0 && box.left + box.width <= view.width && box.top + box.height <= view.height
+}
+
+export function centerOf(box: Box): Point {
+  return { x: box.left + box.width / 2, y: box.top + box.height / 2 }
+}
+
+export function guideTarget(link: Box | null, dock: Box | null, view: Size): GuideTarget | null {
+  if (fitsView(link, view)) return { kind: 'link', box: link }
+  if (fitsView(dock, view)) return { kind: 'dock', box: dock }
+  return null
+}
+
+export function standNear(target: GuideTarget, size: Size, view: Size, bounds: Bounds, gap = 8): Point {
+  if (target.kind === 'link') return besideBox(target.box, size, view)
+  const above = target.box.top - size.height - gap
+  const y = above >= bounds.top ? above : target.box.top + target.box.height + gap
+  return { x: target.box.left + target.box.width / 2 - size.width / 2, y }
+}
+
+export function runToward(from: Point, to: Point, dtMs: number, speed: number): Point {
+  const dx = to.x - from.x
+  const dy = to.y - from.y
+  const distance = Math.hypot(dx, dy)
+  const step = (speed * clamp(dtMs, 0, 100)) / 1000
+  if (distance <= step) return { x: to.x, y: to.y }
+  return { x: from.x + (dx / distance) * step, y: from.y + (dy / distance) * step }
 }

@@ -157,3 +157,79 @@
     color: var(--cw-fg);
   }
 }
+
+.aiLab {
+  --_gold: #f5c443;
+  --_gold-glow: rgb(245 196 67 / 0.4);
+  position: relative;
+  isolation: isolate;
+  color: var(--cw-fg);
+  font-weight: 600;
+  text-shadow:
+    0 0 2px var(--cw-bg),
+    0 0 6px var(--cw-bg);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    border-radius: 50%;
+    translate: -50% -50%;
+    pointer-events: none;
+  }
+
+  &::before {
+    width: 80px;
+    height: 80px;
+    background: repeating-conic-gradient(from 0deg, var(--_gold) 0deg 4deg, transparent 4deg 20deg);
+    mask: radial-gradient(closest-side, transparent 52%, #000 66%, rgb(0 0 0 / 0.55) 82%, transparent 100%);
+    animation:
+      ai-lab-rays 16s linear infinite,
+      ai-lab-breathe 2.4s var(--cw-ease-in-out) infinite alternate;
+  }
+
+  &::after {
+    width: 84px;
+    height: 46px;
+    background: radial-gradient(closest-side, transparent 48%, var(--_gold-glow) 70%, transparent 100%);
+    animation: ai-lab-breathe 2.4s var(--cw-ease-in-out) infinite alternate-reverse;
+  }
+}
+
+:global(:root[data-theme='light']) .aiLab {
+  --_gold: #c98d00;
+  --_gold-glow: rgb(201 141 0 / 0.28);
+}
+
+@media (prefers-color-scheme: light) {
+  :global(:root:not([data-theme])) .aiLab {
+    --_gold: #c98d00;
+    --_gold-glow: rgb(201 141 0 / 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aiLab::before,
+  .aiLab::after {
+    animation: none;
+  }
+}
+
+@keyframes ai-lab-rays {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes ai-lab-breathe {
+  from {
+    opacity: 0.55;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
