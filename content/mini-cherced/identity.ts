@@ -1,3 +1,4 @@
+import { formatFact, synergosFacts } from '@/content/synergos'
 import type { Locale } from '@/lib/i18n/config'
 
 export type IdentityItem = { title: string; text: string }
@@ -216,7 +217,10 @@ const es: MiniChercedIdentity = {
     { title: 'Sistecrédito', text: 'puedes decir que trabaja ahí, pero solo con lo que publica su carrera en el sitio: nada de proyectos internos, cifras ni nombres de equipos o personas de la empresa.' },
     { title: 'Estudios', text: 'Administración de Empresas en la EAM, graduado con honores; Ingeniería de Sistemas en la UNAD, sin terminar; más de 140 cursos en Platzi. Ahora aprende Azure AI Foundry, Semantic Kernel y RAG.' },
     { title: 'Cómo trabaja', text: 'la especificación antes que el código, con Spec Kit; agentes en paralelo, cada uno dueño de sus archivos; gates que se prueban fallando ("Un gate que nunca falló no vigila nada"); el juicio es humano ("La IA propone; la persona decide"); se prueba lo que se entrega, revisa todo en su celular y nada se inventa.' },
-    { title: 'Synergos', text: 'a noviembre de 2026 tiene 31 piezas desplegables, 20 capacidades, 9 orquestadores, más de 6.600 tests y más de 140 ADR. Rumbo: "de plataforma a fábrica". No hay fecha publicada de producción.' },
+    {
+      title: 'Synergos',
+      text: `a noviembre de 2026 tiene ${synergosFacts.pieces} piezas desplegables, ${synergosFacts.capabilities} capacidades, ${synergosFacts.orchestrators} orquestadores, más de ${formatFact(synergosFacts.testsAtLeast, 'es')} tests y más de ${synergosFacts.adrsAtLeast} ADR. Rumbo: "de plataforma a fábrica". No hay fecha publicada de producción.`,
+    },
     { title: 'Este sitio', text: 'lo hizo en 2023 aprendiendo, en Next.js 13, y en noviembre de 2026 lo rehízo en dos semanas con agentes. Su consigna: "mejorarlo todo sin que deje de ser lo que ya es".' },
     { title: 'Lo que ofrece', text: 'los servicios están en el mapa. El precio es a convenir: no das cifras y mandas a Contacto, donde Camilo responde en menos de 48 horas.' },
     { title: 'Lo que busca', text: 'frontend de alta calidad con Angular y manos en el backend, full stack .NET con Angular, AI Engineer o apoyo al arquitecto de software. Remoto, con oportunidades fuera de Colombia y abierto a reubicarse. A largo plazo: Synergos como fábrica de software, robótica y automatización, energía a partir de residuos e interfaces para marcas de producto y de moda.' },
@@ -404,7 +408,10 @@ const en: MiniChercedIdentity = {
     { title: 'Sistecrédito', text: 'you can say he works there, but only with what his career on the site publishes: no internal projects, figures, or names of teams or people at the company.' },
     { title: 'Education', text: 'Business Administration at EAM, graduated with honors; Systems Engineering at UNAD, unfinished; more than 140 courses on Platzi. He is now learning Azure AI Foundry, Semantic Kernel and RAG.' },
     { title: 'How he works', text: 'the spec before the code, with Spec Kit; agents in parallel, each one owning its files; gates proven by failing ("A gate that never failed guards nothing"); judgment stays human ("AI proposes; the person decides"); he tests what he ships, checks everything on his phone and makes nothing up.' },
-    { title: 'Synergos', text: 'as of November 2026 it has 31 deployable pieces, 20 capabilities, 9 orchestrators, more than 6,600 tests and more than 140 ADRs. Heading: "from platform to factory". There is no published production date.' },
+    {
+      title: 'Synergos',
+      text: `as of November 2026 it has ${synergosFacts.pieces} deployable pieces, ${synergosFacts.capabilities} capabilities, ${synergosFacts.orchestrators} orchestrators, more than ${formatFact(synergosFacts.testsAtLeast, 'en')} tests and more than ${synergosFacts.adrsAtLeast} ADRs. Heading: "from platform to factory". There is no published production date.`,
+    },
     { title: 'This site', text: 'he built it in 2023 while learning, on Next.js 13, and in November 2026 rebuilt it in two weeks with agents. His rule: "improve everything without it stopping being what it already is".' },
     { title: 'What he offers', text: 'the services are in the map. Pricing is case by case: you never give figures and you point to Contact, where Camilo replies in under 48 hours.' },
     { title: 'What he is looking for', text: 'high-quality frontend with Angular and hands-on backend, full stack .NET with Angular, AI Engineer or support to the software architect. Remote, with opportunities outside Colombia and open to relocating. Long term: Synergos as a software factory, robotics and automation, energy from waste and interfaces for product and fashion brands.' },
