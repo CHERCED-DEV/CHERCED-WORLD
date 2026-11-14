@@ -13,6 +13,8 @@ $paper: #f4f4f4;
 
 .screen {
   position: relative;
+  width: 100%;
+  min-width: 0;
   min-height: 300px;
   aspect-ratio: 16 / 10;
   overflow: hidden;
@@ -261,11 +263,23 @@ $paper: #f4f4f4;
 }
 
 .sole {
-  fill: #5a5a5a;
+  fill: #e6e6e6;
 }
 
 .tongue {
   fill: #b43c3c;
+}
+
+.olive {
+  fill: #59643a;
+}
+
+.oliveDark {
+  fill: #3f4729;
+}
+
+.wood {
+  fill: #8a5a33;
 }
 
 .sweat,
@@ -364,6 +378,56 @@ $paper: #f4f4f4;
     width: 8px;
     height: calc(4px + var(--agent-level) * (8px + 28px * (0.5 + 0.5 * sin(calc(var(--bar) * 1.7)))));
     background: $green;
+  }
+}
+
+.voxels {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  touch-action: manipulation;
+  transition: opacity 0.6s ease;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.stage[data-scene='3d'] {
+  .screen {
+    border: 1px solid rgb(37 237 158 / 0.3);
+    background: $ink;
+    box-shadow: 0 28px 60px -36px rgb(37 237 158 / 0.45);
+
+    &::after {
+      background: radial-gradient(130% 100% at 50% 42%, transparent 58%, rgb(0 0 0 / 0.6) 100%);
+    }
+  }
+
+  .voxels {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sky,
+  .floor,
+  .meter,
+  .dodger {
+    display: none;
+  }
+
+  .actor {
+    bottom: 72%;
+    pointer-events: none;
+  }
+
+  .nameplate {
+    border-width: 1px;
+    background: rgb(0 0 0 / 0.6);
   }
 }
 
