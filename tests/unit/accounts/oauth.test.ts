@@ -39,7 +39,17 @@ describe('id_token de Google (A-1704)', () => {
       googleSub: '1234567890',
       email: 'ana.prueba@example.com',
       name: 'Ana Prueba',
+      picture: null,
     })
+  })
+
+  it('guarda el enlace de la foto solo si es https de googleusercontent.com (FR-4008)', () => {
+    const options = { clientId: CLIENT, nonce: 'nonce-ok', now: NOW }
+    const photo = 'https://lh3.googleusercontent.com/a/ACg8ocFoto=s96-c'
+    expect(profileFromIdToken(idToken({ ...valid, picture: photo }), options)?.picture).toBe(photo)
+    expect(profileFromIdToken(idToken({ ...valid, picture: 'http://lh3.googleusercontent.com/a/x' }), options)?.picture).toBeNull()
+    expect(profileFromIdToken(idToken({ ...valid, picture: 'https://evil.example.com/a.png' }), options)?.picture).toBeNull()
+    expect(profileFromIdToken(idToken({ ...valid, picture: 'https://googleusercontent.com.evil.example/a' }), options)?.picture).toBeNull()
   })
 
   it.each([

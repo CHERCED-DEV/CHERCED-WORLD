@@ -3,11 +3,11 @@ import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { Icon } from '@/components/ui/Icon'
 import type { AccountCopy, AccountError } from '@/content/account'
-import { deleteOwnAccount, signOutAccount } from '@/lib/actions/account'
+import type { DashboardData } from '@/lib/accounts/dashboard'
 import type { SignInMode } from '@/lib/auth/google'
-import type { Permission } from '@/lib/data/types'
 import { localizedPath, type Locale } from '@/lib/i18n'
 import styles from './Account.module.scss'
+import { AccountDashboard } from './AccountDashboard'
 
 export type AccountViewProps = {
   lang: Locale
@@ -16,9 +16,10 @@ export type AccountViewProps = {
   next: string
   error: AccountError | null
   deleted: boolean
+  withdrawn: boolean
   owner: boolean
   panelHref: string | null
-  account: { name: string; email: string; permissions: Permission[] } | null
+  dashboard: DashboardData | null
 }
 
 function GoogleMark() {
@@ -92,50 +93,19 @@ function SignedOut({ lang, copy, mode, next }: Pick<AccountViewProps, 'lang' | '
   )
 }
 
-function SignedIn({ lang, copy, panelHref, account }: Pick<AccountViewProps, 'lang' | 'copy' | 'panelHref'> & { account: NonNullable<AccountViewProps['account']> }) {
+export function AccountView({ lang, copy, mode, next, error, deleted, withdrawn, owner, panelHref, dashboard }: AccountViewProps) {
+  if (dashboard) {
+    return (
+      <section className={cx('cw-container', styles.dashWrap)} data-cw-account-page="signed-in">
+        {error ? <Notice tone="error">{copy.errors[error]}</Notice> : null}
+        {withdrawn ? <Notice tone="ok">{copy.dashboard.withdrawn}</Notice> : null}
+        <AccountDashboard lang={lang} copy={copy} panelHref={panelHref} data={dashboard} />
+      </section>
+    )
+  }
   return (
-    <>
-      <h1 className={styles.title}>{copy.signedInTitle}</h1>
-      <p className={styles.name} data-cw-account-name="">
-        {account.name}
-      </p>
-      <dl className={styles.details}>
-        <dt>{copy.email}</dt>
-        <dd>{account.email}</dd>
-        <dt>{copy.permissions}</dt>
-        <dd>{account.permissions.length > 0 ? account.permissions.map((permission) => copy.permissionNames[permission]).join(' · ') : copy.noPermissions}</dd>
-      </dl>
-      <div className={styles.actions}>
-        {panelHref ? (
-          <a href={panelHref} className={buttonClassName({ variant: 'solid' })} data-cw-account-panel="">
-            {copy.panel}
-          </a>
-        ) : null}
-        <form action={signOutAccount}>
-          <input type="hidden" name="lang" value={lang} />
-          <button type="submit" className={buttonClassName({})} data-cw-account-signout="">
-            {copy.signOut}
-          </button>
-        </form>
-      </div>
-      <details className={styles.danger}>
-        <summary>{copy.deleteSummary}</summary>
-        <p>{copy.deleteText}</p>
-        <form action={deleteOwnAccount}>
-          <input type="hidden" name="lang" value={lang} />
-          <button type="submit" className={buttonClassName({ variant: 'ghost', size: 'sm' })} data-cw-account-delete="">
-            {copy.deleteConfirm}
-          </button>
-        </form>
-      </details>
-    </>
-  )
-}
-
-export function AccountView({ lang, copy, mode, next, error, deleted, owner, panelHref, account }: AccountViewProps) {
-  return (
-    <section className={cx('cw-container', styles.wrap)} data-cw-account-page={account ? 'signed-in' : 'signed-out'}>
-      {owner && !account ? (
+    <section className={cx('cw-container', styles.wrap)} data-cw-account-page="signed-out">
+      {owner ? (
         <GlassSurface variant="subtle" className={styles.owner} data-cw-account-owner="">
           <p className={styles.ownerTitle}>{copy.ownerTitle}</p>
           <p className={styles.muted}>{copy.ownerText}</p>
@@ -149,11 +119,7 @@ export function AccountView({ lang, copy, mode, next, error, deleted, owner, pan
       <GlassSurface variant="standard" className={styles.card}>
         {error ? <Notice tone="error">{copy.errors[error]}</Notice> : null}
         {deleted ? <Notice tone="ok">{copy.deleted}</Notice> : null}
-        {account ? (
-          <SignedIn lang={lang} copy={copy} panelHref={panelHref} account={account} />
-        ) : (
-          <SignedOut lang={lang} copy={copy} mode={mode} next={next} />
-        )}
+        <SignedOut lang={lang} copy={copy} mode={mode} next={next} />
       </GlassSurface>
     </section>
   )

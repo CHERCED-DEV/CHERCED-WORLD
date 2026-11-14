@@ -94,3 +94,16 @@ export async function setDraftReview(id: string, review: DraftReview | null): Pr
     return { drafts: drafts.map(item => item.id === id ? draft : item), value: draft }
   })
 }
+
+export async function removeDraftsBy(authorId: string, keep: ReadonlySet<string>): Promise<number> {
+  const storage = editorialStorage()
+  if (storage === 'unavailable') return 0
+  if (storage === 'mongo') {
+    const result = await (await getDb()).collection<EditorialDraft>('editorialDrafts').deleteMany({ 'author.id': authorId, id: { $nin: [...keep] } })
+    return result.deletedCount
+  }
+  return lockedLocal(async (drafts) => {
+    const kept = drafts.filter((draft) => draft.author?.id !== authorId || keep.has(draft.id))
+    return { drafts: kept, value: drafts.length - kept.length }
+  })
+}

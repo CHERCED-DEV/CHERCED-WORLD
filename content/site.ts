@@ -1088,8 +1088,15 @@ export const site: SiteContent = {
       {
         heading: { es: 'Si ingresas con tu cuenta de Google', en: 'If you sign in with your Google account' },
         body: {
-          es: 'Google me confirma tu nombre y tu correo. Guardo esos dos datos, un identificador de tu cuenta y las fechas en que ingresas, solo para que comentes sin escribirlos y, si te invité al equipo, para darte acceso al panel. No guardo tu foto ni tu contraseña, y no tengo acceso a tu cuenta de Google. Puedes borrar tu cuenta y tus comentarios cuando quieras desde «Mi cuenta».',
-          en: 'Google confirms your name and email to me. I store those two, an identifier for your account and the dates you sign in, only so you can comment without typing them and, if I invited you to the team, to give you access to the panel. I do not store your photo or your password, and I have no access to your Google account. You can delete your account and your comments at any time from “My account”.',
+          es: 'Google me confirma tu nombre, tu correo y el enlace a tu foto de perfil. Guardo esos datos, un identificador de tu cuenta y las fechas en que ingresas, solo para que comentes sin escribirlos, para mostrarte tu foto en «Mi cuenta» y, si te invité al equipo, para darte acceso al panel. Del enlace a la foto solo acepto direcciones de Google; la imagen sigue en los servidores de Google. No guardo tu contraseña ni tengo acceso a tu cuenta de Google. Puedes borrar tu cuenta y todo lo que guardo de ti cuando quieras desde «Mi cuenta».',
+          en: 'Google confirms your name, your email and the link to your profile photo to me. I store those, an identifier for your account and the dates you sign in, only so you can comment without typing them, to show your photo in “My account” and, if I invited you to the team, to give you access to the panel. For the photo link I only accept Google addresses; the image stays on Google’s servers. I do not store your password and I have no access to your Google account. You can delete your account and everything I keep about you at any time from “My account”.',
+        },
+      },
+      {
+        heading: { es: 'Tu perfil en «Mi cuenta»', en: 'Your profile in “My account”' },
+        body: {
+          es: 'Si ingresas con Google puedes completar un perfil. Todo es opcional y solo lo guardo si me autorizas, con la fecha y la versión del aviso. Pido tu país y tu ciudad, para saber desde dónde me leen; tu rol y tu empresa, para saber quién me lee; tu LinkedIn y tu GitHub, para conocerte antes de responderte; tus idiomas, para saber en qué idioma hablarte; qué te trae al sitio, para mejorar lo que te muestro; y tus preferencias de idioma y tema, para que el sitio se vea como prefieres. También puedes subir una foto: tu navegador la recorta a 256 píxeles y le quita los metadatos, como la ubicación, antes de enviarla, y la guardo en la misma base de datos del sitio. La foto es opcional, nunca la uso para identificar a nadie y no sale en páginas públicas. Tu perfil y tu foto solo los vemos tú y yo. Los conservo hasta que retires la autorización o borres tu cuenta. En «Mi cuenta» puedes verlos, corregirlos, descargar todos tus datos en un archivo JSON, retirar la autorización y borrar tu cuenta con todo lo tuyo, como dice la Ley 1581 de 2012.',
+          en: 'If you sign in with Google you can fill in a profile. Everything is optional and I only store it if you authorize me, with the date and the version of the notice. I ask for your country and city, to know where my readers are; your role and company, to know who is reading; your LinkedIn and GitHub, to get to know you before I reply; your languages, to know which language to use with you; what brings you here, to improve what I show you; and your language and theme preferences, so the site looks the way you like. You can also upload a photo: your browser crops it to 256 pixels and strips its metadata, such as location, before sending it, and I store it in the site’s own database. The photo is optional, I never use it to identify anyone and it never appears on public pages. Only you and I see your profile and photo. I keep them until you withdraw your authorization or delete your account. In “My account” you can see and correct them, download all your data as a JSON file, withdraw your authorization and delete your account with everything in it, as Colombian Law 1581 of 2012 provides.',
         },
       },
       {
@@ -1102,8 +1109,8 @@ export const site: SiteContent = {
       {
         heading: { es: 'Cómo consultar o eliminar tus datos', en: 'How to review or delete your data' },
         body: {
-          es: 'Escríbeme a chernandezcediel@gmail.com, el correo de contacto de este sitio, para consultar, corregir o eliminar tus datos.',
-          en: "Write to me at chernandezcediel@gmail.com, this site's contact email, to review, correct or delete your data.",
+          es: 'Si tienes cuenta, en «Mi cuenta» puedes ver, corregir, descargar y borrar tus datos. También puedes escribirme a chernandezcediel@gmail.com, el correo de contacto de este sitio, para consultar, corregir o eliminar tus datos.',
+          en: "If you have an account, you can see, correct, download and delete your data in “My account”. You can also write to me at chernandezcediel@gmail.com, this site's contact email, to review, correct or delete your data.",
         },
       },
       {

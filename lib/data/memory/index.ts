@@ -4,6 +4,7 @@ import { createMemoryAccountRepo } from './accounts'
 import { createMemoryAdminRepo } from './admin'
 import { createMemoryCommentRepo } from './comments'
 import { createMemoryMessageRepo } from './messages'
+import { createMemoryProfileRepo } from './profiles'
 import { createMemoryRateLimitRepo } from './rate-limits'
 import { createMemoryReactionRepo } from './reactions'
 
@@ -13,9 +14,10 @@ export function createMemoryRepos(): Repos {
     comments: createMemoryCommentRepo(),
     admin: createMemoryAdminRepo(),
     accounts: createMemoryAccountRepo(),
+    profiles: createMemoryProfileRepo(),
     rateLimits: createMemoryRateLimitRepo(),
     reactions: createMemoryReactionRepo(),
   }
 }
 
-export { createMemoryAccountRepo, createMemoryAdminRepo, createMemoryCommentRepo, createMemoryMessageRepo, createMemoryRateLimitRepo, createMemoryReactionRepo }
+export { createMemoryAccountRepo, createMemoryAdminRepo, createMemoryCommentRepo, createMemoryMessageRepo, createMemoryProfileRepo, createMemoryRateLimitRepo, createMemoryReactionRepo }

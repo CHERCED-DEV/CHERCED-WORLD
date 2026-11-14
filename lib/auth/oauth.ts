@@ -1,4 +1,5 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
+import { googlePicture } from '@/lib/accounts/profile'
 import type { AccountProfile } from '@/lib/data/types'
 import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/config'
 
@@ -124,5 +125,5 @@ export function profileFromIdToken(idToken: unknown, { clientId, nonce, now }: {
   if (typeof claims.email !== 'string' || !/^[^\s@]+@[^\s@]+$/.test(claims.email) || claims.email.length > 254) return null
   if (claims.email_verified !== true && claims.email_verified !== 'true') return null
   const email = claims.email.trim().toLowerCase()
-  return { googleSub: claims.sub, email, name: displayName(claims.name, email) }
+  return { googleSub: claims.sub, email, name: displayName(claims.name, email), picture: googlePicture(claims.picture) }
 }

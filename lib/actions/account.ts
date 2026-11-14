@@ -4,6 +4,7 @@ import '@/lib/data/mongo/register'
 import { refresh, revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
+import { eraseAccountData } from '@/lib/accounts/data'
 import { cleanPermissions, normalizeEmail } from '@/lib/accounts/permissions'
 import { endAccountSession, getAccountState } from '@/lib/auth/accounts'
 import { requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
@@ -27,12 +28,6 @@ function refreshComments(): void {
   revalidatePath('/[lang]/blog/[id]', 'page')
 }
 
-async function eraseAccount(repos: Repos, accountId: string): Promise<boolean> {
-  await repos.comments.removeByAccount(accountId)
-  await repos.accounts.deleteSessionsFor(accountId)
-  return repos.accounts.remove(accountId)
-}
-
 export async function signOutAccount(formData: FormData): Promise<void> {
   try {
     await endAccountSession()
@@ -47,7 +42,7 @@ export async function deleteOwnAccount(formData: FormData): Promise<void> {
   try {
     const state = await getAccountState()
     if (state) {
-      await eraseAccount(getRepos(), state.account.id)
+      await eraseAccountData(getRepos(), state.account.id)
       refreshComments()
     }
     await endAccountSession()
@@ -112,7 +107,7 @@ export async function setAccountBlocked(id: string, blocked: boolean): Promise<A
 export async function deleteAccount(id: string): Promise<ActionResult> {
   return asOwner('account.delete', async (repos) => {
     if (!validId(id)) return fail('validation')
-    if (!(await eraseAccount(repos, id))) return fail('not_found')
+    if (!(await eraseAccountData(repos, id))) return fail('not_found')
     refreshComments()
     refresh()
     return ok()

@@ -1,5 +1,5 @@
 import 'server-only'
-import type { Collection, Db, ObjectId } from 'mongodb'
+import type { Binary, Collection, Db, ObjectId } from 'mongodb'
 import type { AuthorReply, CommentStatus, MessageStatus, Permission, ScryptParams } from '@/lib/data/types'
 
 export const COLLECTIONS = {
@@ -13,6 +13,7 @@ export const COLLECTIONS = {
   accounts: 'accounts',
   accountSessions: 'account_sessions',
   teamGrants: 'team_grants',
+  profiles: 'account_profiles',
 } as const
 
 export const CREDENTIAL_ID = 'admin'
@@ -85,6 +86,26 @@ export type AccountDoc = {
   createdAt: Date
   lastLoginAt: Date
   blockedAt: Date | null
+  picture?: string | null
+}
+
+export type ProfileDoc = {
+  _id: string
+  country?: unknown
+  city?: unknown
+  role?: unknown
+  company?: unknown
+  linkedin?: unknown
+  github?: unknown
+  languages?: unknown
+  reason?: unknown
+  reasonNote?: unknown
+  preferences?: { lang?: unknown; theme?: unknown } | null
+  photo?: unknown
+  avatar?: { data?: Binary; type?: unknown; bytes?: unknown; updatedAt?: unknown } | null
+  consent?: { version?: unknown; acceptedAt?: unknown } | null
+  createdAt?: unknown
+  updatedAt?: unknown
 }
 
 export type AccountSessionDoc = SessionDoc & { accountId: string }
@@ -131,4 +152,8 @@ export async function accountSessionsCollection(db: DbProvider): Promise<Collect
 
 export async function teamGrantsCollection(db: DbProvider): Promise<Collection<TeamGrantDoc>> {
   return (await db()).collection<TeamGrantDoc>(COLLECTIONS.teamGrants)
+}
+
+export async function profilesCollection(db: DbProvider): Promise<Collection<ProfileDoc>> {
+  return (await db()).collection<ProfileDoc>(COLLECTIONS.profiles)
 }

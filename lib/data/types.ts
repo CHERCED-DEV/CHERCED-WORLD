@@ -89,13 +89,63 @@ export const PERMISSIONS = ['posts', 'messages', 'comments'] as const
 
 export type Permission = (typeof PERMISSIONS)[number]
 
-export type AccountProfile = { googleSub: string; email: string; name: string }
+export type AccountProfile = { googleSub: string; email: string; name: string; picture?: string | null }
 
 export type AccountRecord = AccountProfile & {
   id: string
   createdAt: Date
   lastLoginAt: Date
   blockedAt: Date | null
+}
+
+export const PROFILE_REASONS = ['hiring', 'services', 'learning', 'collaborate', 'curious', 'other'] as const
+
+export type ProfileReason = (typeof PROFILE_REASONS)[number]
+
+export const PHOTO_SOURCES = ['upload', 'google', 'none'] as const
+
+export type PhotoSource = (typeof PHOTO_SOURCES)[number]
+
+export const AVATAR_TYPES = ['image/webp', 'image/jpeg'] as const
+
+export type AvatarType = (typeof AVATAR_TYPES)[number]
+
+export type ThemePreference = 'dark' | 'light'
+
+export type ProfileFields = {
+  country: string | null
+  city: string | null
+  role: string | null
+  company: string | null
+  linkedin: string | null
+  github: string | null
+  languages: string[]
+  reason: ProfileReason | null
+  reasonNote: string | null
+}
+
+export type ProfilePreferences = { lang: Locale | null; theme: ThemePreference | null }
+
+export type ProfileConsent = { version: string; acceptedAt: Date }
+
+export type AvatarInfo = { type: AvatarType; bytes: number; updatedAt: Date }
+
+export type AvatarImage = AvatarInfo & { data: Uint8Array }
+
+export type ProfileRecord = ProfileFields & {
+  accountId: string
+  preferences: ProfilePreferences
+  photo: PhotoSource
+  avatar: AvatarInfo | null
+  consent: ProfileConsent
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type ProfilePatch = Partial<ProfileFields> & {
+  preferences?: ProfilePreferences
+  photo?: PhotoSource
+  avatar?: { type: AvatarType; data: Uint8Array } | null
 }
 
 export type TeamGrant = { email: string; permissions: Permission[]; createdAt: Date; updatedAt: Date }
@@ -115,6 +165,8 @@ export type ReactionCounts = Record<ReactionKind, number>
 export function emptyReactionCounts(): ReactionCounts {
   return { clap: 0, idea: 0, fire: 0 }
 }
+
+export const ACCOUNT_COMMENTS_LIMIT = 100
 
 export const SESSION_IDLE_MS = 12 * 60 * 60 * 1000
 
@@ -153,6 +205,8 @@ export interface CommentRepo {
   setReply(id: string, text: string | null): Promise<boolean>
   remove(id: string): Promise<boolean>
   removeByAccount(accountId: string): Promise<number>
+  listByAccount(accountId: string): Promise<CommentRecord[]>
+  removeOwn(id: string, accountId: string): Promise<boolean>
   countPending(): Promise<number>
   changedSince(since: Date): Promise<CommentRecord[]>
 }
@@ -188,6 +242,14 @@ export interface AccountRepo {
   deleteSessionsFor(accountId: string): Promise<void>
 }
 
+export interface ProfileRepo {
+  get(accountId: string): Promise<ProfileRecord | null>
+  getMany(accountIds: readonly string[]): Promise<ProfileRecord[]>
+  save(accountId: string, patch: ProfilePatch, now: Date, consent: ProfileConsent | null): Promise<ProfileRecord | null>
+  getAvatar(accountId: string): Promise<AvatarImage | null>
+  remove(accountId: string): Promise<boolean>
+}
+
 export interface RateLimitRepo {
   hit(key: string, rule: RateLimitRule, now: Date): Promise<RateLimitResult>
   reset(key: string): Promise<void>
@@ -203,6 +265,7 @@ export interface Repos {
   comments: CommentRepo
   admin: AdminRepo
   accounts: AccountRepo
+  profiles: ProfileRepo
   rateLimits: RateLimitRepo
   reactions: ReactionRepo
 }

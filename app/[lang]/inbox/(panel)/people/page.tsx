@@ -2,6 +2,7 @@ import '@/lib/data/mongo/register'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import styles from '@/components/admin/admin.module.scss'
+import { Avatar } from '@/components/account/Avatar'
 import { ActionButton, ConfirmButton } from '@/components/admin/ActionButton'
 import { guardPanel } from '@/components/admin/gate'
 import { GrantForm, type GrantFormLabels } from '@/components/admin/GrantForm'
@@ -9,12 +10,15 @@ import { adminText, formatDateTime, resultLabels, type AdminText } from '@/compo
 import { SessionExpired } from '@/components/admin/Views'
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { accountCopy } from '@/content/account'
+import { avatarSources } from '@/lib/accounts/dashboard'
 import { normalizeEmail } from '@/lib/accounts/permissions'
+import { displayCountry } from '@/lib/accounts/profile-options'
 import { deleteAccount, removeTeamGrant, setAccountBlocked } from '@/lib/actions/account'
 import { signInMode } from '@/lib/auth/google'
 import { getRepos } from '@/lib/data'
-import { PERMISSIONS, type Permission } from '@/lib/data/types'
-import { isLocale, localizedPath } from '@/lib/i18n'
+import { PERMISSIONS, type AccountRecord, type Permission, type ProfileRecord } from '@/lib/data/types'
+import { isLocale, localizedPath, type Locale } from '@/lib/i18n'
 
 type Props = {
   params: Promise<{ lang: string }>
@@ -40,6 +44,18 @@ function permissionList(text: AdminText, permissions: readonly Permission[]): st
   return PERMISSIONS.filter((permission) => permissions.includes(permission)).map((permission) => text.tr(`admin.permission.${permission}`)).join(' · ')
 }
 
+function profileLine(profile: ProfileRecord | undefined, lang: Locale): string | null {
+  if (!profile) return null
+  const reason = profile.reason ? accountCopy[lang].dashboard.reasons[profile.reason] : null
+  const parts = [displayCountry(profile.country, lang), profile.role, profile.company, reason].filter(Boolean)
+  return parts.length > 0 ? parts.join(' · ') : null
+}
+
+function avatarOf(account: AccountRecord, profile: ProfileRecord | undefined): string | null {
+  const { avatarSrc } = avatarSources(profile?.photo ?? 'google', profile?.avatar ?? null, account.picture)
+  return avatarSrc?.startsWith('/api/account/avatar?') ? `${avatarSrc}&account=${encodeURIComponent(account.id)}` : avatarSrc
+}
+
 export default async function PeoplePage({ params, searchParams }: Props) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
@@ -49,6 +65,7 @@ export default async function PeoplePage({ params, searchParams }: Props) {
   const results = resultLabels(text)
   const repos = getRepos()
   const [grants, accounts] = await Promise.all([repos.accounts.listGrants(), repos.accounts.list()])
+  const profiles = new Map((await repos.profiles.getMany(accounts.map((account) => account.id))).map((profile) => [profile.accountId, profile]))
   const editing = (await searchParams).email
   const current = typeof editing === 'string' ? grants.find((grant) => grant.email === normalizeEmail(editing)) : undefined
   const base = localizedPath(lang, '/inbox/people')
@@ -108,6 +125,7 @@ export default async function PeoplePage({ params, searchParams }: Props) {
               <li key={account.id}>
                 <GlassSurface as="article" variant="subtle" className={styles.item} data-cw-account={account.email}>
                   <header className={styles.itemHeader}>
+                    <Avatar src={avatarOf(account, profiles.get(account.id))} name={account.name} size="sm" />
                     <h4 className={styles.itemTitle}>{account.name}</h4>
                     {account.blockedAt ? <span className={styles.badge}>{tr('admin.people.blocked')}</span> : null}
                   </header>
@@ -118,6 +136,8 @@ export default async function PeoplePage({ params, searchParams }: Props) {
                     <dd>
                       <time dateTime={account.lastLoginAt.toISOString()}>{formatDateTime(account.lastLoginAt, lang)}</time>
                     </dd>
+                    <dt>{tr('admin.people.profile')}</dt>
+                    <dd data-cw-account-profile="">{profileLine(profiles.get(account.id), lang) ?? tr('admin.people.noProfile')}</dd>
                   </dl>
                   <div className={styles.actions}>
                     <ActionButton

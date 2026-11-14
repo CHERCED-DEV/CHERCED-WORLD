@@ -1,6 +1,7 @@
 import 'server-only'
-import { ObjectId } from 'mongodb'
-import { COMMENT_TRANSITIONS, type CommentRepo, type CommentStatus } from '@/lib/data/types'
+import { ObjectId, type Collection } from 'mongodb'
+import { ACCOUNT_COMMENTS_LIMIT, COMMENT_TRANSITIONS, type CommentRepo, type CommentStatus } from '@/lib/data/types'
+import { logServerError } from '@/lib/security/log'
 import { commentsCollection, type CommentDoc, type DbProvider } from './collections'
 import {
   COMMENT_STATUSES,
@@ -17,6 +18,24 @@ const PUBLIC_PROJECTION = { _id: 1, userName: 1, comment: 1, authorReply: 1, cre
 function byStatus(status: CommentStatus | 'all' | undefined): Record<string, unknown> {
   if (!status || status === 'all') return {}
   return statusFilter(COMMENT_STATUSES, LEGACY_COMMENT_STATUS, [status])
+}
+
+export const ACCOUNT_COMMENTS_INDEX = 'accountId_recent'
+
+const ACCOUNT_INDEXED = Symbol.for('cherced-world.comments-account-indexed')
+
+type Holder = typeof globalThis & { [ACCOUNT_INDEXED]?: Promise<void> }
+
+function ensureAccountIndex(comments: Collection<CommentDoc>): Promise<void> {
+  const holder = globalThis as Holder
+  holder[ACCOUNT_INDEXED] ??= comments
+    .createIndex(
+      { accountId: 1, createdAt: -1 },
+      { name: ACCOUNT_COMMENTS_INDEX, partialFilterExpression: { accountId: { $type: 'string' } } },
+    )
+    .then(() => undefined)
+    .catch((error: unknown) => logServerError('comments.accountIndex', error))
+  return holder[ACCOUNT_INDEXED]
 }
 
 const approved = () => statusFilter(COMMENT_STATUSES, LEGACY_COMMENT_STATUS, ['approved'])
@@ -90,6 +109,18 @@ export function createMongoCommentRepo(db: DbProvider): CommentRepo {
     async removeByAccount(accountId) {
       const result = await (await commentsCollection(db)).deleteMany({ accountId })
       return result.deletedCount
+    },
+    async listByAccount(accountId) {
+      const collection = await commentsCollection(db)
+      await ensureAccountIndex(collection)
+      const docs = await collection.find({ accountId }).sort({ createdAt: -1, _id: -1 }).limit(ACCOUNT_COMMENTS_LIMIT).toArray()
+      return docs.map(toCommentRecord)
+    },
+    async removeOwn(id, accountId) {
+      const _id = toObjectId(id)
+      if (!_id) return false
+      const result = await (await commentsCollection(db)).deleteOne({ _id, accountId })
+      return result.deletedCount === 1
     },
     async countPending() {
       return (await commentsCollection(db)).countDocuments({ status: 'pending' })

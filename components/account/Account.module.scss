@@ -201,3 +201,10 @@
 .ownerTitle {
   font-weight: 700;
 }
+
+.dashWrap {
+  display: grid;
+  gap: var(--cw-space-4);
+  max-width: 1120px;
+  padding-block: var(--cw-space-6) var(--cw-space-7);
+}

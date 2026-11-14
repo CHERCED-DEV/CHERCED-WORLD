@@ -5,6 +5,7 @@ import { createMongoAdminRepo } from './admin'
 import type { DbProvider } from './collections'
 import { createMongoCommentRepo } from './comments'
 import { createMongoMessageRepo } from './messages'
+import { createMongoProfileRepo } from './profiles'
 import { createMongoRateLimitRepo } from './rate-limits'
 import { createMongoReactionRepo } from './reactions'
 
@@ -14,11 +15,12 @@ export function createMongoRepos(db: DbProvider): Repos {
     comments: createMongoCommentRepo(db),
     admin: createMongoAdminRepo(db),
     accounts: createMongoAccountRepo(db),
+    profiles: createMongoProfileRepo(db),
     rateLimits: createMongoRateLimitRepo(db),
     reactions: createMongoReactionRepo(db),
   }
 }
 
-export { createMongoAccountRepo, createMongoAdminRepo, createMongoCommentRepo, createMongoMessageRepo, createMongoRateLimitRepo, createMongoReactionRepo }
+export { createMongoAccountRepo, createMongoAdminRepo, createMongoCommentRepo, createMongoMessageRepo, createMongoProfileRepo, createMongoRateLimitRepo, createMongoReactionRepo }
 export { COLLECTIONS, type DbProvider } from './collections'
 export { ensureIndexes, TTL_INDEXES } from './indexes'

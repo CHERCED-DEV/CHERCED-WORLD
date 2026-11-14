@@ -1,5 +1,6 @@
 import 'server-only'
 import {
+  ACCOUNT_COMMENTS_LIMIT,
   canTransition,
   COMMENT_TRANSITIONS,
   type CommentRecord,
@@ -91,6 +92,19 @@ export function createMemoryCommentRepo(): CommentRepo {
         removed++
       }
       return removed
+    },
+    async listByAccount(accountId) {
+      return [...store.values()]
+        .filter((c) => c.accountId === accountId)
+        .sort((a, b) => byCreated(b, a))
+        .slice(0, ACCOUNT_COMMENTS_LIMIT)
+        .map(clone)
+    },
+    async removeOwn(id, accountId) {
+      const record = store.get(id)
+      if (!record || record.accountId !== accountId) return false
+      order.delete(id)
+      return store.delete(id)
     },
     async countPending() {
       return [...store.values()].filter((c) => c.status === 'pending').length

@@ -12,12 +12,13 @@ export function createMemoryAccountRepo(): AccountRepo {
     async upsertFromGoogle(profile, now) {
       const existing = [...accounts.values()].find((account) => account.googleSub === profile.googleSub)
       const record: AccountRecord = existing
-        ? { ...existing, email: normalizeEmail(profile.email), name: profile.name, lastLoginAt: new Date(now) }
+        ? { ...existing, email: normalizeEmail(profile.email), name: profile.name, picture: profile.picture ?? null, lastLoginAt: new Date(now) }
         : {
             id: newId(),
             googleSub: profile.googleSub,
             email: normalizeEmail(profile.email),
             name: profile.name,
+            picture: profile.picture ?? null,
             createdAt: new Date(now),
             lastLoginAt: new Date(now),
             blockedAt: null,

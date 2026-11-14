@@ -36,6 +36,7 @@ function toAccount(doc: AccountDoc): AccountRecord {
     createdAt: doc.createdAt,
     lastLoginAt: doc.lastLoginAt,
     blockedAt: doc.blockedAt ?? null,
+    picture: typeof doc.picture === 'string' ? doc.picture : null,
   }
 }
 
@@ -51,7 +52,7 @@ export function createMongoAccountRepo(db: DbProvider): AccountRepo {
       const doc = await (await accounts()).findOneAndUpdate(
         { googleSub: profile.googleSub },
         {
-          $set: { email: normalizeEmail(profile.email), name: profile.name, lastLoginAt: now },
+          $set: { email: normalizeEmail(profile.email), name: profile.name, picture: profile.picture ?? null, lastLoginAt: now },
           $setOnInsert: { _id: randomBytes(12).toString('hex'), createdAt: now, blockedAt: null },
         },
         { upsert: true, returnDocument: 'after' },

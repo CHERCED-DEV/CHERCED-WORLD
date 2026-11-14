@@ -128,7 +128,7 @@ test('cuentas: ingreso, equipo con permisos, post invitado aprobado por el autor
     await luis.goto('/es/account')
     await luis.locator('summary', { hasText: 'Borrar mi cuenta' }).click()
     await luis.locator('[data-cw-account-delete]').click()
-    await expect(luis.locator('[data-cw-account-notice="ok"]'), 'FR-1704: borrar la cuenta').toHaveText('Tu cuenta y tus comentarios se borraron.')
+    await expect(luis.locator('[data-cw-account-notice="ok"]'), 'FR-1704: borrar la cuenta').toHaveText('Tu cuenta, tu perfil y tus comentarios se borraron.')
     await owner.goto('/es/inbox/comments')
     await expect(owner.locator('[data-cw-comment]').filter({ hasText: 'Comentario con cuenta 017' }), 'sus comentarios se van con la cuenta').toHaveCount(0)
 

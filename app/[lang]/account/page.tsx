@@ -4,11 +4,13 @@ import { notFound } from 'next/navigation'
 import { AccountView } from '@/components/account/AccountView'
 import { BackgroundIntensity } from '@/components/motion'
 import { accountCopy, isAccountError } from '@/content/account'
+import { loadDashboard, type DashboardData } from '@/lib/accounts/dashboard'
 import { firstPanelPath } from '@/lib/accounts/permissions'
 import { getAccountState, getPanelActor } from '@/lib/auth/accounts'
 import { getAdminSession } from '@/lib/auth/guard'
 import { signInMode } from '@/lib/auth/google'
 import { safeNext } from '@/lib/auth/oauth'
+import { getRepos } from '@/lib/data'
 import { isLocale, localizedPath } from '@/lib/i18n'
 import { logServerError } from '@/lib/security/log'
 
@@ -35,14 +37,14 @@ export default async function AccountPage({ params, searchParams }: Props) {
   if (!isLocale(lang)) notFound()
   const query = await searchParams
   const error = single(query.error)
-  let state = null
+  let dashboard: DashboardData | null = null
   let owner = false
   let panelHref: string | null = null
   try {
     const [account, admin, actor] = await Promise.all([getAccountState(), getAdminSession(), getPanelActor()])
-    state = account
     owner = Boolean(admin)
     panelHref = actor ? localizedPath(lang, firstPanelPath(actor)) : null
+    if (account) dashboard = await loadDashboard(getRepos(), account, lang)
   } catch (cause) {
     logServerError('account.page', cause)
   }
@@ -57,9 +59,10 @@ export default async function AccountPage({ params, searchParams }: Props) {
         next={safeNext(single(query.next), lang)}
         error={isAccountError(error) ? error : null}
         deleted={single(query.deleted) === '1'}
+        withdrawn={single(query.withdrawn) === '1'}
         owner={owner}
         panelHref={panelHref}
-        account={state ? { name: state.account.name, email: state.account.email, permissions: state.permissions } : null}
+        dashboard={dashboard}
       />
     </>
   )
