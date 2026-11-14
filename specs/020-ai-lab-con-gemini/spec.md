@@ -4,7 +4,9 @@ Pedido del autor, 2026-11-14, después de probar a Mini Cherced con Gemini: "con
 creemos specs por proyecto y démosle con todas las capacidades que nos pueda suministrar esta nueva integración con
 Gemini". Esta spec es la base que usan las 021 a 028. Va primero.
 
-Estado: spec. No construida.
+Estado: empezada. Con la 031 y la 029 salieron los precios versionados (`lib/ai/pricing.ts`, la base de
+FR-2005) y el cliente de texto con JSON (`lib/ai/generate.ts`, parte de FR-2001). Falta el resto, incluido el panel
+con el gasto por experimento (FR-2007).
 
 ## Qué resuelve
 
@@ -49,6 +51,25 @@ manera de llamar a Gemini, de cobrar topes y de contarle al visitante qué sale 
 | 026 | Texto → diagrama |
 | 027 | El panel con Gemini |
 | 028 | Mini Cherced en todo el sitio |
+
+## Para entrevistas de trabajo (pedido del autor, 2026-11-14)
+
+"Pensemos en cosas que pueden ser muy útiles y atractivas para entrevistas de trabajo… funcionalidades muy exactas."
+Pensadas para tres públicos: el reclutador (¿encaja?), el líder técnico (¿hay ingeniería de verdad?) y el
+entrevistador (¿cómo responde?).
+
+| Orden | Spec | Proyecto | Para quién | Costo por uso |
+|---|---|---|---|---|
+| 1 | 031 | Caja de cristal del agente: la traza de cada respuesta (construida) | Líder técnico | Cero |
+| 2 | 029 | ¿Encajo en tu vacante?: requisito por requisito con evidencia (construida, A6) | Reclutador | ~0,01 a 0,02 USD |
+| 3 | 032 | Evals públicas y red team del agente | Líder técnico | ~0,05 USD por corrida |
+| 4 | 030 | Modo entrevista: STAR con fuentes en pantalla y acta | Entrevistador | ~0,10 USD |
+| 5 | 033 | Pitch de 60 segundos por caso | Reclutador | ~0,45 USD una vez |
+| 6 | 034 | Diseño de sistemas en vivo con diagrama y decisiones | Entrevistador | ~0,10 USD |
+| 7 | 035 | Recorrido por el código de los repos públicos | Líder técnico | ~0,01 USD |
+
+Por qué ese orden: la 031 no cuesta nada y luce la ingeniería del agente que ya existe; la 029 es lo más útil para un
+reclutador; la 032 respalda todo lo demás con medición, y la 030 y la 034 la necesitan para no inventar.
 
 ## Preguntas abiertas
 

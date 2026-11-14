@@ -242,3 +242,32 @@ button {
     animation: none !important;
   }
 }
+
+@media print {
+  html[data-cw-print='match'] body {
+    background: #ffffff !important;
+  }
+
+  html[data-cw-print='match'] body > :not([data-cw-match-print]) {
+    display: none !important;
+  }
+
+  html[data-cw-print='match'] [data-cw-match-print] {
+    display: grid !important;
+    gap: 10pt;
+    padding: 0;
+    color: #000000;
+    background: #ffffff;
+    font-size: 10.5pt;
+  }
+
+  html[data-cw-print='match'] [data-cw-match-print] * {
+    color: #000000 !important;
+    background: transparent !important;
+    border-color: #000000 !important;
+  }
+
+  html[data-cw-print='match'] [data-cw-match-print] tr {
+    break-inside: avoid;
+  }
+}

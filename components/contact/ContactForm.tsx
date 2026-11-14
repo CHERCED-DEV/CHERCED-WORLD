@@ -76,6 +76,7 @@ export type ContactFormProps = {
   labels: ContactLabels
   errors: Dictionary
   interest?: MessageInterest | null
+  message?: string | null
   booking?: BookingLink | null
 }
 
@@ -103,7 +104,7 @@ function Required() {
   return <span aria-hidden="true"> *</span>
 }
 
-export function ContactForm({ renderedAt, privacyHref, labels, errors, interest = null, booking = null }: ContactFormProps) {
+export function ContactForm({ renderedAt, privacyHref, labels, errors, interest = null, message = null, booking = null }: ContactFormProps) {
   const [state, formAction, pending] = useActionState(submitContact, null)
   const [clientErrors, setClientErrors] = useState<Record<string, string> | null>(null)
   const [active, setActive] = useState<string | null>(null)
@@ -197,7 +198,7 @@ export function ContactForm({ renderedAt, privacyHref, labels, errors, interest 
       </FormField>
 
       <FormField floating label={<>{labels.message}<Required /></>} error={errorFor('message')}>
-        <textarea name="message" required rows={6} maxLength={LIMITS.message} {...lit('message')} />
+        <textarea name="message" required rows={6} maxLength={LIMITS.message} defaultValue={message ?? undefined} {...lit('message')} />
       </FormField>
 
       <ConsentField labels={labels.consent} href={privacyHref} error={errorFor('consent')} />

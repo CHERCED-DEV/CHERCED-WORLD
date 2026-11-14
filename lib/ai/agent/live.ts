@@ -1,4 +1,5 @@
 import { base64ToInt16, INPUT_RATE, int16ToBase64 } from '@/lib/ai/agent/pcm'
+import { parseUsage, type LiveUsage } from '@/lib/ai/agent/usage'
 
 export const LIVE_WS_URL =
   'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained'
@@ -17,6 +18,8 @@ export type LiveEvents = {
   onInterrupted?: () => void
   onTurnComplete?: () => void
   onToolCall?: (calls: LiveFunctionCall[]) => Promise<LiveFunctionResponse[]> | LiveFunctionResponse[]
+  onUsage?: (usage: LiveUsage) => void
+  onVoiceActivity?: (activity: 'start' | 'end') => void
   onClose?: (reason: LiveCloseReason, detail?: string) => void
 }
 
@@ -174,6 +177,11 @@ export function openLiveSession(options: LiveSessionOptions): LiveSession {
       status = 'open'
       events.onOpen?.()
     }
+    const activity = text(record(message.voiceActivity)?.type)
+    if (activity === 'ACTIVITY_START') events.onVoiceActivity?.('start')
+    else if (activity === 'ACTIVITY_END') events.onVoiceActivity?.('end')
+    const usage = parseUsage(message.usageMetadata)
+    if (usage && !finished) events.onUsage?.(usage)
     const content = record(message.serverContent)
     if (content && !finished) serve(content)
     const calls = functionCalls(message.toolCall)

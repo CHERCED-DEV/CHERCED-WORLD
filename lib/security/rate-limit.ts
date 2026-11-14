@@ -12,6 +12,8 @@ export const RATE_LIMITS = {
   account: { limit: 10, windowMs: 15 * MINUTE, blockMs: 15 * MINUTE },
   agent: { limit: 3, windowMs: 60 * MINUTE },
   agentDaily: { limit: 10, windowMs: 24 * 60 * MINUTE },
+  match: { limit: 5, windowMs: 24 * 60 * MINUTE },
+  matchDaily: { limit: 50, windowMs: 24 * 60 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 
 export type RateLimitAction = keyof typeof RATE_LIMITS

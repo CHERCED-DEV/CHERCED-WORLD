@@ -1,7 +1,7 @@
 # Release 1: notas (R4.4)
 
-Borrador del 2026-11-12, al día el 2026-11-13. Producción (`main`) sigue siendo el sitio de 2023, con su último cambio
-del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las specs 001 a 018, en más de 600 commits.
+Borrador del 2026-11-12, al día el 2026-11-14. Producción (`main`) sigue siendo el sitio de 2023, con su último cambio
+del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las specs 001 a 018, la 029 y la 031, en más de 600 commits.
 
 ## Lo que ve un visitante
 
@@ -16,10 +16,14 @@ del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las spe
 - **Blog:** 7 posts en español e inglés, etiquetas, catálogo, series, comentarios y reacciones. Cada post se puede
   escuchar ("Escuchar este post"). En el celular, la pestaña de navegación muestra el título en curso con la línea de
   lectura y abre el índice.
-- **AI Lab:** 12 experimentos. Once corren en el navegador: voz, plugins y skills, el buscador por palabras y por
-  significado, el simulador de sagas, las vitrinas y dos juegos. Ningún modelo se descarga sin permiso. El nuevo,
-  **"Habla con mi portafolio"** (018), corre en Google: Mini Cherced, el chibi pixel art del autor, conversa por voz
-  con Gemini Live, conoce todo el sitio y te lleva a la página que pidas.
+- **AI Lab:** 13 experimentos. Once corren en el navegador: voz, plugins y skills, el buscador por palabras y por
+  significado, el simulador de sagas, las vitrinas y dos juegos. Ningún modelo se descarga sin permiso. Dos corren en
+  Google:
+  - **"Habla con mi portafolio"** (018): Mini Cherced, el chibi pixel art del autor, conversa por voz con Gemini Live,
+    conoce todo el sitio y te lleva a la página que pidas. Su panel "Cómo pensó" (031) muestra la traza de cada
+    respuesta: herramientas, tiempos, tokens y costo en dólares y pesos.
+  - **"¿Encajo en tu vacante?"** (029): el reclutador pega una vacante y ve, requisito por requisito, la evidencia
+    publicada en el sitio, con un resumen en PDF y un enlace a Contacto con el mensaje ya escrito.
 - **Ahora (`/now`), Contacto y Privacidad.** El formulario de contacto tiene antispam. Privacidad explica qué se
   guarda al ingresar con Google.
 - **Cuentas:** "Ingresar" en la barra, con la cuenta de Google. Con la cuenta se comenta sin escribir nombre ni correo,
@@ -66,7 +70,7 @@ del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las spe
    lleva a una página que dice que el ingreso todavía no está activo.
 3. Gemini activo (018): la clave nueva (la primera apareció en el chat) en `GEMINI_API_KEY` de Vercel, para
    Production y Preview, y saldo prepagado en AI Studio. Pasos en `../018-ia-de-google/configurar-gemini.md`. Sin
-   ella, "Habla con mi portafolio" dice que todavía no está activo.
+   ella, "Habla con mi portafolio" y "¿Encajo en tu vacante?" dicen que todavía no están activos.
 4. El QA del autor en su teléfono y su tablet (R4.4), sobre la dirección fija de `dev`:
    https://cherced-world-git-dev-cherceddevs-projects.vercel.app
    - Inicio: un scroll del hero al panel y otro de vuelta; la vitrina y "Ver los 15 proyectos".
@@ -78,6 +82,8 @@ del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las spe
    - Personas: dar un permiso a otra cuenta de Gmail y ver que entra solo a lo suyo.
    - Cambiar de idioma y de tema en dos páginas.
    - AI Lab → "Habla con mi portafolio": conversar por voz en el teléfono, preguntarle por un proyecto y pedirle que te
-     lleve a una página.
+     lleve a una página. Abrir "Cómo pensó" y ver el costo de cada respuesta.
+   - AI Lab → "¿Encajo en tu vacante?": pegar una vacante real, abrir la evidencia de una fila, sacar el resumen en PDF
+     y ver que Contacto llega con el mensaje escrito.
 5. La confirmación explícita del autor para pasar `dev` a `main` (R5.1) y el smoke en producción (R5.2). El mismo día,
    el autor crea la contraseña del panel en producción con el código de un solo uso de los logs.

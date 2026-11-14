@@ -400,4 +400,43 @@ describe('live', () => {
     expect(onClose).toHaveBeenCalledWith('error', 'URL inválida')
     expect(session.state()).toBe('closed')
   })
+  it('avisa el uso de tokens antes de cerrar el turno y la actividad de voz', async () => {
+    const order: string[] = []
+    const onUsage = vi.fn(() => order.push('usage'))
+    const onVoiceActivity = vi.fn()
+    const { socket } = await ready({ onUsage, onVoiceActivity, onTurnComplete: () => order.push('turn') })
+    socket.json({ voiceActivity: { type: 'ACTIVITY_START' } })
+    socket.json({ voiceActivity: { type: 'ACTIVITY_END' } })
+    socket.json({
+      serverContent: { turnComplete: true },
+      usageMetadata: {
+        promptTokenCount: 120,
+        responseTokenCount: 80,
+        totalTokenCount: 200,
+        promptTokensDetails: [
+          { modality: 'TEXT', tokenCount: 100 },
+          { modality: 'AUDIO', tokenCount: 20 },
+        ],
+        responseTokensDetails: [{ modality: 'AUDIO', tokenCount: 80 }],
+      },
+    })
+    await flush()
+    expect(onVoiceActivity.mock.calls).toEqual([['start'], ['end']])
+    expect(onUsage).toHaveBeenCalledTimes(1)
+    expect(onUsage).toHaveBeenCalledWith(
+      expect.objectContaining({ total: 200, input: expect.objectContaining({ text: 100, audio: 20 }), output: expect.objectContaining({ audio: 80 }) }),
+    )
+    expect(order).toEqual(['usage', 'turn'])
+  })
+
+  it('ignora un usageMetadata vacío o con otro tipo de actividad', async () => {
+    const onUsage = vi.fn()
+    const onVoiceActivity = vi.fn()
+    const { socket } = await ready({ onUsage, onVoiceActivity })
+    socket.json({ usageMetadata: {} })
+    socket.json({ voiceActivity: { type: 'TYPE_UNSPECIFIED' } })
+    await flush()
+    expect(onUsage).not.toHaveBeenCalled()
+    expect(onVoiceActivity).not.toHaveBeenCalled()
+  })
 })

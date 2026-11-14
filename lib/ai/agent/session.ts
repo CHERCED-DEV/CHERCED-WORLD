@@ -1,5 +1,6 @@
 import 'server-only'
 import { GEMINI_API_BASE } from '@/lib/ai/gemini'
+import { googleReason } from '@/lib/ai/generate'
 import { AGENT_MODEL, AGENT_SESSION_MINUTES, AGENT_VOICE } from './config'
 import { AGENT_TOOLS } from './tools'
 
@@ -50,12 +51,6 @@ export class LiveTokenError extends Error {
   get unavailable(): boolean {
     return this.status === 402 || this.status === 403 || this.status === 429
   }
-}
-
-async function googleReason(response: Response): Promise<string> {
-  const body = (await response.json().catch(() => null)) as { error?: { message?: unknown } } | null
-  const message = body?.error?.message
-  return typeof message === 'string' ? message.replace(/AIza[\w-]+|AQ\.[\w-]+/g, '[clave]').slice(0, 200) : ''
 }
 
 export async function createLiveToken(

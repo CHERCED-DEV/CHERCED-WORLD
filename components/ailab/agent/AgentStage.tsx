@@ -7,15 +7,31 @@ import { cx } from '@/components/ui/cx'
 import { pixelFont } from '@/styles/fonts'
 import type { LabDemoProps } from '@/components/ailab/shell/types'
 import { agentCopy, type AgentCopy } from '@/content/ailab/agent'
-import { AGENT_SESSION_ENDPOINT, isAgentGrant, isAgentStatus, type AgentMode } from '@/lib/ai/agent/config'
+import { AGENT_SESSION_ENDPOINT, AGENT_VOICE, isAgentGrant, isAgentStatus, type AgentMode } from '@/lib/ai/agent/config'
 import { openLiveSession, type LiveSession } from '@/lib/ai/agent/live'
 import { startMic, type MicHandle } from '@/lib/ai/agent/mic'
+import { OUTPUT_RATE } from '@/lib/ai/agent/pcm'
 import { createPlayer, type AudioPlayer } from '@/lib/ai/agent/player'
 import { intentOf, simulatorGreeting, simulatorReply } from '@/lib/ai/agent/simulator'
-import { createToolRunner, SEARCH_TOOL, type AgentSearchHit, type AgentToolEffect } from '@/lib/ai/agent/tools'
+import { createToolRunner, SEARCH_TOOL, type AgentSearchHit, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
+import {
+  addTool,
+  closeTurn,
+  createTrace,
+  markAnswer,
+  markAsked,
+  markAudio,
+  markHeard,
+  markInterrupted,
+  markUsage,
+  pendingTurn,
+  type Trace,
+  type TraceTool,
+} from '@/lib/ai/agent/trace'
 import { addTurn, appendChunk, closeTurns, lastAgentLine, type Turn } from '@/lib/ai/agent/transcript'
 import { loadSearchIndex } from '@/lib/search/client'
 import { AgentAvatar } from './AgentAvatar'
+import { TracePanel } from './TracePanel'
 import { AVATAR_VIEWBOX, isCrotch, mouthFor } from './avatar-sprite'
 import styles from './Agent.module.scss'
 
@@ -56,6 +72,16 @@ function closeNotice(reason: 'ended' | 'expired' | 'error', detail?: string): No
   return reason === 'expired' ? 'expired' : 'connection'
 }
 
+function traceTool(call: AgentToolCall, effect: AgentToolEffect, response: Record<string, unknown>, ms: number): TraceTool {
+  const base = { name: call.name, args: call.args, ms: Math.round(ms) }
+  if (effect?.kind === 'search') {
+    return { ...base, result: { kind: 'search', hits: effect.hits.map((hit) => ({ title: hit.titulo, url: hit.ruta, score: hit.score })) } }
+  }
+  if (effect?.kind === 'open') return { ...base, result: { kind: 'open', path: effect.path } }
+  if (response.ok === false) return { ...base, result: { kind: 'open', path: null } }
+  return { ...base, result: { kind: 'error', error: typeof response.error === 'string' ? response.error : 'unknown' } }
+}
+
 function replyError(reply: unknown): Notice {
   if (!reply || typeof reply !== 'object') return 'failed'
   const value = reply as Record<string, unknown>
@@ -82,6 +108,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const [expiresAt, setExpiresAt] = useState<number | null>(null)
   const [now, setNow] = useState(0)
   const [draft, setDraft] = useState('')
+  const [trace, setTrace] = useState<Trace | null>(null)
+  const traceRef = useRef<Trace | null>(null)
+  const audioSamples = useRef(0)
+  const focusAfter = useRef(false)
 
   const idRef = useRef(0)
   const sessionRef = useRef<LiveSession | null>(null)
@@ -136,6 +166,32 @@ export default function AgentStage({ lang }: LabDemoProps) {
     )
     return runnerRef.current
   }, [lang])
+
+  const track = useCallback((step: (current: Trace) => Trace) => {
+    const current = traceRef.current
+    if (!current) return
+    const next = step(current)
+    if (next === current) return
+    traceRef.current = next
+    setTrace(next)
+  }, [])
+
+  const beginTrace = useCallback((value: Trace) => {
+    traceRef.current = value
+    audioSamples.current = 0
+    setTrace(value)
+  }, [])
+
+  const runTool = useCallback(
+    async (call: AgentToolCall, turn?: number) => {
+      const started = performance.now()
+      const result = await runner()(call)
+      const ms = performance.now() - started
+      track((current) => addTool(current, traceTool(call, result.effect, result.response.response, ms), turn))
+      return result
+    },
+    [runner, track],
+  )
 
   const teardown = useCallback(() => {
     micRef.current?.stop()
@@ -233,10 +289,12 @@ export default function AgentStage({ lang }: LabDemoProps) {
   }, [phase])
 
   const say = useCallback(
-    (text: string) => {
+    (text: string, turn?: number) => {
       setTurns((current) => addTurn(current, 'agent', text, nextId()))
+      track((current) => markAnswer(current, text, turn))
       const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined
       if (!synth || mutedRef.current) {
+        track((current) => closeTurn(current, Date.now(), 0, turn))
         setActivity('listening')
         flushNavigation()
         return
@@ -245,9 +303,12 @@ export default function AgentStage({ lang }: LabDemoProps) {
       utterance.lang = lang === 'es' ? 'es-ES' : 'en-US'
       utteranceRef.current = utterance
       let finished = false
+      let spokeAt = 0
       const finish = () => {
         if (finished) return
         finished = true
+        const at = Date.now()
+        track((current) => closeTurn(current, at, spokeAt ? at - spokeAt : 0, turn))
         window.clearTimeout(fallback)
         if (utteranceRef.current === utterance) utteranceRef.current = null
         simSpeaking.current = false
@@ -257,13 +318,15 @@ export default function AgentStage({ lang }: LabDemoProps) {
       const fallback = window.setTimeout(finish, 2500 + text.length * 90)
       utterance.onstart = () => {
         simSpeaking.current = true
+        spokeAt = Date.now()
+        track((current) => markAudio(current, spokeAt, turn))
       }
       utterance.onend = finish
       utterance.onerror = finish
       synth.cancel()
       synth.speak(utterance)
     },
-    [flushNavigation, lang],
+    [flushNavigation, lang, track],
   )
 
   const startSimulator = useCallback(() => {
@@ -272,24 +335,27 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setEffect(null)
     setPhase('live')
     setActivity('listening')
-    say(simulatorGreeting(lang))
-  }, [lang, say])
+    const at = Date.now()
+    const first = markAsked(createTrace('local', 'simulator', 'browser', at), at, 'greeting', 'greeting')
+    beginTrace(first)
+    say(simulatorGreeting(lang), pendingTurn(first))
+  }, [beginTrace, lang, say])
 
   const simulate = useCallback(
-    async (question: string) => {
+    async (question: string, turn?: number) => {
       setActivity('thinking')
       const index = await loadSearchIndex(lang)
       let hits: AgentSearchHit[] = []
       if (intentOf(question) === 'search') {
-        const { effect: found } = await runner()({ id: 'local', name: SEARCH_TOOL, args: { consulta: question } })
+        const { effect: found } = await runTool({ id: 'local', name: SEARCH_TOOL, args: { consulta: question } }, turn)
         setEffect(found)
         hits = found?.kind === 'search' ? found.hits : []
       } else setEffect(null)
       const reply = simulatorReply(lang, question, hits, index.facts)
       if (reply.open) pendingOpen.current = reply.open
-      say(reply.text)
+      say(reply.text, turn)
     },
-    [lang, runner, say],
+    [lang, runTool, say],
   )
 
   const openMic = useCallback(async (session: LiveSession) => {
@@ -342,6 +408,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
     }
 
     setExpiresAt(Date.parse(grant.expiresAt))
+    beginTrace(createTrace('live', grant.model, AGENT_VOICE, Date.now()))
     const session: LiveSession = openLiveSession({
       token: grant.token,
       model: grant.model,
@@ -349,19 +416,36 @@ export default function AgentStage({ lang }: LabDemoProps) {
         onOpen: () => {
           setPhase('live')
           setActivity('listening')
+          track((current) => markAsked(current, Date.now(), 'greeting', 'greeting'))
           session.sendText(copy.greet)
           void openMic(session)
         },
         onAudio: (pcm) => {
+          audioSamples.current += pcm.length
+          track((current) => markAudio(current, Date.now()))
           if (!mutedRef.current) playerRef.current?.enqueue(pcm)
         },
-        onInputTranscript: (text) => setTurns((current) => appendChunk(current, 'you', text, nextId())),
-        onOutputTranscript: (text) => setTurns((current) => appendChunk(current, 'agent', text, nextId())),
+        onInputTranscript: (text) => {
+          track((current) => markHeard(current, Date.now(), text))
+          setTurns((current) => appendChunk(current, 'you', text, nextId()))
+        },
+        onOutputTranscript: (text) => {
+          track((current) => markAnswer(current, text))
+          setTurns((current) => appendChunk(current, 'agent', text, nextId()))
+        },
+        onVoiceActivity: (activity) => {
+          if (activity === 'end') track((current) => markAsked(current, Date.now(), 'voice', 'vad'))
+        },
+        onUsage: (usage) => track((current) => markUsage(current, usage)),
         onInterrupted: () => {
+          track(markInterrupted)
           playerRef.current?.flush()
           setActivity('listening')
         },
         onTurnComplete: () => {
+          const audioMs = (audioSamples.current / OUTPUT_RATE) * 1000
+          audioSamples.current = 0
+          track((current) => closeTurn(current, Date.now(), audioMs))
           setTurns(closeTurns)
           setActivity((current) => (current === 'thinking' ? 'listening' : current))
           flushNavigation()
@@ -370,7 +454,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
           setActivity('thinking')
           const responses = []
           for (const call of calls) {
-            const result = await runner()(call)
+            const result = await runTool(call)
             if (result.effect) setEffect(result.effect)
             responses.push(result.response)
           }
@@ -379,6 +463,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
         onClose: (reason, detail) => {
           if (sessionRef.current !== session) return
           sessionRef.current = null
+          track((current) => closeTurn(current, Date.now()))
           teardown()
           setPhase('ended')
           setActivity('idle')
@@ -387,15 +472,26 @@ export default function AgentStage({ lang }: LabDemoProps) {
       },
     })
     sessionRef.current = session
-  }, [copy.greet, flushNavigation, lang, openMic, runner, startSimulator, teardown])
+  }, [beginTrace, copy.greet, flushNavigation, lang, openMic, runTool, startSimulator, teardown, track])
+
+  useEffect(() => {
+    if (!focusAfter.current) return
+    focusAfter.current = false
+    const target = phase === 'consent' ? '[data-cw-agent-consent] button' : '[data-cw-agent-start], [data-cw-agent-hangup]'
+    stageRef.current?.querySelector<HTMLButtonElement>(target)?.focus()
+  }, [phase])
 
   const onStart = () => {
     if (mode === 'local') startSimulator()
-    else if (mode === 'live') setPhase('consent')
+    else if (mode === 'live') {
+      focusAfter.current = true
+      setPhase('consent')
+    }
   }
 
   const hangUp = () => {
     pendingOpen.current = null
+    track((current) => closeTurn(current, Date.now()))
     teardown()
     setPhase('ended')
     setActivity('idle')
@@ -430,11 +526,13 @@ export default function AgentStage({ lang }: LabDemoProps) {
     if (!text) return
     setDraft('')
     setTurns((current) => addTurn(current, 'you', text, nextId()))
+    if (speakingRef.current || simSpeaking.current) track(markInterrupted)
+    track((current) => markAsked(current, Date.now(), 'text', 'text', text))
     if (mode === 'live' && sessionRef.current) {
       playerRef.current?.flush()
       sessionRef.current.sendText(text)
       setActivity('thinking')
-    } else if (mode === 'local') void simulate(text)
+    } else if (mode === 'local') void simulate(text, pendingTurn(traceRef.current))
   }
 
   const live = phase === 'live'
@@ -523,10 +621,22 @@ export default function AgentStage({ lang }: LabDemoProps) {
           </p>
           <p>{copy.consentBody}</p>
           <div className={styles.row}>
-            <Button variant="solid" onClick={() => void startLive()}>
+            <Button
+              variant="solid"
+              onClick={() => {
+                focusAfter.current = true
+                void startLive()
+              }}
+            >
               {copy.consentAccept}
             </Button>
-            <Button variant="ghost" onClick={() => setPhase('idle')}>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                focusAfter.current = true
+                setPhase('idle')
+              }}
+            >
               {copy.consentCancel}
             </Button>
           </div>
@@ -587,6 +697,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
           ))}
         </ol>
       ) : null}
+
+      {trace && (live || phase === 'ended') ? <TracePanel trace={trace} copy={copy.trace} lang={lang} /> : null}
 
       {mode === 'local' ? <p className={styles.note}>{copy.simulatorNote}</p> : null}
     </section>

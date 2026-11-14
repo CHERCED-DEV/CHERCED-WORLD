@@ -26,6 +26,37 @@ export type AgentCopy = {
   simulatorNote: string
   greet: string
   poke: string
+  trace: AgentTraceCopy
+}
+
+export type AgentTraceCopy = {
+  toggle: string
+  title: string
+  intro: string
+  empty: string
+  summary: Record<'turns' | 'p50' | 'p95' | 'tokens' | 'cost' | 'model' | 'tools', string>
+  turn: string
+  sources: Record<'voice' | 'text' | 'greeting' | 'model', string>
+  question: string
+  answer: string
+  latency: string
+  duration: string
+  spoke: string
+  interrupted: string
+  noTools: string
+  results: string
+  opened: string
+  refused: string
+  failed: string
+  tokensIn: string
+  tokensOut: string
+  noUsage: string
+  pending: string
+  prices: string
+  pricesLink: string
+  export: string
+  simulator: string
+  textAudio: string
 }
 
 export const agentCopy: Record<Locale, AgentCopy> = {
@@ -74,6 +105,43 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     simulatorNote: 'Estás en el simulador: responde con el buscador del sitio y la voz de tu navegador. Con la clave de Gemini, conversa de verdad.',
     greet: 'El visitante acaba de abrir la conversación. Salúdalo en una o dos frases, preséntate y pregúntale qué quiere conocer del sitio.',
     poke: '¡Ey! ¿Qué te pasa?',
+    trace: {
+      toggle: 'Cómo pensó ({count})',
+      title: 'Caja de cristal: la traza de cada respuesta',
+      intro: 'Se calcula en tu navegador con los mensajes que ya llegan por la sesión. No se envía a ningún lado ni se guarda.',
+      empty: 'Todavía no hay turnos. Pregúntale algo.',
+      summary: {
+        turns: 'Turnos',
+        p50: 'Latencia p50',
+        p95: 'Latencia p95',
+        tokens: 'Tokens',
+        cost: 'Costo estimado',
+        model: 'Modelo y voz',
+        tools: 'Herramientas',
+      },
+      turn: 'Turno {n}',
+      sources: { voice: 'por voz', text: 'escrito', greeting: 'saludo', model: 'sin pregunta' },
+      question: 'Pregunta',
+      answer: 'Respuesta',
+      latency: 'Primer audio a los {time}',
+      duration: 'turno completo en {time}',
+      spoke: 'habló {time}',
+      interrupted: 'Lo interrumpiste',
+      noTools: 'Respondió sin herramientas.',
+      results: '{count} resultados',
+      opened: 'abrió {path}',
+      refused: 'ruta rechazada por la lista del sitio',
+      failed: 'error: {error}',
+      tokensIn: 'Entrada {total} ({detail})',
+      tokensOut: 'Salida {total} ({detail})',
+      noUsage: 'Sin tokens: este turno no pasó por Gemini.',
+      pending: 'En curso…',
+      prices: 'Precios de Gemini consultados el {date}. Dólar a {rate} COP (TRM del {rateDate}).',
+      pricesLink: 'Ver la tabla de precios',
+      export: 'Exportar JSON',
+      simulator: 'simulador local',
+      textAudio: 'texto {text} · audio {audio}',
+    },
   },
   en: {
     name: 'Mini Cherced',
@@ -120,5 +188,42 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     simulatorNote: 'You are in the simulator: it answers with the site search and your browser voice. With the Gemini key, it really talks.',
     greet: 'The visitor just opened the conversation. Greet them in one or two sentences, introduce yourself and ask what they want to know about the site.',
     poke: "Hey! What's wrong with you?",
+    trace: {
+      toggle: 'How it thought ({count})',
+      title: 'Glass box: the trace of every answer',
+      intro: 'Computed in your browser from the messages the session already receives. Nothing is sent anywhere or stored.',
+      empty: 'No turns yet. Ask it something.',
+      summary: {
+        turns: 'Turns',
+        p50: 'Latency p50',
+        p95: 'Latency p95',
+        tokens: 'Tokens',
+        cost: 'Estimated cost',
+        model: 'Model and voice',
+        tools: 'Tools',
+      },
+      turn: 'Turn {n}',
+      sources: { voice: 'by voice', text: 'typed', greeting: 'greeting', model: 'no question' },
+      question: 'Question',
+      answer: 'Answer',
+      latency: 'First audio after {time}',
+      duration: 'full turn in {time}',
+      spoke: 'spoke for {time}',
+      interrupted: 'You interrupted it',
+      noTools: 'Answered without tools.',
+      results: '{count} results',
+      opened: 'opened {path}',
+      refused: 'path rejected by the site list',
+      failed: 'error: {error}',
+      tokensIn: 'Input {total} ({detail})',
+      tokensOut: 'Output {total} ({detail})',
+      noUsage: 'No tokens: this turn did not go through Gemini.',
+      pending: 'In progress…',
+      prices: 'Gemini prices checked on {date}. Dollar at {rate} COP (TRM of {rateDate}).',
+      pricesLink: 'See the price table',
+      export: 'Export JSON',
+      simulator: 'local simulator',
+      textAudio: 'text {text} · audio {audio}',
+    },
   },
 }

@@ -466,6 +466,133 @@ $paper: #f4f4f4;
   font-size: var(--cw-text-sm);
 }
 
+.trace {
+  display: grid;
+  gap: var(--cw-space-3);
+  min-width: 0;
+}
+
+.traceBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-3);
+  min-width: 0;
+  padding: var(--cw-space-4);
+  border: 2px solid var(--cw-fg);
+  box-shadow: 4px 4px 0 $green;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.traceTitle {
+  margin: 0;
+  font-family: var(--agent-pixel);
+  font-size: var(--cw-text-sm);
+  text-transform: uppercase;
+}
+
+.traceSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(7.5rem, 100%), 1fr));
+  gap: var(--cw-space-2);
+  margin: 0;
+
+  > div {
+    display: grid;
+    gap: 2px;
+    padding: 6px 10px;
+    border-left: 4px solid $green;
+  }
+
+  dt {
+    font-family: var(--agent-pixel);
+    font-size: var(--cw-text-xs);
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+}
+
+.traceWide {
+  grid-column: 1 / -1;
+}
+
+.traceTurns {
+  display: grid;
+  gap: var(--cw-space-2);
+  max-height: 420px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.traceTurn {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-left: 4px solid var(--cw-fg-muted);
+  line-height: var(--cw-leading-snug);
+
+  &[data-state='done'] {
+    border-left-color: $green;
+  }
+}
+
+.traceTurnHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--cw-space-2);
+  margin: 0;
+  font-size: var(--cw-text-sm);
+}
+
+.traceFlag {
+  padding: 0 6px;
+  border: 1px solid currentcolor;
+  font-size: var(--cw-text-xs);
+}
+
+.traceText {
+  margin: 0;
+  font-size: var(--cw-text-sm);
+  overflow-wrap: anywhere;
+}
+
+.traceKey {
+  font-weight: 700;
+}
+
+.traceTools {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: var(--cw-text-sm);
+
+  code {
+    overflow-wrap: anywhere;
+  }
+}
+
+.traceHits {
+  margin: 2px 0 0;
+  padding-left: 1.2rem;
+}
+
+.traceMs {
+  color: var(--cw-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sky,
   .floor,

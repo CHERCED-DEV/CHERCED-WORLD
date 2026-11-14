@@ -46,7 +46,9 @@ export type AgentToolContext = {
   navigate: (path: string) => void
 }
 
-export type AgentToolEffect = { kind: 'search'; query: string; hits: AgentSearchHit[] } | { kind: 'open'; path: string } | null
+export type AgentScoredHit = AgentSearchHit & { score: number }
+
+export type AgentToolEffect = { kind: 'search'; query: string; hits: AgentScoredHit[] } | { kind: 'open'; path: string } | null
 
 function text(value: unknown, max = 200): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : ''
@@ -92,7 +94,7 @@ export function safeSitePath(requested: unknown, index: SearchIndex, origin?: st
   return /^#[\w-]{1,80}$/.test(hash) ? `${path}${hash}` : path
 }
 
-export function searchSite(box: GlassBox, query: string): AgentSearchHit[] {
+export function searchSiteScored(box: GlassBox, query: string): AgentScoredHit[] {
   return box
     .search(query, { limit: AGENT_SEARCH_LIMIT })
     .results.filter((result) => isIndexedDoc(result.doc))
@@ -101,7 +103,12 @@ export function searchSite(box: GlassBox, query: string): AgentSearchHit[] {
       ruta: result.doc.url,
       tipo: result.doc.kind,
       texto: result.doc.text.slice(0, AGENT_FRAGMENT_MAX),
+      score: Math.round(result.score * 100) / 100,
     }))
+}
+
+export function searchSite(box: GlassBox, query: string): AgentSearchHit[] {
+  return searchSiteScored(box, query).map(({ score: _score, ...hit }) => hit)
 }
 
 export function createToolRunner(context: AgentToolContext, origin?: string) {
@@ -118,9 +125,10 @@ export function createToolRunner(context: AgentToolContext, origin?: string) {
     const { box: search, index } = await ready()
     if (call.name === SEARCH_TOOL) {
       const query = text(call.args.consulta)
-      const hits = query ? searchSite(search, query) : []
+      const hits = query ? searchSiteScored(search, query) : []
+      const resultados = hits.map(({ score: _score, ...hit }) => hit)
       return {
-        response: { id: call.id, name: call.name, response: { resultados: hits, total: hits.length } },
+        response: { id: call.id, name: call.name, response: { resultados, total: resultados.length } },
         effect: { kind: 'search', query, hits },
       }
     }

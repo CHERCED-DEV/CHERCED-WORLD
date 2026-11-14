@@ -5,7 +5,7 @@ import { bookingLink } from '@/components/contact/booking'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { contactErrorMessages, contactLabels } from '@/components/contact/labels'
 import styles from '@/components/contact/PageSection.module.scss'
-import { preselectedInterest } from '@/components/contact/preselect'
+import { prefilledMessage, preselectedInterest } from '@/components/contact/preselect'
 import { BackgroundIntensity } from '@/components/motion'
 import { AvailabilityChip } from '@/components/ui/AvailabilityChip'
 import { buttonClassName } from '@/components/ui/Button'
@@ -103,6 +103,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
           labels={contactLabels(common, contact)}
           errors={contactErrorMessages(common, contact)}
           interest={preselectedInterest(query.servicio)}
+          message={prefilledMessage(lang, query.vacante)}
           booking={bookingLink(site.profile, lang)}
         />
       </GlassSurface>

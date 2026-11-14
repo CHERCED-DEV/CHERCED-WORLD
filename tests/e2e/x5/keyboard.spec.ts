@@ -30,7 +30,7 @@ test.use({
 
 test.describe.configure({ timeout: 120_000 })
 
-const CARD_ORDER: CardId[] = ['V5', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
+const CARD_ORDER: CardId[] = ['V5', 'V1', 'V2', 'V3', 'V4', 'R1', 'A6', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
 
 type Focus = { body: boolean; ring: boolean; what: string }
 
@@ -97,9 +97,28 @@ const FLOWS: Record<CardId, Flow> = {
     await page.keyboard.type('Synergos')
     await page.keyboard.press('Enter')
     await expect(stage.locator('[data-cw-agent-transcript] li')).toHaveCount(3)
-    await tabTo(page, stage.locator('[data-cw-agent-hangup]'), rings)
+    await tabTo(page, stage.locator('[data-cw-agent-hangup]'), rings, { back: true })
     await page.keyboard.press('Enter')
-    await expect(stage.locator('[data-cw-agent-start]')).toBeVisible()
+    await expect(stage.locator('[data-cw-agent-start]')).toBeFocused()
+  },
+  A6: async ({ page, stage, rings }) => {
+    const sample = stage.locator('[data-cw-match-sample]')
+    await expect(sample).toBeEnabled()
+    await tabTo(page, sample, rings)
+    await page.keyboard.press('Enter')
+    await expect(stage.locator('[data-cw-match-input]')).not.toHaveValue('')
+    const submit = stage.locator('[data-cw-match-submit]')
+    await tabTo(page, submit, rings, { back: true })
+    await page.keyboard.press('Enter')
+    const result = stage.locator('[data-cw-match-result]')
+    await expect(result).toBeFocused({ timeout: 30_000 })
+    await expect(result).toHaveAttribute('data-mode', 'local')
+    await expect(stage.locator('[data-cw-match-row]').first()).toBeVisible()
+    await tabTo(page, stage.locator('[data-cw-match-again]'), rings)
+    await page.keyboard.press('Enter')
+    await expect(result).toHaveCount(0)
+    await expect(stage.locator('[data-cw-match-input]')).toBeFocused()
+    await checkRing(page, rings)
   },
   V1: async ({ page, stage, lang, rings }) => {
     await expect(stage.locator('[data-cw-voice-engine="ready"]')).toBeVisible()
@@ -238,7 +257,7 @@ test.describe('T764 · cada experimento se abre, se usa y se cierra solo con el 
   onlyIn('desktop-chromium')
 
   for (const lang of LANGS) {
-    test(`/${lang}/ai-lab: Tab llega a los once «Probar» en el orden de la página, siempre con el foco visible`, async ({ page }) => {
+    test(`/${lang}/ai-lab: Tab llega a los trece «Probar» en el orden de la página, siempre con el foco visible`, async ({ page }) => {
       await open(page, lang)
       const rings: string[] = []
       const reached: string[] = []

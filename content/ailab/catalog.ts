@@ -80,6 +80,53 @@ const V5: LabExperiment = {
   code: null,
 }
 
+const A6: LabExperiment = {
+  id: 'A6',
+  theme: 'agents',
+  title: copy('ailab.a6.title'),
+  summary: copy('ailab.a6.summary'),
+  status: 'beta',
+  runsIn: 'google',
+  downloads: [],
+  privacy: copy('ailab.a6.privacy'),
+  flow: [
+    { es: 'Pegas la vacante y el servidor la manda a Gemini junto con el catálogo público del sitio, cada pieza con su id', en: 'You paste the posting and the server sends it to Gemini along with the public catalog of the site, each piece with its id' },
+    {
+      es: 'Gemini responde con un esquema fijo: requisito, tipo, nivel, ids de evidencia, nota y tres preguntas',
+      en: 'Gemini answers with a fixed schema: requirement, type, level, evidence ids, note and three questions',
+    },
+    {
+      es: 'El servidor descarta cualquier id que no exista y baja a "sin evidencia" lo que se quede sin pruebas, antes de que lo veas',
+      en: 'The server drops any id that does not exist and lowers to "no evidence" whatever is left without proof, before you see it',
+    },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Salida estructurada y validada en el servidor', en: 'Structured output validated on the server' },
+      why: {
+        es: 'Un reclutador no puede verificar cada frase. Por eso Gemini no escribe un texto libre: llena un esquema, y el servidor lo revisa con Zod y lo pide una vez más si no cumple.',
+        en: 'A recruiter cannot verify every sentence. So Gemini does not write free text: it fills a schema, and the server checks it with Zod and asks once more if it does not comply.',
+      },
+      tradeoff: {
+        es: 'Pierde matices que un texto libre tendría. A cambio, cada fila se puede comprobar con un clic.',
+        en: 'It loses nuances a free text would have. In exchange, every row can be checked with one click.',
+      },
+    },
+    {
+      decision: { es: 'La evidencia sale del índice público, no del modelo', en: 'Evidence comes from the public index, not from the model' },
+      why: {
+        es: 'Gemini solo puede citar ids del catálogo y el servidor borra los que no existen, así que ningún enlace inventado llega a la pantalla. Si descarta alguno, te lo dice.',
+        en: 'Gemini can only cite ids from the catalog and the server deletes the ones that do not exist, so no invented link reaches the screen. If it drops any, it tells you.',
+      },
+      tradeoff: {
+        es: 'Lo que no está publicado sale como "sin evidencia" aunque Camilo lo sepa hacer. Para eso están las preguntas de la entrevista.',
+        en: 'Whatever is not published shows up as "no evidence" even if Camilo can do it. That is what the interview questions are for.',
+      },
+    },
+  ],
+  code: null,
+}
+
 const V1: LabExperiment = {
   id: 'V1',
   theme: 'voice',
@@ -827,7 +874,7 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
-export const labCatalog: readonly LabExperiment[] = [V5, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
+export const labCatalog: readonly LabExperiment[] = [V5, V1, V2, V3, V4, A6, A2, A3, A5, R1, A4, J1, J2]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)

@@ -16,7 +16,7 @@ export type DemoId = (typeof INTEGRATED)[number]
 
 export const GAMES = ['J1', 'J2'] as const
 
-export type CardId = DemoId | (typeof GAMES)[number] | 'V5'
+export type CardId = DemoId | (typeof GAMES)[number] | 'V5' | 'A6'
 
 export const CONSENT_KEY = 'cw-ailab-consent'
 

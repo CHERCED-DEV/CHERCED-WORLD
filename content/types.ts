@@ -269,7 +269,7 @@ export const LAB_STATUSES = ['stable', 'beta', 'experiment'] as const
 
 export type LabStatus = (typeof LAB_STATUSES)[number]
 
-export const LAB_EXPERIMENT_IDS = ['V5', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'] as const
+export const LAB_EXPERIMENT_IDS = ['V5', 'V1', 'V2', 'V3', 'V4', 'A6', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'] as const
 
 export type LabExperimentId = (typeof LAB_EXPERIMENT_IDS)[number]
 

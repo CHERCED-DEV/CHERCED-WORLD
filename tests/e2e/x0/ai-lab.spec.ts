@@ -11,7 +11,7 @@ const THEMES = {
   es: ['Voz', 'Arquitectura que se toca', 'Agentes y plugins', 'Juegos que aprenden'],
   en: ['Voice', 'Architecture you can touch', 'Agents and plugins', 'Games that learn'],
 } as const
-const CARD_ORDER = ['V5', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
+const CARD_ORDER = ['V5', 'V1', 'V2', 'V3', 'V4', 'R1', 'A6', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
 const HEAVY = /huggingface\.co|hf\.co|cdn\.jsdelivr\.net|\.wasm(\?|$)|\.onnx(\?|$)|\.safetensors(\?|$)|pyodide/i
 const CONSENT_KEY = 'cw-ailab-consent'
 
@@ -62,7 +62,7 @@ test.describe('la página del laboratorio en ES y EN (US1, FR-301)', () => {
   onlyIn('desktop-chromium', 'mobile-chromium', 'no-js')
 
   for (const lang of LANGS) {
-    test(`/${lang}/ai-lab: título, intro, privacidad y once tarjetas por tema, con estado y dónde corren`, async ({ page }) => {
+    test(`/${lang}/ai-lab: título, intro, privacidad y trece tarjetas por tema, con estado y dónde corren`, async ({ page }) => {
       const response = await page.goto(`/${lang}/ai-lab`)
       expect(response?.status()).toBe(200)
       const main = page.locator('#main')
@@ -70,7 +70,7 @@ test.describe('la página del laboratorio en ES y EN (US1, FR-301)', () => {
       await expect(main.getByText(COPY[lang]['ailab.intro'])).toBeVisible()
       await expect(main.locator('[data-cw-ailab-privacy]')).toContainText(COPY[lang]['ailab.privacy'])
       await expect(main.getByRole('heading', { level: 2 })).toHaveText([...THEMES[lang]])
-      await expect(main.locator('[data-cw-lab-card]')).toHaveCount(12)
+      await expect(main.locator('[data-cw-lab-card]')).toHaveCount(CARD_ORDER.length)
       expect(await main.locator('[data-cw-lab-card]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-cw-lab-card')))).toEqual(
         CARD_ORDER,
       )
@@ -116,7 +116,7 @@ test.describe('sin JavaScript (US1 escenario 5)', () => {
   test('se leen las tarjetas con su "Cómo funciona" y su código, y se avisa que la demo necesita JS', async ({ page }) => {
     await page.goto('/es/ai-lab')
     const notices = page.locator('[data-cw-lab-noscript]')
-    await expect(notices).toHaveCount(12)
+    await expect(notices).toHaveCount(CARD_ORDER.length)
     for (const notice of await notices.all()) {
       await expect(notice).toBeVisible()
       await expect(notice).toHaveText(es['ailab.noscript'])
