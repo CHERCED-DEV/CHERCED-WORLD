@@ -2,6 +2,7 @@ import '@/lib/data/mongo/register'
 import { NextResponse, type NextRequest } from 'next/server'
 import { AGENT_DAILY_KEY, AGENT_MODEL, type AgentSessionReply, type AgentStatus } from '@/lib/ai/agent/config'
 import { agentInstruction } from '@/lib/ai/agent/knowledge'
+import { currentViewer } from '@/lib/ai/agent/viewer-server'
 import { createLiveToken, LiveTokenError } from '@/lib/ai/agent/session'
 import { agentMode, geminiKey } from '@/lib/ai/gemini'
 import { getRepos } from '@/lib/data'
@@ -19,7 +20,7 @@ function reply(body: AgentSessionReply, status = 200): NextResponse {
 }
 
 export async function GET(): Promise<NextResponse> {
-  const status: AgentStatus = { mode: agentMode() }
+  const status: AgentStatus = { mode: agentMode(), viewer: await currentViewer() }
   return NextResponse.json(status, { headers: PRIVATE })
 }
 
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const { token, expiresAt } = await createLiveToken(key, await agentInstruction(lang), now)
+    const { token, expiresAt } = await createLiveToken(key, await agentInstruction(lang, await currentViewer()), now)
     return reply({ mode: 'live', token, model: AGENT_MODEL, expiresAt })
   } catch (error) {
     logServerError('agent.session', error instanceof LiveTokenError ? error.message : error)

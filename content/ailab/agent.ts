@@ -77,7 +77,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     timeLeft: 'Quedan {time}',
     consentTitle: 'Antes de hablar',
     consentBody:
-      'Tu voz y lo que escribas van a Google (Gemini Live) mientras dure la conversación, que dura como máximo 5 minutos. Este sitio no guarda audio ni texto. Al aceptar, el navegador te pide el micrófono.',
+      'Tu voz y lo que escribas van a Google (Gemini Live) mientras dure la conversación, que dura como máximo 5 minutos. Este sitio no guarda audio ni texto. Si entraste con tu cuenta, Mini Cherced recibe tu nombre para saludarte. Al aceptar, el navegador te pide el micrófono.',
     consentAccept: 'Aceptar y conversar',
     consentCancel: 'Ahora no',
     states: {
@@ -103,7 +103,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     searching: 'Buscando en el sitio: {query}',
     opening: 'Abriendo {path}',
     simulatorNote: 'Estás en el simulador: responde con el buscador del sitio y la voz de tu navegador. Con la clave de Gemini, conversa de verdad.',
-    greet: 'El visitante acaba de abrir la conversación. Salúdalo en una o dos frases, preséntate y pregúntale qué quiere conocer del sitio.',
+    greet: 'Se acaba de abrir la conversación. Saluda en una o dos frases según la sección «Quién te habla»: si es Camilo, como a tu creador; si no, preséntate y pregunta qué quiere conocer del sitio.',
     poke: '¡Ey! ¿Qué te pasa?',
     trace: {
       toggle: 'Cómo pensó ({count})',
@@ -160,7 +160,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     timeLeft: '{time} left',
     consentTitle: 'Before you talk',
     consentBody:
-      'Your voice and what you type go to Google (Gemini Live) while the conversation lasts, for 5 minutes at most. This site stores no audio or text. When you accept, the browser asks for the microphone.',
+      'Your voice and what you type go to Google (Gemini Live) while the conversation lasts, for 5 minutes at most. This site stores no audio or text. If you signed in, Mini Cherced gets your name to greet you. When you accept, the browser asks for the microphone.',
     consentAccept: 'Accept and talk',
     consentCancel: 'Not now',
     states: {
@@ -186,7 +186,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     searching: 'Searching the site: {query}',
     opening: 'Opening {path}',
     simulatorNote: 'You are in the simulator: it answers with the site search and your browser voice. With the Gemini key, it really talks.',
-    greet: 'The visitor just opened the conversation. Greet them in one or two sentences, introduce yourself and ask what they want to know about the site.',
+    greet: 'The conversation just opened. Greet in one or two sentences following the «Quién te habla» section: if it is Camilo, as your creator; otherwise, introduce yourself and ask what they want to know about the site.',
     poke: "Hey! What's wrong with you?",
     trace: {
       toggle: 'How it thought ({count})',

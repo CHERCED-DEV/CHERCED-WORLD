@@ -1,3 +1,5 @@
+import type { AgentViewer } from './viewer'
+
 export const AGENT_MODEL = 'gemini-3.8-live'
 
 export const AGENT_VOICE = 'Puck'
@@ -16,7 +18,7 @@ export const AGENT_FRAGMENT_MAX = 600
 
 export type AgentMode = 'live' | 'local' | 'off'
 
-export type AgentStatus = { mode: AgentMode }
+export type AgentStatus = { mode: AgentMode; viewer?: AgentViewer }
 
 export function isAgentStatus(value: unknown): value is AgentStatus {
   if (!value || typeof value !== 'object') return false

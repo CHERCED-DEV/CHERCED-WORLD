@@ -29,6 +29,7 @@ import {
   type TraceTool,
 } from '@/lib/ai/agent/trace'
 import { addTurn, appendChunk, closeTurns, lastAgentLine, type Turn } from '@/lib/ai/agent/transcript'
+import { ANONYMOUS_VIEWER, isAgentViewer, type AgentViewer } from '@/lib/ai/agent/viewer'
 import { loadSearchIndex } from '@/lib/search/client'
 import { AgentAvatar } from './AgentAvatar'
 import { TracePanel } from './TracePanel'
@@ -97,6 +98,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const router = useRouter()
   const inputId = useId()
   const [mode, setMode] = useState<AgentMode | null>(null)
+  const [viewer, setViewer] = useState<AgentViewer>(ANONYMOUS_VIEWER)
   const [phase, setPhase] = useState<Phase>('checking')
   const [activity, setActivity] = useState<Activity>('idle')
   const [turns, setTurns] = useState<Turn[]>([])
@@ -236,6 +238,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
       .then((data: unknown) => {
         if (!alive) return
         setMode(isAgentStatus(data) ? data.mode : 'off')
+        if (isAgentStatus(data) && isAgentViewer(data.viewer)) setViewer(data.viewer)
         setPhase('idle')
       })
       .catch(() => {
@@ -338,8 +341,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
     const at = Date.now()
     const first = markAsked(createTrace('local', 'simulator', 'browser', at), at, 'greeting', 'greeting')
     beginTrace(first)
-    say(simulatorGreeting(lang), pendingTurn(first))
-  }, [beginTrace, lang, say])
+    say(simulatorGreeting(lang, viewer), pendingTurn(first))
+  }, [beginTrace, lang, say, viewer])
 
   const simulate = useCallback(
     async (question: string, turn?: number) => {
@@ -351,11 +354,11 @@ export default function AgentStage({ lang }: LabDemoProps) {
         setEffect(found)
         hits = found?.kind === 'search' ? found.hits : []
       } else setEffect(null)
-      const reply = simulatorReply(lang, question, hits, index.facts)
+      const reply = simulatorReply(lang, question, hits, index.facts, viewer)
       if (reply.open) pendingOpen.current = reply.open
       say(reply.text, turn)
     },
-    [lang, runTool, say],
+    [lang, runTool, say, viewer],
   )
 
   const openMic = useCallback(async (session: LiveSession) => {
