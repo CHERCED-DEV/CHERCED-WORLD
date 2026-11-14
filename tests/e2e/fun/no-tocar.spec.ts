@@ -171,7 +171,9 @@ test.describe('No tocar: el muñeco', () => {
     const viewport = page.viewportSize()!
     const corner = (await actorBox(page))!
     expect(corner.x + corner.width).toBeGreaterThan(viewport.width - 40)
-    expect(corner.y + corner.height).toBeGreaterThan(viewport.height - 40)
+    expect(corner.y + corner.height).toBeGreaterThan(viewport.height - 120)
+    const fab = await page.locator('[data-cw-assistant-button]').boundingBox()
+    if (fab) expect(corner.y + corner.height, 'no tapa el botón del asistente').toBeLessThanOrEqual(fab.y)
     await page.mouse.move(60, 140, { steps: 6 })
     await page.waitForTimeout(2_200)
     expect(await actorBox(page)).toEqual(corner)
@@ -210,7 +212,7 @@ test.describe('No tocar: en el celular', () => {
     await wake(page, button, es['fun.warned'], 'tap')
     const before = (await actorBox(page))!
     const viewport = page.viewportSize()!
-    await page.locator('footer#footer [data-cw-footer-egg]').tap()
+    await page.locator('footer#footer [data-cw-footer-egg]').tap({ position: { x: 4, y: 4 } })
     await expect.poll(async () => (await actorBox(page))!.y, { timeout: 3_000 }).toBeLessThan(before.y)
     expect(page.url()).toBe(url)
     expect(await synthetic(page)).toBe(0)

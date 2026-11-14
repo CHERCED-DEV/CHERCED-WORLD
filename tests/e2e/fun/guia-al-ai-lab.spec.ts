@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
-import { FUN_GUIDE_GRACE_MS, FUN_GUIDE_LINES, FUN_GUIDE_TAP_MS } from '@/content/fun'
+import { FUN_GUIDE_GRACE_MS, FUN_GUIDE_LINES, FUN_GUIDE_TAP_MS, FUN_ME_LINES } from '@/content/fun'
 import en from '@/content/i18n/en/fun.json'
 import es from '@/content/i18n/es/fun.json'
 
@@ -17,9 +17,20 @@ type Box = { x: number; y: number; width: number; height: number }
 
 test.use({ trace: 'off' })
 
+const HEAD = { x: 39, y: 30 }
+
+const EGG_SPOT = { x: 4, y: 4 }
+
+function escape(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 function arrivalLines(dict: Record<string, string>): RegExp {
-  const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   return new RegExp(`^(${FUN_GUIDE_LINES.map((line) => escape(dict[`fun.guide.line.${line}`]!)).join('|')})$`)
+}
+
+function meLines(dict: Record<string, string>): RegExp {
+  return new RegExp(`^(${FUN_ME_LINES.map((line) => escape(dict[`fun.me.${line}`]!)).join('|')})$`)
 }
 
 async function open(page: Page, path: string): Promise<Locator> {
@@ -96,16 +107,30 @@ test.describe('019: el chibi lleva al AI Lab (escritorio)', () => {
     const egg = page.locator(EGG)
     const layer = page.locator('[data-cw-fun]')
 
-    await times(5, () => egg.click())
+    await times(5, () => egg.click({ position: EGG_SPOT }))
     await expect(layer).toHaveAttribute('data-guide', 'counting')
     expect(page.url()).toMatch(/\/es\/privacy$/)
+    await page.evaluate(() => {
+      const record = window as unknown as { __funTaps: number[][] }
+      record.__funTaps = []
+      new MutationObserver((changes) => {
+        for (const change of changes) {
+          for (const node of change.addedNodes) {
+            if (node instanceof HTMLElement && node.matches('[data-cw-fun-tap]')) record.__funTaps.push([parseFloat(node.style.left), parseFloat(node.style.top)])
+          }
+        }
+      }).observe(document.body, { childList: true, subtree: true })
+    })
 
-    await egg.click()
+    await egg.click({ position: EGG_SPOT })
     await expect(layer).toHaveAttribute('data-guide', 'running')
+    await page.evaluate(() => void ((window as unknown as { __funTaps: number[][] }).__funTaps = []))
     await expect(page.locator('[data-cw-fun-live]')).toHaveText(es['fun.guide.go'])
     const link = (await page.locator(LINK).boundingBox())!
     await expect.poll(async () => gap(await actorBox(page), link), { timeout: 4_000 }).toBeLessThan(24)
-    await expect(page.locator('[data-cw-fun-tap]').first()).toBeAttached({ timeout: 4_000 })
+    await expect
+      .poll(() => page.evaluate(() => (window as unknown as { __funTaps: number[][] }).__funTaps), { timeout: 4_000 })
+      .toContainEqual([expect.closeTo(link.x + link.width / 2, 0), expect.closeTo(link.y + link.height / 2, 0)])
 
     await page.waitForURL('**/es/ai-lab', { timeout: ARRIVE_MS })
     await expect(page.locator('[data-cw-fun-line]')).toHaveText(arrivalLines(es))
@@ -140,7 +165,7 @@ test.describe('019: el chibi lleva al AI Lab (escritorio)', () => {
     await page.keyboard.press('x')
     await expect(page.locator('[data-cw-fun]')).toHaveAttribute('data-guide', 'counting')
     await toBottom(page)
-    await page.locator(EGG).click()
+    await page.locator(EGG).click({ position: EGG_SPOT })
     await times(5, () => page.keyboard.press('x'))
     await expect(page.locator('[data-cw-fun]')).toHaveAttribute('data-guide', 'running')
     await page.waitForURL('**/es/ai-lab', { timeout: ARRIVE_MS })
@@ -152,7 +177,7 @@ test.describe('019: el chibi lleva al AI Lab (escritorio)', () => {
     await toBottom(page)
     const egg = page.locator(EGG)
     const layer = page.locator('[data-cw-fun]')
-    await times(6, () => egg.click())
+    await times(6, () => egg.click({ position: EGG_SPOT }))
     await expect(layer).toHaveAttribute('data-guide', 'running')
     await page.keyboard.press('Escape')
     await expect(layer).toHaveAttribute('data-phase', 'sulking')
@@ -165,7 +190,7 @@ test.describe('019: el chibi lleva al AI Lab (escritorio)', () => {
 
     await page.locator('[data-cw-fun-calm]').click()
     await expect(layer).toHaveAttribute('data-phase', 'awake')
-    await times(8, () => egg.click())
+    await times(8, () => egg.click({ position: EGG_SPOT }))
     await page.waitForTimeout(2_500)
     expect(page.url()).toMatch(/\/es\/privacy$/)
     await expect(layer).toHaveAttribute('data-guide', 'done')
@@ -175,7 +200,7 @@ test.describe('019: el chibi lleva al AI Lab (escritorio)', () => {
     const button = await open(page, '/es/ai-lab')
     await wake(page, button, es['fun.warned'])
     await toBottom(page)
-    await times(6, () => page.locator(EGG).click())
+    await times(6, () => page.locator(EGG).click({ position: EGG_SPOT }))
     await expect(page.locator('[data-cw-fun]')).toHaveAttribute('data-guide', 'done')
     await expect(page.locator('[data-cw-fun-live]')).toHaveText(es['fun.guide.here'])
     await page.waitForTimeout(FUN_GUIDE_GRACE_MS + FUN_GUIDE_TAP_MS + 500)
@@ -189,7 +214,7 @@ test.describe('019: el chibi lleva al AI Lab (escritorio)', () => {
     await toBottom(page)
     const actor = page.locator('[data-cw-fun-actor]')
     const corner = await actorBox(page)
-    await times(6, () => page.locator(EGG).click())
+    await times(6, () => page.locator(EGG).click({ position: EGG_SPOT }))
     await expect(actor).toHaveAttribute('data-at', '')
     const link = (await page.locator(LINK).boundingBox())!
     expect(gap(await actorBox(page), link)).toBeLessThan(24)
@@ -199,6 +224,78 @@ test.describe('019: el chibi lleva al AI Lab (escritorio)', () => {
     const back = await actorBox(page)
     expect(Math.abs(back.x - corner.x)).toBeLessThan(24)
     expect(Math.abs(back.y - corner.y)).toBeLessThan(4)
+  })
+})
+
+test.describe('019: picarlo a él', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name === 'no-js', 'sin JS no hay muñeco')
+  })
+
+  test('se deja agarrar, reacciona a cada clic, avisa al tercero y al cuarto lleva al AI Lab', async ({ page }, testInfo) => {
+    const mobile = testInfo.project.name === 'mobile-chromium'
+    const button = await open(page, '/es/privacy')
+    await wake(page, button, es['fun.warned'], mobile ? 'tap' : 'click')
+    await toBottom(page)
+    const figure = page.locator('[data-cw-fun-figure]')
+    const live = page.locator('[data-cw-fun-live]')
+    const layer = page.locator('[data-cw-fun]')
+    const poke = () => (mobile ? figure.tap({ position: HEAD }) : figure.click({ position: HEAD }))
+
+    const before = await actorBox(page)
+    await poke()
+    await expect(live).toHaveText(meLines(es))
+    expect(await actorBox(page)).toEqual(before)
+    const first = await live.textContent()
+    await poke()
+    await expect(live).not.toHaveText(first!)
+    await expect(live).toHaveText(meLines(es))
+    await poke()
+    await expect(live).toHaveText(es['fun.me.tease'])
+    await expect(layer).toHaveAttribute('data-guide', 'counting')
+    expect(page.url()).toMatch(/\/es\/privacy$/)
+
+    await poke()
+    await expect(layer).toHaveAttribute('data-guide', 'running')
+    await expect(live).toHaveText(es['fun.guide.go'])
+    await page.waitForURL('**/es/ai-lab', { timeout: ARRIVE_MS })
+    await expect(page.locator('[data-cw-fun-line]')).toHaveText(arrivalLines(es))
+    expect(await synthetic(page)).toBe(0)
+
+    await poke()
+    await expect(live).toHaveText(meLines(es))
+    await expect(layer).toHaveAttribute('data-guide', 'done')
+  })
+
+  test('el clic sobre él no llega a lo que haya debajo', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-chromium', 'escritorio')
+    const button = await open(page, '/en/privacy')
+    await wake(page, button, en['fun.warned'])
+    await toBottom(page)
+    const box = await actorBox(page)
+    const under = await page.evaluate(({ x, y }) => document.elementsFromPoint(x, y).map((element) => element.tagName.toLowerCase()), {
+      x: box.x + HEAD.x,
+      y: box.y + HEAD.y,
+    })
+    expect(under[0]).toBe('rect')
+    await page.locator('[data-cw-fun-figure]').click({ position: HEAD })
+    await expect(page.locator('[data-cw-fun-live]')).toHaveText(meLines(en))
+    expect(page.url()).toMatch(/\/en\/privacy$/)
+  })
+
+  test('quieto dice que está castigado y no cuenta', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-chromium', 'escritorio')
+    const button = await open(page, '/es/privacy')
+    await wake(page, button, es['fun.warned'])
+    await toBottom(page)
+    await page.keyboard.press('Escape')
+    await expect(page.locator('[data-cw-fun]')).toHaveAttribute('data-phase', 'sulking')
+    const figure = page.locator('[data-cw-fun-figure]')
+    await times(5, () => figure.click({ position: HEAD }))
+    await expect(page.locator('[data-cw-fun-live]')).toHaveText(es['fun.me.sulk'])
+    await expect(page.locator('[data-cw-fun]')).toHaveAttribute('data-guide', 'counting')
+    await page.waitForTimeout(FUN_GUIDE_GRACE_MS + FUN_GUIDE_TAP_MS)
+    expect(page.url()).toMatch(/\/es\/privacy$/)
   })
 })
 

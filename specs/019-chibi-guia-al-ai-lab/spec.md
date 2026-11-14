@@ -77,6 +77,37 @@ excepción, pedida por el autor: una navegación del router a `/{lang}/ai-lab`, 
 disparar clics, sin enviar formularios y sin mover el foco. La navegación vive en un archivo aparte
 (`components/fun/guide.ts`), y la guarda de pruebas verifica que es la única.
 
+## 1b. Picarlo a él
+
+Pedido del autor después de probarlo, 2026-11-14: "si le dan clic a donde está él, que reaccione a esos clics y diga
+cosas chistosas, y al cuarto clic se vaya corriendo y diga lo que ya dice para entrar a AI Lab".
+
+- **Se deja agarrar.** Cuando el puntero está encima de él, deja de perseguirlo, así se le puede dar clic. Solo los
+  píxeles pintados del muñeco reciben el clic; el resto de la capa sigue sin recibir el puntero.
+- **No estorba.** Como ahora recibe el clic, nunca se para debajo del puntero por su cuenta: cerca del borde derecho o
+  de abajo se pasa al otro lado del mouse, y con el dedo, si no cabe arriba, se pone debajo. Con movimiento reducido,
+  en escritorio su esquina queda encima del botón del asistente para no taparlo.
+- **Reacciona.** Cada clic o toque sobre él lo hace encogerse con la boca abierta y decir una frase chistosa, sin
+  repetir la anterior:
+  - "¡Ay! Eso no es un botón, soy yo." / "Ouch! That's not a button, that's me."
+  - "¿Me estás picando a mí? Qué confianza." / "Are you poking me? Bold move."
+  - "Cosquillas no, que me reinicio." / "No tickling, I'll reboot."
+  - "Pica más suave, que soy de pixel." / "Gently, I'm made of pixels."
+  - "Si me picas, te pico. Así funciona el karma." / "Poke me and I poke back. That's karma."
+  - "Error 418: soy una tetera. Mentira, soy yo." / "Error 418: I'm a teapot. Kidding, it's me."
+  - "Eso no estaba en los requisitos." / "That wasn't in the requirements."
+  - "¿Ves? Por eso no se toca." / "See? That's why you don't touch."
+- **Al tercero avisa:** "Uno más y te llevo a donde está lo bueno." / "One more and I'll take you to the good stuff."
+- **Al cuarto** (`FUN_ME_GO_AT = 4`) arranca la misma carrera de la parte 1: "¡Ven! Te muestro lo bueno.", corre,
+  toca y lleva al AI Lab. Si ya está en el AI Lab, celebra. Si la página está ocupada (trabajo a medias, diálogo
+  abierto), dice una frase y lo vuelve a intentar en el siguiente clic.
+- Los clics sobre él tienen su propia cuenta: no suman a las seis interacciones de la página, y las seis no suman a
+  sus cuatro. Lo que pase primero lo lleva; sigue siendo una vez por despertar.
+- **Quieto.** Si lo picas mientras está quieto, dice "Shh, estoy castigado. No me hagas reír." y no cuenta.
+- **Después de llevarte**, los clics sobre él siguen sacando frases chistosas.
+- **Movimiento reducido.** Se le puede picar en su esquina; reacciona sin encogerse y al cuarto clic salta.
+- El clic sobre él no llega a lo que haya debajo, y no dispara clics sintéticos.
+
 ## 2. "AI Lab" brilla
 
 - El enlace "AI Lab" del pie lleva rayos dorados que giran despacio detrás de la palabra, más un brillo suave que
@@ -103,12 +134,17 @@ disparar clics, sin enviar formularios y sin mover el foco. La navegación vive 
 - **FR-1909** No navega con trabajo a medias, con un diálogo o el menú abierto, ni en el panel privado.
 - **FR-1910** El enlace "AI Lab" del pie lleva rayos dorados animados, solo esa entrada y en todas las páginas.
 - **FR-1911** El texto del enlace no baja de contraste; con movimiento reducido el brillo queda quieto.
+- **FR-1912** Con el puntero encima, deja de perseguirlo; solo sus píxeles pintados reciben el clic.
+- **FR-1913** Cada clic sobre él saca una frase chistosa sin repetir la anterior, en ES y EN; al tercero avisa.
+- **FR-1914** Al cuarto clic sobre él arranca la carrera al AI Lab (o celebra si ya está ahí), una vez por despertar.
+- **FR-1915** Quieto, responde que está castigado y no cuenta.
 
 ## Archivos
 
 - `content/fun.ts`: `FUN_GUIDE_AFTER`, `FUN_RUN_SPEED`, los tiempos (`FUN_GUIDE_*_MS`) y las frases.
-- `content/i18n/{es,en}/fun.json`: `fun.guide.go`, `fun.guide.here` y `fun.guide.line.1..3`.
-- `components/fun/logic.ts`: la lógica pura (contador, una vez, ya en el AI Lab, Esc, a dónde ir, carrera).
+- `content/i18n/{es,en}/fun.json`: `fun.guide.*` y `fun.me.*` (las frases de cuando lo pican).
+- `components/fun/logic.ts`: la lógica pura (contador, una vez, ya en el AI Lab, Esc, a dónde ir, carrera, y la
+  respuesta a cada clic sobre él).
 - `components/fun/guide.ts`: el gancho del navegador (escucha, mide, navega).
 - `components/fun/Buddy.tsx` y `Buddy.module.scss`: la carrera, el salto y la pose de celebrar.
 - `components/shell/SiteFooter.tsx` y `SiteFooter.module.scss`: la clase `aiLab` con los rayos.
@@ -126,7 +162,9 @@ disparar clics, sin enviar formularios y sin mover el foco. La navegación vive 
   - ya en el AI Lab solo celebra;
   - movimiento reducido: salta y navega;
   - celular: va al dock de abajo y navega;
-  - el brillo: solo en "AI Lab", con animación, el texto en `--cw-fg`, y quieto con movimiento reducido.
+  - el brillo: solo en "AI Lab", con animación, el texto en `--cw-fg`, y quieto con movimiento reducido;
+  - picarlo: se deja agarrar, reacciona, avisa al tercero y al cuarto lleva al AI Lab, en escritorio y celular;
+  - picarlo quieto: dice que está castigado y no corre.
 - Verificación en el navegador: escritorio y celular a 375 px, con movimiento normal y reducido.
 
 ## Preguntas abiertas

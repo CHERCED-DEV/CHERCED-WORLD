@@ -53,3 +53,9 @@ export const FUN_GUIDE_CHEER_MS = 1_400
 export const FUN_GUIDE_LINES = [1, 2, 3] as const
 
 export const FUN_GUIDE_HUSH_MS = 4_500
+
+export const FUN_ME_GO_AT = 4
+
+export const FUN_ME_LINES = [1, 2, 3, 4, 5, 6, 7, 8] as const
+
+export const FUN_ME_OUCH_MS = 700

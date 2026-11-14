@@ -13,6 +13,7 @@ import {
   FUN_GUIDE_HUSH_MS,
   FUN_GUIDE_JUMP_MS,
   FUN_GUIDE_TAP_MS,
+  FUN_ME_OUCH_MS,
   FUN_POKE_MS,
   FUN_POKE_RADIUS,
   FUN_POWER_AT_MS,
@@ -40,12 +41,14 @@ import {
   GUIDE_START,
   inAiLab,
   levelFor,
+  meReply,
   nearestBox,
   nextGuide,
   nextPhase,
   paceFor,
   pickGuideLine,
   pickLine,
+  pickMeLine,
   recordWake,
   runToward,
   settled,
@@ -55,6 +58,7 @@ import {
   type FunEvent,
   type FunPhase,
   type Guide,
+  type GuideAction,
   type GuideEvent,
   type Point,
   type Size,
@@ -75,7 +79,9 @@ type Line = { id: number; text: string }
 
 type Tap = { id: number; x: number; y: number }
 
-type Transient = 'poke' | 'beg' | 'cheer'
+type Transient = 'poke' | 'beg' | 'cheer' | 'ouch'
+
+const FIGURE = '[data-cw-fun-figure]'
 
 type Trip = { startedAt: number; spot: Point | null; tapped: boolean }
 
@@ -140,6 +146,8 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
   const stepRef = useRef<(event: GuideEvent) => void>(() => {})
   const pathRef = useRef(pathname)
   const hushUntil = useRef(0)
+  const meCount = useRef(0)
+  const meLine = useRef<number | null>(null)
   const phaseRef = useRef<FunPhase>('awake')
   const startAt = useRef(0)
   const lastAnnounce = useRef<number | null>(null)
@@ -286,7 +294,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
   )
 
   const stepGuide = useCallback(
-    (event: GuideEvent) => {
+    (event: GuideEvent): GuideAction => {
       const outcome = nextGuide(guide.current, event)
       guide.current = outcome.guide
       const layer = layerRef.current
@@ -294,9 +302,36 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
       if (outcome.action === 'run') startTrip()
       else if (outcome.action === 'celebrate') celebrate(event.type === 'arrived')
       else if (event.type === 'stop' && trip.current) endTrip()
+      return outcome.action
     },
     [startTrip, celebrate, endTrip],
   )
+
+  const pokeMe = useCallback(() => {
+    const phase = phaseRef.current
+    if (phase === 'awake') meCount.current += 1
+    const reply = meReply(phase, meCount.current, guide.current.status)
+    if (reply === null) return
+    if (reply === 'go') {
+      const path = pathRef.current
+      const inLab = inAiLab(path)
+      const blocked = !inLab && (pageBusy(path) || findTarget(viewport()) === null)
+      if (stepGuide({ type: 'summon', inLab, blocked }) !== null) return
+    }
+    hushUntil.current = Date.now() + FUN_GUIDE_HUSH_MS
+    if (reply === 'sulk') {
+      say(t(dict, 'fun.me.sulk'), true)
+      return
+    }
+    flash('ouch', FUN_ME_OUCH_MS)
+    if (reply === 'tease') {
+      say(t(dict, 'fun.me.tease'), true)
+      return
+    }
+    const line = pickMeLine(meLine.current, Math.random)
+    meLine.current = line
+    say(t(dict, `fun.me.${line}`), true)
+  }, [dict, flash, say, stepGuide])
 
   useEffect(() => {
     stepRef.current = stepGuide
@@ -465,7 +500,8 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
 
     const onPointer = (event: PointerEvent) => {
       if (trip.current) return
-      target.current = followTarget({ x: event.clientX, y: event.clientY }, SIZE, event.pointerType === 'touch')
+      if (event.target instanceof Element && event.target.closest(FIGURE)) return
+      target.current = followTarget({ x: event.clientX, y: event.clientY }, SIZE, event.pointerType === 'touch', viewport(), BOUNDS)
       run()
     }
 
@@ -518,7 +554,7 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
             {line.text}
           </p>
         ) : null}
-        <div className={styles.figure} data-powered={powered ? '' : undefined}>
+        <div className={styles.figure} data-powered={powered ? '' : undefined} data-cw-fun-figure="" onClick={pokeMe}>
           <BuddySprite />
         </div>
       </div>

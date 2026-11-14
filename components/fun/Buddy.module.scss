@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 .layer {
   position: fixed;
   inset: 0;
@@ -20,6 +22,12 @@
   left: auto;
   transform: none !important;
   will-change: auto;
+}
+
+@include bp.up(md) {
+  :global(:root:has([data-cw-assistant-button])) .layer[data-reduced] .actor:not([data-at]) {
+    bottom: calc(var(--cw-space-5) + 52px + var(--cw-space-3) + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 .layer[data-reduced] .actor[data-at],
@@ -68,6 +76,16 @@
   position: relative;
   display: block;
   overflow: visible;
+  transform-origin: 50% 100%;
+
+  rect {
+    pointer-events: visiblePainted;
+    cursor: pointer;
+  }
+}
+
+.layer[data-phase='leaving'] .sprite rect {
+  pointer-events: none;
 }
 
 .bubble {
@@ -255,6 +273,17 @@
   .actor[data-pose='cheer'] .sprite {
     animation: fun-hop 0.35s var(--cw-ease-out) 4;
   }
+
+  .actor[data-pose='ouch'] .sprite {
+    animation: fun-squash 0.3s var(--cw-ease-out) 1;
+  }
+}
+
+.actor[data-pose='ouch'] {
+  .yell,
+  .sweat {
+    display: inline;
+  }
 }
 
 .actor[data-pose='cheer'] .yell {
@@ -405,6 +434,12 @@
 @keyframes fun-shake {
   50% {
     transform: translateX(1px);
+  }
+}
+
+@keyframes fun-squash {
+  40% {
+    scale: 1.1 0.88;
   }
 }
 

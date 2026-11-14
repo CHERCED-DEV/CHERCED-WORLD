@@ -5,11 +5,14 @@ import { funDictionary } from '@/components/fun/dictionary'
 import {
   countsAsInteraction,
   fitsView,
+  followTarget,
   GUIDE_START,
   guideTarget,
   inAiLab,
+  meReply,
   nextGuide,
   pickGuideLine,
+  pickMeLine,
   runToward,
   standNear,
   type FunPhase,
@@ -17,7 +20,7 @@ import {
   type GuideEvent,
   type Interaction,
 } from '@/components/fun/logic'
-import { FUN_GUIDE_AFTER, FUN_GUIDE_GRACE_MS, FUN_GUIDE_LINES, FUN_GUIDE_TAP_MS, FUN_RUN_SPEED } from '@/content/fun'
+import { FUN_GUIDE_AFTER, FUN_GUIDE_GRACE_MS, FUN_GUIDE_LINES, FUN_GUIDE_TAP_MS, FUN_ME_GO_AT, FUN_ME_LINES, FUN_RUN_SPEED } from '@/content/fun'
 import en from '@/content/i18n/en/fun.json'
 import es from '@/content/i18n/es/fun.json'
 
@@ -248,5 +251,105 @@ describe('019 guía: la única navegación del huevo', () => {
     expect(styles).toMatch(/@media \(prefers-reduced-motion: reduce\) \{\s*\.aiLab::before,\s*\.aiLab::after \{\s*animation: none;/)
     const chibi = source('components', 'fun', 'Buddy.module.scss')
     expect(chibi).not.toMatch(/gold|#f5c443|#c98d00/i)
+  })
+})
+
+describe('019 picarlo a él', () => {
+  it('cada clic saca una frase, al tercero avisa y al cuarto sale corriendo', () => {
+    expect(FUN_ME_GO_AT).toBe(4)
+    expect([1, 2, 3, 4, 5].map((count) => meReply('awake', count, 'counting'))).toEqual(['line', 'line', 'tease', 'go', 'go'])
+  })
+
+  it('quieto dice que está castigado; yéndose ya no responde', () => {
+    expect(meReply('sulking', 3, 'counting')).toBe('sulk')
+    expect(meReply('sulking', 9, 'done')).toBe('sulk')
+    expect(meReply('leaving', 4, 'counting')).toBeNull()
+  })
+
+  it('corriendo o después de llevarte, solo saca frases', () => {
+    expect(meReply('awake', 4, 'running')).toBe('line')
+    expect(meReply('awake', 3, 'done')).toBe('line')
+    expect(meReply('awake', 12, 'done')).toBe('line')
+  })
+
+  it('el cuarto clic arranca la misma carrera, celebra en el AI Lab y espera si la página está ocupada', () => {
+    const counted = play(times(3, touch())).guide
+    expect(nextGuide(counted, { type: 'summon', inLab: false, blocked: false })).toEqual({ guide: { status: 'running', count: 3 }, action: 'run' })
+    expect(nextGuide(GUIDE_START, { type: 'summon', inLab: true, blocked: true })).toEqual({ guide: { status: 'done', count: 0 }, action: 'celebrate' })
+    expect(nextGuide(GUIDE_START, { type: 'summon', inLab: false, blocked: true })).toEqual({ guide: GUIDE_START, action: null })
+  })
+
+  it('sigue siendo una vez por despertar: si ya fue o va corriendo, no arranca otra vez', () => {
+    const summon: GuideEvent = { type: 'summon', inLab: false, blocked: false }
+    expect(nextGuide({ status: 'running', count: 6 }, summon).action).toBeNull()
+    expect(nextGuide({ status: 'done', count: 6 }, summon).action).toBeNull()
+    const pageFirst = play([...times(6, touch()), { type: 'arrived' }]).guide
+    expect(nextGuide(pageFirst, summon).action).toBeNull()
+  })
+
+  it('nunca repite la frase anterior y puede decir las ocho', () => {
+    expect(FUN_ME_LINES).toHaveLength(8)
+    const seen = new Set<number>()
+    let previous: number | null = null
+    for (let index = 0; index < 400; index++) {
+      const line = pickMeLine(previous, Math.random)
+      expect(line).not.toBe(previous)
+      seen.add(line)
+      previous = line
+    }
+    expect([...seen].sort((a, b) => a - b)).toEqual([...FUN_ME_LINES])
+    expect(pickMeLine(1, () => 0)).toBe(2)
+    expect(pickMeLine(null, () => 0.999)).toBe(8)
+  })
+
+  it('las frases existen en ES y EN, y en inglés no quedan en español', () => {
+    expect(es['fun.me.tease']).toBe('Uno más y te llevo a donde está lo bueno.')
+    for (const lang of ['es', 'en'] as const) {
+      const dict = funDictionary(lang)
+      for (const line of FUN_ME_LINES) expect(dict[`fun.me.${line}`], `${lang} ${line}`).toBeTruthy()
+      expect(dict['fun.me.tease']).toBeTruthy()
+      expect(dict['fun.me.sulk']).toBeTruthy()
+    }
+    for (const key of Object.keys(es).filter((name) => name.startsWith('fun.me.'))) {
+      expect(en[key as keyof typeof en], key).not.toBe(es[key as keyof typeof es])
+    }
+  })
+
+  it('solo los píxeles del muñeco reciben el clic; la capa sigue sin recibir el puntero', () => {
+    const styles = source('components', 'fun', 'Buddy.module.scss')
+    expect(styles).toMatch(/\.layer \{[^}]*pointer-events: none/)
+    expect(styles).toMatch(/rect \{\s*pointer-events: visiblePainted;/)
+    expect(styles).toMatch(/\.layer\[data-phase='leaving'\] \.sprite rect \{\s*pointer-events: none;/)
+    expect(source('components', 'fun', 'Buddy.tsx')).toContain('data-cw-fun-figure="" onClick={pokeMe}')
+  })
+})
+
+describe('019 picarlo: nunca queda debajo del puntero', () => {
+  const view = { width: 1280, height: 800 }
+
+  it('con el mouse se pasa al otro lado cuando no cabe a la derecha o abajo', () => {
+    const middle = followTarget({ x: 600, y: 400 }, SIZE, false, view, BOUNDS)
+    expect(middle).toEqual({ x: 618, y: 418 })
+    const corner = followTarget({ x: 1250, y: 760 }, SIZE, false, view, BOUNDS)
+    expect(corner.x + SIZE.width).toBeLessThan(1250)
+    expect(corner.y + SIZE.height).toBeLessThan(760)
+  })
+
+  it('con el dedo se pone encima; si no cabe arriba, debajo', () => {
+    const roomy = followTarget({ x: 200, y: 500 }, SIZE, true, view, BOUNDS)
+    expect(roomy.y + SIZE.height).toBeLessThan(500)
+    const top = followTarget({ x: 188, y: 159 }, SIZE, true, view, BOUNDS)
+    expect(top.y).toBeGreaterThan(159)
+  })
+
+  it('sin la pantalla, se comporta como en la 015', () => {
+    expect(followTarget({ x: 1250, y: 760 }, SIZE, false)).toEqual({ x: 1268, y: 778 })
+    expect(followTarget({ x: 188, y: 50 }, SIZE, true).y).toBe(50 - SIZE.height - 28)
+  })
+
+  it('con movimiento reducido, en escritorio su esquina queda encima del botón del asistente', () => {
+    expect(source('components', 'fun', 'Buddy.module.scss')).toMatch(
+      /:root:has\(\[data-cw-assistant-button\]\)\) \.layer\[data-reduced\] \.actor:not\(\[data-at\]\) \{\s*bottom: calc\(var\(--cw-space-5\) \+ 52px/,
+    )
   })
 })

@@ -8,6 +8,8 @@ import {
   FUN_HINT_LINE,
   FUN_LEVEL_LINES,
   FUN_MAX_LEVEL,
+  FUN_ME_GO_AT,
+  FUN_ME_LINES,
   FUN_PACE,
   FUN_POWERED,
   FUN_STORAGE_KEY,
@@ -131,9 +133,14 @@ export function clampToView(point: Point, size: Size, view: Size, bounds: Bounds
   return { x: clamp(point.x, bounds.margin, maxX), y: clamp(point.y, bounds.top, maxY) }
 }
 
-export function followTarget(pointer: Point, size: Size, touch: boolean): Point {
-  if (touch) return { x: pointer.x - size.width / 2, y: pointer.y - size.height - 28 }
-  return { x: pointer.x + 18, y: pointer.y + 18 }
+export function followTarget(pointer: Point, size: Size, touch: boolean, view?: Size, bounds: Bounds = { top: 0, margin: 4 }): Point {
+  if (touch) {
+    const above = pointer.y - size.height - 28
+    return { x: pointer.x - size.width / 2, y: view && above < bounds.top ? pointer.y + 28 : above }
+  }
+  const x = view && pointer.x + 18 + size.width > view.width - bounds.margin ? pointer.x - 18 - size.width : pointer.x + 18
+  const y = view && pointer.y + 18 + size.height > view.height - bounds.margin ? pointer.y - 18 - size.height : pointer.y + 18
+  return { x, y }
 }
 
 export function besideBox(box: Box, size: Size, view: Size, gap = 12): Point {
@@ -191,6 +198,7 @@ export const GUIDE_START: Guide = Object.freeze({ status: 'counting', count: 0 }
 
 export type GuideEvent =
   | { type: 'interaction'; phase: FunPhase; inLab: boolean; blocked: boolean }
+  | { type: 'summon'; inLab: boolean; blocked: boolean }
   | { type: 'stop' }
   | { type: 'arrived' }
 
@@ -201,6 +209,12 @@ export type GuideOutcome = { guide: Guide; action: GuideAction }
 export function nextGuide(guide: Guide, event: GuideEvent, after: number = FUN_GUIDE_AFTER): GuideOutcome {
   if (event.type === 'stop') return guide.status === 'running' ? { guide: { ...guide, status: 'done' }, action: null } : { guide, action: null }
   if (event.type === 'arrived') return guide.status === 'running' ? { guide: { ...guide, status: 'done' }, action: 'celebrate' } : { guide, action: null }
+  if (event.type === 'summon') {
+    if (guide.status !== 'counting') return { guide, action: null }
+    if (event.inLab) return { guide: { ...guide, status: 'done' }, action: 'celebrate' }
+    if (event.blocked) return { guide, action: null }
+    return { guide: { ...guide, status: 'running' }, action: 'run' }
+  }
   if (guide.status !== 'counting' || event.phase !== 'awake') return { guide, action: null }
   const count = Math.min(after, guide.count + 1)
   if (count < after) return { guide: { status: 'counting', count }, action: null }
@@ -260,4 +274,20 @@ export function runToward(from: Point, to: Point, dtMs: number, speed: number): 
   const step = (speed * clamp(dtMs, 0, 100)) / 1000
   if (distance <= step) return { x: to.x, y: to.y }
   return { x: from.x + (dx / distance) * step, y: from.y + (dy / distance) * step }
+}
+
+export type MeReply = 'line' | 'tease' | 'go' | 'sulk' | null
+
+export function meReply(phase: FunPhase, count: number, guide: GuideStatus, goAt: number = FUN_ME_GO_AT): MeReply {
+  if (phase === 'leaving') return null
+  if (phase === 'sulking') return 'sulk'
+  if (guide !== 'counting') return 'line'
+  if (count >= goAt) return 'go'
+  if (count === goAt - 1) return 'tease'
+  return 'line'
+}
+
+export function pickMeLine(previous: number | null, random: () => number): number {
+  const pool = FUN_ME_LINES.filter((line) => line !== previous)
+  return pool[clamp(Math.floor(random() * pool.length), 0, pool.length - 1)]!
 }
