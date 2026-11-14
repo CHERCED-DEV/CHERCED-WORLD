@@ -132,3 +132,6 @@ __pycache__/
 
 # borradores privados del editor local
 .local/
+
+# respuestas privadas para la identidad de Mini Cherced (nunca al repo)
+content/mini-cherced/privado/
