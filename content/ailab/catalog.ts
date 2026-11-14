@@ -43,6 +43,10 @@ const V5: LabExperiment = {
   summary: copy('ailab.v5.summary'),
   status: 'beta',
   runsIn: 'google',
+  inputs: ['microphone', 'text'],
+  session: { activity: 'conversation', minutes: 5, capped: true },
+  poweredBy: { es: 'Gemini Live', en: 'Gemini Live' },
+  limit: { uses: 3, per: 'hour' },
   downloads: [],
   privacy: copy('ailab.v5.privacy'),
   flow: [
@@ -87,6 +91,10 @@ const A6: LabExperiment = {
   summary: copy('ailab.a6.summary'),
   status: 'beta',
   runsIn: 'google',
+  inputs: ['text'],
+  session: { activity: 'analysis', minutes: 2 },
+  poweredBy: { es: 'Gemini Flash', en: 'Gemini Flash' },
+  limit: { uses: 5, per: 'day' },
   downloads: [],
   privacy: copy('ailab.a6.privacy'),
   flow: [
@@ -134,6 +142,10 @@ const V1: LabExperiment = {
   summary: copy('ailab.v1.summary'),
   status: 'beta',
   runsIn: 'browser',
+  inputs: ['microphone', 'file'],
+  session: { activity: 'transcription', minutes: 2 },
+  poweredBy: { es: 'Whisper', en: 'Whisper' },
+  limit: null,
   downloads: [{ ...WHISPER_BASE, default: true }, WHISPER_TINY, WHISPER_SMALL],
   privacy: copy('ailab.v1.privacy'),
   flow: [
@@ -193,6 +205,10 @@ const V2: LabExperiment = {
   summary: copy('ailab.v2.summary'),
   status: 'beta',
   runsIn: 'browser',
+  inputs: ['text'],
+  session: { activity: 'listening', minutes: 2 },
+  poweredBy: { es: 'Web Speech API', en: 'Web Speech API' },
+  limit: null,
   downloads: [],
   privacy: copy('ailab.v2.privacy'),
   flow: [
@@ -223,6 +239,10 @@ const V3: LabExperiment = {
   summary: copy('ailab.v3.summary'),
   status: 'beta',
   runsIn: 'browser',
+  inputs: ['mouse', 'touch'],
+  session: { activity: 'listening', minutes: 5 },
+  poweredBy: { es: 'Web Speech API', en: 'Web Speech API' },
+  limit: null,
   downloads: [],
   privacy: copy('ailab.v3.privacy'),
   flow: [
@@ -267,6 +287,10 @@ const V4: LabExperiment = {
   summary: copy('ailab.v4.summary'),
   status: 'experiment',
   runsIn: 'browser',
+  inputs: ['microphone', 'text'],
+  session: { activity: 'commands', minutes: 2 },
+  poweredBy: { es: 'Whisper tiny', en: 'Whisper tiny' },
+  limit: null,
   downloads: [WHISPER_TINY],
   privacy: copy('ailab.v4.privacy'),
   flow: [
@@ -333,6 +357,10 @@ const A2: LabExperiment = {
   summary: copy('ailab.a2.summary'),
   status: 'stable',
   runsIn: 'browser',
+  inputs: ['mouse', 'touch'],
+  session: { activity: 'tour', minutes: 3 },
+  poweredBy: { es: 'Sin modelo: archivos reales', en: 'No model: real files' },
+  limit: null,
   downloads: [],
   privacy: copy('ailab.a2.privacy'),
   flow: [
@@ -415,6 +443,10 @@ const A3: LabExperiment = {
   summary: copy('ailab.a3.summary'),
   status: 'stable',
   runsIn: 'browser',
+  inputs: ['text'],
+  session: { activity: 'writing', minutes: 3 },
+  poweredBy: { es: 'Sin modelo: validador', en: 'No model: validator' },
+  limit: null,
   downloads: [],
   privacy: copy('ailab.a3.privacy'),
   flow: [
@@ -492,6 +524,10 @@ const A5: LabExperiment = {
   summary: copy('ailab.a5.summary'),
   status: 'beta',
   runsIn: 'browser',
+  inputs: ['text'],
+  session: { activity: 'search', minutes: 2 },
+  poweredBy: { es: 'BM25 + e5-small', en: 'BM25 + e5-small' },
+  limit: null,
   downloads: [E5_SMALL],
   privacy: copy('ailab.a5.privacy'),
   flow: [
@@ -562,6 +598,10 @@ const R1: LabExperiment = {
   summary: copy('ailab.r1.summary'),
   status: 'stable',
   runsIn: 'browser',
+  inputs: ['mouse', 'touch'],
+  session: { activity: 'simulation', minutes: 3 },
+  poweredBy: { es: 'Saga determinista', en: 'Deterministic saga' },
+  limit: null,
   downloads: [],
   privacy: copy('ailab.r1.privacy'),
   flow: [
@@ -638,6 +678,10 @@ const A4: LabExperiment = {
   summary: copy('ailab.a4.summary'),
   status: 'beta',
   runsIn: 'browser',
+  inputs: ['mouse', 'touch', 'text'],
+  session: { activity: 'tour', minutes: 4 },
+  poweredBy: { es: 'Python (Pyodide)', en: 'Python (Pyodide)' },
+  limit: null,
   downloads: [PYODIDE_CORE, PYODIDE_NUMPY],
   privacy: copy('ailab.a4.privacy'),
   flow: [
@@ -713,6 +757,10 @@ const J1: LabExperiment = {
   summary: copy('ailab.j1.summary'),
   status: 'experiment',
   runsIn: 'browser',
+  inputs: ['keyboard', 'mouse', 'touch'],
+  session: { activity: 'game', minutes: 3 },
+  poweredBy: { es: 'Red propia de 16 neuronas', en: 'In-house 16-neuron network' },
+  limit: null,
   downloads: [],
   privacy: copy('ailab.j1.privacy'),
   flow: [
@@ -808,6 +856,10 @@ const J2: LabExperiment = {
   summary: copy('ailab.j2.summary'),
   status: 'experiment',
   runsIn: 'browser',
+  inputs: ['keyboard', 'mouse', 'touch'],
+  session: { activity: 'game', minutes: 4 },
+  poweredBy: { es: 'La red de J1, por imitación', en: "J1's network, by imitation" },
+  limit: null,
   downloads: [],
   privacy: copy('ailab.j2.privacy'),
   flow: [
@@ -890,6 +942,20 @@ export function labThemes(catalog: readonly LabExperiment[] = labCatalog): Array
 
 export function defaultDownload(experiment: Pick<LabExperiment, 'downloads'>): LabDownload | null {
   return experiment.downloads.find((download) => download.default) ?? null
+}
+
+export type LabDownloadPlan = { kind: 'none' } | { kind: 'upfront'; bytes: number } | { kind: 'onDemand'; bytes: number }
+
+function withEngines(downloads: LabDownload[]): number {
+  const engines = new Map(downloads.flatMap((download) => (download.engine ? [[download.engine.resource, download.engine.bytes] as const] : [])))
+  return downloads.reduce((total, download) => total + download.bytes, 0) + [...engines.values()].reduce((total, bytes) => total + bytes, 0)
+}
+
+export function labDownloadPlan(experiment: Pick<LabExperiment, 'downloads'>): LabDownloadPlan {
+  if (experiment.downloads.length === 0) return { kind: 'none' }
+  const main = defaultDownload(experiment)
+  if (main) return { kind: 'upfront', bytes: withEngines([main]) }
+  return { kind: 'onDemand', bytes: withEngines(experiment.downloads) }
 }
 
 export function labRepoHref(repoPath: string): string {

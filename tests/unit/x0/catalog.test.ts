@@ -178,3 +178,26 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
     }
   })
 })
+
+describe('la ficha rápida de cada tarjeta', () => {
+  it('todos los experimentos dicen qué usan, cuánto duran y con qué corren', () => {
+    for (const experiment of labCatalog) {
+      expect(experiment.inputs.length, experiment.id).toBeGreaterThan(0)
+      expect(experiment.session.minutes, experiment.id).toBeGreaterThan(0)
+      expect(experiment.poweredBy.es.trim(), experiment.id).not.toBe('')
+      expect(experiment.poweredBy.en.trim(), experiment.id).not.toBe('')
+    }
+  })
+
+  it('los límites de la ficha son los mismos que aplica el servidor', async () => {
+    const { RATE_LIMITS } = await import('@/lib/security/rate-limit')
+    const { AGENT_SESSION_MINUTES } = await import('@/lib/ai/agent/config')
+    const hour = 60 * 60 * 1000
+    const v5 = labExperiment('V5')
+    expect(v5.session.minutes).toBe(AGENT_SESSION_MINUTES)
+    expect(v5.limit).toEqual({ uses: RATE_LIMITS.agent.limit, per: RATE_LIMITS.agent.windowMs === hour ? 'hour' : 'day' })
+    const a6 = labExperiment('A6')
+    expect(a6.limit).toEqual({ uses: RATE_LIMITS.match.limit, per: RATE_LIMITS.match.windowMs === hour ? 'hour' : 'day' })
+    for (const experiment of labCatalog) if (experiment.runsIn === 'browser') expect(experiment.limit, experiment.id).toBeNull()
+  })
+})

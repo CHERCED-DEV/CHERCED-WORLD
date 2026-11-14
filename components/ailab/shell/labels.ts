@@ -1,7 +1,19 @@
 import type { CopyLabels } from '@/components/blog/CopyButton'
 import type { AdrLabels } from '@/components/ui/AdrCards'
-import { LAB_STATUSES, LAB_THEMES, type LabExperiment, type LabExperimentId, type LabStatus, type LabTheme } from '@/content/types'
+import {
+  LAB_ACTIVITIES,
+  LAB_INPUTS,
+  LAB_STATUSES,
+  LAB_THEMES,
+  type LabActivity,
+  type LabExperiment,
+  type LabExperimentId,
+  type LabInput,
+  type LabStatus,
+  type LabTheme,
+} from '@/content/types'
 import { t, type Dictionary } from '@/lib/i18n/translate'
+import { LAB_FACT_KEYS, type LabFactKey, type LabFactLabels } from './facts'
 import type { LabClearLabels, LabConsentLabels, LabTryLabels } from './types'
 
 export const LAB_DEMO_SHARED_KEYS = ['ailab.worker.evicted', 'ailab.worker.paused', 'ailab.storage.unavailable'] as const
@@ -52,15 +64,27 @@ export function labDemoCopy(dict: Dictionary, experiment: LabExperimentId): Reco
   return Object.fromEntries([...own, ...shared])
 }
 
+export function labFactLabels(ailab: Dictionary): LabFactLabels {
+  return {
+    terms: Object.fromEntries(LAB_FACT_KEYS.map((key) => [key, t(ailab, `ailab.facts.${key}`)])) as Record<LabFactKey, string>,
+    inputs: Object.fromEntries(LAB_INPUTS.map((input) => [input, t(ailab, `ailab.input.${input}`)])) as Record<LabInput, string>,
+    activities: Object.fromEntries(LAB_ACTIVITIES.map((activity) => [activity, t(ailab, `ailab.activity.${activity}`)])) as Record<LabActivity, string>,
+    session: { typical: t(ailab, 'ailab.session.typical'), capped: t(ailab, 'ailab.session.capped') },
+    cost: { free: t(ailab, 'ailab.cost.free'), hour: t(ailab, 'ailab.cost.hour'), day: t(ailab, 'ailab.cost.day') },
+    plan: { none: t(ailab, 'ailab.plan.none'), upfront: t(ailab, 'ailab.plan.upfront'), onDemand: t(ailab, 'ailab.plan.onDemand') },
+  }
+}
+
 export type LabCardLabels = {
   statusPrefix: string
   status: Record<LabStatus, string>
   runsIn: Record<LabExperiment['runsIn'], string>
   privacy: string
-  parts: { try: string; how: string; code: string }
+  parts: { try: string; details: string; how: string; code: string }
   how: { flow: string; decisions: string }
   adr: AdrLabels
   downloads: { title: string; none: string; item: string; engine: string; optional: string }
+  facts: LabFactLabels
   noscript: string
   code: { file: string; repo: string }
   copy: CopyLabels
@@ -72,7 +96,7 @@ export function labCardLabels(ailab: Dictionary, site: Dictionary, blog: Diction
     status: Object.fromEntries(LAB_STATUSES.map((status) => [status, t(ailab, `ailab.status.${status}`)])) as Record<LabStatus, string>,
     runsIn: { browser: t(ailab, 'ailab.runsIn.browser'), google: t(ailab, 'ailab.runsIn.google') },
     privacy: t(ailab, 'ailab.part.privacy'),
-    parts: { try: t(ailab, 'ailab.part.try'), how: t(ailab, 'ailab.part.how'), code: t(ailab, 'ailab.part.code') },
+    parts: { try: t(ailab, 'ailab.part.try'), details: t(ailab, 'ailab.part.details'), how: t(ailab, 'ailab.part.how'), code: t(ailab, 'ailab.part.code') },
     how: { flow: t(ailab, 'ailab.how.flow'), decisions: t(ailab, 'ailab.how.decisions') },
     adr: { decision: t(site, 'project.adr.decision'), why: t(site, 'project.adr.why'), tradeoff: t(site, 'project.adr.tradeoff') },
     downloads: {
@@ -82,6 +106,7 @@ export function labCardLabels(ailab: Dictionary, site: Dictionary, blog: Diction
       engine: t(ailab, 'ailab.downloads.engine'),
       optional: t(ailab, 'ailab.downloads.optional'),
     },
+    facts: labFactLabels(ailab),
     noscript: t(ailab, 'ailab.noscript'),
     code: { file: t(ailab, 'ailab.code.file'), repo: t(ailab, 'ailab.code.repo') },
     copy: { copy: t(blog, 'code.copy'), copied: t(blog, 'code.copied'), copyError: t(blog, 'code.copyError') },

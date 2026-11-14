@@ -82,7 +82,10 @@ describe('formato de la tarjeta (FR-303)', () => {
       /Whisper small \(int8\) · 249 MB · desde huggingface\.co<span data-cw-lab-engine=""> \+ motor ONNX Runtime Web · 27 MB · desde este sitio<\/span><span[^>]*> · solo si lo pides<\/span>/,
     )
     expect(html).toMatch(/data-cw-lab-open=""[^>]*>Probar<\/button>/)
-    expect(html).toMatch(/aria-label="Probar Transcriptor"[^>]*aria-describedby="lab-v1-downloads"|aria-describedby="lab-v1-downloads"[^>]*aria-label="Probar Transcriptor"/)
+    expect(html).toMatch(/aria-label="Probar Transcriptor"[^>]*aria-describedby="lab-v1-brief"|aria-describedby="lab-v1-brief"[^>]*aria-label="Probar Transcriptor"/)
+    expect(html).toMatch(/id="lab-v1-brief"/)
+    expect(html).toMatch(/data-cw-lab-fact="downloads"/)
+    expect(html).toMatch(/data-cw-lab-fact="engine"[^>]*>.*Whisper/)
     expect(html).toContain('Esta demo necesita JavaScript. Aquí tienes cómo funciona y su código.')
     expect(html).toMatch(/<details[^>]*data-cw-lab-part="how"><summary[^>]*><h4[^>]*>Cómo funciona<\/h4><\/summary>/)
     expect(count(html, /data-cw-adr=""/)).toBe(2)

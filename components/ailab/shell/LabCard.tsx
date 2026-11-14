@@ -8,8 +8,10 @@ import { formatBytes } from '@/lib/ailab/core/format'
 import type { Locale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/server'
 import { t } from '@/lib/i18n/translate'
+import { labFacts, type LabFact } from './facts'
 import { labCardLabels, labDemoCopy, labTryLabels, type LabCardLabels } from './labels'
 import styles from './LabCard.module.scss'
+import { LabIcon } from './LabIcon'
 import { LabTry } from './LabTry'
 import { RunsInBadge } from './RunsInBadge'
 import { StatusBadge } from './StatusBadge'
@@ -113,9 +115,31 @@ function Code({ experiment, labels }: { experiment: LabExperiment; labels: LabCa
   )
 }
 
+function Facts({ lang, experiment, labels, id }: { lang: Locale; experiment: LabExperiment; labels: LabCardLabels; id: string }) {
+  const sheet = labFacts(experiment, labels.facts, lang)
+  const item = (fact: LabFact) => (
+    <div key={fact.key} className={styles.fact} data-cw-lab-fact={fact.key} data-cw-lab-plan={fact.plan}>
+      <dt className="cw-visually-hidden">{fact.term}</dt>
+      <dd>
+        <LabIcon name={fact.icon} className={styles.factIcon} />
+        <span>{fact.text}</span>
+      </dd>
+    </div>
+  )
+  return (
+    <div className={styles.facts} data-cw-lab-facts="">
+      <dl id={id} className={styles.brief} data-cw-lab-brief="">
+        {sheet.brief.map(item)}
+      </dl>
+      <dl className={styles.meta}>{sheet.more.map(item)}</dl>
+    </div>
+  )
+}
+
 export function LabCardView({ lang, experiment, labels, tryLabels, copy, demo, how, code }: LabCardViewProps) {
   const base = labCardId(experiment.id)
   const titleId = `${base}-title`
+  const briefId = `${base}-brief`
   const downloadsId = `${base}-downloads`
   const howContent = how ?? <How lang={lang} experiment={experiment} labels={labels} />
   const codeContent = code ?? (experiment.code ? <Code experiment={experiment} labels={labels} /> : null)
@@ -148,49 +172,61 @@ export function LabCardView({ lang, experiment, labels, tryLabels, copy, demo, h
 
       <p className={styles.summary}>{experiment.summary[lang]}</p>
 
-      <p className={styles.privacy} data-cw-lab-privacy="">
-        <svg className={styles.privacyIcon} width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-        </svg>
-        <span className="cw-visually-hidden">{labels.privacy}: </span>
-        {experiment.privacy[lang]}
-      </p>
-
       <section className={styles.part} aria-labelledby={`${base}-try`} data-cw-lab-part="try">
-        <h4 id={`${base}-try`} className={styles.partTitle}>
-          {labels.parts.try}
-        </h4>
-        <Downloads lang={lang} experiment={experiment} labels={labels} id={downloadsId} />
-        {demo ?? (
-          <LabTry
-            lang={lang}
-            experiment={experiment.id}
-            downloads={experiment.downloads}
-            labels={tryLabels}
-            copy={copy}
-            describedBy={downloadsId}
-          />
-        )}
-        <p className={styles.noscript} data-cw-lab-noscript="">
-          {labels.noscript}
-        </p>
+        <div className={styles.tryIntro}>
+          <h4 id={`${base}-try`} className={styles.partTitle}>
+            {labels.parts.try}
+          </h4>
+          <Facts lang={lang} experiment={experiment} labels={labels} id={briefId} />
+        </div>
+        <div className={styles.tryArea}>
+          {demo ?? (
+            <LabTry
+              lang={lang}
+              experiment={experiment.id}
+              downloads={experiment.downloads}
+              labels={tryLabels}
+              copy={copy}
+              describedBy={briefId}
+            />
+          )}
+          <p className={styles.noscript} data-cw-lab-noscript="">
+            {labels.noscript}
+          </p>
+        </div>
       </section>
 
-      <details className={styles.disclosure} data-cw-lab-part="how">
-        <summary className={styles.summaryRow}>
-          <h4 className={styles.partTitle}>{labels.parts.how}</h4>
-        </summary>
-        <div className={styles.disclosureBody}>{howContent}</div>
-      </details>
-
-      {codeContent ? (
-        <details className={styles.disclosure} data-cw-lab-part="code">
+      <div className={styles.more}>
+        <details className={styles.disclosure} data-cw-lab-part="details">
           <summary className={styles.summaryRow}>
-            <h4 className={styles.partTitle}>{labels.parts.code}</h4>
+            <LabIcon name="shield" className={styles.summaryIcon} />
+            <h4 className={styles.partTitle}>{labels.parts.details}</h4>
           </summary>
-          <div className={styles.disclosureBody}>{codeContent}</div>
+          <div className={styles.disclosureBody}>
+            <p className={styles.privacy} data-cw-lab-privacy="">
+              <span className="cw-visually-hidden">{labels.privacy}: </span>
+              {experiment.privacy[lang]}
+            </p>
+            <Downloads lang={lang} experiment={experiment} labels={labels} id={downloadsId} />
+          </div>
         </details>
-      ) : null}
+
+        <details className={styles.disclosure} data-cw-lab-part="how">
+          <summary className={styles.summaryRow}>
+            <h4 className={styles.partTitle}>{labels.parts.how}</h4>
+          </summary>
+          <div className={styles.disclosureBody}>{howContent}</div>
+        </details>
+
+        {codeContent ? (
+          <details className={styles.disclosure} data-cw-lab-part="code">
+            <summary className={styles.summaryRow}>
+              <h4 className={styles.partTitle}>{labels.parts.code}</h4>
+            </summary>
+            <div className={styles.disclosureBody}>{codeContent}</div>
+          </details>
+        ) : null}
+      </div>
     </GlassSurface>
   )
 }

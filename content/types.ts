@@ -291,6 +291,22 @@ export const LAB_RUNS_IN = ['browser', 'google'] as const
 
 export type LabRunsIn = (typeof LAB_RUNS_IN)[number]
 
+export const LAB_INPUTS = ['microphone', 'camera', 'file', 'text', 'keyboard', 'mouse', 'touch'] as const
+
+export type LabInput = (typeof LAB_INPUTS)[number]
+
+export const LAB_ACTIVITIES = ['conversation', 'analysis', 'transcription', 'listening', 'commands', 'tour', 'writing', 'search', 'simulation', 'game'] as const
+
+export type LabActivity = (typeof LAB_ACTIVITIES)[number]
+
+export type LabSession = { activity: LabActivity; minutes: number; capped?: true }
+
+export const LAB_LIMIT_PERIODS = ['hour', 'day'] as const
+
+export type LabLimitPeriod = (typeof LAB_LIMIT_PERIODS)[number]
+
+export type LabLimit = { uses: number; per: LabLimitPeriod }
+
 export type LabExperiment = {
   id: LabExperimentId
   theme: LabTheme
@@ -298,6 +314,10 @@ export type LabExperiment = {
   summary: Localized
   status: LabStatus
   runsIn: LabRunsIn
+  inputs: LabInput[]
+  session: LabSession
+  poweredBy: Localized
+  limit: LabLimit | null
   downloads: LabDownload[]
   privacy: Localized
   flow: Localized[]
