@@ -20,10 +20,11 @@ const SPEC_COPY: Record<string, Localized> = {
     en: 'I also build AI plugins for specific professions. For a lawyer, skills that organize case material, test hypotheses and draft documents. For a structural engineer, an assistant that reads his logs, helps with calculations and builds the estimate. The showcases below use made-up data only.',
   },
   'ailab.privacy': {
-    es: 'No guardo tu audio ni tu texto. Se procesan en tu navegador y no salen de él.',
-    en: "I don't store your audio or your text. They're processed in your browser and never leave it.",
+    es: 'No guardo tu audio ni tu texto. Casi todo se procesa en tu navegador; el único experimento que envía tu voz a Google te lo pregunta antes.',
+    en: "I don't store your audio or your text. Almost everything runs in your browser; the one experiment that sends your voice to Google asks you first.",
   },
   'ailab.runsIn.browser': { es: 'Corre en tu navegador', en: 'Runs in your browser' },
+  'ailab.runsIn.google': { es: 'Corre en Google (Gemini)', en: 'Runs on Google (Gemini)' },
   'ailab.consent.title': { es: 'Antes de descargar', en: 'Before downloading' },
   'ailab.consent.body': {
     es: 'Este experimento descarga {resource} ({size}) desde {host}. Queda guardado en tu navegador para la próxima vez.',
@@ -93,9 +94,9 @@ describe('copy base de la spec, palabra por palabra (FR-370)', () => {
 })
 
 describe('catálogo del laboratorio (FR-302, T704)', () => {
-  it('trae los 11 experimentos del alcance, una vez cada uno y en el orden de las lanes', () => {
+  it('trae los 12 experimentos del alcance, una vez cada uno y en el orden de las lanes, con V5 (018) primero', () => {
     expect(labCatalog.map((item) => item.id)).toEqual([...LAB_EXPERIMENT_IDS])
-    expect(LAB_EXPERIMENT_IDS).toEqual(['V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'])
+    expect(LAB_EXPERIMENT_IDS).toEqual(['V5', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'])
     expect(isLabExperimentId('V1')).toBe(true)
     expect(isLabExperimentId('A1')).toBe(false)
     expect(labExperiment('R1').title.es).toBe('Simulador de sagas')
@@ -105,7 +106,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
   it('agrupa por tema en el orden de la spec: Voz, Arquitectura, Agentes y Juegos', () => {
     expect(LAB_THEMES).toEqual(['voice', 'architecture', 'agents', 'games'])
     expect(labThemes().map((group) => [group.theme, group.experiments.map((item) => item.id)])).toEqual([
-      ['voice', ['V1', 'V2', 'V3', 'V4']],
+      ['voice', ['V5', 'V1', 'V2', 'V3', 'V4']],
       ['architecture', ['R1']],
       ['agents', ['A2', 'A3', 'A5', 'A4']],
       ['games', ['J1', 'J2']],
@@ -115,7 +116,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
   it('cada experimento trae estado, dónde corre, privacidad, recorrido y decisiones en ES y EN', () => {
     for (const item of labCatalog) {
       expect(LAB_STATUSES, item.id).toContain(item.status)
-      expect(item.runsIn, item.id).toBe('browser')
+      expect(item.runsIn, item.id).toBe(item.id === 'V5' ? 'google' : 'browser')
       for (const value of [item.title, item.summary, item.privacy, ...item.flow]) {
         expect(value.es.trim(), item.id).not.toBe('')
         expect(value.en.trim(), item.id).not.toBe('')

@@ -1,7 +1,7 @@
 # Release 1: notas (R4.4)
 
 Borrador del 2026-11-12, al día el 2026-11-13. Producción (`main`) sigue siendo el sitio de 2023, con su último cambio
-del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las specs 001 a 017, en más de 600 commits.
+del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las specs 001 a 018, en más de 600 commits.
 
 ## Lo que ve un visitante
 
@@ -16,8 +16,10 @@ del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las spe
 - **Blog:** 7 posts en español e inglés, etiquetas, catálogo, series, comentarios y reacciones. Cada post se puede
   escuchar ("Escuchar este post"). En el celular, la pestaña de navegación muestra el título en curso con la línea de
   lectura y abre el índice.
-- **AI Lab:** 11 experimentos que corren en el navegador: voz, plugins y skills, el buscador por palabras y por
-  significado, el simulador de sagas, las vitrinas y dos juegos. Ningún modelo se descarga sin permiso.
+- **AI Lab:** 12 experimentos. Once corren en el navegador: voz, plugins y skills, el buscador por palabras y por
+  significado, el simulador de sagas, las vitrinas y dos juegos. Ningún modelo se descarga sin permiso. El nuevo,
+  **"Habla con mi portafolio"** (018), corre en Google: Mini Cherced, el chibi pixel art del autor, conversa por voz
+  con Gemini Live, conoce todo el sitio y te lleva a la página que pidas.
 - **Ahora (`/now`), Contacto y Privacidad.** El formulario de contacto tiene antispam. Privacidad explica qué se
   guarda al ingresar con Google.
 - **Cuentas:** "Ingresar" en la barra, con la cuenta de Google. Con la cuenta se comenta sin escribir nombre ni correo,
@@ -62,7 +64,10 @@ del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las spe
 2. El ingreso con Google configurado (R3.9): el cliente OAuth y `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en
    Vercel, para Production y Preview. Pasos en `../017-cuentas-e-ingreso/configurar-google.md`. Sin ellas, "Ingresar"
    lleva a una página que dice que el ingreso todavía no está activo.
-3. El QA del autor en su teléfono y su tablet (R4.4), sobre la dirección fija de `dev`:
+3. Gemini activo (018): la clave nueva (la primera apareció en el chat) en `GEMINI_API_KEY` de Vercel, para
+   Production y Preview, y saldo prepagado en AI Studio. Pasos en `../018-ia-de-google/configurar-gemini.md`. Sin
+   ella, "Habla con mi portafolio" dice que todavía no está activo.
+4. El QA del autor en su teléfono y su tablet (R4.4), sobre la dirección fija de `dev`:
    https://cherced-world-git-dev-cherceddevs-projects.vercel.app
    - Inicio: un scroll del hero al panel y otro de vuelta; la vitrina y "Ver los 15 proyectos".
    - Portafolio: los filtros, el carrusel con el dedo y un caso de estudio completo, con sus tarjetas de decisiones.
@@ -72,5 +77,7 @@ del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las spe
    - Ingresar con Google, comentar un post con la cuenta y aprobar el comentario en el panel.
    - Personas: dar un permiso a otra cuenta de Gmail y ver que entra solo a lo suyo.
    - Cambiar de idioma y de tema en dos páginas.
-4. La confirmación explícita del autor para pasar `dev` a `main` (R5.1) y el smoke en producción (R5.2). El mismo día,
+   - AI Lab → "Habla con mi portafolio": conversar por voz en el teléfono, preguntarle por un proyecto y pedirle que te
+     lleve a una página.
+5. La confirmación explícita del autor para pasar `dev` a `main` (R5.1) y el smoke en producción (R5.2). El mismo día,
    el autor crea la contraseña del panel en producción con el código de un solo uso de los logs.

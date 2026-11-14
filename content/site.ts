@@ -1062,7 +1062,7 @@ export const site: SiteContent = {
     },
   },
   privacy: {
-    updatedAt: '2026-11-13',
+    updatedAt: '2026-11-14',
     sections: [
       {
         heading: { es: 'Quién es el responsable', en: 'Who is responsible' },
@@ -1109,8 +1109,15 @@ export const site: SiteContent = {
       {
         heading: { es: 'El laboratorio de IA', en: 'The AI Lab' },
         body: {
-          es: 'Los experimentos del AI Lab corren en tu navegador. Antes de descargar un modelo o un runtime te digo qué es, cuánto pesa y de qué servidor viene (Hugging Face, jsDelivr o este mismo sitio, que sirve el motor ONNX Runtime Web), y no descargo nada sin tu permiso, que vale solo para esa sesión. Lo descargado queda en la caché de tu navegador, y lo que aprenden los juegos, en su almacenamiento local: nunca llega a mi servidor. Tu audio, tu texto, tus archivos y tus movimientos no se envían a ningún lado; si una voz del navegador se genera en línea, el experimento te avisa antes de usarla. Para borrarlo todo, usa «Borrar lo que el laboratorio guardó» en la página del laboratorio.',
-          en: "The AI Lab experiments run in your browser. Before downloading a model or a runtime I tell you what it is, how much it weighs and which server it comes from (Hugging Face, jsDelivr or this very site, which serves the ONNX Runtime Web engine), and I download nothing without your permission, which lasts only for that session. What is downloaded stays in your browser's cache, and what the games learn stays in its local storage: it never reaches my server. Your audio, your text, your files and your moves are not sent anywhere; if a browser voice is generated online, the experiment warns you before using it. To delete it all, use “Clear what the lab saved” on the lab page.",
+          es: 'Los experimentos del AI Lab corren en tu navegador. Antes de descargar un modelo o un runtime te digo qué es, cuánto pesa y de qué servidor viene (Hugging Face, jsDelivr o este mismo sitio, que sirve el motor ONNX Runtime Web), y no descargo nada sin tu permiso, que vale solo para esa sesión. Lo descargado queda en la caché de tu navegador, y lo que aprenden los juegos, en su almacenamiento local: nunca llega a mi servidor. Tu audio, tu texto, tus archivos y tus movimientos no se envían a ningún lado; si una voz del navegador se genera en línea, el experimento te avisa antes de usarla. Para borrarlo todo, usa «Borrar lo que el laboratorio guardó» en la página del laboratorio. La única excepción es «Habla con mi portafolio», descrita abajo.',
+          en: "The AI Lab experiments run in your browser. Before downloading a model or a runtime I tell you what it is, how much it weighs and which server it comes from (Hugging Face, jsDelivr or this very site, which serves the ONNX Runtime Web engine), and I download nothing without your permission, which lasts only for that session. What is downloaded stays in your browser's cache, and what the games learn stays in its local storage: it never reaches my server. Your audio, your text, your files and your moves are not sent anywhere; if a browser voice is generated online, the experiment warns you before using it. To delete it all, use “Clear what the lab saved” on the lab page. The only exception is “Talk to my portfolio”, described below.",
+        },
+      },
+      {
+        heading: { es: 'Habla con mi portafolio (Gemini)', en: 'Talk to my portfolio (Gemini)' },
+        body: {
+          es: 'Este experimento sí envía datos fuera de tu equipo, y te lo pregunto antes de abrir el micrófono. Mientras dura la conversación, como máximo 5 minutos, tu voz y lo que escribes van directo de tu navegador a Google (Gemini Live), que responde con voz. Mi servidor solo pide a Google un permiso de un solo uso para esa conversación y no ve tu audio. No guardo audio, texto ni transcripciones. Uso la API de pago de Google, en la que, según sus términos, lo que envías no se usa para mejorar sus productos. Para evitar abusos, mi servidor cuenta cuántas conversaciones abre cada dirección IP en la última hora, guardando una huella de la IP que no permite recuperarla, no la IP.',
+          en: 'This experiment does send data outside your device, and I ask you before turning on the microphone. While the conversation lasts, 5 minutes at most, your voice and what you type go straight from your browser to Google (Gemini Live), which answers by voice. My server only asks Google for a single-use permission for that conversation and never sees your audio. I store no audio, text or transcripts. I use Google\'s paid API, under which, according to its terms, what you send is not used to improve its products. To prevent abuse, my server counts how many conversations each IP address opens in the last hour, keeping a one-way hash of it, not the address itself.',
         },
       },
     ],

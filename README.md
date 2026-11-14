@@ -55,5 +55,19 @@ suyas con `npx playwright test tests/e2e/<lane>`.
 
 ## Despliegue
 
-Hacer merge a `main` publica el sitio en el proyecto de Vercel existente. No hay pasos manuales ni
-variables nuevas: solo se usan `MONGODB_INTEGRAL_DB` y `VERCEL_URL_CORS`.
+Hacer merge a `main` publica el sitio en el proyecto de Vercel existente. No hay pasos manuales.
+
+### Variables de entorno
+
+Todas son del servidor: ninguna lleva `NEXT_PUBLIC_` y ninguna se versiona. Sin cada una, el sitio compila y
+funciona; la función que la usa queda apagada o, en local, simulada (constitución, principio VIII).
+
+| Variable | Para qué | Quién la crea | Entornos de Vercel |
+|---|---|---|---|
+| `MONGODB_INTEGRAL_DB` | Base de mensajes, comentarios, cuentas y posts del panel | Existente | Production, Preview |
+| `VERCEL_URL_CORS` | Origen del sitio para CORS y URLs absolutas | Existente | Production, Preview |
+| `GOOGLE_CLIENT_ID` | Ingreso con Google (017) | El autor, en Google Cloud ([guía](specs/017-cuentas-e-ingreso/configurar-google.md)) | Production, Preview |
+| `GOOGLE_CLIENT_SECRET` | Ingreso con Google (017) | El autor, en Google Cloud | Production, Preview (Sensitive) |
+| `GEMINI_API_KEY` | IA de Google: agente de voz y experimentos del AI Lab (018) | El autor, en Google Cloud ([guía](specs/018-ia-de-google/configurar-gemini.md)) | Production, Preview (Sensitive) |
+
+En local van en `.env.local`, que no se versiona.

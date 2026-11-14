@@ -36,6 +36,50 @@ export const PYODIDE_CORE: LabDownload = { resource: 'Pyodide 0.29.0', bytes: 12
 
 export const PYODIDE_NUMPY: LabDownload = { resource: 'numpy (Pyodide 0.29.0)', bytes: 3_100_000, host: 'cdn.jsdelivr.net' }
 
+const V5: LabExperiment = {
+  id: 'V5',
+  theme: 'voice',
+  title: copy('ailab.v5.title'),
+  summary: copy('ailab.v5.summary'),
+  status: 'beta',
+  runsIn: 'google',
+  downloads: [],
+  privacy: copy('ailab.v5.privacy'),
+  flow: [
+    { es: 'Hablas o escribes, y tu navegador abre una conversación directa con Gemini Live', en: 'You speak or type, and your browser opens a direct conversation with Gemini Live' },
+    {
+      es: 'Gemini lleva un mapa del sitio y, si le falta un detalle, usa el buscador del sitio desde tu navegador',
+      en: 'Gemini carries a map of the site and, if it needs a detail, uses the site search from your browser',
+    },
+    { es: 'Responde con voz, el chibi mueve la boca al ritmo del audio y, si lo pides, te lleva a la página', en: 'It answers by voice, the chibi moves its mouth to the audio and, if you ask, takes you to the page' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Gemini Live con un token de un solo uso', en: 'Gemini Live with a single-use token' },
+      why: {
+        es: 'La voz va directo de tu navegador a Google, sin pasar por mi servidor, y la clave nunca sale de él: el servidor pide un token que dura minutos y trae fijados el modelo, la voz y las instrucciones.',
+        en: 'Your voice goes straight from your browser to Google, without going through my server, and the key never leaves it: the server asks for a token that lasts minutes and has the model, the voice and the instructions locked in.',
+      },
+      tradeoff: {
+        es: 'A diferencia del resto del laboratorio, aquí tu voz sale de tu equipo. Por eso te lo pregunto antes de abrir el micrófono.',
+        en: 'Unlike the rest of the lab, here your voice leaves your device. That is why I ask before opening the microphone.',
+      },
+    },
+    {
+      decision: { es: 'Las herramientas corren en tu navegador', en: 'The tools run in your browser' },
+      why: {
+        es: 'Buscar en el sitio y abrir una página usan el índice público que ya existe, así que no hace falta un endpoint nuevo que exponga datos.',
+        en: 'Searching the site and opening a page use the public index that already exists, so no new endpoint exposing data is needed.',
+      },
+      tradeoff: {
+        es: 'El agente solo sabe lo que está publicado en el sitio. Si no aparece, te lo dice y te manda a Contacto.',
+        en: 'The agent only knows what is published on the site. If it is not there, it says so and sends you to Contact.',
+      },
+    },
+  ],
+  code: null,
+}
+
 const V1: LabExperiment = {
   id: 'V1',
   theme: 'voice',
@@ -783,7 +827,7 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
-export const labCatalog: readonly LabExperiment[] = [V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
+export const labCatalog: readonly LabExperiment[] = [V5, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)

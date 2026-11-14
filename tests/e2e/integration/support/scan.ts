@@ -35,7 +35,7 @@ const PERSONAL: ReadonlyArray<[string, RegExp]> = [
   ['teléfono', /(?<![\d-])(?:\+\d{1,3}[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}(?![\d-])/g],
   ['IP', /(?<![\d.])\d{1,3}(\.\d{1,3}){3}(?![\d.])/g],
   ['huella', /\b[a-f0-9]{32,}\b/gi],
-  ['credencial', /mongodb(\+srv)?:\/\/|MONGODB_INTEGRAL_DB|VERCEL_URL_CORS|-----BEGIN/gi],
+  ['credencial', /mongodb(\+srv)?:\/\/|MONGODB_INTEGRAL_DB|VERCEL_URL_CORS|GEMINI_API_KEY|GOOGLE_CLIENT_SECRET|AIza[0-9A-Za-z_-]{35}|\bAQ\.[0-9A-Za-z_-]{40,}|-----BEGIN/gi],
 ]
 
 export function personalData(text: string, allowedEmails: readonly string[] = []): string[] {

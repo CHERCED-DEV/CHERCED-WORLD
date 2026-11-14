@@ -1,5 +1,11 @@
 <!--
 Sync Impact Report
+- Version change: 2.0.1 → 3.0.0 (MAJOR, 2026-11-14): el principio VIII se redefine a pedido del autor
+  ("ahora sí quiero tocar cosas en Vercel. Poner secretos"). Se permiten proveedores gestionados por API
+  y variables de entorno nuevas en Vercel, con cuatro condiciones: tabla en el README, secreto solo en el
+  servidor, modo apagado y tope de costo. Sigue prohibida la infraestructura que haya que operar.
+  Cierra P-3a de la 003 con el camino B (mixto) y habilita la 018 (IA de Google).
+- Historial anterior:
 - Version change: 1.0.0 → 2.0.0 (MAJOR: se elimina la gobernanza externa de Factoria) → 2.0.1 (PATCH:
   el principio III acepta sesiones con token opaco validado en servidor además de tokens firmados, sin
   cambiar su intención)
@@ -149,17 +155,25 @@ escenario de aceptación:
 
 - Desplegar MUST ser un push (o merge) a `main`: el proyecto existente en Vercel compila y publica solo.
   Un despliegue MUST NOT requerir pasos manuales, scripts adicionales ni consolas externas.
-- MUST NOT añadirse infraestructura nueva: ni servicios, ni bases de datos, ni colas, ni proveedores
-  externos que requieran cuentas o claves nuevas.
-- MUST NOT añadirse variables de entorno nuevas en Vercel. Se reutilizan las existentes (conocidas en el
-  código: `MONGODB_INTEGRAL_DB`, `VERCEL_URL_CORS`). La configuración no secreta MUST vivir versionada
-  dentro del repositorio. Un secreto nuevo nunca se versiona (principio III), así que una
-  funcionalidad que lo necesite MUST rediseñarse o salir del alcance.
+- MUST NOT añadirse infraestructura que haya que operar: ni servidores propios, ni bases de datos
+  nuevas, ni colas.
+- Se permiten proveedores gestionados por API (como Gemini o el ingreso con Google) y sus variables de
+  entorno en Vercel cuando una funcionalidad aprobada por el autor las necesite. Cada variable MUST:
+  - estar en la tabla de variables del `README.md`: nombre, para qué sirve, quién la crea y en qué
+    entornos va;
+  - quedarse en el servidor (principio III): nunca con prefijo `NEXT_PUBLIC_` ni versionada. Si el
+    navegador necesita hablar directo con el proveedor, recibe un token temporal, de un solo uso y con
+    la configuración fijada por el servidor;
+  - degradar con gracia: sin la variable el sitio compila y funciona, y la funcionalidad dice que no
+    está activa o, en local, usa un simulador;
+  - tener tope de costo: límite por visitante en el servidor y alerta de presupuesto en el proveedor.
+- La configuración no secreta (modelos, voces, límites) MUST vivir versionada dentro del repositorio.
 - Toda dependencia nueva MUST justificar por qué la plataforma o el framework no resuelven lo mismo.
 - Ante dos diseños que cumplen, MUST elegirse el que tenga menos piezas móviles.
 
-**Rationale**: el autor quiere un sitio que se mantenga solo. Cada servicio o variable de más es algo
-que se rompe en silencio el día que nadie lo está mirando.
+**Rationale**: el autor quiere un sitio que se mantenga solo. Una pieza que hay que operar es algo que se
+rompe en silencio el día que nadie lo está mirando. Un proveedor gestionado, con su secreto en el
+servidor, su tope de costo y su modo apagado, no lo es (enmienda 3.0.0, 2026-11-14).
 
 ## Restricciones técnicas
 
@@ -195,4 +209,4 @@ que se rompe en silencio el día que nadie lo está mirando.
 - Revisión de cumplimiento: cada plan, cada `tasks.md` y cada PR MUST verificar los principios I, III,
   VII y VIII de forma explícita.
 
-**Version**: 2.0.1 | **Ratified**: 2026-11-01 | **Last Amended**: 2026-11-01
+**Version**: 3.0.0 | **Ratified**: 2026-11-01 | **Last Amended**: 2026-11-14

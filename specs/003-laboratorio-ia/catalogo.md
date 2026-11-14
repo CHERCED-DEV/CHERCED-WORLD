@@ -6,13 +6,13 @@ No es una spec: es insumo para especificar la 003. Si algo choca, mandan [idea.m
 
 ## La decisión A/B sigue abierta
 
-El autor todavía no eligió entre el camino A, el B o uno mixto (idea.md, "Tensión con las reglas actuales"). Por eso
-cada experimento lleva su etiqueta de camino:
+El 2026-11-14 el autor eligió el camino mixto (P-3a): el B se construye con la API de Gemini en la 018, bajo el
+principio VIII enmendado (constitución 3.0.0). Cada experimento lleva su etiqueta de camino:
 
 | Etiqueta | Significado |
 |---|---|
 | **A** | Corre en el navegador del visitante. Cumple la constitución tal como está |
-| **B** | Necesita un servidor propio o una llave de IA. Solo se construye si el autor aprueba la excepción, con una enmienda al principio VIII |
+| **B** | Necesita una llave de IA. Aprobado el 2026-11-14: se construye con la API de Gemini (018). Un servidor propio sigue fuera |
 | **A·B** | Tiene una variante A, y una B más vistosa si el autor aprueba la excepción |
 | **[confirmar]** | Depende de un dato que solo el autor puede dar |
 

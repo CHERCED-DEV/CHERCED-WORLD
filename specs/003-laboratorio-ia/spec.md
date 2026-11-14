@@ -23,6 +23,10 @@ decidió el autor. Esta spec construye solo lo que cabe en la constitución tal 
 - sin servidor nuevo, sin llaves y sin variables de entorno nuevas (principio VIII);
 - nada de lo que el visitante graba, escribe o juega sale de su equipo, salvo donde un experimento lo dice antes.
 
+**Actualización del 2026-11-14:** el autor decidió el camino mixto (P-3a). El camino B se construye en la 018 con
+la API de Gemini, bajo el principio VIII enmendado (constitución 3.0.0). Lo que sigue describe la spec tal como se
+escribió.
+
 **La decisión A/B sigue abierta (P-3a).** Lo que depende de B, o de un dato que solo el autor puede dar, va como
 historia condicionada y no entra al plan.
 
@@ -461,7 +465,7 @@ llega a un servidor. El copy de A5, A4, V2 y V3 se escribe en el plan con el mis
 
 | ID | Pregunta | Por defecto |
 |---|---|---|
-| P-3a | ¿Camino A, B o mixto? | Solo A. HC-1 no se construye |
+| P-3a | ¿Camino A, B o mixto? | **Decidida el 2026-11-14: mixto.** Lo hecho en A se queda; el camino B se abre con la API de Gemini (constitución 3.0.0, principio VIII; spec `../018-ia-de-google/`) |
 | P-3b | ¿Se aprueba el servidor MCP del portafolio (A1)? **[confirmar]** | No se construye (HC-2) |
 | P-3c | ¿"Anatomía de un plugin" muestra el plugin para abogados del autor o uno de ejemplo neutral? | Ejemplo neutral |
 | P-3d | ¿El CDN de Synergos es público para R2? **[confirmar]** | No se construye (HC-4) |

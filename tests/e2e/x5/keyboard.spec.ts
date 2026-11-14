@@ -30,7 +30,7 @@ test.use({
 
 test.describe.configure({ timeout: 120_000 })
 
-const CARD_ORDER: CardId[] = ['V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
+const CARD_ORDER: CardId[] = ['V5', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
 
 type Focus = { body: boolean; ring: boolean; what: string }
 
@@ -87,6 +87,20 @@ async function playRally(page: Page, stage: Locator, rings: string[]): Promise<v
 type Flow = (args: { page: Page; stage: Locator; lang: Lang; rings: string[] }) => Promise<void>
 
 const FLOWS: Record<CardId, Flow> = {
+  V5: async ({ page, stage, rings }) => {
+    const start = stage.locator('[data-cw-agent-start]')
+    await expect(start).toBeEnabled()
+    await tabTo(page, start, rings)
+    await page.keyboard.press('Enter')
+    const input = stage.locator('[data-cw-agent-form] input')
+    await tabTo(page, input, rings)
+    await page.keyboard.type('Synergos')
+    await page.keyboard.press('Enter')
+    await expect(stage.locator('[data-cw-agent-transcript] li')).toHaveCount(3)
+    await tabTo(page, stage.locator('[data-cw-agent-hangup]'), rings)
+    await page.keyboard.press('Enter')
+    await expect(stage.locator('[data-cw-agent-start]')).toBeVisible()
+  },
   V1: async ({ page, stage, lang, rings }) => {
     await expect(stage.locator('[data-cw-voice-engine="ready"]')).toBeVisible()
     const other = lang === 'es' ? 'en' : 'es'

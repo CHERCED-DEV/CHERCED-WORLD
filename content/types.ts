@@ -269,7 +269,7 @@ export const LAB_STATUSES = ['stable', 'beta', 'experiment'] as const
 
 export type LabStatus = (typeof LAB_STATUSES)[number]
 
-export const LAB_EXPERIMENT_IDS = ['V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'] as const
+export const LAB_EXPERIMENT_IDS = ['V5', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'] as const
 
 export type LabExperimentId = (typeof LAB_EXPERIMENT_IDS)[number]
 
@@ -287,13 +287,17 @@ export type LabDownload = { resource: string; bytes: number; host: LabHost; defa
 
 export type LabCode = { snippet: string; lang: string; repoPath: string | null }
 
+export const LAB_RUNS_IN = ['browser', 'google'] as const
+
+export type LabRunsIn = (typeof LAB_RUNS_IN)[number]
+
 export type LabExperiment = {
   id: LabExperimentId
   theme: LabTheme
   title: Localized
   summary: Localized
   status: LabStatus
-  runsIn: 'browser'
+  runsIn: LabRunsIn
   downloads: LabDownload[]
   privacy: Localized
   flow: Localized[]
