@@ -1,8 +1,9 @@
-import { Mesh, RingGeometry, Vector3, type Camera, type MeshBasicMaterial, type Scene } from 'three'
+import { InstancedMesh, Mesh, RingGeometry, Vector3, type Camera, type MeshBasicMaterial, type Scene } from 'three'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { isCrotch } from '@/components/ailab/agent/avatar-sprite'
+import { isCrotch, MOUTH_NAMES } from '@/components/ailab/agent/avatar-sprite'
 import { createVoxelEngine, MAX_PIXEL_RATIO, QUALITY_FRAMES, type VoxelInputs, type VoxelRenderer } from '@/components/ailab/agent/voxel-engine'
 import { createFrameLoop, type FrameLoopEnv } from '@/components/ailab/agent/voxel-loop'
+import { LENS_COLORS, VOXEL_MODEL } from '@/components/ailab/agent/voxel-model'
 import { chooseScene, hasWebGL, loadVoxelStage, wantsVoxels, type VoxelStageComponent } from '@/components/ailab/agent/voxel-scene'
 
 function fakeFrames() {
@@ -228,6 +229,41 @@ describe('ciclo de render (FR-3704)', () => {
     const { renderer } = setup()
     expect(renderer.setPixelRatio).toHaveBeenCalledWith(MAX_PIXEL_RATIO)
     expect(MAX_PIXEL_RATIO).toBe(1.5)
+  })
+})
+
+describe('parpadeo', () => {
+  const heightOf = (mesh: InstancedMesh, index: number) => {
+    const e = mesh.instanceMatrix.array
+    return Math.hypot(e[index * 16 + 4]!, e[index * 16 + 5]!, e[index * 16 + 6]!)
+  }
+  const meshOf = (scene: Scene) => scene.children.find((child): child is InstancedMesh => child instanceof InstancedMesh)!
+  const lens = VOXEL_MODEL.body.flatMap((item, index) => (index >= VOXEL_MODEL.visorStart && LENS_COLORS.has(item.c) ? [index] : []))
+  const eyesStart = VOXEL_MODEL.body.length + MOUTH_NAMES.reduce((total, name) => total + VOXEL_MODEL.mouths[name].length, 0)
+  const pupils = VOXEL_MODEL.eyes.flatMap((item, index) => (item.c === 'w' ? [eyesStart + index] : []))
+
+  it('con las gafas puestas no parpadea', () => {
+    const { engine, frames, renderer } = setup()
+    engine.update(LIVE)
+    let smallest = Infinity
+    for (let frame = 0; frame < 900; frame++) {
+      frames.flush(1)
+      const mesh = meshOf(renderer.render.mock.calls.at(-1)![0])
+      for (const index of lens) smallest = Math.min(smallest, heightOf(mesh, index))
+    }
+    expect(smallest).toBeCloseTo(1, 3)
+  })
+
+  it('con el visor abajo parpadean los ojos', () => {
+    const { engine, frames, renderer } = setup()
+    engine.update({ ...LIVE, shocked: true })
+    let smallest = Infinity
+    for (let frame = 0; frame < 140; frame++) {
+      frames.flush(1)
+      const mesh = meshOf(renderer.render.mock.calls.at(-1)![0])
+      for (const index of pupils) smallest = Math.min(smallest, heightOf(mesh, index))
+    }
+    expect(smallest).toBeLessThan(0.3)
   })
 })
 

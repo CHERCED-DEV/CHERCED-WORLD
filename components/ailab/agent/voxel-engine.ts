@@ -87,6 +87,8 @@ const GREET_MS = 900
 
 const BLINK_MS = 160
 
+const EYE_COLORS: ReadonlySet<string> = new Set(['w', 'k'])
+
 export const QUALITY_FRAMES = 90
 
 const SMOOTH_MS = 1000 / 40
@@ -260,11 +262,11 @@ export function createVoxelEngine(host: HTMLElement, options: VoxelEngineOptions
   ring.renderOrder = 2
   scene.add(ring)
 
-  const haloMap = radialTexture(255, 2.2)
-  const haloGeometry = new PlaneGeometry(120, 120)
+  const haloMap = radialTexture(255, 1.7)
+  const haloGeometry = new PlaneGeometry(130, 130)
   const haloMaterial = new MeshBasicMaterial({ color: VOXEL_GREEN, map: haloMap, transparent: true, opacity: 0, blending: AdditiveBlending, depthWrite: false, fog: false })
   const halo = new Mesh(haloGeometry, haloMaterial)
-  halo.position.set(0, 30, -18)
+  halo.position.set(0, 38, -18)
   halo.renderOrder = -1
   scene.add(halo)
 
@@ -317,7 +319,8 @@ export function createVoxelEngine(host: HTMLElement, options: VoxelEngineOptions
   let shakeAt = -Infinity
   let greetAt = -Infinity
   let blinkAt = -Infinity
-  let nextBlink = now() + 2400 + random() * 3600
+  let eyesWereOut = false
+  let nextBlink = now() + 600 + random() * 900
   let ratioCap = MAX_PIXEL_RATIO
   let sampled = 0
   let spent = 0
@@ -388,9 +391,12 @@ export function createVoxelEngine(host: HTMLElement, options: VoxelEngineOptions
     const target: MouthName | null = inputs.shocked ? 'closed' : speaking ? mouthFor(level) : null
     for (const name of MOUTH_NAMES) mouth[name] = follow(mouth[name], name === target ? 1 : 0, 32)
 
-    if (alive && time >= nextBlink) {
+    const eyesOut = drop > 0.6
+    if (eyesOut && !eyesWereOut) nextBlink = time + 550 + random() * 450
+    eyesWereOut = eyesOut
+    if (eyesOut && time >= nextBlink) {
       blinkAt = time
-      nextBlink = time + 2600 + random() * 4200
+      nextBlink = time + 900 + random() * 1400
     }
     const blinkPhase = (time - blinkAt) / BLINK_MS
     const blink = blinkPhase >= 0 && blinkPhase < 1 ? 1 - Math.abs(blinkPhase * 2 - 1) : 0
@@ -442,11 +448,10 @@ export function createVoxelEngine(host: HTMLElement, options: VoxelEngineOptions
       if (index >= model.visorStart && index < model.body.length) {
         oy = -lift
         oz = drop * 0.6
-        if (LENS_COLORS.has(list[index]!.c)) sy = 1 - blink * 0.85
       } else if (layer === 'eyes') {
         const shown = smooth(drop * 1.4 - 0.2)
         sx = shown
-        sy = shown
+        sy = shown * (EYE_COLORS.has(list[index]!.c) ? 1 - blink * 0.9 : 1)
         sz *= shown
       } else if (layer === 'sweat') {
         sx = sweat
@@ -476,7 +481,7 @@ export function createVoxelEngine(host: HTMLElement, options: VoxelEngineOptions
       const item = list[index]!
       const weight = item.c === 'g' ? 1 : item.c === 'l' ? 0.7 : 0.25
       const scan = Math.exp(-((item.x - sweep) ** 2) / 5) * 0.95
-      glow[index] = (base * weight + scan + level * 1.6 * weight) * (1 - blink) * lit
+      glow[index] = (base * weight + scan + level * 1.6 * weight) * lit
     }
     for (const index of accents) glow[index] = 0.45 * lit
     glowAttribute.needsUpdate = true

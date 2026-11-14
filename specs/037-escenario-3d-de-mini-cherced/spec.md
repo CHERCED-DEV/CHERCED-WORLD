@@ -88,6 +88,11 @@ con la voz.
   90 cuadros el promedio baja de 40 fps, la resolución pasa a 1×; si sigue por debajo de 20 fps, vuelve el 2D.
 - **De paso:** el recuadro se salía de la tarjeta en celular (`min-height` con `aspect-ratio` le daba 480 px de
   ancho). Ahora ocupa el ancho de la tarjeta, en 2D y en 3D.
+- **Identidad (2026-11-14):** con fotos del autor, el sprite (fuente del 2D y del 3D) se acerca a él: copete
+  peinado hacia arriba con los lados en degradé, cejas gruesas, barba tupida con canas en el mentón, hombros anchos,
+  collar de cordón negro con dije de madera, reloj en la muñeca izquierda, pantaloneta oliva, piernas, medias y
+  tenis negros de suela blanca. Las fotos no se guardan en el repositorio.
+- **Parpadeo:** con el visor puesto no parpadea; solo parpadean los ojos cuando el visor baja.
 - **Pendiente:** al empezar la conversación saluda con un saltito y un gesto de cabeza; el saludo con la mano y la
   inclinación del celular con permiso quedan para cuando el autor apruebe.
 

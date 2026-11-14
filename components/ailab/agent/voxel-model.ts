@@ -1,7 +1,7 @@
 import { EMPTY, type Grid } from '@/components/fun/sprite'
 import { AVATAR_BODY, GLASSES_DOWN, MOUTH_NAMES, MOUTHS, SWEAT, type MouthName } from './avatar-sprite'
 
-export type VoxelPart = 'hair' | 'head' | 'visor' | 'earcup' | 'boom' | 'neck' | 'torso' | 'arms' | 'badge' | 'legs' | 'feet' | 'overlay' | 'sweat'
+export type VoxelPart = 'hair' | 'head' | 'visor' | 'earcup' | 'boom' | 'neck' | 'torso' | 'arms' | 'badge' | 'legs' | 'shins' | 'feet' | 'overlay' | 'sweat'
 
 export type Voxel = { x: number; y: number; c: string; part: VoxelPart; z: number; depth: number }
 
@@ -29,6 +29,7 @@ export const VOXEL_DEPTH: Record<VoxelPart, { depth: number; z: number }> = {
   arms: { depth: 4.5, z: -0.5 },
   badge: { depth: 6.4, z: -0.3 },
   legs: { depth: 5, z: -0.5 },
+  shins: { depth: 4, z: -0.5 },
   feet: { depth: 7, z: 0.5 },
   overlay: { depth: 1, z: 3.56 },
   sweat: { depth: 1, z: 4.4 },
@@ -53,8 +54,11 @@ export const VOXEL_COLORS: Record<string, number> = {
   T: 0x262626,
   x: 0x25ed9e,
   p: 0xc4c4c4,
-  r: 0x5a5a5a,
+  r: 0xe6e6e6,
   q: 0xb43c3c,
+  o: 0x59643a,
+  O: 0x3f4729,
+  n: 0x8a5a33,
 }
 
 export const LENS_COLORS: ReadonlySet<string> = new Set(['g', 'G', 'l'])
@@ -90,9 +94,8 @@ export function isHeadPart(part: VoxelPart): boolean {
 }
 
 export function buildVoxelModel(): VoxelModel {
-  const tee = rowsWith(AVATAR_BODY, /[tT]/)
-  const firstTee = tee[0]!
-  const lastTee = tee.at(-1)!
+  const firstTee = rowsWith(AVATAR_BODY, /t/)[0]!
+  const lastTee = rowsWith(AVATAR_BODY, /[oO]/)[0]! - 1
   const neckRow = firstTee - 1
   const lens = rowsWith(AVATAR_BODY, /[gl]/).filter((row) => row < neckRow)
   const visorTop = lens[0]! - 1
@@ -107,11 +110,12 @@ export function buildVoxelModel(): VoxelModel {
     }
     if (y === neckRow) return 'neck'
     if (y <= lastTee) {
-      if (c === 'x') return 'badge'
+      if (c === 'x' || c === 'n') return 'badge'
       return SKIN_COLORS.has(c) ? 'arms' : 'torso'
     }
     if (c === 'k' || c === 'r') return 'feet'
-    return SKIN_COLORS.has(c) ? 'arms' : 'legs'
+    if (SKIN_COLORS.has(c)) return y === lastTee + 1 ? 'arms' : 'shins'
+    return c === 'T' ? 'shins' : 'legs'
   }
 
   const all = pixelsOf(AVATAR_BODY).map((pixel) => voxel(pixel, partOf(pixel)))

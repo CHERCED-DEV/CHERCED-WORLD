@@ -29,7 +29,7 @@ describe('Mini Cherced en vóxeles (FR-3701)', () => {
 
   it('separa las partes con su propia profundidad: cabeza más gruesa, visor salido y audífonos a los lados', () => {
     const parts = new Set(VOXEL_MODEL.body.map((item) => item.part))
-    expect(parts).toEqual(new Set(['hair', 'head', 'visor', 'earcup', 'boom', 'neck', 'torso', 'arms', 'badge', 'legs', 'feet']))
+    expect(parts).toEqual(new Set(['hair', 'head', 'visor', 'earcup', 'boom', 'neck', 'torso', 'arms', 'badge', 'legs', 'shins', 'feet']))
     expect(VOXEL_DEPTH.head.depth).toBeGreaterThan(VOXEL_DEPTH.torso.depth)
     const front = (part: keyof typeof VOXEL_DEPTH) => VOXEL_DEPTH[part].z + VOXEL_DEPTH[part].depth / 2
     expect(front('visor')).toBeGreaterThan(front('head'))

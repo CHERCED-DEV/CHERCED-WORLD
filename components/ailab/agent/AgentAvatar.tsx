@@ -24,6 +24,9 @@ const COLOR_CLASS: Record<string, string | undefined> = {
   p: styles.metal,
   r: styles.sole,
   q: styles.tongue,
+  o: styles.olive,
+  O: styles.oliveDark,
+  n: styles.wood,
 }
 
 function Rects({ runs, colored }: { runs: readonly Run[]; colored: boolean }) {
