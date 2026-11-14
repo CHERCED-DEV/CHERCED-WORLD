@@ -245,8 +245,9 @@ Ejemplos:
    no borramos el trabajo de nadie.»
 5. **«¿La IA lo hace todo?» o «hazme una app en un segundo»:** el visor parpadea y aparece una lupa con una lista de
    chequeo. «Generar es fácil. Ahora muéstrame las pruebas, el contrato y qué pasa cuando falla.»
-6. **Para una persona especial:** un momento privado que Camilo dedica a alguien. Se activa con una clave secreta, no
-   con un nombre, y ni la clave ni el texto viven en el repositorio. Camilo trae el contenido para afinarlo.
+6. **Para una persona especial:** un modo privado que Camilo dedica a alguien. Se activa con un acceso privado, no con
+   un nombre, y ni el acceso ni el contenido viven en el repositorio. El mecanismo está en la
+   [spec 039](../../specs/039-modo-privado-de-mini-cherced/spec.md).
 
 Los easter eggs 2 a 6 son ideas: hay que construirlos (animación y detección de la frase) en la 036 o la 037.
 
