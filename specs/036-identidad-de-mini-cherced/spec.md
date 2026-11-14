@@ -5,9 +5,10 @@ conozca de nosotros a nivel personal, profesional, y de todo esto… haz un rese
 data que existe al interior de este portafolio y de lo que es Synergos y de todo lo que hemos levantado, para que él
 tenga un background completo de qué soy, qué hago y qué quiero lograr."
 
-Estado: en curso. La carpeta [content/mini-cherced/](../../content/mini-cherced/README.md) tiene el background y la
-personalidad aprobada en lo público (2026-11-14). Faltan las decisiones pendientes de Camilo y conectarla al agente
-(pasos 2 a 4).
+Estado: construida el 2026-11-14 (pasos 1 a 4). Mini Cherced ya habla con la personalidad y el background aprobados,
+con Gemini y en el simulador local. Probada con pruebas unitarias y en el simulador local, en español y en inglés.
+Quedan fuera: FR-3604 (va con las evals de la 032), FR-3606 (es la [039](../039-modo-privado-de-mini-cherced/spec.md)),
+los easter eggs 2 a 5 de `personalidad.md` (son ideas sin construir) y lo que sigue en su lista "Pendiente".
 
 ## Qué resuelve
 
@@ -34,6 +35,26 @@ lo que Camilo aprobó.
    Camilo" (background corto), dentro del tope de 32.000 caracteres. La persona actual (tercera persona, respuestas
    cortas y la burla cariñosa) se mantiene.
 4. El simulador local también usa la identidad para el saludo y las respuestas de "¿quién es Camilo?".
+
+## Cómo quedó
+
+- **`content/mini-cherced/identity.ts`:** la identidad tipada en `es` y `en`, sacada de las secciones aprobadas de
+  `personalidad.md` y de `background.md`. No incluye "Ajustes", "Pendiente" ni los easter eggs. Las respuestas de
+  ejemplo, la historia y las preguntas personales en español son copia literal de `personalidad.md`, y una prueba lo
+  verifica. Del background solo entra lo que el mapa del sitio no trae: la carrera, los servicios y los idiomas ya
+  están ahí.
+- **`lib/ai/agent/knowledge.ts`:** la instrucción queda así: persona, "# Quién eres", "# La historia de Camilo" y
+  "# Mapa del sitio". La persona se mantiene; solo el largo pasó de "dos a cuatro frases" a "una a tres", como dice la
+  personalidad. Las decisiones de Camilo viven en `identity.ts` y no se repiten en la instrucción, porque ya están
+  aplicadas en la historia, los logros y el humor.
+- **El tope:** el 2026-11-14 la instrucción mide 31.940 caracteres en español y 31.567 en inglés, de 32.000, con los
+  10 ejemplos. Si algo crece y no cabe, `composeInstruction` quita ejemplos desde el último hasta que quepa. El mapa
+  nunca se recorta antes que los ejemplos. El margen en español es corto: un post o un proyecto nuevo ya saca el
+  último ejemplo.
+- **El simulador:** saluda con «¡Pa!» como "el compañero pixelado de Camilo", sin dejar de decir que es el
+  simulador. "¿Quién es Camilo?" y "¿Qué significa CHERCED?" responden con las respuestas de ejemplo aprobadas.
+- **Pruebas:** `tests/unit/agent/identity.test.ts` cubre FR-3601 y FR-3602, el tope, el recorte de ejemplos y el
+  simulador.
 
 ## Requisitos
 

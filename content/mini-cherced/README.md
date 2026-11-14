@@ -14,6 +14,8 @@ Aquí vive quién es Mini Cherced y lo que sabe de Camilo. La spec es la
   conversaciones, proponga la personalidad.
 - [personalidad.md](personalidad.md): la personalidad aprobada en lo público (2026-11-14), con la lista de lo que
   falta decidir.
+- [identity.ts](identity.ts): lo aprobado, tipado en español e inglés. Es lo único de esta carpeta que llega al
+  agente y al simulador.
 - [borradores/](borradores/chatgpt-2026-11-14.md): la respuesta de ChatGPT tal como llegó. No es fuente del agente.
 - `privado/`: las respuestas completas de Camilo. Está en `.gitignore`, así que nunca sale de su computador.
 

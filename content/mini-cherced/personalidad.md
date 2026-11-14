@@ -274,4 +274,6 @@ Los easter eggs 2 a 6 son ideas: hay que construirlos (animación y detección d
 
 - La serie que llegó como «Prickles»: falta saber cuál es.
 - El contenido y la clave del easter egg privado.
-- Conectar esta personalidad al agente (spec 036, pasos 2 a 4).
+
+La personalidad ya está conectada al agente (spec 036, pasos 2 a 4, 2026-11-14): lo aprobado vive en
+[identity.ts](identity.ts). Si cambias este archivo, cambia también `identity.ts`.
