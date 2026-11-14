@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type FormEvent, type PointerEvent } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type PointerEvent } from 'react'
 import { Button } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
 import { pixelFont } from '@/styles/fonts'
@@ -33,6 +33,7 @@ import { loadSearchIndex } from '@/lib/search/client'
 import { AgentAvatar } from './AgentAvatar'
 import { TracePanel } from './TracePanel'
 import { AVATAR_VIEWBOX, isCrotch, mouthFor } from './avatar-sprite'
+import { useVoxelStage } from './voxel-scene'
 import styles from './Agent.module.scss'
 
 type Phase = 'checking' | 'idle' | 'consent' | 'connecting' | 'live' | 'ended'
@@ -131,11 +132,12 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const [dodge, setDodge] = useState<{ side: 'left' | 'right'; id: number } | null>(null)
 
   const [shocked, setShocked] = useState(false)
+  const levelRef = useRef(0)
+  const voiceRef = useRef(0)
+  const voxels = useVoxelStage()
+  const audio = useMemo(() => ({ level: () => levelRef.current, voice: () => voiceRef.current }), [])
 
-  const onPoke = (event: PointerEvent<HTMLDivElement>) => {
-    const box = event.currentTarget.getBoundingClientRect()
-    const x = AVATAR_VIEWBOX.x + ((event.clientX - box.left) / box.width) * AVATAR_VIEWBOX.width
-    const y = AVATAR_VIEWBOX.y + ((event.clientY - box.top) / box.height) * AVATAR_VIEWBOX.height
+  const poke = useCallback((x: number, y: number) => {
     window.clearTimeout(dodgeTimer.current)
     if (isCrotch(x, y)) {
       setDodge(null)
@@ -148,6 +150,14 @@ export default function AgentStage({ lang }: LabDemoProps) {
     lastDodge.current = Math.random() < 0.7 ? side : lastDodge.current
     setDodge({ side: lastDodge.current, id: Date.now() })
     dodgeTimer.current = window.setTimeout(() => setDodge(null), DODGE_MS)
+  }, [])
+
+  const onPoke = (event: PointerEvent<HTMLDivElement>) => {
+    const box = event.currentTarget.getBoundingClientRect()
+    poke(
+      AVATAR_VIEWBOX.x + ((event.clientX - box.left) / box.width) * AVATAR_VIEWBOX.width,
+      AVATAR_VIEWBOX.y + ((event.clientY - box.top) / box.height) * AVATAR_VIEWBOX.height,
+    )
   }
   const transcriptRef = useRef<HTMLOListElement>(null)
 
@@ -271,8 +281,11 @@ export default function AgentStage({ lang }: LabDemoProps) {
     const loop = () => {
       const player = playerRef.current
       const level = simSpeaking.current ? 0.03 + Math.abs(Math.sin(performance.now() / 85)) * 0.16 : (player?.level() ?? 0)
+      const voice = Math.min(1, Math.max(level, micLevel.current) * 5)
+      levelRef.current = level
+      voiceRef.current = voice
       if (figure) figure.dataset.mouth = mouthFor(level)
-      stage?.style.setProperty('--agent-level', Math.min(1, Math.max(level, micLevel.current) * 5).toFixed(3))
+      stage?.style.setProperty('--agent-level', voice.toFixed(3))
       const speaking = simSpeaking.current || Boolean(player?.playing())
       if (speaking !== speakingRef.current) {
         speakingRef.current = speaking
@@ -283,6 +296,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
     frame = requestAnimationFrame(loop)
     return () => {
       cancelAnimationFrame(frame)
+      levelRef.current = 0
+      voiceRef.current = 0
       if (figure) figure.dataset.mouth = 'closed'
       stage?.style.setProperty('--agent-level', '0')
     }
@@ -561,12 +576,26 @@ export default function AgentStage({ lang }: LabDemoProps) {
       className={cx(styles.stage, pixelFont.variable)}
       data-state={visual}
       data-mode={mode ?? 'checking'}
+      data-scene={voxels.shown ? '3d' : undefined}
       aria-label={copy.stageLabel}
       data-cw-agent-stage=""
     >
       <div className={styles.screen}>
         <div className={styles.sky} aria-hidden="true" />
         <div className={styles.floor} aria-hidden="true" />
+        {voxels.Stage ? (
+          <voxels.Stage
+            state={visual}
+            active={phase !== 'ended' && mode !== 'off'}
+            live={live}
+            shocked={shocked}
+            dodge={dodge}
+            audio={audio}
+            onPoke={poke}
+            onReady={voxels.ready}
+            onFail={voxels.fail}
+          />
+        ) : null}
         <div className={styles.hud}>
           <span className={styles.nameplate}>{copy.name}</span>
           {timeLeft ? <span className={styles.timer}>{timeLeft}</span> : null}
