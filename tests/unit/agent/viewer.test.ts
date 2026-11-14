@@ -48,7 +48,7 @@ describe('la instrucción dice quién habla', () => {
   it('con el autor lo trata como su creador y de tú', () => {
     const block = whoIsTalking('Camilo', { kind: 'author', name: 'Camilo' })
     expect(block).toMatch(/tu creador/)
-    expect(block).toMatch(/Háblale de tú/)
+    expect(block).toMatch(/háblale de tú/i)
   })
 
   it('con una cuenta usa su nombre y aclara que no es el autor', () => {
@@ -97,5 +97,62 @@ describe('el simulador sabe quién es', () => {
     expect(whoAmI('es', ANONYMOUS_VIEWER)).toMatch(/No iniciaste sesión/)
     const facts = { author: 'Camilo', about: '', services: { intro: '', items: [] }, projects: [], pages: {} } as never
     expect(simulatorReply('es', '¿sabes quién soy?', [], facts, { kind: 'author', name: 'Camilo' }).text).toMatch(/mi creador/)
+  })
+})
+
+describe('modo invitada (039)', () => {
+  it('reconoce a la invitada por el hash de su correo, sin guardarlo en claro', async () => {
+    const { guestEmailHash, isGuestEmail, parseGuestMode } = await import('@/lib/ai/agent/guest')
+    const salt = 'sal-de-prueba-0123456789'
+    const raw = JSON.stringify({ v: 1, salt, emailHash: guestEmailHash('Invitada@Ejemplo.com', salt), name: 'Ana', persona: 'p'.repeat(250) })
+    const mode = parseGuestMode(raw)
+    expect(mode?.name).toBe('Ana')
+    expect(raw).not.toContain('invitada@ejemplo.com')
+    expect(isGuestEmail(mode, ' invitada@ejemplo.com ')).toBe(true)
+    expect(isGuestEmail(mode, 'otra@ejemplo.com')).toBe(false)
+    expect(parseGuestMode(Buffer.from(raw).toString('base64'))?.name).toBe('Ana')
+    expect(parseGuestMode('{"v":1}')).toBeNull()
+    expect(parseGuestMode(undefined)).toBeNull()
+  })
+
+  it('la invitada se resuelve antes que una cuenta cualquiera, pero nunca antes que el autor', async () => {
+    const guest = (email: string) => (email === 'ana@ejemplo.com' ? { name: 'Ana' } : null)
+    const base = { isAdmin: async () => false, authorEmail: AUTHOR_EMAIL, guest }
+    expect(await resolveViewer({ ...base, account: async () => ({ name: 'Ana P', email: 'ana@ejemplo.com' }) })).toEqual({ kind: 'guest', name: 'Ana' })
+    expect(await resolveViewer({ ...base, account: async () => ({ name: 'Laura', email: 'laura@ejemplo.com' }) })).toEqual({ kind: 'account', name: 'Laura' })
+    expect(await resolveViewer({ ...base, account: async () => ({ name: 'Camilo', email: AUTHOR_EMAIL }) })).toMatchObject({ kind: 'author' })
+  })
+
+  it('las reglas de cuidado y la persona solo entran en la sesión de la invitada', async () => {
+    const { guestBlock } = await import('@/lib/ai/agent/guest')
+    const block = guestBlock({ v: 1, salt: 'x'.repeat(16), emailHash: 'a'.repeat(64), name: 'Ana', persona: 'PERSONA-SECRETA '.repeat(20) })
+    expect(block).toMatch(/exparejas/)
+    expect(block).toMatch(/celos/)
+    expect(block).toContain('PERSONA-SECRETA')
+    const forGuest = composeInstruction('es', 'Camilo', 'MAPA', undefined, { kind: 'guest', name: 'Ana' }, block)
+    expect(forGuest).toContain('PERSONA-SECRETA')
+    const forVisitor = composeInstruction('es', 'Camilo', 'MAPA', undefined, ANONYMOUS_VIEWER)
+    expect(forVisitor).not.toContain('PERSONA-SECRETA')
+    expect(forVisitor).not.toMatch(/Modo invitada/)
+  })
+})
+
+describe('bienvenida al autor, chistes y añañayyyy', () => {
+  it('celebra al autor con títulos de stand-up y nunca con un simple "¿qué más, jefe?"', () => {
+    const block = whoIsTalking('Camilo', { kind: 'author', name: 'Camilo' }, miniChercedIdentity.es.hype)
+    expect(block).toMatch(/Dave Chappelle/)
+    expect(block).toMatch(/socio de socios/)
+    expect(block).toMatch(/Nunca lo recibas con un simple/)
+  })
+
+  it('trae chistes en los dos idiomas y la exclamación bien escrita', () => {
+    for (const lang of ['es', 'en'] as const) {
+      const identity = miniChercedIdentity[lang]
+      expect(identity.jokes.length).toBeGreaterThanOrEqual(8)
+      expect(identity.catchphrases.signature.phrase).toBe('¡Añañayyyy!')
+      expect(identity.catchphrases.signature.use).toMatch(/(nunca|never) «ñañay»/)
+    }
+    const text = composeInstruction('es', 'Camilo', 'MAPA')
+    expect(text).toMatch(/Chistes de cabecera/)
   })
 })

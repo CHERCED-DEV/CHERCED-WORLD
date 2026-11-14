@@ -8,7 +8,7 @@ import { AGENT_NAME } from './config'
 import { OPEN_TOOL, SEARCH_TOOL } from './tools'
 import { ANONYMOUS_VIEWER, type AgentViewer } from './viewer'
 
-export const KNOWLEDGE_MAX_CHARS = 32_000
+export const KNOWLEDGE_MAX_CHARS = 36_000
 
 const LANGUAGE: Record<Locale, string> = { es: 'español', en: 'inglés' }
 
@@ -79,6 +79,7 @@ export function whoYouAre(identity: MiniChercedIdentity, examples = Object.keys(
   for (const { phrase, use } of Object.values(identity.catchphrases)) lines.push(`- «${phrase}»: ${use}.`)
   lines.push(`- ${identity.expressions.map((expression) => `«${expression}»`).join(', ')}.`)
   lines.push('', '## Humor', ...bullets(identity.humor))
+  lines.push('', '## Chistes de cabecera (el estilo y el timing; puedes inventar otros iguales)', ...bullets(identity.jokes))
   lines.push('', '## Su historia, en versión corta', ...identity.story.map((line, at) => `${at + 1}. ${line}`))
   lines.push('', '## Lo que lo mueve', ...items(identity.drives))
   lines.push('', '## Lo que quiere lograr', ...items(identity.goals))
@@ -100,13 +101,16 @@ export function camiloStory(identity: MiniChercedIdentity, author: string): stri
   return [`# La historia de ${author}`, ...items(identity.background)].join('\n')
 }
 
-export function whoIsTalking(author: string, viewer: AgentViewer): string {
+export function whoIsTalking(author: string, viewer: AgentViewer, hype: readonly string[] = [], guest?: string): string {
   const lines = ['# Quién te habla']
   if (viewer.kind === 'author') {
     lines.push(
-      `El sitio verificó la sesión: quien te habla es ${author}, tu creador. Háblale de tú, como a tu creador y compinche, con cariño y recocha (por ejemplo «¡Pa! ¡Llegó el jefe!»). No le expliques quién es ni le presentes su propio sitio como a un visitante: pregúntale qué quiere revisar, cuéntale cómo te va o pídele opinión. La regla de hablar de ${author} en tercera persona es para cuando hablas de él con otros.`,
+      `El sitio verificó la sesión: quien te habla es ${author}, tu creador. Cuando llegue, celébralo en grande, como un presentador de stand-up a lo Dave Chappelle que anuncia a la estrella de la noche: exagera con cara seria y encadena títulos, por ejemplo ${hype.map((line) => `«${line}»`).join(', ')}. Varía los títulos cada vez, inventa otros del mismo calibre y remata de vez en cuando con «¡Añañayyyy!». Nunca lo recibas con un simple «¿qué más, jefe?».`,
+      `Después háblale de tú, como a tu creador y compinche, con cariño y recocha. No le expliques quién es ni le presentes su propio sitio como a un visitante: pregúntale qué quiere revisar, cuéntale cómo te va o pídele opinión. La regla de hablar de ${author} en tercera persona es para cuando hablas de él con otros.`,
     )
-  } else if (viewer.kind === 'account') {
+  } else if (viewer.kind === 'guest' && guest) {
+    lines.push(guest)
+  } else if (viewer.kind === 'account' || viewer.kind === 'guest') {
     lines.push(
       `El sitio verificó la sesión: quien te habla entró con su cuenta de Google y se llama ${viewer.name}. Salúdalo por su nombre y úsalo de vez en cuando, sin abusar. No es ${author}.`,
     )
@@ -125,19 +129,20 @@ export function composeInstruction(
   map: string,
   max = KNOWLEDGE_MAX_CHARS,
   viewer: AgentViewer = ANONYMOUS_VIEWER,
+  guest?: string,
 ): string {
   const identity = miniChercedIdentity[lang]
+  const who = whoIsTalking(author, viewer, identity.hype, guest)
+  const limit = max + (viewer.kind === 'guest' && guest ? guest.length : 0)
   const build = (examples: number) =>
-    [persona(lang, author), whoIsTalking(author, viewer), whoYouAre(identity, examples), camiloStory(identity, author), `# Mapa del sitio\n${map}`].join(
-      '\n\n',
-    )
+    [persona(lang, author), who, whoYouAre(identity, examples), camiloStory(identity, author), `# Mapa del sitio\n${map}`].join('\n\n')
   let examples = Object.keys(identity.examples).length
   let text = build(examples)
-  while (text.length > max && examples > 0) text = build(--examples)
-  return text.length > max ? text.slice(0, max) : text
+  while (text.length > limit && examples > 0) text = build(--examples)
+  return text.length > limit ? text.slice(0, limit) : text
 }
 
-export async function agentInstruction(lang: Locale, viewer: AgentViewer = ANONYMOUS_VIEWER): Promise<string> {
+export async function agentInstruction(lang: Locale, viewer: AgentViewer = ANONYMOUS_VIEWER, guest?: string): Promise<string> {
   const index = await buildSearchIndex(lang)
-  return composeInstruction(lang, index.facts.author, siteMap(lang, index.facts), KNOWLEDGE_MAX_CHARS, viewer)
+  return composeInstruction(lang, index.facts.author, siteMap(lang, index.facts), KNOWLEDGE_MAX_CHARS, viewer, guest)
 }

@@ -19,7 +19,7 @@ export type AgentCopy = {
   consentBody: string
   consentAccept: string
   consentCancel: string
-  states: Record<'checking' | 'idle' | 'connecting' | 'listening' | 'thinking' | 'speaking' | 'ended' | 'expired' | 'simulator', string>
+  states: Record<'checking' | 'idle' | 'connecting' | 'arriving' | 'listening' | 'thinking' | 'speaking' | 'ended' | 'expired' | 'simulator', string>
   errors: Record<'off' | 'rate_limited' | 'daily_cap' | 'failed' | 'mic' | 'connection' | 'unavailable', string>
   searching: string
   opening: string
@@ -84,6 +84,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       checking: 'Despertando a Mini Cherced…',
       idle: 'Listo para conversar',
       connecting: 'Conectando con Gemini…',
+      arriving: 'Mini Cherced va llegando…',
       listening: 'Escuchando',
       thinking: 'Pensando',
       speaking: 'Hablando',
@@ -103,7 +104,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     searching: 'Buscando en el sitio: {query}',
     opening: 'Abriendo {path}',
     simulatorNote: 'Estás en el simulador: responde con el buscador del sitio y la voz de tu navegador. Con la clave de Gemini, conversa de verdad.',
-    greet: 'Se acaba de abrir la conversación. Saluda en una o dos frases según la sección «Quién te habla»: si es Camilo, como a tu creador; si no, preséntate y pregunta qué quiere conocer del sitio.',
+    greet: 'Se acaba de abrir la conversación. Saluda en una o dos frases según la sección «Quién te habla»: si es Camilo o una invitada especial, celébralo en grande como dice esa sección; si no, preséntate y pregunta qué quiere conocer del sitio.',
     poke: '¡Ey! ¿Qué te pasa?',
     trace: {
       toggle: 'Cómo pensó ({count})',
@@ -167,6 +168,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       checking: 'Waking Mini Cherced up…',
       idle: 'Ready to talk',
       connecting: 'Connecting to Gemini…',
+      arriving: 'Mini Cherced is on his way…',
       listening: 'Listening',
       thinking: 'Thinking',
       speaking: 'Speaking',
@@ -186,7 +188,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     searching: 'Searching the site: {query}',
     opening: 'Opening {path}',
     simulatorNote: 'You are in the simulator: it answers with the site search and your browser voice. With the Gemini key, it really talks.',
-    greet: 'The conversation just opened. Greet in one or two sentences following the «Quién te habla» section: if it is Camilo, as your creator; otherwise, introduce yourself and ask what they want to know about the site.',
+    greet: 'The conversation just opened. Greet in one or two sentences following the «Quién te habla» section: if it is Camilo or a special guest, celebrate big as that section says; otherwise, introduce yourself and ask what they want to know about the site.',
     poke: "Hey! What's wrong with you?",
     trace: {
       toggle: 'How it thought ({count})',

@@ -28,18 +28,26 @@ import {
   type Trace,
   type TraceTool,
 } from '@/lib/ai/agent/trace'
-import { addTurn, appendChunk, closeTurns, lastAgentLine, type Turn } from '@/lib/ai/agent/transcript'
+import { addTurn, appendChunk, closeTurns, lastAgentLine, type Speaker, type Turn } from '@/lib/ai/agent/transcript'
 import { ANONYMOUS_VIEWER, isAgentViewer, type AgentViewer } from '@/lib/ai/agent/viewer'
 import { loadSearchIndex } from '@/lib/search/client'
 import { AgentAvatar } from './AgentAvatar'
-import { TracePanel } from './TracePanel'
+import { MemoTracePanel } from './TracePanel'
 import { AVATAR_VIEWBOX, isCrotch, mouthFor } from './avatar-sprite'
 import { useVoxelStage } from './voxel-scene'
 import styles from './Agent.module.scss'
 
 type Phase = 'checking' | 'idle' | 'consent' | 'connecting' | 'live' | 'ended'
 
-type Activity = 'idle' | 'listening' | 'thinking' | 'speaking'
+type Activity = 'idle' | 'arriving' | 'listening' | 'thinking' | 'speaking'
+
+const ARRIVAL_MS = 1500
+
+const CHUNK_FLUSH_MS = 90
+
+const STICK_PX = 48
+
+type PendingChunk = { who: Speaker; text: string; at: number }
 
 type Notice = keyof AgentCopy['errors'] | 'expired' | null
 
@@ -162,6 +170,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
     )
   }
   const transcriptRef = useRef<HTMLOListElement>(null)
+  const stickRef = useRef(true)
+  const pendingChunks = useRef<PendingChunk[]>([])
+  const chunkTimer = useRef(0)
+  const arrivalTimer = useRef(0)
 
   const nextId = () => ++idRef.current
 
@@ -188,6 +200,25 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setTrace(next)
   }, [])
 
+  const flushChunks = useCallback(() => {
+    window.clearTimeout(chunkTimer.current)
+    chunkTimer.current = 0
+    const chunks = pendingChunks.current
+    if (chunks.length === 0) return
+    pendingChunks.current = []
+    for (const chunk of chunks)
+      track((current) => (chunk.who === 'you' ? markHeard(current, chunk.at, chunk.text) : markAnswer(current, chunk.text)))
+    setTurns((current) => chunks.reduce((list, chunk) => appendChunk(list, chunk.who, chunk.text, ++idRef.current), current))
+  }, [track])
+
+  const queueChunk = useCallback(
+    (who: Speaker, text: string) => {
+      pendingChunks.current.push({ who, text, at: Date.now() })
+      if (!chunkTimer.current) chunkTimer.current = window.setTimeout(flushChunks, CHUNK_FLUSH_MS)
+    },
+    [flushChunks],
+  )
+
   const beginTrace = useCallback((value: Trace) => {
     traceRef.current = value
     audioSamples.current = 0
@@ -206,6 +237,11 @@ export default function AgentStage({ lang }: LabDemoProps) {
   )
 
   const teardown = useCallback(() => {
+    window.clearTimeout(arrivalTimer.current)
+    arrivalTimer.current = 0
+    window.clearTimeout(chunkTimer.current)
+    chunkTimer.current = 0
+    pendingChunks.current = []
     micRef.current?.stop()
     micRef.current = null
     const session = sessionRef.current
@@ -265,7 +301,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
 
   useEffect(() => {
     const list = transcriptRef.current
-    if (list) list.scrollTop = list.scrollHeight
+    if (list && stickRef.current) list.scrollTop = list.scrollHeight
   }, [turns])
 
   useEffect(() => {
@@ -352,11 +388,17 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setTurns([])
     setEffect(null)
     setPhase('live')
-    setActivity('listening')
-    const at = Date.now()
-    const first = markAsked(createTrace('local', 'simulator', 'browser', at), at, 'greeting', 'greeting')
-    beginTrace(first)
-    say(simulatorGreeting(lang, viewer), pendingTurn(first))
+    setActivity('arriving')
+    stickRef.current = true
+    window.clearTimeout(arrivalTimer.current)
+    arrivalTimer.current = window.setTimeout(() => {
+      arrivalTimer.current = 0
+      setActivity('listening')
+      const at = Date.now()
+      const first = markAsked(createTrace('local', 'simulator', 'browser', at), at, 'greeting', 'greeting')
+      beginTrace(first)
+      say(simulatorGreeting(lang, viewer), pendingTurn(first))
+    }, ARRIVAL_MS)
   }, [beginTrace, lang, say, viewer])
 
   const simulate = useCallback(
@@ -395,6 +437,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setNotice(null)
     setMicBlocked(false)
     setTurns([])
+    stickRef.current = true
     setEffect(null)
     setPhase('connecting')
     setActivity('idle')
@@ -433,34 +476,41 @@ export default function AgentStage({ lang }: LabDemoProps) {
       events: {
         onOpen: () => {
           setPhase('live')
-          setActivity('listening')
-          track((current) => markAsked(current, Date.now(), 'greeting', 'greeting'))
-          session.sendText(copy.greet)
-          void openMic(session)
+          setActivity('arriving')
+          const opened = Date.now()
+          void openMic(session).finally(() => {
+            arrivalTimer.current = window.setTimeout(
+              () => {
+                arrivalTimer.current = 0
+                if (sessionRef.current !== session) return
+                setActivity((current) => (current === 'arriving' ? 'listening' : current))
+                track((current) => markAsked(current, Date.now(), 'greeting', 'greeting'))
+                session.sendText(copy.greet)
+              },
+              Math.max(0, ARRIVAL_MS - (Date.now() - opened)),
+            )
+          })
         },
         onAudio: (pcm) => {
           audioSamples.current += pcm.length
           track((current) => markAudio(current, Date.now()))
           if (!mutedRef.current) playerRef.current?.enqueue(pcm)
         },
-        onInputTranscript: (text) => {
-          track((current) => markHeard(current, Date.now(), text))
-          setTurns((current) => appendChunk(current, 'you', text, nextId()))
-        },
-        onOutputTranscript: (text) => {
-          track((current) => markAnswer(current, text))
-          setTurns((current) => appendChunk(current, 'agent', text, nextId()))
-        },
+        onInputTranscript: (text) => queueChunk('you', text),
+        onOutputTranscript: (text) => queueChunk('agent', text),
         onVoiceActivity: (activity) => {
           if (activity === 'end') track((current) => markAsked(current, Date.now(), 'voice', 'vad'))
         },
         onUsage: (usage) => track((current) => markUsage(current, usage)),
         onInterrupted: () => {
+          flushChunks()
           track(markInterrupted)
           playerRef.current?.flush()
+          setTurns(closeTurns)
           setActivity('listening')
         },
         onTurnComplete: () => {
+          flushChunks()
           const audioMs = (audioSamples.current / OUTPUT_RATE) * 1000
           audioSamples.current = 0
           track((current) => closeTurn(current, Date.now(), audioMs))
@@ -480,8 +530,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
         },
         onClose: (reason, detail) => {
           if (sessionRef.current !== session) return
+          flushChunks()
           sessionRef.current = null
           track((current) => closeTurn(current, Date.now()))
+          setTurns(closeTurns)
           teardown()
           setPhase('ended')
           setActivity('idle')
@@ -490,7 +542,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
       },
     })
     sessionRef.current = session
-  }, [beginTrace, copy.greet, flushNavigation, lang, openMic, runTool, startSimulator, teardown, track])
+  }, [beginTrace, copy.greet, flushChunks, flushNavigation, lang, openMic, queueChunk, runTool, startSimulator, teardown, track])
 
   useEffect(() => {
     if (!focusAfter.current) return
@@ -508,6 +560,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
   }
 
   const hangUp = () => {
+    flushChunks()
     pendingOpen.current = null
     track((current) => closeTurn(current, Date.now()))
     teardown()
@@ -543,6 +596,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
     const text = draft.trim()
     if (!text) return
     setDraft('')
+    flushChunks()
+    stickRef.current = true
     setTurns((current) => addTurn(current, 'you', text, nextId()))
     if (speakingRef.current || simSpeaking.current) track(markInterrupted)
     track((current) => markAsked(current, Date.now(), 'text', 'text', text))
@@ -588,7 +643,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
         <div className={styles.floor} aria-hidden="true" />
         {voxels.Stage ? (
           <voxels.Stage
-            state={visual}
+            state={visual === 'arriving' ? 'idle' : visual}
             active={phase !== 'ended' && mode !== 'off'}
             live={live}
             shocked={shocked}
@@ -720,7 +775,17 @@ export default function AgentStage({ lang }: LabDemoProps) {
       ) : null}
 
       {turns.length ? (
-        <ol ref={transcriptRef} className={styles.transcript} aria-label={copy.transcript} aria-live="polite" data-cw-agent-transcript="">
+        <ol
+          ref={transcriptRef}
+          className={styles.transcript}
+          aria-label={copy.transcript}
+          aria-live="polite"
+          onScroll={(event) => {
+            const list = event.currentTarget
+            stickRef.current = list.scrollHeight - list.scrollTop - list.clientHeight < STICK_PX
+          }}
+          data-cw-agent-transcript=""
+        >
           {turns.map((turn) => (
             <li key={turn.id} className={styles.turn} data-who={turn.who}>
               <span className={styles.who}>{turn.who === 'you' ? copy.you : copy.name}</span>
@@ -730,7 +795,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
         </ol>
       ) : null}
 
-      {trace && (live || phase === 'ended') ? <TracePanel trace={trace} copy={copy.trace} lang={lang} /> : null}
+      {trace && (live || phase === 'ended') ? <MemoTracePanel trace={trace} copy={copy.trace} lang={lang} /> : null}
 
       {mode === 'local' ? <p className={styles.note}>{copy.simulatorNote}</p> : null}
     </section>

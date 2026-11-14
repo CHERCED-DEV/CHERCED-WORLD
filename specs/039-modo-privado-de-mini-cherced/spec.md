@@ -3,8 +3,9 @@
 Pedido del autor, 2026-11-14: una experiencia distinta de Mini Cherced para una persona especial que él invita,
 "extraordinariamente cariñosa, bromista, cómplice y llena de sorpresas".
 
-Estado: spec. No construida. El contenido lo escribió el autor y vive en `content/mini-cherced/privado/`, que Git
-ignora. **Esta spec es pública a propósito: describe el mecanismo y no dice para quién es ni qué dice.**
+Estado: fase 1 construida el 2026-11-14 (hablar con ella, con reglas de cuidado). Las fases 2 y 3 (escenas, easter
+eggs animados y estrellas) siguen pendientes. El contenido lo escribió el autor y vive en `content/mini-cherced/privado/`,
+que Git ignora. **Esta spec es pública a propósito: describe el mecanismo y no dice para quién es ni qué dice.**
 
 Depende de:
 - **018:** Mini Cherced;
@@ -89,3 +90,19 @@ Viene del documento privado del autor, por fases:
 | P-3901 | ¿Cómo entra la invitada? | **Decidido:** con su cuenta de Google |
 | P-3902 | ¿Dónde vive el contenido? | En MongoDB (`guest_modes`), cargado por un script local desde `privado/` |
 | P-3903 | ¿Cuánto dura el acceso? | Lo que dura la sesión de cuenta: 7 días, y se renueva al volver a entrar |
+
+## Cómo quedó la fase 1 (2026-11-14)
+
+- **Dónde vive el contenido (P-3902, cambio frente al valor por defecto):** en la variable de entorno `GUEST_MODE` de
+  Vercel, no en MongoDB. Así no hace falta escribir en la base ni tener su enlace en local, y el principio VIII queda
+  más simple. El valor es un JSON en base64 con `salt`, `emailHash` (SHA-256 de la sal y el correo en minúsculas),
+  `name` y `persona` (máximo 12.000 caracteres). Lo arma `node scripts/guest-mode.mjs <correo> <nombre>` a partir de
+  `privado/guest-persona.md` y lo deja en `privado/GUEST_MODE.txt`, que el autor pega en Vercel.
+- **Reconocimiento:** `lib/ai/agent/viewer.ts` resuelve primero al autor, luego a la invitada (comparando el hash en
+  tiempo constante) y luego a cualquier cuenta. Escribir su nombre en el chat no activa nada.
+- **Instrucción:** solo el token de su sesión lleva el bloque de la invitada: las reglas de cuidado de
+  `GUEST_CARE_RULES` (nunca exparejas ni relaciones pasadas, nada de celos ni comparaciones, nada de conflictos,
+  intimidad, salud, familia, dinero ni su trabajo; no inventa recuerdos ni promesas; no pone palabras en boca de
+  Camilo) y su persona. Los demás visitantes nunca la reciben (prueba en `tests/unit/agent/viewer.test.ts`).
+- **Pendiente del autor:** generar y pegar `GUEST_MODE` en Vercel, y decidir si Mini Cherced le habla de matrimonio
+  (el documento privado trata los sueños juntos como ilusiones, no como promesas).

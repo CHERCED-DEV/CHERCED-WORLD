@@ -1,4 +1,8 @@
-export type AgentViewer = { kind: 'author'; name: string } | { kind: 'account'; name: string } | { kind: 'anonymous' }
+export type AgentViewer =
+  | { kind: 'author'; name: string }
+  | { kind: 'guest'; name: string }
+  | { kind: 'account'; name: string }
+  | { kind: 'anonymous' }
 
 export const ANONYMOUS_VIEWER: AgentViewer = { kind: 'anonymous' }
 
@@ -14,13 +18,14 @@ export function isAgentViewer(value: unknown): value is AgentViewer {
   if (!value || typeof value !== 'object') return false
   const viewer = value as Record<string, unknown>
   if (viewer.kind === 'anonymous') return true
-  return (viewer.kind === 'author' || viewer.kind === 'account') && typeof viewer.name === 'string'
+  return (viewer.kind === 'author' || viewer.kind === 'guest' || viewer.kind === 'account') && typeof viewer.name === 'string'
 }
 
 export type ViewerSources = {
   isAdmin: () => Promise<boolean>
   account: () => Promise<{ name: string; email: string } | null>
   authorEmail: string | null
+  guest?: (email: string) => { name: string } | null
 }
 
 export async function resolveViewer(sources: ViewerSources): Promise<AgentViewer> {
@@ -30,6 +35,8 @@ export async function resolveViewer(sources: ViewerSources): Promise<AgentViewer
     if (account && author && account.email.trim().toLowerCase() === author) return { kind: 'author', name: firstName(account.name) || 'Camilo' }
     if (await sources.isAdmin()) return { kind: 'author', name: account ? firstName(account.name) || 'Camilo' : 'Camilo' }
     if (account) {
+      const guest = sources.guest?.(account.email)
+      if (guest) return { kind: 'guest', name: firstName(guest.name) || firstName(account.name) }
       const name = firstName(account.name)
       return name ? { kind: 'account', name } : ANONYMOUS_VIEWER
     }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useMemo, useState } from 'react'
+import { memo, useId, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import type { AgentTraceCopy } from '@/content/ailab/agent'
 import type { Locale } from '@/lib/i18n/config'
@@ -203,3 +203,5 @@ export function TracePanel({ trace, copy, lang }: Props) {
     </div>
   )
 }
+
+export const MemoTracePanel = memo(TracePanel)

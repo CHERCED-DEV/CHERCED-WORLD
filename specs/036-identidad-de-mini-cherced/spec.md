@@ -32,7 +32,7 @@ lo que Camilo aprobó.
 2. Lo aprobado se vuelve contenido tipado en `content/mini-cherced/identity.ts` (es y en). Es un módulo y no un
    Markdown leído en tiempo de ejecución, para que viaje en el build de Vercel.
 3. `lib/ai/agent/knowledge.ts` suma dos bloques a las instrucciones: "Quién eres" (personalidad) y "La historia de
-   Camilo" (background corto), dentro del tope de 32.000 caracteres. La persona actual (tercera persona, respuestas
+   Camilo" (background corto), dentro del tope de 36.000 caracteres (era 32.000; subió el 2026-11-14 por los chistes de cabecera). La persona actual (tercera persona, respuestas
    cortas y la burla cariñosa) se mantiene.
 4. El simulador local también usa la identidad para el saludo y las respuestas de "¿quién es Camilo?".
 

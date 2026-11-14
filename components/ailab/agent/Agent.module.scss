@@ -172,6 +172,25 @@ $paper: #f4f4f4;
   animation: agent-tilt 1s steps(2) infinite;
 }
 
+.stage[data-state='arriving'] .figure {
+  animation: agent-arrive 1.4s steps(14) both;
+}
+
+.stage[data-state='arriving'] .actor::after {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: clamp(90px, 20vw, 150px);
+  height: 12px;
+  border: 2px solid $green;
+  border-radius: 50%;
+  content: '';
+  opacity: 0;
+  transform: translateX(-50%);
+  animation: agent-landing 1.4s steps(7) both;
+  pointer-events: none;
+}
+
 .stage[data-state='off'] .figure {
   filter: grayscale(1);
   opacity: 0.55;
@@ -657,7 +676,32 @@ $paper: #f4f4f4;
   font-variant-numeric: tabular-nums;
 }
 
+@media (max-width: 480px) {
+  .screen {
+    min-height: 400px;
+  }
+
+  .actor {
+    bottom: 6%;
+  }
+
+  .bubble {
+    max-width: 100%;
+    margin-bottom: 12px;
+    padding: 6px 10px;
+    font-size: var(--cw-text-xs);
+  }
+
+  .figure {
+    width: clamp(112px, 34vw, 150px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .stage[data-state='arriving'] .actor::after {
+    display: none;
+  }
+
   .sky,
   .floor,
   .figure,
@@ -744,5 +788,58 @@ $paper: #f4f4f4;
 @keyframes agent-pop {
   from {
     transform: scale(0.8);
+  }
+}
+
+@keyframes agent-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(0) scale(1.08, 0.9);
+  }
+
+  52% {
+    transform: translateY(-10%);
+  }
+
+  64% {
+    transform: translateY(0);
+  }
+
+  78% {
+    transform: translateY(-4%) rotate(-5deg);
+  }
+
+  90% {
+    transform: translateY(0) rotate(5deg);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes agent-landing {
+  0%,
+  28% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.4);
+  }
+
+  40% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.6);
   }
 }

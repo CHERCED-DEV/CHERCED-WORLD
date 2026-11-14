@@ -34,7 +34,10 @@ const COPY = {
   es: {
     greeting: (pa: string, self: string) =>
       `${pa} Soy Mini Cherced, ${self}, en modo simulador: aquí no hay Gemini, solo el buscador del sitio. Escríbeme qué quieres ver.`,
-    greetAuthor: (pa: string) => `${pa} ¡Llegó el jefe! Camilo, estoy en modo simulador: aquí no hay Gemini, solo el buscador del sitio. ¿Qué revisamos?`,
+    greetAuthor: (pa: string, hype: string) =>
+      `${pa} ¡Llegó el jefe! ${hype} ¡Añañayyyy! Camilo, estoy en modo simulador: aquí no hay Gemini, solo el buscador del sitio. ¿Qué revisamos?`,
+    greetGuest: (pa: string, name: string) =>
+      `${pa} A ver, a ver, a ver… ¿${name}? ¿La mismísima ${name}? ¡Bienvenida, visita VIP! Estoy en modo simulador: la sorpresa completa está con Gemini.`,
     greetAccount: (pa: string, name: string, self: string) =>
       `${pa} ${name}, soy Mini Cherced, ${self}, en modo simulador: aquí no hay Gemini, solo el buscador del sitio. ¿Qué quieres ver?`,
     whoamiAuthor: 'Uy, quieto: eres Camilo, mi creador. El sitio me confirmó tu sesión. ¿Qué construimos hoy, jefe?',
@@ -57,7 +60,10 @@ const COPY = {
   en: {
     greeting: (pa: string, self: string) =>
       `${pa} I'm Mini Cherced, ${self}, in simulator mode: there's no Gemini here, just the site search. Type what you want to see.`,
-    greetAuthor: (pa: string) => `${pa} The boss is here! Camilo, I'm in simulator mode: no Gemini here, just the site search. What are we checking?`,
+    greetAuthor: (pa: string, hype: string) =>
+      `${pa} The boss is here! ${hype} ¡Añañayyyy! Camilo, I'm in simulator mode: no Gemini here, just the site search. What are we checking?`,
+    greetGuest: (pa: string, name: string) =>
+      `${pa} Wait, wait, wait… ${name}? THE ${name}? Welcome, VIP guest! I'm in simulator mode: the full surprise lives with Gemini.`,
     greetAccount: (pa: string, name: string, self: string) =>
       `${pa} ${name}, I'm Mini Cherced, ${self}, in simulator mode: there's no Gemini here, just the site search. What do you want to see?`,
     whoamiAuthor: "Whoa, freeze: you're Camilo, my creator. The site confirmed your session. What are we building today, boss?",
@@ -81,14 +87,18 @@ const COPY = {
 export function simulatorGreeting(lang: Locale, viewer: AgentViewer = ANONYMOUS_VIEWER): string {
   const identity = miniChercedIdentity[lang]
   const pa = identity.catchphrases.greet.phrase
-  if (viewer.kind === 'author') return COPY[lang].greetAuthor(pa)
+  if (viewer.kind === 'author') {
+    const hype = identity.hype.slice(1)
+    return COPY[lang].greetAuthor(pa, hype[Math.floor(Math.random() * hype.length)] ?? '')
+  }
+  if (viewer.kind === 'guest') return COPY[lang].greetGuest(pa, viewer.name)
   if (viewer.kind === 'account') return COPY[lang].greetAccount(pa, viewer.name, identity.self)
   return COPY[lang].greeting(pa, identity.self)
 }
 
 export function whoAmI(lang: Locale, viewer: AgentViewer): string {
   if (viewer.kind === 'author') return COPY[lang].whoamiAuthor
-  if (viewer.kind === 'account') return COPY[lang].whoamiAccount(viewer.name)
+  if (viewer.kind === 'account' || viewer.kind === 'guest') return COPY[lang].whoamiAccount(viewer.name)
   return COPY[lang].whoamiAnonymous
 }
 
