@@ -1,3 +1,4 @@
+import { miniChercedIdentity } from '@/content/mini-cherced/identity'
 import { formatFact, synergosFacts } from '@/content/synergos'
 import type { Locale } from '@/lib/i18n/config'
 import type { AssistantFacts } from '@/lib/search/types'
@@ -8,11 +9,16 @@ const NAVIGATE: Record<Locale, RegExp> = {
   en: /\b(take me|show me|open|go to|i want to see|navigate)\b/i,
 }
 
-export type SimulatorIntent = 'greeting' | 'identity' | 'work' | 'contact' | 'projects' | 'best' | 'search'
+export type SimulatorIntent = 'greeting' | 'name' | 'camilo' | 'identity' | 'work' | 'contact' | 'projects' | 'best' | 'search'
 
 const INTENTS: Array<[Exclude<SimulatorIntent, 'search'>, RegExp]> = [
+  [
+    'name',
+    /(significa cherced|cherced significa|qu[eé] es cherced(?![-\s]?world)|por qu[eé] (se llama )?cherced|origen del nombre|de d[oó]nde (sale|viene) (el nombre|cherced)|cherced mean|meaning of cherced|why (is it called )?cherced|what is cherced(?![-\s]?world))/i,
+  ],
+  ['camilo', /(qui[eé]n es camilo|qui[eé]n es el autor|who is camilo|who's camilo|who is the author)/i],
   ['identity', /(qui[eé]n eres|qu[eé] eres|c[oó]mo te llamas|who are you|what are you|your name)/i],
-  ['work', /(qu[eé] haces|a qu[eé] te dedicas|qu[eé] hace camilo|en qu[eé] trabaja|qui[eé]n es camilo|what do you do|what does camilo do|who is camilo)/i],
+  ['work', /(qu[eé] haces|a qu[eé] te dedicas|qu[eé] hace camilo|en qu[eé] trabaja|what do you do|what does camilo do)/i],
   ['contact', /(contact|contrat|escrib|correo|email|hire|whatsapp|hablar con camilo)/i],
   ['best', /(lo mejor|destacad|m[aá]s importante|best|favorite|favorito|highlight)/i],
   ['projects', /(proyectos|portafolio|portfolio|projects|casos)/i],
@@ -21,11 +27,11 @@ const INTENTS: Array<[Exclude<SimulatorIntent, 'search'>, RegExp]> = [
 
 const COPY = {
   es: {
-    greeting:
-      '¡Hola! Soy Mini Cherced, en modo simulador: aquí no hay Gemini, solo el buscador del sitio. Escríbeme qué quieres ver.',
-    hello: '¡Hola, hola! Pregúntame por los proyectos, Synergos, el blog o el AI Lab, o dime "llévame a" y te llevo.',
-    identity: (author: string) =>
-      `Soy Mini Cherced, la versión pixel art de ${author} y una IA, no él. En este simulador solo busco en el sitio; con Gemini converso de verdad.`,
+    greeting: (pa: string, self: string) =>
+      `${pa} Soy Mini Cherced, ${self}, en modo simulador: aquí no hay Gemini, solo el buscador del sitio. Escríbeme qué quieres ver.`,
+    hello: (pa: string) => `${pa} Pregúntame por Camilo, los proyectos, Synergos, el blog o el AI Lab, o dime "llévame a" y te llevo.`,
+    identity: (author: string, self: string) =>
+      `Soy Mini Cherced, ${self}: un personaje digital, una IA, no ${author} en persona. En este simulador solo busco en el sitio; con Gemini converso de verdad.`,
     work: (about: string, services: string) => `${about} Ofrece ${services}.`,
     contact: 'Para hablar con Camilo, lo mejor es la página de Contacto: ahí le escribes directo.',
     projects: (titles: string) => `Algunos proyectos: ${titles}. En el portafolio están todos.`,
@@ -37,10 +43,11 @@ const COPY = {
     and: 'y',
   },
   en: {
-    greeting: "Hi! I'm Mini Cherced, in simulator mode: there's no Gemini here, just the site search. Type what you want to see.",
-    hello: 'Hey there! Ask me about the projects, Synergos, the blog or the AI Lab, or say "take me to" and I will.',
-    identity: (author: string) =>
-      `I'm Mini Cherced, the pixel art version of ${author} and an AI, not him. In this simulator I only search the site; with Gemini I really talk.`,
+    greeting: (pa: string, self: string) =>
+      `${pa} I'm Mini Cherced, ${self}, in simulator mode: there's no Gemini here, just the site search. Type what you want to see.`,
+    hello: (pa: string) => `${pa} Ask me about Camilo, the projects, Synergos, the blog or the AI Lab, or say "take me to" and I will.`,
+    identity: (author: string, self: string) =>
+      `I'm Mini Cherced, ${self}: a digital character, an AI, not ${author} himself. In this simulator I only search the site; with Gemini I really talk.`,
     work: (about: string, services: string) => `${about} He offers ${services}.`,
     contact: 'To talk to Camilo, the Contact page is the way: you write to him directly there.',
     projects: (titles: string) => `Some projects: ${titles}. The portfolio has all of them.`,
@@ -53,7 +60,8 @@ const COPY = {
 } as const
 
 export function simulatorGreeting(lang: Locale): string {
-  return COPY[lang].greeting
+  const identity = miniChercedIdentity[lang]
+  return COPY[lang].greeting(identity.catchphrases.greet.phrase, identity.self)
 }
 
 export function wantsToNavigate(lang: Locale, text: string): boolean {
@@ -86,11 +94,14 @@ export function simulatorReply(
   facts?: Pick<AssistantFacts, 'author' | 'about' | 'services' | 'projects' | 'pages'>,
 ): SimulatorReply {
   const copy = COPY[lang]
+  const identity = miniChercedIdentity[lang]
   const navigate = wantsToNavigate(lang, question)
   const intent = facts ? intentOf(question) : 'search'
   if (facts && intent !== 'search') {
-    if (intent === 'greeting') return { text: copy.hello, open: null }
-    if (intent === 'identity') return { text: copy.identity(facts.author), open: null }
+    if (intent === 'greeting') return { text: copy.hello(identity.catchphrases.greet.phrase), open: null }
+    if (intent === 'name') return { text: identity.examples.cherced.answer, open: null }
+    if (intent === 'camilo') return { text: identity.examples['who-is-camilo'].answer, open: null }
+    if (intent === 'identity') return { text: copy.identity(facts.author, identity.self), open: null }
     if (intent === 'work') {
       const services = list(facts.services.items.slice(0, 3).map((item) => item.title.toLowerCase()), lang)
       return { text: copy.work(firstSentence(facts.about), services), open: null }

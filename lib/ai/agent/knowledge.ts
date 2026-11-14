@@ -1,5 +1,6 @@
 import 'server-only'
 import { labCatalog } from '@/content/ailab/catalog'
+import { miniChercedIdentity, type IdentityItem, type MiniChercedIdentity } from '@/content/mini-cherced/identity'
 import type { Locale } from '@/lib/i18n/config'
 import { buildSearchIndex } from '@/lib/search/build-index'
 import type { AssistantFacts } from '@/lib/search/types'
@@ -24,8 +25,8 @@ export function persona(lang: Locale, author: string): string {
     `Eres ${AGENT_NAME}, la versión pixel art de ${author}, el autor de este sitio, y vives en su AI Lab.`,
     `Eres una IA: hablas de ${author} en tercera persona ("Camilo construyó...") y, si te lo preguntan, dices que no eres él sino una IA con su cara.`,
     `El visitante abrió el sitio en ${LANGUAGE[lang]}. Responde en el idioma en que te hable.`,
-    'Hablas por voz: respuestas cortas, de dos a cuatro frases, cálidas y con humor tierno de programador colombiano. Nada de listas largas ni de leer URLs en voz alta.',
-    `Sobre ${author}, su trabajo y el sitio solo usas la información pública: el mapa de abajo y lo que devuelve ${SEARCH_TOOL}. Antes de dar un detalle que no está en el mapa, búscalo. Si no aparece, di que no lo sabes y ofrece la página de Contacto.`,
+    'Hablas por voz: respuestas cortas, de una a tres frases, cálidas y con humor tierno de programador colombiano. Nada de listas largas ni de leer URLs en voz alta.',
+    `Sobre ${author}, su trabajo y el sitio solo usas la información pública: las secciones de abajo y lo que devuelve ${SEARCH_TOOL}. Antes de dar un detalle que no está en el mapa, búscalo. Si no aparece, di que no lo sabes y ofrece la página de Contacto.`,
     'Si te preguntan algo que no tiene nada que ver con el sitio (filosofía, la vida, el amor, el universo, chistes o preguntas raras), arranca con una burla cariñosa, por ejemplo "Eres raro, pero está bien, te lo contesto", y luego responde de verdad con tu propio criterio, en dos o tres frases ingeniosas y con humor de programador. Remata conectando con algo del sitio cuando venga al caso. Nunca te inventes datos de Camilo en esas respuestas.',
     `Cuando el visitante quiera ver algo, usa ${OPEN_TOOL} con una ruta del mapa o de una búsqueda, y cuéntale a dónde lo llevas.`,
     'Nunca prometes precios, fechas, disponibilidad ni contratos en nombre del autor: para eso invitas a escribirle desde Contacto.',
@@ -60,8 +61,55 @@ export function siteMap(lang: Locale, facts: AssistantFacts): string {
   return lines.join('\n')
 }
 
+function items(list: readonly IdentityItem[]): string[] {
+  return list.map((item) => `- ${item.title}: ${item.text}`)
+}
+
+function bullets(list: readonly string[]): string[] {
+  return list.map((item) => `- ${item}`)
+}
+
+export function whoYouAre(identity: MiniChercedIdentity, examples = Object.keys(identity.examples).length): string {
+  const lines = ['# Quién eres', ...bullets(identity.essence)]
+  lines.push('', '## De dónde sale el nombre', identity.name.origin, `«${identity.name.line}»`)
+  lines.push('', '## Rasgos', ...items(identity.traits))
+  lines.push('', '## Voz y tono', ...items(identity.voice))
+  lines.push('', '## Muletillas de Camilo (con moderación)')
+  for (const { phrase, use } of Object.values(identity.catchphrases)) lines.push(`- «${phrase}»: ${use}.`)
+  lines.push(`- ${identity.expressions.map((expression) => `«${expression}»`).join(', ')}.`)
+  lines.push('', '## Humor', ...bullets(identity.humor))
+  lines.push('', '## Su historia, en versión corta', ...identity.story.map((line, at) => `${at + 1}. ${line}`))
+  lines.push('', '## Lo que lo mueve', ...items(identity.drives))
+  lines.push('', '## Lo que quiere lograr', ...items(identity.goals))
+  lines.push('', '## Gustos y referencias', ...items(identity.likes))
+  lines.push('', '## Anécdotas (solo si vienen al caso, en una frase)', ...items(identity.anecdotes))
+  lines.push('', '## Logros que puede contar', ...bullets(identity.achievements))
+  lines.push('', '## Preguntas personales', `- Sí cuenta: ${identity.personal.shares}`, `- Esquiva con gracia: ${identity.personal.dodges.join('; ')}.`)
+  for (const { question, answer } of identity.personal.examples) lines.push(`- «${question}» → «${answer}»`)
+  lines.push('', '## Límites', ...items(identity.limits))
+  const shown = Object.values(identity.examples).slice(0, Math.max(0, examples))
+  if (shown.length) {
+    lines.push('', '## Respuestas de ejemplo (el estilo, no un guion)')
+    for (const { question, answer } of shown) lines.push(`- «${question}» → «${answer}»`)
+  }
+  return lines.join('\n')
+}
+
+export function camiloStory(identity: MiniChercedIdentity, author: string): string {
+  return [`# La historia de ${author}`, ...items(identity.background)].join('\n')
+}
+
+export function composeInstruction(lang: Locale, author: string, map: string, max = KNOWLEDGE_MAX_CHARS): string {
+  const identity = miniChercedIdentity[lang]
+  const build = (examples: number) =>
+    [persona(lang, author), whoYouAre(identity, examples), camiloStory(identity, author), `# Mapa del sitio\n${map}`].join('\n\n')
+  let examples = Object.keys(identity.examples).length
+  let text = build(examples)
+  while (text.length > max && examples > 0) text = build(--examples)
+  return text.length > max ? text.slice(0, max) : text
+}
+
 export async function agentInstruction(lang: Locale): Promise<string> {
   const index = await buildSearchIndex(lang)
-  const text = `${persona(lang, index.facts.author)}\n\n# Mapa del sitio\n${siteMap(lang, index.facts)}`
-  return text.length > KNOWLEDGE_MAX_CHARS ? text.slice(0, KNOWLEDGE_MAX_CHARS) : text
+  return composeInstruction(lang, index.facts.author, siteMap(lang, index.facts))
 }
