@@ -101,6 +101,30 @@ const FLOWS: Record<CardId, Flow> = {
     await page.keyboard.press('Enter')
     await expect(stage.locator('[data-cw-agent-start]')).toBeFocused()
   },
+  A9: async ({ page, stage, rings }) => {
+    const accept = stage.locator('[data-cw-gemini-accept]')
+    if (await accept.count()) {
+      await tabTo(page, accept, rings)
+      await page.keyboard.press('Enter')
+    }
+    await tabTo(page, stage.locator('#diagram-prompt'), rings)
+    await page.keyboard.type('Un BFF que llama a dos servicios')
+    await tabTo(page, stage.locator('[data-cw-diagram-draw]'), rings)
+    await page.keyboard.press('Enter')
+    await expect(stage.locator('[data-cw-diagram-node]').first()).toBeVisible({ timeout: 30_000 })
+  },
+  A7: async ({ page, stage, rings }) => {
+    const accept = stage.locator('[data-cw-gemini-accept]')
+    if (await accept.count()) {
+      await tabTo(page, accept, rings)
+      await page.keyboard.press('Enter')
+    }
+    await tabTo(page, stage.locator('#write-input'), rings)
+    await page.keyboard.type('Un botón que lea el resumen de cada caso')
+    await tabTo(page, stage.locator('[data-cw-write-generate]'), rings)
+    await page.keyboard.press('Enter')
+    await expect(stage.locator('[data-cw-write-output]')).not.toBeEmpty({ timeout: 30_000 })
+  },
   A6: async ({ page, stage, rings }) => {
     const sample = stage.locator('[data-cw-match-sample]')
     await expect(sample).toBeEnabled()
