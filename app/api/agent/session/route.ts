@@ -1,5 +1,6 @@
 import '@/lib/data/mongo/register'
 import { NextResponse, type NextRequest } from 'next/server'
+import { interviewTracks, isInterviewTrack } from '@/content/ailab/interview'
 import { AGENT_DAILY_KEY, AGENT_MODEL, type AgentSessionReply, type AgentStatus } from '@/lib/ai/agent/config'
 import { agentInstruction } from '@/lib/ai/agent/knowledge'
 import { guestBlock } from '@/lib/ai/agent/guest'
@@ -31,7 +32,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const key = geminiKey()
   if (mode !== 'live' || !key) return reply({ mode: mode === 'live' ? 'off' : mode })
 
-  const body = (await request.json().catch(() => null)) as { lang?: unknown } | null
+  const body = (await request.json().catch(() => null)) as { lang?: unknown; interview?: unknown } | null
+  const interview = isInterviewTrack(body?.interview) && interviewTracks.es[body.interview].ready ? body.interview : undefined
   const requested = body?.lang
   const lang = typeof requested === 'string' && isLocale(requested) ? requested : defaultLocale
   const now = new Date()
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const viewer = await currentViewer()
     const guest = viewer.kind === 'guest' ? currentGuestMode() : null
-    const { token, expiresAt } = await createLiveToken(key, await agentInstruction(lang, viewer, guest ? guestBlock(guest) : undefined), now)
+    const { token, expiresAt } = await createLiveToken(key, await agentInstruction(lang, viewer, guest ? guestBlock(guest) : undefined, interview), now)
     return reply({ mode: 'live', token, model: AGENT_MODEL, expiresAt })
   } catch (error) {
     logServerError('agent.session', error instanceof LiveTokenError ? error.message : error)

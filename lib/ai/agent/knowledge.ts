@@ -4,7 +4,9 @@ import { miniChercedIdentity, type IdentityItem, type MiniChercedIdentity } from
 import type { Locale } from '@/lib/i18n/config'
 import { buildSearchIndex } from '@/lib/search/build-index'
 import type { AssistantFacts } from '@/lib/search/types'
+import type { InterviewTrack } from '@/content/ailab/interview'
 import { AGENT_NAME } from './config'
+import { interviewBlock } from './interview'
 import { OPEN_TOOL, SEARCH_TOOL } from './tools'
 import { ANONYMOUS_VIEWER, type AgentViewer } from './viewer'
 
@@ -130,19 +132,28 @@ export function composeInstruction(
   max = KNOWLEDGE_MAX_CHARS,
   viewer: AgentViewer = ANONYMOUS_VIEWER,
   guest?: string,
+  interview?: string,
 ): string {
   const identity = miniChercedIdentity[lang]
   const who = whoIsTalking(author, viewer, identity.hype, guest)
-  const limit = max + (viewer.kind === 'guest' && guest ? guest.length : 0)
+  const limit = max + (viewer.kind === 'guest' && guest ? guest.length : 0) + (interview?.length ?? 0)
   const build = (examples: number) =>
-    [persona(lang, author), who, whoYouAre(identity, examples), camiloStory(identity, author), `# Mapa del sitio\n${map}`].join('\n\n')
+    [persona(lang, author), who, interview ?? '', whoYouAre(identity, examples), camiloStory(identity, author), `# Mapa del sitio\n${map}`]
+      .filter(Boolean)
+      .join('\n\n')
   let examples = Object.keys(identity.examples).length
   let text = build(examples)
   while (text.length > limit && examples > 0) text = build(--examples)
   return text.length > limit ? text.slice(0, limit) : text
 }
 
-export async function agentInstruction(lang: Locale, viewer: AgentViewer = ANONYMOUS_VIEWER, guest?: string): Promise<string> {
+export async function agentInstruction(
+  lang: Locale,
+  viewer: AgentViewer = ANONYMOUS_VIEWER,
+  guest?: string,
+  interview?: InterviewTrack,
+): Promise<string> {
   const index = await buildSearchIndex(lang)
-  return composeInstruction(lang, index.facts.author, siteMap(lang, index.facts), KNOWLEDGE_MAX_CHARS, viewer, guest)
+  const block = interview ? interviewBlock(interview, index.facts.author) : undefined
+  return composeInstruction(lang, index.facts.author, siteMap(lang, index.facts), KNOWLEDGE_MAX_CHARS, viewer, guest, block)
 }

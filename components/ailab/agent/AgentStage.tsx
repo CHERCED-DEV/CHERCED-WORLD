@@ -14,7 +14,10 @@ import { startMic, type MicHandle } from '@/lib/ai/agent/mic'
 import { OUTPUT_RATE } from '@/lib/ai/agent/pcm'
 import { createPlayer, type AudioPlayer } from '@/lib/ai/agent/player'
 import { intentOf, simulatorGreeting, simulatorReply } from '@/lib/ai/agent/simulator'
-import { createToolRunner, SEARCH_TOOL, type AgentSearchHit, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
+import { createToolRunner, SEARCH_TOOL, type AgentSearchHit, type AgentSource, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
+import { interviewActa } from '@/lib/ai/agent/interview'
+import { downloadText } from '@/lib/ailab/skill/download'
+import type { InterviewTrack } from '@/content/ailab/interview'
 import {
   addTool,
   closeTurn,
@@ -33,6 +36,7 @@ import { addTurn, appendChunk, closeTurns, lastAgentLine, type Speaker, type Tur
 import { ANONYMOUS_VIEWER, isAgentViewer, type AgentViewer } from '@/lib/ai/agent/viewer'
 import { loadSearchIndex } from '@/lib/search/client'
 import { AgentAvatar } from './AgentAvatar'
+import { InterviewPanel } from './InterviewPanel'
 import { MemoTracePanel } from './TracePanel'
 import { AVATAR_VIEWBOX, isCrotch, mouthFor } from './avatar-sprite'
 import { useVoxelStage } from './voxel-scene'
@@ -88,7 +92,7 @@ function traceTool(call: AgentToolCall, effect: AgentToolEffect, response: Recor
   if (effect?.kind === 'search') {
     return { ...base, result: { kind: 'search', hits: effect.hits.map((hit) => ({ title: hit.titulo, url: hit.ruta, score: hit.score })) } }
   }
-  if (effect?.kind === 'open') return { ...base, result: { kind: 'open', path: effect.path } }
+  if (effect?.kind === 'open' || effect?.kind === 'source') return { ...base, result: { kind: 'open', path: effect.path } }
   if (response.ok === false) return { ...base, result: { kind: 'open', path: null } }
   return { ...base, result: { kind: 'error', error: typeof response.error === 'string' ? response.error : 'unknown' } }
 }
@@ -143,6 +147,13 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const [dodge, setDodge] = useState<{ side: 'left' | 'right'; id: number } | null>(null)
 
   const [shocked, setShocked] = useState(false)
+  const [interview, setInterview] = useState<InterviewTrack | null>(null)
+  const [sources, setSources] = useState<AgentSource[]>([])
+  const [interviewStartedAt, setInterviewStartedAt] = useState(0)
+  const addSource = useCallback((effect: AgentToolEffect) => {
+    if (effect?.kind !== 'source') return
+    setSources((current) => (current.some((source) => source.path === effect.path) ? current : [...current, { path: effect.path, title: effect.title }]))
+  }, [])
   const levelRef = useRef(0)
   const voiceRef = useRef(0)
   const voxels = useVoxelStage()
@@ -387,6 +398,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const startSimulator = useCallback(() => {
     setNotice(null)
     setTurns([])
+    setSources([])
+    setInterviewStartedAt(Date.now())
     setEffect(null)
     setPhase('live')
     setActivity('arriving')
@@ -413,10 +426,12 @@ export default function AgentStage({ lang }: LabDemoProps) {
         hits = found?.kind === 'search' ? found.hits : []
       } else setEffect(null)
       const reply = simulatorReply(lang, question, hits, index.facts, viewer)
-      if (reply.open) pendingOpen.current = reply.open
+      const top = hits[0]
+      if (interview && top) addSource({ kind: 'source', path: top.ruta, title: top.titulo })
+      if (reply.open && !interview) pendingOpen.current = reply.open
       say(reply.text, turn)
     },
-    [lang, runTool, say, viewer],
+    [addSource, interview, lang, runTool, say, viewer],
   )
 
   const openMic = useCallback(async (session: LiveSession) => {
@@ -438,6 +453,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setNotice(null)
     setMicBlocked(false)
     setTurns([])
+    setSources([])
+    setInterviewStartedAt(Date.now())
     stickRef.current = true
     setEffect(null)
     setPhase('connecting')
@@ -451,7 +468,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
       const response = await fetch(AGENT_SESSION_ENDPOINT, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ lang }),
+        body: JSON.stringify({ lang, interview }),
       })
       grant = await response.json()
     } catch {
@@ -525,6 +542,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
           for (const call of calls) {
             const result = await runTool(call)
             if (result.effect) setEffect(result.effect)
+            addSource(result.effect)
             responses.push(result.response)
           }
           return responses
@@ -543,7 +561,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
       },
     })
     sessionRef.current = session
-  }, [beginTrace, copy.greet, flushChunks, flushNavigation, lang, openMic, queueChunk, runTool, startSimulator, teardown, track])
+  }, [addSource, beginTrace, copy.greet, flushChunks, flushNavigation, interview, lang, openMic, queueChunk, runTool, startSimulator, teardown, track])
 
   useEffect(() => {
     if (!focusAfter.current) return
@@ -597,6 +615,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
     const text = draft.trim()
     if (!text) return
     setDraft('')
+    ask(text)
+  }
+
+  const ask = (text: string) => {
     flushChunks()
     stickRef.current = true
     setTurns((current) => addTurn(current, 'you', text, nextId()))
@@ -607,6 +629,22 @@ export default function AgentStage({ lang }: LabDemoProps) {
       sessionRef.current.sendText(text)
       setActivity('thinking')
     } else if (mode === 'local') void simulate(text, pendingTurn(traceRef.current))
+  }
+
+  const finishInterview = () => {
+    if (!interview) return
+    flushChunks()
+    const acta = interviewActa({
+      lang,
+      track: interview,
+      startedAt: interviewStartedAt || Date.now(),
+      endedAt: Date.now(),
+      turns,
+      sources,
+      origin: window.location.origin,
+    })
+    downloadText(`${copy.interview.file}-${new Date().toISOString().slice(0, 10)}.md`, acta, 'text/markdown')
+    hangUp()
   }
 
   const live = phase === 'live'
@@ -702,6 +740,21 @@ export default function AgentStage({ lang }: LabDemoProps) {
         </p>
       ) : null}
 
+      {!live && phase !== 'consent' && phase !== 'connecting' && phase !== 'checking' && mode !== 'off' ? (
+        <InterviewPanel
+          lang={lang}
+          copy={copy.interview}
+          track={interview}
+          onTrack={setInterview}
+          live={false}
+          startedAt={0}
+          asked={[]}
+          sources={[]}
+          onAsk={() => {}}
+          onFinish={() => {}}
+        />
+      ) : null}
+
       {phase === 'consent' ? (
         <div className={styles.consent} role="group" aria-labelledby={`${inputId}-consent`} data-cw-agent-consent="">
           <p className={styles.consentTitle} id={`${inputId}-consent`}>
@@ -773,6 +826,21 @@ export default function AgentStage({ lang }: LabDemoProps) {
             </Button>
           </div>
         </form>
+      ) : null}
+
+      {live && interview ? (
+        <InterviewPanel
+          lang={lang}
+          copy={copy.interview}
+          track={interview}
+          onTrack={setInterview}
+          live
+          startedAt={interviewStartedAt}
+          asked={turns.filter((turn) => turn.who === 'you').map((turn) => turn.text)}
+          sources={sources}
+          onAsk={ask}
+          onFinish={finishInterview}
+        />
       ) : null}
 
       {turns.length ? (

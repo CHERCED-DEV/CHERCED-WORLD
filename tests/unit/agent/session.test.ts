@@ -45,7 +45,7 @@ describe('token de un solo uso (FR-1806, FR-1807)', () => {
     expect(setup.generationConfig.responseModalities).toEqual(['AUDIO'])
     expect(setup.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName).toBe(AGENT_VOICE)
     expect(setup.systemInstruction.parts[0]!.text).toBe('instrucción')
-    expect(setup.tools[0]!.functionDeclarations.map((item) => item.name)).toEqual(['buscar_en_el_sitio', 'abrir_pagina'])
+    expect(setup.tools[0]!.functionDeclarations.map((item) => item.name)).toEqual(['buscar_en_el_sitio', 'abrir_pagina', 'mostrar_fuente'])
     expect(setup).toHaveProperty('inputAudioTranscription')
     expect(setup).toHaveProperty('outputAudioTranscription')
   })

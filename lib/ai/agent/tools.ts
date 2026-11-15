@@ -7,6 +7,8 @@ export const SEARCH_TOOL = 'buscar_en_el_sitio'
 
 export const OPEN_TOOL = 'abrir_pagina'
 
+export const SOURCE_TOOL = 'mostrar_fuente'
+
 export const AGENT_TOOLS = [
   {
     functionDeclarations: [
@@ -30,6 +32,16 @@ export const AGENT_TOOLS = [
           required: ['ruta'],
         },
       },
+      {
+        name: SOURCE_TOOL,
+        description:
+          'Muestra en pantalla la fuente de lo que estás diciendo: un caso, una decisión, un post o una página del sitio. Úsala en el modo entrevista cada vez que te apoyes en algo publicado. La ruta debe salir del mapa o de una búsqueda.',
+        parameters: {
+          type: 'OBJECT',
+          properties: { ruta: { type: 'STRING', description: 'Ruta de la fuente, por ejemplo /es/portfolio/12.' } },
+          required: ['ruta'],
+        },
+      },
     ],
   },
 ] as const
@@ -48,7 +60,13 @@ export type AgentToolContext = {
 
 export type AgentScoredHit = AgentSearchHit & { score: number }
 
-export type AgentToolEffect = { kind: 'search'; query: string; hits: AgentScoredHit[] } | { kind: 'open'; path: string } | null
+export type AgentSource = { path: string; title: string }
+
+export type AgentToolEffect =
+  | { kind: 'search'; query: string; hits: AgentScoredHit[] }
+  | { kind: 'open'; path: string }
+  | ({ kind: 'source' } & AgentSource)
+  | null
 
 function text(value: unknown, max = 200): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : ''
@@ -94,6 +112,14 @@ export function safeSitePath(requested: unknown, index: SearchIndex, origin?: st
   return /^#[\w-]{1,80}$/.test(hash) ? `${path}${hash}` : path
 }
 
+export function sourceTitle(index: SearchIndex, path: string): string {
+  const bare = pathOf(path) ?? path
+  const doc = index.docs.find((item) => pathOf(item.url) === bare)
+  if (doc) return doc.title
+  const fact = [...Object.values(index.facts.pages), ...index.facts.projects, ...index.facts.posts].find((item) => pathOf(item.url) === bare)
+  return fact?.title ?? bare
+}
+
 export function searchSiteScored(box: GlassBox, query: string): AgentScoredHit[] {
   return box
     .search(query, { limit: AGENT_SEARCH_LIMIT })
@@ -137,6 +163,12 @@ export function createToolRunner(context: AgentToolContext, origin?: string) {
       if (!path) return { response: { id: call.id, name: call.name, response: { ok: false, motivo: 'ruta_desconocida' } }, effect: null }
       context.navigate(path)
       return { response: { id: call.id, name: call.name, response: { ok: true, ruta: path } }, effect: { kind: 'open', path } }
+    }
+    if (call.name === SOURCE_TOOL) {
+      const path = safeSitePath(call.args.ruta, index, origin)
+      if (!path) return { response: { id: call.id, name: call.name, response: { ok: false, motivo: 'fuente_desconocida' } }, effect: null }
+      const title = sourceTitle(index, path)
+      return { response: { id: call.id, name: call.name, response: { ok: true, ruta: path, titulo: title } }, effect: { kind: 'source', path, title } }
     }
     return { response: { id: call.id, name: call.name, response: { error: 'herramienta_desconocida' } }, effect: null }
   }

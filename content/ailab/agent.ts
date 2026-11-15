@@ -1,6 +1,20 @@
 import type { Locale } from '@/lib/i18n/config'
 
+export type AgentInterviewCopy = {
+  pick: string
+  free: string
+  freeHint: string
+  soon: string
+  title: string
+  suggested: string
+  sources: string
+  noSources: string
+  finish: string
+  file: string
+}
+
 export type AgentCopy = {
+  interview: AgentInterviewCopy
   name: string
   stageLabel: string
   start: string
@@ -106,6 +120,18 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     opening: 'Abriendo {path}',
     simulatorNote: 'Estás en el simulador: responde con el buscador del sitio y la voz de tu navegador. Con la clave de Gemini, conversa de verdad.',
     evals: '¿Cómo lo mido? Mira sus evals y el red team',
+    interview: {
+      pick: '¿Cómo quieres conversar?',
+      free: 'Conversación libre',
+      freeHint: 'Pregunta lo que quieras del sitio.',
+      soon: 'pronto',
+      title: 'Modo entrevista',
+      suggested: 'Preguntas sugeridas',
+      sources: 'Fuentes de sus respuestas',
+      noSources: 'Aquí aparecen los casos y posts en los que se apoya cada respuesta.',
+      finish: 'Terminar y descargar el acta',
+      file: 'acta-entrevista-mini-cherced',
+    },
     greet: 'Se acaba de abrir la conversación. Saluda en una o dos frases según la sección «Quién te habla»: si es Camilo o una invitada especial, celébralo en grande como dice esa sección; si no, preséntate y pregunta qué quiere conocer del sitio.',
     poke: '¡Ey! ¿Qué te pasa?',
     trace: {
@@ -191,6 +217,18 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     opening: 'Opening {path}',
     simulatorNote: 'You are in the simulator: it answers with the site search and your browser voice. With the Gemini key, it really talks.',
     evals: 'How do I measure it? See its evals and red team',
+    interview: {
+      pick: 'How do you want to talk?',
+      free: 'Free conversation',
+      freeHint: 'Ask anything about the site.',
+      soon: 'soon',
+      title: 'Interview mode',
+      suggested: 'Suggested questions',
+      sources: 'Sources behind the answers',
+      noSources: 'The cases and posts behind each answer show up here.',
+      finish: 'Finish and download the record',
+      file: 'mini-cherced-interview-record',
+    },
     greet: 'The conversation just opened. Greet in one or two sentences following the «Quién te habla» section: if it is Camilo or a special guest, celebrate big as that section says; otherwise, introduce yourself and ask what they want to know about the site.',
     poke: "Hey! What's wrong with you?",
     trace: {

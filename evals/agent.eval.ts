@@ -2,7 +2,10 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { expect, it, vi } from 'vitest'
 
-vi.mock('@/content/posts/registry', async () => (await import('../tests/unit/l5/support/mdx-registry')).registryFromDisk())
+vi.mock('@/content/posts/registry', async () => {
+  const { registryFromDisk } = await import('../tests/unit/l5/support/mdx-registry')
+  return { postRegistry: registryFromDisk() }
+})
 
 const { runEvals } = await import('@/lib/ai/evals/run')
 const { addRun, refusalFailures } = await import('@/lib/ai/evals/grade')

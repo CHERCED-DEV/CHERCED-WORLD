@@ -3,7 +3,7 @@
 Pedido del autor, 2026-11-14 (funcionalidades para entrevistas). Para entrevistadores. Depende de la 020 y extiende
 V5 (018).
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15, salvo la reanudación de sesión (FR-3004) y las evals propias de cada pista (FR-3005).
 
 ## Qué hace
 
@@ -49,3 +49,19 @@ las fuentes de cada respuesta. Al final queda un acta descargable.
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-3001 | ¿Camilo escribe el banco de preguntas o lo propone Gemini y él lo aprueba? | Lo propongo yo y él lo aprueba |
+
+## Cómo quedó (2026-11-15)
+
+- **Pistas (FR-3001):** `content/ailab/interview.ts`, con Conductual (STAR) y Técnica, de 8 preguntas cada una en ES y EN.
+  Diseño de sistemas aparece como "pronto" hasta que exista la 034. El banco lo propuse yo (P-3001) y queda para que
+  Camilo lo apruebe o lo cambie.
+- **Cómo se elige:** antes de conversar, Mini Cherced pregunta "¿Cómo quieres conversar?": libre o una pista. La pista
+  viaja al servidor y entra en la instrucción bloqueada del token como "# Modo entrevista".
+- **Fuentes (FR-3002):** herramienta nueva `mostrar_fuente(ruta)`. Recibe una ruta, no un docId, y solo acepta las del
+  índice; una ruta desconocida no muestra nada y queda en la traza. Cada fuente aparece como tarjeta con su enlace.
+- **Cronómetro y preguntas:** reloj de la entrevista y preguntas sugeridas como botones, que desaparecen al hacerlas.
+- **Acta (FR-3003):** "Terminar y descargar el acta" arma un Markdown con fecha, pista, duración, cada pregunta con su
+  respuesta y las fuentes sin repetir. No se guarda en el sitio.
+- **Simulador:** en local, la pregunta pasa por el buscador y la mejor coincidencia se muestra como fuente.
+- **Pendiente:** FR-3004, la reanudación para pasar de 5 minutos (hoy la entrevista dura lo que una conversación), y
+  FR-3005, sumar a la batería de la 032 casos de las pistas conductual y técnica.
