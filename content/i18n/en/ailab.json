@@ -645,5 +645,8 @@
   "ailab.a7.privacy": "What you paste goes to Google (Gemini) to write the result. This site doesn’t store it.",
   "ailab.a8.title": "From screenshot to components",
   "ailab.a8.summary": "Upload a screenshot and Gemini proposes how to build it with this site’s design system pieces: the component tree, the props, a pixel art sketch and what’s missing.",
-  "ailab.a8.privacy": "The image goes to Google (Gemini) to be analyzed and is not stored on the site: neither the screenshot nor the result."
+  "ailab.a8.privacy": "The image goes to Google (Gemini) to be analyzed and is not stored on the site: neither the screenshot nor the result.",
+  "ailab.p1.title": "Pixelate: your photo as a chibi",
+  "ailab.p1.summary": "Upload a photo of yourself or take one with the camera and Gemini turns you into a pixel art chibi in Mini Cherced’s style: big head, green outline and a CRT screen background. You download it as a PNG.",
+  "ailab.p1.privacy": "The photo goes to Google (Gemini) to generate the image. This site stores neither the photo nor the result."
 }

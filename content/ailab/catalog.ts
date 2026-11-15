@@ -228,6 +228,37 @@ const A8: LabExperiment = {
   code: null,
 }
 
+const P1: LabExperiment = {
+  id: 'P1',
+  theme: 'gemini',
+  title: copy('ailab.p1.title'),
+  summary: copy('ailab.p1.summary'),
+  status: 'beta',
+  runsIn: 'google',
+  inputs: ['camera', 'file'],
+  session: { activity: 'analysis', minutes: 1 },
+  poweredBy: { es: 'Gemini Flash Image (Nano Banana 2)', en: 'Gemini Flash Image (Nano Banana 2)' },
+  limit: { uses: 2, per: 'day' },
+  downloads: [],
+  privacy: copy('ailab.p1.privacy'),
+  flow: [
+    { es: 'Subes o tomas una foto; tu navegador la reduce a 768 px antes de enviarla', en: 'You upload or take a photo; your browser shrinks it to 768 px before sending it' },
+    { es: 'El servidor se la pasa al modelo de imagen de Gemini con una instrucción de estilo fija que el navegador no puede cambiar', en: 'The server hands it to Gemini’s image model with a fixed style instruction the browser can’t change' },
+    { es: 'Tu navegador le pone la marca del AI Lab y te la muestra junto a Mini Cherced; nada se guarda en el sitio', en: 'Your browser adds the AI Lab mark and shows it next to Mini Cherced; nothing is stored on the site' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'El estilo vive en el servidor', en: 'The style lives on the server' },
+      why: {
+        es: 'La instrucción de estilo es fija y no viaja desde el navegador: nadie puede usar la tarjeta para generar otra cosa con mi clave. Si Gemini rechaza la foto, el escenario lo dice y no muestra nada.',
+        en: 'The style instruction is fixed and never travels from the browser: nobody can use the card to generate something else with my key. If Gemini refuses the photo, the stage says so and shows nothing.',
+      },
+      tradeoff: { es: 'Las imágenes no tienen cuota gratis: por eso son 2 por visitante y 20 al día en total.', en: 'Images have no free quota: that’s why it’s 2 per visitor and 20 a day in total.' },
+    },
+  ],
+  code: null,
+}
+
 const V1: LabExperiment = {
   id: 'V1',
   theme: 'voice',
@@ -1019,7 +1050,7 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
-export const labCatalog: readonly LabExperiment[] = [V5, A6, A9, A7, A8, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
+export const labCatalog: readonly LabExperiment[] = [V5, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)

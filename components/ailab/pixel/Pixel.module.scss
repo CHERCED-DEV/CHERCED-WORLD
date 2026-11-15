@@ -1,0 +1,113 @@
+@use 'layout';
+
+.stage {
+  display: grid;
+  gap: var(--cw-space-4);
+  min-width: 0;
+}
+
+.notice {
+  margin: 0;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.drop {
+  display: grid;
+  gap: var(--cw-space-3);
+  padding: var(--cw-space-4);
+  border: 2px dashed color-mix(in srgb, var(--cw-graphic-accent) 55%, transparent);
+  border-radius: var(--cw-radius-sm);
+  background: color-mix(in srgb, var(--cw-graphic-accent) 5%, transparent);
+
+  p {
+    margin: 0;
+    font-size: var(--cw-text-sm);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cw-space-2);
+}
+
+.photo {
+  display: grid;
+  gap: var(--cw-space-3);
+  justify-items: start;
+
+  img {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    border: 1px solid var(--cw-glass-border);
+    border-radius: var(--cw-radius-sm);
+  }
+}
+
+.result {
+  display: grid;
+  gap: var(--cw-space-3);
+  min-width: 0;
+}
+
+.note {
+  margin: 0;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.scene {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--cw-space-4);
+  padding: var(--cw-space-4);
+  border: 2px solid #25ed9e;
+  border-radius: 6px;
+  background: repeating-linear-gradient(to bottom, #000 0 3px, #031009 3px 4px);
+}
+
+.chibi {
+  width: min(100%, 320px);
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.mini {
+  display: grid;
+  justify-items: center;
+  gap: var(--cw-space-1);
+  margin: 0;
+  color: #25ed9e;
+  font-family: var(--cw-font-mono, monospace);
+  font-size: var(--cw-text-xs, 0.75rem);
+
+  > div {
+    width: clamp(90px, 18vw, 130px);
+  }
+}
+
+.download {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--cw-space-3);
+  border: 1px solid var(--cw-graphic-accent);
+  border-radius: 999px;
+  color: var(--cw-fg);
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+  text-decoration: none;
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}

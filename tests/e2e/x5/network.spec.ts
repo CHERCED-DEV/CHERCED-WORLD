@@ -354,7 +354,7 @@ const DOWNLOADS_ONLY: ReadonlyArray<{ file: string; line: RegExp }> = [
   { file: 'components/ailab/search/use-meaning.ts', line: /^const response = await fetch\(meaningVectorsUrl\(lang\), \{ headers: \{ accept: 'application\/json' \} \}\)$/ },
 ]
 
-const GEMINI_LANE = ['components/ailab/agent/', 'components/ailab/code/', 'components/ailab/diagram/', 'components/ailab/match/', 'components/ailab/write/', 'components/ailab/shot/']
+const GEMINI_LANE = ['components/ailab/agent/', 'components/ailab/code/', 'components/ailab/diagram/', 'components/ailab/match/', 'components/ailab/write/', 'components/ailab/shot/', 'components/ailab/pixel/']
 
 const OWN_API = /fetch\(\s*('\/api\/[\w/-]+'|[A-Z_]+_ENDPOINT)\s*[,)]|^method:\s*'POST',?$/
 

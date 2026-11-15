@@ -31,6 +31,8 @@ export const RATE_LIMITS = {
   listen: { limit: 150, windowMs: 24 * 60 * MINUTE },
   shot: { limit: 5, windowMs: 24 * 60 * MINUTE },
   shotDaily: { limit: 60, windowMs: 24 * 60 * MINUTE },
+  pixel: { limit: 2, windowMs: 24 * 60 * MINUTE },
+  pixelDaily: { limit: 20, windowMs: 24 * 60 * MINUTE },
   listenDaily: { limit: 600, windowMs: 24 * 60 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 

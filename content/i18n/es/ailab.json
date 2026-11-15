@@ -645,5 +645,8 @@
   "ailab.a7.privacy": "Lo que pegas va a Google (Gemini) para escribir el resultado. Este sitio no lo guarda.",
   "ailab.a8.title": "De captura a componentes",
   "ailab.a8.summary": "Sube la captura de una pantalla y Gemini propone cómo construirla con las piezas del sistema de diseño de este sitio: el árbol de componentes, las props, un bosquejo en pixel art y lo que falta.",
-  "ailab.a8.privacy": "La imagen va a Google (Gemini) para analizarla y no se guarda en el sitio: ni la captura ni el resultado."
+  "ailab.a8.privacy": "La imagen va a Google (Gemini) para analizarla y no se guarda en el sitio: ni la captura ni el resultado.",
+  "ailab.p1.title": "Pixélate: tu foto como chibi",
+  "ailab.p1.summary": "Sube una foto tuya o tómala con la cámara y Gemini te convierte en un chibi pixel art al estilo de Mini Cherced: cabeza grande, contorno verde y fondo de pantalla CRT. Lo descargas en PNG.",
+  "ailab.p1.privacy": "La foto va a Google (Gemini) para generar la imagen. Este sitio no guarda ni la foto ni el resultado."
 }
