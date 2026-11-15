@@ -7,7 +7,7 @@ todo en el AI Lab… para usar Mini Cherced deba loguearse con Google… dejar u
 ratico, pero una experiencia completa sí requiere del registro para poder saber nosotros y aprender del ejercicio y
 luego transformarlo."
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 para Mini Cherced (V5). Los eventos del resto del AI Lab (`lab_events`) quedan para después.
 
 Depende de:
 - **017:** que el autor configure Google en Vercel.
@@ -219,3 +219,23 @@ Sin índices extra: se busca por `_id`. Borrar la cuenta borra su consentimiento
 | P-3804 | ¿De la vacante se guarda el texto completo o solo el rol y la tabla? | Solo el rol, la cobertura y la tabla |
 | P-3805 | ¿Los experimentos del navegador también piden cuenta? | No: siguen libres y con sesión se registran sus eventos |
 | P-3806 | ¿El equipo (017) puede ver las conversaciones? | No, solo el autor |
+
+## Cómo quedó (2026-11-15)
+
+- **Freemium (FR-3804, FR-3805):** sin cuenta, el token de Gemini dura 2 minutos y hay 2 pruebas al día por IP y 15 en
+  total al día (`agentTrial`, `agentTrialDaily`). Con cuenta son 5 minutos, 3 por hora y 20 al día. Al terminar la
+  prueba aparece "¿Te gustó? Entra con Google y seguimos hablando". Sin Google configurado no hay muro.
+- **Consentimiento (FR-3801):** quien entra con cuenta ve, en el paso de consentimiento de Mini Cherced, una casilla
+  obligatoria para guardar la transcripción y el resumen 90 días (P-3803). Se guarda en `lab_consents` con su versión
+  (`2026-11-15`). La invitada de la 039 nunca ve la casilla ni guarda nada.
+- **Guardado:** al colgar, al vencer o por error, el navegador manda a `POST /api/ailab/sessions` solo el texto (40
+  turnos de 600 caracteres como máximo) y un resumen de la traza. El servidor valida origen, sesión, consentimiento,
+  tamaño y límite (`labSave`, 30 por hora), guarda en `lab_sessions` con TTL de 90 días y, después de responder, pide
+  el resumen a `gemini-3.8-flash` con salida validada con Zod (FR-3806).
+- **Mi cuenta:** la tarjeta "Mis conversaciones" muestra fecha, duración, resumen y transcripción, con "Borrar esta" y
+  "Borrar todo y retirar la autorización". Borrar la cuenta también borra sus conversaciones (FR-3803).
+- **Panel (FR-3807):** pestaña "Conversaciones", solo del autor, con las preguntas sin respuesta agrupadas y las
+  conversaciones recientes.
+- **Colecciones:** `lab_sessions` y `lab_consents` las crea MongoDB con el primer documento y el código crea los
+  índices (`expiresAt_ttl`, `account_recent`, `experiment_recent`). `lab_events` todavía no se usa.
+- **Pendiente:** eventos de los demás experimentos (`lab_events`), y el análisis de la vacante (A6) con cuenta.

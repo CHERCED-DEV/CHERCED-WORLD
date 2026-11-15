@@ -34,7 +34,9 @@ export type AgentCopy = {
   consentAccept: string
   consentCancel: string
   states: Record<'checking' | 'idle' | 'connecting' | 'arriving' | 'listening' | 'thinking' | 'speaking' | 'ended' | 'expired' | 'simulator', string>
-  errors: Record<'off' | 'rate_limited' | 'daily_cap' | 'failed' | 'mic' | 'connection' | 'unavailable', string>
+  errors: Record<'off' | 'rate_limited' | 'daily_cap' | 'failed' | 'mic' | 'connection' | 'unavailable' | 'trial_used', string>
+  trial: { note: string; ended: string; signIn: string }
+  save: { consent: string }
   searching: string
   opening: string
   simulatorNote: string
@@ -115,11 +117,21 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       mic: 'No pude abrir el micrófono. Puedes escribirle igual.',
       connection: 'Se cortó la conexión con Gemini.',
       unavailable: 'Gemini no está disponible en este momento. Vuelve más tarde, o escríbele a Camilo desde Contacto.',
+      trial_used: 'Ya usaste tus dos pruebas de hoy. Entra con tu cuenta de Google y conversamos 5 minutos completos.',
     },
     searching: 'Buscando en el sitio: {query}',
     opening: 'Abriendo {path}',
     simulatorNote: 'Estás en el simulador: responde con el buscador del sitio y la voz de tu navegador. Con la clave de Gemini, conversa de verdad.',
     evals: '¿Cómo lo mido? Mira sus evals y el red team',
+    trial: {
+      note: 'Prueba de 2 minutos sin cuenta. Con tu cuenta de Google son 5, y Mini Cherced te saluda por tu nombre.',
+      ended: '¿Te gustó? Entra con Google y seguimos hablando.',
+      signIn: 'Entrar con Google',
+    },
+    save: {
+      consent:
+        'Autorizo guardar la transcripción en texto y un resumen de mis conversaciones con Mini Cherced durante 90 días, para mejorar el sitio. Nunca se guarda mi voz, y puedo verlo y borrarlo en Mi cuenta.',
+    },
     interview: {
       pick: '¿Cómo quieres conversar?',
       free: 'Conversación libre',
@@ -212,11 +224,21 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       mic: "I couldn't open the microphone. You can still type to it.",
       connection: 'The connection to Gemini dropped.',
       unavailable: 'Gemini is not available right now. Come back later, or write to Camilo from Contact.',
+      trial_used: 'You already used your two tries today. Sign in with Google and we get a full 5 minutes.',
     },
     searching: 'Searching the site: {query}',
     opening: 'Opening {path}',
     simulatorNote: 'You are in the simulator: it answers with the site search and your browser voice. With the Gemini key, it really talks.',
     evals: 'How do I measure it? See its evals and red team',
+    trial: {
+      note: 'A 2-minute try without an account. With your Google account it’s 5, and Mini Cherced greets you by name.',
+      ended: 'Liked it? Sign in with Google and let’s keep talking.',
+      signIn: 'Sign in with Google',
+    },
+    save: {
+      consent:
+        'I allow saving the text transcript and a summary of my conversations with Mini Cherced for 90 days, to improve the site. My voice is never stored, and I can see and delete it in My account.',
+    },
     interview: {
       pick: 'How do you want to talk?',
       free: 'Free conversation',

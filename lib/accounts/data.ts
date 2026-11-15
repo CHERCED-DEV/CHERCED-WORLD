@@ -62,6 +62,7 @@ export async function eraseAccountData(repos: Repos, accountId: string): Promise
   const published = await listPublished()
   await removeDraftsBy(accountId, new Set(published.map((post) => post.draftId)))
   await repos.profiles.remove(accountId)
+  await repos.lab.removeAllFor(accountId)
   await repos.comments.removeByAccount(accountId)
   await repos.accounts.deleteSessionsFor(accountId)
   return repos.accounts.remove(accountId)

@@ -9,6 +9,7 @@ import type { Locale } from '@/lib/i18n'
 import { Avatar } from './Avatar'
 import { CommentDelete } from './CommentDelete'
 import { ConsentGate } from './ConsentGate'
+import { ConversationsCard } from './ConversationsCard'
 import styles from './Dashboard.module.scss'
 import { PhotoCard } from './PhotoCard'
 import { PreferencesCard } from './PreferencesCard'
@@ -229,6 +230,7 @@ export function AccountDashboard({ lang, copy, panelHref, data }: Props) {
         <div className={cx(styles.column, styles.main)}>
           <ProfileCard lang={lang} copy={copy.dashboard} profile={data.profile} locked={locked} lockedId={LOCKED_ID} />
           <Activity copy={copy} data={data} />
+          <ConversationsCard lang={lang} consent={data.labConsent} conversations={data.conversations} />
         </div>
         <div className={styles.column}>
           <PhotoCard

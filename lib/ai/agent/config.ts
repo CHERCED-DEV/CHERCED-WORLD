@@ -8,6 +8,8 @@ export const AGENT_NAME = 'Mini Cherced'
 
 export const AGENT_SESSION_MINUTES = 5
 
+export const AGENT_TRIAL_MINUTES = 2
+
 export const AGENT_SESSION_ENDPOINT = '/api/agent/session'
 
 export const AGENT_DAILY_KEY = 'global'
@@ -18,7 +20,11 @@ export const AGENT_FRAGMENT_MAX = 600
 
 export type AgentMode = 'live' | 'local' | 'off'
 
-export type AgentStatus = { mode: AgentMode; viewer?: AgentViewer }
+export type AgentStatus = { mode: AgentMode; viewer?: AgentViewer; trial?: boolean; labConsent?: boolean }
+
+export function needsTrial(viewer: AgentViewer, signIn: 'google' | 'local' | 'off'): boolean {
+  return signIn === 'google' && viewer.kind === 'anonymous'
+}
 
 export function isAgentStatus(value: unknown): value is AgentStatus {
   if (!value || typeof value !== 'object') return false
@@ -26,13 +32,13 @@ export function isAgentStatus(value: unknown): value is AgentStatus {
   return mode === 'live' || mode === 'local' || mode === 'off'
 }
 
-export type AgentSessionGrant = { mode: 'live'; token: string; model: string; expiresAt: string }
+export type AgentSessionGrant = { mode: 'live'; token: string; model: string; expiresAt: string; trial?: boolean }
 
 export type AgentSessionReply =
   | AgentSessionGrant
   | { mode: 'local' }
   | { mode: 'off' }
-  | { error: 'rate_limited' | 'daily_cap' | 'unavailable' | 'failed' | 'forbidden' }
+  | { error: 'rate_limited' | 'daily_cap' | 'unavailable' | 'failed' | 'forbidden' | 'trial_used' }
 
 export function isAgentGrant(value: unknown): value is AgentSessionGrant {
   if (!value || typeof value !== 'object') return false

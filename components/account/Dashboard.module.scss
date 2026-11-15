@@ -593,3 +593,46 @@ a.itemTitle {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+.conversations {
+  display: grid;
+  gap: var(--cw-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li {
+    display: grid;
+    gap: var(--cw-space-2);
+    padding-left: var(--cw-space-3);
+    border-left: 3px solid #25ed9e;
+    overflow-wrap: anywhere;
+  }
+
+  summary {
+    cursor: pointer;
+    font-size: var(--cw-text-sm);
+    font-weight: 600;
+  }
+}
+
+.conversationHead {
+  margin: 0;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.points {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: var(--cw-space-5);
+}
+
+.transcript {
+  display: grid;
+  gap: 6px;
+  margin: var(--cw-space-2) 0 0;
+  padding-left: var(--cw-space-5);
+  font-size: var(--cw-text-sm);
+}

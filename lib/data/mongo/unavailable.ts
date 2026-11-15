@@ -22,6 +22,7 @@ export function createUnavailableRepos(): Repos {
     admin: unavailableRepo(),
     accounts: unavailableRepo(),
     profiles: unavailableRepo(),
+    lab: unavailableRepo(),
     rateLimits: unavailableRepo(),
     reactions: unavailableRepo(),
   }

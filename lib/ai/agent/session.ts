@@ -31,10 +31,10 @@ export function liveSetup(instruction: string, model: string = AGENT_MODEL, voic
   }
 }
 
-export function liveTokenRequest(instruction: string, now: Date): LiveTokenRequest {
+export function liveTokenRequest(instruction: string, now: Date, minutes: number = AGENT_SESSION_MINUTES): LiveTokenRequest {
   return {
     uses: 1,
-    expireTime: new Date(now.getTime() + AGENT_SESSION_MINUTES * MINUTE).toISOString(),
+    expireTime: new Date(now.getTime() + minutes * MINUTE).toISOString(),
     newSessionExpireTime: new Date(now.getTime() + MINUTE).toISOString(),
     bidiGenerateContentSetup: liveSetup(instruction),
   }
@@ -58,8 +58,9 @@ export async function createLiveToken(
   instruction: string,
   now: Date,
   fetcher: typeof fetch = fetch,
+  minutes: number = AGENT_SESSION_MINUTES,
 ): Promise<{ token: string; expiresAt: string }> {
-  const body = liveTokenRequest(instruction, now)
+  const body = liveTokenRequest(instruction, now, minutes)
   const response = await fetcher(AUTH_TOKENS_URL, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-goog-api-key': key },

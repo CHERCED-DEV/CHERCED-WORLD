@@ -48,6 +48,19 @@ export type DashboardData = {
   comments: DashboardComment[]
   guestPosts: DashboardPost[] | null
   consents: DashboardConsent[]
+  labConsent: boolean
+  conversations: DashboardConversation[]
+}
+
+export type DashboardConversation = {
+  id: string
+  date: string
+  dateTime: string
+  interview: string | null
+  minutes: number
+  points: string[]
+  topic: string | null
+  turns: Array<{ who: 'you' | 'agent'; text: string }>
 }
 
 function formatter(lang: Locale): Intl.DateTimeFormat {
@@ -83,10 +96,12 @@ export async function loadDashboard(repos: Repos, state: AccountState, lang: Loc
   const format = formatter(lang)
   const date = (value: Date) => ({ date: format.format(value), dateTime: value.toISOString() })
 
-  const [profile, comments, titles] = await Promise.all([
+  const [profile, comments, titles, labConsent, sessions] = await Promise.all([
     repos.profiles.get(account.id),
     attempt('account.dashboard.comments', [], () => repos.comments.listByAccount(account.id)),
     attempt('account.dashboard.titles', new Map<string, string>(), () => postTitles(lang)),
+    attempt('account.dashboard.labConsent', null, () => repos.lab.getConsent(account.id)),
+    attempt('account.dashboard.lab', [], () => repos.lab.listByAccount(account.id, 20)),
   ])
   const posts = await attempt('account.dashboard.posts', [], () => guestPostsOf(account))
   const photo = profile?.photo ?? 'google'
@@ -136,6 +151,16 @@ export async function loadDashboard(repos: Repos, state: AccountState, lang: Loc
       version: entry.version,
       count: entry.count,
       ...date(entry.acceptedAt),
+    })),
+    labConsent: Boolean(labConsent && !labConsent.revokedAt),
+    conversations: sessions.map((record) => ({
+      id: record.id,
+      ...date(record.startedAt),
+      interview: record.interview,
+      minutes: Math.max(1, Math.round((record.endedAt.getTime() - record.startedAt.getTime()) / 60_000)),
+      points: record.summary?.points ?? [],
+      topic: record.summary?.topic || null,
+      turns: record.turns,
     })),
   }
 }

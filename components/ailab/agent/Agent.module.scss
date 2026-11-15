@@ -948,3 +948,15 @@ $paper: #f4f4f4;
     transform: translateX(-50%) scale(1.6);
   }
 }
+
+.saveConsent {
+  display: flex;
+  gap: var(--cw-space-2);
+  align-items: flex-start;
+  font-size: var(--cw-text-sm);
+
+  input {
+    margin-top: 4px;
+    accent-color: $green;
+  }
+}

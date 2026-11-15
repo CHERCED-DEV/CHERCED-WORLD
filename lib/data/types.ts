@@ -260,12 +260,58 @@ export interface ReactionRepo {
   apply(postId: string, kind: ReactionKind, op: ReactionOp): Promise<ReactionCounts>
 }
 
+export const LAB_INTENTS = ['reclutador', 'lider_tecnico', 'curioso', 'otro'] as const
+
+export type LabIntent = (typeof LAB_INTENTS)[number]
+
+export const LAB_END_REASONS = ['hangup', 'expired', 'error', 'left'] as const
+
+export type LabEndReason = (typeof LAB_END_REASONS)[number]
+
+export type LabTurn = { who: 'you' | 'agent'; text: string }
+
+export type LabTraceSummary = { turns: number; latencyP50: number | null; latencyP95: number | null; tokens: number; costUsd: number; tools: string[] }
+
+export type LabSummary = { points: string[]; intent: LabIntent; topic: string; unanswered: string[]; model: string; costUsd: number; createdAt: Date }
+
+export type LabSessionRecord = {
+  id: string
+  accountId: string
+  experiment: 'V5'
+  lang: 'es' | 'en'
+  mode: 'live' | 'local'
+  interview: string | null
+  startedAt: Date
+  endedAt: Date
+  endReason: LabEndReason
+  turns: LabTurn[]
+  trace: LabTraceSummary | null
+  summary: LabSummary | null
+  createdAt: Date
+  expiresAt: Date
+}
+
+export type LabConsent = { accountId: string; version: string; acceptedAt: Date; revokedAt: Date | null }
+
+export interface LabRepo {
+  saveSession(record: LabSessionRecord): Promise<void>
+  setSummary(id: string, summary: LabSummary): Promise<void>
+  listByAccount(accountId: string, limit: number): Promise<LabSessionRecord[]>
+  listRecent(limit: number): Promise<LabSessionRecord[]>
+  removeSession(accountId: string, id: string): Promise<boolean>
+  removeAllFor(accountId: string): Promise<void>
+  getConsent(accountId: string): Promise<LabConsent | null>
+  setConsent(accountId: string, version: string, now: Date): Promise<void>
+  revokeConsent(accountId: string, now: Date): Promise<void>
+}
+
 export interface Repos {
   messages: MessageRepo
   comments: CommentRepo
   admin: AdminRepo
   accounts: AccountRepo
   profiles: ProfileRepo
+  lab: LabRepo
   rateLimits: RateLimitRepo
   reactions: ReactionRepo
 }

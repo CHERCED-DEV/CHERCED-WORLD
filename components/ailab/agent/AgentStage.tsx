@@ -16,6 +16,8 @@ import { createPlayer, type AudioPlayer } from '@/lib/ai/agent/player'
 import { intentOf, simulatorGreeting, simulatorReply } from '@/lib/ai/agent/simulator'
 import { createToolRunner, SEARCH_TOOL, type AgentSearchHit, type AgentSource, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
 import { interviewActa } from '@/lib/ai/agent/interview'
+import { labPayload, sendLabSession, type LabEndReason } from '@/lib/ai/lab/client'
+import { acceptLabConsent } from '@/lib/actions/lab'
 import { downloadText } from '@/lib/ailab/skill/download'
 import type { InterviewTrack } from '@/content/ailab/interview'
 import {
@@ -102,6 +104,7 @@ function replyError(reply: unknown): Notice {
   const value = reply as Record<string, unknown>
   if (value.error === 'rate_limited') return 'rate_limited'
   if (value.error === 'daily_cap') return 'daily_cap'
+  if (value.error === 'trial_used') return 'trial_used'
   if (value.error === 'unavailable') return 'unavailable'
   if (value.mode === 'off') return 'off'
   return 'failed'
@@ -147,6 +150,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const [dodge, setDodge] = useState<{ side: 'left' | 'right'; id: number } | null>(null)
 
   const [shocked, setShocked] = useState(false)
+  const [trial, setTrial] = useState(false)
+  const [labConsent, setLabConsent] = useState(false)
+  const [saveChecked, setSaveChecked] = useState(false)
+  const saveReason = useRef<LabEndReason | null>(null)
   const [interview, setInterview] = useState<InterviewTrack | null>(null)
   const [sources, setSources] = useState<AgentSource[]>([])
   const [interviewStartedAt, setInterviewStartedAt] = useState(0)
@@ -297,6 +304,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
         if (!alive) return
         setMode(isAgentStatus(data) ? data.mode : 'off')
         if (isAgentStatus(data) && isAgentViewer(data.viewer)) setViewer(data.viewer)
+        if (isAgentStatus(data)) setLabConsent(Boolean(data.labConsent))
         setPhase('idle')
       })
       .catch(() => {
@@ -310,6 +318,26 @@ export default function AgentStage({ lang }: LabDemoProps) {
   }, [])
 
   useEffect(() => () => teardown(), [teardown])
+
+  const canSave = viewer.kind === 'account' || viewer.kind === 'author'
+
+  useEffect(() => {
+    if (phase !== 'ended' || !saveReason.current) return
+    const reason = saveReason.current
+    saveReason.current = null
+    if (!canSave || !labConsent || !mode || mode === 'off') return
+    const payload = labPayload({
+      lang,
+      mode: mode === 'local' ? 'local' : 'live',
+      interview,
+      startedAt: interviewStartedAt || Date.now(),
+      endedAt: Date.now(),
+      endReason: reason,
+      turns,
+      trace,
+    })
+    if (payload) sendLabSession(payload)
+  }, [canSave, interview, interviewStartedAt, labConsent, lang, mode, phase, trace, turns])
 
   useEffect(() => {
     const list = transcriptRef.current
@@ -487,6 +515,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
     }
 
     setExpiresAt(Date.parse(grant.expiresAt))
+    setTrial(Boolean(grant.trial))
     beginTrace(createTrace('live', grant.model, AGENT_VOICE, Date.now()))
     const session: LiveSession = openLiveSession({
       token: grant.token,
@@ -549,6 +578,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
         },
         onClose: (reason, detail) => {
           if (sessionRef.current !== session) return
+          saveReason.current = reason === 'expired' ? 'expired' : reason === 'error' ? 'error' : 'hangup'
           flushChunks()
           sessionRef.current = null
           track((current) => closeTurn(current, Date.now()))
@@ -579,6 +609,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
   }
 
   const hangUp = () => {
+    saveReason.current ??= 'hangup'
     flushChunks()
     pendingOpen.current = null
     track((current) => closeTurn(current, Date.now()))
@@ -761,11 +792,22 @@ export default function AgentStage({ lang }: LabDemoProps) {
             {copy.consentTitle}
           </p>
           <p>{copy.consentBody}</p>
+          {canSave && !labConsent ? (
+            <label className={styles.saveConsent} data-cw-agent-save-consent="">
+              <input type="checkbox" checked={saveChecked} onChange={(event) => setSaveChecked(event.target.checked)} />
+              <span>{copy.save.consent}</span>
+            </label>
+          ) : null}
           <div className={styles.row}>
             <Button
               variant="solid"
-              onClick={() => {
+              disabled={canSave && !labConsent && !saveChecked}
+              onClick={async () => {
                 focusAfter.current = true
+                if (canSave && !labConsent) {
+                  const result = await acceptLabConsent()
+                  if (result.ok) setLabConsent(true)
+                }
                 void startLive()
               }}
             >
@@ -866,6 +908,17 @@ export default function AgentStage({ lang }: LabDemoProps) {
 
       {trace && (live || phase === 'ended') ? <MemoTracePanel trace={trace} copy={copy.trace} lang={lang} /> : null}
 
+      {trial && live ? (
+        <p className={styles.note} data-cw-agent-trial="">
+          {copy.trial.note}
+        </p>
+      ) : null}
+      {(trial && phase === 'ended') || notice === 'trial_used' ? (
+        <p className={styles.note} data-cw-agent-trial-end="">
+          {notice === 'trial_used' ? null : `${copy.trial.ended} `}
+          <Link href={`/${lang}/account?next=${encodeURIComponent(`/${lang}/ai-lab`)}`}>{copy.trial.signIn}</Link>
+        </p>
+      ) : null}
       {mode === 'local' ? <p className={styles.note}>{copy.simulatorNote}</p> : null}
       <p className={styles.note}>
         <Link href={`/${lang}/ai-lab/evals`} data-cw-agent-evals="">

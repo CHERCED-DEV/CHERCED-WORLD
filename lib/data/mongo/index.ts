@@ -4,6 +4,7 @@ import { createMongoAccountRepo } from './accounts'
 import { createMongoAdminRepo } from './admin'
 import type { DbProvider } from './collections'
 import { createMongoCommentRepo } from './comments'
+import { createMongoLabRepo } from './lab'
 import { createMongoMessageRepo } from './messages'
 import { createMongoProfileRepo } from './profiles'
 import { createMongoRateLimitRepo } from './rate-limits'
@@ -16,6 +17,7 @@ export function createMongoRepos(db: DbProvider): Repos {
     admin: createMongoAdminRepo(db),
     accounts: createMongoAccountRepo(db),
     profiles: createMongoProfileRepo(db),
+    lab: createMongoLabRepo(db),
     rateLimits: createMongoRateLimitRepo(db),
     reactions: createMongoReactionRepo(db),
   }

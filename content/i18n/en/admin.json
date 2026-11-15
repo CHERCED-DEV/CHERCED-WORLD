@@ -19,6 +19,7 @@
   "admin.nav.messages": "Messages",
   "admin.nav.comments": "Comments",
   "admin.nav.blog": "Blog",
+  "admin.nav.conversations": "Conversations",
   "admin.nav.people": "People",
   "admin.nav.settings": "Settings",
   "admin.unread": "{count} unread",
