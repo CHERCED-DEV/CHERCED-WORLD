@@ -2,12 +2,17 @@ import { createGlassBox, isIndexedDoc, type GlassBox } from '@/lib/ailab/search/
 import type { Locale } from '@/lib/i18n/config'
 import type { SearchIndex } from '@/lib/search/types'
 import { AGENT_FRAGMENT_MAX, AGENT_SEARCH_LIMIT } from './config'
+import { parseDecision, parseDiagram, type DesignDecision, type Diagram } from './design'
 
 export const SEARCH_TOOL = 'buscar_en_el_sitio'
 
 export const OPEN_TOOL = 'abrir_pagina'
 
 export const SOURCE_TOOL = 'mostrar_fuente'
+
+export const DIAGRAM_TOOL = 'actualizar_diagrama'
+
+export const DECISION_TOOL = 'registrar_decision'
 
 export const AGENT_TOOLS = [
   {
@@ -42,6 +47,29 @@ export const AGENT_TOOLS = [
           required: ['ruta'],
         },
       },
+      {
+        name: DIAGRAM_TOOL,
+        description:
+          'Dibuja en pantalla el diagrama de arquitectura completo, en la pista de diseño de sistemas. Manda siempre el diagrama entero, no solo el cambio: máximo 30 nodos y 5 grupos.',
+        parameters: {
+          type: 'OBJECT',
+          properties: {
+            nodos: { type: 'ARRAY', items: { type: 'OBJECT', properties: { id: { type: 'STRING' }, etiqueta: { type: 'STRING' }, tipo: { type: 'STRING', enum: ['cliente', 'servicio', 'datos', 'cola', 'cache', 'externo'] } }, required: ['id', 'etiqueta', 'tipo'] } },
+            conexiones: { type: 'ARRAY', items: { type: 'OBJECT', properties: { de: { type: 'STRING' }, a: { type: 'STRING' }, etiqueta: { type: 'STRING' } }, required: ['de', 'a'] } },
+            grupos: { type: 'ARRAY', items: { type: 'OBJECT', properties: { id: { type: 'STRING' }, etiqueta: { type: 'STRING' }, nodos: { type: 'ARRAY', items: { type: 'STRING' } } }, required: ['id', 'etiqueta', 'nodos'] } },
+          },
+          required: ['nodos'],
+        },
+      },
+      {
+        name: DECISION_TOOL,
+        description: 'Registra una decisión de diseño como tarjeta: qué se decidió, por qué y qué se sacrifica.',
+        parameters: {
+          type: 'OBJECT',
+          properties: { decision: { type: 'STRING' }, por_que: { type: 'STRING' }, sacrificio: { type: 'STRING' } },
+          required: ['decision', 'por_que', 'sacrificio'],
+        },
+      },
     ],
   },
 ] as const
@@ -66,6 +94,8 @@ export type AgentToolEffect =
   | { kind: 'search'; query: string; hits: AgentScoredHit[] }
   | { kind: 'open'; path: string }
   | ({ kind: 'source' } & AgentSource)
+  | { kind: 'diagram'; diagram: Diagram }
+  | { kind: 'decision'; decision: DesignDecision }
   | null
 
 function text(value: unknown, max = 200): string {
@@ -169,6 +199,16 @@ export function createToolRunner(context: AgentToolContext, origin?: string) {
       if (!path) return { response: { id: call.id, name: call.name, response: { ok: false, motivo: 'fuente_desconocida' } }, effect: null }
       const title = sourceTitle(index, path)
       return { response: { id: call.id, name: call.name, response: { ok: true, ruta: path, titulo: title } }, effect: { kind: 'source', path, title } }
+    }
+    if (call.name === DIAGRAM_TOOL) {
+      const parsed = parseDiagram(call.args)
+      if (!parsed.ok) return { response: { id: call.id, name: call.name, response: { ok: false, error: parsed.error } }, effect: null }
+      return { response: { id: call.id, name: call.name, response: { ok: true, nodos: parsed.diagram.nodos.length } }, effect: { kind: 'diagram', diagram: parsed.diagram } }
+    }
+    if (call.name === DECISION_TOOL) {
+      const decision = parseDecision(call.args)
+      if (!decision) return { response: { id: call.id, name: call.name, response: { ok: false, error: 'decision_incompleta' } }, effect: null }
+      return { response: { id: call.id, name: call.name, response: { ok: true } }, effect: { kind: 'decision', decision } }
     }
     return { response: { id: call.id, name: call.name, response: { error: 'herramienta_desconocida' } }, effect: null }
   }

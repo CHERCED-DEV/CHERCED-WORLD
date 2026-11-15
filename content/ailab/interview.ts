@@ -44,9 +44,16 @@ export const interviewTracks: Record<Locale, Record<InterviewTrack, InterviewTra
     },
     design: {
       label: 'Diseño de sistemas',
-      hint: 'Un problema de diseño que se resuelve en vivo con un diagrama.',
-      ready: false,
-      questions: [],
+      hint: 'Un problema de diseño que Mini Cherced resuelve en vivo: preguntas de alcance, diagrama y decisiones.',
+      ready: true,
+      questions: [
+        'Diseña un acortador de URLs para 10 millones de usuarios.',
+        'Diseña un chat en tiempo real para una comunidad grande.',
+        'Diseña el feed de un blog con millones de lectores.',
+        'Diseña un sistema de pagos con reintentos sin cobrar dos veces.',
+        'Diseña el buscador de un catálogo de productos.',
+        'Diseña una plataforma donde agregar un negocio nuevo cueste menos que el primero.',
+      ],
     },
   },
   en: {
@@ -82,9 +89,16 @@ export const interviewTracks: Record<Locale, Record<InterviewTrack, InterviewTra
     },
     design: {
       label: 'System design',
-      hint: 'A design problem solved live with a diagram.',
-      ready: false,
-      questions: [],
+      hint: 'A design problem Mini Cherced solves live: scope questions, a diagram and decisions.',
+      ready: true,
+      questions: [
+        'Design a URL shortener for 10 million users.',
+        'Design a real-time chat for a large community.',
+        'Design the feed of a blog with millions of readers.',
+        'Design a payment system with retries that never charges twice.',
+        'Design the search for a product catalog.',
+        'Design a platform where adding a new business costs less than the first one.',
+      ],
     },
   },
 }

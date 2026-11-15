@@ -1,5 +1,7 @@
 import type { Locale } from '@/lib/i18n/config'
 
+import type { DesignBoardCopy } from '@/components/ailab/agent/DesignBoard'
+
 export type AgentInterviewCopy = {
   pick: string
   free: string
@@ -11,6 +13,7 @@ export type AgentInterviewCopy = {
   noSources: string
   finish: string
   file: string
+  design: DesignBoardCopy
 }
 
 export type AgentCopy = {
@@ -143,6 +146,15 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       noSources: 'Aquí aparecen los casos y posts en los que se apoya cada respuesta.',
       finish: 'Terminar y descargar el acta',
       file: 'acta-entrevista-mini-cherced',
+      design: {
+        title: 'Pizarra de diseño',
+        empty: 'Aquí aparece el diagrama cuando Mini Cherced empiece a dibujar.',
+        decisions: 'Decisiones',
+        exportSvg: 'Descargar el diagrama (SVG)',
+        exportMd: 'Descargar las decisiones',
+        adr: { decision: 'Decisión', why: 'Por qué', tradeoff: 'Qué se sacrifica' },
+        file: 'diseno-mini-cherced',
+      },
     },
     greet: 'Se acaba de abrir la conversación. Saluda en una o dos frases según la sección «Quién te habla»: si es Camilo o una invitada especial, celébralo en grande como dice esa sección; si no, preséntate y pregunta qué quiere conocer del sitio.',
     poke: '¡Ey! ¿Qué te pasa?',
@@ -250,6 +262,15 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       noSources: 'The cases and posts behind each answer show up here.',
       finish: 'Finish and download the record',
       file: 'mini-cherced-interview-record',
+      design: {
+        title: 'Design whiteboard',
+        empty: 'The diagram shows up here when Mini Cherced starts drawing.',
+        decisions: 'Decisions',
+        exportSvg: 'Download the diagram (SVG)',
+        exportMd: 'Download the decisions',
+        adr: { decision: 'Decision', why: 'Why', tradeoff: 'What it costs' },
+        file: 'mini-cherced-design',
+      },
     },
     greet: 'The conversation just opened. Greet in one or two sentences following the «Quién te habla» section: if it is Camilo or a special guest, celebrate big as that section says; otherwise, introduce yourself and ask what they want to know about the site.',
     poke: "Hey! What's wrong with you?",

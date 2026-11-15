@@ -43,6 +43,7 @@ function toolLine(tool: TraceTool, copy: AgentTraceCopy, count: (value: number) 
   const call = `${tool.name}(${arg ? JSON.stringify(arg) : ''})`
   if (tool.result.kind === 'search') return `${call} → ${fill(copy.results, { count: count(tool.result.hits.length) })}`
   if (tool.result.kind === 'open') return `${call} → ${tool.result.path ? fill(copy.opened, { path: tool.result.path }) : copy.refused}`
+  if (tool.result.kind === 'done') return `${call} → ${tool.result.detail}`
   return `${call} → ${fill(copy.failed, { error: tool.result.error })}`
 }
 

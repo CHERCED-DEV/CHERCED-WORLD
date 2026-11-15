@@ -3,7 +3,7 @@
 Pedido del autor, 2026-11-14 (funcionalidades para entrevistas). La pista "Diseño de sistemas" del modo entrevista
 (030). Depende de la 026 (dibujo de diagramas) y la 018 (Live).
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 como la pista "Diseño de sistemas" del modo entrevista (030), con su propio dibujante de diagramas (la 026 sigue pendiente).
 
 ## Qué hace
 
@@ -36,3 +36,23 @@ de los casos del portafolio. El entrevistador puede objetar ("¿y si se cae la c
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-3401 | ¿Problemas sugeridos? | 5 clásicos (acortador, chat, feed, pagos, buscador) y uno libre |
+
+## Cómo quedó (2026-11-15)
+
+- **Pista:** "Diseño de sistemas" se activa en el modo entrevista con 6 problemas sugeridos en ES y EN (P-3401):
+  acortador, chat, feed, pagos, buscador y una plataforma componible tipo Synergos. También se puede preguntar libre.
+- **Instrucción:** primero dos o tres preguntas de alcance; después el diagrama paso a paso, las decisiones y los
+  patrones de Synergos citados con `mostrar_fuente`.
+- **Herramientas:**
+  - `actualizar_diagrama`: el diagrama completo como JSON. Se valida con Zod: ids únicos, conexiones a nodos que
+    existen, máximo 30 nodos y 5 grupos (FR-3401, FR-3402). Uno inválido se ignora y el agente recibe el motivo.
+  - `registrar_decision`: decisión, por qué y sacrificio.
+- **Dibujo:** `lib/ai/agent/design.ts` acomoda los nodos por capas, de izquierda a derecha, y `DesignBoard` los dibuja
+  en SVG con grupos, flechas y etiquetas. Nunca se ejecuta código del modelo. No depende de la 026: cuando exista, se
+  puede cambiar el dibujante.
+- **Decisiones (FR-3404):** usan `AdrCards`, el mismo componente de los casos.
+- **Exportar (FR-3403):** el diagrama en SVG y las decisiones en Markdown. El acta de la entrevista suma las decisiones
+  y el diagrama en Mermaid.
+- **Simulador:** en local muestra un diagrama y una decisión de ejemplo, para revisar la pizarra sin gastar.
+- **Pendiente:** objetar y redibujar solo se prueba con Gemini de verdad, y la reanudación para pasar de 5 minutos es
+  la misma pendiente de la 030.

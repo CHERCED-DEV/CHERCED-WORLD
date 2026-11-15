@@ -17,6 +17,7 @@ import { intentOf, simulatorGreeting, simulatorReply } from '@/lib/ai/agent/simu
 import { createToolRunner, SEARCH_TOOL, type AgentSearchHit, type AgentSource, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
 import { interviewActa } from '@/lib/ai/agent/interview'
 import { labPayload, sendLabSession, type LabEndReason } from '@/lib/ai/lab/client'
+import { SIMULATOR_DECISION, SIMULATOR_DIAGRAM, type DesignDecision, type Diagram } from '@/lib/ai/agent/design'
 import { acceptLabConsent } from '@/lib/actions/lab'
 import { downloadText } from '@/lib/ailab/skill/download'
 import type { InterviewTrack } from '@/content/ailab/interview'
@@ -95,6 +96,8 @@ function traceTool(call: AgentToolCall, effect: AgentToolEffect, response: Recor
     return { ...base, result: { kind: 'search', hits: effect.hits.map((hit) => ({ title: hit.titulo, url: hit.ruta, score: hit.score })) } }
   }
   if (effect?.kind === 'open' || effect?.kind === 'source') return { ...base, result: { kind: 'open', path: effect.path } }
+  if (effect?.kind === 'diagram') return { ...base, result: { kind: 'done', detail: `${effect.diagram.nodos.length} nodos` } }
+  if (effect?.kind === 'decision') return { ...base, result: { kind: 'done', detail: effect.decision.decision } }
   if (response.ok === false) return { ...base, result: { kind: 'open', path: null } }
   return { ...base, result: { kind: 'error', error: typeof response.error === 'string' ? response.error : 'unknown' } }
 }
@@ -156,8 +159,12 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const saveReason = useRef<LabEndReason | null>(null)
   const [interview, setInterview] = useState<InterviewTrack | null>(null)
   const [sources, setSources] = useState<AgentSource[]>([])
+  const [diagram, setDiagram] = useState<Diagram | null>(null)
+  const [decisions, setDecisions] = useState<DesignDecision[]>([])
   const [interviewStartedAt, setInterviewStartedAt] = useState(0)
   const addSource = useCallback((effect: AgentToolEffect) => {
+    if (effect?.kind === 'diagram') setDiagram(effect.diagram)
+    if (effect?.kind === 'decision') setDecisions((current) => [...current, effect.decision].slice(-12))
     if (effect?.kind !== 'source') return
     setSources((current) => (current.some((source) => source.path === effect.path) ? current : [...current, { path: effect.path, title: effect.title }]))
   }, [])
@@ -427,6 +434,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setNotice(null)
     setTurns([])
     setSources([])
+    setDiagram(null)
+    setDecisions([])
     setInterviewStartedAt(Date.now())
     setEffect(null)
     setPhase('live')
@@ -456,6 +465,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
       const reply = simulatorReply(lang, question, hits, index.facts, viewer)
       const top = hits[0]
       if (interview && top) addSource({ kind: 'source', path: top.ruta, title: top.titulo })
+      if (interview === 'design') {
+        setDiagram(SIMULATOR_DIAGRAM)
+        setDecisions([SIMULATOR_DECISION])
+      }
       if (reply.open && !interview) pendingOpen.current = reply.open
       say(reply.text, turn)
     },
@@ -482,6 +495,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setMicBlocked(false)
     setTurns([])
     setSources([])
+    setDiagram(null)
+    setDecisions([])
     setInterviewStartedAt(Date.now())
     stickRef.current = true
     setEffect(null)
@@ -673,6 +688,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
       turns,
       sources,
       origin: window.location.origin,
+      diagram,
+      decisions,
     })
     downloadText(`${copy.interview.file}-${new Date().toISOString().slice(0, 10)}.md`, acta, 'text/markdown')
     hangUp()
@@ -882,6 +899,8 @@ export default function AgentStage({ lang }: LabDemoProps) {
           sources={sources}
           onAsk={ask}
           onFinish={finishInterview}
+          diagram={diagram}
+          decisions={decisions}
         />
       ) : null}
 

@@ -12,11 +12,12 @@ const { agentInstruction } = await import('@/lib/ai/agent/knowledge')
 const { buildSearchIndex } = await import('@/lib/search/build-index')
 
 describe('modo entrevista (030)', () => {
-  it('FR-3001: pistas con 8 preguntas en ES y EN; diseño de sistemas espera a la 034', () => {
+  it('FR-3001: tres pistas con su banco de preguntas en ES y EN', () => {
     for (const lang of ['es', 'en'] as const)
       for (const track of INTERVIEW_TRACKS) {
         const content = interviewTracks[lang][track]
-        expect(content.questions.length, `${lang} ${track}`).toBe(content.ready ? 8 : 0)
+        expect(content.ready, `${lang} ${track}`).toBe(true)
+        expect(content.questions.length, `${lang} ${track}`).toBe(track === 'design' ? 6 : 8)
       }
     expect(isInterviewTrack('behavioral')).toBe(true)
     expect(isInterviewTrack('trampa')).toBe(false)

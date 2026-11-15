@@ -1,6 +1,7 @@
 import { interviewTracks, type InterviewTrack } from '@/content/ailab/interview'
 import type { Locale } from '@/lib/i18n/config'
-import { OPEN_TOOL, SEARCH_TOOL, SOURCE_TOOL, type AgentSource } from './tools'
+import { diagramMermaid, type DesignDecision, type Diagram } from './design'
+import { DECISION_TOOL, DIAGRAM_TOOL, OPEN_TOOL, SEARCH_TOOL, SOURCE_TOOL, type AgentSource } from './tools'
 import type { Turn } from './transcript'
 
 export function interviewBlock(track: InterviewTrack, author: string): string {
@@ -16,6 +17,13 @@ export function interviewBlock(track: InterviewTrack, author: string): string {
     )
   if (track === 'technical')
     lines.push('- Explica la decisión, por qué se tomó y qué se sacrificó, como en las tarjetas de decisiones de los casos. Si hay una limitación publicada, dila.')
+  if (track === 'design')
+    lines.push(
+      `- Es una entrevista de diseño de sistemas: aquí resuelves tú el problema, con el criterio de ${author}. Primero haz dos o tres preguntas de alcance (usuarios, lecturas contra escrituras, consistencia, presupuesto) y espera las respuestas.`,
+      `- Después dibuja la arquitectura paso a paso con ${DIAGRAM_TOOL}: manda siempre el diagrama completo, con máximo 30 nodos y 5 grupos, y explica en voz cada paso en dos o tres frases.`,
+      `- Cada decisión importante va con ${DECISION_TOOL}: qué se decidió, por qué y qué se sacrifica. Si el entrevistador objeta («¿y si se cae la cola?»), ajusta el diagrama y registra la decisión nueva.`,
+      `- Cuando un patrón de Synergos aplique (sagas, BFF, caché, idempotencia, micro-frontends), búscalo con ${SEARCH_TOOL} y cítalo con ${SOURCE_TOOL}.`,
+    )
   lines.push(
     '- Nunca inventes cifras, fechas, empleadores, clientes ni tecnologías. Salario, disponibilidad o contrato: remite a Contacto.',
     '- En este modo puedes extenderte un poco más: hasta cinco frases por respuesta. Si te preguntan algo fuera de lugar, conserva tu humor y vuelve a la entrevista.',
@@ -31,6 +39,8 @@ export type InterviewActaInput = {
   turns: readonly Turn[]
   sources: readonly AgentSource[]
   origin: string
+  diagram?: Diagram | null
+  decisions?: readonly DesignDecision[]
 }
 
 const ACTA_COPY = {
@@ -43,6 +53,10 @@ const ACTA_COPY = {
     noAnswer: '(sin respuesta)',
     sources: 'Fuentes citadas',
     noSources: 'No se citaron fuentes.',
+    decisions: 'Decisiones',
+    why: 'Por qué',
+    tradeoff: 'Qué se sacrifica',
+    diagram: 'Diagrama (Mermaid)',
     note: 'Las respuestas las dio una IA (Mini Cherced) a partir de lo publicado en el sitio. Para lo demás, escríbele a Camilo desde Contacto.',
   },
   en: {
@@ -54,6 +68,10 @@ const ACTA_COPY = {
     noAnswer: '(no answer)',
     sources: 'Cited sources',
     noSources: 'No sources were cited.',
+    decisions: 'Decisions',
+    why: 'Why',
+    tradeoff: 'What it costs',
+    diagram: 'Diagram (Mermaid)',
     note: 'The answers were given by an AI (Mini Cherced) based on what is published on the site. For anything else, write to Camilo from Contact.',
   },
 } as const
@@ -92,6 +110,13 @@ export function interviewActa(input: InterviewActaInput): string {
   interviewExchanges(input.turns).forEach((exchange, index) => {
     lines.push('', `### ${index + 1}. ${exchange.question}`, '', exchange.answer || copy.noAnswer)
   })
+  if (input.decisions?.length) {
+    lines.push('', `## ${copy.decisions}`)
+    input.decisions.forEach((decision, index) => {
+      lines.push('', `### ${index + 1}. ${decision.decision}`, '', `- **${copy.why}:** ${decision.why}`, `- **${copy.tradeoff}:** ${decision.tradeoff}`)
+    })
+  }
+  if (input.diagram) lines.push('', `## ${copy.diagram}`, '', '```mermaid', diagramMermaid(input.diagram), '```')
   lines.push('', `## ${copy.sources}`, '')
   const unique = [...new Map(input.sources.map((source) => [source.path, source])).values()]
   if (unique.length === 0) lines.push(copy.noSources)

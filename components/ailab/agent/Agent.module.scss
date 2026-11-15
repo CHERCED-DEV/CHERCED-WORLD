@@ -960,3 +960,20 @@ $paper: #f4f4f4;
     accent-color: $green;
   }
 }
+
+.design {
+  display: grid;
+  gap: var(--cw-space-2);
+  min-width: 0;
+}
+
+.designCanvas {
+  overflow-x: auto;
+  border: 1px solid rgb(37 237 158 / 0.35);
+  border-radius: 10px;
+
+  svg {
+    display: block;
+    max-width: none;
+  }
+}

@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import type { AgentInterviewCopy } from '@/content/ailab/agent'
 import { INTERVIEW_TRACKS, interviewTracks, type InterviewTrack } from '@/content/ailab/interview'
+import type { DesignDecision, Diagram } from '@/lib/ai/agent/design'
 import type { AgentSource } from '@/lib/ai/agent/tools'
+import { DesignBoard } from './DesignBoard'
 import type { Locale } from '@/lib/i18n/config'
 import styles from './Agent.module.scss'
 
@@ -20,6 +22,8 @@ type Props = {
   sources: readonly AgentSource[]
   onAsk: (question: string) => void
   onFinish: () => void
+  diagram?: Diagram | null
+  decisions?: readonly DesignDecision[]
 }
 
 function clock(ms: number): string {
@@ -36,7 +40,7 @@ function Elapsed({ since }: { since: number }) {
   return <time className={styles.interviewClock}>{clock(now - since)}</time>
 }
 
-export function InterviewPanel({ lang, copy, track, onTrack, live, startedAt, asked, sources, onAsk, onFinish }: Props) {
+export function InterviewPanel({ lang, copy, track, onTrack, live, startedAt, asked, sources, onAsk, onFinish, diagram = null, decisions = [] }: Props) {
   const tracks = interviewTracks[lang]
   if (!live) {
     return (
@@ -86,6 +90,7 @@ export function InterviewPanel({ lang, copy, track, onTrack, live, startedAt, as
           </div>
         </div>
       ) : null}
+      {track === 'design' ? <DesignBoard diagram={diagram} decisions={decisions} copy={copy.design} /> : null}
       <div>
         <p className={styles.label}>{copy.sources}</p>
         {sources.length ? (

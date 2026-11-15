@@ -13,6 +13,7 @@ export type TraceToolResult =
   | { kind: 'search'; hits: Array<{ title: string; url: string; score: number }> }
   | { kind: 'open'; path: string | null }
   | { kind: 'error'; error: string }
+  | { kind: 'done'; detail: string }
 
 export type TraceTool = { name: string; args: Record<string, unknown>; ms: number; result: TraceToolResult }
 
