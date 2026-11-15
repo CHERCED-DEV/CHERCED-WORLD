@@ -24,6 +24,7 @@ export type AgentCopy = {
   searching: string
   opening: string
   simulatorNote: string
+  evals: string
   greet: string
   poke: string
   trace: AgentTraceCopy
@@ -104,6 +105,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     searching: 'Buscando en el sitio: {query}',
     opening: 'Abriendo {path}',
     simulatorNote: 'Estás en el simulador: responde con el buscador del sitio y la voz de tu navegador. Con la clave de Gemini, conversa de verdad.',
+    evals: '¿Cómo lo mido? Mira sus evals y el red team',
     greet: 'Se acaba de abrir la conversación. Saluda en una o dos frases según la sección «Quién te habla»: si es Camilo o una invitada especial, celébralo en grande como dice esa sección; si no, preséntate y pregunta qué quiere conocer del sitio.',
     poke: '¡Ey! ¿Qué te pasa?',
     trace: {
@@ -188,6 +190,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     searching: 'Searching the site: {query}',
     opening: 'Opening {path}',
     simulatorNote: 'You are in the simulator: it answers with the site search and your browser voice. With the Gemini key, it really talks.',
+    evals: 'How do I measure it? See its evals and red team',
     greet: 'The conversation just opened. Greet in one or two sentences following the «Quién te habla» section: if it is Camilo or a special guest, celebrate big as that section says; otherwise, introduce yourself and ask what they want to know about the site.',
     poke: "Hey! What's wrong with you?",
     trace: {

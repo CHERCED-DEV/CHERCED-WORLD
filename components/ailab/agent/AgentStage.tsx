@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type PointerEvent } from 'react'
 import { Button } from '@/components/ui/Button'
@@ -798,6 +799,11 @@ export default function AgentStage({ lang }: LabDemoProps) {
       {trace && (live || phase === 'ended') ? <MemoTracePanel trace={trace} copy={copy.trace} lang={lang} /> : null}
 
       {mode === 'local' ? <p className={styles.note}>{copy.simulatorNote}</p> : null}
+      <p className={styles.note}>
+        <Link href={`/${lang}/ai-lab/evals`} data-cw-agent-evals="">
+          {copy.evals}
+        </Link>
+      </p>
     </section>
   )
 }

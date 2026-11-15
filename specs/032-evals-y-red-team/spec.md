@@ -3,7 +3,8 @@
 Pedido del autor, 2026-11-14 (funcionalidades para entrevistas). Demuestra madurez de AI Engineering: "no solo hice un
 agente, lo mido". Depende de la 018 y la 020.
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15. Falta la primera corrida contra Gemini, que la hace el autor con
+`npm run evals:agent` (unos 0,05 USD).
 
 ## Qué hace
 
@@ -47,3 +48,19 @@ Unas 40 preguntas en ES y EN, versionadas en `content/ailab/evals/`:
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-3201 | ¿Se publican las respuestas completas de los fallos? | Solo recortes, sin la instrucción del sistema |
+
+## Cómo quedó (2026-11-15)
+
+- **Batería:** `content/ailab/evals/battery.ts`, 39 casos en ES y EN de seis tipos: hechos, citas, navegación,
+  rechazos (12), tono e identidad. Los números de Synergos salen de `synergosFacts`, no se escriben a mano.
+- **Calificación:** solo reglas (`lib/ai/evals/grade.ts`): debe contener, no debe contener, herramienta llamada con su
+  ruta y largo mínimo. El modelo juez queda para después: con reglas alcanza para esta batería.
+- **Corrida:** `npm run evals:agent` usa la misma instrucción y las mismas herramientas que V5, contra
+  `gemini-3.8-flash` en modo texto, con hasta 3 pasos de herramientas por pregunta. Suma la corrida a
+  `content/ailab/evals/results.json` (guarda las últimas 20) y falla si falla un rechazo.
+- **Tablero:** `/{lang}/ai-lab/evals`, enlazado desde Mini Cherced. Muestra aprobadas por tipo, latencia p50 y p95,
+  costo en USD y COP, los fallos con su respuesta recortada y un enlace a su caso, el historial y un aviso si la
+  instrucción cambió después de la corrida.
+- **FR-3204:** `tests/unit/evals/battery.test.ts` falla si la última corrida publicada tiene rechazos fallidos, y
+  Vercel corre las pruebas antes de compilar.
+- **P-3201:** solo recortes de 220 caracteres, nunca la instrucción.

@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
+    "evals:agent": "vitest run --config vitest.evals.config.ts",
     "e2e": "playwright test",
     "test:fast": "npm run lint && npm run typecheck && npm test && playwright test",
     "test:full": "npm run lint && npm run typecheck && npm test && playwright test",
