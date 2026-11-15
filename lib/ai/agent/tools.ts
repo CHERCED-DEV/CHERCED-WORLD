@@ -3,6 +3,7 @@ import type { Locale } from '@/lib/i18n/config'
 import type { SearchIndex } from '@/lib/search/types'
 import { AGENT_FRAGMENT_MAX, AGENT_SEARCH_LIMIT } from './config'
 import { parseDecision, parseDiagram, type DesignDecision, type Diagram } from './design'
+import type { PageContext } from './page-context'
 
 export const SEARCH_TOOL = 'buscar_en_el_sitio'
 
@@ -13,6 +14,10 @@ export const SOURCE_TOOL = 'mostrar_fuente'
 export const DIAGRAM_TOOL = 'actualizar_diagrama'
 
 export const DECISION_TOOL = 'registrar_decision'
+
+export const PAGE_TOOL = 'pagina_actual'
+
+export const HIGHLIGHT_TOOL = 'resaltar_seccion'
 
 export const AGENT_TOOLS = [
   {
@@ -70,6 +75,15 @@ export const AGENT_TOOLS = [
           required: ['decision', 'por_que', 'sacrificio'],
         },
       },
+      {
+        name: PAGE_TOOL,
+        description: 'Dice en qué página del sitio está el visitante ahora: ruta, título y las secciones que se pueden señalar. Úsala cuando pregunte por "esta página" o antes de resaltar algo.',
+      },
+      {
+        name: HIGHLIGHT_TOOL,
+        description: 'Hace scroll a una sección de la página actual y la resalta un momento. Solo con un id que devolvió pagina_actual.',
+        parameters: { type: 'OBJECT', properties: { id: { type: 'STRING', description: 'Id de la sección.' } }, required: ['id'] },
+      },
     ],
   },
 ] as const
@@ -84,6 +98,7 @@ export type AgentToolContext = {
   lang: Locale
   index: () => Promise<SearchIndex>
   navigate: (path: string) => void
+  page?: { read: () => PageContext; highlight: (id: unknown) => boolean }
 }
 
 export type AgentScoredHit = AgentSearchHit & { score: number }
@@ -209,6 +224,15 @@ export function createToolRunner(context: AgentToolContext, origin?: string) {
       const decision = parseDecision(call.args)
       if (!decision) return { response: { id: call.id, name: call.name, response: { ok: false, error: 'decision_incompleta' } }, effect: null }
       return { response: { id: call.id, name: call.name, response: { ok: true } }, effect: { kind: 'decision', decision } }
+    }
+    if (call.name === PAGE_TOOL) {
+      if (!context.page) return { response: { id: call.id, name: call.name, response: { ok: false, motivo: 'sin_pagina' } }, effect: null }
+      const page = context.page.read()
+      return { response: { id: call.id, name: call.name, response: { ok: true, ruta: page.path, titulo: page.title, secciones: page.sections } }, effect: null }
+    }
+    if (call.name === HIGHLIGHT_TOOL) {
+      const ok = context.page ? context.page.highlight(call.args.id) : false
+      return { response: { id: call.id, name: call.name, response: ok ? { ok: true } : { ok: false, motivo: 'seccion_desconocida' } }, effect: null }
     }
     return { response: { id: call.id, name: call.name, response: { error: 'herramienta_desconocida' } }, effect: null }
   }

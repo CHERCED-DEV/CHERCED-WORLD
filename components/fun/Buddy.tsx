@@ -23,6 +23,7 @@ import {
 import { useMediaQuery } from '@/lib/fx/viewport'
 import type { Locale } from '@/lib/i18n/config'
 import { t } from '@/lib/i18n/translate'
+import { openMiniCherced } from '@/components/ailab/agent/open-global'
 import { BuddySprite } from './BuddySprite'
 import { funDictionary } from './dictionary'
 import { findTarget, pageBusy, readInteraction, useGuideRoute } from './guide'
@@ -575,6 +576,14 @@ export function Buddy({ lang, origin, wakes, bindPress, onCalmable, onGone }: Bu
         onClick={() => dispatch({ type: 'toggle' })}
       >
         {t(dict, 'fun.calm')}
+      </button>
+      <button
+        type="button"
+        className={styles.talk}
+        data-cw-fun-talk=""
+        onClick={openMiniCherced}
+      >
+        {t(dict, 'fun.talk')}
       </button>
     </div>,
     document.body,

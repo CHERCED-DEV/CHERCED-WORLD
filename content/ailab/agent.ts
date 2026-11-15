@@ -45,6 +45,7 @@ export type AgentCopy = {
   simulatorNote: string
   evals: string
   code: string
+  take: string
   greet: string
   poke: string
   trace: AgentTraceCopy
@@ -128,6 +129,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     simulatorNote: 'Estás en el simulador: responde con el buscador del sitio y la voz de tu navegador. Con la clave de Gemini, conversa de verdad.',
     evals: '¿Cómo lo mido? Mira sus evals y el red team',
     code: 'Recorre su código con Gemini',
+    take: 'Llévalo contigo por el sitio',
     trial: {
       note: 'Prueba de 2 minutos sin cuenta. Con tu cuenta de Google son 5, y Mini Cherced te saluda por tu nombre.',
       ended: '¿Te gustó? Entra con Google y seguimos hablando.',
@@ -245,6 +247,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     simulatorNote: 'You are in the simulator: it answers with the site search and your browser voice. With the Gemini key, it really talks.',
     evals: 'How do I measure it? See its evals and red team',
     code: 'Walk through its code with Gemini',
+    take: 'Take him with you around the site',
     trial: {
       note: 'A 2-minute try without an account. With your Google account it’s 5, and Mini Cherced greets you by name.',
       ended: 'Liked it? Sign in with Google and let’s keep talking.',

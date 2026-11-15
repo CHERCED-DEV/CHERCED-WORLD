@@ -10,7 +10,7 @@ const { buildSearchIndex } = await import('@/lib/search/build-index')
 describe('herramientas del agente (FR-1804)', () => {
   it('declara las cinco herramientas del agente, con sus parámetros obligatorios', () => {
     const declarations = AGENT_TOOLS[0].functionDeclarations
-    expect(declarations.map((item) => item.name)).toEqual([SEARCH_TOOL, OPEN_TOOL, 'mostrar_fuente', 'actualizar_diagrama', 'registrar_decision'])
+    expect(declarations.map((item) => item.name)).toEqual([SEARCH_TOOL, OPEN_TOOL, 'mostrar_fuente', 'actualizar_diagrama', 'registrar_decision', 'pagina_actual', 'resaltar_seccion'])
     expect(declarations[0].parameters.required).toEqual(['consulta'])
     expect(declarations[1].parameters.required).toEqual(['ruta'])
     expect(declarations[2].parameters.required).toEqual(['ruta'])

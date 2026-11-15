@@ -2,7 +2,7 @@
 
 Ola 2 de la 018. Se cruza con la 019 (el chibi del pie que corre al AI Lab). Depende de la 020.
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 (ver «Cómo quedó»). Quedan para el autor la voz (P-1802) y los gestos nuevos.
 
 ## Qué hace
 
@@ -37,3 +37,23 @@ El mismo de V5 (~0,10 USD por conversación de 5 minutos) y los mismos topes.
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-2801 | ¿Dónde vive la entrada? | En el chibi del pie, sin botón nuevo en el dock |
+
+## Cómo quedó (2026-11-15)
+
+- **FR-2801** `GlobalAgent` vive en `app/[lang]/layout.tsx` y monta el mismo `AgentStage` en modo `persistent`: al navegar no
+  hace `teardown`, así que la sesión de Live (o el simulador) y la transcripción siguen en la página nueva. Verificado en dev:
+  «llévame al blog» pasó de `/es/ai-lab` a `/es/blog` con la conversación viva.
+- **FR-2802** Dos herramientas nuevas en `lib/ai/agent/tools.ts`: `pagina_actual` (ruta, título y secciones señalables) y
+  `resaltar_seccion(id)`, que solo acepta ids que devuelve `pagina_actual` (`lib/ai/agent/page-context.ts`). Hace scroll y
+  pone un contorno verde 2,4 s; con `prefers-reduced-motion` el scroll es instantáneo y sin transición.
+- **FR-2803 / P-2801** La entrada es el chibi del pie: cuando está despierto muestra «¿Hablamos?» junto a «Calma». La tarjeta
+  V5 suma «Llévalo contigo por el sitio», que abre el mismo panel. No hay botón nuevo en el dock.
+- **FR-2804** El panel flota abajo a la derecha (en móvil, encima del dock). Esc lo minimiza sin cortar la conversación; × lo
+  cierra y cuelga. No corre por la pantalla.
+- El simulador también entiende «¿qué hay en esta página?»: lee la página, resalta la primera sección y cuenta las tres
+  primeras, para que el modo local lo demuestre sin Gemini.
+- Recordar lo hablado durante la visita queda cubierto por el panel persistente: la conversación vive mientras no lo cierres,
+  y no se guarda en el servidor.
+- Pendiente del autor: probar 2 o 3 voces de Gemini (P-1802, sigue «Puck») y los gestos de señalar y celebrar del sprite.
+- Tests: `tests/unit/agent/page-context.test.ts` (lectura, resaltado, herramientas y simulador) y las listas de herramientas
+  en `tools.test.ts` y `session.test.ts`.

@@ -2,6 +2,7 @@ import { miniChercedIdentity } from '@/content/mini-cherced/identity'
 import { formatFact, synergosFacts } from '@/content/synergos'
 import type { Locale } from '@/lib/i18n/config'
 import type { AssistantFacts } from '@/lib/search/types'
+import type { PageContext } from './page-context'
 import type { AgentSearchHit } from './tools'
 import { ANONYMOUS_VIEWER, type AgentViewer } from './viewer'
 
@@ -10,9 +11,10 @@ const NAVIGATE: Record<Locale, RegExp> = {
   en: /\b(take me|show me|open|go to|i want to see|navigate)\b/i,
 }
 
-export type SimulatorIntent = 'whoami' | 'greeting' | 'name' | 'camilo' | 'identity' | 'work' | 'contact' | 'projects' | 'best' | 'search'
+export type SimulatorIntent = 'page' | 'whoami' | 'greeting' | 'name' | 'camilo' | 'identity' | 'work' | 'contact' | 'projects' | 'best' | 'search'
 
 const INTENTS: Array<[Exclude<SimulatorIntent, 'search'>, RegExp]> = [
+  ['page', /(esta p[aá]gina|d[oó]nde estoy|qu[eé] hay (aqu[ií]|ac[aá])|this page|where am i|what'?s (on )?here)/i],
   [
     'whoami',
     /(qui[eé]n soy|adivina qui[eé]n|sabes qui[eé]n (soy|te habla)|qui[eé]n te habla|me reconoces|me conoces|who am i|guess who|do you know me|do you recognize me)/i,
@@ -55,6 +57,9 @@ const COPY = {
     found: (title: string, more: number) =>
       more > 0 ? `Encontré "${title}" y ${more} ${more === 1 ? 'cosa más' : 'cosas más'}.` : `Encontré "${title}".`,
     going: (title: string) => `Te llevo a "${title}".`,
+    page: (title: string, labels: string, first: string) => `Estás en "${title}". Aquí hay ${labels}. Te señalo "${first}".`,
+    pageEmpty: (title: string) => `Estás en "${title}". Esta página no tiene secciones para señalar, pero pregúntame lo que quieras de ella.`,
+    pageUnknown: 'Desde aquí no alcanzo a ver la página. Ábreme desde el chibi del pie de página y te la recorro.',
     and: 'y',
   },
   en: {
@@ -80,6 +85,9 @@ const COPY = {
     nothing: "Oops, I can't find that on the site. Try other words or write to Camilo from Contact.",
     found: (title: string, more: number) => (more > 0 ? `I found "${title}" and ${more} more.` : `I found "${title}".`),
     going: (title: string) => `Taking you to "${title}".`,
+    page: (title: string, labels: string, first: string) => `You're on "${title}". Here you have ${labels}. Let me point at "${first}".`,
+    pageEmpty: (title: string) => `You're on "${title}". This page has no sections to point at, but ask me anything about it.`,
+    pageUnknown: "I can't see the page from here. Open me from the chibi in the footer and I'll walk you through it.",
     and: 'and',
   },
 } as const
@@ -125,6 +133,19 @@ function list(items: readonly string[], lang: Locale): string {
 
 export type SimulatorReply = { text: string; open: string | null }
 
+export function pageTitle(title: string): string {
+  return title.split(' · ')[0]?.trim() || title
+}
+
+export function simulatorPageReply(lang: Locale, page: PageContext): string {
+  const copy = COPY[lang]
+  const title = pageTitle(page.title)
+  const first = page.sections[0]
+  if (!first) return copy.pageEmpty(title)
+  const labels = list(page.sections.slice(0, 3).map((section) => `"${section.label}"`), lang)
+  return copy.page(title, labels, first.label)
+}
+
 export function simulatorReply(
   lang: Locale,
   question: string,
@@ -137,6 +158,7 @@ export function simulatorReply(
   const navigate = wantsToNavigate(lang, question)
   const intent = facts ? intentOf(question) : 'search'
   if (facts && intent !== 'search') {
+    if (intent === 'page') return { text: copy.pageUnknown, open: null }
     if (intent === 'whoami') return { text: whoAmI(lang, viewer), open: null }
     if (intent === 'greeting') return { text: copy.hello(identity.catchphrases.greet.phrase), open: null }
     if (intent === 'name') return { text: identity.examples.cherced.answer, open: null }

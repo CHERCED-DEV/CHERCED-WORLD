@@ -13,8 +13,8 @@ import { openLiveSession, type LiveSession } from '@/lib/ai/agent/live'
 import { startMic, type MicHandle } from '@/lib/ai/agent/mic'
 import { OUTPUT_RATE } from '@/lib/ai/agent/pcm'
 import { createPlayer, type AudioPlayer } from '@/lib/ai/agent/player'
-import { intentOf, simulatorGreeting, simulatorReply } from '@/lib/ai/agent/simulator'
-import { createToolRunner, SEARCH_TOOL, type AgentSearchHit, type AgentSource, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
+import { intentOf, simulatorGreeting, simulatorPageReply, simulatorReply } from '@/lib/ai/agent/simulator'
+import { createToolRunner, HIGHLIGHT_TOOL, PAGE_TOOL, SEARCH_TOOL, type AgentSearchHit, type AgentSource, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
 import { interviewActa } from '@/lib/ai/agent/interview'
 import { labPayload, sendLabSession, type LabEndReason } from '@/lib/ai/lab/client'
 import { SIMULATOR_DECISION, SIMULATOR_DIAGRAM, type DesignDecision, type Diagram } from '@/lib/ai/agent/design'
@@ -37,6 +37,8 @@ import {
 } from '@/lib/ai/agent/trace'
 import { addTurn, appendChunk, closeTurns, lastAgentLine, type Speaker, type Turn } from '@/lib/ai/agent/transcript'
 import { ANONYMOUS_VIEWER, isAgentViewer, type AgentViewer } from '@/lib/ai/agent/viewer'
+import { highlightSection, readPageContext } from '@/lib/ai/agent/page-context'
+import { openMiniCherced } from './open-global'
 import { loadSearchIndex } from '@/lib/search/client'
 import { AgentAvatar } from './AgentAvatar'
 import { InterviewPanel } from './InterviewPanel'
@@ -113,7 +115,7 @@ function replyError(reply: unknown): Notice {
   return 'failed'
 }
 
-export default function AgentStage({ lang }: LabDemoProps) {
+export default function AgentStage({ lang, persistent = false }: LabDemoProps & { persistent?: boolean }) {
   const copy = agentCopy[lang]
   const router = useRouter()
   const inputId = useId()
@@ -211,6 +213,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
         navigate: (path) => {
           pendingOpen.current = path
         },
+        page: {
+          read: () => readPageContext(),
+          highlight: (id) => highlightSection(id, document, window.matchMedia('(prefers-reduced-motion: reduce)').matches),
+        },
       },
       window.location.origin,
     )
@@ -288,7 +294,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
     pendingOpen.current = null
     const started = Date.now()
     const go = () => {
-      teardown()
+      if (!persistent) teardown()
       router.push(path)
     }
     const wait = () => {
@@ -301,7 +307,7 @@ export default function AgentStage({ lang }: LabDemoProps) {
       window.setTimeout(wait, 200)
     }
     wait()
-  }, [router, teardown])
+  }, [persistent, router, teardown])
 
   useEffect(() => {
     let alive = true
@@ -455,6 +461,15 @@ export default function AgentStage({ lang }: LabDemoProps) {
   const simulate = useCallback(
     async (question: string, turn?: number) => {
       setActivity('thinking')
+      if (intentOf(question) === 'page') {
+        await runTool({ id: 'local', name: PAGE_TOOL, args: {} }, turn)
+        const page = readPageContext()
+        const first = page.sections[0]
+        if (first) await runTool({ id: 'local', name: HIGHLIGHT_TOOL, args: { id: first.id } }, turn)
+        setEffect(null)
+        say(simulatorPageReply(lang, page), turn)
+        return
+      }
       const index = await loadSearchIndex(lang)
       let hits: AgentSearchHit[] = []
       if (intentOf(question) === 'search') {
@@ -632,6 +647,11 @@ export default function AgentStage({ lang }: LabDemoProps) {
     setPhase('ended')
     setActivity('idle')
     setTurns(closeTurns)
+  }
+
+  const takeAlong = () => {
+    if (phase === 'live' || phase === 'connecting') hangUp()
+    openMiniCherced()
   }
 
   const toggleMic = () => {
@@ -947,6 +967,14 @@ export default function AgentStage({ lang }: LabDemoProps) {
         <Link href={`/${lang}/ai-lab/codigo`} data-cw-agent-code="">
           {copy.code}
         </Link>
+        {persistent ? null : (
+          <>
+            {' · '}
+            <button type="button" className={styles.inlineLink} onClick={takeAlong} data-cw-agent-take="">
+              {copy.take}
+            </button>
+          </>
+        )}
       </p>
     </section>
   )

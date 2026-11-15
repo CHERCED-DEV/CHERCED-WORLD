@@ -977,3 +977,14 @@ $paper: #f4f4f4;
     max-width: none;
   }
 }
+
+.inlineLink {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}

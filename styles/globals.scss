@@ -271,3 +271,16 @@ button {
     break-inside: avoid;
   }
 }
+
+[data-cw-agent-highlight] {
+  outline: 3px solid #25ed9e;
+  outline-offset: 6px;
+  border-radius: 6px;
+  transition: outline-color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cw-agent-highlight] {
+    transition: none;
+  }
+}
