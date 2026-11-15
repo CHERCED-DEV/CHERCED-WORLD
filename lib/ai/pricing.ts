@@ -27,6 +27,16 @@ export const MODEL_PRICES = {
     output: { text: 3.75 },
     validUntil: '2026-12-31',
   },
+  'gemini-3.8-flash-tts': {
+    input: { text: 0.75 },
+    output: { text: 9, audio: 9 },
+    validUntil: '2026-12-31',
+  },
+  'gemini-3.1-flash-image': {
+    input: { text: 0.5, image: 0.5 },
+    output: { text: 3, image: 52 },
+    validUntil: null,
+  },
 } as const satisfies Record<string, ModelPrice>
 
 export type PricedModel = keyof typeof MODEL_PRICES

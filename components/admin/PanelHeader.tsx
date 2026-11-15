@@ -41,6 +41,7 @@ export function PanelHeader({
       visible: can(actor, 'comments'),
     },
     { href: localizedPath(lang, '/inbox/blog'), label: tr('admin.nav.blog'), count: 0, countLabel: '', id: 'blog', visible: can(actor, 'posts') },
+    { href: localizedPath(lang, '/inbox/spend'), label: tr('admin.nav.spend'), count: 0, countLabel: '', id: 'spend', visible: owner },
     { href: localizedPath(lang, '/inbox/conversations'), label: tr('admin.nav.conversations'), count: 0, countLabel: '', id: 'conversations', visible: owner },
     { href: localizedPath(lang, '/inbox/people'), label: tr('admin.nav.people'), count: 0, countLabel: '', id: 'people', visible: owner },
     { href: localizedPath(lang, '/inbox/settings'), label: tr('admin.nav.settings'), count: 0, countLabel: '', id: 'settings', visible: owner },

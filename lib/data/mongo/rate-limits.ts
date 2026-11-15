@@ -88,5 +88,9 @@ export function createMongoRateLimitRepo(db: DbProvider): RateLimitRepo {
     async reset(key) {
       await (await rateLimitsCollection(db)).deleteOne({ _id: key })
     },
+    async peek(key) {
+      const doc = await (await rateLimitsCollection(db)).findOne({ _id: key })
+      return doc ? { count: doc.count, windowStart: doc.windowStart } : null
+    },
   }
 }

@@ -70,7 +70,7 @@ export function labFactLabels(ailab: Dictionary): LabFactLabels {
     inputs: Object.fromEntries(LAB_INPUTS.map((input) => [input, t(ailab, `ailab.input.${input}`)])) as Record<LabInput, string>,
     activities: Object.fromEntries(LAB_ACTIVITIES.map((activity) => [activity, t(ailab, `ailab.activity.${activity}`)])) as Record<LabActivity, string>,
     session: { typical: t(ailab, 'ailab.session.typical'), capped: t(ailab, 'ailab.session.capped') },
-    cost: { free: t(ailab, 'ailab.cost.free'), hour: t(ailab, 'ailab.cost.hour'), day: t(ailab, 'ailab.cost.day') },
+    cost: { free: t(ailab, 'ailab.cost.free'), paid: t(ailab, 'ailab.cost.paid'), hour: t(ailab, 'ailab.cost.hour'), day: t(ailab, 'ailab.cost.day') },
     plan: { none: t(ailab, 'ailab.plan.none'), upfront: t(ailab, 'ailab.plan.upfront'), onDemand: t(ailab, 'ailab.plan.onDemand') },
   }
 }

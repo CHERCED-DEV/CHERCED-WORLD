@@ -35,5 +35,9 @@ export function createMemoryRateLimitRepo(): RateLimitRepo {
     async reset(key) {
       store.delete(key)
     },
+    async peek(key) {
+      const entry = store.get(key)
+      return entry ? { count: entry.count, windowStart: new Date(entry.windowStart) } : null
+    },
   }
 }

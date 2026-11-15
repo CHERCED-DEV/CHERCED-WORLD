@@ -38,7 +38,7 @@ export const PYODIDE_NUMPY: LabDownload = { resource: 'numpy (Pyodide 0.29.0)', 
 
 const V5: LabExperiment = {
   id: 'V5',
-  theme: 'voice',
+  theme: 'gemini',
   title: copy('ailab.v5.title'),
   summary: copy('ailab.v5.summary'),
   status: 'beta',
@@ -86,7 +86,7 @@ const V5: LabExperiment = {
 
 const A6: LabExperiment = {
   id: 'A6',
-  theme: 'agents',
+  theme: 'gemini',
   title: copy('ailab.a6.title'),
   summary: copy('ailab.a6.summary'),
   status: 'beta',

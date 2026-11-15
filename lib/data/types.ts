@@ -253,6 +253,7 @@ export interface ProfileRepo {
 export interface RateLimitRepo {
   hit(key: string, rule: RateLimitRule, now: Date): Promise<RateLimitResult>
   reset(key: string): Promise<void>
+  peek(key: string): Promise<{ count: number; windowStart: Date } | null>
 }
 
 export interface ReactionRepo {

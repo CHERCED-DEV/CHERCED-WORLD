@@ -20,8 +20,8 @@ const SPEC_COPY: Record<string, Localized> = {
     en: 'I also build AI plugins for specific professions. For a lawyer, skills that organize case material, test hypotheses and draft documents. For a structural engineer, an assistant that reads his logs, helps with calculations and builds the estimate. The showcases below use made-up data only.',
   },
   'ailab.privacy': {
-    es: 'No guardo tu audio ni tu texto. Casi todo se procesa en tu navegador; el único experimento que envía tu voz a Google te lo pregunta antes.',
-    en: "I don't store your audio or your text. Almost everything runs in your browser; the one experiment that sends your voice to Google asks you first.",
+    es: "Dos clases de experimentos. Los de tu navegador procesan todo en tu equipo: tu audio, tu texto y tus archivos no salen de ahí. Los de «Con Gemini» envían a Google solo lo que tú escribes o dices en ese experimento, te lo preguntan antes y yo no lo guardo sin tu permiso.",
+    en: "Two kinds of experiments. The ones in your browser process everything on your device: your audio, your text and your files never leave it. The ones in «With Gemini» send Google only what you type or say in that experiment, ask you first, and I don't store it without your permission.",
   },
   'ailab.runsIn.browser': { es: 'Corre en tu navegador', en: 'Runs in your browser' },
   'ailab.runsIn.google': { es: 'Corre en Google (Gemini)', en: 'Runs on Google (Gemini)' },
@@ -103,14 +103,16 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
     expect(() => labExperiment('X9' as never)).toThrow()
   })
 
-  it('agrupa por tema en el orden de la spec: Voz, Arquitectura, Agentes y Juegos', () => {
-    expect(LAB_THEMES).toEqual(['voice', 'architecture', 'agents', 'games'])
+  it('agrupa por tema: Con Gemini primero (020, P-2002), luego Voz, Arquitectura, Agentes y Juegos', () => {
+    expect(LAB_THEMES).toEqual(['gemini', 'voice', 'architecture', 'agents', 'games'])
     expect(labThemes().map((group) => [group.theme, group.experiments.map((item) => item.id)])).toEqual([
-      ['voice', ['V5', 'V1', 'V2', 'V3', 'V4']],
+      ['gemini', ['V5', 'A6']],
+      ['voice', ['V1', 'V2', 'V3', 'V4']],
       ['architecture', ['R1']],
-      ['agents', ['A6', 'A2', 'A3', 'A5', 'A4']],
+      ['agents', ['A2', 'A3', 'A5', 'A4']],
       ['games', ['J1', 'J2']],
     ])
+    for (const item of labThemes()[0]!.experiments) expect(item.runsIn).toBe('google')
   })
 
   it('cada experimento trae estado, dónde corre, privacidad, recorrido y decisiones en ES y EN', () => {

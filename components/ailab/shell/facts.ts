@@ -1,5 +1,6 @@
 import { labDownloadPlan } from '@/content/ailab/catalog'
 import type { LabActivity, LabExperiment, LabInput, LabLimitPeriod } from '@/content/types'
+import { formatUsd, typicalCostUsd } from '@/lib/ai/models'
 import { formatBytes } from '@/lib/ailab/core/format'
 import type { Locale } from '@/lib/i18n/config'
 import { t } from '@/lib/i18n/translate'
@@ -14,7 +15,7 @@ export type LabFactLabels = {
   inputs: Record<LabInput, string>
   activities: Record<LabActivity, string>
   session: { typical: string; capped: string }
-  cost: { free: string } & Record<LabLimitPeriod, string>
+  cost: { free: string; paid: string } & Record<LabLimitPeriod, string>
   plan: { none: string; upfront: string; onDemand: string }
 }
 
@@ -39,7 +40,9 @@ export function labFacts(experiment: LabExperiment, labels: LabFactLabels, lang:
   const vars = { minutes: session.minutes, activity: labels.activities[session.activity] }
   const time = t({ session: session.capped ? labels.session.capped : labels.session.typical }, 'session', vars)
   const downloads = plan.kind === 'none' ? labels.plan.none : t({ plan: labels.plan[plan.kind] }, 'plan', { size: formatBytes(plan.bytes, lang) })
-  const cost = limit ? t({ cost: labels.cost[limit.per] }, 'cost', { uses: limit.uses }) : labels.cost.free
+  const usd = experiment.runsIn === 'google' ? typicalCostUsd(experiment.id) : null
+  const base = limit ? t({ cost: labels.cost[limit.per] }, 'cost', { uses: limit.uses }) : labels.cost.free
+  const cost = usd === null ? base : `${base} · ${t({ paid: labels.cost.paid }, 'paid', { usd: formatUsd(usd, lang) })}`
   return {
     brief: [
       { key: 'uses', term: labels.terms.uses, text: labInputsText(experiment.inputs, labels, lang), icon: experiment.inputs[0] ?? 'text' },

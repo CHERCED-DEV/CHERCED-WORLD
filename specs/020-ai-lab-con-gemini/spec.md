@@ -4,9 +4,7 @@ Pedido del autor, 2026-11-14, después de probar a Mini Cherced con Gemini: "con
 creemos specs por proyecto y démosle con todas las capacidades que nos pueda suministrar esta nueva integración con
 Gemini". Esta spec es la base que usan las 021 a 028. Va primero.
 
-Estado: empezada. Con la 031 y la 029 salieron los precios versionados (`lib/ai/pricing.ts`, la base de
-FR-2005) y el cliente de texto con JSON (`lib/ai/generate.ts`, parte de FR-2001). Falta el resto, incluido el panel
-con el gasto por experimento (FR-2007).
+Estado: construida el 2026-11-15. El consentimiento común para "corre en Google" (FR-2003) se usa en cada experimento nuevo a medida que se construye.
 
 ## Qué resuelve
 
@@ -77,3 +75,18 @@ reclutador; la 032 respalda todo lo demás con medición, y la 030 y la 034 la n
 |---|---|---|
 | P-2001 | ¿Tope global diario de gasto en el sitio, además del saldo prepagado? | 10 conversaciones de voz y 30 usos de los demás al día |
 | P-2002 | ¿El tema "Con Gemini" va primero en el AI Lab? | Sí, es lo más vistoso |
+
+## Cómo quedó (2026-11-15)
+
+- **FR-2001:** los modelos de Gemini viven en `lib/ai/models.ts` (Live, texto, voz y la imagen `gemini-3.1-flash-image`),
+  y sus precios en `lib/ai/pricing.ts`. El cliente de texto con JSON es `lib/ai/generate.ts`.
+- **FR-2002:** cada experimento declara sus límites en `lib/security/rate-limit.ts`, con un límite por visitante y
+  otro global por día. En local no aplican.
+- **FR-2004 y P-2002:** el tema nuevo «Con Gemini» va primero en el AI Lab, con V5 y A6. Todo lo que corre en Google
+  vive ahí y lleva la insignia "Corre en Google (Gemini)".
+- **FR-2005:** el costo de cada tarjeta de Gemini dice "≈ 0,0x USD por uso, lo pago yo", calculado con el
+  presupuesto de tokens de `TYPICAL_USE` y los precios, no escrito a mano.
+- **FR-2007:** en el panel, la pestaña "Gasto", solo del autor, suma los usos de las últimas 24 horas por
+  experimento (de los contadores de límites, sin datos del visitante) por su costo típico, en USD y COP.
+- **Privacidad del laboratorio:** el texto general se partió en dos bloques: lo que corre en tu equipo y lo que va a
+  Google.

@@ -261,7 +261,7 @@ export type PostMeta = {
 
 export type CapsuleEntry = { date: string; message: string; note?: Localized }
 
-export const LAB_THEMES = ['voice', 'architecture', 'agents', 'games'] as const
+export const LAB_THEMES = ['gemini', 'voice', 'architecture', 'agents', 'games'] as const
 
 export type LabTheme = (typeof LAB_THEMES)[number]
 
