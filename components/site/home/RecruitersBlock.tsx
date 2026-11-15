@@ -6,6 +6,9 @@ import { CvActions, CvLink } from '@/components/ui/CvLink'
 import { cx } from '@/components/ui/cx'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { CornerMarks, Hairline } from '@/components/ui/graphics'
+import { featuredPitches } from '@/content/pitches'
+import { getProjects } from '@/lib/content'
+import { projectTitle } from '@/lib/content/project-title'
 import type { Locale } from '@/lib/i18n'
 import styles from './Recruiters.module.scss'
 
@@ -82,9 +85,40 @@ function RecruitersBody({
           </div>
         </dl>
       </div>
+      <PitchLinks lang={lang} />
       {certifications ? <div className={styles.certifications}>{certifications}</div> : null}
       {actionsFirst ? null : actions}
     </>
+  )
+}
+
+const PITCH_COPY = {
+  es: { title: 'Escucha el pitch (60 s)', note: 'Un minuto por caso: problema, decisión, resultado y stack.' },
+  en: { title: 'Listen to the pitch (60 s)', note: 'One minute per case: problem, decision, result and stack.' },
+} as const
+
+function PitchLinks({ lang }: { lang: Locale }) {
+  const pitches = featuredPitches()
+  if (pitches.length === 0) return null
+  const projects = new Map(getProjects().map((project) => [project.id, project]))
+  return (
+    <div className={cx(styles.block, styles.pitches)} data-cw-recruiters-pitches="">
+      <h3 className={styles.label}>{PITCH_COPY[lang].title}</h3>
+      <p className={styles.motivation}>{PITCH_COPY[lang].note}</p>
+      <ul className={styles.roles}>
+        {pitches.map((pitch) => {
+          const project = projects.get(pitch.caseId)
+          if (!project) return null
+          return (
+            <li key={pitch.caseId} className={styles.role}>
+              <Link href={`/${lang}/portfolio/${pitch.caseId}#case-pitch-${pitch.caseId}`} prefetch={false}>
+                {projectTitle(project, lang)}
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
   )
 }
 

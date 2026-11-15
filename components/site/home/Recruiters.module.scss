@@ -198,3 +198,14 @@
   justify-content: flex-end;
   margin-top: var(--cw-space-4);
 }
+
+.pitches {
+  display: grid;
+  gap: var(--cw-space-2);
+  margin-top: var(--cw-space-5);
+
+  a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+}

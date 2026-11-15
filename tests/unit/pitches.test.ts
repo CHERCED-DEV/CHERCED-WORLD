@@ -1,6 +1,5 @@
-import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { approvedPitch, casePitches } from '@/content/pitches'
+import { approvedPitch, casePitches, featuredPitches } from '@/content/pitches'
 import { getProjects } from '@/lib/content'
 
 describe('pitch de 60 segundos (033)', () => {
@@ -16,8 +15,9 @@ describe('pitch de 60 segundos (033)', () => {
     }
   })
 
-  it('FR-3301: nada se publica sin la aprobación del autor', () => {
+  it('FR-3301: solo se publica lo que el autor aprobó (los cinco, el 2026-11-15)', () => {
     for (const pitch of casePitches) expect(approvedPitch(pitch.caseId) === undefined).toBe(!pitch.approved)
-    expect(readFileSync('content/pitches.ts', 'utf8')).not.toMatch(/approved: true/)
+    expect(casePitches.every((pitch) => pitch.approved)).toBe(true)
+    expect(featuredPitches().map((pitch) => pitch.caseId)).toEqual(['12', '13', '2'])
   })
 })
