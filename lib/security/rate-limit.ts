@@ -35,6 +35,10 @@ export const RATE_LIMITS = {
   pixelDaily: { limit: 20, windowMs: 24 * 60 * MINUTE },
   subtitles: { limit: 3, windowMs: 24 * 60 * MINUTE },
   subtitlesDaily: { limit: 30, windowMs: 24 * 60 * MINUTE },
+  panelAi: { limit: 80, windowMs: 24 * 60 * MINUTE },
+  panelAiDaily: { limit: 200, windowMs: 24 * 60 * MINUTE },
+  panelCover: { limit: 6, windowMs: 24 * 60 * MINUTE },
+  panelCoverDaily: { limit: 12, windowMs: 24 * 60 * MINUTE },
   listenDaily: { limit: 600, windowMs: 24 * 60 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 

@@ -15,6 +15,8 @@ const LINES: Array<{ id: string; usage: string; action: RateLimitAction; label: 
   { id: 'A8', usage: 'shot', action: 'shotDaily', label: { es: 'De captura a componentes', en: 'From screenshot to components' } },
   { id: 'V6', usage: 'V6', action: 'subtitlesDaily', label: { es: 'Subtítulos en vivo', en: 'Live subtitles' } },
   { id: 'P1', usage: 'P1', action: 'pixelDaily', label: { es: 'Pixélate', en: 'Pixelate' } },
+  { id: 'panel', usage: 'panel', action: 'panelAiDaily', label: { es: 'Panel: traducir, revisar y proponer', en: 'Panel: translate, review and suggest' } },
+  { id: 'cover', usage: 'cover', action: 'panelCoverDaily', label: { es: 'Panel: portadas generadas', en: 'Panel: generated covers' } },
   { id: 'listen', usage: 'listenChunk', action: 'listenDaily', label: { es: 'Voz de Gemini en los posts (frases nuevas)', en: 'Gemini voice on posts (new sentences)' } },
 ]
 

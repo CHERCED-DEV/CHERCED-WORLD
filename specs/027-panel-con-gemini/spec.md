@@ -2,7 +2,7 @@
 
 Línea L2 de la exploración de la 018, para el autor y su equipo (017). Depende de la 020.
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 (ver «Cómo quedó»). La portada generada se descarga; guardarla en el sitio queda pendiente porque pide almacenamiento de imágenes.
 
 ## Qué hace
 
@@ -34,3 +34,26 @@ Herramientas de IA dentro del panel (`/inbox`) para escribir y moderar más ráp
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-2701 | ¿Las reglas de estilo están escritas en un solo archivo que se pueda pasar como instrucción? | Reunirlas en uno |
+
+## Cómo quedó (2026-11-15)
+
+- **P-2701** Las reglas de estilo viven en un solo archivo, `content/style-rules.ts` (E-01 a E-12), reunidas de D-03 y
+  §10 del inventario de la 001 y del estilo de los posts de 2026. Ese archivo va en la instrucción de traducir, revisar y
+  proponer.
+- **Asistente con Gemini** en el editor del blog (`components/admin/editorial/GeminiAssist.tsx`), para el autor y para
+  quien tenga el permiso «posts» (FR-2701). Acciones de servidor en `lib/actions/editorial-ai.ts`:
+  - **Traducir** al otro idioma conservando el Markdown. **FR-2703:** se compara la estructura (bloques de código,
+    títulos, enlaces, imágenes y código en línea) y, si cambió, se avisa antes de aceptar. Aceptar crea un borrador nuevo
+    en el otro idioma, sin guardar, para revisarlo.
+  - **Revisar el estilo:** hallazgos con línea, regla, cita y sugerencia; la línea y la regla se validan con Zod contra
+    el borrador y el archivo de reglas. «Ir a la línea» la selecciona en el editor.
+  - **Proponer** descripción, etiquetas y texto alternativo de cada imagen, cada uno con su «Usar» o «Aplicar».
+  - **Portada** con `gemini-3.1-flash-image` en el estilo del sitio (16:9, sin texto). Se muestra y se descarga en PNG;
+    el sitio todavía no guarda portadas de imagen (pide almacenamiento), así que la portada SVG sigue siendo la del post.
+- **Comentarios pendientes:** «Calificar con Gemini» en la vista de pendientes ordena por probabilidad de spam, con el
+  motivo y un enlace a cada comentario. **FR-2704:** a Google va solo el texto del comentario, sin nombre, correo ni id.
+- **FR-2702** Nada se aplica solo: todo es una propuesta que se usa o se descarta.
+- Topes: 80 usos al día por persona del panel y 200 en total; portadas, 6 por persona y 12 en total. El gasto sale en el
+  panel.
+- Sin la clave de Gemini, cada acción responde con un ejemplo del simulador.
+- Tests: `tests/unit/editorial/gemini-assist.test.ts`.

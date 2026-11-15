@@ -7,6 +7,7 @@ import { publishEditorialDraft, requestEditorialReview, saveEditorialDraft, unpu
 import { exportDraft, type EditorialDraft, type DraftInput } from '@/lib/editorial/model'
 import type { PublishedSummary } from '@/lib/editorial/published'
 import { buttonClassName } from '@/components/ui/Button'
+import { GeminiAssist } from './GeminiAssist'
 import { MarkdownPreview } from './MarkdownPreview'
 import styles from './Editorial.module.scss'
 
@@ -52,6 +53,11 @@ export function BlogStudio({
   function select(next: DraftInput) {
     if (pending || (dirty && !window.confirm(copy.discard))) return
     setDraft(next); setTags(next.tags.join(', ')); setDirty(false); setStatus(''); setPreview(false)
+  }
+
+  function adopt(next: DraftInput) {
+    if (pending || (dirty && !window.confirm(copy.discard))) return
+    setDraft(next); setTags(next.tags.join(', ')); setDirty(true); setStatus(''); setPreview(false)
   }
 
   function change(patch: Partial<DraftInput>) {
@@ -164,6 +170,7 @@ export function BlogStudio({
       {live ? <p className={styles.note} data-cw-published-link=""><a href={`/${live.lang}/blog/${live.id}`} target="_blank" rel="noopener noreferrer">{copy.view}</a> · /{live.lang}/blog/{live.id}</p> : null}
       <p className={styles.status} role="status" aria-live="polite">{status || (dirty ? copy.unsaved : '')}</p>
       <p className={styles.note}>{owner ? copy.review : copy.guestReview}</p>
+      <GeminiAssist lang={lang} draft={current() ?? draft} disabled={pending} onAdopt={adopt} onPatch={change} onTags={next => { setTags(next.join(', ')); setDirty(true); setStatus('') }} />
     </form> : <div className={styles.editor}><p>{copy.empty}</p><p className={styles.note}>{owner ? copy.review : copy.guestReview}</p></div>}
   </div>
 }

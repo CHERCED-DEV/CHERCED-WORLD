@@ -15,7 +15,7 @@ function CommentItem({ comment, text, known, canReply }: { comment: CommentRecor
 
   return (
     <li>
-      <GlassSurface as="article" variant="subtle" className={styles.item} data-cw-comment={comment.id} data-status={comment.status}>
+      <GlassSurface as="article" variant="subtle" className={styles.item} id={`comment-${comment.id}`} data-cw-comment={comment.id} data-status={comment.status}>
         <header className={styles.itemHeader}>
           <h3 className={styles.itemTitle}>{comment.userName}</h3>
           <span className={styles.badge}>{tr(`admin.status.${comment.status}`)}</span>

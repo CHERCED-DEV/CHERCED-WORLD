@@ -6,6 +6,7 @@ import { FilterGroup } from '@/components/admin/FilterBar'
 import { adminText } from '@/components/admin/labels'
 import { pickParam, queryHref } from '@/components/admin/query'
 import { SessionExpired } from '@/components/admin/Views'
+import { SpamRanker } from '@/components/admin/SpamRanker'
 import { guardPanel } from '@/components/admin/gate'
 import { publishedPosts } from '@/lib/blog/source'
 import { postIds } from '@/lib/content'
@@ -45,6 +46,9 @@ export default async function CommentsPage({ params, searchParams }: Props) {
           options={VIEWS.map((value) => ({ value, label: tr(`admin.filter.${value}`), href: queryHref(base, { view: value }) }))}
         />
       </div>
+      {view === 'pending' && comments.length > 0 ? (
+        <SpamRanker lang={lang} excerpts={Object.fromEntries(comments.map((comment) => [comment.id, `${comment.userName}: ${comment.comment.replace(/\s+/g, ' ').slice(0, 80)}`]))} />
+      ) : null}
       <CommentList comments={comments} text={text} postIds={[...postIds(), ...(await publishedPosts()).map((post) => post.id)]} canReply={actor.kind === 'owner'} />
     </section>
   )
