@@ -94,14 +94,14 @@ test.describe('D-01 sin JavaScript', () => {
 })
 
 test.describe('buzón público (E-01)', () => {
-  test('el endpoint solo expone el número de no leídos, con caché de 30 s', async ({ request }, testInfo) => {
+  test('el endpoint solo expone el número de no leídos, sin caché, y a un visitante le dice 0', async ({ request }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-chromium', 'una sola vez')
     const response = await request.get('/api/inbox-count')
     expect(response.status()).toBe(200)
     const body = (await response.json()) as Record<string, unknown>
     expect(Object.keys(body)).toEqual(['unread'])
-    expect(Number.isInteger(body.unread)).toBe(true)
-    expect(response.headers()['cache-control']).toMatch(/s-maxage=30\b/)
+    expect(body.unread).toBe(0)
+    expect(response.headers()['cache-control']).toMatch(/no-store/)
   })
 
   test.describe('en el header', () => {
@@ -122,17 +122,21 @@ test.describe('buzón público (E-01)', () => {
       await page.waitForURL('**/es/inbox')
     })
 
-    test('sin mensajes no muestra número', async ({ page }) => {
+    test('sin mensajes no muestra número, y sin marca no hay buzón', async ({ page, context, baseURL }) => {
       await page.route('**/api/inbox-count', (route) => route.fulfill({ json: { unread: 0 } }))
       await skipIntro(page)
       await page.goto('/en/services')
+      await expect(page.locator('header [data-cw-mailbox]'), 'el visitante no ve el buzón').toHaveCount(0)
+      await context.addCookies([{ name: 'cw-panel', value: '1', url: baseURL! }])
+      await page.reload()
       const mailbox = page.locator('header [data-cw-mailbox]')
       await expect(mailbox).toHaveAccessibleName('Inbox')
-      await expect(mailbox, 'D-R1: el visitante va a Contacto').toHaveAttribute('href', '/en/contactMe')
+      await expect(mailbox).toHaveAttribute('href', '/en/inbox')
       await expect(mailbox.locator('[data-cw-mailbox-badge]')).toHaveCount(0)
     })
 
-    test('consulta cada 60 s y solo con la pestaña visible', async ({ page }) => {
+    test('consulta cada 60 s y solo con la pestaña visible', async ({ page, context, baseURL }) => {
+      await context.addCookies([{ name: 'cw-panel', value: '1', url: baseURL! }])
       let calls = 0
       await page.route('**/api/inbox-count', (route) => {
         calls += 1

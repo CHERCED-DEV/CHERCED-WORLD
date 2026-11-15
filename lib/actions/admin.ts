@@ -2,8 +2,8 @@
 
 import '@/lib/data/mongo/register'
 import { refresh, revalidatePath } from 'next/cache'
-import { requirePermission } from '@/lib/auth/accounts'
-import { requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
+import { requireOwner, requirePermission } from '@/lib/auth/accounts'
+import { UnauthorizedError } from '@/lib/auth/guard'
 import { getRepos } from '@/lib/data'
 import type { CommentStatus, MessageStatus, Permission, Repos } from '@/lib/data/types'
 import { logServerError } from '@/lib/security/log'
@@ -22,7 +22,7 @@ function validId(id: unknown): id is string {
 
 async function asPanel(permission: Permission | 'owner', scope: string, run: (repos: Repos) => Promise<ActionResult>): Promise<ActionResult> {
   try {
-    if (permission === 'owner') await requireAdmin()
+    if (permission === 'owner') await requireOwner()
     else await requirePermission(permission)
   } catch (error) {
     if (error instanceof UnauthorizedError) return fail('unauthorized')

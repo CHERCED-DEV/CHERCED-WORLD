@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache'
 import type { PanelActor } from '@/lib/accounts/permissions'
-import { requirePermission } from '@/lib/auth/accounts'
-import { requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
+import { requireOwner, requirePermission } from '@/lib/auth/accounts'
+import { UnauthorizedError } from '@/lib/auth/guard'
 import { DraftConflict, DraftForbidden, getDraft, saveDraft, setDraftReview } from '@/lib/data/editorial'
 import { publishPost, PublishingUnavailable, unpublishPost } from '@/lib/data/published'
 import { canEditDraft, draftInput, reviewInput, type DraftAuthor, type ReviewResult, type SaveDraftResult } from '@/lib/editorial/model'
@@ -58,7 +58,7 @@ function refreshBlog(): void {
 
 export async function publishEditorialDraft(input: unknown): Promise<PublishResult> {
   try {
-    await requireAdmin()
+    await requireOwner()
     const parsed = publishInput.safeParse(input)
     if (!parsed.success) return { ok: false, error: 'validation' }
     const draft = await getDraft(parsed.data.id)
@@ -77,7 +77,7 @@ export async function publishEditorialDraft(input: unknown): Promise<PublishResu
 
 export async function unpublishEditorialDraft(input: unknown): Promise<UnpublishResult> {
   try {
-    await requireAdmin()
+    await requireOwner()
     const parsed = unpublishInput.safeParse(input)
     if (!parsed.success) return { ok: false, error: 'validation' }
     await unpublishPost(parsed.data.id)

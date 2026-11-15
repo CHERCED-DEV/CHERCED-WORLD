@@ -3,7 +3,8 @@
 import '@/lib/data/mongo/register'
 import { redirect } from 'next/navigation'
 import { endAccountSession } from '@/lib/auth/accounts'
-import { endAllSessions, signIn, signOut, requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
+import { requireOwner } from '@/lib/auth/accounts'
+import { endAllSessions, signIn, signOut, UnauthorizedError } from '@/lib/auth/guard'
 import { burnPasswordCheck, hashPassword, verifyPassword } from '@/lib/auth/password'
 import { changePasswordSchema, loginSchema } from '@/lib/auth/schemas'
 import { verifySetupCode } from '@/lib/auth/setup'
@@ -97,7 +98,7 @@ export async function completeSetup(_prev: ActionResult | null, formData: FormDa
 
 export async function changePassword(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
   try {
-    await requireAdmin()
+    await requireOwner()
   } catch (error) {
     if (error instanceof UnauthorizedError) return fail('unauthorized')
     logServerError('auth.changePassword', error)

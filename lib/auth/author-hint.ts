@@ -14,7 +14,3 @@ export function hasAuthorHint(cookieHeader: string | null | undefined): boolean 
   if (!cookieHeader) return false
   return cookieHeader.split(';').some((part) => part.trim() === `${AUTHOR_HINT_COOKIE}=1`)
 }
-
-export function mailboxHref(lang: string, author: boolean): string {
-  return author ? `/${lang}/inbox` : `/${lang}/contactMe`
-}

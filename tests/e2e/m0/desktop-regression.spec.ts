@@ -47,7 +47,8 @@ test.describe('escritorio sin cambios (SC-601, FR-651)', () => {
           headerBackground: getComputedStyle(header).backgroundColor,
           blur: getComputedStyle(document.documentElement).getPropertyValue('--cw-glass-standard-blur').trim(),
           headerHeight: header.getBoundingClientRect().height,
-          controls: ['[data-cw-palette-trigger]', 'header [data-cw-lang-switch]', 'header [data-cw-mailbox]', '[data-cw-theme-toggle]'].map(x),
+          controls: ['[data-cw-palette-trigger]', 'header [data-cw-lang-switch]', '[data-cw-theme-toggle]'].map(x),
+          mailbox: document.querySelectorAll('header [data-cw-mailbox]').length,
           cardFilters: [...document.querySelectorAll('main [data-cw-glass]')].slice(0, 6).map((element) => getComputedStyle(element).backdropFilter),
           sweeps: document.querySelectorAll('[data-cw-sweep]').length,
           float: [...document.querySelectorAll('[data-cw-float]')].map((element) => getComputedStyle(element).animationName),
@@ -63,14 +64,14 @@ test.describe('escritorio sin cambios (SC-601, FR-651)', () => {
       expect(state.headerBackground).toMatch(/^rgba\(\d+, \d+, \d+, 0\.\d+\)$/)
       expect(state.blur).toBe('14px')
       expect(state.headerHeight).toBe(65)
-      const [palette, lang, mailbox, theme] = state.controls
+      const [palette, lang, theme] = state.controls
+      expect(state.mailbox, 'el visitante no ve el buzón').toBe(0)
       for (const control of state.controls) {
         expect(control).not.toBeNull()
         expect(control!.bottom).toBeLessThanOrEqual(state.headerHeight)
       }
       expect(palette!.left).toBeLessThan(lang!.left)
-      expect(lang!.left).toBeLessThan(mailbox!.left)
-      expect(mailbox!.left).toBeLessThan(theme!.left)
+      expect(lang!.left).toBeLessThan(theme!.left)
       for (const filter of state.cardFilters) expect(filter).toMatch(/blur\((8|14|22)px\)/)
       for (const name of state.float) expect(name).toBe('none')
     })

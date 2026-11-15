@@ -3,7 +3,8 @@
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { cx } from '@/components/ui/cx'
 import { Icon } from '@/components/ui/Icon'
-import { hasAuthorHint, mailboxHref } from '@/lib/auth/author-hint'
+import { hasAuthorHint } from '@/lib/auth/author-hint'
+import { hasPanelHint } from '@/lib/auth/panel-hint'
 import type { Locale } from '@/lib/i18n/config'
 import controls from './controls.module.scss'
 import { badgeText, MAILBOX_ENDPOINT, MAILBOX_INTERVAL_MS, mailboxLabel, parseUnread, startVisiblePolling } from './mailbox'
@@ -15,15 +16,16 @@ function subscribeToNothing(): () => void {
   return () => {}
 }
 
-function readAuthorHint(): boolean {
-  return hasAuthorHint(document.cookie)
+function readPanelHint(): boolean {
+  return hasAuthorHint(document.cookie) || hasPanelHint(document.cookie)
 }
 
 export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLabels }) {
   const [unread, setUnread] = useState<number | null>(null)
-  const author = useSyncExternalStore(subscribeToNothing, readAuthorHint, () => false)
+  const panel = useSyncExternalStore(subscribeToNothing, readPanelHint, () => false)
 
   useEffect(() => {
+    if (!panel) return
     let controller: AbortController | null = null
 
     const run = () => {
@@ -51,17 +53,19 @@ export function MailboxLink({ lang, labels }: { lang: Locale; labels: MailboxLab
       stop()
       controller?.abort()
     }
-  }, [])
+  }, [panel])
+
+  if (!panel) return null
 
   return (
     <SelfLink
-      href={mailboxHref(lang, author)}
+      href={`/${lang}/inbox`}
       prefetch={false}
       className={cx(controls.iconButton, controls.mailbox)}
       aria-label={mailboxLabel(unread, labels)}
       title={labels.name}
       data-cw-mailbox=""
-      data-cw-mailbox-author={author ? '' : undefined}
+      data-cw-mailbox-author=""
     >
       <Icon name="inbox" />
       {unread ? (

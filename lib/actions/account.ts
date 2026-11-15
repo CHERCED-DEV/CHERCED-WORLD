@@ -6,8 +6,8 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { eraseAccountData } from '@/lib/accounts/data'
 import { cleanPermissions, normalizeEmail } from '@/lib/accounts/permissions'
-import { endAccountSession, getAccountState } from '@/lib/auth/accounts'
-import { requireAdmin, UnauthorizedError } from '@/lib/auth/guard'
+import { endAccountSession, getAccountState, requireOwner } from '@/lib/auth/accounts'
+import { UnauthorizedError } from '@/lib/auth/guard'
 import { accountPath } from '@/lib/auth/oauth'
 import { getRepos } from '@/lib/data'
 import type { Repos } from '@/lib/data/types'
@@ -55,7 +55,7 @@ export async function deleteOwnAccount(formData: FormData): Promise<void> {
 
 async function asOwner(scope: string, run: (repos: Repos) => Promise<ActionResult>): Promise<ActionResult> {
   try {
-    await requireAdmin()
+    await requireOwner()
   } catch (error) {
     if (error instanceof UnauthorizedError) return fail('unauthorized')
     logServerError(scope, error)

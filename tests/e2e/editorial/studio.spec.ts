@@ -17,7 +17,7 @@ test('editor privado: entrar, escribir, guardar, recargar, exportar y proteger e
   await page.addInitScript(() => sessionStorage.setItem('cw-intro-seen', '1'))
   try {
     await page.goto('/es')
-    await expect(page.locator('[data-cw-mailbox]'), 'D-R1: el visitante va a Contacto').toHaveAttribute('href', '/es/contactMe')
+    await expect(page.locator('[data-cw-mailbox]'), 'el visitante no ve el buzón: Contacto ya está en la barra').toHaveCount(0)
     await page.goto('/es/inbox')
     const setup = page.locator('[data-cw-setup]')
     await expect(setup).toHaveAttribute('data-cw-hydrated', '')

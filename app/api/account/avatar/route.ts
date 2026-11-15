@@ -1,7 +1,6 @@
 import '@/lib/data/mongo/register'
 import type { NextRequest } from 'next/server'
-import { getAccountState } from '@/lib/auth/accounts'
-import { getAdminSession } from '@/lib/auth/guard'
+import { getAccountState, getPanelActor } from '@/lib/auth/accounts'
 import { getRepos } from '@/lib/data'
 import { logServerError } from '@/lib/security/log'
 
@@ -12,7 +11,7 @@ const NOT_FOUND = { status: 404, headers: { 'cache-control': 'private, no-store'
 async function ownerOf(request: NextRequest): Promise<string | null> {
   const requested = request.nextUrl.searchParams.get('account')
   if (requested) {
-    if (requested.length > 64 || !(await getAdminSession())) return null
+    if (requested.length > 64 || (await getPanelActor())?.kind !== 'owner') return null
     return requested
   }
   return (await getAccountState())?.account.id ?? null

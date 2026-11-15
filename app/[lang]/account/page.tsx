@@ -7,7 +7,6 @@ import { accountCopy, isAccountError } from '@/content/account'
 import { loadDashboard, type DashboardData } from '@/lib/accounts/dashboard'
 import { firstPanelPath } from '@/lib/accounts/permissions'
 import { getAccountState, getPanelActor } from '@/lib/auth/accounts'
-import { getAdminSession } from '@/lib/auth/guard'
 import { signInMode } from '@/lib/auth/google'
 import { safeNext } from '@/lib/auth/oauth'
 import { getRepos } from '@/lib/data'
@@ -41,8 +40,8 @@ export default async function AccountPage({ params, searchParams }: Props) {
   let owner = false
   let panelHref: string | null = null
   try {
-    const [account, admin, actor] = await Promise.all([getAccountState(), getAdminSession(), getPanelActor()])
-    owner = Boolean(admin)
+    const [account, actor] = await Promise.all([getAccountState(), getPanelActor()])
+    owner = actor?.kind === 'owner'
     panelHref = actor ? localizedPath(lang, firstPanelPath(actor)) : null
     if (account) dashboard = await loadDashboard(getRepos(), account, lang)
   } catch (cause) {

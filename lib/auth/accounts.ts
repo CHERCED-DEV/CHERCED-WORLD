@@ -5,6 +5,9 @@ import { cache } from 'react'
 import { can, teamPermissions, type PanelActor } from '@/lib/accounts/permissions'
 import { getRepos } from '@/lib/data'
 import { SESSION_IDLE_MS, SESSION_MAX_AGE_MS, type AccountRecord, type AccountRepo, type Permission } from '@/lib/data/types'
+import { publicEmail } from '@/content/site'
+import { AUTHOR_HINT_COOKIE, AUTHOR_HINT_OPTIONS } from './author-hint'
+import { isOwnerEmail, PANEL_HINT_COOKIE, PANEL_HINT_OPTIONS } from './panel-hint'
 import { READER_HINT_COOKIE, READER_HINT_OPTIONS } from './reader-hint'
 import { getAdminSession, UnauthorizedError } from './guard'
 import { hashSessionToken, isWellFormedToken, newSessionToken, SESSION_COOKIE_OPTIONS, SESSION_TOUCH_INTERVAL_MS } from './session'
@@ -38,12 +41,23 @@ export const getAccountState = cache(async (): Promise<AccountState | null> => {
   return { account, permissions: teamPermissions(account, await repo.getGrant(account.email)) }
 })
 
+export function isOwnerAccount(account: Pick<AccountRecord, 'email'>): boolean {
+  return isOwnerEmail(account.email, publicEmail())
+}
+
 export const getPanelActor = cache(async (): Promise<PanelActor | null> => {
   if (await getAdminSession()) return { kind: 'owner' }
   const state = await getAccountState()
+  if (state && isOwnerAccount(state.account)) return { kind: 'owner' }
   if (!state || state.permissions.length === 0) return null
   return { kind: 'team', account: state.account, permissions: state.permissions }
 })
+
+export async function requireOwner(): Promise<PanelActor> {
+  const actor = await getPanelActor()
+  if (actor?.kind !== 'owner') throw new UnauthorizedError()
+  return actor
+}
 
 export async function requirePermission(permission: Permission): Promise<PanelActor> {
   const actor = await getPanelActor()
@@ -51,7 +65,9 @@ export async function requirePermission(permission: Permission): Promise<PanelAc
   return actor
 }
 
-export async function startAccountSession(accountId: string, now: Date): Promise<void> {
+export type SessionHints = { owner: boolean; panel: boolean }
+
+export async function startAccountSession(accountId: string, now: Date, hints: SessionHints = { owner: false, panel: false }): Promise<void> {
   const token = newSessionToken()
   await getRepos().accounts.createSession({
     tokenHash: hashSessionToken(token),
@@ -63,6 +79,9 @@ export async function startAccountSession(accountId: string, now: Date): Promise
   const store = await cookies()
   store.set(ACCOUNT_COOKIE, token, SESSION_COOKIE_OPTIONS)
   store.set(READER_HINT_COOKIE, '1', READER_HINT_OPTIONS)
+  if (hints.owner) store.set(AUTHOR_HINT_COOKIE, '1', AUTHOR_HINT_OPTIONS)
+  if (hints.owner || hints.panel) store.set(PANEL_HINT_COOKIE, '1', PANEL_HINT_OPTIONS)
+  else store.delete({ name: PANEL_HINT_COOKIE, ...PANEL_HINT_OPTIONS })
 }
 
 export async function endAccountSession(): Promise<void> {
@@ -70,5 +89,6 @@ export async function endAccountSession(): Promise<void> {
   const token = store.get(ACCOUNT_COOKIE)?.value
   store.delete({ name: ACCOUNT_COOKIE, ...SESSION_COOKIE_OPTIONS })
   store.delete({ name: READER_HINT_COOKIE, ...READER_HINT_OPTIONS })
+  store.delete({ name: PANEL_HINT_COOKIE, ...PANEL_HINT_OPTIONS })
   if (isWellFormedToken(token)) await getRepos().accounts.deleteSession(hashSessionToken(token))
 }

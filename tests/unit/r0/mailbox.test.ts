@@ -1,4 +1,8 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+const panel = vi.hoisted(() => ({ actor: { kind: 'owner' } as unknown }))
+vi.mock('@/lib/auth/accounts', () => ({ getPanelActor: async () => panel.actor }))
+
 import * as route from '@/app/api/inbox-count/route'
 import { badgeText, MAILBOX_INTERVAL_MS, mailboxLabel, parseUnread, startVisiblePolling } from '@/components/shell/mailbox'
 import { getRepos, registerRepoFactory } from '@/lib/data'
@@ -8,6 +12,7 @@ import type { Repos } from '@/lib/data/types'
 let repos: Repos
 
 beforeEach(() => {
+  panel.actor = { kind: 'owner' }
   registerRepoFactory(() => createMemoryRepos())
   repos = getRepos()
 })
@@ -15,8 +20,16 @@ beforeEach(() => {
 const message = (name: string) => ({ name, email: `${name}@example.com`, phone: '+57 300 123 4567', message: `Hola soy ${name}`, consentAt: new Date() })
 
 describe('GET /api/inbox-count', () => {
-  it('se revalida cada 30 s', () => {
-    expect(route.revalidate).toBe(30)
+  it('es dinámico y privado: depende de la sesión', () => {
+    expect(route.dynamic).toBe('force-dynamic')
+  })
+
+  it('a un visitante, o a alguien del equipo sin permiso de mensajes, le dice 0', async () => {
+    await repos.messages.create(message('ana'))
+    panel.actor = null
+    expect(await (await route.GET()).json()).toEqual({ unread: 0 })
+    panel.actor = { kind: 'team', account: { id: 'a' }, permissions: ['posts'] }
+    expect(await (await route.GET()).json()).toEqual({ unread: 0 })
   })
 
   it('devuelve solo el número de no leídos, sin datos de visitantes', async () => {

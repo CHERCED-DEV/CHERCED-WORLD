@@ -52,12 +52,7 @@ test.describe('dock flotante (US6, FR-607, FR-608)', () => {
         expect(box.top, `${action.selector} no se repite arriba`).toBeGreaterThan(header.bottom)
       }
 
-      const mailbox = page.locator('header [data-cw-mailbox]')
-      await expect(mailbox).toBeVisible()
-      await expect(mailbox, 'D-R1: el visitante va a Contacto').toHaveAttribute('href', '/es/contactMe')
-      const box = await rectOf(page, 'header [data-cw-mailbox]')
-      expect(box.bottom).toBeLessThanOrEqual(header.bottom)
-      expect(box.right).toBeLessThanOrEqual(width)
+      await expect(page.locator('header [data-cw-mailbox]'), 'el visitante no ve el buzón').toHaveCount(0)
       expect(await page.locator('[data-cw-menu-button]').count()).toBe(1)
     })
   }
@@ -158,7 +153,6 @@ test.describe('dock sin JavaScript (US6, escenario 5)', () => {
     const menu = await rectOf(page, MENU)
     expect(menu.bottom).toBeLessThanOrEqual(header.bottom)
     await expect(page.locator('[data-cw-dock-assistant]')).toBeHidden()
-    await expect(page.locator('header [data-cw-mailbox]')).toBeVisible()
     expect(await page.evaluate(() => getComputedStyle(document.body).paddingBottom)).toBe('0px')
     await page.locator(MENU).click()
     await expect(page.locator('[data-cw-float-menu]')).toBeVisible()

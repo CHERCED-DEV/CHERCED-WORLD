@@ -3,7 +3,8 @@ import { repoBackend } from '@/lib/data/mongo/register'
 import { getRepos } from '@/lib/data'
 import type { AccountProfile } from '@/lib/data/types'
 import { logServerError } from '@/lib/security/log'
-import { startAccountSession } from './accounts'
+import { teamPermissions } from '@/lib/accounts/permissions'
+import { isOwnerAccount, startAccountSession } from './accounts'
 import { GOOGLE_TOKEN_URL } from './oauth'
 
 export const GOOGLE_CLIENT_ID_ENV = 'GOOGLE_CLIENT_ID'
@@ -53,6 +54,9 @@ export async function exchangeCode(client: GoogleClient, code: string, verifier:
 export async function completeSignIn(profile: AccountProfile, now: Date): Promise<'ok' | 'blocked'> {
   const account = await getRepos().accounts.upsertFromGoogle(profile, now)
   if (account.blockedAt) return 'blocked'
-  await startAccountSession(account.id, now)
+  const repo = getRepos().accounts
+  const owner = isOwnerAccount(account)
+  const panel = owner || teamPermissions(account, await repo.getGrant(account.email)).length > 0
+  await startAccountSession(account.id, now, { owner, panel })
   return 'ok'
 }

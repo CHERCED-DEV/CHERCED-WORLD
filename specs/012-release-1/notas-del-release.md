@@ -42,7 +42,11 @@ del 2026-11-01. El release lleva a producción todo lo que hay en `dev`: las spe
 - **Personas** (017): dar a una cuenta de Gmail permiso para escribir posts, leer mensajes o moderar comentarios;
   bloquear o borrar cuentas. Los posts de un invitado llegan "En revisión" y solo el autor los publica, con la firma del
   invitado.
-- El ícono del buzón lleva a los visitantes a Contacto y al autor, al panel (D-R1).
+- El ícono del buzón solo lo ven el autor y su equipo, y lleva al panel. Los visitantes no lo ven, porque "Contáctame"
+  ya está en la barra (cambio del autor al D-R1, 2026-11-15). El contador de no leídos solo responde a quien tiene
+  permiso de mensajes.
+- **El autor entra con su Google:** la cuenta de Google con el correo público del sitio tiene todos los poderes del
+  dueño (mensajes, comentarios, blog, Personas y Ajustes), igual que con la contraseña (2026-11-15).
 
 ## Calidad
 

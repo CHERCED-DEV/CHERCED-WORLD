@@ -116,16 +116,15 @@ describe('Dock (FR-607, FR-608, EM-05)', () => {
     expect(assistant).toContain('cw-js-only')
   })
 
-  it('el header monta el dock con búsqueda, asistente, tema y menú, y el buzón sigue en el header', () => {
+  it('el header monta el dock con búsqueda, asistente, tema y menú, y el visitante no ve el buzón', () => {
     const html = render(createElement(SiteHeader, { lang: 'es', items: [], labels: shellLabels(common) }))
     expect(html).toMatch(/<header id="header" class="[^"]*" data-cw-glass="standard" data-cw-blur="">/)
     const dock = html.slice(html.indexOf('data-cw-dock-bar'))
-    const order = ['data-cw-palette-trigger', 'data-cw-dock-assistant', 'data-cw-lang-switch', 'data-cw-mailbox', 'data-cw-theme-toggle', 'data-cw-menu-button']
+    const order = ['data-cw-palette-trigger', 'data-cw-dock-assistant', 'data-cw-lang-switch', 'data-cw-theme-toggle', 'data-cw-menu-button']
     const positions = order.map((marker) => dock.indexOf(marker))
     expect(positions.every((position) => position > 0)).toBe(true)
     expect([...positions].sort((a, b) => a - b)).toEqual(positions)
-    const mailbox = /<a [^>]*data-cw-mailbox=""[^>]*>/.exec(html)?.[0] ?? ''
-    expect(mailbox, 'D-R1: sin la marca del autor, el buzón lleva a Contacto').toContain('href="/es/contactMe"')
+    expect(html, 'sin la marca del panel no hay buzón: Contacto ya está en la barra').not.toContain('data-cw-mailbox')
     expect(html.match(/data-cw-menu-button/g)).toHaveLength(1)
   })
 })
