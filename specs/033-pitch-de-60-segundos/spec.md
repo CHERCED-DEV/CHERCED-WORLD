@@ -3,7 +3,7 @@
 Pedido del autor, 2026-11-14 (funcionalidades para entrevistas). Para el reclutador que tiene un minuto. Depende de la
 020 y del motor de voz de la 021.
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 con la voz del navegador. Los guiones esperan la aprobación del autor y la voz de Gemini espera la 021.
 
 ## Qué hace
 
@@ -34,3 +34,17 @@ contando el problema, la decisión clave, el resultado y el stack, con subtítul
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-3301 | ¿La voz del pitch es la misma de Mini Cherced? | Sí, para que suene a un mismo personaje |
+
+## Cómo quedó (2026-11-15)
+
+- **Guiones (FR-3301):** `content/pitches.ts`, en ES y EN, para los cinco casos de 2026: Synergos, Director y líneas,
+  CHERCED-WORLD, el espacio legal y el puente de eventos. Los escribí yo solo con lo que publica cada caso, sin
+  Gemini, y las cifras de Synergos salen de `synergosFacts`. Todos están en `approved: false`: no se publican hasta que
+  Camilo los apruebe.
+- **Reproductor:** `CasePitch` aparece al final del caso cuando el guion está aprobado. Usa el mismo `ListenPlayer` de
+  "Escuchar este post", con la voz del navegador. El texto se renderiza en el servidor, así que se lee sin
+  JavaScript y sirve para SEO (FR-3302). Sin voz en el navegador, queda el texto (FR-3303).
+- **Pendiente:**
+  - la voz de Gemini, que llega con la 021 (P-3301);
+  - el enlace desde "Para reclutadores" (FR-3304), que va cuando haya guiones aprobados;
+  - los guiones de los casos de 2022 y 2023.

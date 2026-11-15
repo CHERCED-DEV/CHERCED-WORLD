@@ -1,0 +1,24 @@
+.pitch {
+  display: grid;
+  gap: var(--cw-space-3);
+  width: min(100% - 32px, 960px);
+  margin: var(--cw-space-8) auto;
+  padding: var(--cw-space-6);
+  border-radius: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--cw-text-xl);
+}
+
+.note {
+  margin: 0;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.script p {
+  margin: 0;
+  line-height: 1.7;
+}

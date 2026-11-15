@@ -4,6 +4,7 @@ import { BackgroundIntensity } from '@/components/motion'
 import { isLocale, localizedPath, t, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import { CaseStudy, EMBED_ANCHOR } from '@/components/site/portfolio/CaseStudy'
+import { CasePitch } from '@/components/site/portfolio/CasePitch'
 import { caseEvidenceLabels, caseStudyExtraLabels } from '@/components/site/portfolio/labels'
 import {
   caseAdrCards,
@@ -64,11 +65,12 @@ async function relatedPostTitles(projectId: string, lang: Locale): Promise<Relat
 
 export default async function CaseStudyPage({ params }: Props) {
   const { lang, project } = await resolve(params)
-  const [dict, portfolio, common, posts] = await Promise.all([
+  const [dict, portfolio, common, posts, blog] = await Promise.all([
     getDictionary(lang, 'site'),
     getDictionary(lang, 'portfolio'),
     getDictionary(lang, 'common'),
     relatedPostTitles(project.id, lang),
+    getDictionary(lang, 'blog'),
   ])
   const labels: CaseStudyLabels = {
     context: t(dict, 'project.context'),
@@ -122,6 +124,18 @@ export default async function CaseStudyPage({ params }: Props) {
               services: getSite().services.items,
               labels: { post: extraLabels.relatedPost, services: extraLabels.relatedServices },
             }),
+          }}
+        />
+        <CasePitch
+          caseId={project.id}
+          lang={lang}
+          title={projectTitle(project, lang)}
+          labels={{
+            play: t(blog, 'listen.play'),
+            pause: t(blog, 'listen.pause'),
+            resume: t(blog, 'listen.resume'),
+            stop: t(blog, 'listen.stop'),
+            status: t(blog, 'listen.status'),
           }}
         />
       </SectionNav>
