@@ -943,6 +943,10 @@ export default function AgentStage({ lang }: LabDemoProps) {
         <Link href={`/${lang}/ai-lab/evals`} data-cw-agent-evals="">
           {copy.evals}
         </Link>
+        {' · '}
+        <Link href={`/${lang}/ai-lab/codigo`} data-cw-agent-code="">
+          {copy.code}
+        </Link>
       </p>
     </section>
   )
