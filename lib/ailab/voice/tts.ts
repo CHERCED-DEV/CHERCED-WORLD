@@ -67,6 +67,7 @@ export type SpeechOptions = {
   rate?: number
   env?: SpeechEnv | null
   signal?: AbortSignal
+  from?: number
 }
 
 export type SpeechSession = {
@@ -462,12 +463,13 @@ export function speak<N = unknown>(input: string | readonly SpeechChunk<N>[], op
   })
   let generation = 0
   let current: UtteranceLike | null = null
+  const first = chunks.length > 0 ? Math.min(chunks.length - 1, Math.max(0, Math.floor(options.from ?? 0))) : -1
   let snapshot: SpeechSnapshot = {
     state: 'playing',
-    index: chunks.length > 0 ? 0 : -1,
+    index: first,
     total: chunks.length,
-    heading: chunks[0]?.heading ?? null,
-    chunk: chunks[0] ?? null,
+    heading: chunks[first]?.heading ?? null,
+    chunk: chunks[first] ?? null,
     voice: options.voice?.name ?? null,
     ended: null,
     error: null,

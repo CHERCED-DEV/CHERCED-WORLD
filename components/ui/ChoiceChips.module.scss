@@ -1,0 +1,76 @@
+@use 'layout';
+
+.group {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  margin-bottom: var(--cw-space-2);
+  padding: 0;
+  font-size: var(--cw-text-sm);
+  font-weight: 700;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cw-space-2);
+  min-width: 0;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  touch-action: manipulation;
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.face {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0 var(--cw-space-3);
+  border: 1px solid var(--cw-glass-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cw-bg) 60%, transparent);
+  color: var(--cw-fg);
+  font-size: var(--cw-text-sm);
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.input:checked + .face {
+  border-color: var(--cw-graphic-accent);
+  background: color-mix(in srgb, var(--cw-graphic-accent) 18%, transparent);
+  font-weight: 700;
+}
+
+.input:focus-visible + .face {
+  @include layout.focus-ring;
+}
+
+.input:disabled + .face {
+  opacity: 0.55;
+}

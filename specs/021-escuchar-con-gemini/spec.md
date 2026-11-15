@@ -3,7 +3,7 @@
 Pedido del autor, 2026-11-14: "el motor de lectura es muy básico, debería ser más humano, por eso debemos ponerle
 Gemini". Depende de la 020.
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 (ver «Cómo quedó»). Pendientes del autor: elegir las voces (P-2101) y decidir la pregeneración (P-2102).
 
 ## Qué hace
 
@@ -43,3 +43,28 @@ Estado: spec. No construida.
 |---|---|---|
 | P-2101 | ¿Qué voces? | Una masculina y una femenina por idioma, a elegir por el autor |
 | P-2102 | ¿Pregenerar todos los posts antes de 2027 para pagar la mitad? | Sí, al subir esto |
+
+## Cómo quedó (2026-11-15)
+
+- **FR-2101** `GET /api/listen?s=…&l=…&v=…&t=…` (`app/api/listen/route.ts`) convierte una frase en WAV con
+  `gemini-3.8-flash-tts` y responde con `s-maxage` de un año e `immutable`. Además guarda el audio en la caché de datos
+  de Vercel (`unstable_cache`, clave: fuente, idioma, voz y hash de la frase), que sobrevive a los despliegues: una frase
+  se paga una vez. El lector adelanta la frase siguiente mientras suena la actual.
+- **FR-2104** Solo se convierte texto público: la ruta valida que la frase exista en el MDX del post (o en el post
+  publicado desde el panel, el pitch del caso o el ejemplo de V3), sin importar el formato. Se probó con las 354 frases
+  de los 7 posts en los dos idiomas: todas pasan. Una frase inventada recibe 403 y no cuesta nada.
+- **Topes:** 150 frases nuevas por visitante al día y 600 en total (~2 USD al día como máximo). Solo cuentan las frases
+  que se generan; las que ya están en caché no. El gasto sale en el panel como «Voz de Gemini en los posts».
+- **FR-2102** El reproductor del post y el pitch de 60 s de los casos usan el mismo motor (`lib/ailab/voice/tts.ts`) con
+  un adaptador de Gemini (`lib/ai/listen/client.ts`): misma pausa, «Seguir escuchando», Esc y resaltado por frase. Si
+  Gemini está disponible aparecen dos chips de voz: Charon (grave) y Kore (clara); la elección se recuerda en el
+  navegador.
+- **FR-2103** Si Gemini no está, falla o se alcanza un tope, el lector sigue con la voz del navegador desde esa frase,
+  sin mensaje de error.
+- **FR-2105** El bug de V3: los selectores se bloqueaban mientras leía. Ahora voz, velocidad y motor se cambian en
+  plena lectura y el lector retoma desde la frase actual (`speak(..., { from })`). La velocidad y las voces de Gemini son
+  chips de radio nativos de 44 px que funcionan con toque, mouse y teclado y caben a 320 px. V3 ofrece «Motor de voz:
+  Gemini o tu navegador» cuando hay Gemini; sin Gemini se ve igual que antes.
+- P-2102 (pregenerar los posts antes de 2027) queda para el autor: generar los 7 posts en dos idiomas cuesta ~2 USD y
+  no se hizo sin su permiso. Basta con escuchar cada post una vez con cada voz.
+- Tests: `tests/unit/listen/listen.test.ts` (validación, corpus, WAV, ruta, adaptador, respaldo y `from`).

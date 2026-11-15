@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
     root,
   },
   outputFileTracingRoot: root,
+  outputFileTracingIncludes: {
+    '/api/listen': ['./content/posts/**/*.mdx'],
+  },
 }
 
 const withMDX = createMDX({

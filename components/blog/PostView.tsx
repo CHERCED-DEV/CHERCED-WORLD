@@ -146,6 +146,7 @@ export function PostView({ lang, meta, fallback, prepared, url, blog, neighbors,
             lang={contentLang ?? lang}
             title={meta.title}
             target={POST_BODY_ID}
+            source={`post:${meta.id}`}
             labels={{
               play: t(blog, 'listen.play'),
               pause: t(blog, 'listen.pause'),

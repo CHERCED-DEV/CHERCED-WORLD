@@ -3,9 +3,13 @@
 import Image from 'next/image'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import type { LabDemoProps } from '@/components/ailab/shell/types'
-import { extractPost, isOnlineVoice, pickVoice, speak, voicesFor, type PostReading, type ReadableNode } from '@/lib/ailab/voice/tts'
+import { useGeminiListen, useListenVoice } from '@/components/blog/post/use-gemini-listen'
+import { ChoiceChips } from '@/components/ui/ChoiceChips'
+import { geminiSpeechEnv, geminiVoiceLike, type GeminiSpeechEnv } from '@/lib/ai/listen/client'
+import { LISTEN_VOICE_LABELS, LISTEN_VOICES, type ListenVoice } from '@/lib/ai/listen/voices'
+import { extractPost, isOnlineVoice, LANG_TAGS, pickVoice, speak, SPEECH_RATES, voicesFor, type PostReading, type ReadableNode } from '@/lib/ailab/voice/tts'
 import { LocalNote, fill } from './parts'
-import { RateSelect, SpeechControls, VoiceSelect, isActive, stopOnEscape } from './speech-parts'
+import { SpeechControls, VoiceSelect, isActive, rateLabel, stopOnEscape } from './speech-parts'
 import { useSpeechSession, useSpeechVoices } from './use-speech'
 import styles from './Voice.module.scss'
 
@@ -23,6 +27,10 @@ const DIVIDER =
 
 const READING = 'data-cw-v3-reading'
 
+type Engine = 'gemini' | 'browser'
+
+type Choice = { voiceURI?: string | null; rate?: number; engine?: Engine; geminiVoice?: ListenVoice }
+
 function isElement(node: unknown): node is Element {
   return typeof Element !== 'undefined' && node instanceof Element
 }
@@ -32,6 +40,11 @@ export function PostReader({ lang, t }: LabDemoProps) {
   const { snapshot, start, pause, resume, stop } = useSpeechSession()
   const [chosen, setChosen] = useState<string | null>(null)
   const [rate, setRate] = useState(1)
+  const gemini = useGeminiListen(true) === true
+  const [picked, setPicked] = useState<Engine | null>(null)
+  const [geminiVoice, setGeminiVoice] = useListenVoice()
+  const geminiEnv = useRef<GeminiSpeechEnv | null>(null)
+  const engine: Engine = picked ?? (gemini ? 'gemini' : 'browser')
   const [reading, setReading] = useState<PostReading<ReadableNode> | null>(null)
   const post = useRef<HTMLElement>(null)
   const marked = useRef<Element | null>(null)
@@ -39,7 +52,7 @@ export function PostReader({ lang, t }: LabDemoProps) {
 
   const options = useMemo(() => voicesFor(voices, lang), [voices, lang])
   const voice = useMemo(() => pickVoice(voices, lang, chosen), [voices, lang, chosen])
-  const online = isOnlineVoice(voice)
+  const online = engine === 'browser' && isOnlineVoice(voice)
   const active = isActive(snapshot)
   const title = t('ailab.v3.sample.title')
 
@@ -60,11 +73,39 @@ export function PostReader({ lang, t }: LabDemoProps) {
     }
   }, [active, snapshot.chunk])
 
-  const play = () => {
-    const next = voice ? plan() : null
+  useEffect(() => () => geminiEnv.current?.dispose(), [])
+
+  const run = (choice: Choice = {}, from = 0) => {
+    const useEngine = choice.engine ?? engine
+    const useRate = choice.rate ?? rate
+    const useBrowserVoice = choice.voiceURI === undefined ? voice : pickVoice(voices, lang, choice.voiceURI)
+    if (useEngine === 'browser' && !useBrowserVoice) return
+    const next = plan()
     if (!next) return
-    start(() => speak(next.chunks, { lang, voice, rate, env }))
+    geminiEnv.current?.dispose()
+    geminiEnv.current = null
+    if (useEngine === 'gemini') {
+      const id = choice.geminiVoice ?? geminiVoice
+      const speechEnv = geminiSpeechEnv({ source: 'v3', lang, voice: id, fallback: supported ? env : null, texts: next.chunks.map((chunk) => chunk.text) })
+      geminiEnv.current = speechEnv
+      speechEnv.unlock()
+      start(() => speak(next.chunks, { lang, voice: geminiVoiceLike(id, LANG_TAGS[lang]), rate: useRate, env: speechEnv, from }))
+      return
+    }
+    start(() => speak(next.chunks, { lang, voice: useBrowserVoice, rate: useRate, env, from }))
   }
+
+  const play = () => run()
+
+  const change = (choice: Choice) => {
+    if (choice.voiceURI !== undefined) setChosen(choice.voiceURI)
+    if (choice.rate !== undefined) setRate(choice.rate)
+    if (choice.engine !== undefined) setPicked(choice.engine)
+    if (choice.geminiVoice !== undefined) setGeminiVoice(choice.geminiVoice)
+    if (active) run(choice, Math.max(0, snapshot.index))
+  }
+
+  const canPlay = engine === 'gemini' || voice !== null
 
   const heading = snapshot.heading ?? title
 
@@ -85,15 +126,35 @@ export function PostReader({ lang, t }: LabDemoProps) {
 
   return (
     <div className={styles.demo} data-cw-voice="V3" onKeyDown={stopOnEscape(snapshot, stop)}>
-      <LocalNote>{t('ailab.v3.local')}</LocalNote>
+      <LocalNote>{t(engine === 'gemini' ? 'ailab.v3.gemini.note' : 'ailab.v3.local')}</LocalNote>
 
-      {!supported ? (
+      {!supported && !gemini ? (
         <p className={styles.problem} role="alert" data-cw-speech-unsupported="">
           {t('ailab.v3.unsupported')}
         </p>
       ) : (
         <>
-          {loading ? (
+          {gemini && supported ? (
+            <ChoiceChips
+              kind="v3-engine"
+              legend={t('ailab.v3.engine.label')}
+              options={[
+                { value: 'gemini', label: t('ailab.v3.engine.gemini') },
+                { value: 'browser', label: t('ailab.v3.engine.browser') },
+              ]}
+              value={engine}
+              onChange={(value) => change({ engine: value })}
+            />
+          ) : null}
+          {engine === 'gemini' ? (
+            <ChoiceChips
+              kind="v3-gemini-voice"
+              legend={t('ailab.v3.gemini.voice')}
+              options={LISTEN_VOICES.map((id) => ({ value: id, label: LISTEN_VOICE_LABELS[lang][id] }))}
+              value={geminiVoice}
+              onChange={(value) => change({ geminiVoice: value })}
+            />
+          ) : loading ? (
             <p className={styles.hint} role="status" data-cw-speech-voices="loading">
               {t('ailab.v3.voices.loading')}
             </p>
@@ -107,13 +168,20 @@ export function PostReader({ lang, t }: LabDemoProps) {
                 label={t('ailab.v3.voice.label')}
                 voices={options}
                 value={voice?.voiceURI ?? ''}
-                onChange={setChosen}
+                onChange={(value) => change({ voiceURI: value })}
                 onlineMark={t('ailab.v3.voice.online')}
-                disabled={active}
               />
-              <RateSelect label={t('ailab.v3.rate.label')} lang={lang} value={rate} onChange={setRate} disabled={active} />
             </div>
           )}
+          {engine === 'gemini' || options.length > 0 ? (
+            <ChoiceChips
+              kind="v3-rate"
+              legend={t('ailab.v3.rate.label')}
+              options={SPEECH_RATES.map((value) => ({ value: String(value), label: rateLabel(value, lang) }))}
+              value={String(rate)}
+              onChange={(value) => change({ rate: Number(value) })}
+            />
+          ) : null}
 
           {online && voice ? (
             <p id={`${id}-online`} className={styles.notice} role="status" data-cw-speech-online="">
@@ -134,7 +202,7 @@ export function PostReader({ lang, t }: LabDemoProps) {
             onPause={pause}
             onResume={resume}
             onStop={stop}
-            canPlay={voice !== null}
+            canPlay={canPlay}
             describedBy={online ? `${id}-online` : undefined}
           />
 

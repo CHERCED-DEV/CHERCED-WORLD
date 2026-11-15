@@ -19,7 +19,7 @@ export function CasePitch({ caseId, lang, title, labels }: { caseId: string; lan
         {COPY[lang].title}
       </h2>
       <p className={styles.note}>{COPY[lang].note}</p>
-      <ListenPlayer lang={lang} title={title} target={id} labels={{ ...labels, play: COPY[lang].play }} />
+      <ListenPlayer lang={lang} title={title} target={id} source={`pitch:${caseId}`} labels={{ ...labels, play: COPY[lang].play }} />
       <div id={id} className={styles.script}>
         <p>{pitch.script[lang]}</p>
       </div>
