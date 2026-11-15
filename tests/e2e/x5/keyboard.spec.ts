@@ -30,7 +30,7 @@ test.use({
 
 test.describe.configure({ timeout: 120_000 })
 
-const CARD_ORDER: CardId[] = ['V5', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
+const CARD_ORDER: CardId[] = ['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
 
 type Focus = { body: boolean; ring: boolean; what: string }
 
@@ -136,6 +136,16 @@ const FLOWS: Record<CardId, Flow> = {
     await tabTo(page, stage.locator('[data-cw-shot-analyze]'), rings)
     await page.keyboard.press('Enter')
     await expect(stage.locator('[data-cw-shot-node]').first()).toBeVisible({ timeout: 30_000 })
+  },
+  V6: async ({ page, stage, rings }) => {
+    const accept = stage.locator('[data-cw-gemini-accept]')
+    if (await accept.count()) {
+      await tabTo(page, accept, rings)
+      await page.keyboard.press('Enter')
+    }
+    await tabTo(page, stage.locator('[data-cw-subtitles-start]'), rings)
+    await page.keyboard.press('Enter')
+    await expect(stage.locator('[data-cw-subtitles-translation]')).not.toHaveText('…', { timeout: 30_000 })
   },
   P1: async ({ page, stage, rings }) => {
     const accept = stage.locator('[data-cw-gemini-accept]')

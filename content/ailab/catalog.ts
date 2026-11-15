@@ -259,6 +259,37 @@ const P1: LabExperiment = {
   code: null,
 }
 
+const V6: LabExperiment = {
+  id: 'V6',
+  theme: 'gemini',
+  title: copy('ailab.v6.title'),
+  summary: copy('ailab.v6.summary'),
+  status: 'beta',
+  runsIn: 'google',
+  inputs: ['microphone'],
+  session: { activity: 'transcription', minutes: 3, capped: true },
+  poweredBy: { es: 'Gemini Live', en: 'Gemini Live' },
+  limit: { uses: 3, per: 'day' },
+  downloads: [],
+  privacy: copy('ailab.v6.privacy'),
+  flow: [
+    { es: 'Eliges la dirección y si quieres oír la traducción; el servidor pide un token de un solo uso con una instrucción de intérprete', en: 'You pick the direction and whether to hear the translation; the server requests a single-use token with an interpreter instruction' },
+    { es: 'Tu navegador abre el micrófono y manda el audio directo a Gemini Live, como Mini Cherced; la sesión dura 3 minutos', en: 'Your browser opens the microphone and sends the audio straight to Gemini Live, like Mini Cherced; the session lasts 3 minutes' },
+    { es: 'Las transcripciones de entrada y salida se vuelven subtítulos con tiempos, que descargas en .srt; nada se guarda', en: 'The input and output transcriptions become timed subtitles you download as .srt; nothing is stored' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Un intérprete con instrucción, no un modelo nuevo', en: 'An interpreter by instruction, not a new model' },
+      why: {
+        es: 'Usa el mismo modelo de Live de Mini Cherced, que ya está probado, con una instrucción que solo deja traducir. El modelo de traducción en vivo queda para cuando se pueda validar sin gastar a ciegas.',
+        en: 'It uses the same Live model as Mini Cherced, already proven, with an instruction that only allows translating. The live translation model is left for when it can be validated without spending blindly.',
+      },
+      tradeoff: { es: 'Traduce al final de cada frase, no palabra por palabra: hay que hacer pausas cortas.', en: 'It translates at the end of each sentence, not word by word: you need to pause briefly.' },
+    },
+  ],
+  code: null,
+}
+
 const V1: LabExperiment = {
   id: 'V1',
   theme: 'voice',
@@ -1050,7 +1081,7 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
-export const labCatalog: readonly LabExperiment[] = [V5, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
+export const labCatalog: readonly LabExperiment[] = [V5, V6, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)

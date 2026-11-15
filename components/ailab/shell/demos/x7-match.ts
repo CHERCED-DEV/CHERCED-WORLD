@@ -7,4 +7,5 @@ export const x7Demos: LabDemoRegistry = {
   A7: labDemo(() => import('@/components/ailab/write/WriteStage')),
   A8: labDemo(() => import('@/components/ailab/shot/ShotStage')),
   P1: labDemo(() => import('@/components/ailab/pixel/PixelStage')),
+  V6: labDemo(() => import('@/components/ailab/subtitles/SubtitlesStage')),
 }

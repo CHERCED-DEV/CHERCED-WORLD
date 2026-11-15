@@ -94,9 +94,9 @@ describe('copy base de la spec, palabra por palabra (FR-370)', () => {
 })
 
 describe('catálogo del laboratorio (FR-302, T704)', () => {
-  it('trae los 17 experimentos, una vez cada uno, con los de Gemini primero (020)', () => {
+  it('trae los 18 experimentos, una vez cada uno, con los de Gemini primero (020)', () => {
     expect([...labCatalog.map((item) => item.id)].sort()).toEqual([...LAB_EXPERIMENT_IDS].sort())
-    expect(labCatalog.map((item) => item.id)).toEqual(['V5', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'])
+    expect(labCatalog.map((item) => item.id)).toEqual(['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'])
     expect(isLabExperimentId('V1')).toBe(true)
     expect(isLabExperimentId('A1')).toBe(false)
     expect(labExperiment('R1').title.es).toBe('Simulador de sagas')
@@ -106,7 +106,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
   it('agrupa por tema: Con Gemini primero (020, P-2002), luego Voz, Arquitectura, Agentes y Juegos', () => {
     expect(LAB_THEMES).toEqual(['gemini', 'voice', 'architecture', 'agents', 'games'])
     expect(labThemes().map((group) => [group.theme, group.experiments.map((item) => item.id)])).toEqual([
-      ['gemini', ['V5', 'A6', 'A9', 'A7', 'A8', 'P1']],
+      ['gemini', ['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1']],
       ['voice', ['V1', 'V2', 'V3', 'V4']],
       ['architecture', ['R1']],
       ['agents', ['A2', 'A3', 'A5', 'A4']],

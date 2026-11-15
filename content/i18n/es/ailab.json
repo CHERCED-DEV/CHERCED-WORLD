@@ -648,5 +648,8 @@
   "ailab.a8.privacy": "La imagen va a Google (Gemini) para analizarla y no se guarda en el sitio: ni la captura ni el resultado.",
   "ailab.p1.title": "Pixélate: tu foto como chibi",
   "ailab.p1.summary": "Sube una foto tuya o tómala con la cámara y Gemini te convierte en un chibi pixel art al estilo de Mini Cherced: cabeza grande, contorno verde y fondo de pantalla CRT. Lo descargas en PNG.",
-  "ailab.p1.privacy": "La foto va a Google (Gemini) para generar la imagen. Este sitio no guarda ni la foto ni el resultado."
+  "ailab.p1.privacy": "La foto va a Google (Gemini) para generar la imagen. Este sitio no guarda ni la foto ni el resultado.",
+  "ailab.v6.title": "Subtítulos en vivo español ↔ inglés",
+  "ailab.v6.summary": "Hablas en español y aparecen subtítulos en inglés, o al revés, con la opción de oír la traducción. Así presentaría Camilo en una entrevista en inglés. Descargas los subtítulos en .srt.",
+  "ailab.v6.privacy": "Tu voz va a Google (Gemini) solo mientras dura la sesión, de 3 minutos como máximo. Este sitio no la guarda ni guarda los subtítulos."
 }
