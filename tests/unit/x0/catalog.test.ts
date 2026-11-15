@@ -94,9 +94,9 @@ describe('copy base de la spec, palabra por palabra (FR-370)', () => {
 })
 
 describe('catálogo del laboratorio (FR-302, T704)', () => {
-  it('trae los 13 experimentos del alcance, una vez cada uno y en el orden de las lanes, con V5 (018) primero y A6 (029) al frente de agentes', () => {
-    expect(labCatalog.map((item) => item.id)).toEqual([...LAB_EXPERIMENT_IDS])
-    expect(LAB_EXPERIMENT_IDS).toEqual(['V5', 'V1', 'V2', 'V3', 'V4', 'A6', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'])
+  it('trae los 15 experimentos, una vez cada uno, con los de Gemini primero (020)', () => {
+    expect([...labCatalog.map((item) => item.id)].sort()).toEqual([...LAB_EXPERIMENT_IDS].sort())
+    expect(labCatalog.map((item) => item.id)).toEqual(['V5', 'A6', 'A9', 'A7', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'])
     expect(isLabExperimentId('V1')).toBe(true)
     expect(isLabExperimentId('A1')).toBe(false)
     expect(labExperiment('R1').title.es).toBe('Simulador de sagas')
@@ -106,7 +106,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
   it('agrupa por tema: Con Gemini primero (020, P-2002), luego Voz, Arquitectura, Agentes y Juegos', () => {
     expect(LAB_THEMES).toEqual(['gemini', 'voice', 'architecture', 'agents', 'games'])
     expect(labThemes().map((group) => [group.theme, group.experiments.map((item) => item.id)])).toEqual([
-      ['gemini', ['V5', 'A6']],
+      ['gemini', ['V5', 'A6', 'A9', 'A7']],
       ['voice', ['V1', 'V2', 'V3', 'V4']],
       ['architecture', ['R1']],
       ['agents', ['A2', 'A3', 'A5', 'A4']],
@@ -118,7 +118,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
   it('cada experimento trae estado, dónde corre, privacidad, recorrido y decisiones en ES y EN', () => {
     for (const item of labCatalog) {
       expect(LAB_STATUSES, item.id).toContain(item.status)
-      expect(item.runsIn, item.id).toBe(item.id === 'V5' || item.id === 'A6' ? 'google' : 'browser')
+      expect(item.runsIn, item.id).toBe(item.theme === 'gemini' ? 'google' : 'browser')
       for (const value of [item.title, item.summary, item.privacy, ...item.flow]) {
         expect(value.es.trim(), item.id).not.toBe('')
         expect(value.en.trim(), item.id).not.toBe('')

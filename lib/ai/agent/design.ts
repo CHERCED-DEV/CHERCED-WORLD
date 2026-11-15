@@ -11,6 +11,34 @@ export type NodeKind = (typeof NODE_KINDS)[number]
 const id = z.string().trim().min(1).max(40)
 const label = z.string().trim().min(1).max(60)
 
+export function diagramSchemaWith(maxNodes: number) {
+  return z
+    .object({
+      nodos: z
+        .array(z.object({ id, etiqueta: label, tipo: z.enum(NODE_KINDS).catch('servicio') }))
+        .min(1)
+        .max(maxNodes),
+      conexiones: z.array(z.object({ de: id, a: id, etiqueta: z.string().trim().max(40).optional() })).max(maxNodes * 3).default([]),
+      grupos: z
+        .array(z.object({ id, etiqueta: label, nodos: z.array(id).max(maxNodes) }))
+        .max(DIAGRAM_MAX_GROUPS)
+        .default([]),
+    })
+    .superRefine(checkReferences)
+}
+
+function checkReferences(diagram: { nodos: Array<{ id: string }>; conexiones: Array<{ de: string; a: string }>; grupos: Array<{ id: string; nodos: string[] }> }, context: z.RefinementCtx) {
+  const ids = new Set<string>()
+  for (const node of diagram.nodos) {
+    if (ids.has(node.id)) context.addIssue({ code: 'custom', message: `id repetido: ${node.id}` })
+    ids.add(node.id)
+  }
+  for (const edge of diagram.conexiones)
+    if (!ids.has(edge.de) || !ids.has(edge.a)) context.addIssue({ code: 'custom', message: `conexión a un nodo que no existe: ${edge.de} → ${edge.a}` })
+  for (const group of diagram.grupos)
+    for (const member of group.nodos) if (!ids.has(member)) context.addIssue({ code: 'custom', message: `grupo ${group.id} con un nodo que no existe: ${member}` })
+}
+
 export const diagramSchema = z
   .object({
     nodos: z

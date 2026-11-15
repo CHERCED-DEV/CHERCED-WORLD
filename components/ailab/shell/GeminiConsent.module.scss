@@ -1,0 +1,21 @@
+.consent {
+  display: grid;
+  gap: var(--cw-space-3);
+  justify-items: start;
+  padding: var(--cw-space-4);
+  border: 1px solid #25ed9e;
+  border-radius: 14px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.title {
+  font-weight: 700;
+}
+
+.sends {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}

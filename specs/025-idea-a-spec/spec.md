@@ -2,7 +2,7 @@
 
 Del catálogo de la 003 (A7, A8 y C3, camino B), habilitado por la 018. Depende de la 020.
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 como la tarjeta A7 del tema «Con Gemini».
 
 ## Qué hace
 
@@ -35,3 +35,16 @@ Tres herramientas que muestran cómo trabaja Camilo con Spec Kit, en una sola ta
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-2501 | ¿Los ejemplos de estilo salen de specs reales del repo? | Sí, solo de los públicos |
+
+## Cómo quedó (2026-11-15)
+
+- **Una tarjeta con tres pestañas:** De idea a spec (spec.md, plan.md y tasks.md), Generador de ADR (contexto,
+  opciones, decisión, por qué, qué se sacrifica y disparador de revisión) y Haiku del commit.
+- **Estilo (P-2501):** la instrucción trae el formato real de las specs públicas de este repo.
+- **Streaming (FR-2501):** `POST /api/ailab/write` usa `streamGenerateContent` de Gemini y pasa el texto al navegador
+  mientras se escribe.
+- **Copiar y descargar (FR-2502)** como `.md`. No se guarda nada en el sitio.
+- **Límites (FR-2503):** 2.000 caracteres para la idea y el ADR, y 20.000 para el diff. 10 usos por visitante y 100
+  en total al día.
+- **Consentimiento (FR-2504):** el común de la 020.
+- **Simulador:** sin la clave, una plantilla de cada herramienta.

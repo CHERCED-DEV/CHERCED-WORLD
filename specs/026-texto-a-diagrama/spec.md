@@ -2,7 +2,7 @@
 
 Del catálogo de la 003 (A9, variante B), habilitado por la 018. Depende de la 020.
 
-Estado: spec. No construida.
+Estado: construida el 2026-11-15 como la tarjeta A9 del tema «Con Gemini».
 
 ## Qué hace
 
@@ -31,3 +31,17 @@ la arquitectura de Synergos del sitio. Se puede pedir un cambio ("agrega un cach
 | ID | Pregunta | Por defecto |
 |---|---|---|
 | P-2601 | ¿Reutilizar el dibujo de la arquitectura de Synergos o uno nuevo en pixel art? | Reutilizar el de Synergos |
+
+## Cómo quedó (2026-11-15)
+
+- **Servidor (FR-2601):** `POST /api/ailab/diagram` pide a `gemini-3.8-flash` el diagrama como JSON con esquema y lo
+  valida con Zod (ids únicos, conexiones y grupos válidos, máximo 40 nodos y 5 grupos). Límite: 10 por visitante y
+  100 en total al día.
+- **Dibujo (P-2601):** reutiliza el motor de la pizarra de la 034, que acomoda por capas y dibuja en SVG con el verde y
+  el negro del sitio. Nunca ejecuta código del modelo.
+- **Cambios (FR-2602):** "Pide un cambio" manda el diagrama actual y la petición; el historial guarda los últimos 20 y
+  "Deshacer" vuelve al anterior.
+- **Exportar:** SVG y PNG (a doble resolución).
+- **Accesible (FR-2603):** el SVG tiene una descripción y debajo hay una lista navegable de nodos y conexiones.
+- **Consentimiento (FR-2604):** el común de la 020, que vale para la sesión.
+- **Simulador:** sin la clave, un diagrama de ejemplo y un cambio visible.

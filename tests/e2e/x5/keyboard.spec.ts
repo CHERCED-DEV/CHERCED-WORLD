@@ -30,7 +30,7 @@ test.use({
 
 test.describe.configure({ timeout: 120_000 })
 
-const CARD_ORDER: CardId[] = ['V5', 'A6', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
+const CARD_ORDER: CardId[] = ['V5', 'A6', 'A9', 'A7', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'J1', 'J2']
 
 type Focus = { body: boolean; ring: boolean; what: string }
 

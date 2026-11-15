@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
 import { useToast } from '@/components/ui/Toast'
 import { clearAll } from '@/lib/ailab/core/store'
+import { clearGeminiConsent } from './GeminiConsent'
 import styles from './LabPage.module.scss'
 import type { LabClearLabels } from './types'
 
@@ -18,6 +19,7 @@ export function LabClearButton({ labels }: { labels: LabClearLabels }) {
     setBusy(true)
     try {
       const result = await clearAll()
+      clearGeminiConsent()
       if (result.complete) toast.success(labels.done)
       else toast.error(labels.partial)
     } catch {

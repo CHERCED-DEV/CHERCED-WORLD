@@ -24,6 +24,10 @@ export const RATE_LIMITS = {
   code: { limit: 10, windowMs: 60 * MINUTE },
   codeQuestion: { limit: 5, windowMs: 60 * MINUTE },
   codeDaily: { limit: 80, windowMs: 24 * 60 * MINUTE },
+  diagram: { limit: 10, windowMs: 24 * 60 * MINUTE },
+  diagramDaily: { limit: 100, windowMs: 24 * 60 * MINUTE },
+  write: { limit: 10, windowMs: 24 * 60 * MINUTE },
+  writeDaily: { limit: 100, windowMs: 24 * 60 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 
 export type RateLimitAction = keyof typeof RATE_LIMITS

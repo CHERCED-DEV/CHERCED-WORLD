@@ -631,5 +631,11 @@
   "ailab.j2.curve": "Curva de imitación",
   "ailab.j2.curve.axis": "parecido en cada vuelta de entrenamiento",
   "ailab.j2.curve.empty": "Cuando termines de grabar, aquí verás cómo tu clon se te va pareciendo.",
-  "ailab.j2.curve.summary": "Empezó eligiendo como tú el {first} % de las veces; tras {epochs} vueltas de entrenamiento, el {recent} %."
+  "ailab.j2.curve.summary": "Empezó eligiendo como tú el {first} % de las veces; tras {epochs} vueltas de entrenamiento, el {recent} %.",
+  "ailab.a9.title": "Texto → diagrama",
+  "ailab.a9.summary": "Describe una arquitectura en una frase y Gemini la vuelve un diagrama que puedes cambiar pidiéndolo: \"agrega un caché\", \"pon una cola\". Lo exportas en SVG o PNG.",
+  "ailab.a9.privacy": "Lo que escribes va a Google (Gemini) para armar el diagrama. Este sitio no lo guarda.",
+  "ailab.a7.title": "De idea a spec, ADR y haiku",
+  "ailab.a7.summary": "Así trabajo con Spec Kit: una idea se vuelve spec, plan y tareas; una decisión se vuelve un ADR con su disparador de revisión; un diff se vuelve un commit serio y un haiku.",
+  "ailab.a7.privacy": "Lo que pegas va a Google (Gemini) para escribir el resultado. Este sitio no lo guarda."
 }

@@ -81,3 +81,66 @@ export async function generateJson(request: GenerateJsonRequest, fetcher: typeof
   const finishReason = typeof candidate?.finishReason === 'string' ? candidate.finishReason : null
   return { text, usage: parseUsage(data.usageMetadata, 'text'), finishReason }
 }
+
+export type StreamTextRequest = { key: string; model: string; system: string; prompt: string; temperature?: number; maxOutputTokens?: number }
+
+export function sseTexts(chunk: string): string[] {
+  const texts: string[] = []
+  for (const line of chunk.split('\n')) {
+    if (!line.startsWith('data:')) continue
+    const data = record((() => {
+      try {
+        return JSON.parse(line.slice(5).trim())
+      } catch {
+        return null
+      }
+    })())
+    const candidate = Array.isArray(data?.candidates) ? record(data!.candidates[0]) : undefined
+    const parts = record(candidate?.content)?.parts
+    if (!Array.isArray(parts)) continue
+    for (const part of parts) {
+      const value = record(part)
+      if (value && value.thought !== true && typeof value.text === 'string') texts.push(value.text)
+    }
+  }
+  return texts
+}
+
+export async function streamText(request: StreamTextRequest, fetcher: typeof fetch = fetch): Promise<ReadableStream<Uint8Array>> {
+  const model = request.model.replace(/^models\//, '')
+  const response = await fetcher(`${GEMINI_API_BASE}/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': request.key },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: request.system }] },
+      contents: [{ role: 'user', parts: [{ text: request.prompt }] }],
+      generationConfig: { temperature: request.temperature ?? 0.4, maxOutputTokens: request.maxOutputTokens ?? 4096 },
+    }),
+    signal: AbortSignal.timeout(60_000),
+    cache: 'no-store',
+  })
+  if (!response.ok || !response.body) throw new GeminiError(response.status, await googleReason(response))
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  const encoder = new TextEncoder()
+  let buffer = ''
+  return new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      const { done, value } = await reader.read()
+      if (done) {
+        for (const text of sseTexts(buffer)) controller.enqueue(encoder.encode(text))
+        controller.close()
+        return
+      }
+      buffer += decoder.decode(value, { stream: true })
+      const cut = buffer.lastIndexOf('\n\n')
+      if (cut === -1) return
+      const ready = buffer.slice(0, cut)
+      buffer = buffer.slice(cut + 2)
+      for (const text of sseTexts(ready)) controller.enqueue(encoder.encode(text))
+    },
+    cancel() {
+      void reader.cancel()
+    },
+  })
+}

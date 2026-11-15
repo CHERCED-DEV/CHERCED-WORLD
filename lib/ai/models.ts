@@ -21,6 +21,8 @@ export const TYPICAL_USE: Record<string, Budget> = {
   code: { model: GEMINI_MODELS.text, input: { text: 8000 }, output: { text: 1500 } },
   summary: { model: GEMINI_MODELS.text, input: { text: 3000 }, output: { text: 300 } },
   diagram: { model: GEMINI_MODELS.text, input: { text: 1500 }, output: { text: 1200 } },
+  A9: { model: GEMINI_MODELS.text, input: { text: 1500 }, output: { text: 1200 } },
+  A7: { model: GEMINI_MODELS.text, input: { text: 1500 }, output: { text: 2500 } },
   spec: { model: GEMINI_MODELS.text, input: { text: 1500 }, output: { text: 2500 } },
   shot: { model: GEMINI_MODELS.text, input: { text: 800, image: 1300 }, output: { text: 3000 } },
   pixel: { model: GEMINI_MODELS.image, input: { text: 400, image: 1300 }, output: { image: 1290 } },
