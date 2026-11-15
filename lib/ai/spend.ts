@@ -12,6 +12,7 @@ const LINES: Array<{ id: string; usage: string; action: RateLimitAction; label: 
   { id: 'code', usage: 'code', action: 'codeDaily', label: { es: 'Recorrido por el código', en: 'Code walk-through' } },
   { id: 'A9', usage: 'A9', action: 'diagramDaily', label: { es: 'Texto → diagrama', en: 'Text → diagram' } },
   { id: 'A7', usage: 'A7', action: 'writeDaily', label: { es: 'Idea a spec, ADR y haiku', en: 'Idea to spec, ADR and haiku' } },
+  { id: 'A8', usage: 'shot', action: 'shotDaily', label: { es: 'De captura a componentes', en: 'From screenshot to components' } },
   { id: 'listen', usage: 'listenChunk', action: 'listenDaily', label: { es: 'Voz de Gemini en los posts (frases nuevas)', en: 'Gemini voice on posts (new sentences)' } },
 ]
 

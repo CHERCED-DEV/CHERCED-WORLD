@@ -197,6 +197,37 @@ const A7: LabExperiment = {
   code: null,
 }
 
+const A8: LabExperiment = {
+  id: 'A8',
+  theme: 'gemini',
+  title: copy('ailab.a8.title'),
+  summary: copy('ailab.a8.summary'),
+  status: 'beta',
+  runsIn: 'google',
+  inputs: ['file'],
+  session: { activity: 'analysis', minutes: 1 },
+  poweredBy: { es: 'Gemini Flash con visión', en: 'Gemini Flash with vision' },
+  limit: { uses: 5, per: 'day' },
+  downloads: [],
+  privacy: copy('ailab.a8.privacy'),
+  flow: [
+    { es: 'Subes o pegas una captura; tu navegador la reduce a 1.024 px antes de enviarla', en: 'You upload or paste a screenshot; your browser shrinks it to 1,024 px before sending it' },
+    { es: 'El servidor se la pasa a Gemini con el catálogo de piezas de este sitio, pide JSON con esquema y lo valida con Zod (piezas que existen, padres válidos, sin ciclos); si no pasa, reintenta una vez', en: 'The server hands it to Gemini with this site’s piece catalog, asks for schema-bound JSON and validates it with Zod (existing pieces, valid parents, no cycles); if it fails, it retries once' },
+    { es: 'El sitio dibuja el árbol con enlaces al código de cada pieza y un bosquejo en pixel art; la imagen no se guarda', en: 'The site draws the tree with links to each piece’s code and a pixel art sketch; the image is not stored' },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Solo piezas que existen, y los huecos a la vista', en: 'Only pieces that exist, with the gaps in plain sight' },
+      why: {
+        es: 'El esquema limita la respuesta a los ids del catálogo o a "nueva". Así el modelo no inventa componentes con nombres bonitos: lo que falta queda escrito como hueco, con su porqué.',
+        en: 'The schema limits the answer to catalog ids or "new". The model can’t invent nicely named components: whatever is missing is written down as a gap, with its reason.',
+      },
+      tradeoff: { es: 'Usa el sistema de diseño de este sitio, que es público, y no el de Synergos, que no lo es; de Synergos toma las capas atómicas.', en: 'It uses this site’s design system, which is public, not Synergos’s, which isn’t; from Synergos it takes the atomic layers.' },
+    },
+  ],
+  code: null,
+}
+
 const V1: LabExperiment = {
   id: 'V1',
   theme: 'voice',
@@ -988,7 +1019,7 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
-export const labCatalog: readonly LabExperiment[] = [V5, A6, A9, A7, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
+export const labCatalog: readonly LabExperiment[] = [V5, A6, A9, A7, A8, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)

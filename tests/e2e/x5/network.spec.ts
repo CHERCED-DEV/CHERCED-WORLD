@@ -354,6 +354,10 @@ const DOWNLOADS_ONLY: ReadonlyArray<{ file: string; line: RegExp }> = [
   { file: 'components/ailab/search/use-meaning.ts', line: /^const response = await fetch\(meaningVectorsUrl\(lang\), \{ headers: \{ accept: 'application\/json' \} \}\)$/ },
 ]
 
+const GEMINI_LANE = ['components/ailab/agent/', 'components/ailab/code/', 'components/ailab/diagram/', 'components/ailab/match/', 'components/ailab/write/', 'components/ailab/shot/']
+
+const OWN_API = /fetch\(\s*('\/api\/[\w/-]+'|[A-Z_]+_ENDPOINT)\s*[,)]|^method:\s*'POST',?$/
+
 function sources(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
     const full = path.join(dir, name)
@@ -375,10 +379,11 @@ test.describe('T760 · el código del laboratorio no tiene por dónde enviar dat
         .flatMap((line, index) => {
           if (!NETWORK_API.test(line)) return []
           if (DOWNLOADS_ONLY.some((allowed) => allowed.file === relative && allowed.line.test(line.trim()))) return []
+          if (GEMINI_LANE.some((dir) => relative.startsWith(dir)) && OWN_API.test(line.trim())) return []
           return [`${relative}:${index + 1}: ${line.trim()}`]
         })
     })
-    expect(hits, 'solo se permite bajar los vectores de /api/search-vectors/{lang}: un GET al propio sitio sin datos del visitante').toEqual([])
+    expect(hits, 'solo se permite bajar los vectores de /api/search-vectors/{lang}, y las tarjetas de Gemini (020) solo hablan con rutas /api/ del propio sitio').toEqual([])
     expect(readFileSync(path.resolve('components/ailab/search/use-meaning.ts'), 'utf8'), 'la URL de los vectores no lleva nada más que el idioma').toMatch(
       /export function meaningVectorsUrl\(lang: Locale\): string \{\s*return `\/api\/search-vectors\/\$\{lang\}`\s*\}/,
     )

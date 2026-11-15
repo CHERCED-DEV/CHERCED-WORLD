@@ -642,5 +642,8 @@
   "ailab.a9.privacy": "What you type goes to Google (Gemini) to build the diagram. This site doesn’t store it.",
   "ailab.a7.title": "Idea to spec, ADR and haiku",
   "ailab.a7.summary": "How I work with Spec Kit: an idea becomes spec, plan and tasks; a decision becomes an ADR with its review trigger; a diff becomes a proper commit and a haiku.",
-  "ailab.a7.privacy": "What you paste goes to Google (Gemini) to write the result. This site doesn’t store it."
+  "ailab.a7.privacy": "What you paste goes to Google (Gemini) to write the result. This site doesn’t store it.",
+  "ailab.a8.title": "From screenshot to components",
+  "ailab.a8.summary": "Upload a screenshot and Gemini proposes how to build it with this site’s design system pieces: the component tree, the props, a pixel art sketch and what’s missing.",
+  "ailab.a8.privacy": "The image goes to Google (Gemini) to be analyzed and is not stored on the site: neither the screenshot nor the result."
 }

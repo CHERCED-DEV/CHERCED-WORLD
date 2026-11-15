@@ -642,5 +642,8 @@
   "ailab.a9.privacy": "Lo que escribes va a Google (Gemini) para armar el diagrama. Este sitio no lo guarda.",
   "ailab.a7.title": "De idea a spec, ADR y haiku",
   "ailab.a7.summary": "Así trabajo con Spec Kit: una idea se vuelve spec, plan y tareas; una decisión se vuelve un ADR con su disparador de revisión; un diff se vuelve un commit serio y un haiku.",
-  "ailab.a7.privacy": "Lo que pegas va a Google (Gemini) para escribir el resultado. Este sitio no lo guarda."
+  "ailab.a7.privacy": "Lo que pegas va a Google (Gemini) para escribir el resultado. Este sitio no lo guarda.",
+  "ailab.a8.title": "De captura a componentes",
+  "ailab.a8.summary": "Sube la captura de una pantalla y Gemini propone cómo construirla con las piezas del sistema de diseño de este sitio: el árbol de componentes, las props, un bosquejo en pixel art y lo que falta.",
+  "ailab.a8.privacy": "La imagen va a Google (Gemini) para analizarla y no se guarda en el sitio: ni la captura ni el resultado."
 }

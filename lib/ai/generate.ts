@@ -32,6 +32,7 @@ export type GenerateJsonRequest = {
   temperature?: number
   maxOutputTokens?: number
   timeoutMs?: number
+  images?: ReadonlyArray<{ mimeType: string; data: string }>
 }
 
 export type GenerateJsonReply = { text: string; usage: LiveUsage | null; finishReason: string | null }
@@ -45,7 +46,7 @@ function record(value: unknown): Json | undefined {
 export function generateJsonBody(request: GenerateJsonRequest) {
   return {
     systemInstruction: { parts: [{ text: request.system }] },
-    contents: [{ role: 'user', parts: [{ text: request.prompt }] }],
+    contents: [{ role: 'user', parts: [...(request.images ?? []).map((image) => ({ inlineData: { mimeType: image.mimeType, data: image.data } })), { text: request.prompt }] }],
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: request.schema,

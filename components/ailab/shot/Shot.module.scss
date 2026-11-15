@@ -1,0 +1,141 @@
+@use 'layout';
+
+.stage {
+  display: grid;
+  gap: var(--cw-space-4);
+  min-width: 0;
+}
+
+.drop {
+  display: grid;
+  gap: var(--cw-space-3);
+  padding: var(--cw-space-4);
+  border: 2px dashed color-mix(in srgb, var(--cw-graphic-accent) 55%, transparent);
+  border-radius: var(--cw-radius-sm);
+  background: color-mix(in srgb, var(--cw-graphic-accent) 5%, transparent);
+
+  p {
+    margin: 0;
+    font-size: var(--cw-text-sm);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cw-space-2);
+}
+
+.preview {
+  display: grid;
+  gap: var(--cw-space-3);
+  justify-items: start;
+
+  img {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    border: 1px solid var(--cw-glass-border);
+    border-radius: var(--cw-radius-sm);
+  }
+}
+
+.result {
+  display: grid;
+  gap: var(--cw-space-4);
+  min-width: 0;
+
+  h4 {
+    margin: 0 0 var(--cw-space-2);
+    font-size: var(--cw-text-sm);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.note {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--cw-space-4);
+  min-width: 0;
+}
+
+.sketch {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 2px solid #25ed9e;
+  border-radius: 4px;
+  image-rendering: pixelated;
+}
+
+.tree {
+  display: grid;
+  gap: var(--cw-space-2);
+  margin: 0;
+  padding-left: var(--cw-space-4);
+  font-size: var(--cw-text-sm);
+  list-style: none;
+
+  .tree {
+    margin-top: var(--cw-space-2);
+    border-left: 1px dashed var(--cw-glass-border);
+  }
+
+  li {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.number {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  border-radius: 3px;
+  background: #25ed9e;
+  color: #050807;
+  font-family: var(--cw-font-mono, monospace);
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+.piece {
+  color: var(--cw-graphic-accent);
+  text-underline-offset: 3px;
+}
+
+.newPiece {
+  padding: 0 6px;
+  border: 1px dashed #ffc400;
+  border-radius: 999px;
+  color: #ffc400;
+  font-size: 0.85em;
+}
+
+.props {
+  display: block;
+  margin-top: 2px;
+  color: var(--cw-fg-muted);
+  font-size: 0.85em;
+}
+
+.gaps {
+  display: grid;
+  gap: var(--cw-space-2);
+  margin: 0;
+  padding-left: var(--cw-space-4);
+  font-size: var(--cw-text-sm);
+}
