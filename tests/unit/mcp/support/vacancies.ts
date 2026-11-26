@@ -1,0 +1,37 @@
+export const VACANCIES_029 = [
+  [
+    'Desarrollador full stack senior',
+    '',
+    'Requisitos:',
+    '- Experiencia con React, Next.js y TypeScript',
+    '- APIs en .NET y C#',
+    '- Bases de datos MongoDB',
+    '- Pruebas con Playwright',
+    '',
+    'Deseable:',
+    '- Docker',
+  ].join('\n'),
+  [
+    'Arquitecto de soluciones',
+    'Buscamos a alguien que diseñe arquitecturas orientadas a eventos en Azure. Debe tener experiencia con microservicios y sagas. Se valora inglés avanzado.',
+  ].join('\n'),
+  [
+    'AI Engineer',
+    '',
+    'What you bring:',
+    '* Shipping LLM agents and tool calling',
+    '* Python and FastAPI',
+    '* Evals and prompt engineering',
+    '',
+    'Nice to have:',
+    '* Voice interfaces',
+  ].join('\n'),
+  ['Data Engineer', '1. Spark and Databricks pipelines', '2. Kubernetes in production', '3. Terraform', '4. SQL performance tuning'].join('\n'),
+  [
+    'Líder técnico de producto',
+    '• Guiar equipos de desarrollo con especificaciones y ADRs',
+    '• Automatizar entregas con integración continua',
+    '• Mentoría de desarrolladores',
+    '• CMS headless como Umbraco (deseable)',
+  ].join('\n'),
+] as const
