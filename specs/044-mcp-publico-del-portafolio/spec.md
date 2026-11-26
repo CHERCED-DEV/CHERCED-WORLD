@@ -4,7 +4,7 @@ Pedido del autor, 26 de noviembre de 2026 (línea [041](../041-pruebame-en-vivo/
 entrevistadores de AI Engineer, que ya usan Claude, ChatGPT o Cursor, y para clientes de consultoría que evalúan si
 Camilo sabe construir MCPs. Depende del índice público del sitio (`lib/search/build-index.ts`) y de la 029.
 
-Estado: borrador para aprobación del autor. Nada se implementa sin su visto bueno
+Estado: aprobada por el autor el 26 de noviembre de 2026, con las preguntas abiertas en su valor por defecto; construida en la línea L2 e integrada en `dev` ese mismo día; falta probarla con clientes reales, como pide SC-4401
 ([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)).
 
 ## Qué hace

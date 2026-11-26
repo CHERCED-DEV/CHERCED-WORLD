@@ -4,7 +4,7 @@ Pedido del autor, 26 de noviembre de 2026 (línea [041](../041-pruebame-en-vivo/
 entrevistadores de AI Engineer, líderes técnicos que buscan senior full-stack con IA y posibles clientes de
 consultoría. Depende de 029, 030, 031, 032, 033, 034, 035 y 038, todas construidas.
 
-Estado: aprobada por el autor el 26 de noviembre de 2026, con las preguntas abiertas en su valor por defecto
+Estado: aprobada por el autor el 26 de noviembre de 2026, con las preguntas abiertas en su valor por defecto; construida en la línea L1 e integrada en `dev` ese mismo día (ver «Cómo quedó»)
 ([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)). Construida por la línea L1 ese mismo día; falta integrarla
 (ver [Cómo quedó](#cómo-quedó-26-de-noviembre-de-2026)).
 

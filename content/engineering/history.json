@@ -1,8 +1,32 @@
 {
   "version": 1,
-  "takenAt": "2026-11-26T16:43:09.855Z",
-  "head": "89f511e",
+  "takenAt": "2026-11-26T18:45:07.332Z",
+  "head": "86800cb",
   "commits": [
+    {"sha":"86800cb","date":"2026-11-26T13:43:50-05:00","subject":"fix(041): las entradas del AI Lab caen limpias en el celular"},
+    {"sha":"ffdab8b","date":"2026-11-26T13:34:19-05:00","subject":"test(044): el e2e del probador MCP se salta en el proyecto sin JavaScript"},
+    {"sha":"fcb3ff9","date":"2026-11-26T13:26:54-05:00","subject":"fix(045): el tablero ya no rastrea todo el proyecto en el build"},
+    {"sha":"1bb6cde","date":"2026-11-26T13:08:17-05:00","subject":"feat(041): entradas del tablero de ingeniería al integrar la L3"},
+    {"sha":"e847f5a","date":"2026-11-26T13:02:12-05:00","subject":"feat(045): cierre de la línea, con «Cómo quedó» y las tareas marcadas"},
+    {"sha":"895c7ef","date":"2026-11-26T12:47:10-05:00","subject":"feat(045): fase 6, el tablero en /{lang}/ingenieria y el detalle de cada spec"},
+    {"sha":"b6e4e4b","date":"2026-11-26T12:36:59-05:00","subject":"feat(041): entradas del MCP público al integrar la L2"},
+    {"sha":"8f1c72c","date":"2026-11-26T12:29:05-05:00","subject":"feat(044): cierre de la línea L2, con «Cómo quedó» y tareas marcadas"},
+    {"sha":"253f581","date":"2026-11-26T12:28:31-05:00","subject":"feat(041): entradas de la ruta de 10 minutos al integrar la L1"},
+    {"sha":"753e009","date":"2026-11-26T12:21:03-05:00","subject":"feat(042): fase 7, e2e de la ruta, pulido y «Cómo quedó»"},
+    {"sha":"4d83b9a","date":"2026-11-26T12:18:24-05:00","subject":"feat(044): página /{lang}/mcp con conexión, catálogo vivo y probador, más la batería de filtración"},
+    {"sha":"028dbc3","date":"2026-11-26T12:05:13-05:00","subject":"feat(045): fase 5, presupuestos del principio V con la prueba que los vigila"},
+    {"sha":"f569a9b","date":"2026-11-26T12:04:50-05:00","subject":"feat(045): fase 4, registro de evals y gasto de IA cacheado una hora"},
+    {"sha":"f014bde","date":"2026-11-26T12:04:17-05:00","subject":"feat(045): fase 3, pruebas del build y requisitos nombrados en tests/"},
+    {"sha":"5f0db7c","date":"2026-11-26T12:03:57-05:00","subject":"feat(045): fase 2, de la spec al commit con el historial tomado en local"},
+    {"sha":"bc1dea8","date":"2026-11-26T12:03:41-05:00","subject":"feat(045): fase 1, la lista de archivos versionados que lee el tablero"},
+    {"sha":"ad562b6","date":"2026-11-26T12:01:22-05:00","subject":"feat(042): fase 6, la pastilla «Volver a la ruta» (US4)"},
+    {"sha":"df3b864","date":"2026-11-26T11:59:07-05:00","subject":"feat(042): fase 5, Rómpelo en la estación del agente (US3)"},
+    {"sha":"ea1345c","date":"2026-11-26T11:56:01-05:00","subject":"feat(042): fase 4, el acta de la ruta en Markdown (US2)"},
+    {"sha":"429424a","date":"2026-11-26T11:52:49-05:00","subject":"feat(042): fase 3, la página de la ruta con sus cuatro estaciones (US1)"},
+    {"sha":"01867a7","date":"2026-11-26T11:51:46-05:00","subject":"feat(044): herramientas del portafolio, encaje con vacante y prompts en /api/mcp"},
+    {"sha":"891a258","date":"2026-11-26T11:41:07-05:00","subject":"feat(044): núcleo MCP propio sobre Zod, con contrato, límites y guarda de imports"},
+    {"sha":"380044a","date":"2026-11-26T11:40:34-05:00","subject":"feat(042): fase 2, contrato de estaciones y registro (US5)"},
+    {"sha":"01dec3e","date":"2026-11-26T11:35:36-05:00","subject":"feat(042): fase 1, diccionarios de la ruta en ES y EN"},
     {"sha":"89f511e","date":"2026-11-26T09:39:43-05:00","subject":"feat(041): base F1 de la ola 1 (042, 044 y 045 aprobadas)"},
     {"sha":"0cbf1b1","date":"2026-11-26T09:30:17-05:00","subject":"docs(041-050): upstream de «Pruébame en vivo», con la entrevista, las specs, los planes y las tareas"},
     {"sha":"3802afa","date":"2026-11-26T07:41:45-05:00","subject":"fix(018, 022): castaño amonado con más canas en Mini Cherced y los chibis"},
@@ -770,6 +794,514 @@
     "049": "2026-11-26T09:30:17-05:00",
     "050": "2026-11-26T09:30:17-05:00"
   },
-  "deployments": null,
+  "deployments": {
+    "takenAt": "2026-11-26T18:45:07.332Z",
+    "byEnvironment": {
+      "Preview": [
+        {
+          "sha": "0cbf1b1",
+          "date": "2026-11-26T14:36:38.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "3802afa",
+          "date": "2026-11-26T12:47:18.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "3c1f932",
+          "date": "2026-11-26T12:34:11.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "83ebcc0",
+          "date": "2026-11-26T12:00:49.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "9c591b1",
+          "date": "2026-11-26T11:31:26.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "11438af",
+          "date": "2026-11-26T10:57:57.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "a2f7086",
+          "date": "2026-11-15T20:23:20.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "8cd6395",
+          "date": "2026-11-15T20:12:24.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "316f91b",
+          "date": "2026-11-15T20:06:00.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "d491f16",
+          "date": "2026-11-15T19:57:59.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "2bf2d6e",
+          "date": "2026-11-15T19:43:24.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "6034116",
+          "date": "2026-11-15T19:15:05.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "b19fc46",
+          "date": "2026-11-15T18:40:44.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "4591f77",
+          "date": "2026-11-15T18:31:35.000Z",
+          "state": "failure"
+        },
+        {
+          "sha": "7f6953c",
+          "date": "2026-11-15T18:21:49.000Z",
+          "state": "failure"
+        },
+        {
+          "sha": "833cf7e",
+          "date": "2026-11-15T18:14:30.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "a0fb742",
+          "date": "2026-11-15T12:37:25.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "d6f3b61",
+          "date": "2026-11-15T12:08:25.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "dae29fc",
+          "date": "2026-11-15T11:58:27.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "489c1c0",
+          "date": "2026-11-15T11:52:15.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "9f53a9c",
+          "date": "2026-11-15T11:39:38.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "54d87c2",
+          "date": "2026-11-15T11:22:17.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "6cd74a1",
+          "date": "2026-11-15T11:14:18.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "bcc3cc3",
+          "date": "2026-11-15T10:50:17.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "88ff574",
+          "date": "2026-11-14T22:58:24.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "133c63c",
+          "date": "2026-11-14T21:39:55.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "c8db03b",
+          "date": "2026-11-14T21:21:01.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "eba5890",
+          "date": "2026-11-14T21:11:03.000Z",
+          "state": "failure"
+        },
+        {
+          "sha": "cc166f2",
+          "date": "2026-11-14T20:58:06.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "cbfb353",
+          "date": "2026-11-14T19:48:54.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "4ff6acf",
+          "date": "2026-11-14T19:36:19.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "4719ef7",
+          "date": "2026-11-14T19:13:32.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "33b774c",
+          "date": "2026-11-14T18:45:46.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "f057cfc",
+          "date": "2026-11-14T14:58:19.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "085dc3d",
+          "date": "2026-11-13T19:35:55.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "32c1517",
+          "date": "2026-11-13T16:55:57.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "83768b8",
+          "date": "2026-11-13T16:18:52.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "b6cbff9",
+          "date": "2026-11-13T13:05:48.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "386668c",
+          "date": "2026-11-13T11:30:47.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "c8349b3",
+          "date": "2026-11-13T01:00:22.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "efa32d1",
+          "date": "2026-11-12T23:31:37.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "5014217",
+          "date": "2026-11-12T21:55:52.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "c67d996",
+          "date": "2026-11-12T20:44:36.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "c340dee",
+          "date": "2026-11-12T20:31:56.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "5297e37",
+          "date": "2026-11-12T19:14:00.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "21adf6d",
+          "date": "2026-11-12T18:57:20.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "6be4928",
+          "date": "2026-11-12T17:40:10.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "c41941d",
+          "date": "2026-11-12T17:27:19.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "5fdbd93",
+          "date": "2026-11-12T17:23:24.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "1480131",
+          "date": "2026-11-12T17:12:37.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "dbdfead",
+          "date": "2026-11-12T17:08:47.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "b2d693b",
+          "date": "2026-11-12T16:34:34.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "e05eb51",
+          "date": "2026-11-12T16:26:20.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "fdd535e",
+          "date": "2026-11-12T16:19:03.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "3f5b999",
+          "date": "2026-11-12T16:14:30.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "89def57",
+          "date": "2026-11-12T15:45:26.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "2f072d4",
+          "date": "2026-11-12T15:41:10.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "bf3881d",
+          "date": "2026-11-12T15:38:00.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "863900b",
+          "date": "2026-11-12T15:32:40.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "cfc049f",
+          "date": "2026-11-12T15:14:52.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "7457f84",
+          "date": "2026-11-12T14:38:22.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "49f27c0",
+          "date": "2026-11-12T13:26:52.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "03521d0",
+          "date": "2026-11-12T13:23:33.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "b28f3c3",
+          "date": "2026-11-12T13:13:22.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "9897ce6",
+          "date": "2026-11-12T13:02:43.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "ebd8673",
+          "date": "2026-11-12T12:59:18.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "26e5bda",
+          "date": "2026-11-12T12:55:04.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "ab2d393",
+          "date": "2026-11-12T12:03:39.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "450ad78",
+          "date": "2026-11-12T11:51:22.000Z",
+          "state": "failure"
+        },
+        {
+          "sha": "5022fe1",
+          "date": "2026-11-12T11:39:15.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "5767dbb",
+          "date": "2026-11-12T11:36:05.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "6be08b4",
+          "date": "2026-11-12T02:30:58.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "f9e5bc2",
+          "date": "2026-11-12T02:28:22.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "c79606b",
+          "date": "2026-11-12T01:49:12.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "2e8daa9",
+          "date": "2026-11-12T01:15:42.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "2f65af8",
+          "date": "2026-11-12T01:12:16.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "9646719",
+          "date": "2026-11-12T00:20:31.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "e267c98",
+          "date": "2026-11-12T00:09:07.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "1f47404",
+          "date": "2026-11-12T00:05:30.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "8d8c840",
+          "date": "2026-11-12T00:01:38.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "b63b1e7",
+          "date": "2026-11-11T23:51:36.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "df4475e",
+          "date": "2026-11-11T23:06:44.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "438478d",
+          "date": "2026-11-11T22:54:45.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "8cce66f",
+          "date": "2026-11-11T21:39:16.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "1373aa4",
+          "date": "2026-11-11T20:31:05.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "2142ac4",
+          "date": "2026-11-11T20:23:40.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "bfaa30d",
+          "date": "2026-11-11T18:18:30.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "ab229b0",
+          "date": "2026-11-11T17:32:29.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "c945dfd",
+          "date": "2026-11-11T16:35:38.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "a77fcb4",
+          "date": "2026-11-11T16:21:27.000Z",
+          "state": "failure"
+        },
+        {
+          "sha": "9310487",
+          "date": "2026-11-11T15:48:56.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "b3caa87",
+          "date": "2026-11-11T15:42:54.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "b53e9cd",
+          "date": "2026-11-11T14:43:24.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "4a81d80",
+          "date": "2026-11-11T14:22:15.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "3bf0bd8",
+          "date": "2026-11-11T14:11:35.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "75839a9",
+          "date": "2026-11-11T13:27:50.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "365c99b",
+          "date": "2026-11-07T23:45:21.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "d8f63aa",
+          "date": "2026-11-07T13:54:52.000Z",
+          "state": "active"
+        },
+        {
+          "sha": "6a61aee",
+          "date": "2026-11-07T13:09:15.000Z",
+          "state": "active"
+        }
+      ],
+      "Production": [
+        {
+          "sha": "3802afa",
+          "date": "2026-11-26T12:56:16.000Z",
+          "state": "active"
+        }
+      ]
+    }
+  },
   "measurements": []
 }
