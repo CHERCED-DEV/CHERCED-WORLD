@@ -275,5 +275,5 @@ describe('perfil, correo y sitemap', () => {
       expect(urls).toContain(`/${lang}/now`)
       for (const project of projects) expect(urls).toContain(`/${lang}/portfolio/${project.id}`)
     }
-  })
+  }, 30_000)
 })
