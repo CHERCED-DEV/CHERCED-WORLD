@@ -17,7 +17,7 @@ las otras `[P]` de la misma fase.
   creada antes de arrancar la sesión de la línea
 - [x] T4405 Consultar en modelcontextprotocol.io la última revisión estable del protocolo y anotarla con su fecha —
   archivos: `lib/mcp/core/protocol.ts` — cubre: FR-4403
-- [ ] T4406 [P] Diccionarios de la página — archivos: `content/i18n/es/mcp.json`, `content/i18n/en/mcp.json` — cubre:
+- [x] T4406 [P] Diccionarios de la página — archivos: `content/i18n/es/mcp.json`, `content/i18n/en/mcp.json` — cubre:
   FR-4411
 
 ## Fase 2 — US1: el núcleo del protocolo (va primero: es el contrato de la 048 y la 049)
@@ -65,15 +65,15 @@ las otras `[P]` de la misma fase.
 
 ## Fase 5 — US2: la página con el catálogo y el probador
 
-- [ ] T4423 [P] [US2] Pasos por cliente, solo los probados y con su fecha — archivos: `content/mcp/clients.ts` — cubre:
+- [x] T4423 [P] [US2] Pasos por cliente, solo los probados y con su fecha — archivos: `content/mcp/clients.ts` — cubre:
   FR-4411
-- [ ] T4424 [US2] `McpConnect` con la URL, el botón de copiar y los pasos — archivos: `components/mcp/McpConnect.tsx`,
+- [x] T4424 [US2] `McpConnect` con la URL, el botón de copiar y los pasos — archivos: `components/mcp/McpConnect.tsx`,
   `components/mcp/Mcp.module.scss` — cubre: FR-4411
-- [ ] T4425 [US2] `McpCatalog`, renderizado en el servidor desde `tools/list` del propio servidor (llamada en proceso,
+- [x] T4425 [US2] `McpCatalog`, renderizado en el servidor desde `tools/list` del propio servidor (llamada en proceso,
   sin HTTP a sí mismo, principio IV) — archivos: `components/mcp/McpCatalog.tsx` — cubre: FR-4411
-- [ ] T4426 [US2] `McpTester`: `initialize`, `tools/list` y una `tools/call` elegida, con la petición, la respuesta, los
+- [x] T4426 [US2] `McpTester`: `initialize`, `tools/list` y una `tools/call` elegida, con la petición, la respuesta, los
   milisegundos, «Copiar» y el error visible — archivos: `components/mcp/McpTester.tsx` — cubre: FR-4411
-- [ ] T4427 [US2] Página y metadatos en los dos idiomas — archivos: `app/[lang]/mcp/page.tsx`,
+- [x] T4427 [US2] Página y metadatos en los dos idiomas — archivos: `app/[lang]/mcp/page.tsx`,
   `app/[lang]/mcp/opengraph-image.tsx` — cubre: FR-4411
 
 ## Fase 6 — US4: los prompts
@@ -83,12 +83,12 @@ las otras `[P]` de la misma fase.
 
 ## Fase 7 — Pulido
 
-- [ ] T4429 Batería de filtración: unas 20 llamadas con los `LEAKS` y `KEY` de la 032, correos que no son el público,
+- [x] T4429 Batería de filtración: unas 20 llamadas con los `LEAKS` y `KEY` de la 032, correos que no son el público,
   nombres de variables de entorno y `privado/`; un fallo rompe el build — archivos: `content/mcp/leak-battery.ts`,
   `tests/unit/mcp/leaks.test.ts` — cubre: FR-4412, SC-4402, SC-4403
 - [x] T4430 [P] Estación `mcp-en-tu-agente` con el contrato `RouteStation` de la 042 — archivos: `content/mcp/station.ts`
   — cubre: FR-4101 de la 041
-- [ ] T4431 e2e de la página: catálogo renderizado, probador con una llamada real a la función local, error visible
+- [x] T4431 e2e de la página: catálogo renderizado, probador con una llamada real a la función local, error visible
   con el servidor caído, teclado y axe — archivos: `tests/e2e/mcp/mcp.spec.ts` — cubre: FR-4411
 - [ ] T4432 Integrador: sitemap, enlace en el AI Lab, estación en la ruta y sección del README — archivos:
   `app/sitemap.ts`, `components/ailab/shell/LabPage.tsx`, `content/ailab/route/index.ts`, `README.md` — cubre: E-4403,

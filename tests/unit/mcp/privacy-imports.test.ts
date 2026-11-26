@@ -8,7 +8,7 @@ const LIMIT = 'lib/mcp/core/limit.ts'
 
 const FORBIDDEN = ['lib/data/', 'lib/auth/', 'lib/accounts/', 'lib/ai/agent/', 'content/mini-cherced/', 'lib/security/keys.ts']
 
-const IMPORT = /(?:^|\n)\s*(?:import|export)\s+(type\s+)?(?:([\s\S]*?)\s+from\s+)?['"]([^'"]+)['"]/g
+const IMPORT = /(?:^|\n)\s*(?:import|export)\s+(type\s+)?(?:([^'"]*?)\s+from\s+)?['"]([^'"]+)['"]/g
 
 function files(dir: string): string[] {
   return readdirSync(join(ROOT, dir)).flatMap((entry) => {
