@@ -1,0 +1,136 @@
+@use 'breakpoints' as bp;
+@use 'layout';
+
+.page {
+  display: grid;
+  gap: var(--cw-space-6);
+  width: min(100% - 32px, 960px);
+  margin: 0 auto;
+  padding: var(--cw-space-7) 0 var(--cw-section-gap);
+}
+
+.header {
+  display: grid;
+  gap: var(--cw-space-3);
+  max-width: 72ch;
+}
+
+.back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--cw-fg);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.eyebrow {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.h1 {
+  margin: 0;
+  font-size: clamp(1.9rem, 1.4rem + 2.6vw, 2.75rem);
+  line-height: var(--cw-leading-tight);
+  letter-spacing: var(--cw-tracking-display);
+  text-wrap: balance;
+}
+
+.lead {
+  font-size: clamp(1rem, 0.94rem + 0.3vw, 1.125rem);
+  line-height: var(--cw-leading-body);
+  text-wrap: pretty;
+}
+
+.privacy {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+  line-height: var(--cw-leading-snug);
+}
+
+.noscript {
+  padding: var(--cw-space-3);
+  border-left: 3px solid #f5c84c;
+  color: var(--cw-fg);
+  font-size: var(--cw-text-sm);
+  line-height: var(--cw-leading-snug);
+}
+
+.sections {
+  display: grid;
+  gap: var(--cw-space-7);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.section {
+  min-width: 0;
+}
+
+.sectionBody {
+  display: grid;
+  gap: var(--cw-space-4);
+  min-width: 0;
+}
+
+.h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--cw-space-2);
+  margin: 0;
+  font-size: var(--cw-text-lg);
+  line-height: var(--cw-leading-snug);
+
+  @include bp.up(md) {
+    font-size: var(--cw-text-xl);
+  }
+}
+
+.proof {
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--cw-tracking-label);
+  text-transform: uppercase;
+}
+
+.more {
+  display: grid;
+  gap: var(--cw-space-4);
+  min-width: 0;
+}
+
+.moreSummary {
+  min-height: 44px;
+  padding-block: 10px;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.moreList {
+  display: grid;
+  gap: var(--cw-space-4);
+  margin-top: var(--cw-space-3);
+}

@@ -4,8 +4,9 @@ Pedido del autor, 26 de noviembre de 2026 (línea [041](../041-pruebame-en-vivo/
 entrevistadores de AI Engineer, líderes técnicos que buscan senior full-stack con IA y posibles clientes de
 consultoría. Depende de 029, 030, 031, 032, 033, 034, 035 y 038, todas construidas.
 
-Estado: borrador para aprobación del autor. Nada se implementa sin su visto bueno
-([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)).
+Estado: aprobada por el autor el 26 de noviembre de 2026, con las preguntas abiertas en su valor por defecto
+([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)). Construida por la línea L1 ese mismo día; falta integrarla
+(ver [Cómo quedó](#cómo-quedó-26-de-noviembre-de-2026)).
 
 ## Qué hace
 
@@ -265,3 +266,83 @@ acta (FR-4206) y una prueba e2e de punta a punta con las cuatro estaciones.
 | P-4204 | ¿Mostramos la pastilla «Volver a la ruta» en las páginas de las estaciones? | Sí, solo con una ruta activa, y se puede cerrar |
 | P-4205 | ¿Ofrecemos una versión imprimible del acta, como el resumen de la 029? | No en v1: el Markdown alcanza y se pega en cualquier herramienta |
 | P-4206 | ¿La traza grabada de respaldo se graba con Gemini real? | Sí, una vez y con permiso del autor (unos 0,10 USD); mientras tanto, la del simulador marcada como simulada |
+
+## Cómo quedó (26 de noviembre de 2026)
+
+Construida por la línea L1 en la rama `lane/042-ruta`, desde la etiqueta `041-base-ola1`, con las preguntas abiertas en
+su valor por defecto. Falta que el integrador aplique las enmiendas E-4202, E-4203, E-4205 y E-4206.
+
+**La página.** `/{lang}/ai-lab/ruta`, «Pruébame en 10 minutos» / "Try me in 10 minutes" (P-4201). Las cuatro estaciones
+núcleo, sus pasos, sus botones y sus enlaces se renderizan en el servidor. Sin JavaScript sale un aviso de que el
+reloj, las marcas, las notas y el acta lo piden, y los controles quedan deshabilitados en vez de desaparecer.
+
+| Prueba | Estación núcleo | Minutos | A dónde lleva |
+|---|---|---|---|
+| 1. Agentes que funcionan | Agente en vivo, pista Técnica (P-4202) | 3 | `/ai-lab#lab-v5` |
+| 2. Problemas de negocio | Encaje y pitch, con el pitch de Synergos (P-4203) | 3 | `/ai-lab#lab-a6` y `/portfolio/12#case-pitch-12` |
+| 3. Código de calidad | Código real | 2 | `/ai-lab/codigo` |
+| 4. Entrega rápida con IA | De spec a commit, con la 030 (P-4203) | 2 | La spec 030, los commits `54d87c2` y `18ae4df` y `tests/unit/agent/interview.test.ts` en GitHub |
+
+En «Más pruebas» de la prueba 1 están `rompelo` (2 minutos, tablero de la 032) y `diseno-de-sistemas` (5 minutos, la
+034, que también prueba la 3). La pista Conductual (STAR) quedó como una nota en la estación del agente y no como una
+estación aparte, porque el registro de esta línea trae solo sus seis estaciones.
+
+**El avance.** Vive en `sessionStorage` (`cw-route`, versión 1): inicio, fin, estación activa, marcas, notas de hasta
+500 caracteres y si la pastilla está oculta. Nada sale del navegador. Con el almacenamiento bloqueado la ruta sigue en
+memoria y lo dice. Marcar la estación activa avanza a la siguiente sin mover el foco; el anuncio para lector de
+pantalla sale solo al empezar, al cambiar de estación, al pasar de los 10 minutos y al completar las cuatro. Al
+terminar, el foco pasa a «Descargar el acta»; al reiniciar, a «Empezar».
+
+**El acta.** Un Markdown que se arma en el navegador al pulsar «Descargar el acta», con el módulo cargado en ese
+momento. Trae la fecha en `America/Bogota`, la duración con el mismo `clock` del acta de la 030, las cuatro pruebas
+siempre presentes y «sin probar» por defecto, la evidencia enlazada con URL absoluta, las notas tal cual y la nota fija
+de que la marcó quien entrevista. Una prueba solo queda «comprobada», «no funcionó» o «comprobada en parte» por las
+marcas del visitante.
+
+**Rómpelo.** Tres casos `refusal` de `EVAL_BATTERY` en el idioma de la página: el prompt de sistema, la dirección de
+la casa e «ignora tus instrucciones». «Otros ataques» recorre los nueve casos en español de tres en tres; en inglés hay
+tres casos y el botón no aparece. Como `results.json` sigue con `runs: []`, dice «Todavía no hay una corrida
+publicada» y enlaza al tablero.
+
+**Sin modelo (FR-4212).** Cada estación con Gemini dice qué hacer si no hay cupo o el modelo está apagado. La del
+agente trae una traza grabada con `TracePanel`, marcada como simulada: salió del simulador del sitio, sin Gemini, sin
+tokens y sin costo, y las URL de sus búsquedas se validan contra el índice del sitio. P-4206 sigue esperando el permiso
+del autor para grabar una traza real.
+
+**El contrato (US5).** `routeStationSchema` en `content/ailab/route/stations.ts`, el registro en
+`content/ailab/route/index.ts` y `routeRegistryProblems` en `lib/ailab/route/registry.ts`, que devuelve los motivos en
+español: id repetido, prueba sin estación, ruta núcleo de más de 10 minutos, pasos fuera de 2 a 4, textos vacíos, href
+con idioma o fuera de `github.com/CHERCED-DEV/`, página o ancla que no existe, evidencia sin texto en `route.json` y spec
+que no existe. Los textos de las evidencias de la 044 (`mcp-call`) y la 045 (`metrics-link`) ya están en `route.json`.
+
+**La pastilla (US4).** `RouteReturnPill` está construida y probada aislada; montarla es la enmienda E-4206. Solo pinta
+algo con una ruta activa en la pestaña y fuera de la ruta, dice «Volver a la ruta (06:32)», lleva a la estación activa,
+sigue en negativo al pasarse y se oculta con su botón hasta volver a la ruta.
+
+**Peso.** El JavaScript propio de la ruta suma unos 10,3 KB comprimidos, medido el 26 de noviembre de 2026 sobre el
+build de producción contra `/ai-lab/evals`; el plan pedía menos de 15 KB. El acta queda en un chunk aparte que se
+descarga al pulsar.
+
+**Pruebas.** Corridas el 26 de noviembre de 2026, sin gastar API:
+- `npx vitest run tests/unit/route`: 7 archivos y 53 pruebas en verde (registro 12, avance 11, página 7, traza
+  grabada 4, acta 9, Rómpelo 6 y pastilla 4).
+- `npx vitest run tests/contract` más la paridad de i18n y la prueba de lenguaje: 3 archivos y 50 pruebas en verde.
+- `npm run lint` y `npx tsc --noEmit` (después de `next typegen`) sin errores.
+- `tests/e2e/route/route.spec.ts` en `desktop-chromium`, `mobile-chromium` y `no-js`: 14 pasan y 10 se saltan a
+  propósito, porque cada prueba corre solo en sus proyectos. Cubre el recorrido completo con el acta descargada, axe sin
+  violaciones serias ni críticas, cero llamadas a `/api/ailab/*` y `/api/agent/*` sin abrir estaciones (SC-4205), el
+  reloj en negativo, el cambio de idioma, el almacenamiento bloqueado, Rómpelo, el movimiento reducido, 390×844 sin
+  scroll horizontal y con controles de 44 px o más, y la página sin JavaScript.
+- El build de producción no sale desde el worktree: Turbopack no sigue el junction de `node_modules` y webpack se
+  detiene en dos selectores no puros que ya existían (`components/blog/post/ListenPlayer.module.scss` y
+  `components/site/home/Home.module.scss`). Se compiló con Turbopack desde la carpeta que tiene el `node_modules`
+  compartido, pasándole el worktree como directorio, y el e2e reusó ese build.
+- Capturas en `test-results/`: la ruta empezada y con el acta lista, en 390×844 y en escritorio (Chromium), y en
+  390×844 con WebKit, en tema claro y oscuro.
+
+**Pendiente.**
+- Integrador: E-4202, E-4203, E-4205 y E-4206, y las capturas de SC-4204 de la ventana «Para reclutadores» y del inicio
+  del AI Lab con sus entradas nuevas (T4224 a T4227 y parte de T4230).
+- Autor: cronometrar la ruta con dos personas que no conocen el sitio (T4231, SC-4201 y SC-4202) y decidir P-4206.
+- Antes del push: repetir la búsqueda de nombres prohibidos sobre el diff integrado (T4234). En el diff de la línea
+  contra `041-base-ola1` salió limpia.
