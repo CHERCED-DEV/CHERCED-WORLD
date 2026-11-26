@@ -4,8 +4,9 @@ Pedido del autor, 26 de noviembre de 2026 (línea [041](../041-pruebame-en-vivo/
 líderes técnicos que buscan senior full-stack con IA y entrevistadores de AI Engineer que quieren ver cómo trabaja,
 no solo qué hizo. Depende de la 032 (evals) y de la 038 (trazas). Lee el gasto mensual de la 043 cuando exista.
 
-Estado: borrador para aprobación del autor. Nada se implementa sin su visto bueno
-([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)).
+Estado: aprobada por el autor el 26 de noviembre de 2026 con las preguntas abiertas en su valor por defecto, y construida en la línea L3 ese mismo día; falta integrarla (ver «Cómo quedó»).
+
+Aprobación: [aprobacion.md](../041-pruebame-en-vivo/aprobacion.md).
 
 ## Qué hace
 

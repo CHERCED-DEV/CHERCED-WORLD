@@ -11,28 +11,41 @@ function valid(iso: string): Date | null {
   return Number.isNaN(date.getTime()) ? null : date
 }
 
+function parts(date: Date, lang: Locale, options: Intl.DateTimeFormatOptions): Partial<Record<Intl.DateTimeFormatPartTypes, string>> {
+  const found: Partial<Record<Intl.DateTimeFormatPartTypes, string>> = {}
+  for (const part of new Intl.DateTimeFormat(intlLocale(lang), { ...options, timeZone: ENGINEERING_TIME_ZONE }).formatToParts(date)) found[part.type] = part.value
+  return found
+}
+
+function shortMonth(value: string | undefined): string {
+  return (value ?? '').replace(/\.$/, '')
+}
+
 export function shortDate(iso: string, lang: Locale): string {
   const date = valid(iso)
   if (!date) return iso
-  return new Intl.DateTimeFormat(intlLocale(lang), { day: 'numeric', month: 'short', year: 'numeric', timeZone: ENGINEERING_TIME_ZONE })
-    .formatToParts(date)
-    .map((part) => (part.type === 'month' ? part.value.replace(/\.$/, '') : part.value))
-    .join('')
+  const { day, month, year } = parts(date, lang, { day: 'numeric', month: 'short', year: 'numeric' })
+  return lang === 'es' ? `${day} ${shortMonth(month)} ${year}` : `${shortMonth(month)} ${day}, ${year}`
 }
 
 export function dayMonth(iso: string, lang: Locale): string {
   const date = valid(iso)
   if (!date) return iso
-  return new Intl.DateTimeFormat(intlLocale(lang), { day: 'numeric', month: 'short', timeZone: ENGINEERING_TIME_ZONE })
-    .formatToParts(date)
-    .map((part) => (part.type === 'month' ? part.value.replace(/\.$/, '') : part.value))
-    .join('')
+  const { day, month } = parts(date, lang, { day: 'numeric', month: 'short' })
+  return lang === 'es' ? `${day} ${shortMonth(month)}` : `${shortMonth(month)} ${day}`
+}
+
+export function longDate(iso: string, lang: Locale): string {
+  const date = valid(iso)
+  if (!date) return iso
+  return new Intl.DateTimeFormat(intlLocale(lang), { day: 'numeric', month: 'long', year: 'numeric', timeZone: ENGINEERING_TIME_ZONE }).format(date)
 }
 
 export function dateTime(iso: string, lang: Locale): string {
   const date = valid(iso)
   if (!date) return iso
-  return `${shortDate(iso, lang)}, ${new Intl.DateTimeFormat(intlLocale(lang), { hour: 'numeric', minute: '2-digit', timeZone: ENGINEERING_TIME_ZONE }).format(date)}`
+  const time = new Intl.DateTimeFormat(intlLocale(lang), { hour: 'numeric', minute: '2-digit', timeZone: ENGINEERING_TIME_ZONE }).format(date)
+  return `${longDate(iso, lang)}, ${time}`
 }
 
 export function integer(value: number, lang: Locale): string {
