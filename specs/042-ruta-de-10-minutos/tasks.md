@@ -73,16 +73,18 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Fase 6 — US4: las entradas (enmiendas de la base, las hace el integrador al integrar)
 
-- [ ] T4223 [US4] `RouteReturnPill`: solo con ruta activa, se cierra, teclado, sin tapar contenido en 390×844 —
+- [x] T4223 [US4] `RouteReturnPill`: solo con ruta activa, se cierra, teclado, sin tapar contenido en 390×844 —
   archivos: `components/ailab/route/RouteReturnPill.tsx`, `components/ailab/route/RouteReturnPill.module.scss` —
-  cubre: FR-4211
+  cubre: FR-4211 — construida y probada aislada; montarla es la T4226
 - [ ] T4224 [US4] Integrador: enlace de texto en la ventana «Para reclutadores» — archivos:
-  `components/site/home/RecruitersBlock.tsx` — cubre: E-4202, FR-4210
+  `components/site/home/RecruitersBlock.tsx` — cubre: E-4202, FR-4210 — del integrador, con el código listo en el
+  reporte de la línea
 - [ ] T4225 [US4] Integrador: acceso al inicio del AI Lab — archivos: `components/ailab/shell/LabPage.tsx` — cubre:
-  E-4203, FR-4210
+  E-4203, FR-4210 — del integrador, con el código listo en el reporte de la línea
 - [ ] T4226 [US4] Integrador: montar la pastilla, si el autor aprobó P-4204 — archivos: `app/[lang]/layout.tsx` —
-  cubre: E-4206, FR-4211
-- [ ] T4227 [US4] Integrador: URL de la ruta en el sitemap — archivos: `app/sitemap.ts` — cubre: E-4205
+  cubre: E-4206, FR-4211 — del integrador (P-4204 quedó en «sí» por defecto), con el código listo en el reporte
+- [ ] T4227 [US4] Integrador: URL de la ruta en el sitemap — archivos: `app/sitemap.ts` — cubre: E-4205 — del
+  integrador, con el código listo en el reporte de la línea
 
 ## Fase 7 — Pulido
 
