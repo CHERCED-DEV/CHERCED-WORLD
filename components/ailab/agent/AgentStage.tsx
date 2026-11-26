@@ -8,7 +8,7 @@ import { cx } from '@/components/ui/cx'
 import { pixelFont } from '@/styles/fonts'
 import type { LabDemoProps } from '@/components/ailab/shell/types'
 import { agentCopy, type AgentCopy } from '@/content/ailab/agent'
-import { AGENT_SESSION_ENDPOINT, AGENT_VOICE, isAgentGrant, isAgentStatus, type AgentMode } from '@/lib/ai/agent/config'
+import { AGENT_SESSION_ENDPOINT, AGENT_VOICE, isAgentGrant, isAgentStatus, type AgentMode, type AgentSessionGrant } from '@/lib/ai/agent/config'
 import { openLiveSession, type LiveSession } from '@/lib/ai/agent/live'
 import { startMic, type MicHandle } from '@/lib/ai/agent/mic'
 import { OUTPUT_RATE } from '@/lib/ai/agent/pcm'
@@ -64,6 +64,21 @@ type Notice = keyof AgentCopy['errors'] | 'expired' | null
 const METER_BARS = 12
 
 const NAVIGATE_WAIT_MS = 8000
+
+const INTERVIEW_RESUMES = 2
+
+async function requestGrant(body: Record<string, unknown>): Promise<unknown> {
+  try {
+    const response = await fetch(AGENT_SESSION_ENDPOINT, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    return await response.json()
+  } catch {
+    return { error: 'failed' }
+  }
+}
 
 const BUBBLE_MAX = 180
 
@@ -269,7 +284,12 @@ export default function AgentStage({ lang, persistent = false, request = null }:
     [runner, track],
   )
 
+  const resumeHandle = useRef<string | null>(null)
+  const resumes = useRef(0)
+  const resumeAttempt = useRef(0)
+
   const teardown = useCallback(() => {
+    resumeAttempt.current += 1
     window.clearTimeout(arrivalTimer.current)
     arrivalTimer.current = 0
     window.clearTimeout(chunkTimer.current)
@@ -532,17 +552,7 @@ export default function AgentStage({ lang, persistent = false, request = null }:
     playerRef.current = player
     await player.resume().catch(() => undefined)
 
-    let grant: unknown
-    try {
-      const response = await fetch(AGENT_SESSION_ENDPOINT, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ lang, interview }),
-      })
-      grant = await response.json()
-    } catch {
-      grant = { error: 'failed' }
-    }
+    const grant = await requestGrant({ lang, interview })
     if (!isAgentGrant(grant)) {
       teardown()
       if (grant && typeof grant === 'object' && (grant as { mode?: unknown }).mode === 'local') {
@@ -555,83 +565,116 @@ export default function AgentStage({ lang, persistent = false, request = null }:
       return
     }
 
-    setExpiresAt(Date.parse(grant.expiresAt))
     setTrial(Boolean(grant.trial))
     beginTrace(createTrace('live', grant.model, AGENT_VOICE, Date.now()))
-    const session: LiveSession = openLiveSession({
-      token: grant.token,
-      model: grant.model,
-      events: {
-        onOpen: () => {
-          setPhase('live')
-          setActivity('arriving')
-          const opened = Date.now()
-          void openMic(session).finally(() => {
-            arrivalTimer.current = window.setTimeout(
-              () => {
-                arrivalTimer.current = 0
-                if (sessionRef.current !== session) return
-                setActivity((current) => (current === 'arriving' ? 'listening' : current))
-                track((current) => markAsked(current, Date.now(), 'greeting', 'greeting'))
-                session.sendText(copy.greet)
-              },
-              Math.max(0, ARRIVAL_MS - (Date.now() - opened)),
-            )
-          })
+    resumeHandle.current = null
+    resumes.current = 0
+    const end = (reason: 'ended' | 'expired' | 'error', detail?: string) => {
+      saveReason.current = reason === 'expired' ? 'expired' : reason === 'error' ? 'error' : 'hangup'
+      track((current) => closeTurn(current, Date.now()))
+      setTurns(closeTurns)
+      teardown()
+      setPhase('ended')
+      setActivity('idle')
+      setNotice(closeNotice(reason, detail))
+    }
+    const connect = (current: AgentSessionGrant, resumed: boolean) => {
+      setExpiresAt(Date.parse(current.expiresAt))
+      const session: LiveSession = openLiveSession({
+        token: current.token,
+        model: current.model,
+        events: {
+          onOpen: () => {
+            setPhase('live')
+            if (resumed) {
+              setNotice(null)
+              setActivity('listening')
+              void openMic(session)
+              return
+            }
+            setActivity('arriving')
+            const opened = Date.now()
+            void openMic(session).finally(() => {
+              arrivalTimer.current = window.setTimeout(
+                () => {
+                  arrivalTimer.current = 0
+                  if (sessionRef.current !== session) return
+                  setActivity((current) => (current === 'arriving' ? 'listening' : current))
+                  track((current) => markAsked(current, Date.now(), 'greeting', 'greeting'))
+                  session.sendText(copy.greet)
+                },
+                Math.max(0, ARRIVAL_MS - (Date.now() - opened)),
+              )
+            })
+          },
+          onAudio: (pcm) => {
+            audioSamples.current += pcm.length
+            track((current) => markAudio(current, Date.now()))
+            if (!mutedRef.current) playerRef.current?.enqueue(pcm)
+          },
+          onInputTranscript: (text) => queueChunk('you', text),
+          onOutputTranscript: (text) => queueChunk('agent', text),
+          onVoiceActivity: (activity) => {
+            if (activity === 'end') track((current) => markAsked(current, Date.now(), 'voice', 'vad'))
+          },
+          onUsage: (usage) => track((current) => markUsage(current, usage)),
+          onResumable: (handle) => {
+            resumeHandle.current = handle
+          },
+          onInterrupted: () => {
+            flushChunks()
+            track(markInterrupted)
+            playerRef.current?.flush()
+            setTurns(closeTurns)
+            setActivity('listening')
+          },
+          onTurnComplete: () => {
+            flushChunks()
+            const audioMs = (audioSamples.current / OUTPUT_RATE) * 1000
+            audioSamples.current = 0
+            track((current) => closeTurn(current, Date.now(), audioMs))
+            setTurns(closeTurns)
+            setActivity((current) => (current === 'thinking' ? 'listening' : current))
+            flushNavigation()
+          },
+          onToolCall: async (calls) => {
+            setActivity('thinking')
+            const responses = []
+            for (const call of calls) {
+              const result = await runTool(call)
+              if (result.effect) setEffect(result.effect)
+              addSource(result.effect)
+              responses.push(result.response)
+            }
+            return responses
+          },
+          onClose: (reason, detail) => {
+            if (sessionRef.current !== session) return
+            flushChunks()
+            sessionRef.current = null
+            const handle = resumeHandle.current
+            if (interview && reason !== 'ended' && handle && resumes.current < INTERVIEW_RESUMES) {
+              resumes.current += 1
+              const attempt = ++resumeAttempt.current
+              micRef.current?.stop()
+              micRef.current = null
+              setMicOpen(false)
+              setNotice('resuming')
+              setActivity('thinking')
+              void requestGrant({ lang, interview, resume: handle }).then((next) => {
+                if (resumeAttempt.current !== attempt) return
+                if (isAgentGrant(next)) connect(next, true)
+                else end(reason, detail)
+              })
+              return
+            }
+            end(reason, detail)
+          },
         },
-        onAudio: (pcm) => {
-          audioSamples.current += pcm.length
-          track((current) => markAudio(current, Date.now()))
-          if (!mutedRef.current) playerRef.current?.enqueue(pcm)
-        },
-        onInputTranscript: (text) => queueChunk('you', text),
-        onOutputTranscript: (text) => queueChunk('agent', text),
-        onVoiceActivity: (activity) => {
-          if (activity === 'end') track((current) => markAsked(current, Date.now(), 'voice', 'vad'))
-        },
-        onUsage: (usage) => track((current) => markUsage(current, usage)),
-        onInterrupted: () => {
-          flushChunks()
-          track(markInterrupted)
-          playerRef.current?.flush()
-          setTurns(closeTurns)
-          setActivity('listening')
-        },
-        onTurnComplete: () => {
-          flushChunks()
-          const audioMs = (audioSamples.current / OUTPUT_RATE) * 1000
-          audioSamples.current = 0
-          track((current) => closeTurn(current, Date.now(), audioMs))
-          setTurns(closeTurns)
-          setActivity((current) => (current === 'thinking' ? 'listening' : current))
-          flushNavigation()
-        },
-        onToolCall: async (calls) => {
-          setActivity('thinking')
-          const responses = []
-          for (const call of calls) {
-            const result = await runTool(call)
-            if (result.effect) setEffect(result.effect)
-            addSource(result.effect)
-            responses.push(result.response)
-          }
-          return responses
-        },
-        onClose: (reason, detail) => {
-          if (sessionRef.current !== session) return
-          saveReason.current = reason === 'expired' ? 'expired' : reason === 'error' ? 'error' : 'hangup'
-          flushChunks()
-          sessionRef.current = null
-          track((current) => closeTurn(current, Date.now()))
-          setTurns(closeTurns)
-          teardown()
-          setPhase('ended')
-          setActivity('idle')
-          setNotice(closeNotice(reason, detail))
-        },
-      },
-    })
-    sessionRef.current = session
+      })
+      sessionRef.current = session
+    }
+    connect(grant, false)
   }, [addSource, beginTrace, copy.greet, flushChunks, flushNavigation, interview, lang, openMic, queueChunk, runTool, startSimulator, teardown, track])
 
   useEffect(() => {

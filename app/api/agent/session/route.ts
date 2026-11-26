@@ -8,7 +8,7 @@ import { hasLabConsent } from '@/lib/ai/lab/traces'
 import { agentInstruction } from '@/lib/ai/agent/knowledge'
 import { guestBlock } from '@/lib/ai/agent/guest'
 import { currentGuestMode, currentViewer } from '@/lib/ai/agent/viewer-server'
-import { createLiveToken, LiveTokenError } from '@/lib/ai/agent/session'
+import { createLiveToken, isResumeHandle, liveSetup, LiveTokenError, withResumption } from '@/lib/ai/agent/session'
 import { agentMode, geminiKey } from '@/lib/ai/gemini'
 import { getRepos } from '@/lib/data'
 import { defaultLocale, isLocale } from '@/lib/i18n/config'
@@ -45,8 +45,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const key = geminiKey()
   if (mode !== 'live' || !key) return reply({ mode: mode === 'live' ? 'off' : mode })
 
-  const body = (await request.json().catch(() => null)) as { lang?: unknown; interview?: unknown } | null
+  const body = (await request.json().catch(() => null)) as { lang?: unknown; interview?: unknown; resume?: unknown } | null
   const interview = isInterviewTrack(body?.interview) && interviewTracks.es[body.interview].ready ? body.interview : undefined
+  const resume = interview && isResumeHandle(body?.resume) ? body.resume : undefined
   const requested = body?.lang
   const lang = typeof requested === 'string' && isLocale(requested) ? requested : defaultLocale
   const now = new Date()
@@ -55,7 +56,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (process.env.NODE_ENV !== 'development') {
     const repo = getRepos().rateLimits
     const ip = await requestIpHash()
-    if (trial) {
+    if (resume) {
+      const resumed = await hitRateLimit(repo, 'agentResume', ip, now)
+      if (!resumed.allowed) return reply({ error: 'rate_limited' }, 429)
+      const daily = await hitRateLimit(repo, trial ? 'agentTrialDaily' : 'agentDaily', AGENT_DAILY_KEY, now)
+      if (!daily.allowed) return reply({ error: 'daily_cap' }, 429)
+    } else if (trial) {
       const used = await hitRateLimit(repo, 'agentTrial', ip, now)
       if (!used.allowed) return reply({ error: 'trial_used' }, 429)
       const daily = await hitRateLimit(repo, 'agentTrialDaily', AGENT_DAILY_KEY, now)
@@ -72,7 +78,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const guest = viewer.kind === 'guest' ? currentGuestMode() : null
     const instruction = await agentInstruction(lang, viewer, guest ? guestBlock(guest) : undefined, interview)
     const minutes = trial ? AGENT_TRIAL_MINUTES : AGENT_SESSION_MINUTES
-    const { token, expiresAt } = await createLiveToken(key, instruction, now, fetch, minutes)
+    const setup = interview ? withResumption(liveSetup(instruction), resume) : undefined
+    const { token, expiresAt } = await createLiveToken(key, instruction, now, fetch, minutes, setup)
     return reply({ mode: 'live', token, model: AGENT_MODEL, expiresAt, ...(trial ? { trial: true } : {}) })
   } catch (error) {
     logServerError('agent.session', error instanceof LiveTokenError ? error.message : error)

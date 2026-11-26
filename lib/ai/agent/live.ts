@@ -20,6 +20,8 @@ export type LiveEvents = {
   onToolCall?: (calls: LiveFunctionCall[]) => Promise<LiveFunctionResponse[]> | LiveFunctionResponse[]
   onUsage?: (usage: LiveUsage) => void
   onVoiceActivity?: (activity: 'start' | 'end') => void
+  onResumable?: (handle: string) => void
+  onGoAway?: (timeLeftMs: number | null) => void
   onClose?: (reason: LiveCloseReason, detail?: string) => void
 }
 
@@ -103,6 +105,18 @@ function functionCalls(value: unknown): LiveFunctionCall[] {
   })
 }
 
+export function durationMs(value: unknown): number | null {
+  if (typeof value === 'string') {
+    const match = /^(\d+(?:\.\d+)?)s$/.exec(value.trim())
+    return match ? Math.round(Number(match[1]) * 1000) : null
+  }
+  const parts = record(value)
+  if (!parts) return null
+  const seconds = Number(parts.seconds ?? 0)
+  const nanos = Number(parts.nanos ?? 0)
+  return Number.isFinite(seconds) && Number.isFinite(nanos) ? Math.round(seconds * 1000 + nanos / 1e6) : null
+}
+
 function rejectAll(calls: LiveFunctionCall[], error: string): LiveFunctionResponse[] {
   return calls.map(({ id, name }) => ({ id, name, response: { error } }))
 }
@@ -180,6 +194,11 @@ export function openLiveSession(options: LiveSessionOptions): LiveSession {
     const activity = text(record(message.voiceActivity)?.type)
     if (activity === 'ACTIVITY_START') events.onVoiceActivity?.('start')
     else if (activity === 'ACTIVITY_END') events.onVoiceActivity?.('end')
+    const resumption = record(message.sessionResumptionUpdate)
+    const handleId = text(resumption?.newHandle)
+    if (resumption?.resumable === true && handleId) events.onResumable?.(handleId)
+    const away = record(message.goAway)
+    if (away) events.onGoAway?.(durationMs(away.timeLeft))
     const usage = parseUsage(message.usageMetadata)
     if (usage && !finished) events.onUsage?.(usage)
     const content = record(message.serverContent)

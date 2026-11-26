@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
+  durationMs,
   LIVE_WS_URL,
   liveUrl,
   openLiveSession,
@@ -438,5 +439,20 @@ describe('live', () => {
     await flush()
     expect(onUsage).not.toHaveBeenCalled()
     expect(onVoiceActivity).not.toHaveBeenCalled()
+  })
+
+  it('FR-3004: avisa el handle de reanudación solo si es reanudable, y el goAway con su tiempo', async () => {
+    const onResumable = vi.fn()
+    const onGoAway = vi.fn()
+    const { socket } = await ready({ onResumable, onGoAway })
+    socket.json({ sessionResumptionUpdate: { newHandle: 'h-1', resumable: true } })
+    socket.json({ sessionResumptionUpdate: { newHandle: '', resumable: false } })
+    socket.json({ sessionResumptionUpdate: { newHandle: 'h-2', resumable: false } })
+    socket.json({ goAway: { timeLeft: '12.5s' } })
+    await flush()
+    expect(onResumable.mock.calls).toEqual([['h-1']])
+    expect(onGoAway).toHaveBeenCalledWith(12_500)
+    expect(durationMs({ seconds: 3, nanos: 500_000_000 })).toBe(3500)
+    expect(durationMs('nada')).toBeNull()
   })
 })

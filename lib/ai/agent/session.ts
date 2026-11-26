@@ -31,6 +31,16 @@ export function liveSetup(instruction: string, model: string = AGENT_MODEL, voic
   }
 }
 
+export const RESUME_HANDLE_MAX = 4096
+
+export function isResumeHandle(value: unknown): value is string {
+  return typeof value === 'string' && value.length > 0 && value.length <= RESUME_HANDLE_MAX && /^[\w\-./+=:]+$/.test(value)
+}
+
+export function withResumption(setup: Record<string, unknown>, handle?: string): Record<string, unknown> {
+  return { ...setup, sessionResumption: handle ? { handle } : {}, contextWindowCompression: { slidingWindow: {} } }
+}
+
 export function liveTokenRequest(
   instruction: string,
   now: Date,

@@ -3,7 +3,7 @@
 Pedido del autor, 2026-11-14 (funcionalidades para entrevistas). Para entrevistadores. Depende de la 020 y extiende
 V5 (018).
 
-Estado: construida el 2026-11-15, salvo la reanudación de sesión (FR-3004) y las evals propias de cada pista (FR-3005).
+Estado: construida el 2026-11-15; la reanudación de sesión (FR-3004) el 2026-11-26. Faltan las evals propias de cada pista (FR-3005) y probar la reanudación con una entrevista real.
 
 ## Qué hace
 
@@ -63,5 +63,21 @@ las fuentes de cada respuesta. Al final queda un acta descargable.
 - **Acta (FR-3003):** "Terminar y descargar el acta" arma un Markdown con fecha, pista, duración, cada pregunta con su
   respuesta y las fuentes sin repetir. No se guarda en el sitio.
 - **Simulador:** en local, la pregunta pasa por el buscador y la mejor coincidencia se muestra como fuente.
-- **Pendiente:** FR-3004, la reanudación para pasar de 5 minutos (hoy la entrevista dura lo que una conversación), y
-  FR-3005, sumar a la batería de la 032 casos de las pistas conductual y técnica.
+- **Pendiente:** FR-3005, sumar a la batería de la 032 casos de las pistas conductual y técnica.
+
+## Cómo quedó la reanudación (FR-3004, 2026-11-26)
+
+- El token de una entrevista pide `sessionResumption: {}` y `contextWindowCompression: { slidingWindow: {} }` dentro del
+  setup bloqueado. Gemini manda `sessionResumptionUpdate` con un `newHandle` (válido 2 horas); el cliente de Live guarda el
+  último reanudable y también lee `goAway`.
+- Cuando la sesión se corta por tiempo o por error y hay handle, la tarjeta dice «Reanudando la entrevista…», pide a
+  `POST /api/agent/session` un token nuevo con `resume: <handle>` y el servidor lo pone en el setup bloqueado del token
+  (como el setup del navegador se ignora con tokens bloqueados, el handle tiene que ir en el token). La conversación sigue
+  con el mismo contexto, la misma transcripción, las mismas fuentes y la misma traza.
+- Topes: hasta 2 reanudaciones por entrevista (15 minutos en total), 6 por IP por hora (`agentResume`), y cada una cuenta
+  en el tope diario de Mini Cherced, porque cuesta como otra conversación.
+- Solo aplica al modo entrevista; la conversación libre sigue durando 5 minutos.
+- Si la reanudación falla, la entrevista termina como antes, con el aviso de siempre.
+- Hecho según la documentación de Gemini Live; falta probarlo con una entrevista real de más de 5 minutos (~0,30 USD),
+  que espera el permiso del autor.
+- Tests: `tests/unit/agent/live.test.ts` (handle y `goAway`) y `tests/unit/agent/session.test.ts` (setup con y sin handle).

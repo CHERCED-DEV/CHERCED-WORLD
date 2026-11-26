@@ -6,7 +6,7 @@ vi.mock('@/content/posts/registry', async () => {
 
 const { AGENT_MODEL, AGENT_SESSION_MINUTES, AGENT_VOICE, isAgentGrant, isAgentStatus } = await import('@/lib/ai/agent/config')
 const { agentInstruction, KNOWLEDGE_MAX_CHARS } = await import('@/lib/ai/agent/knowledge')
-const { AUTH_TOKENS_URL, createLiveToken, LiveTokenError, liveTokenRequest } = await import('@/lib/ai/agent/session')
+const { AUTH_TOKENS_URL, createLiveToken, isResumeHandle, liveSetup, LiveTokenError, liveTokenRequest, withResumption } = await import('@/lib/ai/agent/session')
 const { agentMode, geminiKey } = await import('@/lib/ai/gemini')
 
 const NOW = new Date('2026-11-14T15:00:00.000Z')
@@ -85,5 +85,15 @@ describe('instrucción del agente (FR-1804, FR-1805)', () => {
       expect(text).toContain('Synergos')
       expect(text).not.toMatch(/mongodb|MONGODB_INTEGRAL_DB|GEMINI_API_KEY|GOOGLE_CLIENT_SECRET|\/inbox|@gmail\.com|@hotmail\.com/i)
     }
+  })
+
+  it('FR-3004: la entrevista pide handles de reanudación y la reanudación lleva el handle en el setup bloqueado', () => {
+    const fresh = withResumption(liveSetup('instrucción'))
+    expect(fresh.sessionResumption).toEqual({})
+    expect(fresh.contextWindowCompression).toEqual({ slidingWindow: {} })
+    expect(fresh.systemInstruction).toEqual({ parts: [{ text: 'instrucción' }] })
+    expect(withResumption(liveSetup('instrucción'), 'abc-123').sessionResumption).toEqual({ handle: 'abc-123' })
+    expect(isResumeHandle('Cg9h/b+c=d:e.f')).toBe(true)
+    for (const bad of ['', 'con espacio', 'x'.repeat(5000), 42, '<script>']) expect(isResumeHandle(bad), String(bad)).toBe(false)
   })
 })

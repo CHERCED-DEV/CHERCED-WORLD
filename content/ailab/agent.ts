@@ -37,7 +37,7 @@ export type AgentCopy = {
   consentAccept: string
   consentCancel: string
   states: Record<'checking' | 'idle' | 'connecting' | 'arriving' | 'listening' | 'thinking' | 'speaking' | 'ended' | 'expired' | 'simulator', string>
-  errors: Record<'off' | 'rate_limited' | 'daily_cap' | 'failed' | 'mic' | 'connection' | 'unavailable' | 'trial_used', string>
+  errors: Record<'off' | 'rate_limited' | 'daily_cap' | 'failed' | 'mic' | 'connection' | 'unavailable' | 'trial_used' | 'resuming', string>
   trial: { note: string; ended: string; signIn: string }
   save: { consent: string }
   searching: string
@@ -99,7 +99,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     timeLeft: 'Quedan {time}',
     consentTitle: 'Antes de hablar',
     consentBody:
-      'Tu voz y lo que escribas van a Google (Gemini Live) mientras dure la conversación, que dura como máximo 5 minutos. Este sitio no guarda audio ni texto. Si entraste con tu cuenta, Mini Cherced recibe tu nombre para saludarte. Al aceptar, el navegador te pide el micrófono.',
+      'Tu voz y lo que escribas van a Google (Gemini Live) mientras dure la conversación, que dura como máximo 5 minutos (15 en el modo entrevista). Este sitio no guarda audio ni texto. Si entraste con tu cuenta, Mini Cherced recibe tu nombre para saludarte. Al aceptar, el navegador te pide el micrófono.',
     consentAccept: 'Aceptar y conversar',
     consentCancel: 'Ahora no',
     states: {
@@ -121,6 +121,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       failed: 'Gemini no respondió. Intenta de nuevo en un momento.',
       mic: 'No pude abrir el micrófono. Puedes escribirle igual.',
       connection: 'Se cortó la conexión con Gemini.',
+      resuming: 'Reanudando la entrevista para seguir sin perder el hilo…',
       unavailable: 'Gemini no está disponible en este momento. Vuelve más tarde, o escríbele a Camilo desde Contacto.',
       trial_used: 'Ya usaste tus dos pruebas de hoy. Entra con tu cuenta de Google y conversamos 5 minutos completos.',
     },
@@ -217,7 +218,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
     timeLeft: '{time} left',
     consentTitle: 'Before you talk',
     consentBody:
-      'Your voice and what you type go to Google (Gemini Live) while the conversation lasts, for 5 minutes at most. This site stores no audio or text. If you signed in, Mini Cherced gets your name to greet you. When you accept, the browser asks for the microphone.',
+      'Your voice and what you type go to Google (Gemini Live) while the conversation lasts, for 5 minutes at most (15 in interview mode). This site stores no audio or text. If you signed in, Mini Cherced gets your name to greet you. When you accept, the browser asks for the microphone.',
     consentAccept: 'Accept and talk',
     consentCancel: 'Not now',
     states: {
@@ -239,6 +240,7 @@ export const agentCopy: Record<Locale, AgentCopy> = {
       failed: 'Gemini did not answer. Try again in a moment.',
       mic: "I couldn't open the microphone. You can still type to it.",
       connection: 'The connection to Gemini dropped.',
+      resuming: 'Resuming the interview so we can keep going without losing the thread…',
       unavailable: 'Gemini is not available right now. Come back later, or write to Camilo from Contact.',
       trial_used: 'You already used your two tries today. Sign in with Google and we get a full 5 minutes.',
     },
