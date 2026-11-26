@@ -317,7 +317,7 @@ $mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, 'Liberation Mo
   display: flex;
   gap: var(--cw-space-2);
   align-items: center;
-  min-height: 44px;
+  min-height: 36px;
   cursor: pointer;
 
   input {
@@ -337,6 +337,12 @@ $mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, 'Liberation Mo
     max-width: 100%;
     white-space: normal;
     text-align: left;
+  }
+
+  button code {
+    font-family: $mono;
+    letter-spacing: 0;
+    text-transform: none;
   }
 }
 

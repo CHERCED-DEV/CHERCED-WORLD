@@ -198,10 +198,10 @@ export function McpTester({ endpoint, tools, defaultTool, labels }: Props) {
               }
               data-cw-mcp-step="1"
             >
-              1 · {first}
+              1 · <code>{first}</code>
             </Button>
             <Button variant="glass" size="sm" disabled={busy} onClick={() => void run('tools/list', era === 'modern' ? {} : undefined)} data-cw-mcp-step="2">
-              2 · tools/list
+              2 · <code>tools/list</code>
             </Button>
           </div>
           <label className={styles.field} htmlFor={`${ids}-tool`}>

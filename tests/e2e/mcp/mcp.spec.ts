@@ -21,6 +21,8 @@ const TOOLS = [
   'fetch',
 ]
 
+const FIRST_CALL = { timeout: 30_000 }
+
 const MODERN_HEADERS = {
   'content-type': 'application/json',
   accept: 'application/json, text/event-stream',
@@ -64,7 +66,7 @@ test.describe('página /mcp (US2, FR-4411)', () => {
     await expect(page.locator('[data-cw-mcp-noscript]')).toBeHidden()
     await page.locator('[data-cw-mcp-try="get_case_study"]').click()
     const exchange = page.locator('[data-cw-mcp-exchange="tools/call"]').first()
-    await expect(exchange).toHaveAttribute('data-cw-mcp-status', '200')
+    await expect(exchange).toHaveAttribute('data-cw-mcp-status', '200', FIRST_CALL)
     await expect(exchange.locator('[data-cw-mcp-request]')).toContainText('"name": "get_case_study"')
     await expect(exchange.locator('[data-cw-mcp-request]')).toContainText('mcp-name: get_case_study')
     await expect(exchange.locator('[data-cw-mcp-response]')).toContainText('Synergos')
@@ -79,7 +81,7 @@ test.describe('página /mcp (US2, FR-4411)', () => {
     await page.locator('[data-cw-mcp-era="legacy"]').click()
     await expect(page.locator('[data-cw-mcp-era="legacy"]')).toBeChecked()
     await page.locator('[data-cw-mcp-step="1"]').click()
-    await expect(page.locator('[data-cw-mcp-exchange="initialize"]')).toHaveAttribute('data-cw-mcp-status', '200')
+    await expect(page.locator('[data-cw-mcp-exchange="initialize"]')).toHaveAttribute('data-cw-mcp-status', '200', FIRST_CALL)
     await expect(page.locator('[data-cw-mcp-exchange="notifications/initialized"]')).toHaveAttribute('data-cw-mcp-status', '202')
     await page.locator('[data-cw-mcp-step="2"]').click()
     const list = page.locator('[data-cw-mcp-exchange="tools/list"]').first()
@@ -111,7 +113,7 @@ test.describe('página /mcp (US2, FR-4411)', () => {
     await open(page)
     await page.locator('[data-cw-mcp-try="search_portfolio"]').focus()
     await page.keyboard.press('Enter')
-    await expect(page.locator('[data-cw-mcp-exchange="tools/call"] article').first()).toBeFocused()
+    await expect(page.locator('[data-cw-mcp-exchange="tools/call"] article').first()).toBeFocused(FIRST_CALL)
     await page.locator('[data-cw-mcp-tool-select]').focus()
     await page.keyboard.press('Tab')
     await expect(page.locator('[data-cw-mcp-args]')).toBeFocused()
@@ -125,7 +127,7 @@ test.describe('página /mcp (US2, FR-4411)', () => {
       await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' })
       await open(page)
       await page.locator('[data-cw-mcp-try="list_case_studies"]').click()
-      await expect(page.locator('[data-cw-mcp-exchange="tools/call"]').first()).toHaveAttribute('data-cw-mcp-status', '200')
+      await expect(page.locator('[data-cw-mcp-exchange="tools/call"]').first()).toHaveAttribute('data-cw-mcp-status', '200', FIRST_CALL)
       const results = await new AxeBuilder({ page }).include('[data-cw-mcp]').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze()
       expect(
         results.violations.filter((violation) => violation.impact === 'critical' || violation.impact === 'serious').map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target.join(' ')).join(', ')}`),

@@ -98,7 +98,7 @@ las otras `[P]` de la misma fase.
 - [ ] T4434 Medir p95 de `tools/call` en la vista previa sin contar el arranque en frío — cubre: SC-4404
 - [ ] T4435 Capturas de 390×844 y WebKit de `/mcp` y del inicio del AI Lab contra la última vista aprobada — cubre:
   FR-4108 de la 041
-- [ ] T4436 Sección «Cómo quedó» en la spec — archivos: `specs/044-mcp-publico-del-portafolio/spec.md`
+- [x] T4436 Sección «Cómo quedó» en la spec — archivos: `specs/044-mcp-publico-del-portafolio/spec.md`
 
 ## Dependencias y orden
 
@@ -112,6 +112,6 @@ las otras `[P]` de la misma fase.
 
 ## Validación final
 
-- [ ] T4437 `npx vitest run tests/unit/mcp`, `npm run lint`, `npm run typecheck` y
+- [x] T4437 `npx vitest run tests/unit/mcp`, `npm run lint`, `npm run typecheck` y
   `npx playwright test tests/e2e/mcp/mcp.spec.ts` en verde; sin la suite exhaustiva y sin gastar API
 - [ ] T4438 Búsqueda de nombres internos en el diff antes del push (SC-4104 de la 041)

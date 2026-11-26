@@ -259,3 +259,64 @@ No hay modelo en el servidor, así que las «evals» son una batería determinis
 | P-4404 | ¿Sumamos herramientas `search` y `fetch` con la forma que piden los conectores de ChatGPT? | Sí, si el día de implementar la documentación vigente de OpenAI lo sigue pidiendo; se anota con la fecha de consulta |
 | P-4405 | ¿La página va en `/{lang}/mcp` o dentro del AI Lab? | `/{lang}/mcp`, una URL corta para dictar en una llamada, enlazada desde el AI Lab y desde la ruta |
 | P-4406 | ¿Se muestra en el tablero de la 045 cuántas llamadas recibe el MCP? | Sí, el total del día del contador `mcpDaily`, sin desglose por herramienta, sin IP y sin argumentos |
+
+## Cómo quedó (26 de noviembre de 2026)
+
+Construido en la línea L2 (rama `lane/044-mcp`, worktree `.worktrees/L2-mcp`), desde la etiqueta `041-base-ola1`.
+
+### Qué hay
+
+- **Núcleo propio sobre Zod** en `lib/mcp/core/` (P-4401): `createMcpHandler`, `McpTool`, `McpPrompt`, `McpContext`,
+  `McpToolResult`, `McpToolError` y `defineTool`. Sin dependencias nuevas. Lo consumen la 048 y la 049.
+- **`POST /api/mcp`** sin sesión, con respuesta JSON y sin SSE. `GET` y `DELETE` dan 405, las notificaciones 202, un
+  lote 400 y un cuerpo de más de 64 KB 413. CORS abierto sin credenciales y `no-store` en todas las respuestas.
+- **Once herramientas de solo lectura**, en inglés y en orden fijo: `search_portfolio`, `list_case_studies`,
+  `get_case_study`, `get_decisions`, `get_career`, `get_skills`, `list_posts`, `match_job_description`,
+  `get_contact_options`, `search` y `fetch`. Todas traen `readOnlyHint: true`, `outputSchema` y fuentes con URL absoluta.
+- **Dos prompts**: `interview_camilo` y `fit_for_role`.
+- **Página `/{lang}/mcp`** con la URL y su botón de copiar, los pasos por cliente, el catálogo leído de `tools/list` en
+  el build (llamada en proceso, sin HTTP) y el probador del protocolo. Sin JavaScript se ven la URL, los pasos y el
+  catálogo.
+- **Estación `mcp-en-tu-agente`** en `content/mcp/station.ts`, con el tipo `RouteStation` de la base.
+- **Batería de filtración** de 22 llamadas en `content/mcp/leak-battery.ts`, que corre con Vitest en cada build.
+
+### Decisiones que cambian o precisan la spec
+
+| Decisión | Por qué | Qué se sacrificó |
+|---|---|---|
+| Servidor de doble era: la revisión 2026-07-28 y las que usan `initialize` (2025-11-25, 2025-06-18 y 2025-03-26) | La última revisión estable, consultada en modelcontextprotocol.io el 26 de noviembre de 2026, es la 2026-07-28. Quitó `initialize`, `ping` y las sesiones, y pide `server/discover`, `_meta` en cada petición y las cabeceras `MCP-Protocol-Version`, `Mcp-Method` y `Mcp-Name`. FR-4403 pide aceptar esa y las anteriores con Streamable HTTP | Más código de protocolo que mantener: dos formas de pedir la versión en el mismo endpoint |
+| `initialize` con una versión desconocida responde 2025-11-25, no 2026-07-28 | Un cliente con handshake no sabe hablar la revisión sin estado | Ese cliente no se entera de que existe una versión más nueva |
+| `ping` solo existe para los clientes con handshake | La 2026-07-28 lo quitó | Nada: ningún cliente sin estado lo manda |
+| Códigos de error propios: -31403 origen, -31413 cuerpo grande, -31429 límite y -31503 base caída | La 2026-07-28 reserva -32020 a -32099 para el protocolo y pide no usar -32000 a -32019 en implementaciones nuevas | Los clientes no conocen esos códigos; el mensaje y el estado HTTP los explican |
+| `-32601` da 404 en la revisión sin estado y 200 con handshake | Lo pide el transporte de la 2026-07-28 | Nada |
+| Argumentos inválidos vuelven como `isError: true`; herramienta desconocida da `-32602`; una excepción da `-32603` | Es la regla de errores de herramientas del protocolo: lo que el modelo puede corregir va como resultado | El texto del error interno no ayuda a depurar; queda en el log solo con el nombre del error |
+| Se acepta cualquier `Origin` bien formado; uno mal formado da 403 | El protocolo pide validar el origen y FR-4408 pide CORS abierto; no hay cookies ni datos privados | No hay lista de orígenes permitidos |
+| `search` y `fetch` con la forma de los conectores de ChatGPT (P-4404) | La documentación de OpenAI, consultada el 26 de noviembre de 2026, los sigue pidiendo para Deep Research y el conocimiento de empresa; el modo desarrollador no los exige | Dos herramientas casi repetidas: `search` detecta el idioma de la consulta y no acepta `lang`; sus ids llevan el idioma (`es:project:12`) |
+| Ninguna respuesta repite la consulta ni el id pedido | Si una persona escribe una variable de entorno en la consulta, la respuesta no la devuelve; la batería lo exige | El mensaje de error es menos específico («no existe un caso con ese id») |
+| El contador `mcpDaily:global` suma cada petición JSON-RPC que pasa el límite por IP, también `initialize` y `tools/list`; las notificaciones no suman | Es el tope global de llamadas al servidor (FR-4407) | El tablero de la 045 ve llamadas al protocolo, no solo llamadas a herramientas |
+| El hash de la IP sale de `clientIp` e `ipHash` de `lib/security/ip.ts` sobre las cabeceras del `Request` | Es la misma función que usa `requestIpHash`, pero sin `next/headers`, así el núcleo se prueba sin el contexto de Next | Nada |
+| `get_interview_route` está lista con un doble y no se publica | La ruta de la 042 no existe en la base de la línea | Hasta integrar la L1, el servidor no habla de la ruta |
+| Los pasos por cliente dicen «Pendiente de probar en la vista previa» | SC-4401 se prueba en la vista previa, fuera de la línea. FR-4411 pide mostrar solo los probados | Hasta esa prueba, la página muestra cinco clientes sin fecha |
+
+### Pruebas que corrí
+
+- `npx vitest run tests/unit/mcp`: 14 archivos y 76 pruebas en verde (protocolo, límite, guarda de imports, fuentes,
+  cada herramienta, encaje, prompts, servidor y filtración).
+- Pruebas compartidas que tocan mis diccionarios y la ruta nueva (`l0/i18n-parity`, `ux/lenguaje`, `seo`, `rel`,
+  `p0/confidentiality`, `lc` y `tests/contract`): 16 archivos y 240 pruebas en verde.
+- `npm run lint` y `npx tsc --noEmit` en verde.
+- e2e de la página: `tests/e2e/mcp` en `desktop-chromium` y `mobile-chromium` (390×844), en verde.
+
+### Lo que no se pudo y lo que queda
+
+- **Build de producción en el worktree.** Turbopack no encuentra `next` a través del junction de `node_modules`, y
+  `next build --webpack` falla en dos SCSS ajenos (`components/blog/post/ListenPlayer.module.scss` y
+  `components/site/home/Home.module.scss`), con selectores `:global(...)` que webpack no acepta. El e2e corrió contra
+  `next dev --webpack` en el puerto 3142 con `E2E_REUSE_SERVER=1`. Falta un build real antes de la vista previa.
+- **SC-4401**: conectar Claude Code, el conector de Claude, MCP Inspector, Cursor y ChatGPT en la vista previa, anotar
+  la fecha en `content/mcp/clients.ts` (`testedOn`) y quitar los que no conecten.
+- **SC-4404**: medir el p95 de `tools/call` en la vista previa sin el arranque en frío.
+- **T4432**: sitemap, enlace en el AI Lab, estación en la ruta y sección del README (enmiendas E-4403 a E-4406).
+- **T4435**: capturas de 390×844 y de escritorio de `/es/mcp` en Chromium; faltan WebKit y el inicio del AI Lab, que
+  cambia con E-4404.
+- **T4438**: la lista de nombres prohibidos vive en la carpeta privada, que no está en el worktree de la línea.
