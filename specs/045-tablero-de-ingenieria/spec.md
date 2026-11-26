@@ -262,3 +262,128 @@ en pruebas), de contrato sobre `history.json` y el registro de evals, y una prue
 | P-4504 | ¿Se publica el gasto de IA? | Sí, el total y por proveedor frente al tope, sin desglose por visitante |
 | P-4505 | ¿Cada cuánto se refresca el historial? | En cada push de ola, por el integrador, para no sumar despliegues |
 | P-4506 | ¿Se muestran las mediciones de rendimiento? | Solo las que el integrador guarde de una corrida `fast` que ya iba a hacer, con fecha; nunca una corrida extra solo para el tablero |
+
+## Cómo quedó (26 de noviembre de 2026)
+
+Construida en la línea L3 (rama `lane/045-ingenieria`, desde `041-base-ola1`), con las preguntas abiertas en su valor
+por defecto. Falta integrarla: lo que le toca al integrador está al final.
+
+### Qué quedó
+
+- **La página `/{lang}/ingenieria`**, estática en español y en inglés, que se lee sin JavaScript. Tiene siete secciones
+  y cada una cierra con su «Fuente»:
+  - este despliegue;
+  - de la spec al commit;
+  - pruebas;
+  - entrega;
+  - evals;
+  - gasto de IA;
+  - presupuestos.
+- **El detalle de cada spec en su propia página, `/{lang}/ingenieria/{NNN}`**, también estática. Trae el estado, la
+  línea «Estado:» tal cual, el enlace a la spec en GitHub, las dos fechas y los días, los commits con fecha y enlace, y
+  los requisitos agrupados por archivo de prueba. Un número que no existe da 404.
+  - **Por qué no va plegado en la tabla, como decía el plan:** con los 50 detalles dentro, la página medía unos 310 KB
+    de HTML y unas 5.800 etiquetas (medido en `next dev`), y eso pone en riesgo el principio V en el celular.
+  - **Cómo quedó:** con el detalle aparte, la página mide unos 46 KB y 854 etiquetas.
+  - **Qué se sacrifica:** un clic más para ver una spec. A cambio, la evidencia de la estación es una URL directa
+    (`/ingenieria/030`).
+- **US1:**
+  - `lib/engineering/specs.ts`, `commits.ts` y `history.ts`;
+  - el recolector `scripts/engineering-metrics.mjs`, con las opciones `--sin-gh`, `--salida`, `--repo` y
+    `--mediciones <archivo.json>`;
+  - la primera toma de `content/engineering/history.json`, tomada con `--sin-gh`.
+
+  El recolector solo guarda el sha corto, la fecha y el asunto. Antes de guardar cada asunto:
+  - cambia correos, enlaces y rutas de `privado/` por `[correo]`, `[enlace]` y `[ruta privada]`;
+  - si en local está la lista privada de nombres de la 041, cambia esos nombres por `[reservado]`.
+
+  Si aun así queda un correo, una URL de vista previa o `privado/`, no escribe nada. Conserva las mediciones que ya
+  estaban en el historial.
+- **US2:** la franja del despliegue lee `VERCEL_GIT_COMMIT_SHA`, `VERCEL_ENV` y `.engineering/vitest.json`, y de ese
+  reporte solo usa totales y la hora, nunca rutas ni nombres de pruebas. También cuenta los archivos de prueba por tipo
+  y busca, tal cual, los ids `FR-` y `SC-` en `tests/`.
+- **US3:**
+  - el registro `content/engineering/evals.ts`, con la batería de la 032;
+  - el esquema Zod de `EvalResults` en `lib/engineering/evals.ts`;
+  - el gasto de `lib/engineering/spend.ts`;
+  - `GET /api/engineering/spend`, cacheado una hora con `unstable_cache` y `s-maxage=3600`;
+  - la isla cliente `SpendPanel`. Sin JavaScript dice que no carga y enlaza el JSON.
+- **US4:** los cuatro presupuestos de la constitución, cada uno con la prueba e2e que lo vigila (una prueba unitaria
+  comprueba que el archivo existe y de verdad mide ese presupuesto), y la última medición solo si está en el historial.
+- **US5:** la prueba de contrato del registro, que falla con el motivo cuando un archivo no cumple el esquema.
+- **La estación `tablero-en-numeros`** en `content/engineering/station.ts`. Demuestra la prueba 4 y también la 3, dura 2
+  minutos, enlaza a `/ingenieria/030` y su evidencia es `metrics-link`.
+
+### Decisiones y por qué
+
+- **Estado:** se lee la primera línea `Estado:` o `Status:` del `spec.md`, con o sin negrita, porque las specs 001 a
+  010 usan `**Status**:`.
+  - **Precedencia de las palabras clave:** en construcción, construida, borrador, aprobada y propuesta. Así, «aprobada…
+    Construida» (la 040) sale construida y «Draft, aprobado en boceto» (la 009) sale borrador.
+  - **Sin `spec.md`:** con `propuesta.md` sale «propuesta», y sin ella, «sin estado».
+- **Requisitos de una spec:** son los ids `FR-` y `SC-` de todos los `.md` versionados de su carpeta cuyo número empieza
+  con el de la spec. Por ejemplo, `FR-45xx` es de la 045 y `FR-4xx` de la 004. La 001 es la excepción: sus ids van de
+  `FR-001` a `FR-117`. Así no se cuentan los ids que una spec cita de otra (la 044 cita `FR-4108` de la 041).
+- **Commits de una spec:** solo cuenta el paréntesis del tipo, como `feat(030)` o `fix(018, 022)`. Un rango como
+  `docs(041-050)` cuenta para cada spec del rango. Los merges no cuentan.
+- **Días hasta construida:** van del primer commit que agregó el archivo principal de la spec al primer
+  `feat(NNN)` que la nombra, en días de calendario de Bogotá. La página lo rotula «días a su primer feat», porque es
+  lo que mide. Si falta una fecha, o si el primer feat es anterior a la spec (la 012), no muestra un número.
+- **Archivos versionados:** se leen con `git ls-files`. Sin la carpeta `.git` (como puede pasar en el build de
+  Vercel), se recorre el árbol, que es un clon limpio, con las mismas exclusiones: `privado/`, artefactos del build y
+  `.env`.
+- **Gasto:** con la base caída, el «no disponible» se cachea 60 segundos, no una hora.
+- **Contrato `PublishedEvals`:** suma tres campos a los del plan:
+  - `resultsFile`, para la fuente;
+  - `command`;
+  - `costPerRun`, para decir cómo se corre cuando no hay corridas.
+- **Fechas:** en el texto van largas («26 de noviembre de 2026») y en las listas, cortas («26 nov 2026»), según la
+  regla E-06.
+
+### Números del 26 de noviembre de 2026
+
+Con el historial tomado ese día (commit `89f511e`) y los archivos versionados de la rama:
+- **Specs:** 50: 24 construidas (la 045 entre ellas), 2 en construcción, 18 en borrador, 1 propuesta y 5 sin estado.
+- **Archivos de prueba:** 232 unitarias, 1 de contrato y 102 e2e.
+- **Requisitos:** 311 de 828 tienen una prueba que los nombra. Los 17 de esta spec la tienen.
+- **Commits:** 714 sin merges.
+- **Días:** 37 specs tienen días hasta su primer feat. La 030 tiene 1 día, del 14 al 15 de noviembre de 2026.
+- **Sin datos todavía:** no hay despliegues, porque la toma fue con `--sin-gh`. Tampoco hay mediciones de rendimiento
+  ni corridas de evals publicadas, y la página lo dice.
+
+### Pruebas que corrí
+
+- **`npx vitest run tests/unit/engineering`**, más las de i18n que tocan los diccionarios (`l0/i18n-parity`,
+  `p7/i18n-usage` y `r3/encoding`): todas pasan. Se salta una, la de la lista privada de nombres, que no está en el
+  worktree.
+- **`npm run lint` y `npx tsc --noEmit`** (después de `next typegen`): sin errores.
+- **El e2e de la línea en `desktop-chromium`, `mobile-chromium` y `no-js`:** 37 pasan, 11 se saltan y 0 fallan. Las
+  que se saltan son las que solo corren en el celular o con JavaScript, y la de rendimiento. Corrió contra `next dev
+  --webpack`, porque en el worktree no compila el build de producción:
+  - **Turbopack** no encuentra `next` a través de la junction de `node_modules`, que apunta fuera de la raíz del
+    proyecto;
+  - **webpack** rechaza dos módulos CSS que ya existían (`components/site/home/Home.module.scss` y
+    `components/blog/post/ListenPlayer.module.scss`, con selectores `:global` que no son puros).
+
+  Por eso la prueba de rendimiento con la CPU 4× más lenta (SC-4505) se salta allí y queda para un build de
+  producción.
+- **Capturas** en `test-results/engineering/` del worktree: `/es/ingenieria` a 390×844 y en escritorio (vista y página
+  completa) y el detalle de la 030. Son del servidor de desarrollo, que muestra el indicador de Next abajo a la
+  izquierda.
+
+### Lo que queda para el integrador y el autor
+
+- **E-4504, en `app/sitemap.ts`:** sumar `'/ingenieria'` a `PUBLIC_PATHS`. Los detalles por spec se descubren desde la
+  página.
+- **E-4505, en `content/ailab/route/index.ts`** (después de integrar la L1):
+  - importar `engineeringStation` de `@/content/engineering/station`;
+  - sumarla a `routeStations`;
+  - con P-4502 en su valor por defecto, poner `4: 'tablero-en-numeros'` en `coreRoute`.
+- **E-4506:** cada línea con modelo suma una entrada a `publishedEvals`, con los siete campos del tipo.
+- **El historial en cada push de ola (T4540):** `npm run metrics:history`, con la CLI de GitHub en la cuenta personal,
+  para que traiga los despliegues de 30 días, y en el mismo commit del push. Para guardar mediciones de una corrida
+  `fast`: `npm run metrics:history -- --mediciones <archivo.json>`.
+- **Antes del push:** la búsqueda de nombres internos (T4541), las capturas en WebKit (T4537), el conteo a mano de
+  SC-4502 (T4536) y la prueba de rendimiento contra un build de producción.
+- **Cuando llegue la 043:** pasar su `monthlySpend` como tercer argumento de `engineeringSpend` en
+  `app/api/engineering/spend/route.ts`. La sección cambia sola del estimado del día al mes por proveedor.

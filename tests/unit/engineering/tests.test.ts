@@ -26,7 +26,7 @@ describe('archivos de prueba por tipo (FR-4505)', () => {
     expect(countByKind(['tests/unit/a.test.ts', 'tests/unit/b/c.test.ts', 'tests/contract/d.test.ts', 'tests/e2e/e.spec.ts', 'tests/e2e/f.ts'])).toEqual({ unit: 2, contract: 1, e2e: 1 })
   })
 
-  it('el conteo coincide con un recorrido aparte del árbol versionado', () => {
+  it('el conteo coincide con un recorrido aparte del árbol versionado (la parte automática de SC-4502)', () => {
     const tracked = listTracked(ROOT, ['tests'])
     const counted = countByKind(tracked.files)
     const onDisk = new Set(walk('tests'))

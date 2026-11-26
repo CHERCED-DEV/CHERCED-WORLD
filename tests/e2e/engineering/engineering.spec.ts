@@ -61,7 +61,7 @@ test.describe('tablero de ingeniería (045)', () => {
     })
   }
 
-  test('la franja dice el commit, el entorno y las pruebas del build, o que no hay reporte (FR-4503)', async ({ page }) => {
+  test('la franja dice el commit, el entorno y las pruebas del build, o que no hay reporte, con su fuente (FR-4502, FR-4503)', async ({ page }) => {
     await open(page, '/es/ingenieria')
     const strip = page.locator('[data-cw-eng-deploy]')
     await expect(strip.getByRole('heading', { level: 2, name: COPY.es['engineering.deploy.title'] })).toBeVisible()
@@ -76,7 +76,7 @@ test.describe('tablero de ingeniería (045)', () => {
     await open(page, '/es/ingenieria')
     await page.locator('[data-cw-eng-group="021"] > summary').click()
     await page.locator('[data-cw-eng-row="030"] a').click()
-    await expect(page).toHaveURL(/\/es\/ingenieria\/030$/)
+    await expect(page).toHaveURL(/\/es\/ingenieria\/030$/, { timeout: 30_000 })
     const detail = page.locator('[data-cw-eng-spec="030"]')
     await expect(detail.getByRole('heading', { level: 1 })).toContainText('030')
     const commits = detail.locator('[data-cw-eng-commits] li')
@@ -88,7 +88,7 @@ test.describe('tablero de ingeniería (045)', () => {
     await expect(detail.locator('[data-cw-eng-tested] li').first()).toContainText('tests/')
     await expect(detail.getByRole('link', { name: COPY.es['engineering.detail.link'] })).toHaveAttribute('href', /\/specs\/030-modo-entrevista\/spec\.md$/)
     await detail.getByRole('link', { name: COPY.es['engineering.detail.back'] }).click()
-    await expect(page).toHaveURL(/\/es\/ingenieria$/)
+    await expect(page).toHaveURL(/\/es\/ingenieria$/, { timeout: 30_000 })
   })
 
   test('una spec sin commits que la nombren lo dice y no inventa un tiempo; una que no existe da 404 (US1)', async ({ page }) => {
@@ -163,7 +163,7 @@ test.describe('tablero de ingeniería (045)', () => {
       await link.focus()
       await expect(link).toBeFocused()
       await page.keyboard.press('Enter')
-      await expect(page).toHaveURL(/\/es\/ingenieria\/030$/)
+      await expect(page).toHaveURL(/\/es\/ingenieria\/030$/, { timeout: 30_000 })
       await expect(page.getByRole('heading', { level: 1 })).toContainText('030')
     })
 

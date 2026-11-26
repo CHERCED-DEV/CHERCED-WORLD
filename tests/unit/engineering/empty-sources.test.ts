@@ -78,6 +78,15 @@ describe('las páginas reales no publican datos privados (SC-4504)', () => {
     for (const spec of dashboard.specs) expect(html).toContain(`href="/${lang}/ingenieria/${spec.number}"`)
   })
 
+  it('cada sección del tablero dice de dónde salen sus números (FR-4502, SC-4501)', () => {
+    for (const lang of ['es', 'en'] as const) {
+      const html = renderToStaticMarkup(createElement(EngineeringDashboard, { lang, dict: DICTS[lang], dashboard, spend: SPEND }))
+      const sections = html.split('<section').slice(1)
+      expect(sections).toHaveLength(7)
+      for (const section of sections) expect(section).toContain(`${DICTS[lang]['engineering.source']}:`)
+    }
+  })
+
   it('cada detalle de spec, también', () => {
     for (const spec of dashboard.specs) clean(renderToStaticMarkup(createElement(SpecDetail, { lang: 'es', dict: DICTS.es, spec, dashboard })))
   })
