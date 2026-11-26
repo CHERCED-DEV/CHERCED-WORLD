@@ -10,6 +10,7 @@ import { localizedPath, type Locale } from '@/lib/i18n'
 import { getDictionary } from '@/lib/i18n/server'
 import { routePageLabels, type RoutePageLabels } from './labels'
 import { RecordedTrace } from './RecordedTrace'
+import { RouteActaButton } from './RouteActaButton'
 import styles from './RoutePage.module.scss'
 import { RouteView } from './RouteView'
 import { StationCard } from './StationCard'
@@ -23,11 +24,17 @@ export type RoutePageViewProps = {
   model: RouteViewModel
   trace: Trace
   breakIt?: ReactNode
-  acta?: ReactNode
 }
 
-export function RoutePageView({ lang, labels, model, trace, breakIt, acta }: RoutePageViewProps) {
+export function RoutePageView({ lang, labels, model, trace, breakIt }: RoutePageViewProps) {
   const total = model.order.length
+  const controls = labels.controls
+  const acta = (
+    <RouteActaButton
+      labels={{ download: controls.actaDownload, hint: controls.actaHint, failed: controls.actaFailed, file: controls.actaFile }}
+      proofs={model.proofs}
+    />
+  )
   const card = (station: RouteStationView) => (
     <StationCard
       key={station.id}
@@ -86,7 +93,7 @@ export function RoutePageView({ lang, labels, model, trace, breakIt, acta }: Rou
   )
 }
 
-export async function routePageInput(lang: Locale): Promise<Omit<RoutePageViewProps, 'breakIt' | 'acta'>> {
+export async function routePageInput(lang: Locale): Promise<Omit<RoutePageViewProps, 'breakIt'>> {
   const dict = await getDictionary(lang, 'route')
   return {
     lang,

@@ -1,5 +1,5 @@
 import type { RouteGuide } from '@/content/ailab/route/core'
-import { isExternalHref, type RouteProof, type RouteStation } from '@/content/ailab/route/stations'
+import { isExternalHref, ROUTE_PROOFS, type RouteProof, type RouteStation } from '@/content/ailab/route/stations'
 import { localizedPath, t, type Dictionary, type Locale } from '@/lib/i18n'
 import { routeSections } from './registry'
 
@@ -27,7 +27,9 @@ export type RouteStationView = {
 
 export type RouteSectionView = { proof: RouteProof; title: string; check: string; core: RouteStationView; more: RouteStationView[] }
 
-export type RouteViewModel = { sections: RouteSectionView[]; order: string[]; stations: RouteStationView[] }
+export type RouteProofView = { proof: RouteProof; title: string }
+
+export type RouteViewModel = { sections: RouteSectionView[]; order: string[]; stations: RouteStationView[]; proofs: RouteProofView[] }
 
 export function routeHref(lang: Locale, href: string): { href: string; external: boolean } {
   return isExternalHref(href) ? { href, external: true } : { href: localizedPath(lang, href), external: false }
@@ -77,5 +79,6 @@ export function routeViewModel(
     sections,
     order: sections.map((section) => section.core.id),
     stations: sections.flatMap((section) => [section.core, ...section.more]),
+    proofs: ROUTE_PROOFS.map((proof) => ({ proof, title: proofTitle(dict, proof) })),
   }
 }

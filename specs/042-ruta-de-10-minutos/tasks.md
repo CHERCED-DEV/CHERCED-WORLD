@@ -55,11 +55,11 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Fase 4 — US2: el acta
 
-- [ ] T4217 [P] [US2] Pruebas del acta: cuatro pruebas siempre presentes, «sin probar» por defecto, notas tal cual,
+- [x] T4217 [P] [US2] Pruebas del acta: cuatro pruebas siempre presentes, «sin probar» por defecto, notas tal cual,
   URLs absolutas, zona `America/Bogota` y duración con `clock` — archivos: `tests/unit/route/acta.test.ts` — cubre:
   FR-4206
-- [ ] T4218 [US2] `routeActa` hasta que T4217 pase — archivos: `lib/ailab/route/acta.ts` — cubre: FR-4206
-- [ ] T4219 [US2] Botón «Descargar el acta» con `Blob` — archivos: `components/ailab/route/RouteActaButton.tsx` —
+- [x] T4218 [US2] `routeActa` hasta que T4217 pase — archivos: `lib/ailab/route/acta.ts` — cubre: FR-4206
+- [x] T4219 [US2] Botón «Descargar el acta» con `Blob` — archivos: `components/ailab/route/RouteActaButton.tsx` —
   cubre: FR-4206
 
 ## Fase 5 — US3: Rómpelo
