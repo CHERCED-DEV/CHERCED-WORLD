@@ -46,7 +46,7 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 - [x] T4124 [P] Lanzar la L2 (044)
 - [x] T4125 [P] Lanzar la L3 (045)
 - [x] T4126 Integrar la L1 en `integracion-041`. Desde aquí, el registro `content/ailab/route/index.ts` es compartido
-- [ ] T4127 Integrar la L2 y sumar su estación al registro
+- [x] T4127 Integrar la L2 y sumar su estación al registro
 - [ ] T4128 Integrar la L3 y sumar su estación al registro
 - [ ] T4129 Entradas a la ruta (P-4102): un enlace de texto en la ventana «Para reclutadores» y un acceso al inicio del AI Lab, sin rehacer esas secciones — cubre: FR-4108
 - [ ] T4130 Validación de la ola: lint, typecheck, `npx vitest run`, `npx next build`, los tres e2e de la ola con 2 workers y el script de nombres prohibidos

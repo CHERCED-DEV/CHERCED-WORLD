@@ -21,6 +21,7 @@ const TOOLS = [
   'get_skills',
   'list_posts',
   'match_job_description',
+  'get_interview_route',
   'get_contact_options',
   'search',
   'fetch',

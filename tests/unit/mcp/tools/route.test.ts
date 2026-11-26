@@ -20,10 +20,12 @@ afterEach(() => {
 })
 
 describe('get_interview_route, con un doble de la ruta de la 042 (FR-4404)', () => {
-  it('no aparece en tools/list mientras la ruta de la 042 no esté integrada', async () => {
-    expect(ROUTE_STATIONS).toEqual([])
+  it('con la ruta de la 042 integrada, aparece en tools/list y devuelve las estaciones del registro', async () => {
+    expect(ROUTE_STATIONS.map((station) => station.id)).toContain('mcp-en-tu-agente')
     const tools = resultOf(await send(portfolioMcp, modernRequest('tools/list'))).tools as Array<{ name: string }>
-    expect(tools.map((tool) => tool.name)).not.toContain('get_interview_route')
+    expect(tools.map((tool) => tool.name)).toContain('get_interview_route')
+    const output = routeOutput.parse((await callTool(portfolioMcp, 'get_interview_route', { lang: 'es' })).structuredContent)
+    expect(output.stations.map((station) => station.id)).toEqual(ROUTE_STATIONS.map((station) => station.id))
   })
 
   it('con estaciones, va después del encaje y devuelve cada estación con su enlace en el idioma pedido', async () => {

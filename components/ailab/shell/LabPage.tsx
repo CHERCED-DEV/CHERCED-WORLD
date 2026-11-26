@@ -34,6 +34,8 @@ export type LabPageViewProps = {
 
 const ROUTE_ACCESS = { es: '¿Entrevistas? Pruébame en 10 minutos →', en: 'Interviewing? Try me in 10 minutes →' } as const
 
+const MCP_ACCESS = { es: 'MCP público del portafolio', en: "The portfolio's public MCP" } as const
+
 export function themeSectionId(theme: string): string {
   return `ailab-${theme}`
 }
@@ -66,6 +68,10 @@ export function LabPageView({ lang, labels, cardLabels, consentLabels, clearLabe
         <p data-cw-ailab-route="">
           <Link href={localizedPath(lang, '/ai-lab/ruta')} className={styles.privacyLink}>
             {ROUTE_ACCESS[lang]}
+          </Link>
+          {' · '}
+          <Link href={localizedPath(lang, '/mcp')} className={styles.privacyLink} data-cw-ailab-mcp-link="">
+            {MCP_ACCESS[lang]}
           </Link>
         </p>
         <nav className={styles.themes} aria-label={labels.themesLabel}>

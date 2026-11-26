@@ -53,6 +53,15 @@ suyas con `npx playwright test tests/e2e/<lane>`.
 | `styles/` | Tokens, mixin `glass()`, breakpoints y estilos globales |
 | `tests/` | Unitarias, contrato y e2e, una carpeta por lane |
 
+## MCP público
+
+El portafolio publica un servidor MCP remoto de solo lectura en `https://cherced-world.vercel.app/api/mcp`
+(Streamable HTTP, sin sesión y sin token). Se conecta desde cualquier cliente MCP, por ejemplo con
+`claude mcp add --transport http cherced-world https://cherced-world.vercel.app/api/mcp`. Los pasos por cliente, el
+catálogo de herramientas y un probador del protocolo están en [/es/mcp](https://cherced-world.vercel.app/es/mcp).
+No usa variables de entorno nuevas: el límite por IP y el tope diario viven en `lib/security/rate-limit.ts` (`mcp`,
+`mcpMatch` y `mcpDaily`).
+
 ## Despliegue
 
 Hacer merge a `main` publica el sitio en el proyecto de Vercel existente. No hay pasos manuales.

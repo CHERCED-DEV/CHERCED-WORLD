@@ -20,6 +20,7 @@ function knownPaths(): Set<string> {
     for (const page of Object.values(index.facts.pages)) paths.add(page.url)
     for (const pdf of index.facts.cv?.pdfs ?? []) paths.add(pdf.href)
     paths.add(`/${index.lang}/ai-lab`)
+    for (const page of ['/ai-lab/ruta', '/ai-lab/codigo', '/ai-lab/evals', '/mcp']) paths.add(`/${index.lang}${page}`)
   }
   return paths
 }
@@ -37,6 +38,7 @@ const CALLS: Array<[string, Record<string, unknown>]> = [
   ['list_posts', { tag: 'zzzz-no-existe' }],
   ['get_contact_options', { lang: 'en' }],
   ['match_job_description', { text: VACANCIES_029[0] }],
+  ['get_interview_route', { lang: 'es' }],
   ['search', { query: 'Synergos' }],
   ['fetch', { id: 'en:project:12' }],
 ]

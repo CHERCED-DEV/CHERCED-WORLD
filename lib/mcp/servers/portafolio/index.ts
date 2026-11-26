@@ -1,3 +1,4 @@
+import { routeStations } from '@/content/ailab/route'
 import type { RouteStation } from '@/content/ailab/route/stations'
 import { createMcpHandler } from '@/lib/mcp/core/handler'
 import type { McpServerOptions, McpTool } from '@/lib/mcp/core/types'
@@ -22,7 +23,7 @@ export const PORTFOLIO_MCP_VERSION = '1.0.0'
 export const PORTFOLIO_MCP_INSTRUCTIONS =
   "Read-only server for the public portfolio of Camilo Hernández (CHERCED-WORLD): case studies, architecture decisions, career, skills, blog posts, contact options and a deterministic job-description match. Every result links to its source on the site: cite those links. Pass lang \"es\" or \"en\" to choose the language of the content (default \"en\"). There is no private data here and tool arguments are not stored."
 
-export const ROUTE_STATIONS: readonly RouteStation[] = []
+export const ROUTE_STATIONS: readonly RouteStation[] = routeStations
 
 export function portfolioToolList(stations: readonly RouteStation[] = ROUTE_STATIONS): ReadonlyArray<McpTool<unknown, unknown>> {
   return [

@@ -43,7 +43,7 @@ describe('registro de estaciones de la ruta (FR-4208, FR-4209)', () => {
       [4, 'de-spec-a-commit'],
     ])
     expect(coreMinutes(routeStations, coreRoute)).toBeLessThanOrEqual(ROUTE_BUDGET_MINUTES)
-    expect(sections[0]!.more.map((station) => station.id)).toEqual(['rompelo', 'diseno-de-sistemas'])
+    expect(sections[0]!.more.map((station) => station.id)).toEqual(['rompelo', 'diseno-de-sistemas', 'mcp-en-tu-agente'])
   })
 
   it('cada estación tiene de dos a cuatro pasos, con título y pasos en español y en inglés', () => {
@@ -114,7 +114,7 @@ describe('registro de estaciones de la ruta (FR-4208, FR-4209)', () => {
 
   it('US5: la estación de otra línea pasa si cumple el contrato y falla con el motivo si no', () => {
     expect(problemsWith([...routeStations, mcpStation])).toEqual([])
-    expect(problemsWith([...routeStations, { ...mcpStation, href: '/mcp' }])).toEqual(['mcp-en-vivo: href /mcp: la página /mcp no existe'])
+    expect(problemsWith([...routeStations, { ...mcpStation, href: '/mcp/no-existe' }])).toEqual(['mcp-en-vivo: href /mcp/no-existe: la página /mcp/no-existe no existe'])
     expect(problemsWith([...routeStations, { ...mcpStation, id: 'rompelo' }])).toEqual(['rompelo: id repetido'])
   })
 

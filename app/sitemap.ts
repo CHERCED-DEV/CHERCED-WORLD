@@ -9,7 +9,7 @@ import { getProjects } from '@/lib/content'
 import { alternates, defaultLocale, locales, localizedPath, type Locale } from '@/lib/i18n'
 import { absoluteUrl } from '@/lib/site-url'
 
-const PUBLIC_PATHS = ['/', '/aboutMe', '/services', '/portfolio', SYNERGOS_PATH, SYNERGOS_ARCHITECTURE_PATH, '/now', '/ai-lab', '/ai-lab/ruta', '/blog', '/contactMe', '/privacy'] as const
+const PUBLIC_PATHS = ['/', '/aboutMe', '/services', '/portfolio', SYNERGOS_PATH, SYNERGOS_ARCHITECTURE_PATH, '/now', '/ai-lab', '/ai-lab/ruta', '/mcp', '/blog', '/contactMe', '/privacy'] as const
 
 const PAGE_UPDATED: Partial<Record<string, string>> = {
   [SYNERGOS_PATH]: synergosShowcase.countedAt,
