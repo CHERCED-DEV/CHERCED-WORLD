@@ -24,14 +24,14 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Fase 2 — US5: el contrato de estaciones (va primero porque las demás historias lo usan)
 
-- [ ] T4206 [US5] Prueba de contrato que falla: ids únicos, una estación o más por prueba, ruta núcleo de 10 minutos o
+- [x] T4206 [US5] Prueba de contrato que falla: ids únicos, una estación o más por prueba, ruta núcleo de 10 minutos o
   menos, de 2 a 4 pasos, ES y EN, `href` internos que existen (rutas de `app/` y anclas `lab-*` del catálogo) — archivos:
   `tests/unit/route/registry.test.ts` — cubre: FR-4208, FR-4209
-- [ ] T4207 [US5] Tipo `RouteStation`, `RouteProof` y `routeStationSchema` — archivos: `content/ailab/route/stations.ts`
+- [x] T4207 [US5] Tipo `RouteStation`, `RouteProof` y `routeStationSchema` — archivos: `content/ailab/route/stations.ts`
   — cubre: FR-4208
-- [ ] T4208 [US5] Las seis estaciones de la línea (cuatro núcleo y `rompelo` y `diseno-de-sistemas`) — archivos:
+- [x] T4208 [US5] Las seis estaciones de la línea (cuatro núcleo y `rompelo` y `diseno-de-sistemas`) — archivos:
   `content/ailab/route/core.ts` — cubre: FR-4202, FR-4203
-- [ ] T4209 [US5] Registro `routeStations` y `coreRoute` hasta que T4206 pase — archivos: `content/ailab/route/index.ts`
+- [x] T4209 [US5] Registro `routeStations` y `coreRoute` hasta que T4206 pase — archivos: `content/ailab/route/index.ts`
   — cubre: FR-4208, FR-4209
 
 ## Fase 3 — US1: recorrer las cuatro estaciones
