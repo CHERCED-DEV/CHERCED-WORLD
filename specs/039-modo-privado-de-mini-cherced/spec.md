@@ -3,8 +3,9 @@
 Pedido del autor, 2026-11-14: una experiencia distinta de Mini Cherced para una persona especial que él invita,
 "extraordinariamente cariñosa, bromista, cómplice y llena de sorpresas".
 
-Estado: fase 1 construida el 2026-11-14 (hablar con ella, con reglas de cuidado). Las fases 2 y 3 (escenas, easter
-eggs animados y estrellas) siguen pendientes. El contenido lo escribió el autor y vive en `content/mini-cherced/privado/`,
+Estado: fase 1 construida el 2026-11-14 (hablar con ella, con reglas de cuidado); fases 2 y 3 construidas el
+2026-11-26 (bienvenida, sorpresas animadas, estrellas y final). Para verlas en producción, el autor debe volver a generar
+`GUEST_MODE` y pegarlo en Vercel. El contenido lo escribió el autor y vive en `content/mini-cherced/privado/`,
 que Git ignora. **Esta spec es pública a propósito: describe el mecanismo y no dice para quién es ni qué dice.**
 
 Depende de:
@@ -106,3 +107,37 @@ Viene del documento privado del autor, por fases:
   Camilo) y su persona. Los demás visitantes nunca la reciben (prueba en `tests/unit/agent/viewer.test.ts`).
 - **Pendiente del autor:** generar y pegar `GUEST_MODE` en Vercel, y decidir si Mini Cherced le habla de matrimonio
   (el documento privado trata los sueños juntos como ilusiones, no como promesas).
+
+## Cómo quedaron las fases 2 y 3 (2026-11-26)
+
+Esta sección describe solo el mecanismo. El contenido vive en `content/mini-cherced/privado/guest-experience.json`, que Git
+ignora, y viaja dentro de `GUEST_MODE`.
+
+- **Datos:** `GUEST_MODE` acepta un campo opcional `experience` con la bienvenida (líneas y hasta tres opciones), las
+  sorpresas (palabras que las activan o el toque al sprite, una animación de una lista fija y una línea), cinco estrellas
+  (página, posición en porcentaje, animación y línea) y el final. `scripts/guest-mode.mjs` lo agrega solo si existe el
+  archivo privado. Si la experiencia no cumple el esquema, se descarta y la fase 1 sigue funcionando.
+- **`GET /api/guest`** (FR-3902): responde la experiencia solo con la sesión de la invitada; con cualquier otra sesión o
+  sin sesión, 404. El navegador solo la pide si hay sesión de cuenta.
+- **Bienvenida:** una vez por sesión del navegador, una escena con Mini Cherced y las líneas que aparecen de a una. Cada
+  opción abre a Mini Cherced en el panel global (028) y se la pregunta en cuanto termina el saludo.
+- **Sorpresas (fase 2):** Mini Cherced avisa lo que la invitada dice o escribe y el toque al sprite con eventos del
+  navegador; la experiencia busca las palabras (sin tildes ni mayúsculas, palabras completas) y muestra la animación
+  pixel 2D con su línea. Cada sorpresa espera 20 s antes de repetirse. Las animaciones son genéricas: corazones, casita,
+  mazo con barra de energía, corazón grande, alerta de sistema, ojos que miran, cara seria, indignación, destellos, dos
+  personajes y dos escritorios.
+- **Misión (fase 3):** cinco estrellas escondidas en páginas del sitio, solo con su sesión. Cada una abre su escena; el
+  progreso vive en el navegador (`cw-guest-stars`) y se puede repetir. Al completar las cinco aparece el final, con
+  luciérnagas y las líneas de a una, leído en voz con la voz del navegador (se puede silenciar).
+- **Transparencia (FR-3905):** el contador de estrellas abre «Lo que Camilo preparó para ti» con todo el contenido, y
+  «Quiero que retires algo» deja un mensaje en el buzón del autor (`POST /api/guest/withdraw`, solo con su sesión).
+- **Salir del modo (FR-3904):** pone la cookie de sesión `cw-guest-off`, borra el progreso de las estrellas y deja el
+  sitio normal; con esa cookie, Mini Cherced la trata como cualquier cuenta. «Volver a tu modo» la quita.
+- **Nada se guarda en el servidor** salvo el mensaje de retiro, que ella envía a propósito.
+- **Verificado en local** con un correo ficticio: otra cuenta recibe 404 y el Mini Cherced normal; la invitada recibe
+  su experiencia; al salir del modo vuelve a ser una cuenta normal. Ningún archivo versionado contiene su nombre ni sus
+  frases (FR-3901).
+- **Pendiente del autor:** correr `node scripts/guest-mode.mjs <su-correo> <su-nombre>` y pegar el nuevo
+  `privado/GUEST_MODE.txt` en Vercel (Production y Preview, Sensitive). El valor anterior sigue sirviendo para la fase 1.
+- Tests: `tests/unit/agent/guest-experience.test.ts` (palabras, páginas, progreso, esquema y, solo en el equipo del autor,
+  que su archivo privado lo cumpla).

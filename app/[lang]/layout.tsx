@@ -1,4 +1,5 @@
 import { GlobalAgent } from '@/components/ailab/agent/GlobalAgent'
+import { GuestLoader } from '@/components/fun/guest/GuestLoader'
 import '@/styles/globals.scss'
 import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
@@ -89,6 +90,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           <SiteFooter lang={lang} socials={getSite().socials} labels={labels} />
           <ExperienceRoot lang={lang} />
           <GlobalAgent lang={lang} />
+          <GuestLoader lang={lang} />
         </ToastProvider>
         <PointerLight />
       </body>

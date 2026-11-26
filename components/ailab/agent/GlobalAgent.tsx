@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 import type { Locale } from '@/lib/i18n/config'
 import styles from './GlobalAgent.module.scss'
-import { OPEN_MINI_CHERCED } from './open-global'
+import { OPEN_MINI_CHERCED, type AgentRequest } from './open-global'
 
 const AgentStage = dynamic(() => import('./AgentStage'), { ssr: false })
 
@@ -16,13 +16,16 @@ const COPY = {
 export function GlobalAgent({ lang }: { lang: Locale }) {
   const [open, setOpen] = useState(false)
   const [minimized, setMinimized] = useState(false)
+  const [request, setRequest] = useState<AgentRequest | null>(null)
   const panelRef = useRef<HTMLElement>(null)
   const copy = COPY[lang]
 
   useEffect(() => {
-    const show = () => {
+    const show = (event: Event) => {
       setOpen(true)
       setMinimized(false)
+      const ask = (event as CustomEvent<{ ask?: unknown } | null>).detail?.ask
+      if (typeof ask === 'string' && ask.trim()) setRequest({ id: Date.now(), text: ask.trim().slice(0, 300) })
     }
     window.addEventListener(OPEN_MINI_CHERCED, show)
     return () => window.removeEventListener(OPEN_MINI_CHERCED, show)
@@ -62,7 +65,7 @@ export function GlobalAgent({ lang }: { lang: Locale }) {
           </div>
         </header>
         <div className={styles.body}>
-          <AgentStage lang={lang} experiment="V5" consent downloads={[]} t={(key) => key} persistent />
+          <AgentStage lang={lang} experiment="V5" consent downloads={[]} t={(key) => key} persistent request={request} />
         </div>
       </section>
       {minimized ? (

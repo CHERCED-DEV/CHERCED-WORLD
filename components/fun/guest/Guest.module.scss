@@ -1,0 +1,468 @@
+@use 'layout';
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 0.6);
+
+  &[data-dark] {
+    background: rgb(0 0 0 / 0.86);
+  }
+}
+
+.dialog {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  width: min(100%, 520px);
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 20px;
+  border: 2px solid #25ed9e;
+  border-radius: 8px;
+  background: repeating-linear-gradient(to bottom, #020403 0 3px, #04110a 3px 4px);
+  color: #f3fff9;
+  box-shadow: 0 0 0 4px rgb(37 237 158 / 0.15);
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.stage {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  min-height: 140px;
+
+  > div:first-child {
+    width: 110px;
+  }
+}
+
+.lines {
+  display: grid;
+  gap: 10px;
+}
+
+.line {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  animation: guest-in 0.45s ease both;
+}
+
+.kicker {
+  margin: 0;
+  color: #ffd23f;
+  font-family: var(--cw-font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.note {
+  margin: 0;
+  color: rgb(243 255 249 / 0.72);
+  font-size: 0.85rem;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.option,
+.ghost {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid #25ed9e;
+  border-radius: 6px;
+  background: rgb(37 237 158 / 0.14);
+  color: #f3fff9;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.ghost {
+  border-color: rgb(243 255 249 / 0.3);
+  background: transparent;
+  font-weight: 400;
+}
+
+.menu {
+  display: grid;
+  gap: 12px;
+  font-size: 0.9rem;
+
+  h3 {
+    margin: 0;
+  }
+
+  summary {
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  ul {
+    display: grid;
+    gap: 6px;
+    margin: 8px 0 0;
+    padding-left: 18px;
+  }
+
+  details p {
+    margin: 6px 0 0;
+  }
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-weight: 700;
+
+  textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid rgb(243 255 249 / 0.3);
+    border-radius: 6px;
+    background: rgb(0 0 0 / 0.4);
+    color: inherit;
+    font: inherit;
+    font-weight: 400;
+  }
+}
+
+.chip {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 2px solid #ff4d8d;
+  border-radius: 999px;
+  background: #0b0f0d;
+  color: #fff;
+  font-family: var(--cw-font-mono, monospace);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  @media (max-width: 767px) {
+    bottom: calc(var(--cw-dock-space, 72px) + 8px);
+  }
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.egg {
+  position: fixed;
+  left: 50%;
+  top: 84px;
+  z-index: 85;
+  display: grid;
+  gap: 10px;
+  width: min(calc(100% - 32px), 420px);
+  padding: 16px;
+  border: 2px solid #ff4d8d;
+  border-radius: 8px;
+  background: #050807;
+  color: #fff;
+  transform: translateX(-50%);
+  animation: guest-in 0.35s ease both;
+}
+
+.close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  min-width: 32px;
+  min-height: 32px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.starLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 55;
+  width: 100%;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: guest-twinkle 1.6s steps(2) infinite;
+  filter: drop-shadow(0 0 6px rgb(255 210 63 / 0.8));
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
+
+.art {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  min-height: 110px;
+  overflow: hidden;
+}
+
+.artLabel {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  padding: 2px 8px;
+  background: #000;
+  color: #ffd23f;
+  font-family: var(--cw-font-mono, monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  transform: translateX(-50%);
+}
+
+.flyHeart {
+  position: absolute;
+  bottom: 0;
+  animation: guest-fly 1.8s steps(6) infinite;
+}
+
+.twinkle {
+  position: absolute;
+  animation: guest-twinkle 1.2s steps(2) infinite;
+}
+
+.firefly {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffe08a;
+  box-shadow: 0 0 8px #ffe08a;
+  animation: guest-twinkle 2.2s steps(3) infinite;
+}
+
+.pulse {
+  animation: guest-pulse 1.1s steps(2) infinite;
+}
+
+.shake {
+  animation: guest-shake 0.4s steps(2) 4;
+}
+
+.swing {
+  transform-origin: 20% 80%;
+  animation: guest-swing 0.8s steps(2) 3;
+}
+
+.bounce {
+  animation: guest-bounce 0.6s steps(2) infinite;
+}
+
+.bounceLate {
+  animation: guest-bounce 0.6s steps(2) 0.3s infinite;
+}
+
+.peek {
+  animation: guest-peek 2s steps(4) infinite;
+}
+
+.pop {
+  animation: guest-in 0.6s steps(4) both;
+}
+
+.stack {
+  display: grid;
+  justify-items: center;
+}
+
+.energy {
+  display: block;
+  width: 140px;
+  height: 12px;
+  border: 2px solid #ffd23f;
+
+  > span {
+    display: block;
+    height: 100%;
+    background: #ffd23f;
+    animation: guest-fill 1.6s steps(8) both;
+  }
+}
+
+.alert {
+  display: grid;
+  min-width: 220px;
+  border: 2px solid #ff4d8d;
+  background: #120308;
+  font-family: var(--cw-font-mono, monospace);
+  text-align: center;
+}
+
+.alertBar {
+  padding: 2px 6px;
+  background: #ff4d8d;
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.blink {
+  padding: 14px 8px;
+  color: #ff4d8d;
+  animation: guest-twinkle 0.8s steps(2) infinite;
+}
+
+.dots {
+  display: inline-flex;
+  gap: 6px;
+
+  > span {
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    animation: guest-twinkle 0.9s steps(2) infinite;
+  }
+
+  > span:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+
+  > span:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+}
+
+@keyframes guest-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes guest-fly {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-110px);
+  }
+}
+
+@keyframes guest-twinkle {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes guest-pulse {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes guest-shake {
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes guest-swing {
+  50% {
+    transform: rotate(-20deg);
+  }
+}
+
+@keyframes guest-bounce {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes guest-peek {
+  25% {
+    transform: translateX(-6px);
+  }
+
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes guest-fill {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line,
+  .egg,
+  .star,
+  .flyHeart,
+  .twinkle,
+  .firefly,
+  .pulse,
+  .shake,
+  .swing,
+  .bounce,
+  .bounceLate,
+  .peek,
+  .pop,
+  .blink,
+  .dots > span,
+  .energy > span {
+    animation: none;
+  }
+
+  .flyHeart {
+    position: static;
+  }
+}

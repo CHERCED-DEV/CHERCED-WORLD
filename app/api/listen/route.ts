@@ -19,9 +19,9 @@ export const maxDuration = 60
 
 const PRIVATE = { 'cache-control': 'private, no-store' }
 
-export const LISTEN_AUDIO_CACHE = 'public, max-age=86400, s-maxage=31536000, immutable'
+const LISTEN_AUDIO_CACHE = 'public, max-age=86400, s-maxage=31536000, immutable'
 
-export const LISTEN_STATUS_CACHE = 'public, max-age=60, s-maxage=300'
+const LISTEN_STATUS_CACHE = 'public, max-age=60, s-maxage=300'
 
 class ListenLimited extends Error {}
 

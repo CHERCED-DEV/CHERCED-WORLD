@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type PointerEvent } from 'react'
+import { useCallback, useEffect, useEffectEvent, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type PointerEvent } from 'react'
 import { Button } from '@/components/ui/Button'
 import { cx } from '@/components/ui/cx'
 import { pixelFont } from '@/styles/fonts'
@@ -38,7 +38,7 @@ import {
 import { addTurn, appendChunk, closeTurns, lastAgentLine, type Speaker, type Turn } from '@/lib/ai/agent/transcript'
 import { ANONYMOUS_VIEWER, isAgentViewer, type AgentViewer } from '@/lib/ai/agent/viewer'
 import { highlightSection, readPageContext } from '@/lib/ai/agent/page-context'
-import { openMiniCherced } from './open-global'
+import { HEARD_EVENT, openMiniCherced, POKE_EVENT, type AgentRequest } from './open-global'
 import { loadSearchIndex } from '@/lib/search/client'
 import { AgentAvatar } from './AgentAvatar'
 import { InterviewPanel } from './InterviewPanel'
@@ -115,7 +115,7 @@ function replyError(reply: unknown): Notice {
   return 'failed'
 }
 
-export default function AgentStage({ lang, persistent = false }: LabDemoProps & { persistent?: boolean }) {
+export default function AgentStage({ lang, persistent = false, request = null }: LabDemoProps & { persistent?: boolean; request?: AgentRequest | null }) {
   const copy = agentCopy[lang]
   const router = useRouter()
   const inputId = useId()
@@ -178,6 +178,7 @@ export default function AgentStage({ lang, persistent = false }: LabDemoProps & 
   const poke = useCallback((x: number, y: number) => {
     window.clearTimeout(dodgeTimer.current)
     if (isCrotch(x, y)) {
+      window.dispatchEvent(new CustomEvent(POKE_EVENT, { detail: { spot: 'crotch' } }))
       setDodge(null)
       setShocked(true)
       dodgeTimer.current = window.setTimeout(() => setShocked(false), SHOCK_MS)
@@ -355,6 +356,16 @@ export default function AgentStage({ lang, persistent = false }: LabDemoProps & 
   useEffect(() => {
     const list = transcriptRef.current
     if (list && stickRef.current) list.scrollTop = list.scrollHeight
+  }, [turns])
+
+  const heardRef = useRef('')
+  useEffect(() => {
+    const last = turns.findLast((turn) => turn.who === 'you')
+    if (!last) return
+    const key = `${last.id}:${last.text}`
+    if (key === heardRef.current) return
+    heardRef.current = key
+    window.dispatchEvent(new CustomEvent(HEARD_EVENT, { detail: { text: last.text } }))
   }, [turns])
 
   useEffect(() => {
@@ -696,6 +707,15 @@ export default function AgentStage({ lang, persistent = false }: LabDemoProps & 
       setActivity('thinking')
     } else if (mode === 'local') void simulate(text, pendingTurn(traceRef.current))
   }
+
+  const askedRef = useRef(0)
+  const askRequested = useEffectEvent((text: string) => ask(text))
+  useEffect(() => {
+    if (!request || request.id === askedRef.current || phase !== 'live' || activity !== 'listening') return
+    if (!turns.some((turn) => turn.who === 'agent' && turn.done)) return
+    askedRef.current = request.id
+    askRequested(request.text)
+  }, [request, phase, activity, turns])
 
   const finishInterview = () => {
     if (!interview) return

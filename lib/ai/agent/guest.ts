@@ -1,9 +1,48 @@
 import { createHash, timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
+import { GUEST_ANIMATIONS } from './guest-animations'
 
 export const GUEST_MODE_ENV = 'GUEST_MODE'
 
 export const GUEST_PERSONA_MAX = 12_000
+
+export { GUEST_OFF_COOKIE } from './guest-cookie'
+
+const line = z.string().trim().min(1).max(500)
+
+const slug = z.string().regex(/^[a-z0-9-]{1,30}$/)
+
+export const guestExperienceSchema = z.object({
+  welcome: z.object({ lines: z.array(line).min(1).max(6), options: z.array(z.string().trim().min(1).max(80)).max(3) }),
+  eggs: z
+    .array(
+      z.object({
+        id: slug,
+        words: z.array(z.string().trim().min(1).max(60)).max(10),
+        touch: z.boolean().optional(),
+        animation: z.enum(GUEST_ANIMATIONS),
+        label: z.string().trim().max(40).optional(),
+        line,
+      }),
+    )
+    .max(12),
+  stars: z
+    .array(
+      z.object({
+        id: slug,
+        title: z.string().trim().min(1).max(30),
+        page: z.string().regex(/^\/[\w/-]*$/),
+        x: z.number().min(2).max(96),
+        y: z.number().min(5).max(95),
+        animation: z.enum(GUEST_ANIMATIONS),
+        line,
+      }),
+    )
+    .max(5),
+  finale: z.object({ lines: z.array(line).min(1).max(12) }),
+})
+
+export type GuestExperience = z.infer<typeof guestExperienceSchema>
 
 const guestModeSchema = z.object({
   v: z.literal(1),
@@ -11,9 +50,10 @@ const guestModeSchema = z.object({
   emailHash: z.string().regex(/^[a-f0-9]{64}$/),
   name: z.string().trim().min(1).max(40),
   persona: z.string().trim().min(200).max(GUEST_PERSONA_MAX),
+  experience: z.unknown().optional(),
 })
 
-export type GuestMode = z.infer<typeof guestModeSchema>
+export type GuestMode = Omit<z.infer<typeof guestModeSchema>, 'experience'> & { experience?: GuestExperience }
 
 export function guestEmailHash(email: string, salt: string): string {
   return createHash('sha256').update(`${salt}:${email.trim().toLowerCase()}`).digest('hex')
@@ -25,7 +65,10 @@ export function parseGuestMode(raw: string | undefined): GuestMode | null {
   try {
     const json = value.startsWith('{') ? value : Buffer.from(value, 'base64').toString('utf8')
     const parsed = guestModeSchema.safeParse(JSON.parse(json))
-    return parsed.success ? parsed.data : null
+    if (!parsed.success) return null
+    const { experience, ...mode } = parsed.data
+    const extra = experience === undefined ? null : guestExperienceSchema.safeParse(experience)
+    return extra?.success ? { ...mode, experience: extra.data } : mode
   } catch {
     return null
   }
