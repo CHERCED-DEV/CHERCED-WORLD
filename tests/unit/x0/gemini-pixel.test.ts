@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { pixelate, pixelBody, pixelFromReply, PixelRefused, PIXEL_STYLE } from '@/lib/ai/pixel/generate'
+import { AUTHOR_LOOK, pixelate, pixelBody, pixelFromReply, PixelRefused, PIXEL_STYLE } from '@/lib/ai/pixel/generate'
 import { nearestPalette, PIXEL_SAMPLE_SRC } from '@/lib/ai/pixel/model'
 import { RATE_LIMITS } from '@/lib/security/rate-limit'
 
@@ -18,6 +18,9 @@ describe('Pixélate (022, P1)', () => {
     expect(PIXEL_STYLE).toMatch(/No text/)
     expect(body.generationConfig).toEqual({ responseModalities: ['IMAGE'], imageConfig: { aspectRatio: '1:1', imageSize: '512' } })
     expect(pixelBody(PHOTO, false).generationConfig.imageConfig).toEqual({ aspectRatio: '1:1' })
+    expect(pixelBody(PHOTO, true, true).contents[0]!.parts[1]).toEqual({ text: `${PIXEL_STYLE} ${AUTHOR_LOOK}` })
+    expect(AUTHOR_LOOK).toMatch(/light brown/)
+    expect(AUTHOR_LOOK).toMatch(/35% gray/)
     expect(existsSync(join(process.cwd(), 'public', PIXEL_SAMPLE_SRC))).toBe(true)
   })
 

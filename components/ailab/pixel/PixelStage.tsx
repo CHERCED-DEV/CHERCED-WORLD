@@ -170,6 +170,7 @@ export default function PixelStage({ lang }: LabDemoProps) {
   const fileRef = useRef<HTMLInputElement>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
   const [photo, setPhoto] = useState<Photo | null>(null)
+  const [sample, setSample] = useState(false)
   const [result, setResult] = useState<string | null>(null)
   const [simulated, setSimulated] = useState(false)
   const [pending, setPending] = useState(false)
@@ -178,6 +179,7 @@ export default function PixelStage({ lang }: LabDemoProps) {
   const choose = async (src: string, revoke?: () => void) => {
     setError(null)
     setResult(null)
+    setSample(src === PIXEL_SAMPLE_SRC)
     try {
       setPhoto(await preparePhoto(src))
     } catch {
@@ -222,7 +224,7 @@ export default function PixelStage({ lang }: LabDemoProps) {
       const response = await fetch('/api/ailab/pixel', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ lang, photo: { mimeType: photo.mimeType, data: photo.data } }),
+        body: JSON.stringify({ lang, photo: { mimeType: photo.mimeType, data: photo.data }, sample }),
       })
       const body = (await response.json()) as { image?: { mimeType: string; data: string }; simulated?: boolean; error?: string }
       if (!response.ok) throw new Error(body.error ?? 'failed')

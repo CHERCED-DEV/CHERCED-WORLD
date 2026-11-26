@@ -14,6 +14,9 @@ export const PIXEL_STYLE = [
   'No text, no letters, no logos, no watermark. Square image.',
 ].join(' ')
 
+export const AUTHOR_LOOK =
+  'This sample photo is black and white. The real colors of this person: fair white skin, light brown (dirty blond) hair and beard with about 35% gray hairs, salt and pepper. Do not draw black hair.'
+
 export class PixelRefused extends Error {}
 
 export type PixelImage = { mimeType: string; data: string }
@@ -24,9 +27,9 @@ function record(value: unknown): Json | undefined {
   return value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Json) : undefined
 }
 
-export function pixelBody(photo: PixelImage, sized: boolean) {
+export function pixelBody(photo: PixelImage, sized: boolean, sample = false) {
   return {
-    contents: [{ role: 'user', parts: [{ inlineData: { mimeType: photo.mimeType, data: photo.data } }, { text: PIXEL_STYLE }] }],
+    contents: [{ role: 'user', parts: [{ inlineData: { mimeType: photo.mimeType, data: photo.data } }, { text: sample ? `${PIXEL_STYLE} ${AUTHOR_LOOK}` : PIXEL_STYLE }] }],
     generationConfig: {
       responseModalities: ['IMAGE'],
       imageConfig: sized ? { aspectRatio: '1:1', imageSize: '512' } : { aspectRatio: '1:1' },
@@ -46,22 +49,23 @@ export function pixelFromReply(data: unknown): PixelImage {
   return { mimeType: String(inline.mimeType), data: String(inline.data) }
 }
 
-async function call(key: string, photo: PixelImage, sized: boolean, fetcher: typeof fetch): Promise<Response> {
+async function call(key: string, photo: PixelImage, sized: boolean, fetcher: typeof fetch, sample: boolean): Promise<Response> {
   return fetcher(`${GEMINI_API_BASE}/models/${encodeURIComponent(GEMINI_MODELS.image)}:generateContent`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
-    body: JSON.stringify(pixelBody(photo, sized)),
+    body: JSON.stringify(pixelBody(photo, sized, sample)),
     signal: AbortSignal.timeout(PIXEL_TIMEOUT_MS),
     cache: 'no-store',
   })
 }
 
-export async function pixelate(input: { key: string; photo: PixelImage }, fetcher: typeof fetch = fetch): Promise<PixelImage> {
-  let response = await call(input.key, input.photo, true, fetcher)
+export async function pixelate(input: { key: string; photo: PixelImage; sample?: boolean }, fetcher: typeof fetch = fetch): Promise<PixelImage> {
+  const sample = input.sample === true
+  let response = await call(input.key, input.photo, true, fetcher, sample)
   if (response.status === 400) {
     const reason = await googleReason(response)
     if (!/image_?size|imageConfig/i.test(reason)) throw new GeminiError(400, reason)
-    response = await call(input.key, input.photo, false, fetcher)
+    response = await call(input.key, input.photo, false, fetcher, sample)
   }
   if (!response.ok) throw new GeminiError(response.status, await googleReason(response))
   return pixelFromReply(await response.json().catch(() => null))

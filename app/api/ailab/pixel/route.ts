@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   if (data.length > PIXEL_PHOTO_MAX_CHARS) return json({ error: 'too_large' }, 413)
   if (gate.mode === 'local' || !gate.key) return json({ simulated: true })
   try {
-    return json({ image: await pixelate({ key: gate.key, photo: { mimeType, data } }), simulated: false })
+    return json({ image: await pixelate({ key: gate.key, photo: { mimeType, data }, sample: gate.body.sample === true }), simulated: false })
   } catch (error) {
     if (error instanceof PixelRefused) return json({ error: 'refused' }, 422)
     return geminiFailure('ailab.pixel', error)
