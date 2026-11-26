@@ -57,7 +57,7 @@ async function gate(permission: Permission, limits: { actor: RateLimitAction; da
 }
 
 function failure(scope: string, error: unknown): { ok: false; error: AssistError } {
-  logServerError(scope, error instanceof Error ? error.message : error)
+  logServerError(scope, error)
   if (error instanceof GeminiError && error.unavailable) return { ok: false, error: 'unavailable' }
   return { ok: false, error: 'failed' }
 }

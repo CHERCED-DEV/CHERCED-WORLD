@@ -16,8 +16,16 @@ function other(lang: Locale): Locale {
 }
 
 async function json<T>(key: string, system: string, prompt: string, schema: unknown, parser: z.ZodType<T>, fetcher: typeof fetch, maxOutputTokens = 8000): Promise<T> {
-  const reply = await generateJson({ key, model: GEMINI_MODELS.text, system, prompt, schema, temperature: 0.2, maxOutputTokens, timeoutMs: 55_000 }, fetcher)
-  return parser.parse(JSON.parse(reply.text || '{}'))
+  let lastError: unknown = null
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const reply = await generateJson({ key, model: GEMINI_MODELS.text, system, prompt, schema, temperature: 0.2, maxOutputTokens, timeoutMs: 55_000 }, fetcher)
+    try {
+      return parser.parse(JSON.parse(reply.text || '{}'))
+    } catch (error) {
+      lastError = error
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error('respuesta inválida')
 }
 
 const translationSchema = z.object({
@@ -106,6 +114,7 @@ export async function suggestMeta(key: string, draft: DraftText, fetcher: typeof
   const images = bodyImages(draft.body)
   const system = [
     `Propones metadatos para un post del blog en ${LANGUAGE[draft.lang]}: una descripción de una o dos frases (máximo 300 caracteres) que diga de qué trata sin exagerar, de 3 a 6 etiquetas cortas en minúscula, y un texto alternativo para cada imagen según lo que el texto dice de ella.`,
+    'No ves las imágenes: deduce el texto alternativo del nombre del archivo, del texto que la rodea y del tema del post. Nunca lo dejes vacío; si de verdad no hay cómo saberlo, describe lo más probable de forma general.',
     'Reglas de estilo:',
     styleRulesText(),
   ].join('\n')
@@ -121,7 +130,7 @@ export async function suggestMeta(key: string, draft: DraftText, fetcher: typeof
   const prompt = `Título: ${draft.title}\nImágenes: ${JSON.stringify(images.map((image) => ({ src: image.src, altActual: image.alt })))}\n\n${draft.body.slice(0, 40_000)}`
   const result = await json(key, system, prompt, schema, metaSchema, fetcher)
   const known = new Set(images.map((image) => image.src))
-  return { ...result, alts: result.alts.filter((item) => known.has(item.src)) }
+  return { ...result, alts: result.alts.filter((item) => known.has(item.src) && item.alt.trim() !== '') }
 }
 
 const spamSchema = z.object({ puntajes: z.array(z.object({ i: z.number().int().min(0), spam: z.number().min(0).max(1), motivo: z.string().trim().max(160) })) })

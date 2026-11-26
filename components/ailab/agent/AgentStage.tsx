@@ -13,7 +13,7 @@ import { openLiveSession, type LiveSession } from '@/lib/ai/agent/live'
 import { startMic, type MicHandle } from '@/lib/ai/agent/mic'
 import { OUTPUT_RATE } from '@/lib/ai/agent/pcm'
 import { createPlayer, type AudioPlayer } from '@/lib/ai/agent/player'
-import { intentOf, simulatorGreeting, simulatorPageReply, simulatorReply } from '@/lib/ai/agent/simulator'
+import { greetFrom, intentOf, simulatorGreeting, simulatorPageReply, simulatorReply } from '@/lib/ai/agent/simulator'
 import { createToolRunner, HIGHLIGHT_TOOL, PAGE_TOOL, SEARCH_TOOL, type AgentSearchHit, type AgentSource, type AgentToolCall, type AgentToolEffect } from '@/lib/ai/agent/tools'
 import { interviewActa } from '@/lib/ai/agent/interview'
 import { labPayload, sendLabSession, type LabEndReason } from '@/lib/ai/lab/client'
@@ -601,7 +601,7 @@ export default function AgentStage({ lang, persistent = false, request = null }:
                   if (sessionRef.current !== session) return
                   setActivity((current) => (current === 'arriving' ? 'listening' : current))
                   track((current) => markAsked(current, Date.now(), 'greeting', 'greeting'))
-                  session.sendText(copy.greet)
+                  session.sendText(persistent ? `${copy.greet} ${greetFrom(readPageContext())}` : copy.greet)
                 },
                 Math.max(0, ARRIVAL_MS - (Date.now() - opened)),
               )
@@ -675,7 +675,7 @@ export default function AgentStage({ lang, persistent = false, request = null }:
       sessionRef.current = session
     }
     connect(grant, false)
-  }, [addSource, beginTrace, copy.greet, flushChunks, flushNavigation, interview, lang, openMic, queueChunk, runTool, startSimulator, teardown, track])
+  }, [addSource, beginTrace, copy.greet, flushChunks, flushNavigation, interview, lang, openMic, persistent, queueChunk, runTool, startSimulator, teardown, track])
 
   useEffect(() => {
     if (!focusAfter.current) return

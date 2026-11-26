@@ -2,7 +2,7 @@
 
 Del catálogo de la 003 (V6, camino B), habilitado por la 018. Depende de la 020.
 
-Estado: construida el 2026-11-15 como tarjeta **V6** (ver «Cómo quedó»). Falta la primera sesión real con Gemini (~0,05 USD), con permiso del autor.
+Estado: construida el 2026-11-15 como tarjeta **V6** (ver «Cómo quedó»).
 
 ## Qué hace
 
@@ -54,3 +54,4 @@ traducción en voz. Sirve para mostrar cómo Camilo presentaría en una entrevis
 - Traduce al final de cada frase (cuando detecta la pausa), no palabra por palabra.
 - Sin la clave de Gemini, el simulador reproduce un ejemplo grabado en la dirección elegida.
 - Tests: `tests/unit/x0/gemini-subtitles.test.ts`; el catálogo, la página y los e2e cuentan 18 experimentos.
+- **Probada con Gemini real (2026-11-26):** con el token de intérprete, «Hola, soy Camilo y construyo plataformas con agentes de inteligencia artificial» salió en inglés, y «¿Cuál es tu nombre y qué haces?» se tradujo sin responderla. La voz por micrófono queda para la prueba del autor en su equipo.

@@ -68,3 +68,4 @@ Estado: construida el 2026-11-15 (ver «Cómo quedó»). Pendientes del autor: e
 - P-2102 (pregenerar los posts antes de 2027) queda para el autor: generar los 7 posts en dos idiomas cuesta ~2 USD y
   no se hizo sin su permiso. Basta con escuchar cada post una vez con cada voz.
 - Tests: `tests/unit/listen/listen.test.ts` (validación, corpus, WAV, ruta, adaptador, respaldo y `from`).
+- **Probada con Gemini real (2026-11-26):** el post 7 sonó frase a frase con Charon, cada frase un WAV válido (el título, 3,3 s), con la siguiente adelantada. La caché devuelve el mismo audio en 40 ms. En `next dev`, una petición con `Cache-Control: no-cache` se salta la caché a propósito; en producción el navegador no la manda.

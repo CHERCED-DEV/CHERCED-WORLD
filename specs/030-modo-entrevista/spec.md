@@ -3,7 +3,7 @@
 Pedido del autor, 2026-11-14 (funcionalidades para entrevistas). Para entrevistadores. Depende de la 020 y extiende
 V5 (018).
 
-Estado: construida el 2026-11-15; la reanudación de sesión (FR-3004) el 2026-11-26. Faltan las evals propias de cada pista (FR-3005) y probar la reanudación con una entrevista real.
+Estado: construida el 2026-11-15; la reanudación de sesión (FR-3004) el 2026-11-26. Falta FR-3005 (evals propias de cada pista).
 
 ## Qué hace
 
@@ -78,6 +78,5 @@ las fuentes de cada respuesta. Al final queda un acta descargable.
   en el tope diario de Mini Cherced, porque cuesta como otra conversación.
 - Solo aplica al modo entrevista; la conversación libre sigue durando 5 minutos.
 - Si la reanudación falla, la entrevista termina como antes, con el aviso de siempre.
-- Hecho según la documentación de Gemini Live; falta probarlo con una entrevista real de más de 5 minutos (~0,30 USD),
-  que espera el permiso del autor.
 - Tests: `tests/unit/agent/live.test.ts` (handle y `goAway`) y `tests/unit/agent/session.test.ts` (setup con y sin handle).
+- **Probada con Gemini real (2026-11-26):** una entrevista recibió su handle, se cerró, se pidió el token de reanudación y la sesión nueva recordó el nombre y el color que se dijeron antes.

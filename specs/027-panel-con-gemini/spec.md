@@ -57,3 +57,4 @@ Herramientas de IA dentro del panel (`/inbox`) para escribir y moderar más ráp
   panel.
 - Sin la clave de Gemini, cada acción responde con un ejemplo del simulador.
 - Tests: `tests/unit/editorial/gemini-assist.test.ts`.
+- **Probada con Gemini real (2026-11-26):** la revisión encontró el título genérico (E-12), «increíble y revolucionaria» (E-07) y la imagen sin alt (E-11), cada uno en su línea; la traducción conservó enlace, imagen y código; la portada salió en 16:9 con el estilo del sitio. Ajustes tras la prueba: reintento si la respuesta no valida, y el texto alternativo nunca vuelve vacío (se deduce del nombre del archivo y del texto). Ordenar spam no se probó en real por falta de comentarios de prueba.

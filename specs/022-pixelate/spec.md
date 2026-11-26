@@ -3,7 +3,7 @@
 Propuesta de la 018 (ola 3), en la línea del pedido del autor del 2026-11-14 ("cosas súper locas y bonitas", "me
 gusta mucho el pixel art"). Depende de la 020.
 
-Estado: construida el 2026-11-15 como tarjeta **P1** (ver «Cómo quedó»). Falta la primera prueba real con Gemini, que cuesta ~0,045 USD y espera el permiso del autor.
+Estado: construida el 2026-11-15 como tarjeta **P1** (ver «Cómo quedó»).
 
 ## Qué hace
 
@@ -58,3 +58,4 @@ si quiere, verla parada junto a Mini Cherced en el escenario.
 - **FR-2205** El resultado lleva texto alternativo y la carga se anuncia en una región `status`.
 - Sin la clave de Gemini, el simulador pixela la foto en el navegador (48 × 48, colores reducidos y líneas de CRT).
 - Tests: `tests/unit/x0/gemini-pixel.test.ts`; el catálogo, la página y los e2e cuentan 17 experimentos.
+- **Probada con Gemini real (2026-11-26):** el retrato de «Sobre mí» salió como chibi de 512 × 512 en 8 s, con gafas moradas y barba, junto a Mini Cherced.

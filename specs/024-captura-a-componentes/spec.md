@@ -54,3 +54,4 @@ componentes y un bosquejo en pixel art de la pantalla.
 - Sin la clave de Gemini, el simulador devuelve el análisis de la captura de ejemplo.
 - Tests: `tests/unit/x0/gemini-shot.test.ts`; el catálogo, la página del laboratorio y los e2e de teclado y de tarjetas
   cuentan 16 experimentos. El guardián T760 ahora deja que las tarjetas de Gemini hablen solo con rutas `/api/` del sitio.
+- **Probada con Gemini real (2026-11-26):** la captura de ejemplo dio en 20 s un árbol válido de 10 nodos y dos huecos honestos (no hay barra lateral ni tabla de datos en el sistema).

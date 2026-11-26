@@ -57,3 +57,4 @@ El mismo de V5 (~0,10 USD por conversación de 5 minutos) y los mismos topes.
 - Pendiente del autor: probar 2 o 3 voces de Gemini (P-1802, sigue «Puck») y los gestos de señalar y celebrar del sprite.
 - Tests: `tests/unit/agent/page-context.test.ts` (lectura, resaltado, herramientas y simulador) y las listas de herramientas
   en `tools.test.ts` y `session.test.ts`.
+- **Probada con Gemini Live real (2026-11-26):** en el post 7, «¿qué hay en esta página?» usó `pagina_actual`, explicó el post y resaltó la sección correcta; «llévame al AI Lab» navegó con la conversación viva. Ajuste tras la prueba: el saludo recibe la página desde la que se abrió y la personalidad dice que acompaña por todo el sitio, para que no diga «bienvenido al AI Lab» en un post.

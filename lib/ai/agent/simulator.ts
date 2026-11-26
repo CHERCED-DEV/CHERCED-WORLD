@@ -137,6 +137,13 @@ export function pageTitle(title: string): string {
   return title.split(' · ')[0]?.trim() || title
 }
 
+export function greetFrom(page: Pick<PageContext, 'path' | 'title'>): string {
+  const inLab = /\/ai-lab(\/|$)/.test(page.path)
+  return inLab
+    ? `Dato de contexto: te abrieron desde el AI Lab (${page.path}).`
+    : `Dato de contexto: te abrieron desde la página «${pageTitle(page.title)}» (${page.path}), no desde el AI Lab.`
+}
+
 export function simulatorPageReply(lang: Locale, page: PageContext): string {
   const copy = COPY[lang]
   const title = pageTitle(page.title)

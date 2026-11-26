@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { highlightSection, readPageContext } from '@/lib/ai/agent/page-context'
-import { intentOf, pageTitle, simulatorPageReply, simulatorReply } from '@/lib/ai/agent/simulator'
+import { greetFrom, intentOf, pageTitle, simulatorPageReply, simulatorReply } from '@/lib/ai/agent/simulator'
 import { createToolRunner, HIGHLIGHT_TOOL, PAGE_TOOL } from '@/lib/ai/agent/tools'
 
 type Fake = { id: string; tag: string; label?: string; heading?: string; inPanel?: boolean; attrs: Set<string>; scrolled: number }
@@ -97,5 +97,10 @@ describe('Mini Cherced en todo el sitio (028)', () => {
     const buddy = readFileSync(join(process.cwd(), 'components', 'fun', 'Buddy.tsx'), 'utf8')
     expect(buddy.match(/openMiniCherced/g)).toHaveLength(2)
     expect(buddy).toMatch(/data-cw-fun-talk=""\s+onClick=\{openMiniCherced\}/)
+  })
+
+  it('el saludo del panel global sabe desde qué página lo abrieron (prueba real del 2026-11-26)', () => {
+    expect(greetFrom({ path: '/es/blog/post7', title: 'Un gate · Camilo Hernández' })).toBe('Dato de contexto: te abrieron desde la página «Un gate» (/es/blog/post7), no desde el AI Lab.')
+    expect(greetFrom({ path: '/en/ai-lab', title: 'AI Lab' })).toMatch(/desde el AI Lab/)
   })
 })

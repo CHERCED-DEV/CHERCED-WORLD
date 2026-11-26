@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { styleRules } from '@/content/style-rules'
-import { coverPrompt, rankSpam, reviewSchemaFor, simulatedMeta, simulatedReview, simulatedSpam, simulatedTranslation, translateDraft } from '@/lib/ai/editorial/assist'
+import { coverPrompt, rankSpam, reviewSchemaFor, simulatedMeta, simulatedReview, simulatedSpam, simulatedTranslation, suggestMeta, translateDraft } from '@/lib/ai/editorial/assist'
 import { bodyImages, compareShape, markdownShape, replaceAlt } from '@/lib/ai/editorial/check'
 
 const BODY = ['# Título', '', 'Texto con [enlace](https://a.b/c) y `código`.', '', '![Diagrama viejo](/img/a.png)', '', '```ts', 'const x = 1', '```'].join('\n')
@@ -59,5 +59,18 @@ describe('el panel con Gemini (027)', () => {
     expect(seen[0]).not.toMatch(/c1|c2|@/)
     expect(simulatedSpam([{ id: 'a', text: 'hola' }, { id: 'b', text: 'casino https://x' }])[0]!.id).toBe('b')
     expect(coverPrompt({ title: 'Gates', tags: ['pruebas'] })).toMatch(/No text/)
+  })
+
+  it('si la respuesta no valida, reintenta una vez; y nunca propone un alt vacío (prueba real del 2026-11-26)', async () => {
+    let calls = 0
+    const flaky = (async () => {
+      calls += 1
+      const value = calls === 1 ? { title: '' } : { title: 'A post', description: 'x', tags: [], body: BODY }
+      return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: JSON.stringify(value) }] } }] }))
+    }) as unknown as typeof fetch
+    expect((await translateDraft('k', draft, flaky)).title).toBe('A post')
+    expect(calls).toBe(2)
+    const meta = await suggestMeta('k', draft, gemini({ description: 'Algo', tags: ['a'], alts: [{ src: '/img/a.png', alt: '  ' }] }))
+    expect(meta.alts).toEqual([])
   })
 })
