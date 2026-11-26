@@ -294,7 +294,26 @@ export type LabSessionRecord = {
 
 export type LabConsent = { accountId: string; version: string; acceptedAt: Date; revokedAt: Date | null }
 
+export const LAB_EVENT_TYPES = ['open', 'start', 'finish', 'download', 'error'] as const
+
+export type LabEventType = (typeof LAB_EVENT_TYPES)[number]
+
+export type LabEventRecord = {
+  accountId: string
+  experiment: string
+  type: LabEventType
+  detail: string | null
+  lang: 'es' | 'en'
+  at: Date
+  expiresAt: Date
+}
+
+export type LabEventCount = { experiment: string; type: LabEventType; count: number }
+
 export interface LabRepo {
+  addEvents(events: LabEventRecord[]): Promise<void>
+  listEventsFor(accountId: string, limit: number): Promise<LabEventRecord[]>
+  countEvents(since: Date): Promise<LabEventCount[]>
   saveSession(record: LabSessionRecord): Promise<void>
   setSummary(id: string, summary: LabSummary): Promise<void>
   listByAccount(accountId: string, limit: number): Promise<LabSessionRecord[]>

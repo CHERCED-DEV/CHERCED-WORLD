@@ -7,7 +7,7 @@ import { SessionExpired } from '@/components/admin/Views'
 import { GlassSurface } from '@/components/ui/GlassSurface'
 import { groupUnanswered } from '@/lib/ai/lab/traces'
 import { getRepos } from '@/lib/data'
-import type { LabIntent } from '@/lib/data/types'
+import { LAB_EVENT_TYPES, type LabEventCount, type LabEventType, type LabIntent } from '@/lib/data/types'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { logServerError } from '@/lib/security/log'
 
@@ -24,6 +24,10 @@ const COPY = {
     times: 'veces',
     none: 'Todavía no hay conversaciones guardadas.',
     recent: 'Recientes',
+    usage: 'Uso del AI Lab (30 días)',
+    usageIntro: 'Eventos de quienes entraron con su cuenta y lo autorizaron: abrir, empezar, terminar, descargar y errores.',
+    types: { open: 'Abrió', start: 'Empezó', finish: 'Terminó', download: 'Descargó', error: 'Errores' } satisfies Record<LabEventType, string>,
+    experiment: 'Experimento',
     pending: 'Resumen en preparación.',
     transcript: 'Transcripción',
     you: 'Visitante',
@@ -40,6 +44,10 @@ const COPY = {
     times: 'times',
     none: 'No saved conversations yet.',
     recent: 'Recent',
+    usage: 'AI Lab usage (30 days)',
+    usageIntro: 'Events from people who signed in and allowed it: open, start, finish, download and errors.',
+    types: { open: 'Opened', start: 'Started', finish: 'Finished', download: 'Downloaded', error: 'Errors' } satisfies Record<LabEventType, string>,
+    experiment: 'Experiment',
     pending: 'Summary being prepared.',
     transcript: 'Transcript',
     you: 'Visitor',
@@ -62,8 +70,10 @@ export default async function ConversationsPage({ params }: Props) {
   const copy = COPY[lang]
   let records: Awaited<ReturnType<ReturnType<typeof getRepos>['lab']['listRecent']>> = []
   let failed = false
+  let usage: LabEventCount[] = []
   try {
     records = await getRepos().lab.listRecent(100)
+    usage = await getRepos().lab.countEvents(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
   } catch (error) {
     logServerError('panel.conversations', error)
     failed = true
@@ -90,6 +100,37 @@ export default async function ConversationsPage({ params }: Props) {
               </li>
             ))}
           </ul>
+        </GlassSurface>
+      ) : null}
+
+      {usage.length ? (
+        <GlassSurface as="section" variant="subtle" className={styles.item} aria-labelledby="lab-usage-title" data-cw-lab-usage="">
+          <h3 id="lab-usage-title" className={styles.cardTitle}>
+            {copy.usage}
+          </h3>
+          <p className={styles.muted}>{copy.usageIntro}</p>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">{copy.experiment}</th>
+                {LAB_EVENT_TYPES.map((type) => (
+                  <th key={type} scope="col">
+                    {copy.types[type]}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[...new Set(usage.map((row) => row.experiment))].sort().map((experiment) => (
+                <tr key={experiment}>
+                  <th scope="row">{experiment}</th>
+                  {LAB_EVENT_TYPES.map((type) => (
+                    <td key={type}>{usage.find((row) => row.experiment === experiment && row.type === type)?.count ?? 0}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </GlassSurface>
       ) : null}
 

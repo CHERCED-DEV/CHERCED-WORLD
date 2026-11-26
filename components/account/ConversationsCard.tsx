@@ -2,7 +2,7 @@
 
 import { buttonClassName } from '@/components/ui/Button'
 import { GlassSurface } from '@/components/ui/GlassSurface'
-import type { DashboardConversation } from '@/lib/accounts/dashboard'
+import type { DashboardConversation, DashboardLabEvent } from '@/lib/accounts/dashboard'
 import { deleteLabSession, revokeLabConsent } from '@/lib/actions/lab'
 import type { Locale } from '@/lib/i18n'
 import styles from './Dashboard.module.scss'
@@ -11,6 +11,9 @@ import { useRunner } from './useRunner'
 const COPY = {
   es: {
     title: 'Mis conversaciones con Mini Cherced',
+    activity: 'Tu actividad en el AI Lab',
+    activityNote: 'Solo qué experimento abriste, empezaste, terminaste o descargaste. Nunca lo que escribiste, dijiste o subiste.',
+    types: { open: 'abrió', start: 'empezó', finish: 'terminó', download: 'descargó', error: 'falló' } as Record<string, string>,
     none: 'Todavía no hay conversaciones guardadas. Se guardan solo si lo autorizas al empezar una conversación.',
     off: 'No has autorizado guardar tus conversaciones. Puedes hacerlo la próxima vez que hables con Mini Cherced.',
     retention: 'Se guardan en texto, nunca tu voz, y se borran solas a los 90 días.',
@@ -26,6 +29,9 @@ const COPY = {
   },
   en: {
     title: 'My conversations with Mini Cherced',
+    activity: 'Your activity in the AI Lab',
+    activityNote: 'Only which experiment you opened, started, finished or downloaded from. Never what you typed, said or uploaded.',
+    types: { open: 'opened', start: 'started', finish: 'finished', download: 'downloaded', error: 'failed' } as Record<string, string>,
     none: 'No saved conversations yet. They are only saved if you allow it when you start a conversation.',
     off: 'You haven’t allowed saving your conversations. You can do it the next time you talk to Mini Cherced.',
     retention: 'They are stored as text, never your voice, and are deleted automatically after 90 days.',
@@ -59,7 +65,17 @@ function Revoke({ label }: { label: string }) {
   )
 }
 
-export function ConversationsCard({ lang, consent, conversations }: { lang: Locale; consent: boolean; conversations: readonly DashboardConversation[] }) {
+export function ConversationsCard({
+  lang,
+  consent,
+  conversations,
+  activity = [],
+}: {
+  lang: Locale
+  consent: boolean
+  conversations: readonly DashboardConversation[]
+  activity?: readonly DashboardLabEvent[]
+}) {
   const copy = COPY[lang]
   return (
     <GlassSurface as="section" variant="standard" className={styles.card} aria-labelledby="cw-account-conversations" data-cw-account-conversations="">
@@ -103,6 +119,20 @@ export function ConversationsCard({ lang, consent, conversations }: { lang: Loca
         </ul>
       )}
       {consent ? <Revoke label={copy.revoke} /> : null}
+      {activity.length ? (
+        <details data-cw-account-lab-activity="">
+          <summary>{copy.activity}</summary>
+          <p className={styles.muted}>{copy.activityNote}</p>
+          <ul>
+            {activity.map((item, index) => (
+              <li key={`${item.dateTime}-${index}`}>
+                <time dateTime={item.dateTime}>{item.date}</time> · {item.experiment} · {copy.types[item.type] ?? item.type}
+                {item.detail ? ` (${item.detail})` : ''}
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
     </GlassSurface>
   )
 }

@@ -7,7 +7,7 @@ todo en el AI Lab… para usar Mini Cherced deba loguearse con Google… dejar u
 ratico, pero una experiencia completa sí requiere del registro para poder saber nosotros y aprender del ejercicio y
 luego transformarlo."
 
-Estado: construida el 2026-11-15 para Mini Cherced (V5). Los eventos del resto del AI Lab (`lab_events`) quedan para después.
+Estado: construida el 2026-11-15 para Mini Cherced (V5); los eventos del AI Lab (`lab_events`) el 2026-11-26. Queda pendiente el análisis de la vacante (A6) con cuenta.
 
 Depende de:
 - **017:** que el autor configure Google en Vercel.
@@ -238,4 +238,22 @@ Sin índices extra: se busca por `_id`. Borrar la cuenta borra su consentimiento
   conversaciones recientes.
 - **Colecciones:** `lab_sessions` y `lab_consents` las crea MongoDB con el primer documento y el código crea los
   índices (`expiresAt_ttl`, `account_recent`, `experiment_recent`). `lab_events` todavía no se usa.
-- **Pendiente:** eventos de los demás experimentos (`lab_events`), y el análisis de la vacante (A6) con cuenta.
+- **Pendiente:** el análisis de la vacante (A6) con cuenta.
+
+## Cómo quedaron los eventos (`lab_events`, 2026-11-26)
+
+- **Qué se registra:** por experimento, `open` (abrió la tarjeta), `start` (primer uso de un control), `download` (un
+  enlace de descarga o un control de exportar: `.srt`, JSON, PNG…), `finish` (cerró la demo) y `error` (la demo falló al
+  pintarse). Lo hace el armazón de las tarjetas (`LabTry`) por delegación, sin tocar cada demo.
+- **FR-3802:** el detalle solo admite códigos cortos (`^[a-z0-9_.:-]{1,60}$`, por ejemplo `shot-json`), así que no puede
+  llevar texto del visitante. Nunca viaja contenido.
+- **Cómo viaja:** en lotes de hasta 20 a `POST /api/ailab/events`, cada 4 segundos o al salir de la página
+  (`sendBeacon`). El navegador solo los manda si hay sesión de cuenta; el servidor comprueba origen, sesión,
+  consentimiento vigente (FR-3801), tamaño, el esquema y un límite de 120 lotes por cuenta por hora. Si responde «sin
+  consentimiento», el navegador deja de mandar en esa página.
+- **Dónde se guarda:** colección `lab_events` con los índices de la spec (`expiresAt_ttl`, `account_recent`,
+  `experiment_type`). Retirar el consentimiento o borrar la cuenta borra sus eventos (FR-3803).
+- **Quién lo ve:** la persona, en Mi cuenta → «Tu actividad en el AI Lab» (los últimos 15, con la nota de que nunca se
+  guarda lo que escribió, dijo o subió). El autor, en el panel → Conversaciones → «Uso del AI Lab (30 días)», una tabla
+  por experimento y tipo.
+- Tests: `tests/unit/lab/events.test.ts` (esquema, retención, repo, descargas y envío solo con sesión).

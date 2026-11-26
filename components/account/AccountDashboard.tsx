@@ -230,7 +230,7 @@ export function AccountDashboard({ lang, copy, panelHref, data }: Props) {
         <div className={cx(styles.column, styles.main)}>
           <ProfileCard lang={lang} copy={copy.dashboard} profile={data.profile} locked={locked} lockedId={LOCKED_ID} />
           <Activity copy={copy} data={data} />
-          <ConversationsCard lang={lang} consent={data.labConsent} conversations={data.conversations} />
+          <ConversationsCard lang={lang} consent={data.labConsent} conversations={data.conversations} activity={data.labActivity} />
         </div>
         <div className={styles.column}>
           <PhotoCard

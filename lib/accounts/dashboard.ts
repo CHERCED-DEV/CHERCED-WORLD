@@ -50,7 +50,10 @@ export type DashboardData = {
   consents: DashboardConsent[]
   labConsent: boolean
   conversations: DashboardConversation[]
+  labActivity: DashboardLabEvent[]
 }
+
+export type DashboardLabEvent = { experiment: string; type: string; detail: string | null; date: string; dateTime: string }
 
 export type DashboardConversation = {
   id: string
@@ -96,12 +99,13 @@ export async function loadDashboard(repos: Repos, state: AccountState, lang: Loc
   const format = formatter(lang)
   const date = (value: Date) => ({ date: format.format(value), dateTime: value.toISOString() })
 
-  const [profile, comments, titles, labConsent, sessions] = await Promise.all([
+  const [profile, comments, titles, labConsent, sessions, labEvents] = await Promise.all([
     repos.profiles.get(account.id),
     attempt('account.dashboard.comments', [], () => repos.comments.listByAccount(account.id)),
     attempt('account.dashboard.titles', new Map<string, string>(), () => postTitles(lang)),
     attempt('account.dashboard.labConsent', null, () => repos.lab.getConsent(account.id)),
     attempt('account.dashboard.lab', [], () => repos.lab.listByAccount(account.id, 20)),
+    attempt('account.dashboard.labEvents', [], () => repos.lab.listEventsFor(account.id, 15)),
   ])
   const posts = await attempt('account.dashboard.posts', [], () => guestPostsOf(account))
   const photo = profile?.photo ?? 'google'
@@ -162,5 +166,6 @@ export async function loadDashboard(repos: Repos, state: AccountState, lang: Loc
       topic: record.summary?.topic || null,
       turns: record.turns,
     })),
+    labActivity: labEvents.map((event) => ({ experiment: event.experiment, type: event.type, detail: event.detail, ...date(event.at) })),
   }
 }

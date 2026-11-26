@@ -1,9 +1,11 @@
 'use client'
 
-import { Component, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
+import { Component, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type MouseEvent, type ReactNode } from 'react'
 import type { LabDownload, LabExperimentId } from '@/content/types'
 import { Button, buttonClassName } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/Toast'
+import { downloadDetail } from '@/lib/ai/lab/events'
+import { labEvent } from '@/lib/ai/lab/event-client'
 import { consentedResources, onConsentChange, requestDownload, toDownloadRequest, withdrawConsent } from '@/lib/ailab/core/consent'
 import { onLabCleared } from '@/lib/ailab/core/store'
 import type { Locale } from '@/lib/i18n/config'
@@ -25,13 +27,17 @@ export type LabTryProps = {
   demo?: LabDemoComponent | null
 }
 
-type BoundaryProps = { fallback: (retry: () => void) => ReactNode; children: ReactNode }
+type BoundaryProps = { fallback: (retry: () => void) => ReactNode; children: ReactNode; onError?: () => void }
 
 class DemoBoundary extends Component<BoundaryProps, { failed: boolean }> {
   state = { failed: false }
 
   static getDerivedStateFromError() {
     return { failed: true }
+  }
+
+  componentDidCatch() {
+    this.props.onError?.()
   }
 
   retry = () => this.setState({ failed: false })
@@ -62,6 +68,7 @@ export function LabTry({ lang, experiment, downloads, labels, copy, describedBy,
   const stageRef = useRef<HTMLDivElement>(null)
   const focusStage = useRef(false)
   const restoreFocus = useRef(false)
+  const started = useRef(false)
   const granted = useConsentedResources(experiment)
   const Demo = demo === undefined ? (labDemos[experiment] ?? null) : demo
   const main = downloads.find((download) => download.default) ?? null
@@ -92,12 +99,26 @@ export function LabTry({ lang, experiment, downloads, labels, copy, describedBy,
     }
     setConsent(Boolean(main))
     focusStage.current = true
+    started.current = false
     setPhase('open')
+    labEvent(experiment, 'open', lang)
   }
 
   const close = () => {
     restoreFocus.current = true
     setPhase('idle')
+    labEvent(experiment, 'finish', lang)
+  }
+
+  const track = (event: MouseEvent<HTMLDivElement>) => {
+    const target = event.target instanceof Element ? event.target : null
+    if (!target?.closest('button, a, input, select, textarea, [role="button"]') || target.closest('[data-cw-lab-close]')) return
+    if (!started.current) {
+      started.current = true
+      labEvent(experiment, 'start', lang)
+    }
+    const detail = downloadDetail(target)
+    if (detail) labEvent(experiment, 'download', lang, detail)
   }
 
   const revoke = () => {
@@ -109,10 +130,11 @@ export function LabTry({ lang, experiment, downloads, labels, copy, describedBy,
   return (
     <div className={styles.try} data-cw-lab-try={experiment} data-phase={phase}>
       {phase === 'open' ? (
-        <div ref={stageRef} className={styles.stage} tabIndex={-1} aria-label={labels.label} role="region" data-cw-lab-stage="">
+        <div ref={stageRef} className={styles.stage} tabIndex={-1} aria-label={labels.label} role="region" onClickCapture={track} data-cw-lab-stage="">
           <LabDemoLoadingContext value={labels.loading}>
             {Demo ? (
               <DemoBoundary
+                onError={() => labEvent(experiment, 'error', lang, 'render')}
                 fallback={(retry) => (
                   <p className={styles.note} role="alert" data-cw-lab-failed="">
                     {labels.failed}{' '}

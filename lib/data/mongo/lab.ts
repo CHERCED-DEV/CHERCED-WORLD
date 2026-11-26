@@ -1,12 +1,16 @@
 import 'server-only'
 import type { Collection, Db } from 'mongodb'
-import { LAB_END_REASONS, LAB_INTENTS, type LabConsent, type LabEndReason, type LabIntent, type LabRepo, type LabSessionRecord, type LabSummary } from '@/lib/data/types'
+import { LAB_END_REASONS, LAB_EVENT_TYPES, LAB_INTENTS, type LabConsent, type LabEndReason, type LabEventRecord, type LabEventType, type LabIntent, type LabRepo, type LabSessionRecord, type LabSummary } from '@/lib/data/types'
 import type { DbProvider } from './collections'
 import { TTL_INDEX_NAME } from './indexes'
 
 export const LAB_SESSIONS = 'lab_sessions'
 
 export const LAB_CONSENTS = 'lab_consents'
+
+export const LAB_EVENTS = 'lab_events'
+
+type EventDoc = LabEventRecord
 
 type SessionDoc = Omit<LabSessionRecord, 'id'> & { _id: string }
 
@@ -66,6 +70,9 @@ function ensureLabIndexes(db: Db): Promise<unknown> {
     db.collection(LAB_SESSIONS).createIndex({ expiresAt: 1 }, { name: TTL_INDEX_NAME, expireAfterSeconds: 0 }),
     db.collection(LAB_SESSIONS).createIndex({ accountId: 1, createdAt: -1 }, { name: 'account_recent' }),
     db.collection(LAB_SESSIONS).createIndex({ experiment: 1, createdAt: -1 }, { name: 'experiment_recent' }),
+    db.collection(LAB_EVENTS).createIndex({ expiresAt: 1 }, { name: TTL_INDEX_NAME, expireAfterSeconds: 0 }),
+    db.collection(LAB_EVENTS).createIndex({ accountId: 1, at: -1 }, { name: 'account_recent' }),
+    db.collection(LAB_EVENTS).createIndex({ experiment: 1, type: 1, at: -1 }, { name: 'experiment_type' }),
   ]).catch((error: unknown) => {
     indexed = null
     throw error
@@ -79,11 +86,40 @@ export function createMongoLabRepo(provider: DbProvider): LabRepo {
     await ensureLabIndexes(db)
     return db.collection<SessionDoc>(LAB_SESSIONS)
   }
+  async function labEvents(): Promise<Collection<EventDoc>> {
+    const db = await provider()
+    await ensureLabIndexes(db)
+    return db.collection<EventDoc>(LAB_EVENTS)
+  }
   async function consents(): Promise<Collection<ConsentDoc>> {
     return (await provider()).collection<ConsentDoc>(LAB_CONSENTS)
   }
 
   return {
+    async addEvents(list) {
+      if (list.length) await (await labEvents()).insertMany(list.map((event) => ({ ...event })))
+    },
+    async listEventsFor(accountId, limit) {
+      const docs = await (await labEvents()).find({ accountId, expiresAt: { $gt: new Date() } }, { projection: { _id: 0 } }).sort({ at: -1 }).limit(limit).toArray()
+      return docs.map((doc) => ({
+        accountId: doc.accountId,
+        experiment: String(doc.experiment),
+        type: oneOf<LabEventType>(LAB_EVENT_TYPES, doc.type, 'open'),
+        detail: typeof doc.detail === 'string' ? doc.detail : null,
+        lang: doc.lang === 'en' ? 'en' : 'es',
+        at: date(doc.at),
+        expiresAt: date(doc.expiresAt),
+      }))
+    },
+    async countEvents(since) {
+      const rows = await (await labEvents())
+        .aggregate<{ _id: { experiment: string; type: string }; count: number }>([
+          { $match: { at: { $gte: since }, expiresAt: { $gt: new Date() } } },
+          { $group: { _id: { experiment: '$experiment', type: '$type' }, count: { $sum: 1 } } },
+        ])
+        .toArray()
+      return rows.map((row) => ({ experiment: String(row._id.experiment), type: oneOf<LabEventType>(LAB_EVENT_TYPES, row._id.type, 'open'), count: row.count }))
+    },
     async saveSession(record) {
       const { id, ...rest } = record
       await (await sessions()).replaceOne({ _id: id }, rest, { upsert: true })
@@ -105,6 +141,7 @@ export function createMongoLabRepo(provider: DbProvider): LabRepo {
     },
     async removeAllFor(accountId) {
       await (await sessions()).deleteMany({ accountId })
+      await (await labEvents()).deleteMany({ accountId })
       await (await consents()).deleteOne({ _id: accountId })
     },
     async getConsent(accountId) {
@@ -117,6 +154,7 @@ export function createMongoLabRepo(provider: DbProvider): LabRepo {
     async revokeConsent(accountId, now) {
       await (await consents()).updateOne({ _id: accountId }, { $set: { revokedAt: now, updatedAt: now } })
       await (await sessions()).deleteMany({ accountId })
+      await (await labEvents()).deleteMany({ accountId })
     },
   }
 }
