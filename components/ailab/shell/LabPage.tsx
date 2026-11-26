@@ -32,6 +32,8 @@ export type LabPageViewProps = {
   cards: LabCardInput[]
 }
 
+const ROUTE_ACCESS = { es: '¿Entrevistas? Pruébame en 10 minutos →', en: 'Interviewing? Try me in 10 minutes →' } as const
+
 export function themeSectionId(theme: string): string {
   return `ailab-${theme}`
 }
@@ -60,6 +62,11 @@ export function LabPageView({ lang, labels, cardLabels, consentLabels, clearLabe
               {labels.privacyMore}
             </Link>
           </span>
+        </p>
+        <p data-cw-ailab-route="">
+          <Link href={localizedPath(lang, '/ai-lab/ruta')} className={styles.privacyLink}>
+            {ROUTE_ACCESS[lang]}
+          </Link>
         </p>
         <nav className={styles.themes} aria-label={labels.themesLabel}>
           <ul>

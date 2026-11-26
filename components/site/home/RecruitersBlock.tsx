@@ -97,6 +97,8 @@ const PITCH_COPY = {
   en: { title: 'Listen to the pitch (60 s)', note: 'One minute per case: problem, decision, result and stack.' },
 } as const
 
+const ROUTE_LINK = { es: 'Pruébame en 10 minutos', en: 'Try me in 10 minutes' } as const
+
 function PitchLinks({ lang }: { lang: Locale }) {
   const pitches = featuredPitches()
   if (pitches.length === 0) return null
@@ -118,6 +120,11 @@ function PitchLinks({ lang }: { lang: Locale }) {
           )
         })}
       </ul>
+      <p className={styles.motivation}>
+        <Link href={`/${lang}/ai-lab/ruta`} prefetch={false} data-cw-recruiters-route="">
+          {ROUTE_LINK[lang]}
+        </Link>
+      </p>
     </div>
   )
 }

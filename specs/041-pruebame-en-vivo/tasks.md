@@ -31,7 +31,7 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 ## Fase 2: Ola 1 (042, 044 y 045)
 
 - [x] T4120 Script local de nombres prohibidos: lee `specs/041-pruebame-en-vivo/privado/nombres-prohibidos.txt` y revisa las líneas agregadas del diff contra `origin/dev`. Sale con 0 si está limpio, 1 si hay nombres y 2 si falta la lista. No corre en CI, porque la lista no es pública — `scripts/check-private-names.mjs` — cubre: SC-4104
-- [ ] T4121 Base F1: aplicar las enmiendas a archivos compartidos de las specs aprobadas de la ola 1, con lint, typecheck y pruebas de lo tocado. Commit y etiqueta `041-base-ola1` — cubre: constitución VII
+- [x] T4121 Base F1: aplicar las enmiendas a archivos compartidos de las specs aprobadas de la ola 1, con lint, typecheck y pruebas de lo tocado. Commit y etiqueta `041-base-ola1` — cubre: constitución VII
   - Entran:
     - E-4201, E-4402 y E-4501: namespaces de i18n, con JSON vacíos que después llenan las líneas;
     - E-4204: `export` de `clock`;
@@ -41,11 +41,11 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
     - la prueba de contrato de i18n ampliada;
     - el tipo `RouteStation` congelado en `content/ailab/route/stations.ts`, para que la L2 y la L3 declaren sus estaciones sin esperar a la L1.
   - El sitemap, el README y las entradas de interfaz (E-4202, E-4203, E-4205, E-4206, E-4403, E-4404, E-4406 y E-4504) van al integrar, cuando las páginas ya existen (T4129).
-- [ ] T4122 Crear los worktrees `.worktrees/L1-ruta`, `.worktrees/L2-mcp` y `.worktrees/L3-ingenieria` desde `041-base-ola1`, con el junction de `node_modules` hecho antes de lanzar
-- [ ] T4123 [P] Lanzar la L1 (042) en segundo plano, con el brief y la primera línea del junction
-- [ ] T4124 [P] Lanzar la L2 (044)
-- [ ] T4125 [P] Lanzar la L3 (045)
-- [ ] T4126 Integrar la L1 en `integracion-041`. Desde aquí, el registro `content/ailab/route/index.ts` es compartido
+- [x] T4122 Crear los worktrees `.worktrees/L1-ruta`, `.worktrees/L2-mcp` y `.worktrees/L3-ingenieria` desde `041-base-ola1`, con el junction de `node_modules` hecho antes de lanzar
+- [x] T4123 [P] Lanzar la L1 (042) en segundo plano, con el brief y la primera línea del junction
+- [x] T4124 [P] Lanzar la L2 (044)
+- [x] T4125 [P] Lanzar la L3 (045)
+- [x] T4126 Integrar la L1 en `integracion-041`. Desde aquí, el registro `content/ailab/route/index.ts` es compartido
 - [ ] T4127 Integrar la L2 y sumar su estación al registro
 - [ ] T4128 Integrar la L3 y sumar su estación al registro
 - [ ] T4129 Entradas a la ruta (P-4102): un enlace de texto en la ventana «Para reclutadores» y un acceso al inicio del AI Lab, sin rehacer esas secciones — cubre: FR-4108

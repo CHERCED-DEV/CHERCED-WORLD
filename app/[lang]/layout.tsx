@@ -1,4 +1,6 @@
 import { GlobalAgent } from '@/components/ailab/agent/GlobalAgent'
+import { routePillLabels } from '@/components/ailab/route/labels'
+import { RouteReturnPill } from '@/components/ailab/route/RouteReturnPill'
 import { GuestLoader } from '@/components/fun/guest/GuestLoader'
 import '@/styles/globals.scss'
 import type { Metadata, Viewport } from 'next'
@@ -61,7 +63,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   const { lang } = await params
   if (!isLocale(lang)) notFound()
 
-  const common = await getDictionary(lang, 'common')
+  const [common, route] = await Promise.all([getDictionary(lang, 'common'), getDictionary(lang, 'route')])
   const labels = shellLabels(common)
   const items = navItems(common)
 
@@ -90,6 +92,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           <SiteFooter lang={lang} socials={getSite().socials} labels={labels} />
           <ExperienceRoot lang={lang} />
           <GlobalAgent lang={lang} />
+          <RouteReturnPill lang={lang} labels={routePillLabels(route)} />
           <GuestLoader lang={lang} />
         </ToastProvider>
         <PointerLight />
