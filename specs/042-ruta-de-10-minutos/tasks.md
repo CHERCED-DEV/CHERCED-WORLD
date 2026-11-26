@@ -36,20 +36,20 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Fase 3 — US1: recorrer las cuatro estaciones
 
-- [ ] T4210 [P] [US1] Pruebas del avance: versión, lectura con `sessionStorage` bloqueado, marcas, notas de 500
+- [x] T4210 [P] [US1] Pruebas del avance: versión, lectura con `sessionStorage` bloqueado, marcas, notas de 500
   caracteres como máximo y reinicio — archivos: `tests/unit/route/progress.test.ts` — cubre: FR-4204, FR-4205
-- [ ] T4211 [US1] Avance en `sessionStorage` hasta que T4210 pase — archivos: `lib/ailab/route/progress.ts` — cubre:
+- [x] T4211 [US1] Avance en `sessionStorage` hasta que T4210 pase — archivos: `lib/ailab/route/progress.ts` — cubre:
   FR-4204, FR-4205
-- [ ] T4212 [P] [US1] `StationCard`, renderizada en el servidor: objetivo, minutos, pasos, botón y evidencia —
+- [x] T4212 [P] [US1] `StationCard`, renderizada en el servidor: objetivo, minutos, pasos, botón y evidencia —
   archivos: `components/ailab/route/StationCard.tsx`, `components/ailab/route/StationCard.module.scss` — cubre:
   FR-4201, FR-4203
-- [ ] T4213 [P] [US1] `RouteClock`: 10:00 hacia abajo, negativo con aviso, anuncio solo al cambiar de estación y sin
+- [x] T4213 [P] [US1] `RouteClock`: 10:00 hacia abajo, negativo con aviso, anuncio solo al cambiar de estación y sin
   animación con movimiento reducido — archivos: `components/ailab/route/RouteClock.tsx` — cubre: FR-4213
-- [ ] T4214 [US1] `RouteView`, la isla cliente con las marcas y las notas — archivos:
+- [x] T4214 [US1] `RouteView`, la isla cliente con las marcas y las notas — archivos:
   `components/ailab/route/RouteView.tsx`, `components/ailab/route/RouteView.module.scss` — cubre: FR-4202, FR-4204
-- [ ] T4215 [US1] Página y metadatos en los dos idiomas, más el aviso sin JavaScript — archivos:
+- [x] T4215 [US1] Página y metadatos en los dos idiomas, más el aviso sin JavaScript — archivos:
   `app/[lang]/ai-lab/ruta/page.tsx`, `app/[lang]/ai-lab/ruta/opengraph-image.tsx` — cubre: FR-4201
-- [ ] T4216 [US1] Estación sin modelo disponible: aviso y traza grabada con `TracePanel`, marcada como grabada (P-4206:
+- [x] T4216 [US1] Estación sin modelo disponible: aviso y traza grabada con `TracePanel`, marcada como grabada (P-4206:
   la del simulador mientras no haya permiso para grabar una real) — archivos:
   `content/ailab/route/recorded-trace.json`, `components/ailab/route/RecordedTrace.tsx` — cubre: FR-4212
 

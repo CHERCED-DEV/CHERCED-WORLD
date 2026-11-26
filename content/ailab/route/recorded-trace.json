@@ -1,0 +1,266 @@
+{
+  "es": {
+    "mode": "local",
+    "model": "simulator",
+    "voice": "browser",
+    "startedAt": 1795711708000,
+    "turns": [
+      {
+        "n": 1,
+        "state": "done",
+        "source": "greeting",
+        "heardBy": "greeting",
+        "question": "",
+        "answer": "¡Pa! Soy Mini Cherced, el compañero pixelado de Camilo, en modo simulador: aquí no hay Gemini, solo el buscador del sitio. Escríbeme qué quieres ver.",
+        "askedAt": null,
+        "firstAudioAt": null,
+        "doneAt": null,
+        "audioMs": 0,
+        "interrupted": false,
+        "tools": [],
+        "usage": null,
+        "costUsd": 0
+      },
+      {
+        "n": 2,
+        "state": "done",
+        "source": "text",
+        "heardBy": "text",
+        "question": "¿Cómo mide un agente de IA?",
+        "answer": "Encontré \"De un portafolio de 2023 a uno hecho con desarrollo guiado por especificaciones y agentes\" y 4 cosas más. Cómo reconstruí CHERCED-WORLD con especificaciones, 8 lanes de agentes en paralelo y una regla simple: cada agente es dueño…",
+        "askedAt": null,
+        "firstAudioAt": null,
+        "doneAt": null,
+        "audioMs": 0,
+        "interrupted": false,
+        "tools": [
+          {
+            "name": "buscar_en_el_sitio",
+            "args": {
+              "consulta": "¿Cómo mide un agente de IA?"
+            },
+            "ms": 21,
+            "result": {
+              "kind": "search",
+              "hits": [
+                {
+                  "title": "De un portafolio de 2023 a uno hecho con desarrollo guiado por especificaciones y agentes",
+                  "url": "/es/blog/post4",
+                  "score": 321.39
+                },
+                {
+                  "title": "Espacio de trabajo legal",
+                  "url": "/es/portfolio/14",
+                  "score": 228.49
+                },
+                {
+                  "title": "Director y líneas: agentes de IA en paralelo",
+                  "url": "/es/portfolio/13",
+                  "score": 180.46
+                },
+                {
+                  "title": "Un gate que nunca falló no vigila nada",
+                  "url": "/es/blog/post7",
+                  "score": 145.22
+                },
+                {
+                  "title": "AGENTES DE IA PARA PROGRAMAR",
+                  "url": "/es/aboutMe#lobe-applied-ai",
+                  "score": 134.27
+                }
+              ]
+            }
+          }
+        ],
+        "usage": null,
+        "costUsd": 0
+      },
+      {
+        "n": 3,
+        "state": "done",
+        "source": "text",
+        "heardBy": "text",
+        "question": "¿Por qué micro-frontends en Synergos y no un monolito?",
+        "answer": "Encontré \"Synergos por dentro\" y 4 cosas más. Un CMS que compone páginas.",
+        "askedAt": null,
+        "firstAudioAt": null,
+        "doneAt": null,
+        "audioMs": 0,
+        "interrupted": false,
+        "tools": [
+          {
+            "name": "buscar_en_el_sitio",
+            "args": {
+              "consulta": "¿Por qué micro-frontends en Synergos y no un monolito?"
+            },
+            "ms": 13,
+            "result": {
+              "kind": "search",
+              "hits": [
+                {
+                  "title": "Synergos por dentro",
+                  "url": "/es/synergos/arquitectura",
+                  "score": 386.81
+                },
+                {
+                  "title": "Un gate que nunca falló no vigila nada",
+                  "url": "/es/blog/post7",
+                  "score": 359.03
+                },
+                {
+                  "title": "Synergos",
+                  "url": "/es/portfolio/12",
+                  "score": 320.59
+                },
+                {
+                  "title": "Director y líneas: agentes de IA en paralelo",
+                  "url": "/es/portfolio/13",
+                  "score": 306.97
+                },
+                {
+                  "title": "Habilidades",
+                  "url": "/es/aboutMe",
+                  "score": 250.52
+                }
+              ]
+            }
+          }
+        ],
+        "usage": null,
+        "costUsd": 0
+      }
+    ]
+  },
+  "en": {
+    "mode": "local",
+    "model": "simulator",
+    "voice": "browser",
+    "startedAt": 1795711708000,
+    "turns": [
+      {
+        "n": 1,
+        "state": "done",
+        "source": "greeting",
+        "heardBy": "greeting",
+        "question": "",
+        "answer": "¡Pa! I'm Mini Cherced, Camilo's pixelated sidekick, in simulator mode: there's no Gemini here, just the site search. Type what you want to see.",
+        "askedAt": null,
+        "firstAudioAt": null,
+        "doneAt": null,
+        "audioMs": 0,
+        "interrupted": false,
+        "tools": [],
+        "usage": null,
+        "costUsd": 0
+      },
+      {
+        "n": 2,
+        "state": "done",
+        "source": "text",
+        "heardBy": "text",
+        "question": "How does he measure an AI agent?",
+        "answer": "I found \"Legal workspace\" and 4 more. An agent harness that assists a lawyer without giving the AI authority over the case file.",
+        "askedAt": null,
+        "firstAudioAt": null,
+        "doneAt": null,
+        "audioMs": 0,
+        "interrupted": false,
+        "tools": [
+          {
+            "name": "buscar_en_el_sitio",
+            "args": {
+              "consulta": "How does he measure an AI agent?"
+            },
+            "ms": 4,
+            "result": {
+              "kind": "search",
+              "hits": [
+                {
+                  "title": "Legal workspace",
+                  "url": "/en/portfolio/14",
+                  "score": 155.04
+                },
+                {
+                  "title": "Director & lines: parallel AI agents",
+                  "url": "/en/portfolio/13",
+                  "score": 120.23
+                },
+                {
+                  "title": "From a 2023 portfolio to one built with Spec-Driven Development and agents",
+                  "url": "/en/blog/post4",
+                  "score": 107.49
+                },
+                {
+                  "title": "MULTI-AGENT ORCHESTRATION",
+                  "url": "/en/aboutMe#lobe-applied-ai",
+                  "score": 89.78
+                },
+                {
+                  "title": "Synergos",
+                  "url": "/en/portfolio/12",
+                  "score": 86.27
+                }
+              ]
+            }
+          }
+        ],
+        "usage": null,
+        "costUsd": 0
+      },
+      {
+        "n": 3,
+        "state": "done",
+        "source": "text",
+        "heardBy": "text",
+        "question": "Why micro-frontends in Synergos instead of a monolith?",
+        "answer": "I found \"Inside Synergos\" and 4 more. A CMS that composes pages.",
+        "askedAt": null,
+        "firstAudioAt": null,
+        "doneAt": null,
+        "audioMs": 0,
+        "interrupted": false,
+        "tools": [
+          {
+            "name": "buscar_en_el_sitio",
+            "args": {
+              "consulta": "Why micro-frontends in Synergos instead of a monolith?"
+            },
+            "ms": 5,
+            "result": {
+              "kind": "search",
+              "hits": [
+                {
+                  "title": "Inside Synergos",
+                  "url": "/en/synergos/arquitectura",
+                  "score": 260.26
+                },
+                {
+                  "title": "Skills",
+                  "url": "/en/aboutMe",
+                  "score": 184.78
+                },
+                {
+                  "title": "MICRO-FRONTENDS",
+                  "url": "/en/aboutMe#lobe-architecture",
+                  "score": 157.27
+                },
+                {
+                  "title": "The Future of Humanity and Artificial Intelligence",
+                  "url": "/en/blog/post2",
+                  "score": 136.7
+                },
+                {
+                  "title": "Synergos",
+                  "url": "/en/portfolio/12",
+                  "score": 127.98
+                }
+              ]
+            }
+          }
+        ],
+        "usage": null,
+        "costUsd": 0
+      }
+    ]
+  }
+}
