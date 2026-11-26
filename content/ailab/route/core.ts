@@ -181,4 +181,11 @@ export const routeGuides: Readonly<Record<string, RouteGuide>> = {
       en: 'Without an account the try lasts 2 minutes; with your Google account you get more time. If there is no quota today, Mini Cherced tells you when it opens.',
     },
   },
+  'mcp-en-tu-agente': {
+    action: { es: 'Abrir el MCP del portafolio', en: 'Open the portfolio MCP' },
+  },
+  'tablero-en-numeros': {
+    action: { es: 'Abrir la spec 030 en el tablero', en: 'Open spec 030 on the dashboard' },
+    links: [{ label: { es: 'El tablero de ingeniería completo', en: 'The full engineering dashboard' }, href: '/ingenieria' }],
+  },
 }

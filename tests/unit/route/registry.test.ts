@@ -40,7 +40,7 @@ describe('registro de estaciones de la ruta (FR-4208, FR-4209)', () => {
       [1, 'agente-en-vivo'],
       [2, 'encaje-y-pitch'],
       [3, 'codigo-real'],
-      [4, 'de-spec-a-commit'],
+      [4, 'tablero-en-numeros'],
     ])
     expect(coreMinutes(routeStations, coreRoute)).toBeLessThanOrEqual(ROUTE_BUDGET_MINUTES)
     expect(sections[0]!.more.map((station) => station.id)).toEqual(['rompelo', 'diseno-de-sistemas', 'mcp-en-tu-agente'])
@@ -79,7 +79,7 @@ describe('registro de estaciones de la ruta (FR-4208, FR-4209)', () => {
 
   it('falla si una prueba se queda sin estación, si la núcleo no está o si es de otra prueba', () => {
     const withoutFour = routeStations.filter((station) => station.proof !== 4)
-    expect(problemsWith(withoutFour)).toEqual(['prueba 4: no tiene ninguna estación', 'prueba 4: la estación núcleo de-spec-a-commit no está en el registro'])
+    expect(problemsWith(withoutFour)).toEqual(['prueba 4: no tiene ninguna estación', 'prueba 4: la estación núcleo tablero-en-numeros no está en el registro'])
     const moved = routeStations.map((station) => (station.id === 'codigo-real' ? { ...station, proof: 4 as const } : station))
     expect(problemsWith(moved)).toEqual(['prueba 3: no tiene ninguna estación', 'prueba 3: la estación núcleo codigo-real es de la prueba 4'])
   })

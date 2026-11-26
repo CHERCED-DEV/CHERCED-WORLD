@@ -4,7 +4,7 @@ import { expect as baseExpect, test, type Page, type TestInfo } from '@playwrigh
 
 const expect = baseExpect.configure({ timeout: 15_000 })
 
-const CORE = ['agente-en-vivo', 'encaje-y-pitch', 'codigo-real', 'de-spec-a-commit'] as const
+const CORE = ['agente-en-vivo', 'encaje-y-pitch', 'codigo-real', 'tablero-en-numeros'] as const
 
 const API = /^\/api\/(ailab|agent)\//
 
@@ -105,7 +105,7 @@ test.describe('042 · ruta de 10 minutos de punta a punta', () => {
     await markStation(page, 'encaje-y-pitch', 'checked')
     await markStation(page, 'codigo-real', 'failed')
     await station(page, 'codigo-real').locator('[data-cw-route-note]').fill('La explicación no cargó; abrí el archivo en GitHub.')
-    await markStation(page, 'de-spec-a-commit', 'checked')
+    await markStation(page, 'tablero-en-numeros', 'checked')
     await expect(page.locator('[data-cw-route-announce]')).toContainText('Marcaste las cuatro estaciones')
     for (const id of CORE) await expect(page.locator(`[data-cw-route-rail="${id}"]`)).not.toContainText('Sin probar')
 
@@ -115,12 +115,12 @@ test.describe('042 · ruta de 10 minutos de punta a punta', () => {
     expect(acta).toMatch(/^# Acta de la ruta de 10 minutos/)
     expect(acta).toContain('## Prueba 1. Agentes que funcionan: comprobada')
     expect(acta).toContain('## Prueba 2. Problemas de negocio: comprobada')
-    expect(acta).toContain('## Prueba 3. Código de calidad: no funcionó')
+    expect(acta).toContain('## Prueba 3. Código de calidad: comprobada en parte')
     expect(acta).toContain('## Prueba 4. Entrega rápida con IA: comprobada')
     expect(acta).toContain('Citó la spec de Synergos y se negó a dar su prompt.')
     expect(acta).toContain('La explicación no cargó; abrí el archivo en GitHub.')
     expect(acta).toMatch(/\]\(http:\/\/localhost:\d+\/es\/ai-lab#lab-v5\)/)
-    expect(acta).toContain('(https://github.com/CHERCED-DEV/CHERCED-WORLD/blob/main/specs/030-modo-entrevista/spec.md)')
+    expect(acta).toMatch(/\]\(http:\/\/localhost:\d+\/es\/ingenieria\/030\)/)
 
     await page.locator('[data-cw-route-finish]').click()
     await expect(page.locator('[data-cw-route-clock]')).toHaveAttribute('data-cw-route-clock', 'done')
@@ -235,7 +235,8 @@ test.describe('042 · ruta sin JavaScript', () => {
     await expect(page.locator('[data-cw-route-noscript]')).toContainText('piden JavaScript')
     await expect(station(page, 'agente-en-vivo').locator('[data-cw-route-steps] > li')).toHaveCount(4)
     await expect(station(page, 'agente-en-vivo').locator('a[href="/es/ai-lab#lab-v5"]').first()).toBeVisible()
-    await expect(station(page, 'de-spec-a-commit').locator('a[href^="https://github.com/CHERCED-DEV/"]').first()).toBeVisible()
+    await expect(station(page, 'codigo-real').locator('a[href^="https://github.com/CHERCED-DEV/"]').first()).toBeVisible()
+    await expect(station(page, 'tablero-en-numeros').locator('a[href="/es/ingenieria/030"]').first()).toBeVisible()
     await expect(page.locator('[data-cw-route-start]')).toBeDisabled()
   })
 })

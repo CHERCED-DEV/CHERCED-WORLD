@@ -22,6 +22,7 @@ function appPages(): Set<string> {
       if (!/^page\.(tsx|ts|mdx)$/.test(entry.name)) continue
       const path = `/${segments.join('/')}`
       if (path === '/portfolio/[id]') for (const id of projects) pages.add(`/portfolio/${id}`)
+      else if (path === '/ingenieria/[spec]') for (const id of specIds()) pages.add(`/ingenieria/${id}`)
       else if (!path.includes('[')) pages.add(path)
     }
   }

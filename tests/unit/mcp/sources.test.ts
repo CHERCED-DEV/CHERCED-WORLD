@@ -1,3 +1,5 @@
+import { readdirSync } from 'node:fs'
+import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('@/content/posts/registry', async () => {
   const { registryFromDisk } = await import('../l5/support/mdx-registry')
@@ -13,6 +15,10 @@ const { buildSearchIndex } = await import('@/lib/search/build-index')
 
 const indexes = { es: await buildSearchIndex('es'), en: await buildSearchIndex('en') }
 
+const SPEC_IDS = readdirSync(join(process.cwd(), 'specs'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && /^\d{3}-/.test(entry.name))
+  .map((entry) => entry.name.slice(0, 3))
+
 function knownPaths(): Set<string> {
   const paths = new Set<string>()
   for (const index of Object.values(indexes)) {
@@ -20,7 +26,8 @@ function knownPaths(): Set<string> {
     for (const page of Object.values(index.facts.pages)) paths.add(page.url)
     for (const pdf of index.facts.cv?.pdfs ?? []) paths.add(pdf.href)
     paths.add(`/${index.lang}/ai-lab`)
-    for (const page of ['/ai-lab/ruta', '/ai-lab/codigo', '/ai-lab/evals', '/mcp']) paths.add(`/${index.lang}${page}`)
+    for (const page of ['/ai-lab/ruta', '/ai-lab/codigo', '/ai-lab/evals', '/mcp', '/ingenieria']) paths.add(`/${index.lang}${page}`)
+    for (const spec of SPEC_IDS) paths.add(`/${index.lang}/ingenieria/${spec}`)
   }
   return paths
 }

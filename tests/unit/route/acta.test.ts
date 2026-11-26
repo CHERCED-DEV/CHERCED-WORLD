@@ -40,19 +40,20 @@ describe('acta de la ruta (FR-4206)', () => {
     let progress = startRoute(EMPTY_PROGRESS, T0, ORDER)
     progress = setMark(progress, 'agente-en-vivo', 'checked', ORDER)
     progress = setMark(progress, 'encaje-y-pitch', 'failed', ORDER)
-    progress = setMark(progress, 'de-spec-a-commit', 'checked', ORDER)
+    progress = setMark(progress, 'tablero-en-numeros', 'checked', ORDER)
     const text = acta(progress)
     expect(headings(text, '##')).toEqual([
       '## Prueba 1. Agentes que funcionan: comprobada',
       '## Prueba 2. Problemas de negocio: no funcionó',
-      '## Prueba 3. Código de calidad: sin probar',
+      '## Prueba 3. Código de calidad: comprobada',
       '## Prueba 4. Entrega rápida con IA: comprobada',
     ])
+    expect(text).toContain('- El tablero en números (estación de la prueba 4): comprobada')
     expect(headings(text, '###')).toEqual([
       '### Agente en vivo: comprobada',
       '### Encaje y pitch: no funcionó',
       '### Código real: sin probar',
-      '### De spec a commit: comprobada',
+      '### El tablero en números: comprobada',
     ])
   })
 
@@ -67,7 +68,9 @@ describe('acta de la ruta (FR-4206)', () => {
   })
 
   it('la evidencia va enlazada con URL absoluta, también la de GitHub', () => {
-    const text = acta(startRoute(EMPTY_PROGRESS, T0, ORDER))
+    const text = acta(setMark(startRoute(EMPTY_PROGRESS, T0, ORDER), 'de-spec-a-commit', 'checked', ORDER))
+    expect(text).toContain('[Abrir la spec 030 en el tablero](https://ejemplo.test/es/ingenieria/030)')
+    expect(text).toContain('[El tablero de ingeniería completo](https://ejemplo.test/es/ingenieria)')
     expect(text).toContain('[Abrir a Mini Cherced](https://ejemplo.test/es/ai-lab#lab-v5)')
     expect(text).toContain('[Pegar tu vacante](https://ejemplo.test/es/ai-lab#lab-a6)')
     expect(text).toContain('[El pitch de Synergos (60 s)](https://ejemplo.test/es/portfolio/12#case-pitch-12)')

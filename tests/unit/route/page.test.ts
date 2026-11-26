@@ -20,12 +20,12 @@ describe('página de la ruta renderizada en el servidor (FR-4201, FR-4203)', () 
     expect(page).toContain('<h1')
     expect(page).toContain('Pruébame en 10 minutos')
     const order = [...page.matchAll(/data-cw-route-station="([a-z-]+)" data-cw-route-core=""/g)].map((match) => match[1])
-    expect(order).toEqual(['agente-en-vivo', 'encaje-y-pitch', 'codigo-real', 'de-spec-a-commit'])
+    expect(order).toEqual(['agente-en-vivo', 'encaje-y-pitch', 'codigo-real', 'tablero-en-numeros'])
     for (const [n, title] of [
       [1, 'Agente en vivo'],
       [2, 'Encaje y pitch'],
       [3, 'Código real'],
-      [4, 'De spec a commit'],
+      [4, 'El tablero en números'],
     ] as const) {
       expect(page).toContain(`Estación ${n} de 4`)
       expect(page).toContain(title)
