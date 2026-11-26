@@ -7,34 +7,34 @@ las otras `[P]` de la misma fase.
 
 ## Fase 0 — Enmiendas de la base (las hace el integrador)
 
-- [ ] T4401 Acciones `mcp`, `mcpMatch` y `mcpDaily` — archivos: `lib/security/rate-limit.ts` — cubre: E-4401, FR-4407
-- [ ] T4402 Namespace `mcp` en i18n — archivos: `lib/i18n/config.ts`, `lib/i18n/server.ts` — cubre: E-4402
-- [ ] T4403 Etiqueta `044-base` en la rama base después de T4401 y T4402
+- [x] T4401 Acciones `mcp`, `mcpMatch` y `mcpDaily` — archivos: `lib/security/rate-limit.ts` — cubre: E-4401, FR-4407
+- [x] T4402 Namespace `mcp` en i18n — archivos: `lib/i18n/config.ts`, `lib/i18n/server.ts` — cubre: E-4402
+- [x] T4403 Etiqueta `044-base` en la rama base después de T4401 y T4402
 
 ## Fase 1 — Preparación
 
-- [ ] T4404 Rama `lane/l2-mcp` y worktree `.worktrees/l2-mcp` desde `044-base`, con la junction de `node_modules`
+- [x] T4404 Rama `lane/l2-mcp` y worktree `.worktrees/l2-mcp` desde `044-base`, con la junction de `node_modules`
   creada antes de arrancar la sesión de la línea
-- [ ] T4405 Consultar en modelcontextprotocol.io la última revisión estable del protocolo y anotarla con su fecha —
+- [x] T4405 Consultar en modelcontextprotocol.io la última revisión estable del protocolo y anotarla con su fecha —
   archivos: `lib/mcp/core/protocol.ts` — cubre: FR-4403
 - [ ] T4406 [P] Diccionarios de la página — archivos: `content/i18n/es/mcp.json`, `content/i18n/en/mcp.json` — cubre:
   FR-4411
 
 ## Fase 2 — US1: el núcleo del protocolo (va primero: es el contrato de la 048 y la 049)
 
-- [ ] T4407 [P] [US1] Pruebas de contrato del protocolo que fallan: `initialize` con negociación de versión, `ping`,
+- [x] T4407 [P] [US1] Pruebas de contrato del protocolo que fallan: `initialize` con negociación de versión, `ping`,
   `tools/list` con JSON Schema y `readOnlyHint`, `tools/call` válida e inválida (`isError`), `-32700`, `-32600`,
   `-32601`, `-32602`, notificación con 202, lote rechazado, `GET` y `DELETE` con 405, cuerpo de más de 64 KB con 413 y
   `OPTIONS` con CORS — archivos: `tests/unit/mcp/protocol.test.ts` — cubre: FR-4401, FR-4402, FR-4403, FR-4408
-- [ ] T4408 [P] [US1] Prueba de la guarda de imports: `lib/mcp/servers/**` no importa `@/lib/data` y solo
+- [x] T4408 [P] [US1] Prueba de la guarda de imports: `lib/mcp/servers/**` no importa `@/lib/data` y solo
   `lib/mcp/core/limit.ts` lo hace — archivos: `tests/unit/mcp/privacy-imports.test.ts` — cubre: FR-4406
-- [ ] T4409 [US1] Tipos del contrato — archivos: `lib/mcp/core/types.ts` — cubre: FR-4410
-- [ ] T4410 [US1] Constantes del protocolo y formas de mensaje — archivos: `lib/mcp/core/protocol.ts` — cubre: FR-4402,
+- [x] T4409 [US1] Tipos del contrato — archivos: `lib/mcp/core/types.ts` — cubre: FR-4410
+- [x] T4410 [US1] Constantes del protocolo y formas de mensaje — archivos: `lib/mcp/core/protocol.ts` — cubre: FR-4402,
   FR-4403
-- [ ] T4411 [US1] Zod a JSON Schema con `z.toJSONSchema` — archivos: `lib/mcp/core/schema.ts` — cubre: FR-4404
-- [ ] T4412 [US1] Límite por IP y global, con 429, `Retry-After` y 503 si la base no responde — archivos:
+- [x] T4411 [US1] Zod a JSON Schema con `z.toJSONSchema` — archivos: `lib/mcp/core/schema.ts` — cubre: FR-4404
+- [x] T4412 [US1] Límite por IP y global, con 429, `Retry-After` y 503 si la base no responde — archivos:
   `lib/mcp/core/limit.ts`, `tests/unit/mcp/limit.test.ts` — cubre: FR-4407
-- [ ] T4413 [US1] `createMcpHandler` hasta que T4407 pase — archivos: `lib/mcp/core/handler.ts` — cubre: FR-4401,
+- [x] T4413 [US1] `createMcpHandler` hasta que T4407 pase — archivos: `lib/mcp/core/handler.ts` — cubre: FR-4401,
   FR-4402, FR-4408, FR-4410
 
 ## Fase 3 — US1: las herramientas del portafolio
