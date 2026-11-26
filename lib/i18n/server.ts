@@ -17,6 +17,9 @@ const loaders: Record<Locale, Record<Namespace, Loader>> = {
     home: () => import('@/content/i18n/es/home.json'),
     portfolio: () => import('@/content/i18n/es/portfolio.json'),
     ailab: () => import('@/content/i18n/es/ailab.json'),
+    route: () => import('@/content/i18n/es/route.json'),
+    mcp: () => import('@/content/i18n/es/mcp.json'),
+    engineering: () => import('@/content/i18n/es/engineering.json'),
   },
   en: {
     common: () => import('@/content/i18n/en/common.json'),
@@ -30,6 +33,9 @@ const loaders: Record<Locale, Record<Namespace, Loader>> = {
     home: () => import('@/content/i18n/en/home.json'),
     portfolio: () => import('@/content/i18n/en/portfolio.json'),
     ailab: () => import('@/content/i18n/en/ailab.json'),
+    route: () => import('@/content/i18n/en/route.json'),
+    mcp: () => import('@/content/i18n/en/mcp.json'),
+    engineering: () => import('@/content/i18n/en/engineering.json'),
   },
 }
 

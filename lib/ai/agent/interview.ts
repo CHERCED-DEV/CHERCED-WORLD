@@ -76,7 +76,7 @@ const ACTA_COPY = {
   },
 } as const
 
-function clock(ms: number): string {
+export function clock(ms: number): string {
   const seconds = Math.max(0, Math.round(ms / 1000))
   return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`
 }

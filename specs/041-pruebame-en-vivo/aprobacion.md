@@ -77,7 +77,7 @@ peores casos.
 - **Necesita de ti:**
   - dos personas para cronometrar la ruta (SC-4201);
   - permiso para grabar una traza real de respaldo, unos 0,10 USD (P-4206).
-- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+- **Decisión:** ☑ Aprobada el 26 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
 
 ### 044 — MCP público del portafolio · ola 1 · L2
 
@@ -91,7 +91,7 @@ peores casos.
 - **Riesgo principal:** el abuso de un endpoint público. Se mitiga con solo lectura, límites, cero datos personales y
   pruebas de que no filtra nada privado.
 - **Necesita de ti:** decidir la suposición 3.
-- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+- **Decisión:** ☑ Aprobada el 26 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
 
 ### 045 — Tablero de ingeniería vivo · ola 1 · L3
 
@@ -112,7 +112,7 @@ peores casos.
   corrida publicada (`runs: []`). La spec lo dice en pantalla y no inventa porcentajes.
 - **Necesita de ti:** decidir la suposición 4 y P-4502 (si el tablero reemplaza la estación núcleo «de spec a
   commit»).
-- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+- **Decisión:** ☑ Aprobada el 26 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
 
 ### 043 — Tres proveedores y arena · ola 2 · L4
 
@@ -275,4 +275,4 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 
 | Fecha | Spec | Decisión | Palabras del autor |
 |---|---|---|---|
-| — | — | Pendiente | — |
+| 26 de noviembre de 2026 | 042, 044 y 045 | Aprobadas. Sus preguntas abiertas van con su valor por defecto | «Apruebo 042, 044 y 045» |

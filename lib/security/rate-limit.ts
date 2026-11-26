@@ -42,6 +42,9 @@ export const RATE_LIMITS = {
   panelCover: { limit: 6, windowMs: 24 * 60 * MINUTE },
   panelCoverDaily: { limit: 12, windowMs: 24 * 60 * MINUTE },
   listenDaily: { limit: 600, windowMs: 24 * 60 * MINUTE },
+  mcp: { limit: 60, windowMs: 10 * MINUTE },
+  mcpMatch: { limit: 10, windowMs: 60 * MINUTE },
+  mcpDaily: { limit: 3000, windowMs: 24 * 60 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 
 export type RateLimitAction = keyof typeof RATE_LIMITS

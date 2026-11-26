@@ -138,3 +138,6 @@ content/mini-cherced/privado/
 
 # informes privados de las specs: material de terceros o corporativo (nunca al repo)
 specs/**/privado/
+
+# reportes del build para el tablero de ingeniería (045)
+.engineering/
