@@ -20,7 +20,8 @@ describe('Pixélate (022, P1)', () => {
     expect(pixelBody(PHOTO, false).generationConfig.imageConfig).toEqual({ aspectRatio: '1:1' })
     expect(pixelBody(PHOTO, true, true).contents[0]!.parts[1]).toEqual({ text: `${PIXEL_STYLE} ${AUTHOR_LOOK}` })
     expect(AUTHOR_LOOK).toMatch(/light brown/)
-    expect(AUTHOR_LOOK).toMatch(/35% gray/)
+    expect(AUTHOR_LOOK).toMatch(/not blond and not black/)
+    expect(AUTHOR_LOOK).toMatch(/40%/)
     expect(existsSync(join(process.cwd(), 'public', PIXEL_SAMPLE_SRC))).toBe(true)
   })
 

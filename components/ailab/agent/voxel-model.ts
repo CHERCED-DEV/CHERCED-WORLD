@@ -36,9 +36,9 @@ export const VOXEL_DEPTH: Record<VoxelPart, { depth: number; z: number }> = {
 }
 
 export const VOXEL_COLORS: Record<string, number> = {
-  h: 0xa57d55,
-  F: 0xcdc8c0,
-  f: 0x8f806f,
+  h: 0x86684c,
+  F: 0xdcd9d3,
+  f: 0xa9a49c,
   s: 0xd4d4d4,
   S: 0xa3a3a3,
   d: 0x808080,
@@ -46,8 +46,8 @@ export const VOXEL_COLORS: Record<string, number> = {
   g: 0x25ed9e,
   l: 0x0e8c5e,
   G: 0xffffff,
-  b: 0x8d7259,
-  B: 0xcdc8c0,
+  b: 0x7e6c5c,
+  B: 0xdcd9d3,
   m: 0x2a2a2a,
   w: 0xf4f4f4,
   t: 0x0d0d0d,

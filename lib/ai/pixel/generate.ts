@@ -15,7 +15,7 @@ export const PIXEL_STYLE = [
 ].join(' ')
 
 export const AUTHOR_LOOK =
-  'This sample photo is black and white. The real colors of this person: fair white skin, light brown (dirty blond) hair and beard with about 35% gray hairs, salt and pepper. Do not draw black hair.'
+  'This sample photo is black and white. The real colors of this person: fair white skin; medium light brown hair and beard with a slight golden tint, not blond and not black, with plenty of gray hairs (about 40%), salt and pepper, grayer on the sides and the chin.'
 
 export class PixelRefused extends Error {}
 
