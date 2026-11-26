@@ -102,8 +102,17 @@
   overflow-wrap: anywhere;
 }
 
+.steps {
+  list-style: decimal;
+}
+
 .steps li::marker {
   font-weight: 700;
+}
+
+.evidence,
+.links {
+  list-style: disc;
 }
 
 .tip {

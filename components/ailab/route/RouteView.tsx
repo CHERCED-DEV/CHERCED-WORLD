@@ -60,6 +60,10 @@ function focusStation(id: string) {
   document.getElementById(`${stationAnchor(id)}-title`)?.focus({ preventScroll: true })
 }
 
+function focusLater(selector: string) {
+  window.requestAnimationFrame(() => document.querySelector<HTMLElement>(selector)?.focus())
+}
+
 type Props = {
   lang: Locale
   labels: RouteControlLabels
@@ -112,11 +116,13 @@ export function RouteView({ lang, labels, stations, order, actions, children }: 
 
   const finish = useCallback(() => {
     updateRouteProgress((current) => finishRoute(current, Date.now()))
+    focusLater('[data-cw-route-acta]')
   }, [])
 
   const reset = useCallback(() => {
     updateRouteProgress(() => EMPTY_PROGRESS)
     announce(labels.announceReset)
+    focusLater('[data-cw-route-start]')
   }, [announce, labels.announceReset])
 
   const mark = useCallback(

@@ -118,10 +118,10 @@
 }
 
 .moreSummary {
-  display: flex;
-  align-items: center;
   min-height: 44px;
+  padding-block: 10px;
   font-weight: 700;
+  line-height: 24px;
   cursor: pointer;
 
   &:focus-visible {

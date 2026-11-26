@@ -71,7 +71,7 @@ export function StationCard({ station, total, labels, mark, extra, fallback }: P
         <p className={styles.goal}>{station.goal}</p>
 
         <h4 className={styles.label}>{labels.steps}</h4>
-        <ol className={styles.steps}>
+        <ol className={styles.steps} data-cw-route-steps="">
           {station.steps.map((step) => (
             <li key={step}>{step}</li>
           ))}

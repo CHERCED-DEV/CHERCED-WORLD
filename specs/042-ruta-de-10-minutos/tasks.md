@@ -88,15 +88,18 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Fase 7 — Pulido
 
-- [ ] T4228 [P] Textos finales en ES y EN según `content/style-rules.ts` — archivos: `content/i18n/{es,en}/route.json`,
+- [x] T4228 [P] Textos finales en ES y EN según `content/style-rules.ts` — archivos: `content/i18n/{es,en}/route.json`,
   `content/ailab/route/core.ts` — cubre: FR-4201
-- [ ] T4229 e2e de punta a punta: empezar, abrir una estación, volver, marcar las cuatro, descargar el acta, axe sin
+- [x] T4229 e2e de punta a punta: empezar, abrir una estación, volver, marcar las cuatro, descargar el acta, axe sin
   violaciones críticas, y cero llamadas a `/api/ailab/*` y `/api/agent/*` sin abrir estaciones — archivos:
   `tests/e2e/route/route.spec.ts` — cubre: FR-4213, FR-4214, SC-4205
 - [ ] T4230 Capturas de 390×844 y WebKit de la ruta, de la ventana «Para reclutadores» y del inicio del AI Lab, contra
-  la última vista aprobada; se describe cada cambio visual — cubre: SC-4204
-- [ ] T4231 Cronometrar la ruta con el autor (las dos personas más las consigue él) — cubre: SC-4201, SC-4202
-- [ ] T4232 Sección «Cómo quedó» en la spec — archivos: `specs/042-ruta-de-10-minutos/spec.md`
+  la última vista aprobada; se describe cada cambio visual — cubre: SC-4204 — la línea hizo las de la ruta (Chromium
+  en 390×844 y escritorio, y WebKit en 390×844); las de la ventana y del AI Lab son del integrador al aplicar E-4202 y
+  E-4203
+- [ ] T4231 Cronometrar la ruta con el autor (las dos personas más las consigue él) — cubre: SC-4201, SC-4202 — espera
+  al autor
+- [x] T4232 Sección «Cómo quedó» en la spec — archivos: `specs/042-ruta-de-10-minutos/spec.md`
 
 ## Dependencias y orden
 
@@ -109,6 +112,7 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Validación final
 
-- [ ] T4233 `npx vitest run tests/unit/route`, `npm run lint`, `npm run typecheck` y
+- [x] T4233 `npx vitest run tests/unit/route`, `npm run lint`, `npm run typecheck` y
   `npx playwright test tests/e2e/route/route.spec.ts` en verde; sin la suite exhaustiva y sin gastar API
-- [ ] T4234 Búsqueda de nombres internos en el diff antes del push (SC-4104 de la 041)
+- [ ] T4234 Búsqueda de nombres internos en el diff antes del push (SC-4104 de la 041) — limpia en el diff de la línea
+  contra `041-base-ola1`; el integrador la repite sobre el diff integrado antes del push
