@@ -48,7 +48,7 @@ export function parseVitestReport(value: unknown): VitestSummary | null {
 
 export function readVitestReport(root: string, file: string = VITEST_REPORT_PATH): VitestSummary | null {
   try {
-    return parseVitestReport(JSON.parse(readFileSync(path.join(root, file), 'utf8')))
+    return parseVitestReport(JSON.parse(readFileSync(path.join(/* turbopackIgnore: true */ root, file), 'utf8')))
   } catch {
     return null
   }

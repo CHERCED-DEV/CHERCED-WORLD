@@ -63,18 +63,18 @@ function gitLsFiles(root: string, roots: readonly string[]): string[] | null {
 }
 
 function walk(root: string, dir: string): string[] {
-  const full = path.join(root, dir)
-  if (!existsSync(full)) return []
-  return readdirSync(full).flatMap((name) => {
+  const full = path.join(/* turbopackIgnore: true */ root, dir)
+  if (!existsSync(/* turbopackIgnore: true */ full)) return []
+  return readdirSync(/* turbopackIgnore: true */ full).flatMap((name) => {
     const relative = `${dir}/${name}`
     if (!isReadablePath(relative)) return []
-    return statSync(path.join(full, name)).isDirectory() ? walk(root, relative) : [relative]
+    return statSync(path.join(/* turbopackIgnore: true */ full, name)).isDirectory() ? walk(root, relative) : [relative]
   })
 }
 
 export function listTracked(root: string, roots: readonly string[] = TRACKED_ROOTS, deps: TrackedDeps = {}): TrackedFiles {
   const fromGit = (deps.gitLsFiles ?? gitLsFiles)(root, roots)
-  const exists = deps.exists ?? ((file: string) => existsSync(path.join(root, file)))
+  const exists = deps.exists ?? ((file: string) => existsSync(path.join(/* turbopackIgnore: true */ root, file)))
   const candidates = fromGit ?? roots.flatMap((dir) => (deps.walk ?? walk)(root, dir))
   const files = candidates
     .map(toPosix)
@@ -93,8 +93,8 @@ export function trackedReader(root: string, tracked: TrackedFiles): (file: strin
     if (cache.has(posix)) return cache.get(posix) ?? null
     let text: string | null = null
     try {
-      const full = path.join(root, posix)
-      text = statSync(full).size <= MAX_TEXT_BYTES ? readFileSync(full, 'utf8') : null
+      const full = path.join(/* turbopackIgnore: true */ root, posix)
+      text = statSync(/* turbopackIgnore: true */ full).size <= MAX_TEXT_BYTES ? readFileSync(/* turbopackIgnore: true */ full, 'utf8') : null
     } catch {
       text = null
     }

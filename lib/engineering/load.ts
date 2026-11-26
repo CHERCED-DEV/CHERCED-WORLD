@@ -10,7 +10,7 @@ let built: Dashboard | null = null
 
 export function loadDashboard(): Dashboard {
   if (built) return built
-  const root = process.cwd()
+  const root = /* turbopackIgnore: true */ process.cwd()
   const tracked = listTracked(root)
   built = buildDashboard({
     history: parseHistory(history),
