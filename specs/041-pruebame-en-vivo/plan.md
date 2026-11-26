@@ -1,11 +1,11 @@
-# 041 — Plan de la línea: cómo se orquestan las nueve specs
+# 041 — Plan de la línea: cómo se orquestan las diez specs
 
 **Rama del upstream:** `claude/cherced-world-upstream-spec-acd0fd`, que se entrega a `dev` · **Fecha:** 26 de noviembre
 de 2026 · **Spec:** [spec.md](./spec.md)
 
 ## Resumen
 
-Nueve specs hijas (042 a 050), cada una con su propio `spec.md`, `plan.md` y `tasks.md`. Cada una es una línea de trabajo
+Diez specs hijas (042 a 051), cada una con su propio `spec.md`, `plan.md` y `tasks.md`. Cada una es una línea de trabajo
 que corre como subagente en su propio worktree y le reporta a la sesión principal, que orquesta e integra (entrevista,
 pregunta 9). El autor aprueba spec por spec (pregunta 10). Una línea arranca solo con su spec aprobada y sus
 dependencias integradas.
@@ -67,7 +67,7 @@ Hay una enmienda MINOR propuesta, que no es requisito para arrancar la ola 1:
    - no hace push;
    - al terminar, reporta a este chat: qué hizo, pruebas corridas con su resultado, lo que quedó pendiente y lo que
      necesita del autor.
-4. **Puertos e2e propios:** L1 3141, L2 3142, L3 3143, L4 3144, L5 3145, L6 3146, L7 3147, L8 3148 y L9 3149. Nunca dos
+4. **Puertos e2e propios:** L1 3141, L2 3142, L3 3143, L4 3144, L5 3145, L6 3146, L7 3147, L8 3148, L9 3149 y L10 3150. Nunca dos
    corridas de Playwright en el mismo checkout. Cada línea apaga su servidor al verificar.
 5. **Paralelismo:** máximo tres líneas a la vez (P-4103). Si una se corta por el límite semanal, se retoma desde su
    último commit con el mismo brief.
@@ -102,6 +102,7 @@ Hay una enmienda MINOR propuesta, que no es requisito para arrancar la ola 1:
 | L7 | 048 | `lib/ai/kb/**`, `lib/mcp/servers/empresa/**`, `app/api/mcp/empresa/route.ts`, `app/api/ailab/kb/**`, `components/ailab/kb/**`, `content/ailab/kb/**`, `content/i18n/{es,en}/kb.json`, `tests/unit/kb/**`, `tests/e2e/kb.spec.ts`, `evals/kb.eval.ts` |
 | L8 | 049 | `lib/ai/professions/**`, `lib/mcp/servers/{despacho,obra}/**`, `app/api/mcp/{despacho,obra}/route.ts`, `app/api/ailab/professions/**`, `components/ailab/professions/**`, `content/ailab/professions/**`, `content/i18n/{es,en}/professions.json`, `tests/unit/professions/**`, `tests/e2e/professions.spec.ts`, `evals/professions.eval.ts` |
 | L9 | 050 | `lib/ai/pyme/**`, `app/api/ailab/pyme/**`, `components/ailab/pyme/**`, `content/ailab/pyme/**`, `content/i18n/{es,en}/pyme.json`, `tests/unit/pyme/**`, `tests/e2e/pyme.spec.ts`, `evals/pyme.eval.ts` |
+| L10 | 051 | Fase A: el repo externo nuevo `CHERCED-DEV/forja` (en local, `C:\Users\HITMA\Desktop\forja`). Fase B: `app/api/mcp/kit/route.ts`, `lib/mcp/servers/kit/**`, `app/[lang]/kit/**`, `components/kit/**`, `content/kit/**`, `content/i18n/{es,en}/kit.json`, `tests/unit/kit/**`, `tests/e2e/kit/**` |
 
 **Archivos compartidos.** Son de la base de cada ola y solo la sesión principal los toca, como enmienda registrada:
 - `content/ailab/catalog.ts` y `content/i18n/{es,en}/ailab.json`;
@@ -118,9 +119,9 @@ Hay una enmienda MINOR propuesta, que no es requisito para arrancar la ola 1:
 | Contrato | Lo produce | Lo consumen | Se congela en |
 |---|---|---|---|
 | `RouteStation` y su registro (`content/ailab/route/`) | 042 | Todas | `041-base-ola1` el tipo; cada línea entrega su archivo de estación |
-| `createMcpHandler` y `McpTool` (`lib/mcp/core/`) | 044 | 048, 049 | Al integrar la 044 (antes de la ola 3). Cada servidor pasa sus `limits`: la acción por visitante es propia (`mcpEmpresa`, `mcpDespacho`, `mcpObra`) y el tope diario se comparte (`mcpDaily`) |
+| `createMcpHandler` y `McpTool` (`lib/mcp/core/`) | 044 | 048, 049, 051 | Al integrar la 044 (antes de la ola 3). Cada servidor pasa sus `limits`: la acción por visitante es propia (`mcpEmpresa`, `mcpDespacho`, `mcpObra`, `mcpKit`) y el tope diario se comparte (`mcpDaily`) |
 | Puerto de modelos y `assertMonthlyBudget` (`lib/ai/providers/`, `lib/ai/budget/`) | 043 | 046, 048, 049, 050 | Al integrar la 043 (antes de la 046 y de la ola 3) |
-| Núcleo determinista de Cotejo (paquete) | 047 | 046 | Al publicar la primera versión del paquete |
+| Núcleo determinista de Cotejo (paquete) | 047 | 046, 051 | Al publicar la primera versión del paquete |
 | `monthlySpend(now)`, el gasto del mes por proveedor sin datos personales (`lib/ai/budget/`) | 043 | 045 | Al integrar la 043. Hasta entonces, la 045 muestra el gasto de `lib/ai/spend.ts` |
 
 Las firmas finales están en el `plan.md` de cada spec que produce el contrato.
@@ -176,6 +177,13 @@ aprobadas.
 
   Al integrar cada una: su archivo de demo en `components/ailab/shell/demos/` y su import en el índice del registro de
   demos, su estación en el registro de la ruta y, la 048, la mención de su MCP en el `README.md`.
+- **Fase B de la 051, al cerrar P-4105:** E-5101 a E-5108 de su plan:
+  - el namespace `kit` y las acciones `mcpKit` y `mcpKitCheck`;
+  - `forja-core` por tarball;
+  - la tarjeta A13 y `/kit` en el sitemap;
+  - la fila del README, la estación y la entrada de evals en el tablero.
+
+  Su fase A no toca archivos compartidos.
 
 ## Llaves nuevas (043)
 
@@ -191,7 +199,7 @@ Nunca se leen sus valores.
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| Alcance de nueve specs | Alto | Aprobación spec por spec, olas por dependencia, tareas cortas y una entrega por línea |
+| Alcance de diez specs | Alto | Aprobación spec por spec, olas por dependencia, tareas cortas y una entrega por línea |
 | El límite semanal corta una línea a la mitad | Alto | Máximo tres líneas a la vez, commit por fase y briefs que se pueden retomar |
 | Dos líneas tocan el mismo archivo | Alto | Rutas exclusivas, archivos compartidos solo en la base y revisión del diff al integrar |
 | `npm ci` a través del junction vacía el `node_modules` principal | Alto | Junction antes de lanzar la línea y la regla en la primera línea del brief |

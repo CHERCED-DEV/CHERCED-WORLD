@@ -1,0 +1,389 @@
+# 051 — Forja: de la spec de una prueba técnica a una solución probada
+
+Pedido del autor, 26 de noviembre de 2026 (línea [041](../041-pruebame-en-vivo/spec.md), ola 2, línea L10). Para el
+entrevistador que entrega una prueba técnica y quiere ver, no oír, cómo trabaja Camilo con agentes, y para equipos que
+quieren un arnés que lleve un encargo acotado de la spec al código con pruebas. Depende de la 044 (núcleo MCP, ya
+integrado) y del núcleo determinista de la 047 (Cotejo). El MCP de la 044 se queda como está: Forja lo usa.
+
+Estado: borrador para aprobación del autor. Nada se implementa sin su visto bueno
+([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)).
+
+## Qué hace
+
+Forja es un arnés de agentes que recibe la spec de una prueba técnica y entrega una solución que compila, pasa sus
+pruebas y trae un informe de entrega. En una entrevista se usa así:
+
+1. El entrevistador comparte la prueba: un texto, un Markdown o un PDF.
+2. Camilo la corre compartiendo pantalla, o el entrevistador instala Forja en su propio Claude Code con dos comandos.
+   El plugin trae su comando, sus skills, sus subagentes, sus hooks y la conexión a los MCP del sitio.
+3. Se corre `/forja reto.md --stack angular --minutos 45`.
+4. Forja trabaja por fases:
+   1. lee la prueba y la normaliza en requisitos con id, criterio verificable y prioridad, con sus supuestos;
+   2. decide la arquitectura con sus razones y divide el trabajo en tareas;
+   3. construye con pruebas primero;
+   4. verifica: build, lint, pruebas y una matriz requisito → prueba;
+   5. le pide a un revisor que no escribió el código que intente tumbar la entrega;
+   6. deja `ENTREGA.md`.
+5. El entrevistador lee la entrega, corre las pruebas él mismo y pregunta por cualquier decisión: cada una está escrita
+   con lo que sacrifica.
+
+Conoce cuatro stacks por medio de packs: Angular, .NET (C#), Next.js con React y NestJS. Las fases son las mismas para
+los cuatro.
+
+Tiene cuatro partes:
+- **El plugin**, en un repo propio (`CHERCED-DEV/forja`): comando, skills, subagentes, hooks, packs, encargos de
+  muestra con su suite de aceptación oculta y el corredor de evals.
+- **El MCP del kit**, en `/api/mcp/kit` del sitio, sobre el núcleo de la 044: packs vigentes y validadores
+  deterministas, sin modelo. Para las decisiones de Camilo usa el MCP del portafolio que ya existe (`get_decisions`).
+- **La página** `/{lang}/kit`: qué es, la regla de transparencia, cómo instalarlo, una corrida grabada de punta a punta
+  y los resultados de las evals.
+- **Otros clientes** (Cursor, ChatGPT en modo desarrollador u otro cliente MCP): conectan el MCP del kit y usan el
+  prompt `solve_technical_test`. Corren el mismo flujo con menos automatización, porque no tienen subagentes ni hooks.
+
+## Qué prueba en la entrevista
+
+- **Prueba 4, entrega rápida con IA:** la prueba técnica del propio entrevistador, resuelta en vivo dentro de su
+  tiempo y con evidencia.
+- **Prueba 1, agentes que funcionan:** un arnés con fases, roles separados, hooks y MCP propios, que corre en la
+  máquina de otro.
+- **Prueba 3, código de calidad:** la solución trae pruebas que nombran cada requisito, con lint y build en verde. El
+  repo de Forja tiene sus propias pruebas y evals con verdad oculta.
+- **Públicos:**
+  - el AI Engineer: arneses, skills y automatización con agentes, que es el rol que Camilo busca;
+  - el senior full-stack: cuatro stacks con convenciones de verdad;
+  - el consultor: un arnés que un equipo puede usar mañana para katas, pruebas internas o features pequeñas.
+
+## Caso de negocio o valor
+
+- **Problema:** una prueba técnica mide un rato de código a mano. No muestra lo que hoy vale: diseñar el trabajo para
+  que los agentes lo hagan bien, con control y con evidencia.
+- **Para quién:**
+  - el entrevistador, que en una sesión ve el arnés y su resultado sobre su propia prueba;
+  - el equipo que contrata, que puede reutilizar Forja con sus pruebas;
+  - el cliente de consultoría, que ve cómo se lleva una spec a código verificable.
+- **Qué evita:** la discusión abstracta sobre «uso IA para programar». Aquí la IA trabaja a la vista, con reglas, y
+  cada decisión queda escrita.
+- **Cómo se mide:** SC-5101 a SC-5107. Encargos de muestra resueltos contra una suite que Forja no ve, cobertura de
+  requisitos, minutos, instalación cronometrada y cero datos de la prueba en el servidor del autor.
+
+## Decisiones del autor (26 de noviembre de 2026)
+
+| Pregunta | Respuesta |
+|---|---|
+| ¿Quién corre el kit en la entrevista? | Ambos. Camilo comparte pantalla y el entrevistador puede instalarlo en su máquina para repetirlo y auditar cada paso |
+| ¿En qué clientes funciona desde la primera versión? | Plugin de Claude Code con skills, subagentes y hooks. El mismo flujo, con menos automatización, como prompts y herramientas MCP para otros clientes |
+| ¿Qué stacks en la primera versión? | Angular, .NET (C#), Next.js con React y NestJS |
+| ¿Y el proyecto de referencia? | Diseño propio desde ya, sin copiar nada. Consultar con el arquitecto (P-4105) es requisito antes de publicar Forja |
+
+## Historias de usuario
+
+### US1 — Resolver una prueba técnica de una (P1)
+
+Camilo recibe una prueba: «API de reservas para una sala de reuniones, con .NET, en 60 minutos». Corre
+`/forja reto.md --stack dotnet --minutos 60`. Forja normaliza la prueba, anota los supuestos, planifica, construye con
+pruebas primero, verifica, pasa por el revisor y entrega.
+
+**Por qué esta prioridad:** es la promesa.
+
+**Prueba independiente:** con solo esta historia y un pack, un encargo de muestra queda resuelto y verificado sin
+intervención.
+
+**Escenarios:**
+
+1. **Dado** una prueba con requisitos sueltos en prosa, **cuando** Forja la lee, **entonces** escribe `forja/spec.md`
+   con cada requisito numerado (`R-01`, `R-02`…), su criterio verificable, su prioridad y la cita breve de la prueba de
+   donde sale. Aparte, lista los supuestos y las ambigüedades.
+2. **Dado** una ambigüedad que bloquea, como el formato de una respuesta que la prueba no dice, **cuando** el modo es
+   «de una», **entonces** toma la opción más simple que cumple la letra de la prueba, la anota como supuesto con su
+   alternativa y sigue.
+3. **Dado** el plan, **cuando** termina, **entonces** `forja/plan.md` trae:
+   - la arquitectura elegida, con sus decisiones (qué se eligió, por qué y qué se sacrifica);
+   - la estructura de carpetas del pack;
+   - las tareas, cada una con los requisitos que cubre y los archivos que toca.
+4. **Dado** una tarea, **cuando** el constructor la hace, **entonces** primero escribe la prueba que nombra el
+   requisito, la ve fallar, y después escribe el código mínimo hasta verla pasar.
+5. **Dado** que se acerca el límite de minutos y quedan tareas, **cuando** el orquestador lo detecta, **entonces**
+   termina la tarea en curso, corta por prioridad y lo deja escrito en la entrega. Nunca entrega algo que no compila.
+6. **Dado** el final de la construcción, **cuando** verifica, **entonces** corre build, lint y pruebas con los comandos
+   del pack y arma la matriz requisito → prueba. Si algo falla, lo arregla o lo declara.
+
+### US2 — El entrevistador lo instala y lo repite en su máquina (P1)
+
+El entrevistador abre `/{lang}/kit`, pega dos comandos en su Claude Code y corre Forja sobre su propia prueba o sobre
+un encargo de muestra.
+
+**Por qué esta prioridad:** es lo que vuelve creíble la prueba, porque no depende de la máquina de Camilo.
+
+**Prueba independiente:** una persona que no conoce Forja la instala y la arranca siguiendo solo la página (SC-5104).
+
+**Escenarios:**
+
+1. **Dado** Claude Code, **cuando** agrega el marketplace del repo de Forja e instala el plugin, **entonces** quedan
+   disponibles el comando, las skills, los subagentes, los hooks y la conexión a los MCP, sin editar archivos a mano.
+2. **Dado** que los MCP del sitio no responden, **cuando** corre Forja, **entonces** sigue con los packs que trae el
+   plugin y lo anota en la entrega.
+3. **Dado** que a la máquina le falta el SDK del stack (por ejemplo, .NET), **cuando** Forja revisa las herramientas al
+   empezar, **entonces** lo dice con el comando oficial de instalación y no instala nada por su cuenta.
+
+### US3 — Una entrega que el entrevistador puede auditar (P1)
+
+**Prueba independiente:** con una corrida terminada, una persona encuentra en `ENTREGA.md`, sin abrir el código, qué se
+pidió, qué se cubrió y cómo comprobarlo.
+
+**Escenarios:**
+
+1. **Dado** una corrida terminada, **cuando** el entrevistador abre `ENTREGA.md`, **entonces** ve:
+   - qué se pidió y qué se entregó;
+   - la matriz requisito → prueba → estado;
+   - las decisiones, con lo que sacrifican;
+   - los supuestos;
+   - cómo correrlo y cómo correr sus pruebas;
+   - los minutos por fase;
+   - lo que falta;
+   - con qué cliente y qué modelo se hizo.
+2. **Dado** la bitácora (`forja/bitacora.jsonl`), **cuando** la revisa, **entonces** cada fase, cada subagente y cada
+   comando quedan con su hora. No guarda el contenido de los archivos ni secretos.
+3. **Dado** un requisito sin prueba, **cuando** se arma la matriz, **entonces** sale como «sin cubrir», con su motivo.
+   La matriz nunca lo esconde.
+
+### US4 — Otros clientes de IA (P2)
+
+Un entrevistador con Cursor o con ChatGPT en modo desarrollador conecta el MCP del kit y pide el prompt
+`solve_technical_test`.
+
+**Prueba independiente:** con un cliente MCP que no es Claude Code, el prompt lleva a una entrega con matriz.
+
+**Escenarios:**
+
+1. **Dado** un cliente MCP que no es Claude Code, **cuando** usa el prompt con la prueba, el stack y los minutos,
+   **entonces** su agente sigue las mismas fases, usa las herramientas del kit para el pack, los chequeos y la matriz, y
+   entrega `ENTREGA.md` con el mismo formato.
+2. **Dado** la página, **cuando** el entrevistador busca su cliente, **entonces** ve qué clientes se probaron y en qué
+   fecha, y que sin subagentes ni hooks la verificación y la bitácora dependen de ese cliente.
+
+### US5 — Evals con verdad oculta (P2)
+
+Forja se mide con encargos de muestra inventados: uno por stack y uno que cruza front y back. Cada uno trae una suite de
+aceptación que Forja no ve durante la corrida.
+
+**Prueba independiente:** el corredor de evals, con un agente de prueba que entrega una solución fija, aplica la suite
+oculta y anota el resultado sin llamar a ningún modelo.
+
+**Escenarios:**
+
+1. **Dado** un encargo de muestra, **cuando** el corredor copia solo su enunciado a una carpeta limpia fuera del repo y
+   corre Forja, **entonces** al final aplica la suite oculta y anota cuántas pruebas pasan, los minutos, las
+   intervenciones humanas y los requisitos cubiertos.
+2. **Dado** una corrida terminada, **cuando** se publica, **entonces** va al tablero de la 045 (`publishedEvals`) con su
+   fecha, su cliente y su modelo.
+
+### US6 — La página con la corrida grabada (P2)
+
+`/{lang}/kit` muestra en dos minutos una corrida real grabada: la prueba, la spec normalizada, el plan, la bitácora
+resumida, la matriz y el enlace al resultado. Se lee sin JavaScript.
+
+**Prueba independiente:** la página se construye solo con la corrida grabada y los resultados versionados, sin
+llamar a nada en vivo.
+
+## Casos límite
+
+- **La prueba prohíbe IA:** Forja no se usa en esa prueba. Se muestra aparte, con un encargo de muestra. La página lo
+  dice: se usa a la vista y con permiso (FR-5101).
+- **Prueba enorme o vaga:** Forja propone un recorte por prioridad que cabe en los minutos y lo anota como supuesto. En
+  el modo «con pausas», se lo pregunta al entrevistador.
+- **Stack sin pack (Vue, Spring o Go, por ejemplo):** corre las fases sin pack y lo dice en la entrega. Sin las
+  convenciones ni los comandos de verificación del pack, la calidad baja.
+- **La prueba trae su propio repo base:** Forja trabaja sobre él y respeta sus convenciones. El pack solo llena lo que
+  falta.
+- **Datos sensibles en la prueba,** como el nombre de la empresa o URLs internas: nunca salen de la máquina. El MCP del
+  kit no los recibe, salvo que alguien llame `check_spec` con el texto desde otro cliente (FR-5106).
+- **Sin internet:** el plugin trae sus packs. Solo falla lo que el stack necesite bajar, como sus paquetes.
+- **Un comando destructivo,** como borrar fuera de la carpeta, `git push` o `rm -rf`: un hook lo bloquea y lo anota.
+- **Menos de 15 minutos:** avisa al empezar y propone el mínimo del stack.
+- **El modelo del cliente se queda sin cupo a mitad de corrida:** la entrega se escribe con lo que hay, marca la fase
+  en la que se cortó y dice cómo retomar.
+
+## Requisitos
+
+- **FR-5101** Transparencia. Forja se usa a la vista y con permiso del entrevistador. La entrega dice que la hizo
+  Forja, con qué cliente y modelo, y qué decidió una persona. La página y el README lo dicen antes de las
+  instrucciones.
+- **FR-5102** Fases fijas: leer, planificar, construir, verificar, revisar y entregar. Cada fase deja su archivo en
+  `forja/`, dentro del proyecto de la solución. El orquestador no salta fases.
+- **FR-5103** Requisitos normalizados con id (`R-NN`), criterio verificable, prioridad y cita de origen. Antes de
+  planificar, corren sobre la spec normalizada los chequeos deterministas del núcleo de Cotejo (047): ambigüedad,
+  contradicciones, duplicados y criterios que no se pueden verificar. Mientras Cotejo no esté publicado, corre una
+  versión mínima propia detrás de la misma interfaz: ids, un criterio por requisito y palabras vagas.
+- **FR-5104** Roles separados en subagentes:
+  - **arquitecto:** escribe el plan;
+  - **constructor:** uno por grupo de tareas que no comparten archivos, hasta tres en paralelo;
+  - **verificador:** corre build, lint y pruebas, y arma la matriz;
+  - **revisor:** lee la spec y el código con contexto nuevo e intenta tumbar la entrega.
+
+  Quien construye no aprueba lo que construyó. Lo que el revisor encuentra se arregla o queda escrito en la entrega.
+- **FR-5105** Modos:
+  - **«de una»,** por defecto: anota los supuestos y sigue;
+  - **«con pausas»** (`--con-pausas`): se detiene después de la spec y después del plan para que una persona apruebe.
+
+  Si se recorta el alcance por los minutos, la decisión siempre queda escrita.
+- **FR-5106** Local primero. El texto de la prueba y el código nunca se envían al servidor del autor:
+  - en el plugin, los chequeos, la matriz y la plantilla corren en local con `forja-core`;
+  - el MCP del kit solo recibe lo que una herramienta pide de forma explícita, como el stack o una lista de ids y
+    nombres de pruebas;
+  - el MCP no guarda argumentos ni cuerpos;
+  - `check_spec` existe para otros clientes y solo corre si alguien lo llama.
+- **FR-5107** Packs por stack (Angular, .NET, Next.js y NestJS). Cada uno trae:
+  - la versión fijada, con su fecha;
+  - el comando oficial para crear el proyecto;
+  - la estructura de carpetas y la arquitectura por defecto, con sus decisiones;
+  - el corredor de pruebas, el lint y el formato;
+  - los comandos de verificación;
+  - la convención para nombrar los requisitos en las pruebas;
+  - los errores típicos del stack.
+
+  El plugin trae los packs, y el MCP sirve la versión vigente.
+- **FR-5108** El tiempo es un parámetro (`--minutos`, 30 por defecto, mínimo 15). El orquestador reparte el presupuesto
+  por fase, mide el tiempo real y corta por prioridad. Nunca entrega algo que no compila.
+- **FR-5109** Entrega: `ENTREGA.md` en el idioma de la prueba (español o inglés), con las secciones de US3, más
+  `forja/bitacora.jsonl`, que escriben los hooks.
+- **FR-5110** Guardas por hooks:
+  - solo se escribe dentro de la carpeta de la solución;
+  - se bloquean `git push`, los borrados fuera de la carpeta y la lectura de `.env*` y de llaves;
+  - los paquetes se instalan solo con el gestor del stack y desde su registro oficial.
+
+  Toda acción bloqueada queda en la bitácora.
+- **FR-5111** MCP del kit en `/api/mcp/kit`, sobre `createMcpHandler` de la 044, de solo lectura y sin modelo:
+  - `list_stack_packs()` y `get_stack_pack(stack)`;
+  - `check_spec(text, lang?)`: los chequeos de FR-5103, sin guardar el texto;
+  - `coverage_matrix(requirements, tests)`: cruza ids con nombres de pruebas de forma determinista;
+  - `get_delivery_template(lang)`;
+  - los prompts `solve_technical_test(spec, stack, minutes)` y `review_delivery(spec, delivery)`.
+
+  Para las decisiones de arquitectura de Camilo, el plugin y el prompt usan `get_decisions` del MCP del portafolio
+  (044), con su fuente.
+- **FR-5112** Límites: una acción por visitante propia (`mcpKit`), el tope diario compartido (`mcpDaily`) y una acción
+  aparte para `check_spec` (`mcpKitCheck`). Las respuestas de transporte son las mismas de la 044.
+- **FR-5113** Página `/{lang}/kit` en español y en inglés:
+  - qué es Forja y la regla de transparencia;
+  - la instalación en Claude Code;
+  - la conexión desde otros clientes: solo los probados, con su fecha;
+  - la corrida grabada y los resultados de las evals;
+  - el enlace al repo.
+
+  Se lee sin JavaScript.
+- **FR-5114** Repo `CHERCED-DEV/forja` con licencia MIT, como monorepo con npm workspaces, igual que Cotejo. Contiene:
+  - el plugin y su marketplace;
+  - el paquete determinista `forja-core`: normalizar ids, matriz de cobertura, plantilla de entrega y validación de la
+    bitácora;
+  - los packs;
+  - los encargos de muestra con su suite oculta, y el corredor de evals.
+
+  El sitio consume `forja-core` por tarball del release, con versión exacta.
+- **FR-5115** Publicación en dos tiempos:
+  - **Antes de cerrar P-4105:** el repo es privado y Forja corre solo en la máquina de Camilo, con pantalla
+    compartida. El sitio no cambia.
+  - **Con P-4105 cerrada:** el repo se hace público y se construyen en el sitio el MCP del kit, la página, la tarjeta
+    del AI Lab y la estación de la ruta.
+- **FR-5116** Diseño propio. Nombres, fases, formatos y textos son de Forja. Lo que se parece a otros arneses se cuenta
+  como patrón general, con palabras propias (la 041 los lista en `research.md`). Nada sale del proyecto de referencia
+  (FR-4107).
+
+## Entidades clave
+
+- **Encargo:** la prueba técnica recibida tal cual, más su stack y sus minutos.
+- **Requisito:** id `R-NN`, texto, criterio verificable, prioridad y cita de origen en el encargo.
+- **Decisión:** qué se eligió, qué alternativas había, por qué y qué se sacrifica.
+- **Tarea:** id, requisitos que cubre, archivos que toca y grupo de paralelismo.
+- **Pack:** stack, versión y fecha, comandos, estructura, convenciones y errores típicos.
+- **Entrega:** `ENTREGA.md`, con la matriz, y la bitácora.
+- **Corrida de eval:** encargo, cliente, modelo, minutos, intervenciones, requisitos cubiertos y resultado de la suite
+  oculta.
+
+## Criterios de éxito
+
+- **SC-5101** En los cinco encargos de muestra, en modo «de una» y sin intervención:
+  - la solución compila y pasa su lint y sus pruebas;
+  - pasa al menos el 80 % de la suite oculta;
+  - la corrida termina dentro de sus minutos, con un margen del 10 %.
+- **SC-5102** En cada entrega, el 100 % de los requisitos aparece en la matriz: cubierto por una prueba que lo nombra,
+  o «sin cubrir» con su motivo.
+- **SC-5103** En una corrida de control con un defecto sembrado a propósito, el revisor lo encuentra en tres de tres
+  corridas.
+- **SC-5104** Dos personas que no conocen Forja la instalan y la arrancan en Claude Code en 5 minutos o menos, solo con
+  la página.
+- **SC-5105** En modo local, cero bytes del encargo o del código llegan al servidor del autor. Lo comprueba una prueba
+  que registra todas las llamadas del plugin a los MCP.
+- **SC-5106** Al menos un cliente distinto de Claude Code (Cursor o ChatGPT en modo desarrollador) corre el prompt
+  `solve_technical_test` y llega a una entrega con matriz. Se anota la fecha de la prueba.
+- **SC-5107** Peso en el tope mensual de IA del sitio: cero USD.
+
+## No incluye
+
+- No resuelve pruebas a escondidas ni ayuda a ocultar el uso de IA.
+- No llama a ningún modelo desde el sitio: razona el modelo del cliente de quien lo corre.
+- No es un motor para gobernar los cambios del backlog de una empresa: resuelve un encargo acotado y entrega.
+- No despliega la solución ni hace push: la deja lista en la máquina.
+- No trae más packs que los cuatro de la v1.
+- No sube el encargo ni el código a ningún servicio, ni guarda corridas de terceros.
+- No promete compatibilidad con un cliente que no se probó.
+
+## Costo y topes
+
+- **Modelos del sitio:** cero. Forja razona con el modelo del cliente de quien la corre, sea el Claude Code de Camilo o
+  el del entrevistador.
+- **Corridas de eval:** con el Claude Code del autor en local, fuera del tope de la línea. Solo corren cuando él las
+  autoriza (P-5105).
+- **Vercel:** una invocación por mensaje MCP, con `mcpKit`, `mcpKitCheck` y el tope compartido `mcpDaily`.
+- **GitHub:** Actions del repo. Los tarballs van en los releases, sin registro de paquetes ni cuenta nueva.
+- **Peso en el tope mensual de IA:** cero USD (COP 0).
+
+## Estación en la ruta de 10 minutos
+
+| Id | Prueba | Minutos | Qué hace el entrevistador | Evidencia para el acta |
+|---|---|---|---|---|
+| `forja-de-una` | 4, y también 1 y 3 | 2 | Ve la corrida grabada en `/kit`, abre la matriz y la bitácora de la entrega, y decide si quiere correrla sobre su prueba | La matriz requisito → prueba de la corrida grabada (`kit-matrix`) |
+
+Va en «Más pruebas» de la prueba 4, con `alsoProves: [1, 3]`. La corrida en vivo sobre la prueba del entrevistador
+queda fuera de los 10 minutos. Entra al registro cuando el sitio publique Forja (FR-5115).
+
+## Evals
+
+- **Encargos de muestra:** cinco, inventados y marcados como ficticios, cada uno con su suite de aceptación oculta:
+  - Angular: un tablero de tareas con filtros;
+  - .NET: una API de reservas;
+  - Next.js: un catálogo con carrito;
+  - NestJS: una API de inventario con validación;
+  - cruzado: un front en Angular contra una API en NestJS.
+- **Métricas:**
+  - suite oculta aprobada (%);
+  - requisitos cubiertos (%);
+  - minutos totales y por fase;
+  - intervenciones humanas;
+  - problemas que encontró el revisor y si eran reales.
+- **Control del revisor:** una corrida por encargo con un defecto sembrado (SC-5103).
+- **Calificación:** solo reglas y la suite oculta. Ningún modelo califica a otro.
+- **Determinista en CI:** `forja-core` (ids, matriz, plantilla y bitácora) corre en el repo de Forja. Cuando se
+  publique, el MCP del kit corre en el build del sitio con su batería de protocolo, filtración y fuentes, como la 044.
+
+## Supuestos
+
+- Claude Code sigue admitiendo plugins con comandos, skills, subagentes, hooks y MCP, instalables desde un marketplace
+  en un repo de GitHub. Se confirma contra la documentación vigente el día de implementar.
+- Los cuatro stacks tienen una CLI oficial para crear el proyecto y correr sus pruebas sin cuenta ni llave.
+- La máquina que corre Forja tiene Node 20 o más reciente, porque los scripts del plugin lo usan. Tres de los cuatro
+  stacks ya lo piden; para .NET, el arranque lo comprueba.
+- El núcleo de Cotejo sale como paquete estable en la ola 2 (contrato de la 047).
+- El MCP de la 044 se queda tal cual. El del kit es un servidor aparte sobre el mismo núcleo.
+
+## Preguntas abiertas
+
+| ID | Pregunta | Por defecto |
+|---|---|---|
+| P-5101 | ¿Nombre público? | «Forja», con el lema «de la spec a la solución probada» («from spec to tested solution») |
+| P-5102 | ¿Quién crea el repo `CHERCED-DEV/forja`? | El autor, privado hasta cerrar P-4105. Después se hace público con licencia MIT |
+| P-5103 | ¿Modo por defecto? | «De una», con los supuestos anotados. «Con pausas» va con una bandera |
+| P-5104 | ¿Los packs se publican también como skills estándar para otros clientes que lean `SKILL.md`? | Sí, si el día de implementar hay clientes que los leen. Se anota cuáles y la fecha |
+| P-5105 | ¿Quién autoriza y paga las corridas de eval? | El autor, con su Claude Code en local, corrida por corrida |
+| P-5106 | ¿Qué versión de cada stack? | La estable vigente el día de implementar, fijada con su fecha. Se revisa cada trimestre |
+| P-5107 | ¿La página va en `/{lang}/kit` o dentro del AI Lab? | `/{lang}/kit`, corta para dictar en una llamada, con la tarjeta A13 en «Agentes y plugins» del AI Lab |
+| P-5108 | ¿Cuántos minutos por defecto? | 30, con un mínimo de 15 |

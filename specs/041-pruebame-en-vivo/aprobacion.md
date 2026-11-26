@@ -225,6 +225,35 @@ peores casos.
 - **Necesita de ti:** revisar el catálogo, las reglas y la agenda ficticias (P-5002).
 - **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
 
+### 051 — Forja, de la spec de una prueba técnica a una solución probada · ola 2 · L10
+
+Sumada el 26 de noviembre de 2026, después de integrar la ola 1, a pedido tuyo: «conecte este MCP a su máquina y
+corra tal skill con tal capacidad y que la prueba técnica pueda resolverse de una».
+
+- **Qué hace:** un arnés de agentes para pruebas técnicas:
+  - `/forja reto.md --stack angular --minutos 45` lee la prueba y la normaliza en requisitos con id, planifica con
+    decisiones escritas, construye con pruebas primero, verifica con una matriz requisito → prueba, pasa por un
+    revisor que no escribió el código y deja `ENTREGA.md`;
+  - plugin de Claude Code con comando, skills, subagentes, hooks y packs de Angular, .NET, Next.js y NestJS;
+  - MCP del kit y prompt `solve_technical_test` para otros clientes;
+  - evals con cinco encargos de muestra y una suite de aceptación que Forja no ve.
+
+  Se usa a la vista y con permiso del entrevistador. El encargo y el código no salen de la máquina.
+- **Depende de:** la 044 (ya integrada) y, si ya está, el núcleo de la 047.
+- **Costo:** cero en el sitio, porque razona el modelo del cliente de quien la corre. Las corridas de evals usan tu
+  Claude Code en local y solo corren con tu permiso.
+- **Llaves nuevas:** ninguna.
+- **Tamaño:** 16 FR, 7 SC, 8 preguntas y 42 tareas.
+- **Riesgo principal:** que se parezca al proyecto de referencia o que se perciba como hacer trampa. Lo cubren el
+  diseño propio (FR-5116), la regla de transparencia (FR-5101) y la publicación en dos tiempos (FR-5115): hasta
+  cerrar P-4105, el repo es privado y Forja corre solo en tu máquina.
+- **Necesita de ti:**
+  - el nombre (P-5101, por defecto «Forja»);
+  - crear el repo privado `CHERCED-DEV/forja` (P-5102), aunque la línea puede empezar en local;
+  - autorizar las corridas reales de evals (P-5105);
+  - cerrar P-4105 antes de la fase B.
+- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+
 ### Enmienda de la constitución 3.0.0 → 3.1.0
 
 - **Qué cambia:**
@@ -238,15 +267,16 @@ peores casos.
 ## Orden recomendado para aprobar
 
 1. **042, 044 y 045.** No piden llaves y casi no gastan. Pueden arrancar apenas las apruebes.
-2. **043 y 047.** La 043 necesita tus llaves para usar Claude y OpenAI de verdad, pero se construye con simulador.
-   La 047 no gasta nada.
+2. **043, 047 y 051.** La 043 necesita tus llaves para usar Claude y OpenAI de verdad, pero se construye con
+   simulador. La 047 no gasta nada, y la 051 tampoco: su fase A vive en un repo aparte y toma el núcleo de la 047
+   cuando salga.
 3. **046,** cuando la 043 y el núcleo de la 047 estén integrados.
 4. **048, 049 y 050,** sobre la 043 y la 044.
 
 ## Riesgos que aceptas al aprobar
 
 El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
-- **Alcance:** son nueve specs y más de 370 tareas. La aprobación spec por spec y las olas lo contienen.
+- **Alcance:** son diez specs y más de 410 tareas. La aprobación spec por spec y las olas lo contienen.
 - **Límite semanal:** puede cortar líneas a la mitad. Por eso van tres a la vez como máximo, con commit por fase.
 - **Gasto:** es real, pero tiene techo. Ninguna corrida que gaste se hace sin tu permiso.
 - **Secciones aprobadas:** las entradas a la ruta tocan la ventana «Para reclutadores» y el AI Lab, solo con un
@@ -264,6 +294,7 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
   - crear la colección `ai_budget` en Atlas;
   - elegir los modelos de OpenAI.
 - [ ] Dar el visto bueno para crear el repo público de Cotejo.
+- [ ] Si apruebas la 051: crear el repo privado de Forja y, después de P-4105, hacerlo público.
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
 - [ ] Conseguir dos personas que cronometren la ruta.
 - [ ] Autorizar, cuando quieras, las corridas que gastan:
@@ -276,3 +307,4 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 | Fecha | Spec | Decisión | Palabras del autor |
 |---|---|---|---|
 | 26 de noviembre de 2026 | 042, 044 y 045 | Aprobadas. Sus preguntas abiertas van con su valor por defecto | «Apruebo 042, 044 y 045» |
+| 26 de noviembre de 2026 | 051 (nueva) | Pedida y entrevistada; queda para tu aprobación. La corren ambos; Claude Code más MCP; Angular, .NET, Next.js y NestJS; diseño propio, con P-4105 antes de publicar | «Eso del MCP está muy bacano, pero le falta» |

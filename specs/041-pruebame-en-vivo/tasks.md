@@ -65,6 +65,10 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 - [ ] T4146 Integrar la L5
 - [ ] T4147 **[autor]** Si quiere, autorizar una corrida real de la arena y de las evals de la ola. Sin su permiso no se gasta API
 - [ ] T4148 Validación de la ola (igual que T4130), push a `dev` y limpieza de worktrees
+- [x] T4149 Upstream de la 051 (Forja), sumada el 26 de noviembre: entrevista corta de cuatro preguntas, spec, plan,
+  tareas y su bloque en `aprobacion.md`
+- [ ] T4156 [P] Si se aprueba la 051, lanzar la L10 (fase A) en el repo externo `C:\Users\HITMA\Desktop\forja`, sin
+  worktree del sitio ni base nueva. Cuenta para el máximo de tres líneas
 
 ## Fase 4: Ola 3 (048, 049 y 050)
 
@@ -73,6 +77,8 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 - [ ] T4152 Integrar la L7, la L8 y la L9, en ese orden, con sus estaciones
 - [ ] T4153 **[autor]** Revisar los datos ficticios de la empresa, de los casos de Despacho y Obra y de la pyme antes de publicarlos — cubre: FR-4102
 - [ ] T4154 Validación de la ola, push a `dev` y limpieza de worktrees
+- [ ] T4155 Fase B de la 051, cuando el autor cierre P-4105: base con E-5101 a E-5106, worktree `.worktrees/L10-kit`,
+  integración con su estación y sus evals en el tablero, validación y push
 
 ## Fase 5: Cierre de la línea
 

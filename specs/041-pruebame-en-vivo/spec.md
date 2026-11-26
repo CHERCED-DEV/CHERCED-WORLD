@@ -8,7 +8,7 @@ ayude en entrevistas». Pide dos cosas:
 También pide aprender de un proyecto que le regaló un arquitecto. La línea se trabaja spec-driven: primero el upstream
 completo, con el autor como entrevistador humano antes de implementar.
 
-Estado: en curso. Upstream del 26 de noviembre de 2026, con la entrevista hecha ([entrevista.md](./entrevista.md)). La ola 1 (042, 044 y 045) está aprobada e integrada en `dev`; 043 y 046 a 050 esperan la decisión del autor.
+Estado: en curso. Upstream del 26 de noviembre de 2026, con la entrevista hecha ([entrevista.md](./entrevista.md)). La ola 1 (042, 044 y 045) está aprobada e integrada en `dev`; 043, 046 a 050 y la 051, sumada el mismo día, esperan la decisión del autor.
 Ninguna spec hija se implementa sin el visto bueno del autor. Se aprueban una por una en [aprobacion.md](./aprobacion.md).
 
 ## Qué ordena esta spec
@@ -17,7 +17,7 @@ Esta es la spec paraguas. Define:
 - para quién es la línea;
 - la prueba de los 10 minutos;
 - qué ya existe y se reutiliza;
-- las nueve specs hijas y sus olas;
+- las diez specs hijas y sus olas;
 - las reglas que valen para todas.
 
 El cómo vive en [plan.md](./plan.md) y las tareas por línea en [tasks.md](./tasks.md). Lo aprendido del proyecto de
@@ -87,6 +87,7 @@ Los costos son estimados y cada spec hija los detalla.
 | [048](../048-base-de-conocimiento-honesta/spec.md) Base de conocimiento honesta | MCP y agente sobre los documentos de una empresa ficticia: fuente, nivel de confianza y «no encontré» | 1, 2 | 3 | 043, 044 | Unos 0,004 USD por pregunta; el MCP no gasta | Ninguna más |
 | [049](../049-plugins-por-profesion/spec.md) Plugins por profesión | Despacho (abogados) y Obra (ingeniero estructural) como productos: agente, MCP, evals y horas ahorradas | 2 | 3 | 043, 044 | Unos 0,008 USD por pregunta en Despacho y 0,003 USD por entrada en Obra | Ninguna más |
 | [050](../050-agente-de-operaciones-pyme/spec.md) Agente de operaciones pyme | Cotiza, agenda y responde por una pyme ficticia, con aprobación humana antes de cada acción | 1, 2 | 3 | 043 | Unos 0,025 USD por conversación | Ninguna más |
+| [051](../051-kit-de-prueba-tecnica/spec.md) Forja | Arnés de agentes que lleva la spec de una prueba técnica a una solución probada: plugin de Claude Code, packs de cuatro stacks, MCP del kit y evals con verdad oculta | 4, 1, 3 | 2 | 044; el núcleo de la 047 si ya está | Cero en el sitio: razona el modelo del cliente | Ninguna |
 
 ## Olas y líneas de trabajo
 
@@ -103,7 +104,10 @@ spec está aprobada y sus dependencias están integradas.
 - **Ola 2, modelos:**
   - L4 Tres proveedores y arena (043) y L6 Cotejo (047) arrancan en paralelo;
   - L5 Del pedido a la spec (046) arranca cuando estén integrados el puerto de modelos de la 043 y el núcleo
-    determinista de la 047.
+    determinista de la 047;
+  - L10 Forja (051), sumada el 26 de noviembre: su fase A vive en un repo aparte y puede arrancar en cuanto se
+    apruebe, porque no necesita llaves ni enmiendas del sitio. Su fase B (MCP del kit, página y estación) espera a
+    P-4105.
 - **Ola 3, negocio:**
   - L7 Base honesta (048), L8 Plugins por profesión (049) y L9 Agente pyme (050);
   - todas sobre el puerto de la 043 y, la 048 y la 049, sobre el MCP de la 044.
