@@ -135,3 +135,6 @@ __pycache__/
 
 # respuestas privadas para la identidad de Mini Cherced (nunca al repo)
 content/mini-cherced/privado/
+
+# informes privados de las specs: material de terceros o corporativo (nunca al repo)
+specs/**/privado/
