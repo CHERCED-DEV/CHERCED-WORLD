@@ -7,15 +7,19 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Fase 0 — Enmiendas de la base (las hace el integrador)
 
-- [ ] T4201 Namespace `route` en i18n — archivos: `lib/i18n/config.ts`, `lib/i18n/server.ts` — cubre: E-4201
-- [ ] T4202 `export` de `clock` sin cambiar su comportamiento — archivos: `lib/ai/agent/interview.ts` — cubre: E-4204
-- [ ] T4203 Etiqueta `042-base` en la rama base después de T4201 y T4202
+- [ ] T4201 Namespace `route` en i18n — archivos: `lib/i18n/config.ts`, `lib/i18n/server.ts` — cubre: E-4201 — la hizo
+  la base (`89f511e`), no la línea
+- [ ] T4202 `export` de `clock` sin cambiar su comportamiento — archivos: `lib/ai/agent/interview.ts` — cubre: E-4204 —
+  la hizo la base (`89f511e`), no la línea
+- [ ] T4203 Etiqueta `042-base` en la rama base después de T4201 y T4202 — del integrador: la base quedó en la etiqueta
+  `041-base-ola1`
 
 ## Fase 1 — Preparación
 
 - [ ] T4204 Crear la rama `lane/l1-ruta` y el worktree `.worktrees/l1-ruta` desde `042-base`, con la junction de
-  `node_modules` creada antes de arrancar la sesión de la línea
-- [ ] T4205 [P] Diccionarios vacíos con las claves de la interfaz — archivos: `content/i18n/es/route.json`,
+  `node_modules` creada antes de arrancar la sesión de la línea — del integrador: quedó como `lane/042-ruta` en
+  `.worktrees/L1-ruta`, desde `041-base-ola1`
+- [x] T4205 [P] Diccionarios vacíos con las claves de la interfaz — archivos: `content/i18n/es/route.json`,
   `content/i18n/en/route.json` — cubre: FR-4201
 
 ## Fase 2 — US5: el contrato de estaciones (va primero porque las demás historias lo usan)
