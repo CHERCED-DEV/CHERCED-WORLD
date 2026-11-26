@@ -39,28 +39,28 @@ las otras `[P]` de la misma fase.
 
 ## Fase 3 — US1: las herramientas del portafolio
 
-- [ ] T4414 [P] [US1] Fuentes con URL absoluta y título — archivos: `lib/mcp/servers/portafolio/sources.ts`,
+- [x] T4414 [P] [US1] Fuentes con URL absoluta y título — archivos: `lib/mcp/servers/portafolio/sources.ts`,
   `tests/unit/mcp/sources.test.ts` — cubre: FR-4405
-- [ ] T4415 [P] [US1] `search_portfolio` sobre `createGlassBox`, con un máximo de 10 resultados y recortes de 220
+- [x] T4415 [P] [US1] `search_portfolio` sobre `createGlassBox`, con un máximo de 10 resultados y recortes de 220
   caracteres — archivos: `lib/mcp/servers/portafolio/tools/search.ts`, `tests/unit/mcp/tools/search.test.ts` — cubre:
   FR-4404, FR-4405
-- [ ] T4416 [P] [US1] `list_case_studies` y `get_case_study`, con el pitch solo si está aprobado — archivos:
+- [x] T4416 [P] [US1] `list_case_studies` y `get_case_study`, con el pitch solo si está aprobado — archivos:
   `lib/mcp/servers/portafolio/tools/cases.ts`, `tests/unit/mcp/tools/cases.test.ts` — cubre: FR-4404, FR-4405
-- [ ] T4417 [P] [US1] `get_decisions` — archivos: `lib/mcp/servers/portafolio/tools/decisions.ts`,
+- [x] T4417 [P] [US1] `get_decisions` — archivos: `lib/mcp/servers/portafolio/tools/decisions.ts`,
   `tests/unit/mcp/tools/decisions.test.ts` — cubre: FR-4404
-- [ ] T4418 [P] [US1] `get_career`, `get_skills` y `list_posts` — archivos:
+- [x] T4418 [P] [US1] `get_career`, `get_skills` y `list_posts` — archivos:
   `lib/mcp/servers/portafolio/tools/profile.ts`, `tests/unit/mcp/tools/profile.test.ts` — cubre: FR-4404
-- [ ] T4419 [P] [US1] `get_contact_options` con los canales públicos y los CV en PDF — archivos:
+- [x] T4419 [P] [US1] `get_contact_options` con los canales públicos y los CV en PDF — archivos:
   `lib/mcp/servers/portafolio/tools/contact.ts`, `tests/unit/mcp/tools/contact.test.ts` — cubre: FR-4404
-- [ ] T4420 [US1] Servidor del portafolio con sus instrucciones y la ruta `/api/mcp` — archivos:
+- [x] T4420 [US1] Servidor del portafolio con sus instrucciones y la ruta `/api/mcp` — archivos:
   `lib/mcp/servers/portafolio/index.ts`, `app/api/mcp/route.ts` — cubre: FR-4401, FR-4404
 
 ## Fase 4 — US3: el encaje con una vacante
 
-- [ ] T4421 [US3] Pruebas que fallan: límites de 80 y 8.000 caracteres, las cinco vacantes inventadas de la 029 con la
+- [x] T4421 [US3] Pruebas que fallan: límites de 80 y 8.000 caracteres, las cinco vacantes inventadas de la 029 con la
   misma cobertura en tres corridas, cero ids inventados y nada guardado — archivos: `tests/unit/mcp/tools/match.test.ts`
   — cubre: FR-4404, SC-4405
-- [ ] T4422 [US3] `match_job_description` sobre `simulateMatch`, con el límite `mcpMatch` y el enlace al A6 — archivos:
+- [x] T4422 [US3] `match_job_description` sobre `simulateMatch`, con el límite `mcpMatch` y el enlace al A6 — archivos:
   `lib/mcp/servers/portafolio/tools/match.ts` — cubre: FR-4404
 
 ## Fase 5 — US2: la página con el catálogo y el probador
@@ -78,7 +78,7 @@ las otras `[P]` de la misma fase.
 
 ## Fase 6 — US4: los prompts
 
-- [ ] T4428 [US4] `interview_camilo` y `fit_for_role`, con `prompts/list` y `prompts/get` — archivos:
+- [x] T4428 [US4] `interview_camilo` y `fit_for_role`, con `prompts/list` y `prompts/get` — archivos:
   `lib/mcp/servers/portafolio/prompts.ts`, `tests/unit/mcp/prompts.test.ts` — cubre: FR-4402
 
 ## Fase 7 — Pulido
@@ -86,7 +86,7 @@ las otras `[P]` de la misma fase.
 - [ ] T4429 Batería de filtración: unas 20 llamadas con los `LEAKS` y `KEY` de la 032, correos que no son el público,
   nombres de variables de entorno y `privado/`; un fallo rompe el build — archivos: `content/mcp/leak-battery.ts`,
   `tests/unit/mcp/leaks.test.ts` — cubre: FR-4412, SC-4402, SC-4403
-- [ ] T4430 [P] Estación `mcp-en-tu-agente` con el contrato `RouteStation` de la 042 — archivos: `content/mcp/station.ts`
+- [x] T4430 [P] Estación `mcp-en-tu-agente` con el contrato `RouteStation` de la 042 — archivos: `content/mcp/station.ts`
   — cubre: FR-4101 de la 041
 - [ ] T4431 e2e de la página: catálogo renderizado, probador con una llamada real a la función local, error visible
   con el servidor caído, teclado y axe — archivos: `tests/e2e/mcp/mcp.spec.ts` — cubre: FR-4411
