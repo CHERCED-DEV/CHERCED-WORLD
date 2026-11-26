@@ -37,6 +37,7 @@ const META = {
 }
 
 async function open(page: Page, lang: 'es' | 'en' = 'es'): Promise<void> {
+  test.skip(test.info().project.use.javaScriptEnabled === false, 'el probador necesita JavaScript')
   await page.addInitScript(() => {
     try {
       sessionStorage.setItem('cw-intro-seen', '1')
