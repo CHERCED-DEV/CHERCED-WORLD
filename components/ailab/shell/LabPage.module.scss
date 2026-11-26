@@ -61,6 +61,13 @@
   white-space: nowrap;
 }
 
+.entries {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: var(--cw-space-5);
+}
+
 .themes {
   width: 100%;
 

@@ -65,11 +65,10 @@ export function LabPageView({ lang, labels, cardLabels, consentLabels, clearLabe
             </Link>
           </span>
         </p>
-        <p data-cw-ailab-route="">
+        <p className={styles.entries} data-cw-ailab-route="">
           <Link href={localizedPath(lang, '/ai-lab/ruta')} className={styles.privacyLink}>
             {ROUTE_ACCESS[lang]}
           </Link>
-          {' · '}
           <Link href={localizedPath(lang, '/mcp')} className={styles.privacyLink} data-cw-ailab-mcp-link="">
             {MCP_ACCESS[lang]}
           </Link>

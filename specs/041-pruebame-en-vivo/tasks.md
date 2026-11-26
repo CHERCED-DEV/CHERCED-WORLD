@@ -49,8 +49,8 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 - [x] T4127 Integrar la L2 y sumar su estación al registro
 - [x] T4128 Integrar la L3 y sumar su estación al registro
 - [x] T4129 Entradas a la ruta (P-4102): un enlace de texto en la ventana «Para reclutadores» y un acceso al inicio del AI Lab, sin rehacer esas secciones — cubre: FR-4108
-- [ ] T4130 Validación de la ola: lint, typecheck, `npx vitest run`, `npx next build`, los tres e2e de la ola con 2 workers y el script de nombres prohibidos
-- [ ] T4131 Capturas del celular (390×844 y WebKit) del AI Lab, la ventana «Para reclutadores» y las páginas nuevas, contra la última vista aprobada — cubre: SC-4105
+- [x] T4130 Validación de la ola: lint, typecheck, `npx vitest run`, `npx next build`, los tres e2e de la ola con 2 workers y el script de nombres prohibidos
+- [x] T4131 Capturas del celular (390×844 y WebKit) del AI Lab, la ventana «Para reclutadores» y las páginas nuevas, contra la última vista aprobada — cubre: SC-4105
 - [ ] T4132 Push de la ola 1 a `dev` (fetch, rebase, push sin force) y esperar la vista previa de Vercel
 - [ ] T4133 Borrar los worktrees de la ola 1 con `cmd /c rmdir` (primero el junction), `git worktree prune` y las ramas locales
 
