@@ -69,6 +69,15 @@ describe('página de la ruta renderizada en el servidor (FR-4201, FR-4203)', () 
     expect(agent).toContain('Cómo pensó (3)')
   })
 
+  it('US3: la estación del agente trae Rómpelo con tres ataques de la batería y dice que no hay corrida publicada', async () => {
+    const page = await html('es')
+    const agent = page.slice(page.indexOf('data-cw-route-station="agente-en-vivo"'), page.indexOf('data-cw-route-station="encaje-y-pitch"'))
+    expect(agent.match(/data-cw-route-attack=/g)).toHaveLength(3)
+    expect(agent).toContain('Todavía no hay una corrida publicada.')
+    expect(agent).toContain('href="/es/ai-lab/evals"')
+    expect(page.match(/data-cw-route-breakit=/g)).toHaveLength(1)
+  })
+
   it('en inglés trae lo mismo, traducido', async () => {
     const page = await html('en')
     expect(page).toContain('Try me in 10 minutes')

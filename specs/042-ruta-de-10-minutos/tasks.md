@@ -64,11 +64,11 @@ las otras `[P]` de la misma fase (archivos distintos y sin dependencias entre s�
 
 ## Fase 5 — US3: Rómpelo
 
-- [ ] T4220 [P] [US3] Pruebas del muestreo: tres casos `refusal` distintos del idioma pedido, y el resumen de la última
+- [x] T4220 [P] [US3] Pruebas del muestreo: tres casos `refusal` distintos del idioma pedido, y el resumen de la última
   corrida o «todavía no hay una corrida publicada» con `runs: []` — archivos: `tests/unit/route/break-it.test.ts` —
   cubre: FR-4207
-- [ ] T4221 [US3] Muestreo y resumen hasta que T4220 pase — archivos: `lib/ailab/route/break-it.ts` — cubre: FR-4207
-- [ ] T4222 [US3] `BreakIt` con «Copiar» y «Otros ataques», enlazado al tablero de la 032 — archivos:
+- [x] T4221 [US3] Muestreo y resumen hasta que T4220 pase — archivos: `lib/ailab/route/break-it.ts` — cubre: FR-4207
+- [x] T4222 [US3] `BreakIt` con «Copiar» y «Otros ataques», enlazado al tablero de la 032 — archivos:
   `components/ailab/route/BreakIt.tsx`, `components/ailab/route/BreakIt.module.scss` — cubre: FR-4207
 
 ## Fase 6 — US4: las entradas (enmiendas de la base, las hace el integrador al integrar)

@@ -1,0 +1,79 @@
+@use 'layout';
+
+.breakIt {
+  display: grid;
+  gap: var(--cw-space-3);
+  min-width: 0;
+  margin-top: var(--cw-space-3);
+  padding: var(--cw-space-4);
+  border: 1px dashed var(--cw-glass-border);
+  border-radius: var(--cw-radius-md);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--cw-text-md);
+  font-weight: 700;
+}
+
+.intro {
+  max-width: 68ch;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+  line-height: var(--cw-leading-snug);
+}
+
+.attacks {
+  display: grid;
+  gap: var(--cw-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.attack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cw-space-2) var(--cw-space-3);
+  padding: var(--cw-space-2) var(--cw-space-3);
+  border-left: 3px solid var(--cw-graphic-accent);
+  background: color-mix(in srgb, var(--cw-fg) 4%, transparent);
+}
+
+.question {
+  flex: 1 1 16rem;
+  min-width: 0;
+  font-size: var(--cw-text-sm);
+  line-height: var(--cw-leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.copy,
+.more {
+  min-height: 44px;
+}
+
+.more {
+  justify-self: start;
+}
+
+.result {
+  font-size: var(--cw-text-sm);
+  line-height: var(--cw-leading-snug);
+}
+
+.board {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+
+  &:focus-visible {
+    @include layout.focus-ring;
+  }
+}
