@@ -89,15 +89,18 @@ autor. Si falta un SDK, la línea lo reporta y sigue con los demás.
   `forja/evals/encargos/*/defecto.md` — cubre: SC-5103
 - [x] T5126 [P] [US1] Prueba de red: todas las llamadas del plugin a los MCP quedan registradas y ninguna lleva el
   encargo ni el código — archivos: `forja/evals/privacidad/**` — cubre: FR-5106, SC-5105
-- [ ] T5127 [autor] Autorizar las corridas reales con su Claude Code (P-5105)
+- [x] T5127 [autor] Autorizar las corridas reales con su Claude Code (P-5105). Autorizó la primera el 26 de
+  noviembre: «Sí, una corrida»
 - [ ] T5128 Corridas reales de los cinco encargos y de los controles. Los resultados van a `forja/evals/resultados/`
-  con fecha, cliente y modelo — cubre: SC-5101, SC-5103
+  con fecha, cliente y modelo — cubre: SC-5101, SC-5103. Hecha: `nestjs-inventario` el 27 de noviembre, con 15 de
+  15. Faltan cuatro encargos y los controles
 
 ## Fase 6: Corrida grabada (US6, P2)
 
 - [x] T5129 Script que convierte una corrida (bitácora, `forja/*.md` y `ENTREGA.md`) en `recorded-run.json` para la
   página — archivos: `forja/scripts/grabar-corrida.mjs` y su prueba
-- [ ] T5130 Grabar una corrida real de punta a punta, elegida por el autor entre las de T5128
+- [ ] T5130 Grabar una corrida real de punta a punta, elegida por el autor entre las de T5128. Candidata: la de
+  `nestjs-inventario`, ya grabada en `forja/evals/resultados/`
 
 ## Fase 7: Cierre de la fase A
 

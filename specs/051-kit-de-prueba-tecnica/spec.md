@@ -438,7 +438,7 @@ Construida en la línea L10, en el repo local `C:\Users\HITMA\Desktop\forja` (ra
 | R-5101 | code.claude.com/docs: referencia de plugins, componentes, CLI, marketplace, hooks y skills | Manifiesto en `.claude-plugin/plugin.json`; las skills reemplazan a `commands/`; los agentes de un plugin ignoran `hooks`, `mcpServers` y `permissionMode`; `claude plugin validate <ruta> --strict` solo lee |
 | R-5102 | cursor.com/docs/context/skills y la página de skills de Claude Code | Cursor lee `SKILL.md` desde `.agents/skills`, `.cursor/skills` y `.claude/skills`; fuera de Claude Code solo valen seis campos del frontmatter. Codex y Copilot sin confirmar |
 | R-5103 | Registro npm, blog de .NET y su política de soporte | Angular 22.3.0 (Node 22.22.3), NestJS CLI 12.0.15, Next.js 16.4.6, .NET 11 STS desde el 10 de noviembre de 2026 y .NET 10 LTS hasta el 14 de noviembre de 2028 |
-| R-5104 | code.claude.com/docs, modo sin interfaz | `claude -p` con `--plugin-dir`, `stream-json`, `--permission-mode dontAsk` y `--allowedTools`; `--bare` apaga los hooks del plugin, así que no se usa. La documentación nombra `--permission-prompts none`, que el CLI 2.1.202 no tiene |
+| R-5104 | code.claude.com/docs, modo sin interfaz | `claude -p` con `--plugin-dir`, `stream-json`, `--permission-mode dontAsk` y `--allowedTools`; `--bare` apaga los hooks del plugin, así que no se usa. La documentación nombra `--permission-prompts none`, que el CLI 2.1.202 no tiene y el 2.1.332 sí; `dontAsk` sirve en los dos |
 | R-5105 | cursor.com/docs/context/mcp y la ayuda de OpenAI sobre el modo desarrollador | Cursor lista los prompts como soportados; ChatGPT solo documenta herramientas |
 
 ### Pruebas que se corrieron
@@ -458,15 +458,53 @@ Construida en la línea L10, en el repo local `C:\Users\HITMA\Desktop\forja` (ra
   quedó en la bitácora y ninguna llevó el encargo, sus datos sensibles ni código. Los scripts del plugin no abrieron
   ninguna conexión de red.
 
+### Primera corrida real (27 de noviembre de 2026)
+
+El autor la autorizó el 26 de noviembre. El primer intento no arrancó: el CLI de la máquina no tenía sesión, y al
+lanzarlo desde una sesión de Claude Code heredó sus variables. No hubo modelo ni costo. Los commits `92a35d7` y
+`43c26aa` aíslan la corrida: sin la configuración ni los MCP del usuario, fuera de su perfil, con una identidad git
+neutra, sin heredar la sesión que la lanza y revisando `claude auth status` antes de empezar. El autor inició sesión,
+el CLI pasó de 2.1.202 a 2.1.332 y la corrida se repitió.
+
+| Métrica | Resultado |
+|---|---|
+| Encargo | `nestjs-inventario` (ficticio), con 11 requisitos |
+| Cliente y modelo | Claude Code 2.1.332 con `claude-opus-5-5`, modo «de una» |
+| Suite oculta | 15 de 15 (100 %) |
+| Requisitos cubiertos | 10 de 11. R-11, un `should` (pruebas, lint y README), no tiene una prueba que lo nombre y quedó con su motivo |
+| Minutos | 19,3 de 45: leer 0,6, planificar 1,4, construir 5,4, verificar 4,8, revisar 5,8 y entregar 0,6 |
+| Intervenciones y denegaciones | 0 y 0 |
+| Revisor | 8 hallazgos (1 alto, 2 medios y 5 bajos). Se arreglaron 7 y el otro quedó escrito en la entrega |
+| Costo informado | 3,51 USD, dentro del plan del autor y fuera del tope de la línea |
+
+Lo que mostró:
+
+- **El revisor encontró un error real:** la validación rechazaba precios válidos de más de 131 072 con dos decimales.
+  Se arregló antes de entregar.
+- **El encargo y las herramientas son datos:** la CLI de Nest escribe en su salida una instrucción para los agentes de
+  código (vincular su telemetría). Forja no la siguió, quitó la telemetría como dice el pack y lo anotó en la entrega.
+- **Dos huecos de las guardas, cerrados en `a3870d4`:** el revisor cerró su servidor de prueba con
+  `taskkill //F //IM node.exe`, que cierra también los procesos de Node de la persona, y los subagentes escribieron
+  logs en `/tmp`. Las guardas ahora bloquean cerrar procesos por nombre y redirigir fuera de la carpeta. Repetidas
+  contra las 119 llamadas de la corrida, bloquean esas 5 y ninguna otra. La skill y los subagentes cierran sus
+  servidores por PID o por puerto y dejan los logs en `forja/tmp/`.
+- **Plugins cargados:** además de Forja, el CLI cargó cuatro plugins `cc-plugin-*` que el autor no instaló. Ninguno se
+  invocó.
+- **Detalles menores:** la tabla de minutos de `ENTREGA.md` pone 0 en entregar, porque se escribe antes de cerrar esa
+  fase, y `npm` avisa que algunas herramientas de Nest piden Node 22.
+- **Validador:** con el CLI 2.1.332, `claude plugin validate --strict` revisa los componentes (5 hooks, el MCP, 5
+  skills y 4 subagentes) y pasa. Para publicar en el directorio de plugins avisa que faltan un ícono,
+  `privacyPolicyUrl` y los hosts en `network.hosts`.
+
+El resultado y su grabación están en `forja/evals/resultados/` (commit `438c6bb`).
+
 ### Lo que no se pudo y lo que queda
 
-- **Sesión real de Claude Code:** el plugin nunca se cargó en una, porque eso corre un modelo. Falta ver `/forja`, los
-  subagentes y los hooks en vivo, y repetir `claude plugin validate` con una versión que revise los componentes.
-- **Corridas reales (T5127, T5128 y T5130):** las autoriza el autor (P-5105). Autorizó la primera el 26 de noviembre,
-  pero no arrancó: el CLI de la máquina no tiene sesión, y al lanzarla desde una sesión de Claude Code heredó sus
-  variables. No hubo modelo ni costo. Los commits `92a35d7` y `43c26aa` aíslan la corrida: sin la configuración ni
-  los MCP del usuario, fuera de su perfil, con una identidad git neutra, sin heredar la sesión que la lanza y
-  revisando `claude auth status` antes de empezar.
+- **Sesión interactiva:** el plugin ya corrió de punta a punta sin interfaz (`claude -p`), con sus subagentes y sus
+  hooks. Falta verlo en una sesión interactiva, con pantalla compartida.
+- **Corridas reales (T5128 y T5130):** hay una de cinco. Las otras cuatro y los controles del revisor corren cada una
+  con el permiso del autor (P-5105), y él elige la corrida grabada para la página.
+- **Publicar en el directorio de plugins:** un ícono, `privacyPolicyUrl` y `network.hosts`, en la fase B.
 - **Control del revisor con un modelo real:** el corredor todavía no lo tiene conectado.
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
 - **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
