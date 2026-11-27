@@ -298,7 +298,10 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
   y, después de P-4105, hacer público el repo. Ya elegiste la corrida grabada (`cruzado-turnos`) y que los requisitos
   verificados por comando cuenten como cubiertos.
 - [x] Forja, fase C (la firma CHERCED): aprobada el 27 de noviembre con los valores por defecto.
-- [ ] Forja, fase C: autorizar las tres corridas de front con la firma (P-5105).
+- [x] Forja, fase C: autorizar las tres corridas de front con la firma (P-5105). Autorizadas y corridas el 27 de
+  noviembre.
+- [ ] Forja, fase C: decidir SC-5110. La firma subió la fase construir 3,07 minutos de media y el criterio pide 3 o
+  menos; casi todo es variación entre corridas (ver la 051).
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
 - [ ] Conseguir dos personas que cronometren la ruta.
 - [ ] Autorizar, cuando quieras, las corridas que gastan:

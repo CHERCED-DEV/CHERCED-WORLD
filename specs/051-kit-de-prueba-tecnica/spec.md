@@ -5,7 +5,7 @@ entrevistador que entrega una prueba técnica y quiere ver, no oír, cómo traba
 quieren un arnés que lleve un encargo acotado de la spec al código con pruebas. Depende de la 044 (núcleo MCP, ya
 integrado) y del núcleo determinista de la 047 (Cotejo). El MCP de la 044 se queda como está: Forja lo usa.
 
-Estado: en curso. Aprobada el 26 de noviembre de 2026; la fase A está construida y medida en un repo aparte, la fase B espera a P-4105 y la fase C, la firma CHERCED, está aprobada y en construcción.
+Estado: en curso. Aprobada el 26 de noviembre de 2026; la fase A está construida y medida en un repo aparte, la fase B espera a P-4105 y la fase C, la firma CHERCED, está construida y medida.
 Las preguntas abiertas van con su valor por defecto, y las corridas reales las autoriza el autor (P-5105). Detalle en
 «Cómo quedó (fase A)» y en [aprobacion.md](../041-pruebame-en-vivo/aprobacion.md).
 
@@ -634,9 +634,10 @@ firma trae:
 **Costo.** Cero en el sitio. Las tres corridas de front que la miden las autoriza el autor (P-5105), y cada una informa
 unos 3 USD dentro de su plan.
 
-### Cómo va (27 de noviembre de 2026)
+### Cómo quedó (27 de noviembre de 2026)
 
-Construida en el repo de Forja (commits `3d29f98` a `ac0ea3b`). Faltan las tres corridas que la miden.
+Construida en el repo de Forja (commits `3d29f98` a `ac0ea3b`) y medida con tres corridas reales el mismo día
+(`18a1682` a `790f3cd`).
 
 - **Skill `forja:firma-cherced`:** los tokens, `base.css` con los patrones `cw-*` (contenedor, título, etiqueta pixel,
   superficie de vidrio, formulario, campo, botones, tarjeta, lista, error y vacío), la voz de los textos y las reglas.
@@ -652,4 +653,35 @@ Construida en el repo de Forja (commits `3d29f98` a `ac0ea3b`). Faltan las tres 
   commit de origen y una línea en el README de la solución.
 - **Vista en Chrome:** una página de muestra con los patrones, en tema oscuro, claro y a 375 px, carga las dos fuentes,
   no tiene scroll horizontal y deja las etiquetas y los controles alineados.
-- **Validación:** 190 pruebas, lint, typecheck, `check:dist` y `claude plugin validate --strict` en verde.
+- **Validación:** 191 pruebas, lint, typecheck, `check:dist` y `claude plugin validate --strict` en verde.
+
+**Las tres corridas con la firma.** El autor las autorizó («Sí, las tres»). Claude Code 2.1.332 con `claude-opus-5-5`,
+modo «de una». La comparación es contra la corrida sin firma más cercana: la de la serie para Angular y Next.js, y la
+repetición con la regla de los comandos para el cruzado.
+
+| Encargo | Suite oculta | Requisitos | Minutos | Construir: sin firma → con firma | Costo informado |
+|---|---|---|---|---|---|
+| `angular-tablero` | 7 de 7 (igual) | 10 de 10 (antes 7 de 10) | 20,3 de 45 | 3,0 → 10,6 | 2,85 USD |
+| `nextjs-catalogo` | 7 de 7 (igual) | 11 de 11 (antes 8 de 11) | 21,0 de 60 | 4,1 → 4,6 | 3,89 USD |
+| `cruzado-turnos` | 11 de 11 (igual) | 13 de 13 (antes 14 de 14) | 34,5 de 90 | 7,8 → 8,9 | 5,69 USD |
+
+- **SC-5108 se cumple:** las tres suites ocultas pasan igual que sin la firma.
+- **SC-5109 se cumple:** AA en los dos temas.
+- **SC-5110 no se cumple tal como está escrito:** la fase construir subió 3,07 minutos de media y el criterio pedía 3 o
+  menos. Casi todo viene de Angular (+7,6), donde `ng new` tardó 2,6 minutos y los dos constructores corrieron unos 5,7
+  minutos cada uno. Los comandos propios de la firma (instalar las fuentes y cablear las hojas) sumaron 25 s en
+  Angular, 12 s en Next.js y 38 s en el cruzado. La variación entre una corrida y otra es mayor que el costo de la
+  firma, así que con una corrida por encargo no se puede separar una cosa de la otra. Lo decide el autor.
+- **La firma se aplicó como pide la skill:** fuentes en 5.3.0, hojas en `angular.json` o en `layout.tsx`, clases
+  `cw-*`, sin voseo, y la decisión, el supuesto y la línea del README en la entrega. Las capturas de las tres soluciones
+  en tema oscuro, claro y a 375 px están en `forja/evals/resultados/capturas-firma/`: cargan las dos fuentes y no tienen
+  scroll horizontal.
+- **Lo que mostraron y ya se arregló:**
+  - **Los enlaces:** en Next.js la navegación salió con el azul subrayado del navegador. `base.css` ahora les da el
+    color del texto, un foco visible y el patrón `cw-nav` (`7e4e83a`).
+  - **Un bloqueo de más:** el revisor del cruzado corrió `(cd api && node dist/main > ../forja/tmp/api.log …)` y las
+    guardas no seguían el `cd` dentro del subshell. Ahora lo siguen (`18a1682`). Repetidas contra las 443 llamadas de
+    las tres corridas, no bloquean ninguna.
+  - **Un servidor de prueba quedó vivo:** el revisor de Next.js ocupó el puerto 3123 para probar el arranque y lo cerró
+    con `kill $(cat x.pid)`, pero en el Git Bash de Windows `$!` no es el PID de Windows. Se cerró a mano y la skill y
+    los subagentes ahora cierran por puerto y confirman que quedó libre.

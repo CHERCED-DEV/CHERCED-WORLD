@@ -140,10 +140,11 @@ autor. Si falta un SDK, la línea lo reporta y sigue con los demás.
   (el encargo manda, los contratos no se tocan) — archivos: `forja/plugins/forja/skills/firma-cherced/**`
 - [x] T5154 El constructor y la skill `forja` cargan la firma después del pack, `--sin-firma` la apaga y `ENTREGA.md`
   anota la decisión — archivos: `forja/plugins/forja/skills/forja/SKILL.md`, `forja/plugins/forja/agents/constructor.md`
-- [ ] T5155 [autor] Autorizar las tres corridas de front con la firma (P-5105)
-- [ ] T5156 Correr `angular-tablero`, `nextjs-catalogo` y `cruzado-turnos` con la firma y compararlas con las de la
+- [x] T5155 [autor] Autorizar las tres corridas de front con la firma (P-5105). Autorizadas el 27 de noviembre: «Sí,
+  las tres»
+- [x] T5156 Correr `angular-tablero`, `nextjs-catalogo` y `cruzado-turnos` con la firma y compararlas con las de la
   fase A — cubre: SC-5108, SC-5110
-- [ ] T5157 «Cómo quedó (fase C)» en la spec, con capturas de las tres soluciones en los dos temas
+- [x] T5157 «Cómo quedó (fase C)» en la spec, con capturas de las tres soluciones en los dos temas
 
 ## Dependencias y orden
 

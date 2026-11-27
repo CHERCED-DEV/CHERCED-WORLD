@@ -8,7 +8,7 @@ ayude en entrevistas». Pide dos cosas:
 También pide aprender de un proyecto que le regaló un arquitecto. La línea se trabaja spec-driven: primero el upstream
 completo, con el autor como entrevistador humano antes de implementar.
 
-Estado: en curso. Upstream del 26 de noviembre de 2026, con la entrevista hecha ([entrevista.md](./entrevista.md)). La ola 1 (042, 044 y 045) está aprobada e integrada en `dev`; 043 y 046 a 050 esperan la decisión del autor. La 051, sumada el mismo día, está aprobada, su fase A quedó construida y medida en un repo aparte (cinco corridas reales y cinco controles) y su fase C, la firma CHERCED, está aprobada y en construcción.
+Estado: en curso. Upstream del 26 de noviembre de 2026, con la entrevista hecha ([entrevista.md](./entrevista.md)). La ola 1 (042, 044 y 045) está aprobada e integrada en `dev`; 043 y 046 a 050 esperan la decisión del autor. La 051, sumada el mismo día, está aprobada, su fase A quedó construida y medida en un repo aparte (cinco corridas reales y cinco controles) y su fase C, la firma CHERCED, está construida y medida.
 Ninguna spec hija se implementa sin el visto bueno del autor. Se aprueban una por una en [aprobacion.md](./aprobacion.md).
 
 ## Qué ordena esta spec
