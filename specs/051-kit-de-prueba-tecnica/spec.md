@@ -438,7 +438,7 @@ Construida en la línea L10, en el repo local `C:\Users\HITMA\Desktop\forja` (ra
 | R-5101 | code.claude.com/docs: referencia de plugins, componentes, CLI, marketplace, hooks y skills | Manifiesto en `.claude-plugin/plugin.json`; las skills reemplazan a `commands/`; los agentes de un plugin ignoran `hooks`, `mcpServers` y `permissionMode`; `claude plugin validate <ruta> --strict` solo lee |
 | R-5102 | cursor.com/docs/context/skills y la página de skills de Claude Code | Cursor lee `SKILL.md` desde `.agents/skills`, `.cursor/skills` y `.claude/skills`; fuera de Claude Code solo valen seis campos del frontmatter. Codex y Copilot sin confirmar |
 | R-5103 | Registro npm, blog de .NET y su política de soporte | Angular 22.3.0 (Node 22.22.3), NestJS CLI 12.0.15, Next.js 16.4.6, .NET 11 STS desde el 10 de noviembre de 2026 y .NET 10 LTS hasta el 14 de noviembre de 2028 |
-| R-5104 | code.claude.com/docs, modo sin interfaz | `claude -p` con `--plugin-dir`, `stream-json`, `--permission-prompts none` y `--allowedTools`; `--bare` apaga los hooks del plugin, así que no se usa |
+| R-5104 | code.claude.com/docs, modo sin interfaz | `claude -p` con `--plugin-dir`, `stream-json`, `--permission-mode dontAsk` y `--allowedTools`; `--bare` apaga los hooks del plugin, así que no se usa. La documentación nombra `--permission-prompts none`, que el CLI 2.1.202 no tiene |
 | R-5105 | cursor.com/docs/context/mcp y la ayuda de OpenAI sobre el modo desarrollador | Cursor lista los prompts como soportados; ChatGPT solo documenta herramientas |
 
 ### Pruebas que se corrieron
@@ -462,7 +462,11 @@ Construida en la línea L10, en el repo local `C:\Users\HITMA\Desktop\forja` (ra
 
 - **Sesión real de Claude Code:** el plugin nunca se cargó en una, porque eso corre un modelo. Falta ver `/forja`, los
   subagentes y los hooks en vivo, y repetir `claude plugin validate` con una versión que revise los componentes.
-- **Corridas reales (T5127, T5128 y T5130):** las autoriza el autor (P-5105).
+- **Corridas reales (T5127, T5128 y T5130):** las autoriza el autor (P-5105). Autorizó la primera el 26 de noviembre,
+  pero no arrancó: el CLI de la máquina no tiene sesión, y al lanzarla desde una sesión de Claude Code heredó sus
+  variables. No hubo modelo ni costo. Los commits `92a35d7` y `43c26aa` aíslan la corrida: sin la configuración ni
+  los MCP del usuario, fuera de su perfil, con una identidad git neutra, sin heredar la sesión que la lanza y
+  revisando `claude auth status` antes de empezar.
 - **Control del revisor con un modelo real:** el corredor todavía no lo tiene conectado.
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
 - **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
