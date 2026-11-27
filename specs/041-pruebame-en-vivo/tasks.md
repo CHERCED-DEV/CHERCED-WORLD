@@ -85,7 +85,11 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 
 - [ ] T4160 **[autor]** Cronometrar la ruta con él mismo y dos personas más — cubre: SC-4101
 - [ ] T4161 Revisar el gasto real del mes contra la meta y el techo — cubre: SC-4102
-- [ ] T4162 Comprobar que cada spec construida tiene evals y que su última corrida está en el tablero — cubre: SC-4103
+- [ ] T4162 Comprobar que cada spec construida tiene evals y que su última corrida está en el tablero — cubre: SC-4103.
+  Revisión parcial del 27 de noviembre: la 042, la 044 y la 045 no usan modelo, y sus pruebas nombran sus requisitos
+  (8, 15 y 12 archivos), así que el tablero las traza por spec con el resumen de Vitest del build. Las evals de la 051
+  viven en el repo de Forja y entran al tablero en su fase B (E-5108). `history.json` es del 26 de noviembre y se
+  renueva en el push de la ola 2
 - [ ] T4163 Sección «Cómo quedó» en esta spec y en `specs/seguimiento-*.md`
 - [ ] T4164 **[autor]** Confirmar de forma explícita si algo pasa a `main`
 

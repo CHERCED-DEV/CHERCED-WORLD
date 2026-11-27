@@ -303,6 +303,16 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 - [x] Forja, fase C: decidir SC-5110. La firma subió la fase construir 3,07 minutos de media y el criterio pide 3 o
   menos; casi todo es variación entre corridas. Dado por cumplido el 27 de noviembre.
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
+- [ ] Decidir la actualización de seguridad de Next. El sitio usa 16.4.3 y `npm audit` marca siete avisos moderados
+  (de 16.0.0 a 16.4.4). Los corrige 16.4.6, del 9 de noviembre, que no cambia de versión mayor y también trae
+  `eslint-config-next` 16.4.6. Revisado el 27 de noviembre contra el código:
+  - **No aplican cinco:** tres piden `'use cache'` y el sitio solo usa `unstable_cache`; otro pide Cache Components,
+    que no está encendido; y el de respuestas reenviadas es para sitios propios, no para Vercel.
+  - **Aplican poco dos:** el salto del rechazo de SVG en la optimización de imágenes (las SVG ya van con `unoptimized`
+    y solo se sirven imágenes locales de `/assets` y `/capsule`) y el de cookies HttpOnly en rutas Edge (no hay rutas
+    Edge declaradas).
+  - **Recomendación:** subir a 16.4.6 en un cambio aparte, con el build real y las pruebas de lo que toca. Sin tu
+    visto bueno no se cambia.
 - [ ] Conseguir dos personas que cronometren la ruta.
 - [ ] Autorizar, cuando quieras, las corridas que gastan:
   - la traza de respaldo, unos 0,10 USD;

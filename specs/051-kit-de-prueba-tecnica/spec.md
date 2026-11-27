@@ -568,7 +568,10 @@ Los resultados, las grabaciones de las cinco corridas y los controles están en 
   `forja/comandos.json` ni `forja/matriz.json`, y el revisor busca comandos que pasarían aunque el criterio fallara.
   Las cinco corridas de la serie se midieron con la regla anterior. La repetición de `cruzado-turnos` ya usó la nueva
   (`dbc7edb`).
-- **Publicar en el directorio de plugins:** un ícono, `privacyPolicyUrl` y `network.hosts`, en la fase B.
+- **Publicar en el directorio de plugins:** el ícono (una propuesta: un yunque en pixel art con una chispa verde, que el
+  autor aprueba antes de la primera subida, porque el directorio solo lo toma esa vez) y `network.hosts` ya están en
+  Forja (`24112ed`). Falta `privacyPolicyUrl`, en la fase B: la página de privacidad del sitio todavía no habla del
+  MCP.
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
 - **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
   28.
