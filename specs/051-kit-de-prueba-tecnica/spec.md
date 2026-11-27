@@ -490,8 +490,8 @@ Lo que mostró:
   servidores por PID o por puerto y dejan los logs en `forja/tmp/`.
 - **Plugins cargados:** además de Forja, el CLI cargó cuatro plugins `cc-plugin-*` que el autor no instaló. Ninguno se
   invocó.
-- **Detalles menores:** la tabla de minutos de `ENTREGA.md` pone 0 en entregar, porque se escribe antes de cerrar esa
-  fase, y `npm` avisa que algunas herramientas de Nest piden Node 22.
+- **Detalles menores:** la tabla de minutos de `ENTREGA.md` ponía 0 en entregar, porque se escribe antes de cerrar esa
+  fase (arreglado en `c8f5652`), y `npm` avisa que algunas herramientas de Nest piden Node 22.
 - **Validador:** con el CLI 2.1.332, `claude plugin validate --strict` revisa los componentes (5 hooks, el MCP, 5
   skills y 4 subagentes) y pasa. Para publicar en el directorio de plugins avisa que faltan un ícono,
   `privacyPolicyUrl` y los hosts en `network.hosts`.
@@ -505,7 +505,8 @@ El resultado y su grabación están en `forja/evals/resultados/` (commit `438c6b
 - **Corridas reales (T5128 y T5130):** hay una de cinco. Las otras cuatro y los controles del revisor corren cada una
   con el permiso del autor (P-5105), y él elige la corrida grabada para la página.
 - **Publicar en el directorio de plugins:** un ícono, `privacyPolicyUrl` y `network.hosts`, en la fase B.
-- **Control del revisor con un modelo real:** el corredor todavía no lo tiene conectado.
+- **Control del revisor con un modelo real:** conectado en `fa38273`, con el mismo aislamiento que la corrida. Falta
+  correrlo (P-5105).
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
 - **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
   28.
