@@ -5,7 +5,7 @@ entrevistador que entrega una prueba técnica y quiere ver, no oír, cómo traba
 quieren un arnés que lleve un encargo acotado de la spec al código con pruebas. Depende de la 044 (núcleo MCP, ya
 integrado) y del núcleo determinista de la 047 (Cotejo). El MCP de la 044 se queda como está: Forja lo usa.
 
-Estado: en curso. Aprobada el 26 de noviembre de 2026; la fase A está construida en un repo aparte y la fase B espera a P-4105.
+Estado: en curso. Aprobada el 26 de noviembre de 2026; la fase A está construida y medida en un repo aparte, la fase B espera a P-4105 y la fase C, la firma CHERCED, está propuesta.
 Las preguntas abiertas van con su valor por defecto, y las corridas reales las autoriza el autor (P-5105). Detalle en
 «Cómo quedó (fase A)» y en [aprobacion.md](../041-pruebame-en-vivo/aprobacion.md).
 
@@ -498,18 +498,122 @@ Lo que mostró:
 
 El resultado y su grabación están en `forja/evals/resultados/` (commit `438c6bb`).
 
+### Las cinco corridas y los cinco controles (27 de noviembre de 2026)
+
+El autor autorizó el resto de la serie el mismo día («Sí, todas»). Todas corrieron con Claude Code 2.1.332 y
+`claude-opus-5-5`, en modo «de una», una detrás de otra y con el mismo aislamiento que la primera.
+
+| Encargo | Suite oculta | Requisitos cubiertos | Minutos | Bloqueos de las guardas | Costo informado |
+|---|---|---|---|---|---|
+| `nestjs-inventario` | 15 de 15 | 10 de 11 | 19,3 de 45 | 0 (antes de `a3870d4`) | 3,51 USD |
+| `dotnet-reservas` | 13 de 13 | 10 de 12 | 18,1 de 60 | 3, los tres de más | 3,48 USD |
+| `nextjs-catalogo` | 7 de 7 | 8 de 11 | 13,8 de 60 | 0 | 2,98 USD |
+| `angular-tablero` | 7 de 7 | 7 de 10 | 14,7 de 45 | 0 | 2,81 USD |
+| `cruzado-turnos` | 11 de 11 (8 de 11 con la suite sin corregir) | 11 de 12 | 24,8 de 90 | 0 | 4,97 USD |
+
+Ninguna tuvo intervenciones. Todas terminaron con menos de la mitad de sus minutos, y cada entrega pone todos sus
+requisitos en la matriz, cubiertos o con su motivo. SC-5101 y SC-5102 se cumplen.
+
+**Controles del revisor (SC-5103).** En los cinco encargos el subagente `forja:revisor` encontró el defecto sembrado, y
+en todos es su primer hallazgo (H-01): el filtro de stock bajo con `<` en vez de `<=`, las reservas de hasta 5 horas,
+el carrito escrito en `sessionStorage`, el filtro que no pliega el título y el 409 que no mira la fecha. El código quedó
+igual a la referencia con el defecto: el revisor no cambió nada. Cada control tardó entre 1,5 y 3,5 minutos y costó
+entre 0,34 y 0,39 USD informados. Son cinco de cinco, y el criterio pedía tres de tres.
+
+Lo que mostró la serie:
+
+- **Tres bloqueos de más en `dotnet-reservas`.** Dos comandos asignaban `$root` a la carpeta y escribían logs en
+  `"$root\forja\tmp"`, y las guardas tomaban toda ruta con una variable como si estuviera fuera. El tercero borraba
+  `forja/reportes` con `-ErrorAction SilentlyContinue`, y el valor de la opción contaba como otra carpeta. El commit
+  `88240fa` resuelve las variables que el mismo comando asigna con un valor fijo, sigue tomando como fuera las que no
+  puede resolver y revisa `-RedirectStandardOutput` y `-RedirectStandardError`. Repetidas contra las 119 llamadas de la
+  corrida, ya no bloquean ninguna. Las tres corridas siguientes no tuvieron bloqueos.
+- **Un defecto de la suite oculta de `cruzado-turnos`.** Contaba todas las opciones del `select` de hora y esperaba 16
+  o 18. La solución pone primero una opción deshabilitada, que el enunciado no prohíbe y la referencia no tiene, así que
+  la validación no lo mostró. El commit `484bd5f` cuenta solo las opciones habilitadas con forma `HH:MM`. La suite se
+  revalidó: 11 de 11 con la referencia, y F-04 sigue fallando con el defecto sembrado. El resultado guarda las dos
+  notas.
+- **El revisor no deja pasar evidencia engañosa.** En `angular-tablero` una prueba nombraba R-08 (el build) sin
+  comprobarlo, y la matriz lo daba por cubierto. Forja le quitó el nombre a la prueba y dejó R-08 sin cubrir, verificado
+  por comando. En `cruzado-turnos` encontró que las pruebas e2e de la API no corrían con `npm test`.
+- **Los requisitos sin cubrir son siempre los mismos:** el arranque o el build, y los `should` de pruebas, lint y
+  README. Forja los comprueba a mano o por comando, pero ninguna prueba los nombra, así que la matriz los cuenta como
+  sin cubrir. Queda como decisión del autor si la matriz debe aceptar «verificado por comando» como cubierto.
+- **La voz de los textos.** La solución de `cruzado-turnos` usó voseo («Elegí una hora»). La fase C lo cubre.
+- **Procesos y archivos.** Ninguna corrida dejó servidores escuchando ni escribió fuera de su carpeta. Los servidores de
+  prueba se cerraron por PID o por puerto. El SDK de .NET escribe sus propios logs de workloads en `%TEMP%`, fuera del
+  alcance de las guardas.
+
+Los resultados, las grabaciones de las cinco corridas y los controles están en `forja/evals/resultados/` (commits
+`36df4c9`, `365a144`, `72ae39b`, `884e187` y `4277a0d`).
+
 ### Lo que no se pudo y lo que queda
 
 - **Sesión interactiva:** el plugin ya corrió de punta a punta sin interfaz (`claude -p`), con sus subagentes y sus
   hooks. Falta verlo en una sesión interactiva, con pantalla compartida.
-- **Corridas reales (T5128 y T5130):** hay una de cinco. Las otras cuatro y los controles del revisor corren cada una
-  con el permiso del autor (P-5105), y él elige la corrida grabada para la página.
+- **Corrida grabada (T5130):** las cinco corridas tienen su grabación. El autor elige la que va en la página.
+- **Requisitos verificados por comando:** el autor decide si la matriz los cuenta como cubiertos.
 - **Publicar en el directorio de plugins:** un ícono, `privacyPolicyUrl` y `network.hosts`, en la fase B.
-- **Control del revisor con un modelo real:** conectado en `fa38273`, con el mismo aislamiento que la corrida. Falta
-  correrlo (P-5105).
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
 - **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
   28.
 - **El MCP del portafolio:** solo existe en la vista previa de `dev`, así que en producción la skill sigue sin él y lo
   anota en la entrega.
 - **Repo en GitHub (T5102):** el remoto `CHERCED-DEV/forja` lo crea el autor.
+
+## Fase C (evolutiva): la firma CHERCED
+
+Propuesta por el autor el 27 de noviembre de 2026, al ver las corridas reales: «quisiera que se llevara el design
+system de nosotros, como para que tenga una firma de alto valor». Espera su aprobación y no se construye antes.
+
+**Qué cambia.** Los fronts que construye Forja (Angular, Next.js y el `web/` del cruzado) salen con el sistema de
+diseño del sitio. Las APIs no cambian. Quien abre la solución reconoce el trabajo del autor sin leer el README. La
+firma trae:
+
+- los tokens `--cw-*` de color en tema claro y oscuro, con el acento verde;
+- el vidrio de `_glass.scss`, con su versión sólida para `prefers-reduced-transparency`;
+- Montserrat para el texto y Silkscreen para los acentos;
+- los espaciados, los radios y los breakpoints;
+- la voz de los textos: español neutro con tuteo («Elige una hora», no «Elegí una hora»). La corrida de
+  `cruzado-turnos` usó voseo.
+
+**Cómo se construye.**
+
+- **Una skill nueva, `forja:firma-cherced`.** El constructor la carga después del pack del stack. Trae los tokens como
+  CSS custom properties y unos patrones base escritos para cada stack: campos, `select`, botones, tarjetas, listas,
+  mensajes de error y estados vacíos. No copia los componentes de React del sitio: los escribe en el idioma de cada
+  stack, ordenados en las capas del catálogo `content/ailab/ui-pieces.ts` (primitiva, composición, módulo).
+- **Un solo origen.** Un script del repo de Forja exporta los tokens de `styles/tokens.scss` a la skill, con la fecha y
+  el commit del sitio de donde salen. Una prueba falla si la copia no dice de dónde viene.
+- **Sin hosts nuevos.** Las fuentes se instalan como paquetes del registro oficial (`@fontsource/montserrat` y
+  `@fontsource/silkscreen`), sin CDN en tiempo de ejecución.
+- **La entrega lo dice.** `ENTREGA.md` suma la decisión «Diseño: firma CHERCED», con su alternativa y lo que se
+  sacrifica.
+
+**Reglas.**
+
+- **El encargo manda.** Si trae un diseño, una marca o una librería de componentes, o pide no usar ninguna, Forja no
+  aplica la firma y lo anota como supuesto.
+- **Los contratos no se tocan.** Los `data-testid`, las rutas y los textos que pide el enunciado quedan igual, y las
+  suites ocultas tienen que pasar igual que sin la firma.
+- **Accesibilidad AA en los dos temas:** contraste de los pares de tokens, foco visible y `prefers-reduced-motion` para
+  el vidrio y las animaciones.
+
+**Criterios de éxito.**
+
+- **SC-5108** Las tres corridas de front con la firma pasan su suite oculta igual que sin ella.
+- **SC-5109** Los pares de tokens de texto y fondo cumplen AA en los dos temas, medido con un chequeo determinista en el
+  repo de Forja.
+- **SC-5110** La firma suma 3 minutos o menos a la fase construir, de media, en las tres corridas.
+
+**Preguntas abiertas.**
+
+| ID | Pregunta | Por defecto |
+|---|---|---|
+| P-5109 | ¿Qué sistema de diseño? | El de CHERCED-WORLD, que es público en este repo. El de Synergos no publica sus piezas (P-2401) |
+| P-5110 | ¿Va encendida por defecto? | Sí, cuando el encargo no dice nada de diseño, y `--sin-firma` la apaga. La otra opción es apagada, con `--firma` |
+| P-5111 | ¿Lleva un crédito visible dentro de la app? | No: la firma es el diseño. El crédito va en `ENTREGA.md` y en el README. La otra opción es una línea discreta en el pie |
+| P-5112 | ¿Cuándo se construye? | Después de cerrar las corridas y los controles de la fase A. Se construye en el repo privado y se publica con la fase B, después de P-4105 |
+
+**Costo.** Cero en el sitio. Las tres corridas de front que la miden las autoriza el autor (P-5105), y cada una informa
+unos 3 USD dentro de su plan.

@@ -90,17 +90,17 @@ autor. Si falta un SDK, la línea lo reporta y sigue con los demás.
 - [x] T5126 [P] [US1] Prueba de red: todas las llamadas del plugin a los MCP quedan registradas y ninguna lleva el
   encargo ni el código — archivos: `forja/evals/privacidad/**` — cubre: FR-5106, SC-5105
 - [x] T5127 [autor] Autorizar las corridas reales con su Claude Code (P-5105). Autorizó la primera el 26 de
-  noviembre: «Sí, una corrida»
-- [ ] T5128 Corridas reales de los cinco encargos y de los controles. Los resultados van a `forja/evals/resultados/`
-  con fecha, cliente y modelo — cubre: SC-5101, SC-5103. Hecha: `nestjs-inventario` el 27 de noviembre, con 15 de
-  15. Faltan cuatro encargos y los controles
+  noviembre («Sí, una corrida») y el resto el 27 («Sí, todas»)
+- [x] T5128 Corridas reales de los cinco encargos y de los controles. Los resultados van a `forja/evals/resultados/`
+  con fecha, cliente y modelo — cubre: SC-5101, SC-5103. Hecha el 27 de noviembre: las cinco suites ocultas al 100 %
+  (la de `cruzado-turnos` después de corregir la suite) y el revisor encontró el defecto en los cinco controles
 
 ## Fase 6: Corrida grabada (US6, P2)
 
 - [x] T5129 Script que convierte una corrida (bitácora, `forja/*.md` y `ENTREGA.md`) en `recorded-run.json` para la
   página — archivos: `forja/scripts/grabar-corrida.mjs` y su prueba
-- [ ] T5130 Grabar una corrida real de punta a punta, elegida por el autor entre las de T5128. Candidata: la de
-  `nestjs-inventario`, ya grabada en `forja/evals/resultados/`
+- [ ] T5130 Grabar una corrida real de punta a punta, elegida por el autor entre las de T5128. Las cinco ya están
+  grabadas en `forja/evals/resultados/`
 
 ## Fase 7: Cierre de la fase A
 
@@ -128,12 +128,28 @@ autor. Si falta un SDK, la línea lo reporta y sigue con los demás.
   (SC-5106)
 - [ ] T5142 Validación, capturas del celular contra la última vista aprobada, push a `dev` y «Cómo quedó (fase B)»
 
+## Fase C (evolutiva): la firma CHERCED, espera la aprobación del autor
+
+- [ ] T5150 [autor] Aprobar la fase C y responder P-5109 a P-5112
+- [ ] T5151 Script que exporta los tokens de `styles/tokens.scss` a la skill, con la fecha y el commit de origen, y su
+  prueba — archivos: `forja/scripts/exportar-firma.mjs`, `forja/plugins/forja/skills/firma-cherced/tokens.css`
+- [ ] T5152 Chequeo determinista de contraste AA de los pares de tokens en los dos temas — cubre: SC-5109
+- [ ] T5153 Skill `forja:firma-cherced` con los patrones base para Angular y Next.js, la voz de los textos y las reglas
+  (el encargo manda, los contratos no se tocan) — archivos: `forja/plugins/forja/skills/firma-cherced/**`
+- [ ] T5154 El constructor y la skill `forja` cargan la firma después del pack, `--sin-firma` la apaga y `ENTREGA.md`
+  anota la decisión — archivos: `forja/plugins/forja/skills/forja/SKILL.md`, `forja/plugins/forja/agents/constructor.md`
+- [ ] T5155 [autor] Autorizar las tres corridas de front con la firma (P-5105)
+- [ ] T5156 Correr `angular-tablero`, `nextjs-catalogo` y `cruzado-turnos` con la firma y compararlas con las de la
+  fase A — cubre: SC-5108, SC-5110
+- [ ] T5157 «Cómo quedó (fase C)» en la spec, con capturas de las tres soluciones en los dos temas
+
 ## Dependencias y orden
 
 - T5101 bloquea todo. T5102 no bloquea: la línea puede empezar en local.
 - Fase 1 → fase 2 → fases 3 y 4 en paralelo → fase 5 → fase 6 → fase 7.
 - `cotejoChecker` se suma cuando Cotejo (047) publique su núcleo. Hasta entonces, `minimalChecker`.
 - La fase B necesita T5133. T5136 necesita la base de T5135.
+- La fase C necesita T5150 y la fase A cerrada (T5128). Se construye en el repo privado y se publica con la fase B.
 - La L10 cuenta para el máximo de tres líneas a la vez de la 041.
 
 ## Validación final
