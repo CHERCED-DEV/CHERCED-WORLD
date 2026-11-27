@@ -84,6 +84,9 @@ forja/
 └── LICENSE                              # MIT
 ```
 
+Al implementar (R-5101) no hubo `commands/`: `/forja` es la skill `skills/forja/SKILL.md`, porque las skills reemplazan
+a los comandos. Los scripts de `dist/` son `.mjs`.
+
 ## Flujo del orquestador
 
 | Fase | Quién | Archivo | Gate | Parte del tiempo |
@@ -139,6 +142,12 @@ export function parsePack(json: unknown): StackPack
   máquina (`verify.testReport` del pack). Nunca los adivina del código.
 - **`cotejoChecker`:** adapta `cotejo-core` a la misma interfaz. Hasta que Cotejo publique su primera versión,
   `forja-core` exporta solo `minimalChecker`, y el orquestador usa el que esté.
+- **Al implementar (fase A):**
+  - `LogEvent` suma `kind: 'mcp'` y `bytes`;
+  - `StackPack` suma `packageManager`, `registry`, `tools`, `run`, `minimum`, `verify.reportFormat` y
+    `verify.reportPaths`;
+  - `DeliveryInput` suma `title`, `delivered`, `howToRun`, `humanDecisions`, `notes` e `interruptedAt`;
+  - `forja-core` suma `coverageFromResults`, `orphanTests`, `parseTestReport`, `parsePlanTasks` y `planProblems`.
 
 ### MCP del kit (fase B)
 
@@ -232,7 +241,8 @@ export const kitStation: RouteStation = {
 | R-5104 | Cómo correr Claude Code sin interfaz para el corredor de evals y cómo medir minutos e intervenciones | US5 |
 | R-5105 | Soporte de `prompts/*` de MCP en Cursor y en ChatGPT en modo desarrollador | US4 y SC-5106 |
 
-Cada hallazgo se anota con su fuente y su fecha de consulta en la sección «Cómo quedó».
+Cada hallazgo se anota con su fuente y su fecha de consulta en la sección «Cómo quedó» de la spec. La de la fase A se
+hizo el 26 de noviembre de 2026, antes de escribir código.
 
 ## Validación
 

@@ -294,7 +294,8 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
   - crear la colección `ai_budget` en Atlas;
   - elegir los modelos de OpenAI.
 - [ ] Dar el visto bueno para crear el repo público de Cotejo.
-- [ ] Si apruebas la 051: crear el repo privado de Forja y, después de P-4105, hacerlo público.
+- [ ] Forja (051): crear el repo privado `CHERCED-DEV/forja`, probar el plugin en una sesión tuya de Claude Code,
+  autorizar las corridas reales (P-5105) y, después de P-4105, hacer público el repo.
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
 - [ ] Conseguir dos personas que cronometren la ruta.
 - [ ] Autorizar, cuando quieras, las corridas que gastan:

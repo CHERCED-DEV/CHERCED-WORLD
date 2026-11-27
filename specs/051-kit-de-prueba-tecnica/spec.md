@@ -5,8 +5,9 @@ entrevistador que entrega una prueba técnica y quiere ver, no oír, cómo traba
 quieren un arnés que lleve un encargo acotado de la spec al código con pruebas. Depende de la 044 (núcleo MCP, ya
 integrado) y del núcleo determinista de la 047 (Cotejo). El MCP de la 044 se queda como está: Forja lo usa.
 
-Estado: aprobada por el autor el 26 de noviembre de 2026, con las preguntas abiertas en su valor por defecto; la fase A está en construcción en la línea L10 y la fase B espera a P-4105
-([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)).
+Estado: en curso. Aprobada el 26 de noviembre de 2026; la fase A está construida en un repo aparte y la fase B espera a P-4105.
+Las preguntas abiertas van con su valor por defecto, y las corridas reales las autoriza el autor (P-5105). Detalle en
+«Cómo quedó (fase A)» y en [aprobacion.md](../041-pruebame-en-vivo/aprobacion.md).
 
 ## Qué hace
 
@@ -387,3 +388,85 @@ queda fuera de los 10 minutos. Entra al registro cuando el sitio publique Forja 
 | P-5106 | ¿Qué versión de cada stack? | La estable vigente el día de implementar, fijada con su fecha. Se revisa cada trimestre |
 | P-5107 | ¿La página va en `/{lang}/kit` o dentro del AI Lab? | `/{lang}/kit`, corta para dictar en una llamada, con la tarjeta A13 en «Agentes y plugins» del AI Lab |
 | P-5108 | ¿Cuántos minutos por defecto? | 30, con un mínimo de 15 |
+
+## Cómo quedó (fase A, 26 de noviembre de 2026)
+
+Construida en la línea L10, en el repo local `C:\Users\HITMA\Desktop\forja` (rama `main`, commits `6e64223` a
+`75b7b13`, sin remoto). El sitio no cambia.
+
+### Qué hay
+
+- **`forja-core`**, TypeScript estricto y sin dependencias en tiempo de ejecución: `parseRequirements`,
+  `minimalChecker` detrás de `SpecChecker`, `coverageMatrix`, `coverageFromResults` y `orphanTests`, `parseTestReport`
+  (JUnit, TRX y JSON de Jest), `deliveryMarkdown` y `deliveryProblems` en ES y EN, `validateLog` y `serializeEvent`,
+  `parsePack`, las guardas (`evaluateToolUse`), el arranque (`preflight`), los chequeos del plan y el reparto del tiempo.
+  `cotejoChecker` espera a que Cotejo publique su núcleo.
+- **El plugin** en `plugins/forja/`, con su marketplace en la raíz del repo:
+  - la skill `forja`, que es el comando `/forja` (o `/forja:forja`): seis fases, dos modos, reparto del tiempo, recorte
+    por prioridad y retoma, con sus formatos en `formatos.md`;
+  - los subagentes `arquitecto`, `constructor`, `verificador` y `revisor`; el verificador y el revisor no editan, y solo
+    el arquitecto llama a `get_decisions`;
+  - hooks de guardas y bitácora, activos solo mientras hay una corrida abierta;
+  - siete scripts empaquetados en `dist/`, que corren con `node` sin `node_modules`;
+  - `.mcp.json` con el MCP del portafolio por HTTP. El del kit llega en la fase B.
+- **Cuatro packs** verificados el 26 de noviembre de 2026: .NET 10 LTS, NestJS 12, Next.js 16.4.6 y Angular 21.2.31.
+- **Cinco encargos de muestra ficticios**, cada uno con su suite oculta de caja negra, su solución de referencia y su
+  defecto sembrado para el control del revisor.
+- **El corredor de evals**, la prueba de privacidad y el script que convierte una corrida en `recorded-run.json`.
+
+### Decisiones que cambian o precisan la spec
+
+| Decisión | Por qué | Qué se sacrificó |
+|---|---|---|
+| `/forja` es una skill; no hay `commands/forja.md` | La documentación vigente dice que los comandos son el formato viejo y que las skills los reemplazan | Nada: se invoca igual |
+| Las guardas solo actúan con una corrida activa | Los hooks de un plugin corren en toda sesión donde está activo | Lo que pasa fuera de una corrida no queda en la bitácora |
+| Los scripts toman la raíz de la carpeta donde corren | El Bash del agente no recibe `${CLAUDE_PLUGIN_ROOT}` como variable | Se corren desde la raíz de la solución o con `--raiz` |
+| La bitácora suma `kind: 'mcp'` y `bytes` | SC-5105 pide registrar cada llamada a los MCP | Un tipo más en el esquema |
+| Las guardas también bloquean nombres propios, URLs, correos y códigos del encargo hacia los MCP y las URLs | El nombre de la empresa o una URL interna son cortos y una comparación por fragmentos largos no los ve | Un tema general que use un nombre propio del encargo queda bloqueado |
+| Angular 21.2.31 (LTS hasta mayo de 2027) en lugar de 22.3 | Angular 22 pide Node 22.22.3 y la máquina de la demo tiene Node 20.19 | Lo nuevo de Angular 22 |
+| .NET 10 LTS en lugar de .NET 11 | .NET 11 salió el 10 de noviembre como STS y su soporte termina el mismo día que el de .NET 10 | Lo nuevo de .NET 11 |
+| Vitest 4.1.12, jsdom 27.4.0 y TypeScript 6.0.3 | Vitest 5 y jsdom 28 piden Node 22; typescript-eslint no soporta TypeScript 7 | Lo nuevo de esas versiones |
+| El pack NestJS quita la telemetría, el despliegue y las instrucciones para agentes que trae la plantilla | Forja es local primero y la corrida la gobierna el pack | Las skills oficiales de Nest |
+| El pack Next.js usa `useSyncExternalStore` para el carrito | El lint de Next 16 rechaza un `setState` dentro de un efecto | El servidor siempre renderiza el carrito vacío |
+| Las suites de front usan `playwright-core` con el Chrome instalado | Es lo más liviano: no descarga navegadores | Validar exige Chrome |
+| Para la fase B, el prompt `solve_technical_test` también va como herramienta | ChatGPT en modo desarrollador solo documenta herramientas | Una herramienta casi repetida |
+
+### Investigación (R-5101 a R-5105), consultada el 26 de noviembre de 2026
+
+| Id | Fuente | Hallazgo |
+|---|---|---|
+| R-5101 | code.claude.com/docs: referencia de plugins, componentes, CLI, marketplace, hooks y skills | Manifiesto en `.claude-plugin/plugin.json`; las skills reemplazan a `commands/`; los agentes de un plugin ignoran `hooks`, `mcpServers` y `permissionMode`; `claude plugin validate <ruta> --strict` solo lee |
+| R-5102 | cursor.com/docs/context/skills y la página de skills de Claude Code | Cursor lee `SKILL.md` desde `.agents/skills`, `.cursor/skills` y `.claude/skills`; fuera de Claude Code solo valen seis campos del frontmatter. Codex y Copilot sin confirmar |
+| R-5103 | Registro npm, blog de .NET y su política de soporte | Angular 22.3.0 (Node 22.22.3), NestJS CLI 12.0.15, Next.js 16.4.6, .NET 11 STS desde el 10 de noviembre de 2026 y .NET 10 LTS hasta el 14 de noviembre de 2028 |
+| R-5104 | code.claude.com/docs, modo sin interfaz | `claude -p` con `--plugin-dir`, `stream-json`, `--permission-prompts none` y `--allowedTools`; `--bare` apaga los hooks del plugin, así que no se usa |
+| R-5105 | cursor.com/docs/context/mcp y la ayuda de OpenAI sobre el modo desarrollador | Cursor lista los prompts como soportados; ChatGPT solo documenta herramientas |
+
+### Pruebas que se corrieron
+
+- En el repo de Forja: `npm run lint`, `npm run typecheck`, `npx vitest run` (20 archivos y 161 pruebas en verde,
+  ninguna saltada) y `npm run build`, con `dist/` igual al build. El integrador las repitió el mismo día, en verde, y
+  revisó el repo y sus mensajes de commit en busca de nombres privados y secretos: cero hallazgos.
+- `claude plugin validate` del marketplace y del plugin con `--strict`, en verde. La versión instalada (2.1.202) solo
+  revisa manifiestos, así que la estructura del plugin la revisa una prueba propia.
+- Cada pack: proyecto creado con su CLI en una carpeta temporal y build, lint, pruebas y reporte tal como están en su
+  `pack.json`. Los cuatro en verde.
+- Cada suite oculta: 100 % contra su referencia (13, 15, 7, 7 y 11 pruebas), y el defecto sembrado hace fallar las
+  pruebas esperadas.
+- El corredor, en seco con un agente de prueba que entrega una solución fija, y el control del revisor con revisiones
+  fijas.
+- La prueba de privacidad: un MCP falso registra todo lo que recibe. Solo llegaron los temas generales, cada llamada
+  quedó en la bitácora y ninguna llevó el encargo, sus datos sensibles ni código. Los scripts del plugin no abrieron
+  ninguna conexión de red.
+
+### Lo que no se pudo y lo que queda
+
+- **Sesión real de Claude Code:** el plugin nunca se cargó en una, porque eso corre un modelo. Falta ver `/forja`, los
+  subagentes y los hooks en vivo, y repetir `claude plugin validate` con una versión que revise los componentes.
+- **Corridas reales (T5127, T5128 y T5130):** las autoriza el autor (P-5105).
+- **Control del revisor con un modelo real:** el corredor todavía no lo tiene conectado.
+- **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
+- **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
+  28.
+- **El MCP del portafolio:** solo existe en la vista previa de `dev`, así que en producción la skill sigue sin él y lo
+  anota en la entrega.
+- **Repo en GitHub (T5102):** el remoto `CHERCED-DEV/forja` lo crea el autor.

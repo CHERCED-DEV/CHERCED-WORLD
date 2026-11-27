@@ -68,7 +68,8 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 - [x] T4149 Upstream de la 051 (Forja), sumada el 26 de noviembre: entrevista corta de cuatro preguntas, spec, plan,
   tareas y su bloque en `aprobacion.md`
 - [x] T4156 [P] Si se aprueba la 051, lanzar la L10 (fase A) en el repo externo `C:\Users\HITMA\Desktop\forja`, sin
-  worktree del sitio ni base nueva. Cuenta para el máximo de tres líneas
+  worktree del sitio ni base nueva. Cuenta para el máximo de tres líneas. Fase A construida el mismo día; ver «Cómo
+  quedó (fase A)» en la 051
 
 ## Fase 4: Ola 3 (048, 049 y 050)
 
