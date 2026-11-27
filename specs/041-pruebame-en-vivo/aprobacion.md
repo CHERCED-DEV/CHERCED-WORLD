@@ -252,7 +252,7 @@ corra tal skill con tal capacidad y que la prueba técnica pueda resolverse de u
   - crear el repo privado `CHERCED-DEV/forja` (P-5102), aunque la línea puede empezar en local;
   - autorizar las corridas reales de evals (P-5105);
   - cerrar P-4105 antes de la fase B.
-- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+- **Decisión:** ☑ Aprobada el 26 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
 
 ### Enmienda de la constitución 3.0.0 → 3.1.0
 
@@ -308,3 +308,4 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 |---|---|---|---|
 | 26 de noviembre de 2026 | 042, 044 y 045 | Aprobadas. Sus preguntas abiertas van con su valor por defecto | «Apruebo 042, 044 y 045» |
 | 26 de noviembre de 2026 | 051 (nueva) | Pedida y entrevistada; queda para tu aprobación. La corren ambos; Claude Code más MCP; Angular, .NET, Next.js y NestJS; diseño propio, con P-4105 antes de publicar | «Eso del MCP está muy bacano, pero le falta» |
+| 26 de noviembre de 2026 | 051 | Aprobada. Sus preguntas abiertas van con su valor por defecto; la fase B sigue esperando a P-4105 | «Apruebo la 051» |

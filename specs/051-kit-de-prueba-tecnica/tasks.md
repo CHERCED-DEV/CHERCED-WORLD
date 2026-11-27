@@ -12,7 +12,8 @@ Ninguna tarea de la línea llama a un modelo. Las corridas reales de evals las a
 
 ## Fase 0: Decisiones y repo
 
-- [ ] T5101 [autor] Aprobar la 051 y confirmar P-5101 (nombre) en `aprobacion.md`
+- [x] T5101 [autor] Aprobar la 051 y confirmar P-5101 (nombre) en `aprobacion.md`. Aprobada el 26 de noviembre de
+  2026, con «Forja» por defecto
 - [ ] T5102 [autor] Crear el repo privado `CHERCED-DEV/forja` (P-5102). Mientras tanto, la línea trabaja en un repo git
   local en `C:\Users\HITMA\Desktop\forja`, con commits firmados con el correo personal del autor
 - [ ] T5103 Investigación R-5101 a R-5105, con fuente y fecha, anotada en el `plan.md` de esta spec antes de escribir

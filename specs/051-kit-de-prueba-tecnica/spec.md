@@ -5,7 +5,7 @@ entrevistador que entrega una prueba técnica y quiere ver, no oír, cómo traba
 quieren un arnés que lleve un encargo acotado de la spec al código con pruebas. Depende de la 044 (núcleo MCP, ya
 integrado) y del núcleo determinista de la 047 (Cotejo). El MCP de la 044 se queda como está: Forja lo usa.
 
-Estado: borrador para aprobación del autor. Nada se implementa sin su visto bueno
+Estado: aprobada por el autor el 26 de noviembre de 2026, con las preguntas abiertas en su valor por defecto; la fase A está en construcción en la línea L10 y la fase B espera a P-4105
 ([aprobacion.md](../041-pruebame-en-vivo/aprobacion.md)).
 
 ## Qué hace

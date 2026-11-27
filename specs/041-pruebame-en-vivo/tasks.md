@@ -67,7 +67,7 @@ limpieza. Las tareas de producto están en el `tasks.md` de cada spec (T42xx a T
 - [ ] T4148 Validación de la ola (igual que T4130), push a `dev` y limpieza de worktrees
 - [x] T4149 Upstream de la 051 (Forja), sumada el 26 de noviembre: entrevista corta de cuatro preguntas, spec, plan,
   tareas y su bloque en `aprobacion.md`
-- [ ] T4156 [P] Si se aprueba la 051, lanzar la L10 (fase A) en el repo externo `C:\Users\HITMA\Desktop\forja`, sin
+- [x] T4156 [P] Si se aprueba la 051, lanzar la L10 (fase A) en el repo externo `C:\Users\HITMA\Desktop\forja`, sin
   worktree del sitio ni base nueva. Cuenta para el máximo de tres líneas
 
 ## Fase 4: Ola 3 (048, 049 y 050)
