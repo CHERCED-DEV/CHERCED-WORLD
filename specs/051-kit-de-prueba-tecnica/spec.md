@@ -553,16 +553,21 @@ Los resultados, las grabaciones de las cinco corridas y los controles están en 
 - **Sesión interactiva:** el plugin ya corrió de punta a punta sin interfaz (`claude -p`), con sus subagentes y sus
   hooks. Falta verlo en una sesión interactiva, con pantalla compartida.
 - **Corrida grabada (T5130):** el autor eligió la de `cruzado-turnos` el 27 de noviembre, la más completa (Angular
-  contra NestJS). `forja/evals/resultados/elegida.json` apunta a su grabación, su resultado y su control. La grabación
-  anota solo el stack principal (`angular`), así que la página muestra los dos stacks del encargo, que van en
-  `elegida.json`, y la nota de la suite antes y después de corregirla.
+  contra NestJS). Se repitió el mismo día con la regla nueva (abajo), autorizada por el autor («Sí, una corrida»), y
+  esa es la que va en la página: suite oculta 11 de 11, 14 de 14 requisitos (R-13 y R-14 cubiertos por comando), 27,6
+  de 90 minutos, 4,60 USD informados, sin intervenciones, denegaciones ni bloqueos. El verificador escribió un script
+  propio para comprobar el arranque con `PORT` y cerró la API por su PID. El revisor dejó 6 hallazgos bajos y se
+  arreglaron 5. `forja/evals/resultados/elegida.json` apunta a su grabación, su resultado y su control, y guarda la
+  corrida anterior. La grabación anota solo el stack principal (`angular`), así que la página muestra los dos stacks
+  del encargo, que van en `elegida.json`.
 - **Requisitos verificados por comando:** el autor decidió que cuenten como cubiertos, y el commit `816dfea` de Forja
   lo construye. `comando.mjs` corre el comando de uno o más requisitos, lo revisa antes con las mismas guardas, y anota
   en `forja/comandos.json` su código, la hora y los milisegundos. La matriz toma la última corrida de cada comando: si
   todas pasan, el requisito queda «cubierto por comando» con el comando exacto, y si alguna falla queda sin cubrir con
   ese motivo. Una prueba que falla pesa más que un comando que pasa. Las guardas no dejan escribir a mano
   `forja/comandos.json` ni `forja/matriz.json`, y el revisor busca comandos que pasarían aunque el criterio fallara.
-  Las cinco corridas de la serie se midieron con la regla anterior; las próximas corridas reales usan la nueva.
+  Las cinco corridas de la serie se midieron con la regla anterior. La repetición de `cruzado-turnos` ya usó la nueva
+  (`dbc7edb`).
 - **Publicar en el directorio de plugins:** un ícono, `privacyPolicyUrl` y `network.hosts`, en la fase B.
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
 - **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
