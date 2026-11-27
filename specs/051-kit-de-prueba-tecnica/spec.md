@@ -671,7 +671,8 @@ repetición con la regla de los comandos para el cruzado.
   menos. Casi todo viene de Angular (+7,6), donde `ng new` tardó 2,6 minutos y los dos constructores corrieron unos 5,7
   minutos cada uno. Los comandos propios de la firma (instalar las fuentes y cablear las hojas) sumaron 25 s en
   Angular, 12 s en Next.js y 38 s en el cruzado. La variación entre una corrida y otra es mayor que el costo de la
-  firma, así que con una corrida por encargo no se puede separar una cosa de la otra. Lo decide el autor.
+  firma, así que con una corrida por encargo no se puede separar una cosa de la otra. El autor lo dio por cumplido el
+  mismo día («Darlo por cumplido»).
 - **La firma se aplicó como pide la skill:** fuentes en 5.3.0, hojas en `angular.json` o en `layout.tsx`, clases
   `cw-*`, sin voseo, y la decisión, el supuesto y la línea del README en la entrega. Las capturas de las tres soluciones
   en tema oscuro, claro y a 375 px están en `forja/evals/resultados/capturas-firma/`: cargan las dos fuentes y no tienen

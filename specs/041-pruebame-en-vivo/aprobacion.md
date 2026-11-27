@@ -300,8 +300,8 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 - [x] Forja, fase C (la firma CHERCED): aprobada el 27 de noviembre con los valores por defecto.
 - [x] Forja, fase C: autorizar las tres corridas de front con la firma (P-5105). Autorizadas y corridas el 27 de
   noviembre.
-- [ ] Forja, fase C: decidir SC-5110. La firma subió la fase construir 3,07 minutos de media y el criterio pide 3 o
-  menos; casi todo es variación entre corridas (ver la 051).
+- [x] Forja, fase C: decidir SC-5110. La firma subió la fase construir 3,07 minutos de media y el criterio pide 3 o
+  menos; casi todo es variación entre corridas. Dado por cumplido el 27 de noviembre.
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
 - [ ] Conseguir dos personas que cronometren la ruta.
 - [ ] Autorizar, cuando quieras, las corridas que gastan:
@@ -319,3 +319,5 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 | 27 de noviembre de 2026 | 051 | Corrida grabada: `cruzado-turnos` | «cruzado-turnos» |
 | 27 de noviembre de 2026 | 051 | Los requisitos verificados por un comando que corrió Forja cuentan como cubiertos | «Sí, que cuenten» |
 | 27 de noviembre de 2026 | 051, fase C | Aprobada con los valores por defecto de P-5109 a P-5112 | «Apruebo la fase C con los valores por defecto» |
+| 27 de noviembre de 2026 | 051, fase C | Las tres corridas con la firma, autorizadas | «Sí, las tres» |
+| 27 de noviembre de 2026 | 051, fase C | SC-5110 dado por cumplido (3,07 minutos de media contra 3, por variación entre corridas) | «Darlo por cumplido» |
