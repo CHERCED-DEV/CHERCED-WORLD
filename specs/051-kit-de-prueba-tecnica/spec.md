@@ -307,7 +307,7 @@ llamar a nada en vivo.
   - pasa al menos el 80 % de la suite oculta;
   - la corrida termina dentro de sus minutos, con un margen del 10 %.
 - **SC-5102** En cada entrega, el 100 % de los requisitos aparece en la matriz: cubierto por una prueba que lo nombra,
-  o «sin cubrir» con su motivo.
+  cubierto por un comando que corrió Forja y pasó, o «sin cubrir» con su motivo.
 - **SC-5103** En una corrida de control con un defecto sembrado a propósito, el revisor lo encuentra en tres de tres
   corridas.
 - **SC-5104** Dos personas que no conocen Forja la instalan y la arrancan en Claude Code en 5 minutos o menos, solo con
@@ -430,6 +430,7 @@ Construida en la línea L10, en el repo local `C:\Users\HITMA\Desktop\forja` (ra
 | El pack Next.js usa `useSyncExternalStore` para el carrito | El lint de Next 16 rechaza un `setState` dentro de un efecto | El servidor siempre renderiza el carrito vacío |
 | Las suites de front usan `playwright-core` con el Chrome instalado | Es lo más liviano: no descarga navegadores | Validar exige Chrome |
 | Para la fase B, el prompt `solve_technical_test` también va como herramienta | ChatGPT en modo desarrollador solo documenta herramientas | Una herramienta casi repetida |
+| Un requisito verificado por comando cuenta como cubierto (decisión del autor, 27 de noviembre) | El build, el arranque, el lint y el README quedaban siempre sin cubrir en las cinco corridas, aunque Forja los comprobaba | El comando prueba menos que una prueba: el revisor busca los que pasarían aunque el criterio fallara |
 
 ### Investigación (R-5101 a R-5105), consultada el 26 de noviembre de 2026
 
@@ -537,8 +538,8 @@ Lo que mostró la serie:
   comprobarlo, y la matriz lo daba por cubierto. Forja le quitó el nombre a la prueba y dejó R-08 sin cubrir, verificado
   por comando. En `cruzado-turnos` encontró que las pruebas e2e de la API no corrían con `npm test`.
 - **Los requisitos sin cubrir son siempre los mismos:** el arranque o el build, y los `should` de pruebas, lint y
-  README. Forja los comprueba a mano o por comando, pero ninguna prueba los nombra, así que la matriz los cuenta como
-  sin cubrir. Queda como decisión del autor si la matriz debe aceptar «verificado por comando» como cubierto.
+  README. Forja los comprueba a mano o por comando, pero ninguna prueba los nombra, así que la matriz los contaba como
+  sin cubrir. El autor decidió el mismo día que un comando verificado cuente como cubierto (ver abajo).
 - **La voz de los textos.** La solución de `cruzado-turnos` usó voseo («Elegí una hora»). La fase C lo cubre.
 - **Procesos y archivos.** Ninguna corrida dejó servidores escuchando ni escribió fuera de su carpeta. Los servidores de
   prueba se cerraron por PID o por puerto. El SDK de .NET escribe sus propios logs de workloads en `%TEMP%`, fuera del
@@ -555,7 +556,13 @@ Los resultados, las grabaciones de las cinco corridas y los controles están en 
   contra NestJS). `forja/evals/resultados/elegida.json` apunta a su grabación, su resultado y su control. La grabación
   anota solo el stack principal (`angular`), así que la página muestra los dos stacks del encargo, que van en
   `elegida.json`, y la nota de la suite antes y después de corregirla.
-- **Requisitos verificados por comando:** el autor decide si la matriz los cuenta como cubiertos.
+- **Requisitos verificados por comando:** el autor decidió que cuenten como cubiertos, y el commit `816dfea` de Forja
+  lo construye. `comando.mjs` corre el comando de uno o más requisitos, lo revisa antes con las mismas guardas, y anota
+  en `forja/comandos.json` su código, la hora y los milisegundos. La matriz toma la última corrida de cada comando: si
+  todas pasan, el requisito queda «cubierto por comando» con el comando exacto, y si alguna falla queda sin cubrir con
+  ese motivo. Una prueba que falla pesa más que un comando que pasa. Las guardas no dejan escribir a mano
+  `forja/comandos.json` ni `forja/matriz.json`, y el revisor busca comandos que pasarían aunque el criterio fallara.
+  Las cinco corridas de la serie se midieron con la regla anterior; las próximas corridas reales usan la nueva.
 - **Publicar en el directorio de plugins:** un ícono, `privacyPolicyUrl` y `network.hosts`, en la fase B.
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.
 - **Node 20 llegó al fin de su soporte en abril de 2026.** Con Node 22, los packs pasan a Angular 22, Vitest 5 y jsdom
