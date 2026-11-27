@@ -295,8 +295,8 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
   - elegir los modelos de OpenAI.
 - [ ] Dar el visto bueno para crear el repo público de Cotejo.
 - [ ] Forja (051): crear el repo privado `CHERCED-DEV/forja`, probarlo en una sesión tuya con pantalla compartida,
-  elegir la corrida grabada entre las cinco, decidir si los requisitos verificados por comando cuentan como cubiertos
-  y, después de P-4105, hacer público el repo.
+  decidir si los requisitos verificados por comando cuentan como cubiertos y, después de P-4105, hacer público el
+  repo. La corrida grabada ya la elegiste: `cruzado-turnos`.
 - [ ] Forja, fase C (la firma CHERCED): aprobarla y responder P-5109 a P-5112 en la spec 051.
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
 - [ ] Conseguir dos personas que cronometren la ruta.

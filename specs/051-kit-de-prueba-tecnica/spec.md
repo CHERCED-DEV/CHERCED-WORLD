@@ -551,7 +551,10 @@ Los resultados, las grabaciones de las cinco corridas y los controles están en 
 
 - **Sesión interactiva:** el plugin ya corrió de punta a punta sin interfaz (`claude -p`), con sus subagentes y sus
   hooks. Falta verlo en una sesión interactiva, con pantalla compartida.
-- **Corrida grabada (T5130):** las cinco corridas tienen su grabación. El autor elige la que va en la página.
+- **Corrida grabada (T5130):** el autor eligió la de `cruzado-turnos` el 27 de noviembre, la más completa (Angular
+  contra NestJS). `forja/evals/resultados/elegida.json` apunta a su grabación, su resultado y su control. La grabación
+  anota solo el stack principal (`angular`), así que la página muestra los dos stacks del encargo, que van en
+  `elegida.json`, y la nota de la suite antes y después de corregirla.
 - **Requisitos verificados por comando:** el autor decide si la matriz los cuenta como cubiertos.
 - **Publicar en el directorio de plugins:** un ícono, `privacyPolicyUrl` y `network.hosts`, en la fase B.
 - **Límite de las guardas:** son hooks y no un sandbox. No revisan por dentro código arbitrario como `node -e`.

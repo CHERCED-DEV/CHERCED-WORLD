@@ -99,8 +99,9 @@ autor. Si falta un SDK, la línea lo reporta y sigue con los demás.
 
 - [x] T5129 Script que convierte una corrida (bitácora, `forja/*.md` y `ENTREGA.md`) en `recorded-run.json` para la
   página — archivos: `forja/scripts/grabar-corrida.mjs` y su prueba
-- [ ] T5130 Grabar una corrida real de punta a punta, elegida por el autor entre las de T5128. Las cinco ya están
-  grabadas en `forja/evals/resultados/`
+- [x] T5130 Grabar una corrida real de punta a punta, elegida por el autor entre las de T5128. Eligió la de
+  `cruzado-turnos` el 27 de noviembre; `forja/evals/resultados/elegida.json` apunta a su grabación, su resultado y su
+  control
 
 ## Fase 7: Cierre de la fase A
 
