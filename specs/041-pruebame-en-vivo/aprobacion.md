@@ -297,7 +297,8 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 - [ ] Forja (051): crear el repo privado `CHERCED-DEV/forja`, probarlo en una sesión tuya con pantalla compartida
   y, después de P-4105, hacer público el repo. Ya elegiste la corrida grabada (`cruzado-turnos`) y que los requisitos
   verificados por comando cuenten como cubiertos.
-- [ ] Forja, fase C (la firma CHERCED): aprobarla y responder P-5109 a P-5112 en la spec 051.
+- [x] Forja, fase C (la firma CHERCED): aprobada el 27 de noviembre con los valores por defecto.
+- [ ] Forja, fase C: autorizar las tres corridas de front con la firma (P-5105).
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
 - [ ] Conseguir dos personas que cronometren la ruta.
 - [ ] Autorizar, cuando quieras, las corridas que gastan:
@@ -312,3 +313,6 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 | 26 de noviembre de 2026 | 042, 044 y 045 | Aprobadas. Sus preguntas abiertas van con su valor por defecto | «Apruebo 042, 044 y 045» |
 | 26 de noviembre de 2026 | 051 (nueva) | Pedida y entrevistada; queda para tu aprobación. La corren ambos; Claude Code más MCP; Angular, .NET, Next.js y NestJS; diseño propio, con P-4105 antes de publicar | «Eso del MCP está muy bacano, pero le falta» |
 | 26 de noviembre de 2026 | 051 | Aprobada. Sus preguntas abiertas van con su valor por defecto; la fase B sigue esperando a P-4105 | «Apruebo la 051» |
+| 27 de noviembre de 2026 | 051 | Corrida grabada: `cruzado-turnos` | «cruzado-turnos» |
+| 27 de noviembre de 2026 | 051 | Los requisitos verificados por un comando que corrió Forja cuentan como cubiertos | «Sí, que cuenten» |
+| 27 de noviembre de 2026 | 051, fase C | Aprobada con los valores por defecto de P-5109 a P-5112 | «Apruebo la fase C con los valores por defecto» |

@@ -129,15 +129,16 @@ autor. Si falta un SDK, la línea lo reporta y sigue con los demás.
   (SC-5106)
 - [ ] T5142 Validación, capturas del celular contra la última vista aprobada, push a `dev` y «Cómo quedó (fase B)»
 
-## Fase C (evolutiva): la firma CHERCED, espera la aprobación del autor
+## Fase C (evolutiva): la firma CHERCED
 
-- [ ] T5150 [autor] Aprobar la fase C y responder P-5109 a P-5112
-- [ ] T5151 Script que exporta los tokens de `styles/tokens.scss` a la skill, con la fecha y el commit de origen, y su
+- [x] T5150 [autor] Aprobar la fase C y responder P-5109 a P-5112. Aprobada el 27 de noviembre con los valores por
+  defecto
+- [x] T5151 Script que exporta los tokens de `styles/tokens.scss` a la skill, con la fecha y el commit de origen, y su
   prueba — archivos: `forja/scripts/exportar-firma.mjs`, `forja/plugins/forja/skills/firma-cherced/tokens.css`
-- [ ] T5152 Chequeo determinista de contraste AA de los pares de tokens en los dos temas — cubre: SC-5109
-- [ ] T5153 Skill `forja:firma-cherced` con los patrones base para Angular y Next.js, la voz de los textos y las reglas
+- [x] T5152 Chequeo determinista de contraste AA de los pares de tokens en los dos temas — cubre: SC-5109
+- [x] T5153 Skill `forja:firma-cherced` con los patrones base para Angular y Next.js, la voz de los textos y las reglas
   (el encargo manda, los contratos no se tocan) — archivos: `forja/plugins/forja/skills/firma-cherced/**`
-- [ ] T5154 El constructor y la skill `forja` cargan la firma después del pack, `--sin-firma` la apaga y `ENTREGA.md`
+- [x] T5154 El constructor y la skill `forja` cargan la firma después del pack, `--sin-firma` la apaga y `ENTREGA.md`
   anota la decisión — archivos: `forja/plugins/forja/skills/forja/SKILL.md`, `forja/plugins/forja/agents/constructor.md`
 - [ ] T5155 [autor] Autorizar las tres corridas de front con la firma (P-5105)
 - [ ] T5156 Correr `angular-tablero`, `nextjs-catalogo` y `cruzado-turnos` con la firma y compararlas con las de la

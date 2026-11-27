@@ -5,7 +5,7 @@ entrevistador que entrega una prueba técnica y quiere ver, no oír, cómo traba
 quieren un arnés que lleve un encargo acotado de la spec al código con pruebas. Depende de la 044 (núcleo MCP, ya
 integrado) y del núcleo determinista de la 047 (Cotejo). El MCP de la 044 se queda como está: Forja lo usa.
 
-Estado: en curso. Aprobada el 26 de noviembre de 2026; la fase A está construida y medida en un repo aparte, la fase B espera a P-4105 y la fase C, la firma CHERCED, está propuesta.
+Estado: en curso. Aprobada el 26 de noviembre de 2026; la fase A está construida y medida en un repo aparte, la fase B espera a P-4105 y la fase C, la firma CHERCED, está aprobada y en construcción.
 Las preguntas abiertas van con su valor por defecto, y las corridas reales las autoriza el autor (P-5105). Detalle en
 «Cómo quedó (fase A)» y en [aprobacion.md](../041-pruebame-en-vivo/aprobacion.md).
 
@@ -579,7 +579,8 @@ Los resultados, las grabaciones de las cinco corridas y los controles están en 
 ## Fase C (evolutiva): la firma CHERCED
 
 Propuesta por el autor el 27 de noviembre de 2026, al ver las corridas reales: «quisiera que se llevara el design
-system de nosotros, como para que tenga una firma de alto valor». Espera su aprobación y no se construye antes.
+system de nosotros, como para que tenga una firma de alto valor». Aprobada el mismo día con los valores por defecto
+(«Apruebo la fase C con los valores por defecto»).
 
 **Qué cambia.** Los fronts que construye Forja (Angular, Next.js y el `web/` del cruzado) salen con el sistema de
 diseño del sitio. Las APIs no cambian. Quien abre la solución reconoce el trabajo del autor sin leer el README. La
@@ -623,7 +624,7 @@ firma trae:
 
 **Preguntas abiertas.**
 
-| ID | Pregunta | Por defecto |
+| ID | Pregunta | Respuesta (27 de noviembre, valor por defecto) |
 |---|---|---|
 | P-5109 | ¿Qué sistema de diseño? | El de CHERCED-WORLD, que es público en este repo. El de Synergos no publica sus piezas (P-2401) |
 | P-5110 | ¿Va encendida por defecto? | Sí, cuando el encargo no dice nada de diseño, y `--sin-firma` la apaga. La otra opción es apagada, con `--firma` |
@@ -632,3 +633,23 @@ firma trae:
 
 **Costo.** Cero en el sitio. Las tres corridas de front que la miden las autoriza el autor (P-5105), y cada una informa
 unos 3 USD dentro de su plan.
+
+### Cómo va (27 de noviembre de 2026)
+
+Construida en el repo de Forja (commits `3d29f98` a `ac0ea3b`). Faltan las tres corridas que la miden.
+
+- **Skill `forja:firma-cherced`:** los tokens, `base.css` con los patrones `cw-*` (contenedor, título, etiqueta pixel,
+  superficie de vidrio, formulario, campo, botones, tarjeta, lista, error y vacío), la voz de los textos y las reglas.
+  Las fuentes son `@fontsource-variable/montserrat` 5.3.0 y `@fontsource/silkscreen` 5.3.0, sin scripts de instalación
+  y con licencia OFL-1.1.
+- **Un solo origen:** `exportar-firma.mjs` convierte `styles/tokens.scss` y `styles/_breakpoints.scss` a CSS plano y deja
+  en `origen.json` el commit del sitio (`114d01e`, del 5 de noviembre), la fecha y la huella. Una prueba falla si la
+  copia cambia sin su origen o si queda SCSS sin convertir.
+- **SC-5109 cumplido:** los 16 pares de texto y fondo pasan AA en los dos temas (texto entre 6,66 y 21; foco 21). El
+  verde de acento da 1,53 sobre fondo claro, así que la skill lo deja solo para decorar.
+- **Encendida por defecto:** `fase iniciar` la deja encendida y `--sin-firma` la apaga. El orquestador la instala una
+  vez al crear el proyecto, los constructores de front cargan la skill y la entrega anota la decisión, una nota con el
+  commit de origen y una línea en el README de la solución.
+- **Vista en Chrome:** una página de muestra con los patrones, en tema oscuro, claro y a 375 px, carga las dos fuentes,
+  no tiene scroll horizontal y deja las etiquetas y los controles alineados.
+- **Validación:** 190 pruebas, lint, typecheck, `check:dist` y `claude plugin validate --strict` en verde.
