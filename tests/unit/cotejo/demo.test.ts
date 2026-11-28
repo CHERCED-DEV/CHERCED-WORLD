@@ -189,13 +189,13 @@ describe('nada sale del dispositivo (FR-4713, historia 1, escenario 3)', () => {
   })
 
   it('el código de la demo no tiene llamadas de red, y el worker solo carga los modelos bajo pedido', () => {
-    for (const path of ['lib/ailab/cotejo/engine.ts', 'lib/ailab/cotejo/trace.ts', 'lib/ailab/cotejo/metrics.ts', 'lib/ailab/cotejo/semantic.ts', 'lib/ailab/cotejo/cotejo.worker.ts', 'lib/ailab/cotejo/client.ts']) {
+    for (const path of ['lib/ailab/cotejo/engine.ts', 'lib/ailab/cotejo/input.ts', 'lib/ailab/cotejo/trace.ts', 'lib/ailab/cotejo/metrics.ts', 'lib/ailab/cotejo/semantic.ts', 'lib/ailab/cotejo/loading.ts', 'lib/ailab/cotejo/cotejo.worker.ts', 'lib/ailab/cotejo/client.ts']) {
       expect(source(path), path).not.toMatch(/\bfetch\(|XMLHttpRequest|WebSocket|sendBeacon|EventSource/)
     }
     const worker = source('lib/ailab/cotejo/cotejo.worker.ts')
-    expect(worker).not.toMatch(/^import [^\n]*['"](\.\/models|@huggingface\/transformers|\.\/trace|\.\/semantic)['"]/m)
-    expect(worker).toContain("await import('./models')")
-    expect(source('lib/ailab/cotejo/models.ts')).toContain("await import('@huggingface/transformers')")
+    expect(worker).not.toMatch(/^import (?!type )[^\n]*['"](@huggingface\/transformers|cotejo-semantic|cotejo-trace|\.\/trace|\.\/semantic)['"]/m)
+    expect(worker).toContain("await import('@huggingface/transformers')")
+    expect(worker).toContain("await import('./trace')")
   })
 })
 

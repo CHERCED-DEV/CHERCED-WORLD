@@ -1,11 +1,41 @@
 import { CORE_VERSION, type CotejoReport, type Lang } from 'cotejo-core'
-import type { Embedder, NliModel, NliScores } from 'cotejo-semantic'
+import type { Embedder, FeatureExtractor, NliModel, NliScores, SequenceClassifier, SequenceTokenizer } from 'cotejo-semantic'
 import type { LoadedIndex, RepoIndex } from 'cotejo-trace'
 import { serveLabWorker, type LabTaskContext } from '@/lib/ailab/core/worker-runtime'
 import { combine, exportsOf, runDeterministic, type LayerExtras } from './engine'
+import { aggregateProgress, onnxVersion, withFallback, type DownloadProgress } from './loading'
 import type { CotejoInput, CotejoProgress, CotejoRequest, CotejoResult, SemanticDevice } from './protocol'
 
 type Current = { input: CotejoInput; base: CotejoReport; extras: LayerExtras }
+
+async function transformers() {
+  const tf = await import('@huggingface/transformers')
+  tf.env.allowLocalModels = false
+  tf.env.useBrowserCache = true
+  const wasm = tf.env.backends.onnx.wasm
+  if (wasm) wasm.wasmPaths = undefined
+  return tf
+}
+
+async function loadEmbedder(device: SemanticDevice, onProgress: DownloadProgress): Promise<{ embedder: Embedder; device: SemanticDevice; onnxRuntime: string | null }> {
+  const [tf, semantic, { EMBEDDING_MODEL, SEMANTIC_DTYPE }] = await Promise.all([transformers(), import('cotejo-semantic'), import('./semantic')])
+  const progress = aggregateProgress(onProgress)
+  const { value, device: used } = await withFallback(device, async (target) =>
+    (await tf.pipeline('feature-extraction', EMBEDDING_MODEL, { device: target, dtype: SEMANTIC_DTYPE, progress_callback: progress as never })) as unknown as FeatureExtractor,
+  )
+  return { embedder: semantic.transformersEmbedder(value, EMBEDDING_MODEL), device: used, onnxRuntime: onnxVersion(tf.env) }
+}
+
+async function loadNli(lang: Lang, device: SemanticDevice, onProgress: DownloadProgress): Promise<{ nli: NliModel; device: SemanticDevice }> {
+  const [tf, semantic, { NLI_MODELS, SEMANTIC_DTYPE }] = await Promise.all([transformers(), import('cotejo-semantic'), import('./semantic')])
+  const id = NLI_MODELS[lang]
+  const progress = aggregateProgress(onProgress)
+  const tokenizer = (await tf.AutoTokenizer.from_pretrained(id, { progress_callback: progress as never })) as unknown as SequenceTokenizer
+  const { value, device: used } = await withFallback(device, async (target) =>
+    (await tf.AutoModelForSequenceClassification.from_pretrained(id, { device: target, dtype: SEMANTIC_DTYPE, progress_callback: progress as never })) as unknown as SequenceClassifier,
+  )
+  return { nli: semantic.transformersNli(tokenizer, value, id), device: used }
+}
 
 type Loaded<T> = { value: T; device: SemanticDevice }
 
@@ -77,7 +107,6 @@ serveLabWorker<CotejoRequest, CotejoResult, CotejoProgress>(async (request, cont
 
   if (request.type === 'load') {
     const started = now()
-    const { loadEmbedder, loadNli } = await import('./models')
     const onProgress = (loaded: number, total: number) => context.progress({ stage: 'download', model: request.model, loaded, total })
     if (request.model === 'embeddings') {
       embedder ??= loadEmbedder(request.device, onProgress).then((result) => ({ value: result.embedder, device: result.device, onnxRuntime: result.onnxRuntime }))
