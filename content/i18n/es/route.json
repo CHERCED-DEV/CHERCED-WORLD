@@ -84,5 +84,6 @@
   "route.evidence.evals-link": "El enlace al tablero de evals (032).",
   "route.evidence.design-diagram": "El diagrama en Mermaid y las decisiones (034).",
   "route.evidence.mcp-call": "La llamada a una herramienta del MCP y su respuesta (044).",
-  "route.evidence.metrics-link": "El enlace a las métricas del tablero de ingeniería (045)."
+  "route.evidence.metrics-link": "El enlace a las métricas del tablero de ingeniería (045).",
+  "route.evidence.arena-comparison": "La tarea, el proveedor más barato que pasó las reglas, la nota del juez, el costo y el JSON de la comparación (043)."
 }

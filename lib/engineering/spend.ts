@@ -70,7 +70,7 @@ function monthView(month: MonthlySpend): SpendMonth {
     month: month.month,
     usd: round(month.usd),
     byProvider: Object.entries(month.byProvider)
-      .flatMap(([provider, usd]) => (typeof usd === 'number' && Number.isFinite(usd) ? [{ provider, usd: round(usd) }] : []))
+      .flatMap(([provider, usd]) => (provider !== 'simulator' && typeof usd === 'number' && Number.isFinite(usd) ? [{ provider, usd: round(usd) }] : []))
       .sort((a, b) => b.usd - a.usd),
   }
 }
@@ -84,7 +84,7 @@ export async function engineeringSpend(repo: RateLimitRepo, now: Date, monthly?:
       targetUsd: month?.targetUsd ?? SPEND_TARGET_USD,
       capUsd: month?.capUsd ?? SPEND_CAP_USD,
       copRate: { value: USD_TO_COP, date: USD_TO_COP_DATE },
-      today: month ? null : await today(repo),
+      today: await today(repo),
       month: month ? monthView(month) : null,
       mcp,
     }

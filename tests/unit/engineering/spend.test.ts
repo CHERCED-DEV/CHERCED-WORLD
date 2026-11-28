@@ -45,12 +45,18 @@ describe('gasto de IA del tablero (FR-4509)', () => {
     expect(spend.today?.since).not.toBeNull()
   })
 
-  it('con la 043 usa el gasto del mes por proveedor y deja de estimar el día', async () => {
-    const monthly = async (): Promise<MonthlySpend> => ({ month: '2026-11', usd: 3.25, targetUsd: 10, capUsd: 25, byProvider: { gemini: 1.2, claude: 2.05, openai: undefined } })
+  it('con la 043 suma el libro del mes por proveedor y sigue estimando el día de los experimentos que no pasan por él', async () => {
+    const monthly = async (): Promise<MonthlySpend> => ({
+      month: '2026-11',
+      usd: 3.25,
+      targetUsd: 10,
+      capUsd: 25,
+      byProvider: { gemini: 1.2, claude: 2.05, openai: undefined, simulator: 0 },
+    })
     const spend = await engineeringSpend(createMemoryRateLimitRepo(), new Date(), monthly)
     expect(spend.available).toBe(true)
     if (!spend.available) return
-    expect(spend.today).toBeNull()
+    expect(spend.today?.provider).toBe('gemini')
     expect(spend.month).toEqual({ month: '2026-11', usd: 3.25, byProvider: [{ provider: 'claude', usd: 2.05 }, { provider: 'gemini', usd: 1.2 }] })
   })
 

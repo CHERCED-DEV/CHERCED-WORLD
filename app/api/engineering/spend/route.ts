@@ -1,5 +1,6 @@
 import '@/lib/data/mongo/register'
 import { unstable_cache } from 'next/cache'
+import { monthlySpend } from '@/lib/ai/budget/spend'
 import { getRepos } from '@/lib/data'
 import { engineeringSpend, SPEND_CACHE_SECONDS, type EngineeringSpend } from '@/lib/engineering/spend'
 
@@ -11,11 +12,11 @@ class SpendUnavailable extends Error {}
 
 const cachedSpend = unstable_cache(
   async (): Promise<EngineeringSpend> => {
-    const spend = await engineeringSpend(getRepos().rateLimits, new Date())
+    const spend = await engineeringSpend(getRepos().rateLimits, new Date(), (now) => monthlySpend(now))
     if (!spend.available) throw new SpendUnavailable('contadores no disponibles')
     return spend
   },
-  ['engineering-spend-v1'],
+  ['engineering-spend-v2'],
   { revalidate: SPEND_CACHE_SECONDS, tags: ['engineering-spend'] },
 )
 
