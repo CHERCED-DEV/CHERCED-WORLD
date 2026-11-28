@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "evals:agent": "vitest run --config vitest.evals.config.ts",
+    "evals:agent": "vitest run --config vitest.evals.config.ts evals/agent.eval.ts",
+    "arena:run": "vitest run --config vitest.evals.config.ts evals/arena.eval.ts",
     "metrics:history": "node scripts/engineering-metrics.mjs",
     "e2e": "playwright test",
     "test:fast": "npm run lint && npm run typecheck && npm test && playwright test",
@@ -22,6 +23,7 @@
     "verify": "npm run lint && npm run typecheck && npm test && next build && npm audit --audit-level=high"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "1.14.0",
     "@huggingface/transformers": "4.3.2",
     "@mdx-js/loader": "3.1.1",
     "@mdx-js/react": "3.1.1",
@@ -30,6 +32,7 @@
     "minisearch": "7.2.0",
     "mongodb": "7.8.0",
     "next": "16.4.6",
+    "openai": "7.64.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "sass": "1.107.1",
