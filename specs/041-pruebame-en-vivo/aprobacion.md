@@ -294,9 +294,18 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 - [ ] Consultar con el arquitecto si las ideas generales se pueden usar en proyectos públicos y con qué crédito
   (P-4105).
 - [ ] Ola 2:
-  - crear `ANTHROPIC_API_KEY` y `OPENAI_API_KEY` con límite en cada consola;
+  - crear `ANTHROPIC_API_KEY` y `OPENAI_API_KEY` con límite en cada consola, siguiendo `configurar-claude.md` y
+    `configurar-openai.md` de la 043 (5 USD de prepago y sin recarga automática);
   - crear la colección `ai_budget` en Atlas;
-  - elegir los modelos de OpenAI.
+  - aprobar los modelos que propone la 043 (P-4301), con precios en USD por millón de tokens, entrada y salida,
+    consultados el 27 de noviembre:
+    - OpenAI: `gpt-6-luna` (0,10 / 0,50) para `cheap`, `gpt-6.2-sol` (2 / 10) para `balanced` y `gpt-6.2-astra`
+      (8 / 40) para `strong`;
+    - el `strong` de Gemini: `gemini-4-argon`, a 2 / 10 hasta el 30 de noviembre y a 4 / 20 desde el 1 de diciembre;
+  - decidir el tope de la 046 con los tres proveedores: con 0,05 USD por corrida, para después de la ronda 1. Se puede
+    subir el tope o aceptar que pare ahí;
+  - Cotejo (047): probar las capas semánticas con los modelos reales (solo se probaron con dobles), confirmar el INP
+    y los fps en un celular real sobre la vista previa, y cronometrarte con y sin Cotejo (T4739).
 - [x] Dar el visto bueno para crear el repo público de Cotejo. Dado el 27 de noviembre.
 - [ ] Forja (051): crear el repo privado `CHERCED-DEV/forja`, probarlo en una sesión tuya con pantalla compartida
   y, después de P-4105, hacer público el repo. Ya elegiste la corrida grabada (`cruzado-turnos`) y que los requisitos
@@ -322,7 +331,8 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 - [ ] Autorizar, cuando quieras, las corridas que gastan:
   - la traza de respaldo, unos 0,10 USD;
   - `arena:run`, unos 0,16 USD más OpenAI;
-  - `evals:gates`, unos 0,40 USD.
+  - `evals:gates`, unos 0,80 USD: la batería cuesta unos 0,60 (el plan calculaba 0,40) y las seis corridas grabadas,
+    unos 0,20.
 
 ## Registro de decisiones
 
