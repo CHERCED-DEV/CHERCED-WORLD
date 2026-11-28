@@ -14,12 +14,11 @@ describe('estación «arena» para la ruta de 10 minutos (043, contrato de la 04
     expect(isExternalHref(ARENA_PORT_HREF)).toBe(true)
   })
 
-  it('en el registro solo le falta el texto de su evidencia nueva, que el integrador suma con la E-4315', () => {
+  it('el integrador la sumó al registro con su texto de evidencia (E-4315) y el registro no tiene problemas', () => {
     const env = registryEnv()
     expect(env.anchors.has('/ai-lab#lab-a10')).toBe(true)
-    const problems = routeRegistryProblems([...routeStations, arenaStation], coreRoute, env)
-    expect(problems).toEqual(['arena: la evidencia arena-comparison no tiene texto en ES y EN en route.json'])
-    const withText = { ...env, evidence: new Set([...env.evidence, ...Object.keys(ARENA_EVIDENCE_TEXT)]) }
-    expect(routeRegistryProblems([...routeStations, arenaStation], coreRoute, withText)).toEqual([])
+    expect(routeStations.filter((station) => station.id === 'arena')).toEqual([arenaStation])
+    for (const id of Object.keys(ARENA_EVIDENCE_TEXT)) expect(env.evidence.has(id)).toBe(true)
+    expect(routeRegistryProblems(routeStations, coreRoute, env)).toEqual([])
   })
 })

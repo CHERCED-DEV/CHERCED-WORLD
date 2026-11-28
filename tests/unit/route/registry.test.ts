@@ -43,7 +43,7 @@ describe('registro de estaciones de la ruta (FR-4208, FR-4209)', () => {
       [4, 'tablero-en-numeros'],
     ])
     expect(coreMinutes(routeStations, coreRoute)).toBeLessThanOrEqual(ROUTE_BUDGET_MINUTES)
-    expect(sections[0]!.more.map((station) => station.id)).toEqual(['rompelo', 'diseno-de-sistemas', 'mcp-en-tu-agente'])
+    expect(sections[0]!.more.map((station) => station.id)).toEqual(['rompelo', 'diseno-de-sistemas', 'mcp-en-tu-agente', 'arena'])
   })
 
   it('cada estación tiene de dos a cuatro pasos, con título y pasos en español y en inglés', () => {

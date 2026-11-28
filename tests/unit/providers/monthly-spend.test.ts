@@ -39,6 +39,6 @@ describe('monthlySpend(now) para la 045 (contrato de la 041)', () => {
     await repo.reserve('2026-11', 2_000_000, BUDGET_CAP_MICRO)
     await repo.settle('2026-11', 2_000_000, 2_000_000, 'claude', 'kb')
     const view = await engineeringSpend(createMemoryRateLimitRepo(), NOW, (now) => monthlySpend(now, repo))
-    expect(view).toMatchObject({ available: true, month: { month: '2026-11', usd: 2, byProvider: [{ provider: 'claude', usd: 2 }, { provider: 'gemini', usd: 0 }, { provider: 'openai', usd: 0 }, { provider: 'simulator', usd: 0 }] } })
+    expect(view).toMatchObject({ available: true, month: { month: '2026-11', usd: 2, byProvider: [{ provider: 'claude', usd: 2 }, { provider: 'gemini', usd: 0 }, { provider: 'openai', usd: 0 }] } })
   })
 })
