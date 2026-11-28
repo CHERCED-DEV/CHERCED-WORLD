@@ -655,5 +655,8 @@
   "ailab.v6.privacy": "Your voice goes to Google (Gemini) only while the session lasts, 3 minutes at most. This site stores neither your voice nor the subtitles.",
   "ailab.a10.title": "Model arena",
   "ailab.a10.summary": "The same task for Gemini, Claude and OpenAI, side by side: answer, latency, tokens, cost and the grade from the same evals, with a judge that is never from the provider being graded.",
-  "ailab.a10.privacy": "The pregenerated run sends nothing. If you run one live with your account, your task goes to Google (Gemini), Anthropic (Claude) and OpenAI, and I ask you first. This site does not store the text of your task."
+  "ailab.a10.privacy": "The pregenerated run sends nothing. If you run one live with your account, your task goes to Google (Gemini), Anthropic (Claude) and OpenAI, and I ask you first. This site does not store the text of your task.",
+  "ailab.a11.title": "Cotejo: spec reviewer",
+  "ailab.a11.summary": "It checks a spec against itself without spending a single token: contradictions, duplicates, vague terms, broken references and requirements the site probably already has, each with its evidence and how to refute it. With the sample you see its precision and recall live.",
+  "ailab.a11.privacy": "Your spec is analyzed in a worker in your browser and never leaves your device. The deterministic layer downloads nothing; the embeddings (118 MB) and the NLI (339 MB in Spanish or 87 MB in English) come from huggingface.co only if you give permission."
 }

@@ -1,0 +1,31 @@
+name: Cotejo
+
+on:
+  pull_request:
+    paths:
+      - 'specs/**/spec.md'
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: cotejo-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  cotejo:
+    name: Cotejo sobre las specs que cambian (informativo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: CHERCED-DEV/cotejo/action@6feb68f24e5f95d611941d73372f392a8b787723 # v0.1.0
+        with:
+          specs: 'specs/**/spec.md'
+          falla-con: nunca
