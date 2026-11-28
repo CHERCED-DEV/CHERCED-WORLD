@@ -36,6 +36,10 @@ export const PYODIDE_CORE: LabDownload = { resource: 'Pyodide 0.29.0', bytes: 12
 
 export const PYODIDE_NUMPY: LabDownload = { resource: 'numpy (Pyodide 0.29.0)', bytes: 3_100_000, host: 'cdn.jsdelivr.net' }
 
+export const NLI_ES: LabDownload = { resource: 'mDeBERTa-v3-base-xnli (int8)', bytes: 339 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
+
+export const NLI_EN: LabDownload = { resource: 'nli-deberta-v3-xsmall (int8)', bytes: 87 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
+
 const V5: LabExperiment = {
   id: 'V5',
   theme: 'gemini',
@@ -1135,6 +1139,60 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
+const A11: LabExperiment = {
+  id: 'A11',
+  theme: 'architecture',
+  title: copy('ailab.a11.title'),
+  summary: copy('ailab.a11.summary'),
+  status: 'beta',
+  runsIn: 'browser',
+  inputs: ['text'],
+  session: { activity: 'analysis', minutes: 2 },
+  poweredBy: { es: 'Cotejo: reglas deterministas, más e5-small y NLI opcionales', en: 'Cotejo: deterministic rules, plus optional e5-small and NLI' },
+  limit: null,
+  downloads: [E5_SMALL, NLI_ES, NLI_EN],
+  privacy: copy('ailab.a11.privacy'),
+  flow: [
+    {
+      es: 'Cargas la spec de muestra, unas 600 líneas con defectos sembrados, o pegas la tuya, y un worker de tu navegador la parte en requisitos, criterios, historias y párrafos, cada uno con su línea',
+      en: 'You load the sample spec, about 600 lines with seeded defects, or paste your own, and a worker in your browser splits it into requirements, criteria, stories and paragraphs, each with its line',
+    },
+    {
+      es: 'La capa determinista corre las reglas de Cotejo sin modelo y sin red: contradicciones de valor y de polaridad, duplicados, referencias rotas, términos vagos y acrónimos sin definir. La muestra se mide en vivo contra su verdad',
+      en: 'The deterministic layer runs the Cotejo rules with no model and no network: value and polarity conflicts, duplicates, broken references, vague terms and undefined acronyms. The sample is measured live against its ground truth',
+    },
+    {
+      es: 'Si lo pides, BM25 busca cada requisito en un índice del sitio con fecha, y los embeddings y el NLI, con tu permiso, proponen y ordenan pares para revisar, sin dar un veredicto',
+      en: 'If you ask, BM25 looks up each requirement in a dated index of the site, and the embeddings and the NLI, with your permission, propose and rank pairs to review, without giving a verdict',
+    },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Determinista primero; los modelos solo proponen u ordenan', en: 'Deterministic first; models only propose or rank' },
+      why: {
+        es: 'Lo medí en la propuesta 014: las reglas sobre la frase con los números enmascarados dieron 0 falsos positivos donde el coseno dio 354, y resolvieron lo que más duele en 0,23 s, sin descargar nada.',
+        en: 'I measured it in proposal 014: rules over the sentence with its numbers masked gave 0 false positives where cosine gave 354, and they solved what hurts most in 0.23 s, without downloading anything.',
+      },
+      tradeoff: {
+        es: 'Las contradicciones dichas con otras palabras casi no salen (1 de 10 en el spike). La pantalla lo dice y las deja a las capas opcionales, como una lista para revisar.',
+        en: 'Contradictions phrased with different words barely show up (1 in 10 in the spike). The screen says so and leaves them to the optional layers, as a list to review.',
+      },
+    },
+    {
+      decision: { es: 'El núcleo es un paquete propio, puro y síncrono', en: 'The core is its own pure, synchronous package' },
+      why: {
+        es: 'cotejo-core corre igual en Node, en la GitHub Action y en este worker, sin red ni sistema de archivos: la misma entrada da el mismo sha256 del reporte. Viene del release v0.1.0 del repo abierto CHERCED-DEV/cotejo, con su hash en el lock.',
+        en: 'cotejo-core runs the same in Node, in the GitHub Action and in this worker, with no network and no file system: the same input gives the same report sha256. It comes from the v0.1.0 release of the open CHERCED-DEV/cotejo repo, with its hash in the lock.',
+      },
+      tradeoff: {
+        es: 'Trae su propio SHA-256 en TypeScript para no depender de APIs asíncronas del navegador, y la demo acepta hasta 3.000 líneas; una spec más larga va por la CLI.',
+        en: 'It carries its own SHA-256 in TypeScript so it does not depend on asynchronous browser APIs, and the demo accepts up to 3,000 lines; a longer spec goes through the CLI.',
+      },
+    },
+  ],
+  code: null,
+}
+
 const A12: LabExperiment = {
   id: 'A12',
   theme: 'agents',
@@ -1189,7 +1247,7 @@ const A12: LabExperiment = {
   code: null,
 }
 
-export const labCatalog: readonly LabExperiment[] = [V5, V6, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, A10, J1, J2, A12]
+export const labCatalog: readonly LabExperiment[] = [V5, V6, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, A10, J1, J2, A11, A12]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)

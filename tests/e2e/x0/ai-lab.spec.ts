@@ -11,7 +11,7 @@ const THEMES = {
   es: ['Con Gemini', 'Voz', 'Arquitectura que se toca', 'Agentes y plugins', 'Juegos que aprenden'],
   en: ['With Gemini', 'Voice', 'Architecture you can touch', 'Agents and plugins', 'Games that learn'],
 } as const
-const CARD_ORDER = ['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'R1', 'A2', 'A3', 'A5', 'A4', 'A10', 'A12', 'J1', 'J2']
+const CARD_ORDER = ['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'R1', 'A11', 'A2', 'A3', 'A5', 'A4', 'A10', 'A12', 'J1', 'J2']
 const HEAVY = /huggingface\.co|hf\.co|cdn\.jsdelivr\.net|\.wasm(\?|$)|\.onnx(\?|$)|\.safetensors(\?|$)|pyodide/i
 const CONSENT_KEY = 'cw-ailab-consent'
 

@@ -36,15 +36,15 @@ Implementación:
 - [ ] T4712 [US6] Reglas y diccionarios ES y EN como datos — archivos: `cotejo/rules/**`, `cotejo/packages/core/src/default-rules.ts` — cubre: FR-4704, FR-4719
 - [ ] T4713 [US6] Reporte, SHA-256 propio, `reportHash`, SARIF, Markdown y resumen compacto — archivos: `cotejo/packages/core/src/report.ts`, `cotejo/packages/core/src/sha256.ts`, `cotejo/packages/core/src/sarif.ts`, `cotejo/packages/core/src/markdown.ts`, `cotejo/packages/core/src/compact.ts` — cubre: FR-4705, FR-4706
 - [ ] T4714 [US6] Release `v0.1.0` del núcleo. Aviso al integrador: núcleo listo para la 046 — cubre: SC-4711
-- [ ] T4715 [US6] La misma prueba de contrato en el sitio, contra la versión fijada — archivos: `tests/unit/cotejo/contract.test.ts` — cubre: SC-4711
+- [x] T4715 [US6] La misma prueba de contrato en el sitio, contra la versión fijada — archivos: `tests/unit/cotejo/contract.test.ts` — cubre: SC-4711
 
 ## Fase 3: Historia 1 — La demo en un segundo (P1)
 
-- [ ] T4716 [P] [US1] Muestra de unas 600 líneas con defectos sembrados y su verdad, todo ficticio — archivos: `content/ailab/cotejo/sample.es.md`, `content/ailab/cotejo/sample.en.md`, `content/ailab/cotejo/truth.ts` — cubre: FR-4713
-- [ ] T4717 [P] [US1] Prueba de la demo: métricas en vivo contra la verdad, límite de 3.000 líneas pegadas, nada sale del dispositivo — archivos: `tests/unit/cotejo/demo.test.ts` — cubre: FR-4713
-- [ ] T4718 [US1] Worker de la demo sobre la infraestructura de Workers del laboratorio (ampliación `lib/ailab/cotejo/**`) — archivos: `lib/ailab/cotejo/cotejo.worker.ts`, `lib/ailab/cotejo/client.ts` — cubre: FR-4713, SC-4709
-- [ ] T4719 [US1] Tarjeta: cargar o pegar, hallazgos por familia, caja de cristal que resalta líneas y desglosa el puntaje, precisión y recall — archivos: `components/ailab/cotejo/CotejoStage.tsx`, `components/ailab/cotejo/CotejoStage.module.scss`, `components/ailab/cotejo/FindingDetail.tsx`, `content/i18n/{es,en}/cotejo.json` — cubre: FR-4713
-- [ ] T4720 [US1] Descargar JSON, SARIF y Markdown — archivos: `components/ailab/cotejo/CotejoDownloads.tsx` — cubre: FR-4705
+- [x] T4716 [P] [US1] Muestra de unas 600 líneas con defectos sembrados y su verdad, todo ficticio — archivos: `content/ailab/cotejo/sample.es.md`, `content/ailab/cotejo/sample.en.md`, `content/ailab/cotejo/truth.ts` — cubre: FR-4713
+- [x] T4717 [P] [US1] Prueba de la demo: métricas en vivo contra la verdad, límite de 3.000 líneas pegadas, nada sale del dispositivo — archivos: `tests/unit/cotejo/demo.test.ts` — cubre: FR-4713
+- [x] T4718 [US1] Worker de la demo sobre la infraestructura de Workers del laboratorio (ampliación `lib/ailab/cotejo/**`) — archivos: `lib/ailab/cotejo/cotejo.worker.ts`, `lib/ailab/cotejo/client.ts` — cubre: FR-4713, SC-4709
+- [x] T4719 [US1] Tarjeta: cargar o pegar, hallazgos por familia, caja de cristal que resalta líneas y desglosa el puntaje, precisión y recall — archivos: `components/ailab/cotejo/CotejoStage.tsx`, `components/ailab/cotejo/CotejoStage.module.scss`, `components/ailab/cotejo/FindingDetail.tsx`, `content/i18n/{es,en}/cotejo.json` — cubre: FR-4713
+- [x] T4720 [US1] Descargar JSON, SARIF y Markdown — archivos: `components/ailab/cotejo/CotejoDownloads.tsx` — cubre: FR-4705
 
 ## Fase 4: Historia 2 — CLI y GitHub Action (P1)
 
@@ -64,25 +64,25 @@ Implementación:
 
 - [ ] T4729 [P] [US4] Prueba con 20 requisitos del portafolio y su verdad — archivos: `cotejo/packages/trace/test/site.test.ts` — cubre: SC-4706
 - [ ] T4730 [US4] BM25 con el puente de glosario, archivos imán, búsqueda literal de IDs en pruebas y los 3 más probables — archivos: `cotejo/packages/trace/src/**` — cubre: FR-4710
-- [ ] T4731 [US4] Índice del sitio generado con la CLI y versionado con su fecha — archivos: `content/ailab/cotejo/repo-index.json` — cubre: FR-4713
+- [x] T4731 [US4] Índice del sitio generado con la CLI y versionado con su fecha — archivos: `content/ailab/cotejo/repo-index.json` — cubre: FR-4713
 
 ## Fase 7: Historia 5 — Capas semánticas (P3)
 
 - [ ] T4732 [P] [US5] Prueba de candidatos y orden con modelos pequeños de prueba — archivos: `cotejo/packages/semantic/test/**` — cubre: FR-4708, FR-4709
 - [ ] T4733 [US5] Embeddings (k = 5, coseno de 0,86 o más) y NLI con los cinco recortes — archivos: `cotejo/packages/semantic/src/**` — cubre: FR-4708, FR-4709
-- [ ] T4734 [US5] Capas opcionales en la demo, con consentimiento y la caché compartida con A5 — archivos: `components/ailab/cotejo/SemanticLayers.tsx`, `lib/ailab/cotejo/semantic.ts` — cubre: FR-4713
+- [x] T4734 [US5] Capas opcionales en la demo, con consentimiento y la caché compartida con A5 — archivos: `components/ailab/cotejo/SemanticLayers.tsx`, `lib/ailab/cotejo/semantic.ts` — cubre: FR-4713
 
 ## Fase final: Pulido
 
 - [ ] T4735 Medición completa: P, R y F1 por detector en el sintético (tres semillas), el difícil del autor y PURE; tiempos, RAM y MB — archivos: `cotejo/bench/results/**`, `cotejo/README.md` — cubre: FR-4715, SC-4701 a SC-4707
-- [ ] T4736 [P] Estación de la ruta — archivos: `content/ailab/cotejo/station.ts` — cubre: FR-4101
-- [ ] T4737 [P] Texto del caso de estudio para que el integrador lo sume (E-4706) — archivos: `content/ailab/cotejo/case.ts` — cubre: FR-4717
-- [ ] T4738 Medir la demo en el perfil móvil: C1 en 300 ms o menos, fps del fondo e INP — cubre: SC-4709
+- [x] T4736 [P] Estación de la ruta — archivos: `content/ailab/cotejo/station.ts` — cubre: FR-4101
+- [x] T4737 [P] Texto del caso de estudio para que el integrador lo sume (E-4706) — archivos: `content/ailab/cotejo/case.ts` — cubre: FR-4717
+- [x] T4738 Medir la demo en el perfil móvil: C1 en 300 ms o menos, fps del fondo e INP — cubre: SC-4709
 - [ ] T4739 Cronometrar al autor con y sin Cotejo sobre la muestra y publicar el resultado — cubre: SC-4710
-- [ ] T4740 Revisión de i18n ES/EN y accesibilidad (teclado, movimiento reducido, resaltado que no depende del color) — archivos: `content/i18n/{es,en}/cotejo.json`, `components/ailab/cotejo/**` — cubre: FR-4719
-- [ ] T4741 Capturas del celular (390×844 y WebKit) del AI Lab contra la última vista aprobada — cubre: FR-4108
+- [x] T4740 Revisión de i18n ES/EN y accesibilidad (teclado, movimiento reducido, resaltado que no depende del color) — archivos: `content/i18n/{es,en}/cotejo.json`, `components/ailab/cotejo/**` — cubre: FR-4719
+- [x] T4741 Capturas del celular (390×844 y WebKit) del AI Lab contra la última vista aprobada — cubre: FR-4108
 - [ ] T4742 El integrador suma `cotejoStation` al registro de estaciones — archivos: `content/ailab/route/index.ts` — cubre: FR-4101 (E-4707)
-- [ ] T4743 Sección «Cómo quedó» en la spec — archivos: `specs/047-cotejo-revisor-de-specs/spec.md`
+- [x] T4743 Sección «Cómo quedó» en la spec — archivos: `specs/047-cotejo-revisor-de-specs/spec.md`
 
 ## Dependencias y orden
 
@@ -98,5 +98,5 @@ La parte del sitio no toca archivos de otra línea.
 ## Validación final
 
 - [ ] T4744 En el repo de Cotejo: suite, medición sintética y reproducibilidad en verde en el CI
-- [ ] T4745 En el sitio: `npx vitest run tests/unit/cotejo`, `npm run lint` y `npm run typecheck` en verde
+- [x] T4745 En el sitio: `npx vitest run tests/unit/cotejo`, `npm run lint` y `npm run typecheck` en verde
 - [ ] T4746 Búsqueda en el diff de los dos repos de la lista de nombres prohibidos de la carpeta privada de la 041 (SC-4104)

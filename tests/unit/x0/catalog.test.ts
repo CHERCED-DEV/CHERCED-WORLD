@@ -94,9 +94,9 @@ describe('copy base de la spec, palabra por palabra (FR-370)', () => {
 })
 
 describe('catálogo del laboratorio (FR-302, T704)', () => {
-  it('trae los 20 experimentos, una vez cada uno, con los de Gemini primero (020), la arena (043) y del pedido a la spec (046) en Agentes', () => {
+  it('trae los 21 experimentos, una vez cada uno, con los de Gemini primero (020), Cotejo en Arquitectura (047), y la arena (043) y del pedido a la spec (046) en Agentes', () => {
     expect([...labCatalog.map((item) => item.id)].sort()).toEqual([...LAB_EXPERIMENT_IDS].sort())
-    expect(labCatalog.map((item) => item.id)).toEqual(['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'A10', 'J1', 'J2', 'A12'])
+    expect(labCatalog.map((item) => item.id)).toEqual(['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'A10', 'J1', 'J2', 'A11', 'A12'])
     expect(isLabExperimentId('V1')).toBe(true)
     expect(isLabExperimentId('A1')).toBe(false)
     expect(labExperiment('R1').title.es).toBe('Simulador de sagas')
@@ -108,7 +108,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
     expect(labThemes().map((group) => [group.theme, group.experiments.map((item) => item.id)])).toEqual([
       ['gemini', ['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1']],
       ['voice', ['V1', 'V2', 'V3', 'V4']],
-      ['architecture', ['R1']],
+      ['architecture', ['R1', 'A11']],
       ['agents', ['A2', 'A3', 'A5', 'A4', 'A10', 'A12']],
       ['games', ['J1', 'J2']],
     ])
@@ -140,6 +140,8 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
       'multilingual-e5-small (int8)': 118 * MB,
       'Pyodide 0.29.0': 12 * MB,
       'numpy (Pyodide 0.29.0)': 3_100_000,
+      'mDeBERTa-v3-base-xnli (int8)': 339 * MB,
+      'nli-deberta-v3-xsmall (int8)': 87 * MB,
     })
     for (const item of labCatalog) {
       for (const download of item.downloads) {
@@ -152,6 +154,8 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
       ['V1', 'Whisper base (int8)'],
     ])
     expect(labExperiment('A4').downloads.every((download) => download.host === 'cdn.jsdelivr.net')).toBe(true)
+    expect(labExperiment('A11').downloads.map((download) => download.resource)).toEqual(['multilingual-e5-small (int8)', 'mDeBERTa-v3-base-xnli (int8)', 'nli-deberta-v3-xsmall (int8)'])
+    expect(labExperiment('A11').downloads[0]).toBe(labExperiment('A5').downloads[0])
   })
 
   it('el fragmento de código es real: está, tal cual, en el archivo que enlaza', () => {

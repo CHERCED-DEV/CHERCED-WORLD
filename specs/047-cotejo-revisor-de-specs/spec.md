@@ -398,3 +398,71 @@ Las nueve preguntas de la propuesta de la 014, con su valor por defecto, más tr
 | P-4712 | ¿Cotejo bloquea PRs en CHERCED-WORLD? | No: solo informa con SARIF |
 | P-4713 | ¿En qué tema del AI Lab va la tarjeta A11? | «Arquitectura» (`architecture`), junto al simulador de sagas |
 | P-4714 | ¿Quién crea el repo público `CHERCED-DEV/cotejo`? | La línea, con la cuenta CHERCED-DEV, solo después del visto bueno explícito del autor, porque es una publicación |
+
+## Cómo quedó: la parte del sitio (28 de noviembre de 2026)
+
+Construida por la línea L6 en la rama `lane/047-cotejo-sitio`, desde la etiqueta `041-base-ola2b`, contra
+`cotejo-core`, `cotejo-semantic` y `cotejo-trace` 0.1.0. La Fase 0 delegada va en dos commits `base(047):` aparte:
+E-4702, E-4703 y E-4705 en el primero, y E-4704 (el registro de la demo en `x9-cotejo.ts`) en el segundo. Faltan la
+etiqueta `047-base-congelada`, la estación en el registro (E-4707) y el caso en `content/projects.ts` (E-4706), que
+son del integrador.
+
+**La tarjeta A11.** «Cotejo: revisor de specs», en «Arquitectura que se toca», detrás del simulador de sagas. Al
+pulsar «Probar» carga la demo y arranca el worker. Se elige la muestra en español, la muestra en inglés o se pega una
+spec de hasta 3.000 líneas, que no sale del dispositivo. Cada hallazgo abre su caja de cristal:
+- la regla, la capa, la severidad y el puntaje desglosado;
+- por qué es un problema y cómo refutarlo;
+- la evidencia con su número de línea, ▶, negrita, borde y el término marcado, así que no depende del color;
+- la huella y si está o no en la verdad de la muestra.
+
+Las cuatro salidas (JSON, SARIF 2.1.0, Markdown y el resumen para agentes) se descargan del mismo reporte.
+
+**La muestra.** «Sala de lectura de la bitácora», una spec inventada en formato Spec Kit, de 584 líneas alineadas
+en ES y EN, con 34 defectos sembrados y su verdad en `content/ailab/cotejo/truth.ts`: 31 para la capa determinista y
+3 que solo ven las capas semánticas (dos paráfrasis y una contradicción dicha con otras palabras).
+
+| Muestra | Hallazgos de C1 | Precisión | Recall | De C1 | Falsos positivos |
+|---|---|---|---|---|---|
+| Español | 31 | 1,00 | 0,91 (31 de 34) | 31 de 31 | 0 |
+| Inglés | 33 | 0,94 | 0,91 (31 de 34) | 31 de 31 | 2 «how many», que el diccionario toma por cantidades vagas |
+
+**«Posiblemente implementado».** Corre a pedido contra `content/ailab/cotejo/repo-index.json`, generado con la CLI de
+Cotejo sobre el sitio, en solo lectura: 921 archivos de `app`, `components`, `lib` y `content/i18n`, sin las carpetas
+privadas ni la demo misma, 1,0 MB. La pantalla compara tres búsquedas contra la verdad de la muestra en español:
+
+| Búsqueda | Ya existen y salen en los 3 primeros | No existen y no se afirma nada |
+|---|---|---|
+| BM25 sin puente | 1 de 18 | 8 de 8 |
+| Con el léxico es→en | 4 de 18 | 6 de 8 |
+| Con el léxico y el glosario | 8 de 18 | 6 de 8 |
+
+En inglés son 6, 6 y 7 de 18. El glosario de la muestra trae nombres del código, así que la última fila es un techo
+optimista, y la pantalla lo dice.
+
+**Las capas semánticas.** Cada una pide su permiso: los embeddings (`multilingual-e5-small`, el mismo modelo y la misma
+caché del buscador A5) y, después, el NLI del idioma de la spec. La salida es una lista ordenada para revisar. Se
+probaron con dobles: con modelos de prueba encuentran los 3 defectos semánticos. Los modelos reales no se descargaron.
+
+**Medición (T4738).** Fue en `next dev --webpack`, porque el build de producción del sitio baja el modelo de 118 MB
+para los vectores del buscador. Se usó el perfil móvil de Chromium, de 390×844, con la CPU a 4×:
+- C1 tarda unos 50 ms en el worker: mediana de 48 a 57 ms en cuatro tandas de cinco corridas. El freno de CPU de las
+  DevTools no llega a los workers dedicados, así que la cifra en un celular de gama media es una estimación: con 4×,
+  unos 200 ms, dentro de los 300 ms de SC-4709.
+- Al pintar los resultados, el hilo principal se trababa hasta 717 ms. Con una transición de React y la lista
+  memorizada, el peor salto entre cuadros quedó en 133 ms y los fps del fondo durante el análisis, en 25 (53 en
+  reposo).
+- Abrir la demo da un INP de 136 ms sin freno y de 312 a 328 ms con 4× en dev; la arena A10 da de 360 a 472 ms en las
+  mismas condiciones. Confirmar los 200 ms en producción queda para la vista previa.
+
+**Revisión a mano (T4741).** Capturas del celular de 390×844 en Chromium y WebKit: la tarjeta, las métricas, la caja
+de cristal, la traza y las capas semánticas, sin desplazamiento horizontal.
+
+**Pruebas.** `tests/unit/cotejo` (51 pruebas: contrato del núcleo, muestra y verdad, métricas, límite de 3.000
+líneas, nada sale del dispositivo, índice, capas semánticas con dobles, estación y caso) y `tests/e2e/cotejo.spec.ts`
+(12 en desktop-chromium, mobile-chromium y no-js).
+
+**Pendiente.**
+- Del integrador: E-4706, E-4707 con los textos de evidencia de `COTEJO_EVIDENCE_TEXT` en `route.json`, la
+  etiqueta y regenerar el índice al integrar cada ola.
+- Del autor: T4739 (el cronómetro con y sin Cotejo), las capas semánticas con los modelos reales y el INP en la vista
+  previa.

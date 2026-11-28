@@ -658,5 +658,8 @@
   "ailab.a10.privacy": "Lo pregenerado no envía nada. Si corres una en vivo con tu cuenta, tu tarea va a Google (Gemini), Anthropic (Claude) y OpenAI, y te lo pregunto antes. Este sitio no guarda el texto de tu tarea.",
   "ailab.a12.title": "Del pedido a la spec",
   "ailab.a12.summary": "Un pedido corto se vuelve una spec breve y pasa por gates: chequeos deterministas, dos revisores que nunca son del proveedor que la escribió, un verificador que intenta tumbar lo dudoso y una corrección. El sistema recomienda y decides tú.",
-  "ailab.a12.privacy": "Las corridas grabadas no envían nada. Si corres tu pedido en vivo con tu cuenta, va a Google (Gemini), Anthropic (Claude) y OpenAI, y te lo pregunto antes. Este sitio no guarda ni tu pedido, ni la spec, ni tu decisión."
+  "ailab.a12.privacy": "Las corridas grabadas no envían nada. Si corres tu pedido en vivo con tu cuenta, va a Google (Gemini), Anthropic (Claude) y OpenAI, y te lo pregunto antes. Este sitio no guarda ni tu pedido, ni la spec, ni tu decisión.",
+  "ailab.a11.title": "Cotejo: revisor de specs",
+  "ailab.a11.summary": "Confronta una spec consigo misma sin gastar un token: contradicciones, duplicados, términos vagos, referencias rotas y requisitos que el sitio probablemente ya tiene, cada uno con su evidencia y cómo refutarlo. Con la muestra ves en vivo su precisión y su recall.",
+  "ailab.a11.privacy": "Tu spec se analiza en un worker de tu navegador y no sale de tu dispositivo. La capa determinista no descarga nada; los embeddings (118 MB) y el NLI (339 MB en español u 87 MB en inglés) se bajan de huggingface.co solo si das permiso."
 }

@@ -658,5 +658,8 @@
   "ailab.a10.privacy": "The pregenerated run sends nothing. If you run one live with your account, your task goes to Google (Gemini), Anthropic (Claude) and OpenAI, and I ask you first. This site does not store the text of your task.",
   "ailab.a12.title": "From request to spec",
   "ailab.a12.summary": "A short request becomes a short spec and goes through gates: deterministic checks, two reviewers that are never from the provider that wrote it, a verifier that tries to knock down the doubtful findings and a fix. The system recommends and you decide.",
-  "ailab.a12.privacy": "Recorded runs send nothing. If you run your request live with your account, it goes to Google (Gemini), Anthropic (Claude) and OpenAI, and I ask you first. This site stores neither your request, nor the spec, nor your decision."
+  "ailab.a12.privacy": "Recorded runs send nothing. If you run your request live with your account, it goes to Google (Gemini), Anthropic (Claude) and OpenAI, and I ask you first. This site stores neither your request, nor the spec, nor your decision.",
+  "ailab.a11.title": "Cotejo: spec reviewer",
+  "ailab.a11.summary": "It checks a spec against itself without spending a single token: contradictions, duplicates, vague terms, broken references and requirements the site probably already has, each with its evidence and how to refute it. With the sample you see its precision and recall live.",
+  "ailab.a11.privacy": "Your spec is analyzed in a worker in your browser and never leaves your device. The deterministic layer downloads nothing; the embeddings (118 MB) and the NLI (339 MB in Spanish or 87 MB in English) come from huggingface.co only if you give permission."
 }
