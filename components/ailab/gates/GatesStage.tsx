@@ -15,6 +15,7 @@ import { gatesDate, gatesList, gatesNumber, gatesText, type GatesCopyKey } from 
 import { FindingList, providerName } from './FindingList'
 import styles from './GatesStage.module.scss'
 import { GatesDownloads } from './GatesDownloads'
+import { GatesEvals } from './GatesEvals'
 import { GatesLive } from './GatesLive'
 import { GatesTotal, GatesTrace, stepCost, type RunLike } from './GatesTrace'
 import { GATES_CHANGES_ENDPOINT, postGate } from './stream'
@@ -496,6 +497,7 @@ export function GatesView({ lang }: { lang: Locale }) {
           {text('gates.run.loading')}
         </p>
       )}
+      <GatesEvals lang={lang} />
       <GatesLive
         lang={lang}
         onStart={() => {

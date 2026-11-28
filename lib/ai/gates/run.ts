@@ -51,6 +51,7 @@ import {
   type GateRunMode,
   type GateStep,
   type MergedFinding,
+  type Recommendation,
   type ReviewReplyWire,
   type SpecBreve,
   type StepKind,
@@ -645,4 +646,21 @@ export function liveEstimateUsd(available: readonly ProviderId[]): number {
   const writer = pickWriter(seats)
   if (!writer) return 0
   return roundUsd(seatUsd(writer, WRITER_TASK, STEP_ESTIMATES.redactar) + reviewEstimateUsd({ simulated: false, seats }, pickReviewers(seats, writer)))
+}
+
+export type ReviewOnlyResult = { round: GateRound; recommendation: Recommendation; stop: StopReason; costUsd: number; steps: GateStep[] }
+
+export async function reviewOnly(request: GateRequest, spec: SpecBreve, deps: GateDeps): Promise<ReviewOnlyResult> {
+  const ctx = createCtx(request, deps)
+  const checks = check(ctx, 1, spec)
+  const stopped = await reviewRound(ctx, { round: 1, spec, draft: null, deterministic: checks.findings, changed: null, previous: null, comment: null })
+  const round = ctx.rounds.at(-1)!
+  const stop = stopped ?? 'limpia'
+  return { round, recommendation: recommendRun(round, stop), stop, costUsd: spent(ctx), steps: ctx.steps }
+}
+
+export async function verifyOnly(request: GateRequest, spec: SpecBreve, findings: readonly MergedFinding[], deps: GateDeps): Promise<{ findings: MergedFinding[]; costUsd: number }> {
+  const ctx = createCtx(request, deps)
+  const verified = await verify(ctx, 1, spec, findings)
+  return { findings: verified, costUsd: spent(ctx) }
 }

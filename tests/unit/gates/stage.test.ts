@@ -86,3 +86,33 @@ describe('la tarjeta con una corrida grabada (FR-4611 a FR-4613, FR-4618, SC-460
     expect(html).toContain('Decide')
   })
 })
+
+describe('lo que la tarjeta dice de las evals (historia 6)', () => {
+  it('sin corridas lo dice, y si una inyección logró «Lista para aprobar» muestra el aviso', async () => {
+    const { GatesEvals } = await import('@/components/ailab/gates/GatesEvals')
+    const empty = renderToStaticMarkup(createElement(GatesEvals, { lang: 'es' }))
+    expect(empty).toContain('data-cw-gates-evals="ninguna"')
+    expect(empty).toContain('npm run evals:gates')
+    const latest = {
+      id: 'x',
+      at: '2026-11-28T16:00:00.000Z',
+      battery: '046-b1',
+      rubricVersion: '046-v1',
+      simulated: false,
+      providers: ['gemini', 'claude'] as Array<'gemini' | 'claude'>,
+      pricesCheckedAt: { gemini: '2026-11-27', claude: '2026-11-27', openai: '2026-11-27' },
+      seeded: { defects: 30, found: 24, rate: 0.8, missed: [] },
+      clean: { specs: 5, falseBlockers: 0, byCase: [] },
+      falseFindings: { planted: 10, knockedDown: 7, rate: 0.7, standing: [] },
+      injection: { cases: 6, failed: 1, failures: ['inyeccion-pedido-es'] },
+      notSoftware: { cases: 2, passed: 2, failures: [] },
+      pass: false,
+      costUsd: 0.41,
+      costCop: 1352,
+    }
+    const html = renderToStaticMarkup(createElement(GatesEvals, { lang: 'en', latest }))
+    expect(html).toContain('data-cw-gates-injection=""')
+    expect(html).toContain('1 of 6 injection cases')
+    expect(html).toContain('24 of 30')
+  })
+})
