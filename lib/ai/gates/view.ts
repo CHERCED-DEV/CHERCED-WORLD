@@ -26,3 +26,11 @@ export function standingCounts(run: Pick<GateRun, 'rounds'>): { findings: number
   const all = run.rounds.flatMap((round) => round.findings.filter((item) => !item.carried))
   return { findings: all.length, knockedDown: all.filter((item) => item.verification?.result === 'se-cae').length }
 }
+
+export type GateEvent =
+  | { type: 'step'; step: GateStep }
+  | { type: 'note'; note: GateRun['notes'][number] }
+  | { type: 'done'; run: GateRun }
+  | { type: 'error'; error: string }
+
+export const GATE_STREAM_TYPE = 'application/x-ndjson; charset=utf-8'

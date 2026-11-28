@@ -639,3 +639,10 @@ export function isSoftwareRequest(text: string): boolean {
 }
 
 export type { ReviewBatch }
+
+export function liveEstimateUsd(available: readonly ProviderId[]): number {
+  const seats = seatsFrom(available)
+  const writer = pickWriter(seats)
+  if (!writer) return 0
+  return roundUsd(seatUsd(writer, WRITER_TASK, STEP_ESTIMATES.redactar) + reviewEstimateUsd({ simulated: false, seats }, pickReviewers(seats, writer)))
+}

@@ -8,12 +8,15 @@ import { GATE_EXAMPLES, type GateExampleId } from '@/content/ailab/gates/example
 import { loadRecorded } from '@/content/ailab/gates/recorded'
 import { specToMarkdown } from '@/lib/ai/gates/markdown'
 import { COMMENT_MAX, type DecisionKind, type GateDecision, type GateRun, type GateStep } from '@/lib/ai/gates/schema'
-import { REPLAY_STEP_MS, roundVisible } from '@/lib/ai/gates/view'
+import { canRequestChanges, REPLAY_STEP_MS, roundVisible } from '@/lib/ai/gates/view'
+import { USD_TO_COP, USD_TO_COP_DATE } from '@/lib/ai/pricing'
 import type { Locale } from '@/lib/i18n/config'
 import { gatesDate, gatesList, gatesNumber, gatesText, type GatesCopyKey } from './copy'
 import { FindingList, providerName } from './FindingList'
 import styles from './GatesStage.module.scss'
-import { GatesTotal, GatesTrace, stepCost } from './GatesTrace'
+import { GatesLive } from './GatesLive'
+import { GatesTotal, GatesTrace, stepCost, type RunLike } from './GatesTrace'
+import { GATES_CHANGES_ENDPOINT, postGate } from './stream'
 
 export type GatesRequestChanges = (run: GateRun, comment: string) => Promise<{ run: GateRun } | { error: string }>
 
@@ -25,7 +28,7 @@ function stepDetail(lang: Locale, step: GateStep): string {
   return text(`gates.step.detail.${step.kind}` as GatesCopyKey, { count: step.count })
 }
 
-function StepBadge({ lang, run, step }: { lang: Locale; run: GateRun; step: GateStep }) {
+function StepBadge({ lang, run, step }: { lang: Locale; run: RunLike; step: GateStep }) {
   const text = gatesText(lang)
   if (step.provider === 'deterministic') return <span className={styles.deterministic}>{text('gates.provider.deterministic')}</span>
   if (step.provider === 'simulator' && step.seat) {
@@ -46,7 +49,7 @@ function StepBadge({ lang, run, step }: { lang: Locale; run: GateRun; step: Gate
   )
 }
 
-export type StepListProps = { lang: Locale; run: GateRun; shown: number; pending: boolean; decided: boolean }
+export type StepListProps = { lang: Locale; run: RunLike; shown: number; pending: boolean; decided: boolean }
 
 export function StepList({ lang, run, shown, pending, decided }: StepListProps) {
   const text = gatesText(lang)
@@ -192,7 +195,7 @@ export function DecisionBox({ lang, run, decision, onDecide, requestChanges, onR
     if (!trimmed) return
     if (!requestChanges) {
       decide('pedir-cambios', trimmed)
-      setNotice(text('gates.decide.recorded'))
+      setNotice(run.mode === 'grabada' ? text('gates.decide.recorded') : run.rounds.some((round) => round.round === 3) ? text('gates.live.error.already') : text('gates.live.error.not_allowed'))
       setCommenting(false)
       return
     }
@@ -327,6 +330,46 @@ function announcement(lang: Locale, run: GateRun, shown: number): string {
   return text('gates.announce.step', { n: shown, total: run.steps.length, kind: text(`gates.step.kind.${step.kind}` as GatesCopyKey), round: step.round, provider, detail: stepDetail(lang, step) })
 }
 
+type LiveState = { steps: GateStep[]; run: GateRun | null; running: boolean }
+
+function streamingRun(steps: readonly GateStep[]): RunLike {
+  return { steps: [...steps], copRate: { value: USD_TO_COP, date: USD_TO_COP_DATE }, simulated: steps.some((step) => step.provider === 'simulator') }
+}
+
+export const requestLiveChanges =
+  (lang: Locale): GatesRequestChanges =>
+  async (run, comment) => {
+    const result = await postGate(GATES_CHANGES_ENDPOINT, { lang, run, comment, consent: true }, () => {})
+    return 'run' in result ? { run: result.run } : { error: result.error }
+  }
+
+type LivePanelProps = { lang: Locale; live: LiveState; decision: GateDecision | null; onDecide: (decision: GateDecision) => void; onRun: (run: GateRun) => void; onBack: () => void }
+
+function LivePanel({ lang, live, decision, onDecide, onRun, onBack }: LivePanelProps) {
+  const text = gatesText(lang)
+  const requestChanges = useMemo(() => requestLiveChanges(lang), [lang])
+  const view = live.run ?? streamingRun(live.steps)
+  return (
+    <section className={styles.run} aria-label={text('gates.live.result')} data-cw-gates-live-run={live.running ? 'corriendo' : live.run ? 'lista' : 'cortada'}>
+      <div className={styles.row}>
+        <p className={styles.label}>{text('gates.live.result')}</p>
+        <Button variant="ghost" size="sm" onClick={onBack} disabled={live.running} data-cw-gates-back="">
+          {text('gates.live.back')}
+        </Button>
+      </div>
+      {live.run?.simulated || view.simulated ? <p className={styles.note}>{text('gates.live.local')}</p> : null}
+      <p className={styles.status} role="status" aria-live="polite">
+        {live.steps.length ? text('gates.live.progress', { count: live.steps.length }) : ''}
+      </p>
+      {live.run ? (
+        <RunView lang={lang} run={live.run} shown={live.run.steps.length} pending={false} decision={decision} onDecide={onDecide} requestChanges={canRequestChanges(live.run) ? requestChanges : null} onRun={onRun} />
+      ) : (
+        <StepList lang={lang} run={view} shown={view.steps.length} pending={live.running} decided={false} />
+      )}
+    </section>
+  )
+}
+
 export function GatesView({ lang }: { lang: Locale }) {
   const text = gatesText(lang)
   const groupId = useId()
@@ -336,6 +379,8 @@ export function GatesView({ lang }: { lang: Locale }) {
   const [shown, setShown] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [decision, setDecision] = useState<GateDecision | null>(null)
+  const [live, setLive] = useState<LiveState | null>(null)
+  const [liveDecision, setLiveDecision] = useState<GateDecision | null>(null)
   const key = `${exampleId}-${lang}`
   const run = loaded?.key === key ? loaded.run : null
   const example = useMemo(() => GATE_EXAMPLES.find((item) => item.id === exampleId)!, [exampleId])
@@ -391,7 +436,22 @@ export function GatesView({ lang }: { lang: Locale }) {
         <blockquote className={styles.quote}>{example.text[lang]}</blockquote>
       </figure>
       {failed ? <p className={styles.error}>{text('gates.run.failed')}</p> : null}
-      {run ? (
+      {live ? (
+        <LivePanel
+          lang={lang}
+          live={live}
+          decision={liveDecision}
+          onDecide={setLiveDecision}
+          onRun={(next) => {
+            setLive({ steps: next.steps, run: next, running: false })
+            setLiveDecision(null)
+          }}
+          onBack={() => {
+            setLive(null)
+            setLiveDecision(null)
+          }}
+        />
+      ) : run ? (
         <>
           <p className={styles.date} data-cw-gates-recorded={run.simulated ? 'simulada' : 'real'}>
             {run.simulated ? text('gates.run.simulated') : text('gates.run.real', { date: gatesDate(run.at, lang) })}
@@ -434,6 +494,16 @@ export function GatesView({ lang }: { lang: Locale }) {
           {text('gates.run.loading')}
         </p>
       )}
+      <GatesLive
+        lang={lang}
+        onStart={() => {
+          setLive({ steps: [], run: null, running: true })
+          setLiveDecision(null)
+        }}
+        onStep={(step) => setLive((current) => (current ? { ...current, steps: [...current.steps, step] } : current))}
+        onDone={(next) => setLive({ steps: next.steps, run: next, running: false })}
+        onFail={(steps) => setLive(steps.length ? { steps, run: null, running: false } : null)}
+      />
     </div>
   )
 }

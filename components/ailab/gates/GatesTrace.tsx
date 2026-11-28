@@ -12,7 +12,9 @@ export function stepCost(lang: Locale, step: GateStep, rate: number): string {
   return text('gates.metrics.cost', { usd: gatesUsd(step.costUsd, lang), cop: gatesCop(step.costUsd, rate, lang) })
 }
 
-export type GatesTraceProps = { lang: Locale; run: GateRun; step: GateStep; index: number }
+export type RunLike = Pick<GateRun, 'steps' | 'copRate' | 'simulated'>
+
+export type GatesTraceProps = { lang: Locale; run: RunLike; step: GateStep; index: number }
 
 export function GatesTrace({ lang, run, step, index }: GatesTraceProps) {
   const text = gatesText(lang)
