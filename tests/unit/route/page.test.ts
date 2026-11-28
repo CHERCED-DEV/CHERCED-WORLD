@@ -49,7 +49,9 @@ describe('página de la ruta renderizada en el servidor (FR-4201, FR-4203)', () 
     expect(more).toContain('data-cw-route-station="diseno-de-sistemas"')
     expect(more).toContain('data-cw-route-station="mcp-en-tu-agente"')
     expect(page).toContain('También prueba 3: Código de calidad')
-    expect(page).not.toContain('data-cw-route-more="2"')
+    const moreForTwo = page.slice(page.indexOf('data-cw-route-more="2"'))
+    expect(page).toContain('data-cw-route-more="2"')
+    expect(moreForTwo).toContain('data-cw-route-station="cotejo"')
   })
 
   it('sin JavaScript se ven pasos y enlaces, y el aviso dice que el reloj, las marcas y el acta piden JavaScript', async () => {

@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import en from '@/content/i18n/en/ailab.json'
 import es from '@/content/i18n/es/ailab.json'
-import { LAB_REPO_URL, defaultDownload, labCatalog, labExperiment, labRepoHref, labThemes } from '@/content/ailab/catalog'
+import { LAB_REPO_URL, defaultDownload, labCatalog, labDownloadPlan, labExperiment, labRepoHref, labThemes } from '@/content/ailab/catalog'
 import { LAB_EXPERIMENT_IDS, LAB_HOSTS, LAB_STATUSES, LAB_THEMES, isLabExperimentId, type Localized } from '@/content/types'
 
 const ROOT = process.cwd()
@@ -156,6 +156,15 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
     expect(labExperiment('A4').downloads.every((download) => download.host === 'cdn.jsdelivr.net')).toBe(true)
     expect(labExperiment('A11').downloads.map((download) => download.resource)).toEqual(['multilingual-e5-small (int8)', 'mDeBERTa-v3-base-xnli (int8)', 'nli-deberta-v3-xsmall (int8)'])
     expect(labExperiment('A11').downloads[0]).toBe(labExperiment('A5').downloads[0])
+  })
+
+  it('las descargas que se excluyen entre sí suman solo la mayor de su grupo (los NLI de la A11, uno por idioma)', () => {
+    const [e5, nliEs, nliEn] = labExperiment('A11').downloads
+    expect(nliEs!.choice).toBe('nli')
+    expect(nliEn!.choice).toBe('nli')
+    const engine = nliEs!.engine!.bytes
+    expect(labDownloadPlan(labExperiment('A11'))).toEqual({ kind: 'onDemand', bytes: e5!.bytes + nliEs!.bytes + engine })
+    expect(labDownloadPlan({ downloads: [nliEn!] })).toEqual({ kind: 'onDemand', bytes: nliEn!.bytes + engine })
   })
 
   it('el fragmento de código es real: está, tal cual, en el archivo que enlaza', () => {

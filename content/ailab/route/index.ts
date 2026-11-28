@@ -1,11 +1,12 @@
 import { arenaStation } from '@/content/ailab/arena/station'
+import { cotejoStation } from '@/content/ailab/cotejo/station'
 import { gatesStation } from '@/content/ailab/gates/station'
 import { engineeringStation } from '@/content/engineering/station'
 import { mcpStation } from '@/content/mcp/station'
 import { coreStations, extraStations } from './core'
 import type { RouteProof, RouteStation } from './stations'
 
-export const routeStations: readonly RouteStation[] = [...coreStations, ...extraStations, mcpStation, engineeringStation, arenaStation, gatesStation]
+export const routeStations: readonly RouteStation[] = [...coreStations, ...extraStations, mcpStation, engineeringStation, arenaStation, gatesStation, cotejoStation]
 
 export const coreRoute: Readonly<Record<RouteProof, string>> = {
   1: 'agente-en-vivo',

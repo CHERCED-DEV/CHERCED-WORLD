@@ -86,5 +86,8 @@
   "route.evidence.mcp-call": "La llamada a una herramienta del MCP y su respuesta (044).",
   "route.evidence.metrics-link": "El enlace a las métricas del tablero de ingeniería (045).",
   "route.evidence.arena-comparison": "La tarea, el proveedor más barato que pasó las reglas, la nota del juez, el costo y el JSON de la comparación (043).",
-  "route.evidence.gates-revision": "El pedido, la recomendación con su motivo de parada y tu decisión; cuántos hallazgos hubo, cuántos tumbó el verificador y el costo; spec.md y revision.json (046)."
+  "route.evidence.gates-revision": "El pedido, la recomendación con su motivo de parada y tu decisión; cuántos hallazgos hubo, cuántos tumbó el verificador y el costo; spec.md y revision.json (046).",
+  "route.evidence.cotejo-findings": "Los hallazgos de Cotejo por familia y el tiempo de la capa determinista en tu navegador (047).",
+  "route.evidence.cotejo-metrics": "La precisión y el recall de Cotejo contra la verdad de la muestra, y el SARIF descargado (047).",
+  "route.evidence.cotejo-repo-run": "El enlace al repo abierto de Cotejo y al último run de su GitHub Action (047)."
 }

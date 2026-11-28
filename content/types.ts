@@ -283,7 +283,7 @@ export type LabHost = (typeof LAB_HOSTS)[number]
 
 export type LabEngine = { resource: string; bytes: number }
 
-export type LabDownload = { resource: string; bytes: number; host: LabHost; default?: true; engine?: LabEngine }
+export type LabDownload = { resource: string; bytes: number; host: LabHost; default?: true; engine?: LabEngine; choice?: string }
 
 export type LabCode = { snippet: string; lang: string; repoPath: string | null }
 

@@ -36,9 +36,9 @@ export const PYODIDE_CORE: LabDownload = { resource: 'Pyodide 0.29.0', bytes: 12
 
 export const PYODIDE_NUMPY: LabDownload = { resource: 'numpy (Pyodide 0.29.0)', bytes: 3_100_000, host: 'cdn.jsdelivr.net' }
 
-export const NLI_ES: LabDownload = { resource: 'mDeBERTa-v3-base-xnli (int8)', bytes: 339 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
+export const NLI_ES: LabDownload = { resource: 'mDeBERTa-v3-base-xnli (int8)', bytes: 339 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB, choice: 'nli' }
 
-export const NLI_EN: LabDownload = { resource: 'nli-deberta-v3-xsmall (int8)', bytes: 87 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB }
+export const NLI_EN: LabDownload = { resource: 'nli-deberta-v3-xsmall (int8)', bytes: 87 * MB, host: 'huggingface.co', engine: ONNX_RUNTIME_WEB, choice: 'nli' }
 
 const V5: LabExperiment = {
   id: 'V5',
@@ -1276,7 +1276,17 @@ export function labDownloadPlan(experiment: Pick<LabExperiment, 'downloads'>): L
   if (experiment.downloads.length === 0) return { kind: 'none' }
   const main = defaultDownload(experiment)
   if (main) return { kind: 'upfront', bytes: withEngines([main]) }
-  return { kind: 'onDemand', bytes: withEngines(experiment.downloads) }
+  return { kind: 'onDemand', bytes: withEngines(largestPerChoice(experiment.downloads)) }
+}
+
+function largestPerChoice(downloads: readonly LabDownload[]): LabDownload[] {
+  const largest = new Map<string, LabDownload>()
+  for (const download of downloads) {
+    if (!download.choice) continue
+    const current = largest.get(download.choice)
+    if (!current || download.bytes > current.bytes) largest.set(download.choice, download)
+  }
+  return downloads.filter((download) => !download.choice || largest.get(download.choice) === download)
 }
 
 export function labRepoHref(repoPath: string): string {
