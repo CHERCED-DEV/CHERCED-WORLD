@@ -298,8 +298,8 @@ $mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace;
 
   thead th {
     font-size: var(--cw-text-xs);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    overflow-wrap: normal;
+    hyphens: auto;
   }
 
   tbody th {

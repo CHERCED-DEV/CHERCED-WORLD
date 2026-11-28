@@ -1,7 +1,7 @@
 'use client'
 
 import type { CotejoReport, Family, Finding, Lang, Profile } from 'cotejo-core'
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { memo, startTransition, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import type { LabDemoProps } from '@/components/ailab/shell/types'
 import { Button } from '@/components/ui/Button'
 import samples from '@/content/ailab/cotejo/samples.json'
@@ -119,11 +119,14 @@ export function CotejoView({ lang, experiment, downloads }: Pick<LabDemoProps, '
     try {
       const result = await client.analyze(input)
       if (current !== generation.current) return
-      setRun({ input, sample: sampleOf(source), lines: sourceLines(input.text), lineCount: result.lines, ms: result.ms, roundTripMs: result.roundTripMs })
-      setReport(result.report)
-      setTrace({ phase: 'idle', view: null })
-      setRunKey(current)
-      setPhase('idle')
+      const sample = sampleOf(source)
+      startTransition(() => {
+        setRun({ input, sample, lines: sourceLines(input.text), lineCount: result.lines, ms: result.ms, roundTripMs: result.roundTripMs })
+        setReport(result.report)
+        setTrace({ phase: 'idle', view: null })
+        setRunKey(current)
+        setPhase('idle')
+      })
     } catch (failure) {
       if (current !== generation.current) return
       setPhase('failed')
@@ -131,9 +134,11 @@ export function CotejoView({ lang, experiment, downloads }: Pick<LabDemoProps, '
     }
   }
 
+  const toggle = useCallback((fingerprint: string) => setOpen((current) => (current === fingerprint ? null : fingerprint)), [])
+
   const onSemantic = useCallback(
     (next: CotejoReport) => {
-      if (runKey === generation.current) setReport(next)
+      if (runKey === generation.current) startTransition(() => setReport(next))
     },
     [runKey],
   )
@@ -144,8 +149,10 @@ export function CotejoView({ lang, experiment, downloads }: Pick<LabDemoProps, '
     try {
       const result = await client.trace()
       if (current !== generation.current) return
-      setReport(result.report)
-      setTrace({ phase: 'ready', view: result.trace })
+      startTransition(() => {
+        setReport(result.report)
+        setTrace({ phase: 'ready', view: result.trace })
+      })
     } catch {
       if (current !== generation.current) return
       setTrace({ phase: 'failed', view: null })
@@ -268,25 +275,7 @@ export function CotejoView({ lang, experiment, downloads }: Pick<LabDemoProps, '
             </p>
           )}
 
-          <section className={styles.panel} aria-labelledby={`${baseId}-findings`} data-cw-cotejo-findings="">
-            <h4 id={`${baseId}-findings`} className={styles.panelTitle}>
-              {text('cotejo.findings.title')}
-            </h4>
-            {groups.length === 0 ? <p className={styles.muted}>{text('cotejo.findings.empty')}</p> : null}
-            {groups.map((group) => (
-              <FamilyGroup
-                key={group.family}
-                lang={lang}
-                baseId={baseId}
-                family={group.family}
-                findings={group.findings}
-                lines={run.lines}
-                sample={Boolean(run.sample)}
-                open={open}
-                onToggle={(fingerprint) => setOpen((current) => (current === fingerprint ? null : fingerprint))}
-              />
-            ))}
-          </section>
+          <FindingsSection lang={lang} baseId={baseId} groups={groups} lines={run.lines} sample={Boolean(run.sample)} open={open} onToggle={toggle} />
 
           <TracePanel lang={lang} phase={trace.phase} view={trace.view} sample={Boolean(run.sample)} disabled={phase === 'running'} onRun={() => void runTrace()} />
 
@@ -318,6 +307,41 @@ export function CotejoView({ lang, experiment, downloads }: Pick<LabDemoProps, '
   )
 }
 
+type FindingsSectionProps = {
+  lang: Locale
+  baseId: string
+  groups: Array<{ family: Family; findings: Finding[] }>
+  lines: string[]
+  sample: boolean
+  open: string | null
+  onToggle: (fingerprint: string) => void
+}
+
+const FindingsSection = memo(function FindingsSection({ lang, baseId, groups, lines, sample, open, onToggle }: FindingsSectionProps) {
+  const text = cotejoText(lang)
+  return (
+    <section className={styles.panel} aria-labelledby={`${baseId}-findings`} data-cw-cotejo-findings="">
+      <h4 id={`${baseId}-findings`} className={styles.panelTitle}>
+        {text('cotejo.findings.title')}
+      </h4>
+      {groups.length === 0 ? <p className={styles.muted}>{text('cotejo.findings.empty')}</p> : null}
+      {groups.map((group) => (
+        <FamilyGroup
+          key={group.family}
+          lang={lang}
+          baseId={baseId}
+          family={group.family}
+          findings={group.findings}
+          lines={lines}
+          sample={sample}
+          open={open !== null && group.findings.some((finding) => finding.fingerprint === open) ? open : null}
+          onToggle={onToggle}
+        />
+      ))}
+    </section>
+  )
+})
+
 type FamilyGroupProps = {
   lang: Locale
   baseId: string
@@ -329,7 +353,7 @@ type FamilyGroupProps = {
   onToggle: (fingerprint: string) => void
 }
 
-function FamilyGroup({ lang, baseId, family, findings, lines, sample, open, onToggle }: FamilyGroupProps) {
+const FamilyGroup = memo(function FamilyGroup({ lang, baseId, family, findings, lines, sample, open, onToggle }: FamilyGroupProps) {
   const text = cotejoText(lang)
   return (
     <div className={styles.family} data-cw-cotejo-family={family}>
@@ -363,7 +387,7 @@ function FamilyGroup({ lang, baseId, family, findings, lines, sample, open, onTo
       </ul>
     </div>
   )
-}
+})
 
 export default function CotejoStage({ lang, experiment, downloads }: LabDemoProps) {
   return <CotejoView lang={lang} experiment={experiment} downloads={downloads} />

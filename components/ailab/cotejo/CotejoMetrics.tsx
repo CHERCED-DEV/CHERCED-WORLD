@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { SampleScore } from '@/lib/ailab/cotejo/metrics'
 import type { Locale } from '@/lib/i18n/config'
 import { cotejoRatio, cotejoText } from './copy'
@@ -5,7 +6,7 @@ import styles from './CotejoStage.module.scss'
 
 export type CotejoMetricsProps = { lang: Locale; score: SampleScore; semanticOn: boolean }
 
-export function CotejoMetrics({ lang, score, semanticOn }: CotejoMetricsProps) {
+export const CotejoMetrics = memo(function CotejoMetrics({ lang, score, semanticOn }: CotejoMetricsProps) {
   const text = cotejoText(lang)
   const missed = score.missed.map((defect) => defect.id).join(', ')
   return (
@@ -73,4 +74,4 @@ export function CotejoMetrics({ lang, score, semanticOn }: CotejoMetricsProps) {
       </details>
     </section>
   )
-}
+})
