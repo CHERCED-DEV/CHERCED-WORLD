@@ -73,9 +73,9 @@ export function ArenaCaseView({ lang, entry, run, input }: CaseViewProps) {
           return (
             <li key={column.provider} className={styles.column} data-cw-arena-column={column.provider} data-status={column.status}>
               <article aria-labelledby={titleId}>
-                <h4 id={titleId} className={styles.columnTitle}>
+                <h5 id={titleId} className={styles.columnTitle}>
                   <ProviderBadge provider={column.provider} label={text(`arena.provider.${column.provider}`)} detail={text(`arena.provider.company.${column.provider}`)} />
-                </h4>
+                </h5>
                 {column.provider === best ? (
                   <p className={styles.best} data-cw-arena-best="">
                     <span aria-hidden="true">★ </span>

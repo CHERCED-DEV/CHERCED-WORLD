@@ -91,14 +91,14 @@ export function ArenaLive({ lang, taskId, onResult }: ArenaLiveProps) {
 
   return (
     <section className={styles.live} aria-labelledby={`${id}-title`} data-cw-arena-live={status?.mode ?? 'loading'}>
-      <h4 id={`${id}-title`} className={styles.columnTitle}>
+      <h5 id={`${id}-title`} className={styles.columnTitle}>
         {text('arena.live.title')}
-      </h4>
+      </h5>
       <p className={styles.muted}>{text('arena.live.intro')}</p>
       {status?.mode === 'off' ? <p className={styles.note}>{text('arena.live.error.off')}</p> : null}
       {status && status.mode !== 'off' && !status.signedIn ? (
         <div className={styles.row}>
-          <a href={signInHref} className={buttonClassName({ variant: 'solid' })} data-cw-arena-signin="">
+          <a href={signInHref} className={buttonClassName({ variant: 'solid', className: styles.signin })} data-cw-arena-signin="">
             {text('arena.live.signin')}
           </a>
           <p className={styles.muted}>{text('arena.live.signinHint')}</p>

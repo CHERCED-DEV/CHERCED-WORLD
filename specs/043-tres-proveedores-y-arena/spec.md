@@ -386,3 +386,65 @@ Precios por millón de tokens:
 | P-4307 | ¿Se usa el SDK oficial de cada proveedor o `fetch`? | SDK oficial para Claude y OpenAI (errores tipados y salida estructurada). Gemini sigue con el `fetch` que ya existe |
 | P-4308 | ¿En qué tema del AI Lab va la tarjeta? | «Agentes y plugins» (`agents`) |
 | P-4309 | ¿Cuánto prepago o límite pone el autor en Anthropic y OpenAI? | 5 USD en cada una para empezar, con recarga automática apagada |
+
+## Cómo quedó (27 de noviembre de 2026)
+
+Construida por la línea L4 en la rama `lane/043-arena`, desde la etiqueta `041-base-ola2`, con las preguntas abiertas
+en su valor por defecto. La Fase 0 delegada va en dos commits `base(043):` aparte. Faltan la etiqueta T4310, la
+estación en el registro (E-4315, del integrador) y la primera corrida real del autor (T4350).
+
+**El puerto.** `lib/ai/providers/port.ts` exporta el contrato del plan sin cambios de forma: `generateJson`,
+`callTools`, `availableProviders`, `providersMode`, `assertMonthlyBudget`, `BudgetExhaustedError` y
+`ProvidersUnavailableError`. Suma, sin romper nada:
+- `BudgetUnavailableError`, para fallar cerrado cuando no se pudo reservar;
+- `ProviderRequestError`, para el 400 que no hace fallback;
+- `SimulatorMissingError`, para el modo local sin `simulate()`;
+- `createPort(deps)`, el mismo puerto con dependencias inyectables, que usan las pruebas.
+
+Cada intento reserva su costo en el libro antes de salir y ajusta al volver. Un tiempo agotado se queda con lo
+reservado, porque el proveedor pudo cobrar. `costUsd` del resultado suma todos los intentos y `latencyMs` es el tiempo
+total que esperó quien llamó. Los esquemas Zod de las líneas no deben usar `.optional()`: la salida estricta de OpenAI
+exige todos los campos, así que lo que puede faltar va con `.nullable()`.
+
+**Los modelos.** Tabla en `lib/ai/providers/models.ts`. Precios en `lib/ai/pricing.ts`, con su fuente y la fecha de
+consulta en `PRICE_SOURCES` (27 de noviembre de 2026):
+
+| Tarea | Gemini | Claude | OpenAI |
+|---|---|---|---|
+| `cheap` | `gemini-3.8-flash` (0,75 / 3,75) | `claude-haiku-5-5` (0,10 / 0,50) | `gpt-6-luna` (0,10 / 0,50), por aprobar |
+| `balanced` | `gemini-3.8-flash` | `claude-sonnet-5-5` (2 / 10) | `gpt-6.2-sol` (2 / 10), por aprobar |
+| `strong` | `gemini-4-argon` (4 / 20 desde el 1 de diciembre), por aprobar | `claude-opus-5-5` (4 / 20) | `gpt-6.2-astra` (8 / 40), por aprobar |
+
+Los precios están en USD por millón de tokens, de entrada y de salida. Haiku 5.5 y los de OpenAI traen su tramo de
+contexto largo. Opus 5.5 y Sonnet 5.5 piden `fallbacks: "default"`; sus destinos (`claude-opus-5`, `claude-opus-4-8` y
+`claude-sonnet-5`) tienen precio, y la reserva cubre el más caro.
+
+**Gemini con herramientas.** `callTools` en Gemini manda `functionDeclarations` junto con la salida estructurada
+(`responseMimeType` y `responseSchema`). No está verificado contra la API real: lo confirma la primera corrida de una
+línea que use herramientas.
+
+**El libro.** `ai_budget` en la Mongo del sitio, un documento por mes UTC, con índice TTL de 400 días en
+`lib/data/mongo/indexes.ts`. La tarjeta del tope vive en el panel, en **Gasto**, debajo de la tabla de siempre. Al
+cruzar 10 USD y 25 USD deja un mensaje en el buzón, una vez por mes. `monthlySpend(now)` para la 045 encaja con el
+lector que ya espera `lib/engineering/spend.ts`.
+
+**La arena.** La tarjeta A10, en «Agentes y plugins», carga la demo al pulsar «Probar». Doce casos fijos con reglas y
+un juez de otro proveedor (rúbrica `043-v1`). `results.json` empieza vacío y la tarjeta lo dice hasta la primera
+corrida. En vivo pide cuenta y el aviso de proveedores, cuesta como mucho 0,05 USD estimados y cobra el cupo (3 por
+cuenta y 10 al día) solo después de pasar las revisiones. En local sin llaves responde el simulador, marcado como tal.
+
+**Revisión a mano.** Se hizo en `next dev --webpack` en el puerto 3144, sin llaves y con la base en memoria, porque
+Turbopack rechazó el junction de `node_modules`. Las capturas son del celular de 390×844 en Chromium y WebKit:
+- las columnas se apilan;
+- la tabla conserva sus encabezados y se desplaza dentro de su marco;
+- la página no se desplaza a lo ancho;
+- no sale ningún pedido a Google, Anthropic ni OpenAI.
+
+En WebKit sobre `http://localhost` la cookie de sesión no se guarda, así que se revisó el estado sin cuenta.
+
+**Pendiente del autor.**
+- Aprobar los modelos de OpenAI y el `strong` de Gemini (P-4301).
+- Crear las llaves y su prepago con las guías [configurar-claude.md](./configurar-claude.md) y
+  [configurar-openai.md](./configurar-openai.md).
+- Crear la colección `ai_budget` en Atlas.
+- Correr `npm run arena:run` una vez (T4350).

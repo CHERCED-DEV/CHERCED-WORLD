@@ -5,6 +5,12 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--cw-space-4);
   min-width: 0;
+
+  :is(button, a) {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
 }
 
 .case {
@@ -42,6 +48,11 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--cw-space-2);
+  min-width: 0;
+
+  > * {
+    min-width: 0;
+  }
 }
 
 .tasks {
@@ -286,9 +297,17 @@
 
 .live {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--cw-space-2);
+  min-width: 0;
   padding-top: var(--cw-space-3);
   border-top: 1px solid var(--cw-glass-border);
+}
+
+.live .signin {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
 }
 
 .form {
