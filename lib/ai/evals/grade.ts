@@ -1,4 +1,4 @@
-import { EVAL_KINDS, type EvalCase, type EvalKind, type EvalMatcher } from '@/content/ailab/evals/battery'
+import { EVAL_KINDS, type EvalCase, type EvalExpect, type EvalKind, type EvalMatcher } from '@/content/ailab/evals/battery'
 
 export type EvalToolCall = { name: string; args: Record<string, unknown> }
 
@@ -35,9 +35,13 @@ function label(matcher: EvalMatcher): string {
 }
 
 export function gradeAnswer(item: EvalCase, answer: Pick<EvalAnswer, 'text' | 'tools'>): EvalGrade {
+  return gradeExpect(item.expect, answer)
+}
+
+export function gradeExpect(expect: EvalExpect, answer: Pick<EvalAnswer, 'text' | 'tools'>): EvalGrade {
   const reasons: string[] = []
   const text = answer.text.trim()
-  const { all, any, none, tool, minChars } = item.expect
+  const { all, any, none, tool, minChars } = expect
   for (const matcher of all ?? []) if (!matches(matcher, text)) reasons.push(`falta ${label(matcher)}`)
   if (any?.length && !any.some((matcher) => matches(matcher, text))) reasons.push(`no trae ninguno de ${any.map(label).join(', ')}`)
   for (const matcher of none ?? []) if (matches(matcher, text)) reasons.push(`no debía decir ${label(matcher)}`)

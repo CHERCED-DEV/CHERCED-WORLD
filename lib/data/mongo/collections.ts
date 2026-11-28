@@ -1,6 +1,6 @@
 import 'server-only'
 import type { Binary, Collection, Db, ObjectId } from 'mongodb'
-import type { AuthorReply, CommentStatus, MessageStatus, Permission, ScryptParams } from '@/lib/data/types'
+import type { AuthorReply, BudgetLine, BudgetProvider, CommentStatus, MessageStatus, Permission, ScryptParams } from '@/lib/data/types'
 
 export const COLLECTIONS = {
   messages: 'messages',
@@ -14,6 +14,7 @@ export const COLLECTIONS = {
   accountSessions: 'account_sessions',
   teamGrants: 'team_grants',
   profiles: 'account_profiles',
+  budget: 'ai_budget',
 } as const
 
 export const CREDENTIAL_ID = 'admin'
@@ -112,6 +113,16 @@ export type AccountSessionDoc = SessionDoc & { accountId: string }
 
 export type TeamGrantDoc = { _id: string; permissions: Permission[]; createdAt: Date; updatedAt: Date }
 
+export type BudgetDoc = {
+  _id: string
+  totalMicroUsd: number
+  byProvider?: Partial<Record<BudgetProvider, number>>
+  byLine?: Partial<Record<BudgetLine, number>>
+  warnedAt?: Date | null
+  cutAt?: Date | null
+  expiresAt: Date
+}
+
 export type DbProvider = () => Promise<Db>
 
 export async function messagesCollection(db: DbProvider): Promise<Collection<MessageDoc>> {
@@ -156,4 +167,8 @@ export async function teamGrantsCollection(db: DbProvider): Promise<Collection<T
 
 export async function profilesCollection(db: DbProvider): Promise<Collection<ProfileDoc>> {
   return (await db()).collection<ProfileDoc>(COLLECTIONS.profiles)
+}
+
+export async function budgetCollection(db: DbProvider): Promise<Collection<BudgetDoc>> {
+  return (await db()).collection<BudgetDoc>(COLLECTIONS.budget)
 }

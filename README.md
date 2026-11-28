@@ -78,6 +78,8 @@ funciona; la función que la usa queda apagada o, en local, simulada (constituci
 | `GOOGLE_CLIENT_ID` | Ingreso con Google (017) | El autor, en Google Cloud ([guía](specs/017-cuentas-e-ingreso/configurar-google.md)) | Production, Preview |
 | `GOOGLE_CLIENT_SECRET` | Ingreso con Google (017) | El autor, en Google Cloud | Production, Preview (Sensitive) |
 | `GEMINI_API_KEY` | IA de Google: agente de voz y experimentos del AI Lab (018) | El autor, en Google Cloud ([guía](specs/018-ia-de-google/configurar-gemini.md)) | Production, Preview (Sensitive) |
+| `ANTHROPIC_API_KEY` | Claude en el puerto de modelos y la arena del AI Lab (043). Sin ella, Claude no aparece y la arena compara los que haya. Tope: 3 comparaciones por cuenta al día, 10 en total, techo mensual de 25 USD para toda la línea y un límite de gasto en la consola | El autor, en la consola de Anthropic ([guía](specs/043-tres-proveedores-y-arena/configurar-claude.md)) | Production, Preview (Sensitive) |
+| `OPENAI_API_KEY` | OpenAI en el puerto de modelos y la arena del AI Lab (043). Sin ella, OpenAI no aparece y la arena compara los que haya. Mismos topes que la de Claude | El autor, en la plataforma de OpenAI ([guía](specs/043-tres-proveedores-y-arena/configurar-openai.md)) | Production, Preview (Sensitive) |
 | `GUEST_MODE` | Modo invitada de Mini Cherced (039): persona, hash del correo de la invitada y, si existe, su experiencia (bienvenida, sorpresas, estrellas y final), en base64. Sin ella el modo no existe | El autor, con `node scripts/guest-mode.mjs` desde su carpeta privada | Production, Preview (Sensitive) |
 
 En local van en `.env.local`, que no se versiona.

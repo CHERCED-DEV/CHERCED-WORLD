@@ -94,9 +94,9 @@ describe('copy base de la spec, palabra por palabra (FR-370)', () => {
 })
 
 describe('catálogo del laboratorio (FR-302, T704)', () => {
-  it('trae los 18 experimentos, una vez cada uno, con los de Gemini primero (020)', () => {
+  it('trae los 19 experimentos, una vez cada uno, con los de Gemini primero (020) y la arena en Agentes (043)', () => {
     expect([...labCatalog.map((item) => item.id)].sort()).toEqual([...LAB_EXPERIMENT_IDS].sort())
-    expect(labCatalog.map((item) => item.id)).toEqual(['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'J1', 'J2'])
+    expect(labCatalog.map((item) => item.id)).toEqual(['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1', 'V1', 'V2', 'V3', 'V4', 'A2', 'A3', 'A5', 'R1', 'A4', 'A10', 'J1', 'J2'])
     expect(isLabExperimentId('V1')).toBe(true)
     expect(isLabExperimentId('A1')).toBe(false)
     expect(labExperiment('R1').title.es).toBe('Simulador de sagas')
@@ -109,7 +109,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
       ['gemini', ['V5', 'V6', 'A6', 'A9', 'A7', 'A8', 'P1']],
       ['voice', ['V1', 'V2', 'V3', 'V4']],
       ['architecture', ['R1']],
-      ['agents', ['A2', 'A3', 'A5', 'A4']],
+      ['agents', ['A2', 'A3', 'A5', 'A4', 'A10']],
       ['games', ['J1', 'J2']],
     ])
     for (const item of labThemes()[0]!.experiments) expect(item.runsIn).toBe('google')
@@ -118,7 +118,7 @@ describe('catálogo del laboratorio (FR-302, T704)', () => {
   it('cada experimento trae estado, dónde corre, privacidad, recorrido y decisiones en ES y EN', () => {
     for (const item of labCatalog) {
       expect(LAB_STATUSES, item.id).toContain(item.status)
-      expect(item.runsIn, item.id).toBe(item.theme === 'gemini' ? 'google' : 'browser')
+      expect(item.runsIn, item.id).toBe(item.theme === 'gemini' ? 'google' : item.id === 'A10' ? 'providers' : 'browser')
       for (const value of [item.title, item.summary, item.privacy, ...item.flow]) {
         expect(value.es.trim(), item.id).not.toBe('')
         expect(value.en.trim(), item.id).not.toBe('')
@@ -200,6 +200,7 @@ describe('la ficha rápida de cada tarjeta', () => {
     expect(v5.limit).toEqual({ uses: RATE_LIMITS.agent.limit, per: RATE_LIMITS.agent.windowMs === hour ? 'hour' : 'day' })
     const a6 = labExperiment('A6')
     expect(a6.limit).toEqual({ uses: RATE_LIMITS.match.limit, per: RATE_LIMITS.match.windowMs === hour ? 'hour' : 'day' })
+    expect(labExperiment('A10').limit).toEqual({ uses: RATE_LIMITS.arena.limit, per: RATE_LIMITS.arena.windowMs === hour ? 'hour' : 'day' })
     for (const experiment of labCatalog) if (experiment.runsIn === 'browser') expect(experiment.limit, experiment.id).toBeNull()
   })
 })

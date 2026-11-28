@@ -8,6 +8,7 @@
   "ailab.meta.title": "AI Lab: experimentos de IA en tu navegador",
   "ailab.runsIn.browser": "Corre en tu navegador",
   "ailab.runsIn.google": "Corre en Google (Gemini)",
+  "ailab.runsIn.providers": "Corre en Google, Anthropic y OpenAI",
   "ailab.v5.title": "Habla con mi portafolio",
   "ailab.v5.summary": "Mini Cherced, mi versión en pixel art, conoce todo el sitio: pregúntale por voz o por texto por mis proyectos, Synergos, el blog o el laboratorio, y si quieres ver algo, te lleva.",
   "ailab.v5.privacy": "Tu voz y lo que escribes van a Google (Gemini Live) mientras dura la conversación. Este sitio no guarda audio ni texto, y la clave de Gemini nunca llega a tu navegador.",
@@ -651,5 +652,8 @@
   "ailab.p1.privacy": "La foto va a Google (Gemini) para generar la imagen. Este sitio no guarda ni la foto ni el resultado.",
   "ailab.v6.title": "Subtítulos en vivo español ↔ inglés",
   "ailab.v6.summary": "Hablas en español y aparecen subtítulos en inglés, o al revés, con la opción de oír la traducción. Así presentaría Camilo en una entrevista en inglés. Descargas los subtítulos en .srt.",
-  "ailab.v6.privacy": "Tu voz va a Google (Gemini) solo mientras dura la sesión, de 3 minutos como máximo. Este sitio no la guarda ni guarda los subtítulos."
+  "ailab.v6.privacy": "Tu voz va a Google (Gemini) solo mientras dura la sesión, de 3 minutos como máximo. Este sitio no la guarda ni guarda los subtítulos.",
+  "ailab.a10.title": "Arena de modelos",
+  "ailab.a10.summary": "La misma tarea para Gemini, Claude y OpenAI, lado a lado: respuesta, latencia, tokens, costo y la nota de las mismas evals, con un juez que nunca es del proveedor evaluado.",
+  "ailab.a10.privacy": "Lo pregenerado no envía nada. Si corres una en vivo con tu cuenta, tu tarea va a Google (Gemini), Anthropic (Claude) y OpenAI, y te lo pregunto antes. Este sitio no guarda el texto de tu tarea."
 }

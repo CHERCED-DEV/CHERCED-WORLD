@@ -25,5 +25,6 @@ export function createUnavailableRepos(): Repos {
     lab: unavailableRepo(),
     rateLimits: unavailableRepo(),
     reactions: unavailableRepo(),
+    budget: unavailableRepo(),
   }
 }

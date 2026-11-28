@@ -18,6 +18,7 @@ const LINES: Array<{ id: string; usage: string; action: RateLimitAction; label: 
   { id: 'panel', usage: 'panel', action: 'panelAiDaily', label: { es: 'Panel: traducir, revisar y proponer', en: 'Panel: translate, review and suggest' } },
   { id: 'cover', usage: 'cover', action: 'panelCoverDaily', label: { es: 'Panel: portadas generadas', en: 'Panel: generated covers' } },
   { id: 'listen', usage: 'listenChunk', action: 'listenDaily', label: { es: 'Voz de Gemini en los posts (frases nuevas)', en: 'Gemini voice on posts (new sentences)' } },
+  { id: 'arena', usage: 'arena', action: 'arenaDaily', label: { es: 'Arena de modelos (Gemini, Claude y OpenAI)', en: 'Model arena (Gemini, Claude and OpenAI)' } },
 ]
 
 export const SPEND_GLOBAL_KEY = 'global'
