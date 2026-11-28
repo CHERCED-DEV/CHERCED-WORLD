@@ -14,6 +14,7 @@ import type { Locale } from '@/lib/i18n/config'
 import { gatesDate, gatesList, gatesNumber, gatesText, type GatesCopyKey } from './copy'
 import { FindingList, providerName } from './FindingList'
 import styles from './GatesStage.module.scss'
+import { GatesDownloads } from './GatesDownloads'
 import { GatesLive } from './GatesLive'
 import { GatesTotal, GatesTrace, stepCost, type RunLike } from './GatesTrace'
 import { GATES_CHANGES_ENDPOINT, postGate } from './stream'
@@ -314,6 +315,7 @@ export function RunView({ lang, run, shown, pending, decision, onDecide, request
           <GatesTotal lang={lang} run={run} />
           <Recommendation lang={lang} run={run} />
           <DecisionBox lang={lang} run={run} decision={decision} onDecide={onDecide} requestChanges={requestChanges} onRun={onRun} />
+          <GatesDownloads lang={lang} run={run} decision={decision} />
           {extra}
         </>
       ) : null}
