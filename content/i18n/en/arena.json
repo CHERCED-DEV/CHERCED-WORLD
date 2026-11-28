@@ -7,7 +7,7 @@
   "arena.provider.company.claude": "Anthropic",
   "arena.provider.company.openai": "OpenAI",
   "arena.line.arena": "Model arena (043)",
-  "arena.line.gates": "PR reviewers (046)",
+  "arena.line.gates": "From request to spec (046)",
   "arena.line.kb": "Knowledge base (048)",
   "arena.line.professions": "Professions (049)",
   "arena.line.pyme": "Small business agent (050)",

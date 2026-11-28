@@ -85,5 +85,6 @@
   "route.evidence.design-diagram": "The Mermaid diagram and the decisions (034).",
   "route.evidence.mcp-call": "A call to an MCP tool and its answer (044).",
   "route.evidence.metrics-link": "The link to the engineering board metrics (045).",
-  "route.evidence.arena-comparison": "The task, the cheapest provider that passed the rules, the judge’s grade, the cost and the comparison JSON (043)."
+  "route.evidence.arena-comparison": "The task, the cheapest provider that passed the rules, the judge’s grade, the cost and the comparison JSON (043).",
+  "route.evidence.gates-revision": "The request, the recommendation with its stop reason and your decision; how many findings there were, how many the verifier knocked down and the cost; spec.md and revision.json (046)."
 }
