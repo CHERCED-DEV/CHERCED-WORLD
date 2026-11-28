@@ -390,3 +390,76 @@ Los tokens son estimados y se recalibran con las evals.
 | P-4605 | ¿Cómo llega el resultado al acta de la 042? | Con el mecanismo que defina la 042 para que una estación reporte su resultado. Mientras no exista, solo la descarga |
 | P-4606 | ¿Se muestra el nombre del proveedor en cada paso? | Sí: es parte de la prueba (quién revisó a quién) |
 | P-4607 | ¿Id y tema de la tarjeta? | A12, en el tema «Agentes y plugins» (`agents`) |
+
+## Cómo quedó (28 de noviembre de 2026)
+
+Construida por la línea L5 en la rama `lane/046-gates`, desde la etiqueta `041-base-ola2b`, con las preguntas abiertas en
+su valor por defecto. La Fase 0 delegada va en dos commits `base(046):` aparte (E-4601 a E-4605, y E-4606 cuando
+existió la tarjeta). Faltan la etiqueta T4605, la estación en el registro (E-4607, del integrador) y las corridas reales
+del autor (T4642).
+
+**El camino.** `lib/ai/gates/run.ts` encadena los pasos sobre el puerto de la 043 (`generateJson`, `prefer`,
+`exclude`, `attempts`, `availableProviders`, `providersMode` y `assertMonthlyBudget`) y sobre `cotejo-core` 0.1.0
+(`analyze` con el perfil `breve`):
+1. El redactor es el `balanced` más barato disponible y va fijo a ese proveedor: si la spec no cumple el contrato dos
+   veces, la corrida termina con un error claro y sin costo de revisión.
+2. Los chequeos corren el núcleo de Cotejo sobre la spec en Markdown (`lib/ai/gates/markdown.ts`), más las dos reglas
+   propias. Un `error` de Cotejo y las reglas propias son fallos bloqueantes; una advertencia entra como menor. Si hay
+   fallos, el redactor corrige una vez antes de los revisores, sin que cuente como ronda. Lo determinista no pasa por
+   el verificador: es un hecho, no una opinión.
+3. Hasta dos revisores excluyen al proveedor del redactor y entre sí. Un revisor que cae no pasa al proveedor del otro,
+   para que los dos sigan siendo independientes: la corrida sigue con uno y lo anota.
+4. El verificador es el `cheap` más barato que no reportó el hallazgo; puede ser el del redactor. Los hallazgos van en
+   un solo llamado por grupo de quienes los reportaron.
+5. En las rondas de corrección los revisores reportan solo sobre lo que cambió, y pueden marcar como resuelto
+   (`resolved`) un hallazgo anterior cuya corrección cayó en otro lugar. Lo que sigue en pie en un lugar sin cambio se
+   arrastra: falla cerrado.
+
+**Decisiones propias que el plan no fijaba.**
+- **Orden de la parada:** limpia, empeoró, dos rondas, tope y presupuesto. «Empeoró» va antes que «dos rondas» porque,
+  con el orden literal de FR-4610, nunca se alcanzaría: toda ronda 2 ya es la segunda.
+- **Motivos de parada nuevos:** `sin-tiempo` (la función de Vercel sigue en 60 s, como las demás rutas, y la corrida se
+  corta a los 50 s), `ronda-pedida` y `redactor-caido`.
+- **La regla falla cerrada:** «revisión no disponible», «no es software» o una ronda que no alcanzó a revisarse
+  recomiendan «No lista».
+- **Lo que viaja al modelo** no lleva largos de texto, para no tropezar con la salida estricta de OpenAI; el servidor
+  recorta y valida contra `specBreve`.
+- **La ronda pedida no confía en el navegador:** la corrida sale sellada con un HMAC de la llave del servidor que ya
+  existe (`lib/security/keys.ts`) y la cuenta, vale un día y se cobra una sola vez con un contador de `rate_limits` por
+  sello. No hay variables nuevas ni nada guardado.
+- **El acta de la 042 (P-4605):** la 042 no trae un mecanismo propio para que una estación reporte, así que la tarjeta
+  usa la nota de la estación `gates` en el progreso de la ruta del navegador. Con la ruta empezada, «Sumar a mi acta de
+  la ruta» agrega el resumen sin borrar lo que escribió quien entrevista.
+
+**Corridas grabadas.** Seis (los tres pedidos en ES y EN) en `content/ailab/gates/recorded/`, hechas con el simulador y
+marcadas como simuladas: el simulador hace el papel de cada proveedor y la tarjeta lo dice en cada paso, sin tokens ni
+costo. Los chequeos, la unión, la verificación y la parada son el código de verdad. Terminan en «Lista para aprobar»
+(contacto), «Con reservas» (citas) y «No lista» por «empeoró» (panadería). Una prueba las compara con el simulador para
+que no se desfasen del código.
+
+**Costo estimado de una corrida en vivo**, con los precios de la 043 y los tokens típicos de esta spec, sin el
+razonamiento de los modelos:
+
+| Proveedores activos | Qué pasa | Costo |
+|---|---|---|
+| Gemini y Claude | Dos rondas | 0,040 USD (unos COP 133); 0,048 USD con la corrección gratis |
+| Gemini, Claude y OpenAI | La ronda 1 cuesta 0,033 USD y la 2 se estima en 0,033 USD: para en «tope de la corrida» | 0,033 USD (unos COP 108); 0,040 USD con la corrección gratis |
+
+Con el tope de 0,05 USD, la ronda que pide la persona solo cabe cuando la corrida paró limpia en la ronda 1. El estimado
+de la ficha (`TYPICAL_USE.gates`) es 0,040 USD. La batería completa (historia 6) cuesta unos 0,60 USD y las seis
+corridas grabadas, unos 0,20 USD.
+
+**Revisión a mano.** En `next dev --webpack` en el puerto 3145, sin llaves y con la base en memoria. Capturas del
+celular de 390×844 en Chromium y WebKit del AI Lab y de la tarjeta A12:
+- los pasos se apilan;
+- la página no se desplaza a lo ancho;
+- la gravedad va en texto y lo tumbado, tachado;
+- no sale ningún pedido a Google, Anthropic ni OpenAI.
+
+El e2e de la tarjeta en `no-js` pasa. La prueba «la página del laboratorio» del e2e x0 falla antes de llegar a las
+tarjetas, porque su lista de temas no trae «Con Gemini»; eso ya fallaba en la base.
+
+**Pendiente del autor.**
+- Correr `npm run evals:gates` una vez (T4642): corre la batería y graba las seis corridas reales.
+- Decidir si con los tres proveedores conviene subir el tope de 0,05 USD o dejar que pare tras la ronda 1.
+- El tablero de la 045 espera el formato de evals de Mini Cherced: mostrar esta batería pide un lector propio.
