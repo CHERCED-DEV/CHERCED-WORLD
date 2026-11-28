@@ -5,7 +5,7 @@ export const BUDGET_CAP_USD = 25
 export const MICRO_PER_USD = 1_000_000
 
 export function toMicroUsd(usd: number): number {
-  return Number.isFinite(usd) && usd > 0 ? Math.ceil(usd * MICRO_PER_USD) : 0
+  return Number.isFinite(usd) && usd > 0 ? Math.ceil(Math.round(usd * MICRO_PER_USD * 1000) / 1000) : 0
 }
 
 export function fromMicroUsd(micro: number): number {
