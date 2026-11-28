@@ -4,7 +4,9 @@ import styles from '@/components/admin/admin.module.scss'
 import { guardPanel } from '@/components/admin/gate'
 import { adminText } from '@/components/admin/labels'
 import { SessionExpired } from '@/components/admin/Views'
+import { BudgetCard } from '@/components/ailab/arena/BudgetCard'
 import { GlassSurface } from '@/components/ui/GlassSurface'
+import { budgetSummary, type BudgetSummary } from '@/lib/ai/budget/summary'
 import { formatUsd } from '@/lib/ai/models'
 import { PRICES_CHECKED_AT, toCop, USD_TO_COP_DATE } from '@/lib/ai/pricing'
 import { spendToday, type SpendLine } from '@/lib/ai/spend'
@@ -61,6 +63,12 @@ export default async function SpendPage({ params }: Props) {
     logServerError('panel.spend', error)
     failed = true
   }
+  let budget: BudgetSummary | null = null
+  try {
+    budget = await budgetSummary(getRepos().budget, new Date())
+  } catch (error) {
+    logServerError('panel.budget', error)
+  }
   const total = lines.reduce((sum, line) => sum + line.usd, 0)
   const cop = new Intl.NumberFormat(lang === 'es' ? 'es-CO' : 'en-US', { maximumFractionDigits: 0 }).format(toCop(total))
 
@@ -98,6 +106,7 @@ export default async function SpendPage({ params }: Props) {
         </p>
         <p className={styles.muted}>{copy.note}</p>
       </GlassSurface>
+      <BudgetCard lang={lang} summary={budget} />
     </section>
   )
 }
