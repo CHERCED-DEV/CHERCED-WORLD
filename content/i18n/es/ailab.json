@@ -655,5 +655,8 @@
   "ailab.v6.privacy": "Tu voz va a Google (Gemini) solo mientras dura la sesión, de 3 minutos como máximo. Este sitio no la guarda ni guarda los subtítulos.",
   "ailab.a10.title": "Arena de modelos",
   "ailab.a10.summary": "La misma tarea para Gemini, Claude y OpenAI, lado a lado: respuesta, latencia, tokens, costo y la nota de las mismas evals, con un juez que nunca es del proveedor evaluado.",
-  "ailab.a10.privacy": "Lo pregenerado no envía nada. Si corres una en vivo con tu cuenta, tu tarea va a Google (Gemini), Anthropic (Claude) y OpenAI, y te lo pregunto antes. Este sitio no guarda el texto de tu tarea."
+  "ailab.a10.privacy": "Lo pregenerado no envía nada. Si corres una en vivo con tu cuenta, tu tarea va a Google (Gemini), Anthropic (Claude) y OpenAI, y te lo pregunto antes. Este sitio no guarda el texto de tu tarea.",
+  "ailab.a12.title": "Del pedido a la spec",
+  "ailab.a12.summary": "Un pedido corto se vuelve una spec breve y pasa por gates: chequeos deterministas, dos revisores que nunca son del proveedor que la escribió, un verificador que intenta tumbar lo dudoso y una corrección. El sistema recomienda y decides tú.",
+  "ailab.a12.privacy": "Las corridas grabadas no envían nada. Si corres tu pedido en vivo con tu cuenta, va a Google (Gemini), Anthropic (Claude) y OpenAI, y te lo pregunto antes. Este sitio no guarda ni tu pedido, ni la spec, ni tu decisión."
 }

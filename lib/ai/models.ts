@@ -28,6 +28,19 @@ const ARENA_COMPARISON: Budget = {
   ],
 }
 
+const GATES_RUN: Budget = {
+  model: GEMINI_MODELS.text,
+  input: { text: 1800 },
+  output: { text: 1500 },
+  also: [
+    { model: GEMINI_MODELS.text, input: { text: 2500 }, output: { text: 1500 } },
+    { model: 'claude-sonnet-5-5', input: { text: 2800 }, output: { text: 700 } },
+    { model: 'gpt-6.2-sol', input: { text: 2800 }, output: { text: 700 } },
+    { model: 'claude-haiku-5-5', input: { text: 1500 }, output: { text: 300 } },
+    { model: 'gpt-6-luna', input: { text: 1500 }, output: { text: 300 } },
+  ],
+}
+
 export const TYPICAL_USE: Record<string, Budget> = {
   V5: { model: GEMINI_MODELS.live, input: { text: 9000, audio: 6000 }, output: { text: 1200, audio: 6000 } },
   A6: { model: GEMINI_MODELS.text, input: { text: 7000 }, output: { text: 1800 } },
@@ -48,6 +61,8 @@ export const TYPICAL_USE: Record<string, Budget> = {
   listenChunk: { model: GEMINI_MODELS.tts, input: { text: 60 }, output: { audio: 400 } },
   arena: ARENA_COMPARISON,
   A10: ARENA_COMPARISON,
+  gates: GATES_RUN,
+  A12: GATES_RUN,
 }
 
 function budgetCostUsd(budget: Budget): number | null {

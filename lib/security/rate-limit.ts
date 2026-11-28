@@ -47,6 +47,8 @@ export const RATE_LIMITS = {
   mcpDaily: { limit: 3000, windowMs: 24 * 60 * MINUTE },
   arena: { limit: 3, windowMs: 24 * 60 * MINUTE },
   arenaDaily: { limit: 10, windowMs: 24 * 60 * MINUTE },
+  gates: { limit: 2, windowMs: 24 * 60 * MINUTE },
+  gatesDaily: { limit: 6, windowMs: 24 * 60 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 
 export type RateLimitAction = keyof typeof RATE_LIMITS

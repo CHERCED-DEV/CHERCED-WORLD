@@ -1135,7 +1135,61 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
-export const labCatalog: readonly LabExperiment[] = [V5, V6, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, A10, J1, J2]
+const A12: LabExperiment = {
+  id: 'A12',
+  theme: 'agents',
+  title: copy('ailab.a12.title'),
+  summary: copy('ailab.a12.summary'),
+  status: 'beta',
+  runsIn: 'providers',
+  inputs: ['text'],
+  session: { activity: 'analysis', minutes: 3 },
+  poweredBy: { es: 'Gemini, Claude y OpenAI, más el núcleo de Cotejo', en: 'Gemini, Claude and OpenAI, plus the Cotejo core' },
+  limit: { uses: 2, per: 'day' },
+  downloads: [],
+  privacy: copy('ailab.a12.privacy'),
+  flow: [
+    {
+      es: 'Eliges uno de tres pedidos de ejemplo y ves su corrida grabada paso a paso: un redactor arma una spec breve y unos chequeos deterministas la revisan sin gastar',
+      en: 'You pick one of three sample requests and watch its recorded run step by step: a writer drafts a short spec and deterministic checks review it for free',
+    },
+    {
+      es: 'Dos revisores de proveedores distintos al redactor la juzgan con una rúbrica fija, un verificador intenta tumbar lo dudoso y el redactor corrige',
+      en: 'Two reviewers from providers other than the writer judge it with a fixed rubric, a verifier tries to knock down the doubtful findings and the writer fixes it',
+    },
+    {
+      es: 'El sistema recomienda y tú decides: aprobar, pedir cambios o rechazar. Te llevas la spec y la revisión; con cuenta corres tu propio pedido',
+      en: 'The system recommends and you decide: approve, request changes or reject. You take the spec and the review with you; with an account you run your own request',
+    },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Nadie revisa lo de su propio proveedor', en: 'Nobody reviews their own provider’s work' },
+      why: {
+        es: 'Los estudios de LLM como juez documentan que un modelo tiende a preferir lo suyo. Los revisores salen de proveedores distintos al redactor, y el verificador, de uno distinto al revisor que reportó el hallazgo.',
+        en: 'LLM-as-judge studies document that a model tends to prefer its own work. Reviewers come from providers other than the writer, and the verifier from one other than the reviewer that reported the finding.',
+      },
+      tradeoff: {
+        es: 'Con un solo proveedor activo no hay revisión, y la corrida termina en «revisión no disponible».',
+        en: 'With a single active provider there is no review, and the run ends in “review not available”.',
+      },
+    },
+    {
+      decision: { es: 'La recomendación es una regla del servidor', en: 'The recommendation is a server rule' },
+      why: {
+        es: 'Sale de los hallazgos que quedan en pie, no de un texto del modelo. Una inyección dentro del pedido no puede «aprobar», y la decisión final es de una persona.',
+        en: 'It comes from the findings still standing, not from model text. An injection inside the request cannot “approve”, and the final decision belongs to a person.',
+      },
+      tradeoff: {
+        es: 'Tres valores sin matices, y una persona tiene que pulsar un botón más.',
+        en: 'Three values with no nuance, and a person has to press one more button.',
+      },
+    },
+  ],
+  code: null,
+}
+
+export const labCatalog: readonly LabExperiment[] = [V5, V6, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, A10, J1, J2, A12]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)
