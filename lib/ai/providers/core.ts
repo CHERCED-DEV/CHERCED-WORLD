@@ -5,6 +5,7 @@ import { reserveBudget, settleBudget, type BudgetNotifier, type Ledger } from '@
 import type { AdapterLoader } from './adapter'
 import { estimateTokens, roundUsd, servedCostUsd } from './cost'
 import { asProviderError, ProviderCallError, type FailureKind } from './errors'
+import { safeReason } from './redact'
 import { keyedProviders, type ProviderKeys } from './mode'
 import { TASK_MAX_OUTPUT_TOKENS } from './models'
 import { planRoute, type ModelResolver, type RouteCandidate, type RoutePlan } from './router'
@@ -49,7 +50,7 @@ export function outcomeFor(kind: FailureKind): AttemptOutcome {
 }
 
 export function record(ctx: CallContext, candidate: RouteCandidate, attempt: Omit<ProviderAttempt, 'provider' | 'requestedModel'>): void {
-  ctx.attempts.push({ provider: candidate.provider, requestedModel: candidate.model, ...attempt, costUsd: roundUsd(attempt.costUsd) })
+  ctx.attempts.push({ provider: candidate.provider, requestedModel: candidate.model, ...attempt, reason: attempt.reason === null ? null : safeReason(attempt.reason), costUsd: roundUsd(attempt.costUsd) })
 }
 
 export type AttemptResult<R> = { ok: true; reply: R; latencyMs: number } | { ok: false; error: ProviderCallError; latencyMs: number; costUsd: number }
