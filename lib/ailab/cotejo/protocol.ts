@@ -77,6 +77,6 @@ export type CotejoResult =
   | { type: 'loaded'; model: SemanticModelKind; device: SemanticDevice; ms: number }
   | { type: 'semantic'; report: CotejoReport; semantic: SemanticView }
   | { type: 'exported'; exports: CotejoExports }
-  | { type: 'unloaded' }
+  | { type: 'unloaded'; report: CotejoReport | null }
 
 export type CotejoProgress = { stage: 'download'; model: SemanticModelKind; loaded: number; total: number } | { stage: 'index' }

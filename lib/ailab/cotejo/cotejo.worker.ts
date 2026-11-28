@@ -148,5 +148,5 @@ serveLabWorker<CotejoRequest, CotejoResult, CotejoProgress>(async (request, cont
   nli = {}
   nliCache.clear()
   if (current) current.extras = { ...current.extras, semantic: null }
-  return { type: 'unloaded' }
+  return { type: 'unloaded', report: current ? report(current) : null }
 })

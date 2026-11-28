@@ -16,6 +16,7 @@ import { CotejoMetrics } from './CotejoMetrics'
 import { COTEJO_ACTION_RUNS_URL, COTEJO_REPO_URL, cotejoMs, cotejoNumber, cotejoText } from './copy'
 import styles from './CotejoStage.module.scss'
 import { FindingDetail } from './FindingDetail'
+import { SemanticLayers } from './SemanticLayers'
 import { TracePanel, type TracePhase } from './TracePanel'
 
 type SourceChoice = 'sample-es' | 'sample-en' | 'pasted'
@@ -62,7 +63,7 @@ function reasonText(lang: Locale, error: unknown): string {
   return error instanceof Error && error.message ? error.message : cotejoText(lang)('cotejo.failed.unknown')
 }
 
-export function CotejoView({ lang, experiment }: Pick<LabDemoProps, 'lang' | 'experiment'>) {
+export function CotejoView({ lang, experiment, downloads }: Pick<LabDemoProps, 'lang' | 'experiment' | 'downloads'>) {
   const text = cotejoText(lang)
   const baseId = useId()
   const [source, setSource] = useState<SourceChoice>(lang === 'en' ? 'sample-en' : 'sample-es')
@@ -75,6 +76,7 @@ export function CotejoView({ lang, experiment }: Pick<LabDemoProps, 'lang' | 'ex
   const [report, setReport] = useState<CotejoReport | null>(null)
   const [trace, setTrace] = useState<{ phase: TracePhase; view: TraceView | null }>({ phase: 'idle', view: null })
   const [open, setOpen] = useState<string | null>(null)
+  const [runKey, setRunKey] = useState(0)
   const generation = useRef(0)
 
   const onEvict = useCallback(() => {
@@ -120,6 +122,7 @@ export function CotejoView({ lang, experiment }: Pick<LabDemoProps, 'lang' | 'ex
       setRun({ input, sample: sampleOf(source), lines: sourceLines(input.text), lineCount: result.lines, ms: result.ms, roundTripMs: result.roundTripMs })
       setReport(result.report)
       setTrace({ phase: 'idle', view: null })
+      setRunKey(current)
       setPhase('idle')
     } catch (failure) {
       if (current !== generation.current) return
@@ -127,6 +130,13 @@ export function CotejoView({ lang, experiment }: Pick<LabDemoProps, 'lang' | 'ex
       setError(reasonText(lang, failure))
     }
   }
+
+  const onSemantic = useCallback(
+    (next: CotejoReport) => {
+      if (runKey === generation.current) setReport(next)
+    },
+    [runKey],
+  )
 
   const runTrace = async () => {
     const current = generation.current
@@ -280,6 +290,18 @@ export function CotejoView({ lang, experiment }: Pick<LabDemoProps, 'lang' | 'ex
 
           <TracePanel lang={lang} phase={trace.phase} view={trace.view} sample={Boolean(run.sample)} disabled={phase === 'running'} onRun={() => void runTrace()} />
 
+          <SemanticLayers
+            key={runKey}
+            lang={lang}
+            experiment={experiment}
+            client={client}
+            downloads={downloads}
+            specLang={report.lang}
+            sample={Boolean(run.sample)}
+            disabled={phase === 'running'}
+            onResult={onSemantic}
+          />
+
           <CotejoDownloads lang={lang} client={client} base={fileBase} disabled={phase === 'running'} />
         </>
       ) : null}
@@ -343,6 +365,6 @@ function FamilyGroup({ lang, baseId, family, findings, lines, sample, open, onTo
   )
 }
 
-export default function CotejoStage({ lang, experiment }: LabDemoProps) {
-  return <CotejoView lang={lang} experiment={experiment} />
+export default function CotejoStage({ lang, experiment, downloads }: LabDemoProps) {
+  return <CotejoView lang={lang} experiment={experiment} downloads={downloads} />
 }

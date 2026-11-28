@@ -8,6 +8,7 @@ import { CotejoMetrics } from '@/components/ailab/cotejo/CotejoMetrics'
 import { COTEJO_DOWNLOADS, downloadFileName } from '@/components/ailab/cotejo/CotejoDownloads'
 import { FindingDetail } from '@/components/ailab/cotejo/FindingDetail'
 import { TRACE_INDEX_BYTES } from '@/components/ailab/cotejo/TracePanel'
+import { labExperiment } from '@/content/ailab/catalog'
 import en from '@/content/i18n/en/cotejo.json'
 import es from '@/content/i18n/es/cotejo.json'
 import samples from '@/content/ailab/cotejo/samples.json'
@@ -38,7 +39,7 @@ describe('textos de la demo en ES y EN (T4740, FR-4719)', () => {
 
 describe('la tarjeta antes de analizar (T4719)', () => {
   it.each(['es', 'en'] as const)('%s: elige la muestra del idioma de la página, y el botón y los enlaces se leen sin JavaScript del worker', (lang) => {
-    const html = renderToStaticMarkup(createElement(CotejoView, { lang, experiment: 'A11' }))
+    const html = renderToStaticMarkup(createElement(CotejoView, { lang, experiment: 'A11', downloads: labExperiment('A11').downloads }))
     const copy = lang === 'es' ? es : en
     expect(html).toContain('data-cw-cotejo=""')
     expect(html).toContain(`data-cw-cotejo-source="sample-${lang}"`)

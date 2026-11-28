@@ -1,5 +1,6 @@
 'use client'
 
+import type { CotejoReport } from 'cotejo-core'
 import { useMemo } from 'react'
 import type { LabExperimentId } from '@/content/types'
 import { useLabWorker } from '@/lib/ailab/core/use-lab-worker'
@@ -17,7 +18,7 @@ export type CotejoClient = {
   load(model: SemanticModelKind, device: SemanticDevice, onProgress?: (loaded: number, total: number) => void): Promise<Result<'loaded'>>
   semantic(nli: boolean): Promise<Result<'semantic'>>
   exports(): Promise<CotejoExports>
-  unload(): Promise<void>
+  unload(): Promise<CotejoReport | null>
 }
 
 function expectType<T extends CotejoResult['type']>(result: CotejoResult, type: T): Result<T> {
@@ -47,7 +48,7 @@ export function createCotejoClient(worker: () => CotejoWorker, now: () => number
     semantic: (nli) => call({ type: 'semantic', nli }, 'semantic'),
     exports: async () => (await call({ type: 'export' }, 'exported')).exports,
     unload: async () => {
-      await call({ type: 'unload' }, 'unloaded')
+      return (await call({ type: 'unload' }, 'unloaded')).report
     },
   }
 }
