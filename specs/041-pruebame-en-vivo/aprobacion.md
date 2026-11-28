@@ -136,7 +136,7 @@ peores casos.
   - aprobar la tabla de modelos por tarea (P-4301);
   - el aviso por el buzón (P-4304);
   - permiso para `arena:run`.
-- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+- **Decisión:** ☑ Aprobada el 27 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
 
 ### 047 — Cotejo, revisor de specs · ola 2 · L6
 
@@ -156,7 +156,8 @@ peores casos.
   - tu visto bueno explícito para crear el repo público (P-4714);
   - si se publica en npm (P-4710);
   - unos 60 pares de requisitos para el corpus difícil (P-4705).
-- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+- **Decisión:** ☑ Aprobada el 27 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde. El repo se
+  construye en local y sin remoto hasta tu visto bueno para hacerlo público (P-4714).
 
 ### 046 — Del pedido a la spec con gates · ola 2 · L5
 
@@ -178,7 +179,8 @@ peores casos.
 - **Necesita de ti:**
   - permiso para `evals:gates` y para grabar tres corridas reales;
   - P-4605 (cómo suma su resultado al acta de la ruta).
-- **Decisión:** ☐ Aprobada · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde
+- **Decisión:** ☑ Aprobada el 27 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde. Arranca cuando
+  estén integrados el puerto de la 043 y el núcleo de Cotejo.
 
 ### 048 — Base de conocimiento honesta · ola 3 · L7
 
@@ -303,16 +305,17 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 - [x] Forja, fase C: decidir SC-5110. La firma subió la fase construir 3,07 minutos de media y el criterio pide 3 o
   menos; casi todo es variación entre corridas. Dado por cumplido el 27 de noviembre.
 - [ ] Revisar los datos ficticios de la 048, la 049 y la 050 antes de publicarlos.
-- [ ] Decidir la actualización de seguridad de Next. El sitio usa 16.4.3 y `npm audit` marca siete avisos moderados
-  (de 16.0.0 a 16.4.4). Los corrige 16.4.6, del 9 de noviembre, que no cambia de versión mayor y también trae
-  `eslint-config-next` 16.4.6. Revisado el 27 de noviembre contra el código:
+- [x] Decidir la actualización de seguridad de Next. El sitio usaba 16.4.3 y `npm audit` le marcaba siete avisos
+  moderados (de 16.0.0 a 16.4.4). Los corrige 16.4.6, del 9 de noviembre, que no cambia de versión mayor y también
+  trae `eslint-config-next` 16.4.6. Revisado el 27 de noviembre contra el código:
   - **No aplican cinco:** tres piden `'use cache'` y el sitio solo usa `unstable_cache`; otro pide Cache Components,
     que no está encendido; y el de respuestas reenviadas es para sitios propios, no para Vercel.
   - **Aplican poco dos:** el salto del rechazo de SVG en la optimización de imágenes (las SVG ya van con `unoptimized`
     y solo se sirven imágenes locales de `/assets` y `/capsule`) y el de cookies HttpOnly en rutas Edge (no hay rutas
     Edge declaradas).
-  - **Recomendación:** subir a 16.4.6 en un cambio aparte, con el build real y las pruebas de lo que toca. Sin tu
-    visto bueno no se cambia.
+  - **Hecho el 27 de noviembre:** `next`, `@next/mdx` y `eslint-config-next` en 16.4.6, en un cambio aparte. Los
+    avisos de `next` desaparecen. `npm audit` sigue marcando siete moderados de otra cadena que ya estaba antes:
+    `minimatch` dentro de `typescript-eslint`, que solo corre en el lint y no llega al sitio.
 - [ ] Conseguir dos personas que cronometren la ruta.
 - [ ] Autorizar, cuando quieras, las corridas que gastan:
   - la traza de respaldo, unos 0,10 USD;
@@ -331,3 +334,5 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 | 27 de noviembre de 2026 | 051, fase C | Aprobada con los valores por defecto de P-5109 a P-5112 | «Apruebo la fase C con los valores por defecto» |
 | 27 de noviembre de 2026 | 051, fase C | Las tres corridas con la firma, autorizadas | «Sí, las tres» |
 | 27 de noviembre de 2026 | 051, fase C | SC-5110 dado por cumplido (3,07 minutos de media contra 3, por variación entre corridas) | «Darlo por cumplido» |
+| 27 de noviembre de 2026 | Next | Subir `next`, `@next/mdx` y `eslint-config-next` a 16.4.6 en un cambio aparte | «Sí, súbelo» |
+| 27 de noviembre de 2026 | 043, 047 y 046 | Aprobadas, con sus preguntas abiertas en su valor por defecto. Siguen esperando lo que publica o gasta: las llaves, `ai_budget`, los modelos de OpenAI, el repo público de Cotejo, `arena:run` y `evals:gates`. La 048, la 049 y la 050 van después, en la ola 3 | «y sigue con las otras specs» |
