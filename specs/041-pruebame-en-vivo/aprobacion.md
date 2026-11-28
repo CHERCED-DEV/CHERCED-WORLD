@@ -158,6 +158,8 @@ peores casos.
   - unos 60 pares de requisitos para el corpus difícil (P-4705).
 - **Decisión:** ☑ Aprobada el 27 de noviembre de 2026 · ☐ Con cambios · ☐ Rechazada · ☐ Más tarde. El repo se
   construye en local y sin remoto hasta tu visto bueno para hacerlo público (P-4714).
+- **P-4714:** ☑ visto bueno el 27 de noviembre. `CHERCED-DEV/cotejo` se crea público cuando el núcleo esté listo y
+  revisado, con su código y el release que consume el sitio. npm sigue fuera (P-4710).
 
 ### 046 — Del pedido a la spec con gates · ola 2 · L5
 
@@ -295,7 +297,7 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
   - crear `ANTHROPIC_API_KEY` y `OPENAI_API_KEY` con límite en cada consola;
   - crear la colección `ai_budget` en Atlas;
   - elegir los modelos de OpenAI.
-- [ ] Dar el visto bueno para crear el repo público de Cotejo.
+- [x] Dar el visto bueno para crear el repo público de Cotejo. Dado el 27 de noviembre.
 - [ ] Forja (051): crear el repo privado `CHERCED-DEV/forja`, probarlo en una sesión tuya con pantalla compartida
   y, después de P-4105, hacer público el repo. Ya elegiste la corrida grabada (`cruzado-turnos`) y que los requisitos
   verificados por comando cuenten como cubiertos.
@@ -336,3 +338,4 @@ El detalle está en [plan.md](./plan.md). Los cinco que más pesan:
 | 27 de noviembre de 2026 | 051, fase C | SC-5110 dado por cumplido (3,07 minutos de media contra 3, por variación entre corridas) | «Darlo por cumplido» |
 | 27 de noviembre de 2026 | Next | Subir `next`, `@next/mdx` y `eslint-config-next` a 16.4.6 en un cambio aparte | «Sí, súbelo» |
 | 27 de noviembre de 2026 | 043, 047 y 046 | Aprobadas, con sus preguntas abiertas en su valor por defecto. Siguen esperando lo que publica o gasta: las llaves, `ai_budget`, los modelos de OpenAI, el repo público de Cotejo, `arena:run` y `evals:gates`. La 048, la 049 y la 050 van después, en la ola 3 | «y sigue con las otras specs» |
+| 27 de noviembre de 2026 | 047 | P-4714: crear el repo público `CHERCED-DEV/cotejo` cuando el núcleo esté listo | «Sí, créalo» |
