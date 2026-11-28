@@ -59,6 +59,10 @@ export default async function PrivacyPage({ params }: Props) {
           </section>
         ))}
         <section>
+          <h2>{t(privacy, 'privacy.providers.heading')}</h2>
+          <p>{t(privacy, 'privacy.providers.body')}</p>
+        </section>
+        <section>
           <h2>{t(privacy, 'privacy.technical.heading')}</h2>
           <p>{t(privacy, 'privacy.technical.body')}</p>
         </section>

@@ -45,6 +45,8 @@ export const RATE_LIMITS = {
   mcp: { limit: 60, windowMs: 10 * MINUTE },
   mcpMatch: { limit: 10, windowMs: 60 * MINUTE },
   mcpDaily: { limit: 3000, windowMs: 24 * 60 * MINUTE },
+  arena: { limit: 3, windowMs: 24 * 60 * MINUTE },
+  arenaDaily: { limit: 10, windowMs: 24 * 60 * MINUTE },
 } as const satisfies Record<string, RateLimitRule>
 
 export type RateLimitAction = keyof typeof RATE_LIMITS

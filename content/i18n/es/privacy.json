@@ -3,6 +3,8 @@
   "privacy.updatedAt": "Última actualización: {date}",
   "privacy.technical.heading": "Datos técnicos",
   "privacy.technical.body": "Para proteger los formularios y las reacciones del spam guardo durante unos minutos una huella cifrada de tu dirección IP, nunca la IP en sí. Las reacciones solo guardan contadores. En tu navegador solo quedan tus preferencias (idioma, tema, atajos de teclado, las reacciones que marcaste y cuántas veces despertaste al muñeco de «Cuidado, no tocar»). No uso analítica ni cookies de seguimiento.",
+  "privacy.providers.heading": "Arena de modelos: Google, Anthropic y OpenAI",
+  "privacy.providers.body": "Lo pregenerado de la arena del AI Lab no envía nada. Si inicias sesión y aceptas el aviso, el texto de tu tarea, de hasta 1.000 caracteres, va a tres proveedores para compararlos: Google (Gemini), Anthropic (Claude) y OpenAI. Mi servidor les manda solo la tarea, nunca tu nombre ni tu correo, y no guarda el texto: guarda en la base del sitio un contador por cuenta para el límite diario, que se borra solo al día siguiente, y el gasto del mes por proveedor, que no dice quién lo hizo. Uso las API de pago de los tres; según sus términos, lo que se envía por API no se usa para entrenar sus modelos. Las otras demos que usan estos proveedores te avisan igual antes de enviar.",
   "privacy.contactCta": "Ir al formulario de contacto",
   "meta.privacy.title": "Privacidad",
   "meta.privacy.description": "Qué datos recojo en este sitio, para qué los uso y cómo pedir su consulta o eliminación."

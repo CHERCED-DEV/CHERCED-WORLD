@@ -2,6 +2,7 @@ import 'server-only'
 import type { Repos } from '../types'
 import { createMemoryAccountRepo } from './accounts'
 import { createMemoryAdminRepo } from './admin'
+import { createMemoryBudgetRepo } from './budget'
 import { createMemoryCommentRepo } from './comments'
 import { createMemoryLabRepo } from './lab'
 import { createMemoryMessageRepo } from './messages'
@@ -19,7 +20,8 @@ export function createMemoryRepos(): Repos {
     lab: createMemoryLabRepo(),
     rateLimits: createMemoryRateLimitRepo(),
     reactions: createMemoryReactionRepo(),
+    budget: createMemoryBudgetRepo(),
   }
 }
 
-export { createMemoryAccountRepo, createMemoryAdminRepo, createMemoryCommentRepo, createMemoryLabRepo, createMemoryMessageRepo, createMemoryProfileRepo, createMemoryRateLimitRepo, createMemoryReactionRepo }
+export { createMemoryAccountRepo, createMemoryAdminRepo, createMemoryBudgetRepo, createMemoryCommentRepo, createMemoryLabRepo, createMemoryMessageRepo, createMemoryProfileRepo, createMemoryRateLimitRepo, createMemoryReactionRepo }

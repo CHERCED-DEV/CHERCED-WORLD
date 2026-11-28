@@ -2,6 +2,7 @@ import 'server-only'
 import type { Repos } from '@/lib/data/types'
 import { createMongoAccountRepo } from './accounts'
 import { createMongoAdminRepo } from './admin'
+import { createMongoBudgetRepo } from './budget'
 import type { DbProvider } from './collections'
 import { createMongoCommentRepo } from './comments'
 import { createMongoLabRepo } from './lab'
@@ -20,9 +21,10 @@ export function createMongoRepos(db: DbProvider): Repos {
     lab: createMongoLabRepo(db),
     rateLimits: createMongoRateLimitRepo(db),
     reactions: createMongoReactionRepo(db),
+    budget: createMongoBudgetRepo(db),
   }
 }
 
-export { createMongoAccountRepo, createMongoAdminRepo, createMongoCommentRepo, createMongoMessageRepo, createMongoProfileRepo, createMongoRateLimitRepo, createMongoReactionRepo }
+export { createMongoAccountRepo, createMongoAdminRepo, createMongoBudgetRepo, createMongoCommentRepo, createMongoMessageRepo, createMongoProfileRepo, createMongoRateLimitRepo, createMongoReactionRepo }
 export { COLLECTIONS, type DbProvider } from './collections'
 export { ensureIndexes, TTL_INDEXES } from './indexes'

@@ -1,0 +1,108 @@
+@use 'breakpoints' as bp;
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-3);
+  padding: var(--cw-space-4);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--cw-text-lg);
+  font-weight: 800;
+}
+
+.muted {
+  margin: 0;
+  color: var(--cw-fg-muted);
+  font-size: var(--cw-text-sm);
+  line-height: var(--cw-leading-snug);
+}
+
+.total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--cw-space-2);
+  margin: 0;
+
+  strong {
+    font-size: var(--cw-text-2xl);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.meters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-2);
+
+  @include bp.up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.meter {
+  display: grid;
+  gap: var(--cw-space-1);
+  font-size: var(--cw-text-sm);
+}
+
+.bar {
+  width: 100%;
+  height: 0.75rem;
+}
+
+.state {
+  margin: 0;
+  font-weight: 700;
+}
+
+.alert {
+  margin: 0;
+  color: var(--cw-danger);
+  font-weight: 700;
+}
+
+.tables {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cw-space-3);
+
+  @include bp.up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--cw-text-sm);
+
+  caption {
+    padding-bottom: var(--cw-space-1);
+    font-weight: 700;
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--cw-glass-border);
+    text-align: left;
+  }
+
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead th {
+    font-size: var(--cw-text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}

@@ -325,6 +325,34 @@ export interface LabRepo {
   revokeConsent(accountId: string, now: Date): Promise<void>
 }
 
+export const BUDGET_LINES = ['arena', 'gates', 'kb', 'professions', 'pyme'] as const
+
+export type BudgetLine = (typeof BUDGET_LINES)[number]
+
+export const BUDGET_PROVIDERS = ['gemini', 'claude', 'openai'] as const
+
+export type BudgetProvider = (typeof BUDGET_PROVIDERS)[number]
+
+export type BudgetMark = 'warnedAt' | 'cutAt'
+
+export type BudgetMonth = {
+  month: string
+  totalMicroUsd: number
+  byProvider: Partial<Record<BudgetProvider, number>>
+  byLine: Partial<Record<BudgetLine, number>>
+  warnedAt: Date | null
+  cutAt: Date | null
+}
+
+export const BUDGET_RETENTION_DAYS = 400
+
+export interface BudgetRepo {
+  reserve(month: string, microUsd: number, capMicroUsd: number): Promise<{ ok: boolean; totalMicroUsd: number }>
+  settle(month: string, reservedMicroUsd: number, actualMicroUsd: number, provider: BudgetProvider, line: BudgetLine): Promise<BudgetMonth>
+  mark(month: string, field: BudgetMark, now: Date): Promise<boolean>
+  get(month: string): Promise<BudgetMonth | null>
+}
+
 export interface Repos {
   messages: MessageRepo
   comments: CommentRepo
@@ -334,6 +362,7 @@ export interface Repos {
   lab: LabRepo
   rateLimits: RateLimitRepo
   reactions: ReactionRepo
+  budget: BudgetRepo
 }
 
 export type RepoFactory = () => Repos

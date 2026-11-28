@@ -40,7 +40,7 @@ export function labFacts(experiment: LabExperiment, labels: LabFactLabels, lang:
   const vars = { minutes: session.minutes, activity: labels.activities[session.activity] }
   const time = t({ session: session.capped ? labels.session.capped : labels.session.typical }, 'session', vars)
   const downloads = plan.kind === 'none' ? labels.plan.none : t({ plan: labels.plan[plan.kind] }, 'plan', { size: formatBytes(plan.bytes, lang) })
-  const usd = experiment.runsIn === 'google' ? typicalCostUsd(experiment.id) : null
+  const usd = experiment.runsIn === 'browser' ? null : typicalCostUsd(experiment.id)
   const base = limit ? t({ cost: labels.cost[limit.per] }, 'cost', { uses: limit.uses }) : labels.cost.free
   const cost = usd === null ? base : `${base} · ${t({ paid: labels.cost.paid }, 'paid', { usd: formatUsd(usd, lang) })}`
   return {

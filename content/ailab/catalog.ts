@@ -905,6 +905,60 @@ const A4: LabExperiment = {
   },
 }
 
+const A10: LabExperiment = {
+  id: 'A10',
+  theme: 'agents',
+  title: copy('ailab.a10.title'),
+  summary: copy('ailab.a10.summary'),
+  status: 'beta',
+  runsIn: 'providers',
+  inputs: ['text'],
+  session: { activity: 'analysis', minutes: 2 },
+  poweredBy: { es: 'Gemini, Claude y OpenAI', en: 'Gemini, Claude and OpenAI' },
+  limit: { uses: 3, per: 'day' },
+  downloads: [],
+  privacy: copy('ailab.a10.privacy'),
+  flow: [
+    {
+      es: 'Eliges una de las seis tareas fijas y ves la última corrida pregenerada: la misma tarea resuelta por Gemini, Claude y OpenAI, lado a lado',
+      en: 'You pick one of the six fixed tasks and see the latest pregenerated run: the same task solved by Gemini, Claude and OpenAI, side by side',
+    },
+    {
+      es: 'Cada respuesta pasa por las reglas de las evals y por un juez de otro proveedor, que nunca califica a su propia casa',
+      en: 'Each answer goes through the eval rules and through a judge from another provider, which never grades its own house',
+    },
+    {
+      es: 'Con cuenta corres una en vivo: el puerto del servidor reserva el costo en un libro mensual con techo de 25 USD antes de llamar a nadie',
+      en: 'With an account you run one live: the server port reserves the cost in a monthly ledger capped at 25 USD before calling anyone',
+    },
+  ],
+  adrCards: [
+    {
+      decision: { es: 'Un solo puerto para los tres proveedores', en: 'One port for the three providers' },
+      why: {
+        es: 'El servidor pide JSON validado con el mismo contrato a Gemini, a Claude o a OpenAI, elige el más barato disponible y cae al siguiente si uno falla. Las demos nuevas no se casan con un proveedor.',
+        en: 'The server asks Gemini, Claude or OpenAI for validated JSON with the same contract, picks the cheapest one available and falls back to the next if one fails. New demos are not married to a provider.',
+      },
+      tradeoff: {
+        es: 'Cada proveedor tiene su forma de salida estructurada y de herramientas; el puerto traduce y por eso solo usa lo que los tres comparten.',
+        en: 'Each provider has its own shape for structured output and tools; the port translates, so it only uses what the three share.',
+      },
+    },
+    {
+      decision: { es: 'El juez nunca es del proveedor evaluado', en: 'The judge is never from the provider being graded' },
+      why: {
+        es: 'Los estudios de LLM como juez documentan que un modelo favorece sus propias respuestas. Además, la respuesta le llega al juez como datos delimitados, para que una inyección no cambie la nota.',
+        en: 'LLM-as-judge studies document that a model favors its own answers. On top of that, the answer reaches the judge as delimited data, so an injection does not change the grade.',
+      },
+      tradeoff: {
+        es: 'Con un solo proveedor activo no hay nota del juez, y la pantalla lo dice. Son seis tareas, no un benchmark.',
+        en: 'With a single active provider there is no judge grade, and the screen says so. These are six tasks, not a benchmark.',
+      },
+    },
+  ],
+  code: null,
+}
+
 const J1: LabExperiment = {
   id: 'J1',
   theme: 'games',
@@ -1081,7 +1135,7 @@ adamStep(net, grads, adam, options.lr, 1 / batch.length)`,
   },
 }
 
-export const labCatalog: readonly LabExperiment[] = [V5, V6, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, J1, J2]
+export const labCatalog: readonly LabExperiment[] = [V5, V6, A6, A9, A7, A8, P1, V1, V2, V3, V4, A2, A3, A5, R1, A4, A10, J1, J2]
 
 export function labExperiment(id: LabExperimentId): LabExperiment {
   const experiment = labCatalog.find((item) => item.id === id)

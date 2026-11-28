@@ -94,7 +94,7 @@ export function labCardLabels(ailab: Dictionary, site: Dictionary, blog: Diction
   return {
     statusPrefix: t(ailab, 'ailab.status.label'),
     status: Object.fromEntries(LAB_STATUSES.map((status) => [status, t(ailab, `ailab.status.${status}`)])) as Record<LabStatus, string>,
-    runsIn: { browser: t(ailab, 'ailab.runsIn.browser'), google: t(ailab, 'ailab.runsIn.google') },
+    runsIn: { browser: t(ailab, 'ailab.runsIn.browser'), google: t(ailab, 'ailab.runsIn.google'), providers: t(ailab, 'ailab.runsIn.providers') },
     privacy: t(ailab, 'ailab.part.privacy'),
     parts: { try: t(ailab, 'ailab.part.try'), details: t(ailab, 'ailab.part.details'), how: t(ailab, 'ailab.part.how'), code: t(ailab, 'ailab.part.code') },
     how: { flow: t(ailab, 'ailab.how.flow'), decisions: t(ailab, 'ailab.how.decisions') },
