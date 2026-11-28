@@ -6,5 +6,6 @@ import { x4Demos } from './x4-games'
 import { x6Demos } from './x6-agent'
 import { x7Demos } from './x7-match'
 import { x8Demos } from './x8-arena'
+import { x10Demos } from './x10-gates'
 
-export const labDemos: LabDemoRegistry = { ...x6Demos, ...x7Demos, ...x1Demos, ...x2Demos, ...x3Demos, ...x4Demos, ...x8Demos }
+export const labDemos: LabDemoRegistry = { ...x6Demos, ...x7Demos, ...x1Demos, ...x2Demos, ...x3Demos, ...x4Demos, ...x8Demos, ...x10Demos }

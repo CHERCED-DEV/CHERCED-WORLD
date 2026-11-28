@@ -1,0 +1,882 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-11-28T03-13-20-396Z",
+  "at": "2026-11-28T03:13:20.396Z",
+  "mode": "grabada",
+  "simulated": true,
+  "rubricVersion": "046-v1",
+  "request": {
+    "text": "A fictional neighborhood bakery needs a board to see the day’s orders: who placed them, what they contain, when they are picked up and whether they are ready. The team marks each order as ready from a tablet.",
+    "lang": "en",
+    "source": "ejemplo",
+    "exampleId": "panaderia"
+  },
+  "writer": {
+    "seat": "gemini",
+    "provider": "simulator"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "spec": {
+        "title": "Board of the day’s orders",
+        "problem": "The bakery team keeps orders on paper and cannot see at a glance which are pending or when they are picked up.",
+        "includes": [
+          "A board with the day’s orders.",
+          "Marking an order as ready from a tablet."
+        ],
+        "excludes": [
+          "Online payments."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "The board shows every order of the day with who placed it, what it contains and when it is picked up."
+          },
+          {
+            "id": "R-2",
+            "text": "The team marks an order as ready from a tablet and the board updates."
+          },
+          {
+            "id": "R-3",
+            "text": "The board sorts orders by pickup time."
+          },
+          {
+            "id": "R-4",
+            "text": "When someone marks an order as ready, the board shows it in less than 5 s."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "three orders of the day",
+            "when": "the team opens the board",
+            "then": "it sees all three with customer, contents and time"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "a pending order",
+            "when": "someone marks it as ready on the tablet",
+            "then": "the board shows it as ready"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "an 8:00 order and a 7:30 order",
+            "when": "the board opens",
+            "then": "the 7:30 one comes first"
+          },
+          {
+            "id": "C-4",
+            "covers": [
+              "R-4"
+            ],
+            "given": "the board open on another screen",
+            "when": "someone marks an order as ready",
+            "then": "the change shows in less than 5 s"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "How many orders does a normal day have?",
+            "byDefault": "Up to 80 orders."
+          }
+        ]
+      },
+      "draft": {
+        "title": "Board of the day’s orders",
+        "problem": "The bakery team keeps orders on paper and cannot see at a glance which are pending or when they are picked up.",
+        "includes": [
+          "A board with the day’s orders.",
+          "Marking an order as ready from a tablet."
+        ],
+        "excludes": [
+          "Online payments."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "The board shows every order of the day with who placed it, what it contains and when it is picked up."
+          },
+          {
+            "id": "R-2",
+            "text": "The team marks an order as ready from a tablet and the board updates."
+          },
+          {
+            "id": "R-3",
+            "text": "The board sorts orders by pickup time."
+          },
+          {
+            "id": "R-4",
+            "text": "The board updates in real time and handles 500."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "three orders of the day",
+            "when": "the team opens the board",
+            "then": "it sees all three with customer, contents and time"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "a pending order",
+            "when": "someone marks it as ready on the tablet",
+            "then": "the board shows it as ready"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "an 8:00 order and a 7:30 order",
+            "when": "the board opens",
+            "then": "the 7:30 one comes first"
+          }
+        ],
+        "questions": []
+      },
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "completa",
+          "gravity": "bloqueante",
+          "where": "R-1",
+          "problem": "The spec does not say how orders get onto the board: does the team type them in or do they come from somewhere else?",
+          "fix": "Add a requirement to register an order.",
+          "confidence": 0.75,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.75,
+              "problem": "The spec does not say how orders get onto the board: does the team type them in or do they come from somewhere else?",
+              "fix": "Add a requirement to register an order."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-sostiene",
+            "reason": "No R-n says how an order is created.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-2",
+          "criterion": "honesta",
+          "gravity": "bloqueante",
+          "where": "Q-1",
+          "problem": "The 80 orders are an invented figure.",
+          "fix": "Remove the figure.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.5,
+              "problem": "The 80 orders are an invented figure.",
+              "fix": "Remove the figure."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-cae",
+            "reason": "Q-1 presents the figure as a question with its default, which is exactly what the rubric asks for what is uncertain.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-3",
+          "criterion": "clara",
+          "gravity": "importante",
+          "where": "R-2",
+          "problem": "“Ready” can mean “baked” or “packed”: it has two readings.",
+          "fix": "Define ready as packed and waiting for pickup.",
+          "confidence": 0.7,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.7,
+              "problem": "“Ready” can mean “baked” or “packed”: it has two readings.",
+              "fix": "Define ready as packed and waiting for pickup."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-4",
+          "criterion": "acotada",
+          "gravity": "menor",
+          "where": "excludes",
+          "problem": "It only excludes payments; it does not say whether phone orders come in.",
+          "fix": "Say whether phone orders are out.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.5,
+              "problem": "It only excludes payments; it does not say whether phone orders come in.",
+              "fix": "Say whether phone orders are out."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "no-se-sabe",
+            "reason": "The request does not mention channels; it is not enough to decide.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": false
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": null,
+      "comment": null
+    },
+    {
+      "round": 2,
+      "spec": {
+        "title": "Board of the day’s orders",
+        "problem": "The bakery team keeps orders on paper and cannot see at a glance which are pending or when they are picked up.",
+        "includes": [
+          "A board with the day’s orders.",
+          "Marking an order as ready from a tablet."
+        ],
+        "excludes": [
+          "Online payments."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "The board shows every order of the day with who placed it, what it contains and when it is picked up."
+          },
+          {
+            "id": "R-2",
+            "text": "Ready means packed and waiting for pickup; the team marks it from the tablet and the board updates."
+          },
+          {
+            "id": "R-3",
+            "text": "The board sorts orders by pickup time."
+          },
+          {
+            "id": "R-4",
+            "text": "When someone marks an order as ready, the board shows it in less than 5 s."
+          },
+          {
+            "id": "R-5",
+            "text": "The team registers a new order with customer, contents, pickup time and phone, and the customer gets an SMS when it is ready."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "three orders of the day",
+            "when": "the team opens the board",
+            "then": "it sees all three with customer, contents and time"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "a pending order",
+            "when": "someone marks it as ready on the tablet",
+            "then": "the board shows it as ready"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "an 8:00 order and a 7:30 order",
+            "when": "the board opens",
+            "then": "the 7:30 one comes first"
+          },
+          {
+            "id": "C-4",
+            "covers": [
+              "R-4"
+            ],
+            "given": "the board open on another screen",
+            "when": "someone marks an order as ready",
+            "then": "the change shows in less than 5 s"
+          },
+          {
+            "id": "C-5",
+            "covers": [
+              "R-6"
+            ],
+            "given": "a new phone order",
+            "when": "the team registers it",
+            "then": "it appears on the board with its pickup time"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "How many orders does a normal day have?",
+            "byDefault": "Up to 80 orders."
+          }
+        ]
+      },
+      "draft": null,
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "verificable",
+          "gravity": "bloqueante",
+          "where": "C-5",
+          "problem": "Criterion C-5 covers R-6, which does not exist. Criterion C-5 covers no requirement that exists.",
+          "fix": "Fix the ID of the requirement it covers or add the missing requirement.",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "coverage.unknown-requirement",
+            "criterio-sin-requisito"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-2",
+          "criterion": "acotada",
+          "gravity": "bloqueante",
+          "where": "R-5",
+          "problem": "The SMS to the customer and their phone number are not in the request: they add a new provider and a new piece of personal data.",
+          "fix": "Remove the SMS and the phone number from R-5.",
+          "confidence": 0.8,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.8,
+              "problem": "The SMS to the customer and their phone number are not in the request: they add a new provider and a new piece of personal data.",
+              "fix": "Remove the SMS and the phone number from R-5."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-sostiene",
+            "reason": "The request mentions neither messages to the customer nor their phone.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-3",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "R-5",
+          "problem": "Acronym SMS is used 1 times and is not defined.",
+          "fix": "Define it in the glossary or on first use, as «Full name (ACRONYM)».",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "glossary.undefined-acronym"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-4",
+          "criterion": "verificable",
+          "gravity": "menor",
+          "where": "R-5",
+          "problem": "Requirement R-5 has no criterion that covers it.",
+          "fix": "Add a given-when-then criterion that verifies it.",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "coverage.requirement-without-criterion"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-5",
+          "criterion": "acotada",
+          "gravity": "menor",
+          "where": "excludes",
+          "problem": "It only excludes payments; it does not say whether phone orders come in.",
+          "fix": "Say whether phone orders are out.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.5,
+              "problem": "It only excludes payments; it does not say whether phone orders come in.",
+              "fix": "Say whether phone orders are out."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "no-se-sabe",
+            "reason": "The request does not mention channels; it is not enough to decide.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": true
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": [
+        "R-2",
+        "R-5",
+        "C-5"
+      ],
+      "comment": null
+    }
+  ],
+  "steps": [
+    {
+      "kind": "redactar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 1,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 3.12,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "R-4"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "corregir",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 1,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 2.74,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [
+        "H-1",
+        "H-4"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-2"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "corregir",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 5,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 2,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 2.82,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [
+        "C-5"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-2"
+      ],
+      "reason": null
+    }
+  ],
+  "notes": [
+    {
+      "seat": null,
+      "where": null,
+      "detail": "1",
+      "round": 1,
+      "kind": "correccion-gratis"
+    },
+    {
+      "seat": "claude",
+      "where": "R-1",
+      "detail": "H-1",
+      "round": 2,
+      "kind": "resuelto"
+    }
+  ],
+  "recommendation": "no-lista",
+  "stop": "empeoro",
+  "totalUsd": 0,
+  "totalCop": 0,
+  "capUsd": 0.05,
+  "copRate": {
+    "value": 3297,
+    "date": "2026-11-11"
+  },
+  "pricesCheckedAt": {
+    "gemini": "2026-11-27",
+    "claude": "2026-11-27",
+    "openai": "2026-11-27"
+  },
+  "seal": null
+}

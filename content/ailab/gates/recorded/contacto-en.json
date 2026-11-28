@@ -1,0 +1,831 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-11-28T03-13-20-125Z",
+  "at": "2026-11-28T03:13:20.125Z",
+  "mode": "grabada",
+  "simulated": true,
+  "rubricVersion": "046-v1",
+  "request": {
+    "text": "I want a contact form for the website of a fictional design studio: name, email, message and up to three attachments. When someone writes, the studio should get an email notice and the person should see that the message was sent.",
+    "lang": "en",
+    "source": "ejemplo",
+    "exampleId": "contacto"
+  },
+  "writer": {
+    "seat": "gemini",
+    "provider": "simulator"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "spec": {
+        "title": "Contact form with attachments",
+        "problem": "Visitors to the studio’s website cannot send files with their message, and the studio does not find out in time that someone wrote.",
+        "includes": [
+          "A form with name, email, message and up to three attachments.",
+          "An email notice to the studio for every message.",
+          "An on-screen confirmation for the person who writes."
+        ],
+        "excludes": [
+          "Live chat.",
+          "A dashboard to answer messages from the site."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "The form accepts up to 3 attachments of 5 MB each."
+          },
+          {
+            "id": "R-2",
+            "text": "On submit, the studio gets an email notice."
+          },
+          {
+            "id": "R-3",
+            "text": "The writer sees on screen that the message was sent, with the name of each attachment."
+          },
+          {
+            "id": "R-4",
+            "text": "The form shows the confirmation in less than 2 s after submitting."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "a 6 MB attachment",
+            "when": "the writer sends it",
+            "then": "the form rejects it and says the maximum is 5 MB"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "a valid message",
+            "when": "it is sent",
+            "then": "the studio gets an email with the notice"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "a message sent with one attachment",
+            "when": "sending finishes",
+            "then": "the screen says the message was sent and shows the attachment name"
+          },
+          {
+            "id": "C-4",
+            "covers": [
+              "R-4"
+            ],
+            "given": "a valid message",
+            "when": "it is sent",
+            "then": "the confirmation appears in less than 2 s"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "Which file formats are accepted?",
+            "byDefault": "PDF, PNG and JPG."
+          }
+        ]
+      },
+      "draft": {
+        "title": "Contact form with attachments",
+        "problem": "Visitors to the studio’s website cannot send files with their message, and the studio does not find out in time that someone wrote.",
+        "includes": [
+          "A form with name, email, message and up to three attachments.",
+          "An email notice to the studio for every message.",
+          "An on-screen confirmation for the person who writes."
+        ],
+        "excludes": [
+          "Live chat.",
+          "A dashboard to answer messages from the site."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "The form accepts up to 3 attachments of 5 MB each."
+          },
+          {
+            "id": "R-2",
+            "text": "On submit, the studio gets an email notice."
+          },
+          {
+            "id": "R-3",
+            "text": "The writer sees a quick confirmation that the message was sent."
+          },
+          {
+            "id": "R-4",
+            "text": "The form responds in less than 2."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "a 6 MB attachment",
+            "when": "the writer sends it",
+            "then": "the form rejects it and says the maximum is 5 MB"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "a valid message",
+            "when": "it is sent",
+            "then": "the studio gets an email with the notice"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-5"
+            ],
+            "given": "a sent message",
+            "when": "sending finishes",
+            "then": "the confirmation shows on screen"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "Which file formats are accepted?",
+            "byDefault": "PDF, PNG and JPG."
+          }
+        ]
+      },
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "verificable",
+          "gravity": "bloqueante",
+          "where": "C-1",
+          "problem": "C-1 does not say what happens with an attachment over 5 MB.",
+          "fix": "Add the case of the attachment over the limit.",
+          "confidence": 0.65,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.65,
+              "problem": "C-1 does not say what happens with an attachment over 5 MB.",
+              "fix": "Add the case of the attachment over the limit."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-cae",
+            "reason": "C-1 already covers it: given a 6 MB attachment, the form rejects it and says the maximum is 5 MB.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-2",
+          "criterion": "honesta",
+          "gravity": "importante",
+          "where": "R-1",
+          "problem": "The 5 MB limit does not come from the request: it belongs in a question with its default, not in a requirement.",
+          "fix": "Move the size to Q-1 with its default and leave R-1 as “up to 3 attachments”.",
+          "confidence": 0.55,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.55,
+              "problem": "The 5 MB limit does not come from the request: it belongs in a question with its default, not in a requirement.",
+              "fix": "Move the size to Q-1 with its default and leave R-1 as “up to 3 attachments”."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-sostiene",
+            "reason": "The request only says “up to three attachments”: the size does not appear.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-3",
+          "criterion": "completa",
+          "gravity": "importante",
+          "where": "R-2",
+          "problem": "R-2 does not say what the notice contains: the studio would not know who wrote without opening something else.",
+          "fix": "Say that the email carries the name, email, message and attachments.",
+          "confidence": 0.8,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.8,
+              "problem": "R-2 does not say what the notice contains: the studio would not know who wrote without opening something else.",
+              "fix": "Say that the email carries the name, email, message and attachments."
+            },
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.75,
+              "problem": "The notice to the studio does not say what data it carries.",
+              "fix": "List the fields of the email."
+            }
+          ],
+          "seenByBoth": true,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-4",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "R-3",
+          "problem": "“On screen” does not say how long the confirmation stays visible.",
+          "fix": "Say whether it stays until the person closes the page.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.5,
+              "problem": "“On screen” does not say how long the confirmation stays visible.",
+              "fix": "Say whether it stays until the person closes the page."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "no-se-sabe",
+            "reason": "The request does not say how long the confirmation lasts; there is no evidence to knock it down or to uphold it.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": false
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": null,
+      "comment": null
+    },
+    {
+      "round": 2,
+      "spec": {
+        "title": "Contact form with attachments",
+        "problem": "Visitors to the studio’s website cannot send files with their message, and the studio does not find out in time that someone wrote.",
+        "includes": [
+          "A form with name, email, message and up to three attachments.",
+          "An email notice to the studio for every message.",
+          "An on-screen confirmation for the person who writes."
+        ],
+        "excludes": [
+          "Live chat.",
+          "A dashboard to answer messages from the site."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "The form accepts up to 3 attachments; size and formats are set by Q-1."
+          },
+          {
+            "id": "R-2",
+            "text": "On submit, the studio gets an email with the writer’s name, email, message and attachments."
+          },
+          {
+            "id": "R-3",
+            "text": "The writer sees on screen that the message was sent, with the name of each attachment."
+          },
+          {
+            "id": "R-4",
+            "text": "The form shows the confirmation in less than 2 s after submitting."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "an attachment larger than the Q-1 maximum",
+            "when": "the writer sends it",
+            "then": "the form rejects it and says what the maximum is"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "a valid message with one attachment",
+            "when": "it is sent",
+            "then": "the studio gets an email with the name, email, message and attachment"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "a message sent with one attachment",
+            "when": "sending finishes",
+            "then": "the screen says the message was sent and shows the attachment name"
+          },
+          {
+            "id": "C-4",
+            "covers": [
+              "R-4"
+            ],
+            "given": "a valid message",
+            "when": "it is sent",
+            "then": "the confirmation appears in less than 2 s"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "What maximum size and which formats are accepted?",
+            "byDefault": "5 MB per file, in PDF, PNG or JPG."
+          }
+        ]
+      },
+      "draft": null,
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "R-3",
+          "problem": "“On screen” does not say how long the confirmation stays visible.",
+          "fix": "Say whether it stays until the person closes the page.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.5,
+              "problem": "“On screen” does not say how long the confirmation stays visible.",
+              "fix": "Say whether it stays until the person closes the page."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "no-se-sabe",
+            "reason": "The request does not say how long the confirmation lasts; there is no evidence to knock it down or to uphold it.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": true
+        },
+        {
+          "id": "H-2",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "Q-1",
+          "problem": "Q-1 bundles two questions into one.",
+          "fix": "Split it into size and formats.",
+          "confidence": 0.4,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.4,
+              "problem": "Q-1 bundles two questions into one.",
+              "fix": "Split it into size and formats."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-cae",
+            "reason": "A question with a compound default is answered at once; it has no two readings.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": false
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": [
+        "R-1",
+        "R-2",
+        "C-1",
+        "C-2",
+        "Q-1"
+      ],
+      "comment": null
+    }
+  ],
+  "steps": [
+    {
+      "kind": "redactar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 1,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 34.13,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 3,
+      "ids": [
+        "C-3",
+        "R-4"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "corregir",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 1,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 3.24,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 3,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-1"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [
+        "H-2",
+        "H-4"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "corregir",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 2,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 3.49,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-2"
+      ],
+      "reason": null
+    }
+  ],
+  "notes": [
+    {
+      "seat": null,
+      "where": null,
+      "detail": "3",
+      "round": 1,
+      "kind": "correccion-gratis"
+    }
+  ],
+  "recommendation": "lista",
+  "stop": "limpia",
+  "totalUsd": 0,
+  "totalCop": 0,
+  "capUsd": 0.05,
+  "copRate": {
+    "value": 3297,
+    "date": "2026-11-11"
+  },
+  "pricesCheckedAt": {
+    "gemini": "2026-11-27",
+    "claude": "2026-11-27",
+    "openai": "2026-11-27"
+  },
+  "seal": null
+}

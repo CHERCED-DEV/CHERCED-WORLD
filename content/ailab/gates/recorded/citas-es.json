@@ -1,0 +1,723 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-11-28T03-13-20-226Z",
+  "at": "2026-11-28T03:13:20.226Z",
+  "mode": "grabada",
+  "simulated": true,
+  "rubricVersion": "046-v1",
+  "request": {
+    "text": "Un consultorio de fisioterapia ficticio quiere que cada paciente reciba un recordatorio por correo el día antes de su cita, con un enlace para confirmarla o cancelarla. Si cancela, el horario debe quedar libre en la agenda.",
+    "lang": "es",
+    "source": "ejemplo",
+    "exampleId": "citas"
+  },
+  "writer": {
+    "seat": "gemini",
+    "provider": "simulator"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "spec": {
+        "title": "Recordatorio de citas por correo",
+        "problem": "Los pacientes del consultorio olvidan sus citas y el horario se pierde, porque nadie avisa con tiempo ni hay cómo cancelar.",
+        "includes": [
+          "Un correo de recordatorio el día antes de cada cita.",
+          "Un enlace para confirmar y otro para cancelar.",
+          "Liberar el horario cuando alguien cancela."
+        ],
+        "excludes": [
+          "Recordatorios por SMS o por chat.",
+          "Cambiar la cita de día desde el correo."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "El sistema manda un recordatorio por correo a cada paciente el día antes de su cita."
+          },
+          {
+            "id": "R-2",
+            "text": "El correo trae un enlace para confirmar y otro para cancelar."
+          },
+          {
+            "id": "R-3",
+            "text": "Si el paciente cancela, el horario queda libre en la agenda."
+          },
+          {
+            "id": "R-4",
+            "text": "El sistema se integra con el software de agenda que ya usa el consultorio."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "una cita el martes",
+            "when": "llega el lunes",
+            "then": "el paciente recibe el recordatorio por correo"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2",
+              "R-3"
+            ],
+            "given": "un recordatorio recibido",
+            "when": "el paciente pulsa cancelar",
+            "then": "la cita queda cancelada y el horario aparece libre en la agenda"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "¿A qué hora sale el recordatorio?",
+            "byDefault": "A las 9:00 del día anterior, en la hora local del consultorio."
+          }
+        ]
+      },
+      "draft": null,
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "honesta",
+          "gravity": "bloqueante",
+          "where": "R-4",
+          "problem": "El pedido no habla de un software de agenda existente: la integración es una dependencia inventada.",
+          "fix": "Quita R-4 o conviértelo en pregunta: ¿dónde vive hoy la agenda?",
+          "confidence": 0.85,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.85,
+              "problem": "El pedido no habla de un software de agenda existente: la integración es una dependencia inventada.",
+              "fix": "Quita R-4 o conviértelo en pregunta: ¿dónde vive hoy la agenda?"
+            },
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.8,
+              "problem": "R-4 supone una integración que el pedido no pide.",
+              "fix": "Saca la integración del alcance."
+            }
+          ],
+          "seenByBoth": true,
+          "verification": {
+            "result": "se-sostiene",
+            "reason": "El pedido dice «el horario debe quedar libre en la agenda», pero no menciona otro software.",
+            "seat": "gemini",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-2",
+          "criterion": "completa",
+          "gravity": "importante",
+          "where": "R-2",
+          "problem": "No dice qué pasa cuando el paciente confirma.",
+          "fix": "Di qué cambia en la agenda al confirmar.",
+          "confidence": 0.6,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.6,
+              "problem": "No dice qué pasa cuando el paciente confirma.",
+              "fix": "Di qué cambia en la agenda al confirmar."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-3",
+          "criterion": "verificable",
+          "gravity": "importante",
+          "where": "C-1",
+          "problem": "C-1 dice «llega el lunes» sin decir a qué hora sale el correo.",
+          "fix": "Ata C-1 a la hora de Q-1.",
+          "confidence": 0.7,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.7,
+              "problem": "C-1 dice «llega el lunes» sin decir a qué hora sale el correo.",
+              "fix": "Ata C-1 a la hora de Q-1."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-4",
+          "criterion": "verificable",
+          "gravity": "importante",
+          "where": "C-2",
+          "problem": "C-2 cubre R-2 y R-3 pero solo prueba cancelar: confirmar queda sin criterio.",
+          "fix": "Agrega un criterio para confirmar.",
+          "confidence": 0.55,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.55,
+              "problem": "C-2 cubre R-2 y R-3 pero solo prueba cancelar: confirmar queda sin criterio.",
+              "fix": "Agrega un criterio para confirmar."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-sostiene",
+            "reason": "C-2 solo describe el enlace de cancelar.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-5",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "excludes",
+          "problem": "El acrónimo SMS se usa 1 veces y no está definido.",
+          "fix": "Defínelo en el glosario o la primera vez que aparece, con la forma «Nombre completo (SIGLA)».",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "glossary.undefined-acronym"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-6",
+          "criterion": "verificable",
+          "gravity": "menor",
+          "where": "R-4",
+          "problem": "El requisito R-4 no tiene ningún criterio que lo cubra.",
+          "fix": "Agrega un criterio con «dado, cuando, entonces» que lo verifique.",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "coverage.requirement-without-criterion"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": null,
+      "comment": null
+    },
+    {
+      "round": 2,
+      "spec": {
+        "title": "Recordatorio de citas por correo",
+        "problem": "Los pacientes del consultorio olvidan sus citas y el horario se pierde, porque nadie avisa con tiempo ni hay cómo cancelar.",
+        "includes": [
+          "Un correo de recordatorio el día antes de cada cita.",
+          "Un enlace para confirmar y otro para cancelar.",
+          "Liberar el horario cuando alguien cancela."
+        ],
+        "excludes": [
+          "Recordatorios por SMS o por chat.",
+          "Cambiar la cita de día desde el correo."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "El sistema manda un recordatorio por correo a cada paciente el día antes de su cita."
+          },
+          {
+            "id": "R-2",
+            "text": "El correo trae un enlace para confirmar y otro para cancelar; al confirmar, la cita queda marcada como confirmada en la agenda."
+          },
+          {
+            "id": "R-3",
+            "text": "Si el paciente cancela, el horario queda libre en la agenda."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "una cita el martes",
+            "when": "son las 9:00 del lunes (Q-1)",
+            "then": "el paciente recibe el recordatorio por correo"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-3"
+            ],
+            "given": "un recordatorio recibido",
+            "when": "el paciente pulsa cancelar",
+            "then": "la cita queda cancelada y el horario aparece libre en la agenda"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-2"
+            ],
+            "given": "un recordatorio recibido",
+            "when": "el paciente pulsa confirmar",
+            "then": "la cita aparece como confirmada en la agenda"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "¿A qué hora sale el recordatorio?",
+            "byDefault": "A las 9:00 del día anterior, en la hora local del consultorio."
+          },
+          {
+            "id": "Q-2",
+            "question": "¿Dónde vive hoy la agenda del consultorio?",
+            "byDefault": "En este mismo sistema; no hay otro software."
+          }
+        ]
+      },
+      "draft": null,
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "verificable",
+          "gravity": "importante",
+          "where": "C-3",
+          "problem": "C-3 no dice qué ve el paciente después de confirmar.",
+          "fix": "Agrega la página que confirma la cita.",
+          "confidence": 0.7,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.7,
+              "problem": "C-3 no dice qué ve el paciente después de confirmar.",
+              "fix": "Agrega la página que confirma la cita."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-2",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "excludes",
+          "problem": "El acrónimo SMS se usa 1 veces y no está definido.",
+          "fix": "Defínelo en el glosario o la primera vez que aparece, con la forma «Nombre completo (SIGLA)».",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "glossary.undefined-acronym"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-3",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "C-1",
+          "problem": "«9:00» no dice en qué zona horaria.",
+          "fix": "Repite la hora local del consultorio.",
+          "confidence": 0.45,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.45,
+              "problem": "«9:00» no dice en qué zona horaria.",
+              "fix": "Repite la hora local del consultorio."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "no-se-sabe",
+            "reason": "Q-1 ya dice «hora local del consultorio»; repetirlo en C-1 es cuestión de estilo.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": false
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": [
+        "R-2",
+        "C-1",
+        "C-2",
+        "C-3",
+        "Q-2"
+      ],
+      "comment": null
+    }
+  ],
+  "steps": [
+    {
+      "kind": "redactar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 1,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 4.18,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 3,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-1"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-4"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "corregir",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 3,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 2,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 4.23,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-3"
+      ],
+      "reason": null
+    }
+  ],
+  "notes": [],
+  "recommendation": "con-reservas",
+  "stop": "dos-rondas",
+  "totalUsd": 0,
+  "totalCop": 0,
+  "capUsd": 0.05,
+  "copRate": {
+    "value": 3297,
+    "date": "2026-11-11"
+  },
+  "pricesCheckedAt": {
+    "gemini": "2026-11-27",
+    "claude": "2026-11-27",
+    "openai": "2026-11-27"
+  },
+  "seal": null
+}

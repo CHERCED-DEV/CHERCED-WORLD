@@ -1,0 +1,882 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-11-28T03-13-20-347Z",
+  "at": "2026-11-28T03:13:20.347Z",
+  "mode": "grabada",
+  "simulated": true,
+  "rubricVersion": "046-v1",
+  "request": {
+    "text": "Una panadería de barrio ficticia necesita un tablero para ver los pedidos del día: quién los pidió, qué llevan, a qué hora los recogen y si ya están listos. El equipo marca cada pedido como listo desde una tableta.",
+    "lang": "es",
+    "source": "ejemplo",
+    "exampleId": "panaderia"
+  },
+  "writer": {
+    "seat": "gemini",
+    "provider": "simulator"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "spec": {
+        "title": "Tablero de pedidos del día",
+        "problem": "El equipo de la panadería lleva los pedidos en papel y no ve de un vistazo cuáles faltan ni a qué hora los recogen.",
+        "includes": [
+          "Un tablero con los pedidos del día.",
+          "Marcar un pedido como listo desde una tableta."
+        ],
+        "excludes": [
+          "Pagos en línea."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "El tablero muestra cada pedido del día con quién lo pidió, qué lleva y a qué hora lo recogen."
+          },
+          {
+            "id": "R-2",
+            "text": "El equipo marca un pedido como listo desde una tableta y el tablero se actualiza."
+          },
+          {
+            "id": "R-3",
+            "text": "El tablero ordena los pedidos por hora de recogida."
+          },
+          {
+            "id": "R-4",
+            "text": "Cuando alguien marca un pedido como listo, el tablero lo muestra en menos de 5 s."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "tres pedidos del día",
+            "when": "el equipo abre el tablero",
+            "then": "ve los tres con cliente, contenido y hora"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "un pedido pendiente",
+            "when": "alguien lo marca como listo en la tableta",
+            "then": "el tablero lo muestra como listo"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "un pedido de las 8:00 y otro de las 7:30",
+            "when": "se abre el tablero",
+            "then": "el de las 7:30 sale primero"
+          },
+          {
+            "id": "C-4",
+            "covers": [
+              "R-4"
+            ],
+            "given": "el tablero abierto en otra pantalla",
+            "when": "alguien marca un pedido como listo",
+            "then": "el cambio aparece en menos de 5 s"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "¿Cuántos pedidos tiene un día normal?",
+            "byDefault": "Hasta 80 pedidos."
+          }
+        ]
+      },
+      "draft": {
+        "title": "Tablero de pedidos del día",
+        "problem": "El equipo de la panadería lleva los pedidos en papel y no ve de un vistazo cuáles faltan ni a qué hora los recogen.",
+        "includes": [
+          "Un tablero con los pedidos del día.",
+          "Marcar un pedido como listo desde una tableta."
+        ],
+        "excludes": [
+          "Pagos en línea."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "El tablero muestra cada pedido del día con quién lo pidió, qué lleva y a qué hora lo recogen."
+          },
+          {
+            "id": "R-2",
+            "text": "El equipo marca un pedido como listo desde una tableta y el tablero se actualiza."
+          },
+          {
+            "id": "R-3",
+            "text": "El tablero ordena los pedidos por hora de recogida."
+          },
+          {
+            "id": "R-4",
+            "text": "El tablero se actualiza en tiempo real y aguanta 500."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "tres pedidos del día",
+            "when": "el equipo abre el tablero",
+            "then": "ve los tres con cliente, contenido y hora"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "un pedido pendiente",
+            "when": "alguien lo marca como listo en la tableta",
+            "then": "el tablero lo muestra como listo"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "un pedido de las 8:00 y otro de las 7:30",
+            "when": "se abre el tablero",
+            "then": "el de las 7:30 sale primero"
+          }
+        ],
+        "questions": []
+      },
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "completa",
+          "gravity": "bloqueante",
+          "where": "R-1",
+          "problem": "La spec no dice cómo entran los pedidos al tablero: ¿los escribe el equipo o llegan de otro lado?",
+          "fix": "Agrega un requisito para registrar un pedido.",
+          "confidence": 0.75,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.75,
+              "problem": "La spec no dice cómo entran los pedidos al tablero: ¿los escribe el equipo o llegan de otro lado?",
+              "fix": "Agrega un requisito para registrar un pedido."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-sostiene",
+            "reason": "Ningún R-n dice cómo se crea un pedido.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-2",
+          "criterion": "honesta",
+          "gravity": "bloqueante",
+          "where": "Q-1",
+          "problem": "Los 80 pedidos son una cifra inventada.",
+          "fix": "Quita la cifra.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.5,
+              "problem": "Los 80 pedidos son una cifra inventada.",
+              "fix": "Quita la cifra."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-cae",
+            "reason": "Q-1 presenta la cifra como pregunta con su valor por defecto, que es justo lo que pide la rúbrica para lo incierto.",
+            "seat": "claude",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-3",
+          "criterion": "clara",
+          "gravity": "importante",
+          "where": "R-2",
+          "problem": "«Listo» puede ser «horneado» o «empacado»: tiene dos lecturas.",
+          "fix": "Define listo como empacado y esperando recogida.",
+          "confidence": 0.7,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "openai",
+              "provider": "simulator",
+              "gravity": "importante",
+              "confidence": 0.7,
+              "problem": "«Listo» puede ser «horneado» o «empacado»: tiene dos lecturas.",
+              "fix": "Define listo como empacado y esperando recogida."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-4",
+          "criterion": "acotada",
+          "gravity": "menor",
+          "where": "excludes",
+          "problem": "Solo excluye los pagos; no dice si entran pedidos por teléfono.",
+          "fix": "Di si los pedidos por teléfono quedan fuera.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.5,
+              "problem": "Solo excluye los pagos; no dice si entran pedidos por teléfono.",
+              "fix": "Di si los pedidos por teléfono quedan fuera."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "no-se-sabe",
+            "reason": "El pedido no habla de canales; no alcanza para decidir.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": false
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": null,
+      "comment": null
+    },
+    {
+      "round": 2,
+      "spec": {
+        "title": "Tablero de pedidos del día",
+        "problem": "El equipo de la panadería lleva los pedidos en papel y no ve de un vistazo cuáles faltan ni a qué hora los recogen.",
+        "includes": [
+          "Un tablero con los pedidos del día.",
+          "Marcar un pedido como listo desde una tableta."
+        ],
+        "excludes": [
+          "Pagos en línea."
+        ],
+        "requirements": [
+          {
+            "id": "R-1",
+            "text": "El tablero muestra cada pedido del día con quién lo pidió, qué lleva y a qué hora lo recogen."
+          },
+          {
+            "id": "R-2",
+            "text": "Listo significa empacado y esperando recogida; el equipo lo marca desde la tableta y el tablero se actualiza."
+          },
+          {
+            "id": "R-3",
+            "text": "El tablero ordena los pedidos por hora de recogida."
+          },
+          {
+            "id": "R-4",
+            "text": "Cuando alguien marca un pedido como listo, el tablero lo muestra en menos de 5 s."
+          },
+          {
+            "id": "R-5",
+            "text": "El equipo registra un pedido nuevo con cliente, contenido, hora de recogida y teléfono, y al cliente le llega un SMS cuando está listo."
+          }
+        ],
+        "criteria": [
+          {
+            "id": "C-1",
+            "covers": [
+              "R-1"
+            ],
+            "given": "tres pedidos del día",
+            "when": "el equipo abre el tablero",
+            "then": "ve los tres con cliente, contenido y hora"
+          },
+          {
+            "id": "C-2",
+            "covers": [
+              "R-2"
+            ],
+            "given": "un pedido pendiente",
+            "when": "alguien lo marca como listo en la tableta",
+            "then": "el tablero lo muestra como listo"
+          },
+          {
+            "id": "C-3",
+            "covers": [
+              "R-3"
+            ],
+            "given": "un pedido de las 8:00 y otro de las 7:30",
+            "when": "se abre el tablero",
+            "then": "el de las 7:30 sale primero"
+          },
+          {
+            "id": "C-4",
+            "covers": [
+              "R-4"
+            ],
+            "given": "el tablero abierto en otra pantalla",
+            "when": "alguien marca un pedido como listo",
+            "then": "el cambio aparece en menos de 5 s"
+          },
+          {
+            "id": "C-5",
+            "covers": [
+              "R-6"
+            ],
+            "given": "un pedido nuevo por teléfono",
+            "when": "el equipo lo registra",
+            "then": "aparece en el tablero con su hora de recogida"
+          }
+        ],
+        "questions": [
+          {
+            "id": "Q-1",
+            "question": "¿Cuántos pedidos tiene un día normal?",
+            "byDefault": "Hasta 80 pedidos."
+          }
+        ]
+      },
+      "draft": null,
+      "findings": [
+        {
+          "id": "H-1",
+          "criterion": "verificable",
+          "gravity": "bloqueante",
+          "where": "C-5",
+          "problem": "El criterio C-5 cubre R-6, que no existe. El criterio C-5 no cubre ningún requisito que exista.",
+          "fix": "Corrige el ID del requisito que cubre o agrega el requisito que falta.",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "coverage.unknown-requirement",
+            "criterio-sin-requisito"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-2",
+          "criterion": "acotada",
+          "gravity": "bloqueante",
+          "where": "R-5",
+          "problem": "El SMS al cliente y su teléfono no están en el pedido: suman un proveedor y un dato personal nuevos.",
+          "fix": "Quita el SMS y el teléfono de R-5.",
+          "confidence": 0.8,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "bloqueante",
+              "confidence": 0.8,
+              "problem": "El SMS al cliente y su teléfono no están en el pedido: suman un proveedor y un dato personal nuevos.",
+              "fix": "Quita el SMS y el teléfono de R-5."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "se-sostiene",
+            "reason": "El pedido no menciona mensajes al cliente ni su teléfono.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": false
+        },
+        {
+          "id": "H-3",
+          "criterion": "clara",
+          "gravity": "menor",
+          "where": "R-5",
+          "problem": "El acrónimo SMS se usa 1 veces y no está definido.",
+          "fix": "Defínelo en el glosario o la primera vez que aparece, con la forma «Nombre completo (SIGLA)».",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "glossary.undefined-acronym"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-4",
+          "criterion": "verificable",
+          "gravity": "menor",
+          "where": "R-5",
+          "problem": "El requisito R-5 no tiene ningún criterio que lo cubra.",
+          "fix": "Agrega un criterio con «dado, cuando, entonces» que lo verifique.",
+          "confidence": 1,
+          "origin": "determinista",
+          "rules": [
+            "coverage.requirement-without-criterion"
+          ],
+          "reporters": [],
+          "seenByBoth": false,
+          "verification": null,
+          "carried": false
+        },
+        {
+          "id": "H-5",
+          "criterion": "acotada",
+          "gravity": "menor",
+          "where": "excludes",
+          "problem": "Solo excluye los pagos; no dice si entran pedidos por teléfono.",
+          "fix": "Di si los pedidos por teléfono quedan fuera.",
+          "confidence": 0.5,
+          "origin": "revisor",
+          "rules": [],
+          "reporters": [
+            {
+              "seat": "claude",
+              "provider": "simulator",
+              "gravity": "menor",
+              "confidence": 0.5,
+              "problem": "Solo excluye los pagos; no dice si entran pedidos por teléfono.",
+              "fix": "Di si los pedidos por teléfono quedan fuera."
+            }
+          ],
+          "seenByBoth": false,
+          "verification": {
+            "result": "no-se-sabe",
+            "reason": "El pedido no habla de canales; no alcanza para decidir.",
+            "seat": "openai",
+            "provider": "simulator"
+          },
+          "carried": true
+        }
+      ],
+      "reviewed": true,
+      "reviewers": [
+        "claude",
+        "openai"
+      ],
+      "changed": [
+        "R-2",
+        "R-5",
+        "C-5"
+      ],
+      "comment": null
+    }
+  ],
+  "steps": [
+    {
+      "kind": "redactar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 1,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 3.13,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "R-4"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "corregir",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 4,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 1,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 2.8,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [
+        "H-1",
+        "H-4"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 1,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-2"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "corregir",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "gemini",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 5,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "chequear",
+      "round": 2,
+      "provider": "deterministic",
+      "seat": null,
+      "model": "cotejo-core 0.1.0 · breve",
+      "attempts": [],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 3.59,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 2,
+      "ids": [
+        "C-5"
+      ],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "claude",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "revisar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 0,
+      "ids": [],
+      "reason": null
+    },
+    {
+      "kind": "verificar",
+      "round": 2,
+      "provider": "simulator",
+      "seat": "openai",
+      "model": "simulador",
+      "attempts": [
+        {
+          "provider": "simulator",
+          "requestedModel": "simulador",
+          "model": "simulador",
+          "outcome": "ok",
+          "reason": null,
+          "latencyMs": 0,
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "costUsd": 0
+        }
+      ],
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "latencyMs": 0,
+      "costUsd": 0,
+      "status": "ok",
+      "count": 1,
+      "ids": [
+        "H-2"
+      ],
+      "reason": null
+    }
+  ],
+  "notes": [
+    {
+      "seat": null,
+      "where": null,
+      "detail": "1",
+      "round": 1,
+      "kind": "correccion-gratis"
+    },
+    {
+      "seat": "claude",
+      "where": "R-1",
+      "detail": "H-1",
+      "round": 2,
+      "kind": "resuelto"
+    }
+  ],
+  "recommendation": "no-lista",
+  "stop": "empeoro",
+  "totalUsd": 0,
+  "totalCop": 0,
+  "capUsd": 0.05,
+  "copRate": {
+    "value": 3297,
+    "date": "2026-11-11"
+  },
+  "pricesCheckedAt": {
+    "gemini": "2026-11-27",
+    "claude": "2026-11-27",
+    "openai": "2026-11-27"
+  },
+  "seal": null
+}

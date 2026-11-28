@@ -15,6 +15,7 @@
     "test": "vitest run",
     "evals:agent": "vitest run --config vitest.evals.config.ts evals/agent.eval.ts",
     "arena:run": "vitest run --config vitest.evals.config.ts evals/arena.eval.ts",
+    "evals:gates": "vitest run --config vitest.evals.config.ts evals/gates.eval.ts",
     "metrics:history": "node scripts/engineering-metrics.mjs",
     "e2e": "playwright test",
     "test:fast": "npm run lint && npm run typecheck && npm test && playwright test",
