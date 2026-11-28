@@ -83,17 +83,30 @@ export function reviewerSystem(lang: GateLang): string {
     '- where es el lugar exacto: R-n, C-n o Q-n que existan en la spec, o title, problem, includes o excludes.',
     '- problem dice qué falla, en una frase; fix propone una corrección concreta.',
     '- confidence va de 0 a 1: qué tan seguro estás de que el problema es real.',
+    '- resolved va vacío en la primera ronda.',
     'Responde solo con el JSON del esquema.',
   ].join('\n')
 }
 
-export function reviewerPrompt(input: { lang: GateLang; request: string; spec: SpecBreve; changed: readonly string[] | null }): string {
+export function reviewerPrompt(input: {
+  lang: GateLang
+  request: string
+  spec: SpecBreve
+  changed: readonly string[] | null
+  previous: readonly Pick<MergedFinding, 'id' | 'criterion' | 'gravity' | 'where' | 'problem'>[]
+}): string {
   const parts = [block('pedido', input.request), block('spec', specToMarkdown(input.spec, input.lang))]
   if (input.changed) {
     parts.push(
-      'Esta es una ronda de corrección. Reporta hallazgos solo sobre los lugares que cambiaron; lo demás ya se revisó:',
+      'Esta es una ronda de corrección. Reporta hallazgos nuevos solo sobre los lugares que cambiaron; lo demás ya se revisó:',
       block('cambios', input.changed.length ? input.changed.join(', ') : 'ninguno'),
     )
+    if (input.previous.length) {
+      parts.push(
+        'Estos hallazgos de la ronda anterior siguen en pie. Si la corrección ya resolvió alguno, aunque haya sido en otro lugar, pon su id en resolved; si no, déjalo fuera:',
+        block('hallazgos', input.previous.map((item) => `${item.id} [${item.gravity}, ${item.criterion}, ${item.where}] ${item.problem}`).join('\n')),
+      )
+    }
   }
   return parts.join('\n\n')
 }

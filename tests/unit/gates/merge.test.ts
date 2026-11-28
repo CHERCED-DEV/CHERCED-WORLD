@@ -14,8 +14,8 @@ describe('unión de hallazgos (FR-4607)', () => {
       spec: SPEC,
       deterministic: [],
       reviews: [
-        { seat: 'claude', provider: 'claude', findings: [item({ confidence: 0.6 }), item({ criterion: 'clara', where: 'R-1', gravity: 'menor' })] },
-        { seat: 'openai', provider: 'openai', findings: [item({ gravity: 'bloqueante', confidence: 0.9, problem: 'El criterio no dice el plazo.' })] },
+        { seat: 'claude', provider: 'claude', resolved: [], findings: [item({ confidence: 0.6 }), item({ criterion: 'clara', where: 'R-1', gravity: 'menor' })] },
+        { seat: 'openai', provider: 'openai', resolved: [], findings: [item({ gravity: 'bloqueante', confidence: 0.9, problem: 'El criterio no dice el plazo.' })] },
       ],
       changed: null,
       previous: null,
@@ -32,7 +32,7 @@ describe('unión de hallazgos (FR-4607)', () => {
       round: 1,
       spec: SPEC,
       deterministic: [],
-      reviews: [{ seat: 'claude', provider: 'claude', findings: [item(), item({ problem: 'otra frase' }), item({ criterion: 'honesta' })] }],
+      reviews: [{ seat: 'claude', provider: 'claude', resolved: [], findings: [item(), item({ problem: 'otra frase' }), item({ criterion: 'honesta' })] }],
       changed: null,
       previous: null,
     })
@@ -45,7 +45,7 @@ describe('unión de hallazgos (FR-4607)', () => {
       round: 1,
       spec: SPEC,
       deterministic: [],
-      reviews: [{ seat: 'openai', provider: 'openai', findings: [item({ where: 'R-9' }), item({ where: 'C-7' }), item()] }],
+      reviews: [{ seat: 'openai', provider: 'openai', resolved: [], findings: [item({ where: 'R-9' }), item({ where: 'C-7' }), item()] }],
       changed: null,
       previous: null,
     })
@@ -64,7 +64,7 @@ describe('unión de hallazgos (FR-4607)', () => {
         { rule: 'coverage.unknown-requirement', criterion: 'verificable', gravity: 'bloqueante', where: 'C-2', problem: 'C-2 cubre R-4, que no existe.', fix: 'Corrige el id.' },
         { rule: 'criterio-sin-requisito', criterion: 'verificable', gravity: 'bloqueante', where: 'C-2', problem: 'C-2 no cubre un requisito que exista.', fix: 'Cubre un R-n.' },
       ],
-      reviews: [{ seat: 'claude', provider: 'claude', findings: [item({ gravity: 'menor', where: 'R-2', criterion: 'clara' })] }],
+      reviews: [{ seat: 'claude', provider: 'claude', resolved: [], findings: [item({ gravity: 'menor', where: 'R-2', criterion: 'clara' })] }],
       changed: null,
       previous: null,
     })
@@ -86,7 +86,7 @@ describe('unión de hallazgos (FR-4607)', () => {
       round: 2,
       spec: SPEC,
       deterministic: [],
-      reviews: [{ seat: 'claude', provider: 'claude', findings: [item({ where: 'C-2', gravity: 'menor', criterion: 'clara' }), item({ where: 'R-2' })] }],
+      reviews: [{ seat: 'claude', provider: 'claude', resolved: [], findings: [item({ where: 'C-2', gravity: 'menor', criterion: 'clara' }), item({ where: 'R-2' })] }],
       changed: ['C-2'],
       previous,
     })
@@ -95,6 +95,23 @@ describe('unión de hallazgos (FR-4607)', () => {
       ['C-2', false, 'menor'],
     ])
     expect(notes).toEqual([{ round: 2, kind: 'fuera-de-cambio', seat: 'claude', where: 'R-2', detail: null }])
+  })
+
+  it('un revisor puede dar por resuelto un hallazgo anterior cuya corrección cayó en otro lugar, y queda anotado', () => {
+    const previous = [finding({ id: 'H-1', where: 'R-1', criterion: 'completa', gravity: 'bloqueante' }), finding({ id: 'H-2', where: 'R-2', criterion: 'clara', gravity: 'menor' })]
+    const { findings, notes } = mergeFindings({
+      round: 2,
+      spec: SPEC,
+      deterministic: [],
+      reviews: [
+        { seat: 'claude', provider: 'claude', resolved: ['H-1'], findings: [] },
+        { seat: 'openai', provider: 'openai', resolved: [], findings: [] },
+      ],
+      changed: ['C-1'],
+      previous,
+    })
+    expect(findings.map((entry) => [entry.where, entry.carried])).toEqual([['R-2', true]])
+    expect(notes).toEqual([{ round: 2, kind: 'resuelto', seat: 'claude', where: 'R-1', detail: 'H-1' }])
   })
 
   it('lo que el verificador tumbó no cuenta, pero no se borra', () => {

@@ -53,8 +53,8 @@ describe('contrato de un hallazgo (FR-4606)', () => {
 
   it('cada revisor devuelve como máximo 8', () => {
     const findings = Array.from({ length: 9 }, () => valid)
-    expect(reviewReplyWire.safeParse({ findings }).success).toBe(false)
-    expect(reviewReplyWire.safeParse({ findings: findings.slice(0, 8) }).success).toBe(true)
+    expect(reviewReplyWire.safeParse({ findings, resolved: [] }).success).toBe(false)
+    expect(reviewReplyWire.safeParse({ findings: findings.slice(0, 8), resolved: [] }).success).toBe(true)
   })
 })
 

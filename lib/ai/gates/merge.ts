@@ -4,7 +4,7 @@ import type { FindingReporter, GateNote, GateRoundNumber, Gravity, MergedFinding
 
 export const GRAVITY_RANK: Readonly<Record<Gravity, number>> = { bloqueante: 0, importante: 1, menor: 2 }
 
-export type ReviewBatch = { seat: PaidProviderId; provider: ProviderId; findings: readonly ReviewFinding[] }
+export type ReviewBatch = { seat: PaidProviderId; provider: ProviderId; findings: readonly ReviewFinding[]; resolved: readonly string[] }
 
 export type DeterministicFinding = { rule: string; criterion: RubricCriterion; gravity: Gravity; where: string; problem: string; fix: string }
 
@@ -100,11 +100,18 @@ function deterministicFindings(items: readonly DeterministicFinding[]): MergedFi
   })
 }
 
-function carriedFindings(previous: readonly MergedFinding[] | null, places: ReadonlySet<string>, changed: ReadonlySet<string> | null): MergedFinding[] {
-  if (!previous || !changed) return []
-  return previous
-    .filter((item) => item.origin === 'revisor' && item.verification?.result !== 'se-cae' && places.has(item.where) && !changed.has(item.where))
-    .map((item) => ({ ...item, carried: true }))
+function carriedFindings(input: MergeInput, places: ReadonlySet<string>, changed: ReadonlySet<string> | null, notes: GateNote[]): MergedFinding[] {
+  if (!input.previous || !changed) return []
+  const standing = input.previous.filter((item) => item.origin === 'revisor' && item.verification?.result !== 'se-cae' && places.has(item.where) && !changed.has(item.where))
+  const resolvedBy = new Map<string, PaidProviderId>()
+  for (const review of input.reviews) for (const id of review.resolved) if (!resolvedBy.has(id)) resolvedBy.set(id, review.seat)
+  const out: MergedFinding[] = []
+  for (const item of standing) {
+    const seat = resolvedBy.get(item.id)
+    if (seat) notes.push({ round: input.round, kind: 'resuelto', seat, where: item.where, detail: item.id })
+    else out.push({ ...item, carried: true })
+  }
+  return out
 }
 
 export function sortFindings(findings: readonly MergedFinding[]): MergedFinding[] {
@@ -124,7 +131,7 @@ export function mergeFindings(input: MergeInput): MergeResult {
   const merged = [
     ...deterministicFindings(input.deterministic.filter((item) => places.has(item.where))),
     ...reviewerGroups(input.reviews, places, changed, input.round, notes).map(reviewerFinding),
-    ...carriedFindings(input.previous, places, changed),
+    ...carriedFindings(input, places, changed, notes),
   ]
   const findings = sortFindings(merged).map((item, index) => ({ ...item, id: `H-${index + 1}` }))
   return { findings, notes }

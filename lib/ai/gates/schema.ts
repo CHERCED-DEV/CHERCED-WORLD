@@ -130,6 +130,7 @@ export const reviewReplyWire = z.object({
       }),
     )
     .max(REVIEW_MAX_FINDINGS),
+  resolved: z.array(z.string().regex(FINDING_ID)).max(24).describe('En una ronda de corrección, los ids H-n de hallazgos anteriores que la corrección ya resolvió; en la primera ronda, vacío'),
 })
 
 export type ReviewReplyWire = z.infer<typeof reviewReplyWire>
@@ -160,6 +161,7 @@ export const STOP_REASONS = [
   'no-es-software',
   'sin-tiempo',
   'ronda-pedida',
+  'redactor-caido',
 ] as const
 
 export type StopReason = (typeof STOP_REASONS)[number]
@@ -232,6 +234,7 @@ export const NOTE_KINDS = [
   'esquema-reintento',
   'correccion-gratis',
   'corte',
+  'resuelto',
 ] as const
 
 export type NoteKind = (typeof NOTE_KINDS)[number]
