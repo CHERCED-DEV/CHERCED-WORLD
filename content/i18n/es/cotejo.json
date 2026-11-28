@@ -79,7 +79,7 @@
   "cotejo.detail.evidence": "Evidencia",
   "cotejo.detail.evidenceItem": "Línea {line}, columna {column}",
   "cotejo.detail.excerpt": "Texto alrededor de la línea {line}",
-  "cotejo.detail.marked": "Línea señalada:",
+  "cotejo.detail.marked": "Línea {line}, la señalada:",
   "cotejo.detail.fingerprint": "Huella",
   "cotejo.detail.truth.seeded": "En la verdad de la muestra: {id}. {note}",
   "cotejo.detail.truth.extra": "No está en la verdad de la muestra: cuenta como falso positivo.",

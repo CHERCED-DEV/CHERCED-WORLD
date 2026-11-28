@@ -79,7 +79,7 @@
   "cotejo.detail.evidence": "Evidence",
   "cotejo.detail.evidenceItem": "Line {line}, column {column}",
   "cotejo.detail.excerpt": "Text around line {line}",
-  "cotejo.detail.marked": "Marked line:",
+  "cotejo.detail.marked": "Line {line}, the marked one:",
   "cotejo.detail.fingerprint": "Fingerprint",
   "cotejo.detail.truth.seeded": "In the sample's ground truth: {id}. {note}",
   "cotejo.detail.truth.extra": "Not in the sample's ground truth: it counts as a false positive.",

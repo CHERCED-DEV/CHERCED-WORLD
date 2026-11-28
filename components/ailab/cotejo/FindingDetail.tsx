@@ -25,42 +25,67 @@ function componentValue(lang: Locale, key: string, value: number | string): stri
   return value
 }
 
-function Marked({ line, evidence }: { line: string; evidence: Evidence }) {
-  const fragment = evidence.fragment.trim()
-  const from = fragment ? line.indexOf(fragment, Math.max(0, evidence.column - 1)) : -1
-  const start = from >= 0 ? from : fragment ? line.indexOf(fragment) : -1
-  if (start < 0 || fragment.length >= line.trim().length) return <mark className={styles.mark}>{line}</mark>
+const NEEDLE_KEYS = ['term', 'acronym', 'marker', 'ref', 'number', 'id'] as const
+
+export function needleOf(finding: Pick<Finding, 'components'>): string | null {
+  for (const key of NEEDLE_KEYS) {
+    const value = finding.components[key]
+    if (typeof value === 'string' && value.trim() !== '') return value
+    if (typeof value === 'number') return String(value)
+  }
+  return null
+}
+
+export function markRange(line: string, evidence: Evidence, needle: string | null): [number, number] | null {
+  if (needle) {
+    const lower = line.toLocaleLowerCase()
+    const target = needle.toLocaleLowerCase()
+    const near = lower.indexOf(target, Math.max(0, evidence.column - 1))
+    const at = near >= 0 ? near : lower.indexOf(target)
+    if (at >= 0) return [at, at + needle.length]
+  }
+  const fragment = evidence.fragment.trim().replace(/…$/, '')
+  const at = fragment ? line.indexOf(fragment) : -1
+  return at >= 0 ? [at, at + fragment.length] : null
+}
+
+function Marked({ line, evidence, needle }: { line: string; evidence: Evidence; needle: string | null }) {
+  const range = markRange(line, evidence, needle)
+  if (!range) return <mark className={styles.mark}>{line}</mark>
   return (
     <>
-      {line.slice(0, start)}
-      <mark className={styles.mark}>{line.slice(start, start + fragment.length)}</mark>
-      {line.slice(start + fragment.length)}
+      {line.slice(0, range[0])}
+      <mark className={styles.mark}>{line.slice(range[0], range[1])}</mark>
+      {line.slice(range[1])}
     </>
   )
 }
 
-function Excerpt({ lang, lines, evidence }: { lang: Locale; lines: readonly string[]; evidence: Evidence }) {
+function Excerpt({ lang, lines, evidence, needle }: { lang: Locale; lines: readonly string[]; evidence: Evidence; needle: string | null }) {
   const text = cotejoText(lang)
   const from = Math.max(1, evidence.line - CONTEXT)
   const to = Math.min(lines.length, evidence.line + CONTEXT)
   const numbers = Array.from({ length: Math.max(0, to - from + 1) }, (_, index) => from + index)
   return (
-    <ol className={styles.source} start={from} tabIndex={0} aria-label={text('cotejo.detail.excerpt', { line: evidence.line })}>
+    <ol className={styles.source} tabIndex={0} aria-label={text('cotejo.detail.excerpt', { line: evidence.line })}>
       {numbers.map((number) => {
         const line = lines[number - 1] ?? ''
         const target = number === evidence.line
         return (
-          <li key={number} value={number} className={target ? styles.sourceTarget : undefined} data-cw-cotejo-line={number} data-marked={target ? '' : undefined}>
+          <li key={number} className={target ? styles.sourceTarget : undefined} data-cw-cotejo-line={number} data-marked={target ? '' : undefined}>
+            <span className={styles.gutter} aria-hidden="true">
+              {number}
+            </span>
             {target ? (
-              <>
+              <span>
                 <span className={styles.pointer} aria-hidden="true">
                   ▶{' '}
                 </span>
-                <span className={styles.srOnly}>{text('cotejo.detail.marked')} </span>
-                <Marked line={line} evidence={evidence} />
-              </>
+                <span className={styles.srOnly}>{text('cotejo.detail.marked', { line: number })} </span>
+                <Marked line={line} evidence={evidence} needle={needle} />
+              </span>
             ) : (
-              line || ' '
+              <span>{line || ' '}</span>
             )}
           </li>
         )
@@ -74,6 +99,7 @@ export function FindingDetail({ id, lang, finding, lines, defect }: FindingDetai
   const basis = finding.components.basis === 'fact' ? 'fact' : 'signal'
   const scoreKey: CotejoCopyKey = basis === 'fact' ? 'cotejo.detail.score.fact' : 'cotejo.detail.score.signal'
   const components = Object.entries(finding.components)
+  const needle = needleOf(finding)
   return (
     <div id={id} className={styles.detail} data-cw-cotejo-detail={finding.id}>
       <dl className={styles.facts}>
@@ -126,7 +152,7 @@ export function FindingDetail({ id, lang, finding, lines, defect }: FindingDetai
                 {text('cotejo.detail.evidenceItem', { line: item.line, column: item.column })}
                 {item.unitId ? ` · ${item.unitId}` : ''}
               </p>
-              <Excerpt lang={lang} lines={lines} evidence={item} />
+              <Excerpt lang={lang} lines={lines} evidence={item} needle={needle} />
             </li>
           ))}
         </ul>

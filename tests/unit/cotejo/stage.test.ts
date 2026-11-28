@@ -64,10 +64,23 @@ describe('la caja de cristal (T4719, T4740)', () => {
     expect(html).toContain(finding.howToRefute.es)
     expect(html).toContain('data-cw-cotejo-line="264"')
     expect(html).toMatch(/data-cw-cotejo-line="264" data-marked="">.*▶/)
-    expect(html).toContain('Línea señalada:')
+    expect(html).toContain('Línea 264, la señalada:')
     expect(html).toContain('<mark')
     expect(html).toContain('data-cw-cotejo-truth="S08"')
     expect(html).toContain('0,95')
+  })
+
+  it('resalta el término, el acrónimo o la referencia, y la frase entera cuando el hallazgo es la frase', () => {
+    const markOf = (rule: string) => {
+      const finding = report.findings.find((item) => item.rule === rule)!
+      const html = renderToStaticMarkup(createElement(FindingDetail, { id: 'd', lang: 'es', finding, lines, defect: undefined }))
+      return [...html.matchAll(/<mark[^>]*>([^<]*)<\/mark>/g)].map((match) => match[1])
+    }
+    expect(markOf('language.vague')[0]).toBe('adecuado')
+    expect(markOf('references.unknown-id')).toEqual(['FR-099'])
+    expect(markOf('glossary.undefined-acronym')).toContain('OPML')
+    expect(markOf('numbers.unitless-dimension')).toEqual(['800'])
+    expect(markOf('conflict.polarity')[0]).toContain('La lista de lectura DEBE sincronizarse entre los dispositivos del mismo lector')
   })
 
   it('un hallazgo que no está en la verdad lo dice', () => {

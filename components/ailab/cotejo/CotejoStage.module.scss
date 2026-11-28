@@ -293,7 +293,7 @@ $mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace;
     border-bottom: 1px solid var(--cw-glass-border);
     text-align: left;
     vertical-align: top;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   thead th {
@@ -303,7 +303,9 @@ $mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace;
   }
 
   tbody th {
+    width: 40%;
     font-weight: 700;
+    hyphens: auto;
   }
 }
 
@@ -473,27 +475,35 @@ $mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace;
 }
 
 .source {
+  display: grid;
+  gap: 2px;
   margin: 0;
-  padding: var(--cw-space-2) var(--cw-space-2) var(--cw-space-2) 3.2em;
+  padding: var(--cw-space-2);
   overflow-x: auto;
   border: 1px solid var(--cw-glass-border);
   font-family: $mono;
   font-size: var(--cw-text-xs);
   line-height: var(--cw-leading-snug);
+  list-style: none;
 
   li {
+    display: grid;
+    grid-template-columns: 4ch minmax(0, 1fr);
+    gap: 1ch;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-  }
-
-  li::marker {
-    color: var(--cw-fg-muted);
   }
 
   &:focus-visible {
     outline: 2px solid var(--cw-focus);
     outline-offset: 2px;
   }
+}
+
+.gutter {
+  color: var(--cw-fg-muted);
+  text-align: right;
+  user-select: none;
 }
 
 .sourceTarget {
